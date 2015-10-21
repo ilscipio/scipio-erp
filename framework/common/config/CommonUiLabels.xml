@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-    KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed 
+    with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, 
+    Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at 
+    http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the 
+    License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License 
+    for the specific language governing permissions and limitations under the License. -->
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <property key="Accounting - AP">
         <value xml:lang="ar">ذمم دائنة</value>
@@ -188,6 +176,9 @@
         <value xml:lang="zh">已接受</value>
         <value xml:lang="zh_CN">接受</value>
         <value xml:lang="zh_TW">已接受</value>
+    </property>
+    <property key="CommonAccount">
+        <value xml:lang="en">Account</value>
     </property>
     <property key="CommonActiveInactive">
         <value xml:lang="ar">فعال و غير فعال</value>
@@ -1133,7 +1124,7 @@
         <value xml:lang="zh_TW">授權</value>
     </property>
     <property key="CommonAutoAssignedId">
-        <value xml:lang="ar">الرقم التسلسلي - يعين تلقائيا إذا ما ترك فارغا</value>    
+        <value xml:lang="ar">الرقم التسلسلي - يعين تلقائيا إذا ما ترك فارغا</value>
         <value xml:lang="cs">Unikátní ID - automaticky přiřazeno pokud je prázdné</value>
         <value xml:lang="en">Unique ID - auto-assigned if blank</value>
         <value xml:lang="es">Código único - asignado automáticamente si se deja en blanco</value>
@@ -2880,7 +2871,7 @@
         <value xml:lang="pt_PT">Descrição</value>
         <value xml:lang="ro">Descriere</value>
         <value xml:lang="ru">Описание</value>
-    <!--value xml:lang="th">รายละเอียด</value-->
+        <!--value xml:lang="th">รายละเอียด</value -->
         <value xml:lang="th">คำอธิบาย</value>
         <value xml:lang="vi">Mô tả</value>
         <value xml:lang="zh">描述</value>
@@ -3216,28 +3207,44 @@
         <value xml:lang="zh_TW">電子郵件密碼</value>
     </property>
     <property key="CommonEmailSendAddressError">
-        <value xml:lang="ar">[ADDRERR] خطأ في العنوان عند إرسال الرسالة إلى ${sendTo} من ${sendFrom} نسخة إلى ${sendCC} نسخة مخفية إلى ${sendBcc} بعنوان ${subject}</value>
-        <value xml:lang="cs">[ADDRERR] Chyba adresy při odesílání zprávu pro ${sendTo} od ${sendFrom} v kopii ${sendCc} slepé kopii ${sendBcc} předmět ${subject}</value>
-        <value xml:lang="en">[ADDRERR] Address error when sending message to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} subject ${subject}</value>
-        <value xml:lang="es">[ADDRERR] Error en la dirección al enviar el mensaje para ${sendTo} de ${sendFrom} cc ${sendCc} bcc ${sendBcc} asunto ${subject}</value>
-        <value xml:lang="fr">[ADDRERR] Erreur lors de l'envoi du courriel à ${sendTo}, depuis ${sendFrom}, en copie, ${sendCc}, en copie cachée ${sendBcc}, avec le sujet ${subject}</value>
-        <value xml:lang="it">[ADDRERR] Errore indirizzo durante l'invio del messaggio a ${sendTo} da ${sendFrom} cc ${sendCc} cn ${sendBcc} soggetto ${subject}</value>
+        <value xml:lang="ar">[ADDRERR] خطأ في العنوان عند إرسال الرسالة إلى ${sendTo} من ${sendFrom} نسخة إلى ${sendCC} نسخة مخفية
+            إلى ${sendBcc} بعنوان ${subject}</value>
+        <value xml:lang="cs">[ADDRERR] Chyba adresy při odesílání zprávu pro ${sendTo} od ${sendFrom} v kopii ${sendCc} slepé kopii
+            ${sendBcc} předmět ${subject}</value>
+        <value xml:lang="en">[ADDRERR] Address error when sending message to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc}
+            subject ${subject}</value>
+        <value xml:lang="es">[ADDRERR] Error en la dirección al enviar el mensaje para ${sendTo} de ${sendFrom} cc ${sendCc} bcc
+            ${sendBcc} asunto ${subject}</value>
+        <value xml:lang="fr">[ADDRERR] Erreur lors de l'envoi du courriel à ${sendTo}, depuis ${sendFrom}, en copie, ${sendCc}, en
+            copie cachée ${sendBcc}, avec le sujet ${subject}</value>
+        <value xml:lang="it">[ADDRERR] Errore indirizzo durante l'invio del messaggio a ${sendTo} da ${sendFrom} cc ${sendCc} cn
+            ${sendBcc} soggetto ${subject}</value>
         <value xml:lang="ja">[ADDRERR] メッセージの送信中にエラー to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} 件名 ${subject}</value>
-        <value xml:lang="ru">[ADDRERR] Ошибка адреса когда было послано сообщение к ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} subject ${subject}</value>
-        <value xml:lang="vi">[ADDRESS] lỗi địa chỉ khi gửi thông điệp tới ${sendTo} từ ${sendFrom} cc ${sendCc} bcc ${sendBcc} tiêu đề ${subject}</value>
+        <value xml:lang="ru">[ADDRERR] Ошибка адреса когда было послано сообщение к ${sendTo} from ${sendFrom} cc ${sendCc} bcc
+            ${sendBcc} subject ${subject}</value>
+        <value xml:lang="vi">[ADDRESS] lỗi địa chỉ khi gửi thông điệp tới ${sendTo} từ ${sendFrom} cc ${sendCc} bcc ${sendBcc}
+            tiêu đề ${subject}</value>
         <value xml:lang="zh">[地址错误] 自 ${sendFrom} 发送信息到 ${sendTo}、 抄送 ${sendCc} 、密送 ${sendBcc} 、主题 ${subject} 时发生地址错误</value>
         <value xml:lang="zh_TW">[位址錯誤] 自 ${sendFrom} 發送訊息到 ${sendTo}、 複本 ${sendCc} 、密複本 ${sendBcc} 、主題 ${subject} 時發生位址錯誤</value>
     </property>
     <property key="CommonEmailSendConnectionError">
-        <value xml:lang="ar">[CON] خطأ في شبكة الإتصال عند إرسال الرسالة إلى ${sendTo} من ${sendFrom} نسخة إلى ${sendCC} نسخة مخفية إلى ${sendBcc} بعنوان ${subject}</value>
-        <value xml:lang="cs">[CON] Chyba připojení při odesílání zprávu pro ${sendTo} od ${sendFrom} v kopii ${sendCc} bcc ${sendBcc} předmět ${subject}</value>
-        <value xml:lang="en">[CON] Connection error when sending message to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} subject ${subject}</value>
-        <value xml:lang="es">[CON] Error de conexión al enviar el mensaje para ${sendTo} de ${sendFrom} cc ${sendCc} bcc ${sendBcc} asunto ${subject}</value>
-        <value xml:lang="fr">[CON] Erreur de connexion lors de l'envoi du courriel à ${sendTo}, depuis ${sendFrom}, en copie, ${sendCc}, en copie cachée ${sendBcc}, avec le sujet ${subject}</value>
-        <value xml:lang="it">[CON] Errore connessione durante l'invio del messaggio a ${sendTo} da ${sendFrom} cc ${sendCc} cn ${sendBcc} soggetto ${subject}</value>
+        <value xml:lang="ar">[CON] خطأ في شبكة الإتصال عند إرسال الرسالة إلى ${sendTo} من ${sendFrom} نسخة إلى ${sendCC} نسخة مخفية
+            إلى ${sendBcc} بعنوان ${subject}</value>
+        <value xml:lang="cs">[CON] Chyba připojení při odesílání zprávu pro ${sendTo} od ${sendFrom} v kopii ${sendCc} bcc
+            ${sendBcc} předmět ${subject}</value>
+        <value xml:lang="en">[CON] Connection error when sending message to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc}
+            subject ${subject}</value>
+        <value xml:lang="es">[CON] Error de conexión al enviar el mensaje para ${sendTo} de ${sendFrom} cc ${sendCc} bcc ${sendBcc}
+            asunto ${subject}</value>
+        <value xml:lang="fr">[CON] Erreur de connexion lors de l'envoi du courriel à ${sendTo}, depuis ${sendFrom}, en copie,
+            ${sendCc}, en copie cachée ${sendBcc}, avec le sujet ${subject}</value>
+        <value xml:lang="it">[CON] Errore connessione durante l'invio del messaggio a ${sendTo} da ${sendFrom} cc ${sendCc} cn
+            ${sendBcc} soggetto ${subject}</value>
         <value xml:lang="ja">[CON] メッセージの送信中に接続エラー to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} 件名 ${subject}</value>
-        <value xml:lang="ru">[CON] Ошибка связи когда отправляется сообщение к ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} subject ${subject}</value>
-        <value xml:lang="vi">[CON] lỗi kết nối khi gửi thông điệp tới ${sendTo} từ ${sendFrom} cc ${sendCc} bcc ${sendBcc} tiêu đề ${subject}</value>
+        <value xml:lang="ru">[CON] Ошибка связи когда отправляется сообщение к ${sendTo} from ${sendFrom} cc ${sendCc} bcc
+            ${sendBcc} subject ${subject}</value>
+        <value xml:lang="vi">[CON] lỗi kết nối khi gửi thông điệp tới ${sendTo} từ ${sendFrom} cc ${sendCc} bcc ${sendBcc} tiêu đề
+            ${subject}</value>
         <value xml:lang="zh">[连接] 自 ${sendFrom} 发送信息到 ${sendTo}、 抄送 ${sendCc} 、密送 ${sendBcc} 、主题 ${subject} 时发生连接错误</value>
         <value xml:lang="zh_TW">[連接] 由 ${sendFrom} 發送訊息到 ${sendTo}、 複本 ${sendCc} 、密複本 ${sendBcc} 、主題 ${subject} 時發生連接錯誤</value>
     </property>
@@ -3268,14 +3275,21 @@
         <value xml:lang="zh_TW">取出內容時出錯:${errorString}</value>
     </property>
     <property key="CommonEmailSendIOException">
-        <value xml:lang="ar">خطأ في IOException عند خلق رسالة إلى ${sendTo} من ${sendFrom} نسخة ${sendCc} نسخة مخفية ${sendBcc} بموضوع ${subject}</value>
-        <value xml:lang="cs">IOException při přípravě zprávy pro ${sendTo} od ${sendFrom} kopie ${sendCc} bcc ${sendBcc} předmět ${subject}</value>
-        <value xml:lang="en">IOException when creating message to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} subject ${subject}</value>
-        <value xml:lang="es">IOException creando el mensaje para ${sendTo} de ${sendFrom} cc ${sendCc} bcc ${sendBcc} asunto ${subject}</value>
-        <value xml:lang="fr">Erreur d'Entrée/Sortie lors de la création du courriel à ${sendTo}, depuis ${sendFrom}, en copie, ${sendCc}, en copie cachée ${sendBcc}, avec le sujet ${subject}</value>
-        <value xml:lang="it">IOException durante la creazione del messaggio a ${sendTo} da ${sendFrom} cc ${sendCc} cn ${sendBcc} soggetto ${subject}</value>
+        <value xml:lang="ar">خطأ في IOException عند خلق رسالة إلى ${sendTo} من ${sendFrom} نسخة ${sendCc} نسخة مخفية ${sendBcc}
+            بموضوع ${subject}</value>
+        <value xml:lang="cs">IOException při přípravě zprávy pro ${sendTo} od ${sendFrom} kopie ${sendCc} bcc ${sendBcc} předmět
+            ${subject}</value>
+        <value xml:lang="en">IOException when creating message to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} subject
+            ${subject}</value>
+        <value xml:lang="es">IOException creando el mensaje para ${sendTo} de ${sendFrom} cc ${sendCc} bcc ${sendBcc} asunto
+            ${subject}</value>
+        <value xml:lang="fr">Erreur d'Entrée/Sortie lors de la création du courriel à ${sendTo}, depuis ${sendFrom}, en copie,
+            ${sendCc}, en copie cachée ${sendBcc}, avec le sujet ${subject}</value>
+        <value xml:lang="it">IOException durante la creazione del messaggio a ${sendTo} da ${sendFrom} cc ${sendCc} cn ${sendBcc}
+            soggetto ${subject}</value>
         <value xml:lang="ja">メッセージ作成中にI/O例外 to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} 件名 ${subject}</value>
-        <value xml:lang="ru">IOException когда создается сообщение к ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} subject ${subject}</value>
+        <value xml:lang="ru">IOException когда создается сообщение к ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} subject
+            ${subject}</value>
         <value xml:lang="zh">新建自 ${sendFrom} 、到 ${sendTo}、 抄送 ${sendCc} 、密送 ${sendBcc} 、主题 ${subject} 的信息时发生IO错误</value>
         <value xml:lang="zh_TW">新建由 ${sendFrom} 、到 ${sendTo}、 複本 ${sendCc} 、密複本 ${sendBcc} 、主題 ${subject} 的訊息時發生IO錯誤</value>
     </property>
@@ -3292,13 +3306,19 @@
         <value xml:lang="zh_TW">網址格式錯誤:${bodyUrl};錯誤是:${errorString}</value>
     </property>
     <property key="CommonEmailSendMessagingException">
-        <value xml:lang="cs">MessagingException při přípravě zprávy ${sendTo} od ${sendFrom} kopie ${sendCc} bcc ${sendBcc} předmět ${subject}</value>
-        <value xml:lang="en">MessagingException when creating message to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} subject ${subject}</value>
-        <value xml:lang="es">MessagingException creando el mensaje para ${sendTo} de ${sendFrom} cc ${sendCc} bcc ${sendBcc} asunto ${subject}</value>
-        <value xml:lang="fr">MessagingException lors de la création du courriel à ${sendTo}, depuis ${sendFrom}, en copie, ${sendCc}, en copie cachée ${sendBcc}, avec le sujet ${subject}</value>
-        <value xml:lang="it">MessagingException durante la creazione del messaggio a ${sendTo} da ${sendFrom} cc ${sendCc} cn ${sendBcc} soggetto ${subject}</value>
+        <value xml:lang="cs">MessagingException při přípravě zprávy ${sendTo} od ${sendFrom} kopie ${sendCc} bcc ${sendBcc} předmět
+            ${subject}</value>
+        <value xml:lang="en">MessagingException when creating message to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc}
+            subject ${subject}</value>
+        <value xml:lang="es">MessagingException creando el mensaje para ${sendTo} de ${sendFrom} cc ${sendCc} bcc ${sendBcc} asunto
+            ${subject}</value>
+        <value xml:lang="fr">MessagingException lors de la création du courriel à ${sendTo}, depuis ${sendFrom}, en copie,
+            ${sendCc}, en copie cachée ${sendBcc}, avec le sujet ${subject}</value>
+        <value xml:lang="it">MessagingException durante la creazione del messaggio a ${sendTo} da ${sendFrom} cc ${sendCc} cn
+            ${sendBcc} soggetto ${subject}</value>
         <value xml:lang="ja">メッセージ作成中にメッセージ例外 to ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} 件名 ${subject}</value>
-        <value xml:lang="ru">Сообщение об ошибке когда создается сообщение к ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc} subject ${subject}</value>
+        <value xml:lang="ru">Сообщение об ошибке когда создается сообщение к ${sendTo} from ${sendFrom} cc ${sendCc} bcc ${sendBcc}
+            subject ${subject}</value>
         <value xml:lang="zh">新建自 ${sendFrom} 、到 ${sendTo}、 抄送 ${sendCc} 、密送 ${sendBcc} 、主题 ${subject} 的信息时发生消息错误</value>
         <value xml:lang="zh_TW">新建由 ${sendFrom} 、到 ${sendTo}、 複本 ${sendCc} 、密複本 ${sendBcc} 、主題 ${subject} 的訊息時發生訊息錯誤</value>
     </property>
@@ -3427,7 +3447,7 @@
         <value xml:lang="zh_TW">電子郵件</value>
     </property>
     <property key="CommonEmptyHeader">
-    <!-- do not  remove this! -->
+        <!-- do not remove this! -->
         <value xml:lang="en" xml:space="preserve"> </value>
     </property>
     <property key="CommonEnable">
@@ -3639,31 +3659,45 @@
         <value xml:lang="de">Fehler: Statuswechsel von [${lookedUpValue.statusId}] nach [${parameters.statusId}] ist nicht erlaubt.</value>
         <value xml:lang="en">Error: status change from [${lookedUpValue.statusId}] to [${parameters.statusId}] is not allowed.</value>
         <value xml:lang="es">Error: cambiar estado de [${lookedUpValue.statusId}] a [${parameters.statusId}] no está permitido</value>
-        <value xml:lang="fr">Erreur le changement de status depuis [${lookedUpValue.statusId}] vers [${parameters.statusId}] n'est pas autorisé.</value>
-        <value xml:lang="hi_IN">त्रुटि: [${lookedUpValue.statusId}] स्थिति से [${parameters.statusId}] स्थिति में बदलने की अनुमति नहीं है</value>
+        <value xml:lang="fr">Erreur le changement de status depuis [${lookedUpValue.statusId}] vers [${parameters.statusId}] n'est
+            pas autorisé.</value>
+        <value xml:lang="hi_IN">त्रुटि: [${lookedUpValue.statusId}] स्थिति से [${parameters.statusId}] स्थिति में बदलने की अनुमति नहीं
+            है</value>
         <value xml:lang="it">Errore: stato cambiato da [${lookedUpValue.statusId}] a [${parameters.statusId}] non è permesso</value>
         <value xml:lang="ja">エラー: [${lookedUpValue.statusId}] から [${parameters.statusId}] へステータスの変更はできません。</value>
-        <value xml:lang="pt_BR">Erro: alteração de estado de [${lookedUpValue.statusId}] para [${parameters.statusId}] não é permitida.</value>
+        <value xml:lang="pt_BR">Erro: alteração de estado de [${lookedUpValue.statusId}] para [${parameters.statusId}] não é
+            permitida.</value>
         <value xml:lang="ro">Eroare: stato schimbat de la [${lookedUpValue.statusId}] la [${parameters.statusId}] nu este permis</value>
         <value xml:lang="ru">Ошибка: изменение статуса с [${lookedUpValue.statusId}] на [${parameters.statusId}] запрещено.</value>
-        <value xml:lang="th">Error: ข้อผิดพลาด ! ไม่อนุญาติเปลี่ยนสถานะจาก [${lookedUpValue.statusId}] เป็น [${parameters.statusId}]</value>
-        <value xml:lang="vi">Có lỗi xảy ra : trạng thái chuyển từ [${lookedUpValue.statusId}] tới [${parameters.statusId}] là không hợp lệ.</value>
+        <value xml:lang="th">Error: ข้อผิดพลาด ! ไม่อนุญาติเปลี่ยนสถานะจาก [${lookedUpValue.statusId}] เป็น
+            [${parameters.statusId}]</value>
+        <value xml:lang="vi">Có lỗi xảy ra : trạng thái chuyển từ [${lookedUpValue.statusId}] tới [${parameters.statusId}]
+            là không hợp lệ.</value>
         <value xml:lang="zh">错误: 不允许把状态从[${lookedUpValue.statusId}]变为[${parameters.statusId}]。</value>
         <value xml:lang="zh_TW">錯誤: 不允許把狀態從[${lookedUpValue.statusId}]變為[${parameters.statusId}].</value>
     </property>
     <property key="CommonErrorStatusNotValid">
         <value xml:lang="ar">خطأ: حالة ${entity} غير صالحة. الحالة هي: ${lookedUpValue.statusId} ولكن يجب أن تكون ${goodStatusId}</value>
-        <value xml:lang="cs">Chyba: stav ${entity} není platný, nalezeno: ${lookedUpValue.statusId} avšak očekáváno: ${goodStatusId}.</value>
-        <value xml:lang="de">Fehler: Der Status von ${entity} ist ungÃ¼ltig; gefunden: ${lookedUpValue.statusId}; soll: ${goodStatusId}.</value>
-        <value xml:lang="en">Error: status of ${entity} is not valid, it is: ${lookedUpValue.statusId} but should be: ${goodStatusId}.</value>
-        <value xml:lang="es">Error: el estado de ${entity} no es válido, es: ${lookedUpValue.statusId} pero debería ser: ${goodStatusId}.</value>
-        <value xml:lang="fr">Erreur: le status de ${entity} n'est pas valide : ${lookedUpValue.statusId} devrait être ${goodStatusId}.</value>
-        <value xml:lang="hi_IN">त्रुटि: ${entity} की स्थिति मान्य नहीं है, यह : ${lookedUpValue.statusId} है पर होना : ${goodStatusId} चाहिए</value>
-        <value xml:lang="it">Errore: stato di ${entity} non èp valido, questo è: ${lookedUpValue.statusId} ma dovrebbe essere: ${goodStatusId}.</value>
+        <value xml:lang="cs">Chyba: stav ${entity} není platný, nalezeno: ${lookedUpValue.statusId} avšak očekáváno:
+            ${goodStatusId}.</value>
+        <value xml:lang="de">Fehler: Der Status von ${entity} ist ungÃ¼ltig; gefunden: ${lookedUpValue.statusId}; soll:
+            ${goodStatusId}.</value>
+        <value xml:lang="en">Error: status of ${entity} is not valid, it is: ${lookedUpValue.statusId} but should be:
+            ${goodStatusId}.</value>
+        <value xml:lang="es">Error: el estado de ${entity} no es válido, es: ${lookedUpValue.statusId} pero debería ser:
+            ${goodStatusId}.</value>
+        <value xml:lang="fr">Erreur: le status de ${entity} n'est pas valide : ${lookedUpValue.statusId} devrait être
+            ${goodStatusId}.</value>
+        <value xml:lang="hi_IN">त्रुटि: ${entity} की स्थिति मान्य नहीं है, यह : ${lookedUpValue.statusId} है पर होना : ${goodStatusId}
+            चाहिए</value>
+        <value xml:lang="it">Errore: stato di ${entity} non èp valido, questo è: ${lookedUpValue.statusId} ma dovrebbe essere:
+            ${goodStatusId}.</value>
         <value xml:lang="ja">エラー: ${entity} のステータスは有効ではありません。${lookedUpValue.statusId} でしたが、${goodStatusId}であるべきです。</value>
         <value xml:lang="pt_BR">Erro: estado de ${entity} não é válido, é ${lookedUpValue.statusId} mas deveria ser: ${goodStatusId}.</value>
-        <value xml:lang="ru">Ошибка: статус у ${entity) недействительный, это: ${lookedUpValue.statusId} но должно быть: ${goodStatusId}.</value>
-        <value xml:lang="vi">Có lỗi xảy ra : trạng thái của ${entity} là không hợp lệ, hiện tại là ${lookedUpValue.statusId} - nếu đúng phải là: ${goodStatusId}.</value>
+        <value xml:lang="ru">Ошибка: статус у ${entity) недействительный, это: ${lookedUpValue.statusId} но должно быть:
+            ${goodStatusId}.</value>
+        <value xml:lang="vi">Có lỗi xảy ra : trạng thái của ${entity} là không hợp lệ, hiện tại là
+            ${lookedUpValue.statusId} - nếu đúng phải là: ${goodStatusId}.</value>
         <value xml:lang="zh">错误: ${entity}状态无效，现在是${lookedUpValue.statusId}，应该是${goodStatusId}。</value>
         <value xml:lang="zh_TW">錯誤: ${entity}狀態無效,現在是${lookedUpValue.statusId},應該是${goodStatusId}.</value>
     </property>
@@ -3991,7 +4025,8 @@
         <value xml:lang="zh_TW">外部設備使用者操作</value>
     </property>
     <property key="CommonExtraFields">
-        <value xml:lang="de">Extra (Optionale) Felder</value>>
+        <value xml:lang="de">Extra (Optionale) Felder</value>
+        >
         <value xml:lang="nl">Extra (Optional) Fields</value>
     </property>
     <property key="CommonFalse">
@@ -4367,7 +4402,7 @@
         <value xml:lang="zh_TW">格式: yyyy-MM-dd</value>
     </property>
     <property key="CommonFormatDateFieldNotCorrect">
-        <value xml:lang="ar">أحد حقول التاريخ خاطئ, النمط يجت أن يكون  ي ي-ش ش-ع ع ع ع    س س:د د:ث ث:</value>
+        <value xml:lang="ar">أحد حقول التاريخ خاطئ, النمط يجت أن يكون ي ي-ش ش-ع ع ع ع س س:د د:ث ث:</value>
         <value xml:lang="cs">Jedno z datumových polí je chybné, formát musí být RRRR-MM-dd HH:mm:ss.SSS</value>
         <value xml:lang="de">Der Inhalt eines Datumfeldes ist fehlerhaft. Das Eingabeformat lautet tt-MM-JJJJ HH:mm:ss</value>
         <value xml:lang="en">One of the date fields is incorrect, format must be yyyy-MM-dd HH:mm:ss.SSS</value>
@@ -4382,14 +4417,14 @@
         <value xml:lang="pt_BR">Um dos campos de data está errada, o formato deve ser aaaa-mm-dd hh:mm:ss.SSS</value>
         <value xml:lang="ro">Unul dintre campurile de date nu este corect, formatul trebbie sa fie AAAA-ll-zz HH:mm:ss</value>
         <value xml:lang="ru">Одно из полей в дате указано неверно, требуемый формат ГГГГ-мм-дд ЧЧ:мм:сс</value>
-        <value xml:lang="th">ฟิลด์วันที่หนึ่งไม่ถูกต้อง  รูปแบบต้องเป็น yyyy-MM-dd HH:mm:ss.SSS</value>
+        <value xml:lang="th">ฟิลด์วันที่หนึ่งไม่ถูกต้อง รูปแบบต้องเป็น yyyy-MM-dd HH:mm:ss.SSS</value>
         <value xml:lang="vi">Một trong các trường ngày tháng chưa đúng định dạng, định dạng hợp lệ là yyyy-MM-dd HH:mm:ss.SSS</value>
         <value xml:lang="zh">日期格式不对，格式必须是yyyy-MM-dd HH:mm:ss.SSS</value>
         <value xml:lang="zh_CN">有一项日期字段不正确, 格式必须是AAAA-mm-jj HH:mm:ss</value>
         <value xml:lang="zh_TW">日期格式不對,格式必須是yyyy-MM-dd HH:mm:ss.SSS</value>
     </property>
     <property key="CommonFormatDateTime">
-        <value xml:lang="ar">النمط: ي ي-ش ش-ع ع ع ع  س س:د د:ث ث</value>
+        <value xml:lang="ar">النمط: ي ي-ش ش-ع ع ع ع س س:د د:ث ث</value>
         <value xml:lang="cs">DD-MM-RRRR HH:mm:ss</value>
         <value xml:lang="de">tt-MM-JJJJ HH:mm:ss</value>
         <value xml:lang="en">Format: yyyy-MM-dd HH:mm:ss.SSS</value>
@@ -4468,20 +4503,32 @@
         <value xml:lang="zh_TW">frame警告</value>
     </property>
     <property key="CommonFrameAlert2">
-        <value xml:lang="ar">هذه الوثيقة صممت للمشاهدة بواسطة خاصية الأطر. إذا رأيتم هذه الرسالة, فإنكم تستعملون زبون ويب غير مؤهل لعرض الأطر</value>
-        <value xml:lang="cs">Dokument vyžaduje prohlížeč s podporou rámců. Pokud vidíte tuto stránku tak používáte prohlížeč bez této funkce.</value>
-        <value xml:lang="de">Dieses Dokument wurde mit Frames erstellt. Falls Sie diese Meldung sehen, unterstützt Ihr Web-Browser keine Frames.</value>
-        <value xml:lang="en">This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.</value>
+        <value xml:lang="ar">هذه الوثيقة صممت للمشاهدة بواسطة خاصية الأطر. إذا رأيتم هذه الرسالة, فإنكم تستعملون زبون ويب غير مؤهل
+            لعرض الأطر</value>
+        <value xml:lang="cs">Dokument vyžaduje prohlížeč s podporou rámců. Pokud vidíte tuto stránku tak používáte prohlížeč bez
+            této funkce.</value>
+        <value xml:lang="de">Dieses Dokument wurde mit Frames erstellt. Falls Sie diese Meldung sehen, unterstützt Ihr Web-Browser
+            keine Frames.</value>
+        <value xml:lang="en">This document is designed to be viewed using the frames feature. If you see this message, you are
+            using a non-frame-capable web client.</value>
         <value xml:lang="es">Debe habilitar frames para ver este documento.</value>
-        <value xml:lang="fr">Ce document est conçu pour être vu en utilisant les frames. Si vous voyez ce message, vous utilisez un navigateur un frame ne gérant pas les frames</value>
-        <value xml:lang="hi_IN">इस दस्तावेज को फ़्रेम फीचर्स का उपयोग देखने के लिए बनाया गया है! यदि आप इस संदेश को देखे, आप एक गैर फ्रेम-सक्षम वेब ग्राहक का उपयोग कर रहे हैं</value>
-        <value xml:lang="it">Questo documento è disegnato per essere visualizzato usando i frames. Se vedi questo messaggio, tu stai usando un client web senza capacità frame.</value>
+        <value xml:lang="fr">Ce document est conçu pour être vu en utilisant les frames. Si vous voyez ce message, vous utilisez un
+            navigateur un frame ne gérant pas les frames</value>
+        <value xml:lang="hi_IN">इस दस्तावेज को फ़्रेम फीचर्स का उपयोग देखने के लिए बनाया गया है! यदि आप इस संदेश को देखे, आप एक गैर
+            फ्रेम-सक्षम वेब ग्राहक का उपयोग कर रहे हैं</value>
+        <value xml:lang="it">Questo documento è disegnato per essere visualizzato usando i frames. Se vedi questo messaggio, tu
+            stai usando un client web senza capacità frame.</value>
         <value xml:lang="ja">この画面はフレーム機能を使用して作成されています。このメッセージが表示される場合は、ブラウザがフレームに対応していません。</value>
-        <value xml:lang="pt">Este documento destina-se a ser visto utilizando frames. Se estiver a vêr esta mensagem, então está autilizar um browser que não suporta frames.</value>
-        <value xml:lang="pt_BR">Este documento é projetado para ser visualizado usando o recurso de frames. Se você estiver lendo esta mensagem, você está usando um browser não compatível.</value>
-        <value xml:lang="ru">Этот документ разработан с использованием фреймов. Если вы видите это сообщение, значит вы используете программу просмотра которая не поддерживает фреймы.</value>
-        <value xml:lang="th">เอกสารนี้ออกแบบเพื่อเป็นมุมมองในการใช้กรอบหน้าต่างคุณลักษณะ. ถ้าคุณเห็นข้อความนี้ , คุณกำลังใช้หน้าต่างทั่วไปของเว็บไคลแอนท์</value>
-        <value xml:lang="vi">Tài liệu này được thiết kế để hiển thị sử dụng tính năng khung hình (frame). Nếu bạn đọc được thông báo này, có nghĩa là bạn đang dùng trình duyệt web không hỗ trợ khung hình.</value>
+        <value xml:lang="pt">Este documento destina-se a ser visto utilizando frames. Se estiver a vêr esta mensagem, então está
+            autilizar um browser que não suporta frames.</value>
+        <value xml:lang="pt_BR">Este documento é projetado para ser visualizado usando o recurso de frames. Se você estiver lendo esta
+            mensagem, você está usando um browser não compatível.</value>
+        <value xml:lang="ru">Этот документ разработан с использованием фреймов. Если вы видите это сообщение, значит вы используете
+            программу просмотра которая не поддерживает фреймы.</value>
+        <value xml:lang="th">เอกสารนี้ออกแบบเพื่อเป็นมุมมองในการใช้กรอบหน้าต่างคุณลักษณะ. ถ้าคุณเห็นข้อความนี้ ,
+            คุณกำลังใช้หน้าต่างทั่วไปของเว็บไคลแอนท์</value>
+        <value xml:lang="vi">Tài liệu này được thiết kế để hiển thị sử dụng tính năng khung hình (frame). Nếu bạn đọc được thông
+            báo này, có nghĩa là bạn đang dùng trình duyệt web không hỗ trợ khung hình.</value>
         <value xml:lang="zh">这个文档是设计利用frame功能来浏览的。如果你见到本信息，说明你正在使用一个不支持frame的浏览器客户端。</value>
         <value xml:lang="zh_TW">這個檔是設計利用frame功能來檢視的.如果你見到本資訊,說明你正在使用一個不支援frame的瀏覽器客戶端.</value>
     </property>
@@ -4639,23 +4686,23 @@
         <value xml:lang="fr">La date de fin ne peut être égale ou plus récente que la date de début</value>
     </property>
     <property key="CommonFromDateTime">
-        <value xml:lang="ar">تاريخ  و وقت البدء</value>
+        <value xml:lang="ar">تاريخ و وقت البدء</value>
         <value xml:lang="cs">Od data a času</value>
-        <value xml:lang="de">Von Datum  Zeit</value>
-        <value xml:lang="en">From Date  Time</value>
+        <value xml:lang="de">Von Datum Zeit</value>
+        <value xml:lang="en">From Date Time</value>
         <value xml:lang="es">Desde la fecha y hora</value>
-        <value xml:lang="fr">à partir de la date et  de l'heure</value>
+        <value xml:lang="fr">à partir de la date et de l'heure</value>
         <value xml:lang="hi_IN">दिनांक समय से</value>
         <value xml:lang="it">Dalla data e ora</value>
         <value xml:lang="ja">開始日時</value>
-        <value xml:lang="nl">Vanaf Datum  Tijd</value>
-        <value xml:lang="pt">Data Origem  Tempo</value>
+        <value xml:lang="nl">Vanaf Datum Tijd</value>
+        <value xml:lang="pt">Data Origem Tempo</value>
         <value xml:lang="pt_BR">Hora da data de início</value>
         <value xml:lang="ro">De la Data si Ora</value>
         <value xml:lang="ru">С (дата, время)</value>
         <value xml:lang="th">จากวันที่ เวลา</value>
         <value xml:lang="vi">Từ ngày giờ</value>
-        <value xml:lang="zh">开始日期  时间</value>
+        <value xml:lang="zh">开始日期 时间</value>
         <value xml:lang="zh_CN">起始日期和时间</value>
         <value xml:lang="zh_TW">開始日期 時間</value>
     </property>
@@ -4738,20 +4785,34 @@
         <value xml:lang="zh_TW">站台指令執行 ${command} 時失敗:${replyString}</value>
     </property>
     <property key="CommonGenericPermissionError">
-        <value xml:lang="ar">خطأ في نظام الحماية: لتشغيل ${resourceDescription} يجب أن يكون لديك أحد الصلاحيات التالية: ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
-        <value xml:lang="cs">Bezpečnostní chyba: Pro spuštění ${resourceDescription} musíte mít jedno z oprávnění: ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
-        <value xml:lang="de">Sicherheitsfehler: Um ${resourceDescription} auszuführen, müssen Sie eine der folgenden Berechtigungen besitzen: ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
-        <value xml:lang="en">Security Error: To run ${resourceDescription} you must have the one of the following permissions: ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
-        <value xml:lang="es">Error de seguridad: Para ejecutar ${resourceDescription} debe tener uno de los siguientes permisos: ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
-        <value xml:lang="fr">Erreur de sécurité : pour exécuter ${resourceDescription} vous devez avoir une des autorisations suivantes : ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
-        <value xml:lang="hi_IN">सुरक्षा त्रुटि: ${resourceDescription} चलाने के लिए आप के पास निम्न में से एक अनुमतियाँ हो: ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
-        <value xml:lang="it">Errore sicurezza: per eseguire ${resourceDescription} tu devi avere uno dei seguenti permessi: ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
-        <value xml:lang="ja">セキュリティエラー: ${resourceDescription} の実行には次のいずれかの権限が必要です: ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
-        <value xml:lang="pt">Erro de Segurança: Para executar ${resourceDescription} você deve ter a ${}_${mainAction} ou a permissão ${}_ADMIN</value>
-        <value xml:lang="pt_BR">Erro de segurança: Para executar ${resourceDescription} você deve ter uma das seguintes permissões: ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
-        <value xml:lang="ru">Ошибка безопасности: для выполнения ${resourceDescription} у вас должны быть права ${}_${mainAction} или ${}_ADMIN</value>
-        <value xml:lang="th">Security Error: ความปลอดภัยผิดพลาด ! ในการรัน ${resourceDescription} คุณต้องมีการได้รับอนุญาตก่อน${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
-        <value xml:lang="vi">Lỗi phân quyền: để thực thi ${resourceDescription} bạn cần có ít nhất một trong các quyền sau: ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
+        <value xml:lang="ar">خطأ في نظام الحماية: لتشغيل ${resourceDescription} يجب أن يكون لديك أحد الصلاحيات التالية:
+            ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
+        <value xml:lang="cs">Bezpečnostní chyba: Pro spuštění ${resourceDescription} musíte mít jedno z oprávnění:
+            ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
+        <value xml:lang="de">Sicherheitsfehler: Um ${resourceDescription} auszuführen, müssen Sie eine der folgenden Berechtigungen
+            besitzen: ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
+        <value xml:lang="en">Security Error: To run ${resourceDescription} you must have the one of the following permissions:
+            ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
+        <value xml:lang="es">Error de seguridad: Para ejecutar ${resourceDescription} debe tener uno de los siguientes permisos:
+            ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
+        <value xml:lang="fr">Erreur de sécurité : pour exécuter ${resourceDescription} vous devez avoir une des autorisations
+            suivantes : ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
+        <value xml:lang="hi_IN">सुरक्षा त्रुटि: ${resourceDescription} चलाने के लिए आप के पास निम्न में से एक अनुमतियाँ हो:
+            ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
+        <value xml:lang="it">Errore sicurezza: per eseguire ${resourceDescription} tu devi avere uno dei seguenti permessi:
+            ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
+        <value xml:lang="ja">セキュリティエラー: ${resourceDescription} の実行には次のいずれかの権限が必要です: ${primaryPermission}_${mainAction},
+            ${primaryPermission}_ADMIN${altPermissionList}</value>
+        <value xml:lang="pt">Erro de Segurança: Para executar ${resourceDescription} você deve ter a ${}_${mainAction} ou a
+            permissão ${}_ADMIN</value>
+        <value xml:lang="pt_BR">Erro de segurança: Para executar ${resourceDescription} você deve ter uma das seguintes permissões:
+            ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
+        <value xml:lang="ru">Ошибка безопасности: для выполнения ${resourceDescription} у вас должны быть права ${}_${mainAction}
+            или ${}_ADMIN</value>
+        <value xml:lang="th">Security Error: ความปลอดภัยผิดพลาด ! ในการรัน ${resourceDescription}
+            คุณต้องมีการได้รับอนุญาตก่อน${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
+        <value xml:lang="vi">Lỗi phân quyền: để thực thi ${resourceDescription} bạn cần có ít nhất một trong các quyền sau:
+            ${primaryPermission}_${mainAction}, ${primaryPermission}_ADMIN${altPermissionList}</value>
         <value xml:lang="zh">安全错误：要运行${resourceDescription}，你必须具有下列权限之一：${primaryPermission}_${mainAction}、${primaryPermission}_ADMIN${altPermissionList}</value>
         <value xml:lang="zh_TW">安全錯誤:要執行${resourceDescription},你必須具有下列權限之一:${primaryPermission}_${mainAction}、${primaryPermission}_ADMIN${altPermissionList}</value>
     </property>
@@ -5569,6 +5630,9 @@
         <value xml:lang="zh_CN">库存</value>
         <value xml:lang="zh_TW">庫存</value>
     </property>
+    <property key="CommonInvoice">
+        <value xml:lang="en">Invoice</value>
+    </property>
     <property key="CommonIsA">
         <value xml:lang="ar">هو</value>
         <value xml:lang="cs">je</value>
@@ -6145,15 +6209,22 @@
     </property>
     <property key="CommonLookupWhitepagesAddressLink">
         <value xml:lang="cs">http://zlatestranky.cz/hledani/${addressNum}</value>
-        <value xml:lang="en">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29 y=18</value>
-        <value xml:lang="es">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29 y=18</value>
+        <value xml:lang="en">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29
+            y=18</value>
+        <value xml:lang="es">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29
+            y=18</value>
         <value xml:lang="fr">http://www.pagesjaunes.fr/trouverunnom/RecherchePagesBlanches.do</value>
         <value xml:lang="hi_IN">http://www.whitepages.com/find_person_results.pl?fid=a</value>
-        <value xml:lang="it">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29 y=18</value>
-        <value xml:lang="ja">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29 y=18</value>
-        <value xml:lang="ru">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29 y=18</value>
-        <value xml:lang="zh">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29 y=18</value>
-        <value xml:lang="zh_TW">HTTP://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29 y=18</value>
+        <value xml:lang="it">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29
+            y=18</value>
+        <value xml:lang="ja">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29
+            y=18</value>
+        <value xml:lang="ru">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29
+            y=18</value>
+        <value xml:lang="zh">http://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29
+            y=18</value>
+        <value xml:lang="zh_TW">HTTP://www.whitepages.com/find_person_results.pl?fid=a&amp;s_n=${addressNum}&amp;s_a=${addressOther}&amp;c=${postalAddress.city}&amp;s=${postalAddress.stateProvinceGeoId}&amp;x=29
+            y=18</value>
     </property>
     <property key="CommonLookupWhitepagesTelNumberLink">
         <value xml:lang="cs">http://zlatestranky.cz</value>
@@ -7098,16 +7169,23 @@
     <property key="CommonNoAccess">
         <value xml:lang="ar">غير مسموح بإستخدام هذه الوظيفة. إتصل بمسؤول النظام إن كنت تعتقد بوجود خطأ في النظام</value>
         <value xml:lang="cs">Funkce není dostupná. Kontaktujte správce, pokud se domníváte, že se jedná o chybu</value>
-        <value xml:lang="de">Sie haben keine Berechtigung für diese Fumktion; falls Sie dies für einen Fehler halten, wenden Sie sich an Ihren Systemadministrator</value>
+        <value xml:lang="de">Sie haben keine Berechtigung für diese Fumktion; falls Sie dies für einen Fehler halten, wenden Sie
+            sich an Ihren Systemadministrator</value>
         <value xml:lang="en">No Access to this function, contact your system administrator if you feel this is an error</value>
-        <value xml:lang="es">Acceso no autorizado. Póngase en contacto con su administrador de sistemas si piensa que esto es un error.</value>
-        <value xml:lang="fr">L'accès à cette fonction ne vous est pas autorisé, contactez votre administrateur système si vous pensez que c'est une erreur.</value>
-        <value xml:lang="hi_IN">इस फंक्शन पर पहुँच उपलब्ध नहीं है, अगर आप को यह एक त्रुटि महसूस हो रही है तो अपने सिस्टम व्यवस्थापक से संपर्क करें</value>
+        <value xml:lang="es">Acceso no autorizado. Póngase en contacto con su administrador de sistemas si piensa que esto es un
+            error.</value>
+        <value xml:lang="fr">L'accès à cette fonction ne vous est pas autorisé, contactez votre administrateur système si vous
+            pensez que c'est une erreur.</value>
+        <value xml:lang="hi_IN">इस फंक्शन पर पहुँच उपलब्ध नहीं है, अगर आप को यह एक त्रुटि महसूस हो रही है तो अपने सिस्टम व्यवस्थापक से
+            संपर्क करें</value>
         <value xml:lang="it">Nessun accesso a questa funzione, contattare l'amministratore di sistema se pensi che sia un'errore</value>
         <value xml:lang="ja">この機能は使用できません。システム管理者にご連絡ください。</value>
-        <value xml:lang="pt_BR">Sem acesso a esta função, entre em contato com o administrador do sistema se você acha que isso é um erro</value>
-        <value xml:lang="ru">Нету доступа к этой функции, свяжитесь с вашим системным администратором если вы думаете, что то ошибка</value>
-        <value xml:lang="vi">Bạn không thể truy nhập vào chức năng này, hãy liên lạc với Quản trị viên nếu bạn nhận định bạn được phép truy nhập</value>
+        <value xml:lang="pt_BR">Sem acesso a esta função, entre em contato com o administrador do sistema se você acha que isso é um
+            erro</value>
+        <value xml:lang="ru">Нету доступа к этой функции, свяжитесь с вашим системным администратором если вы думаете, что то
+            ошибка</value>
+        <value xml:lang="vi">Bạn không thể truy nhập vào chức năng này, hãy liên lạc với Quản trị viên nếu bạn nhận định bạn được
+            phép truy nhập</value>
         <value xml:lang="zh">无法访问到这个功能，如果你觉得这是错误，请与系统管理员联系</value>
         <value xml:lang="zh_TW">無法訪問到這個功能,如果你覺得這是錯誤,請與系統管理者聯絡</value>
     </property>
@@ -7230,14 +7308,19 @@
         <value xml:lang="cs">Poloha není k dispozici (pro otestování můžete zkusit použí profil DemoCustomer)</value>
         <value xml:lang="de">Kein Geografischer Ort verfügbar (testen Sie mit dem DemoCustomer Profil)</value>
         <value xml:lang="en">No Geolocation Available (for a demo you may try using DemoCustomer party profile)</value>
-        <value xml:lang="es">Localización geográfica no disponible (para demostración debe usar el perfil del participante DemoCustomer)</value>
-        <value xml:lang="fr">Aucune géolocalisation disponible (pour une démonstration vous pouvez utiliser le profil de l'acteur DemoCustomer)</value>
-        <value xml:lang="hi_IN">भू स्थान उपलब्ध नहीं है (एक डेमो के लिए आप DemoCustomer पार्टी प्रोफ़ाइल का उपयोग करने का प्रयास कर सकते हैं)</value>
+        <value xml:lang="es">Localización geográfica no disponible (para demostración debe usar el perfil del participante
+            DemoCustomer)</value>
+        <value xml:lang="fr">Aucune géolocalisation disponible (pour une démonstration vous pouvez utiliser le profil de l'acteur
+            DemoCustomer)</value>
+        <value xml:lang="hi_IN">भू स्थान उपलब्ध नहीं है (एक डेमो के लिए आप DemoCustomer पार्टी प्रोफ़ाइल का उपयोग करने का प्रयास कर
+            सकते हैं)</value>
         <value xml:lang="it">Nessuna locazione geografica disponibile (per un dimostrazione tu puoi usare il soggetto DemoCustomer)</value>
         <value xml:lang="ja">位置情報が有効ではありません(デモの場合はデモ顧客取引先プロファイルを使用してみてください)</value>
-        <value xml:lang="pt_BR">Geolocalização Não disponível (para uma demonstração você pode tentar usar o perfil de participante DemoCustomer)</value>
+        <value xml:lang="pt_BR">Geolocalização Não disponível (para uma demonstração você pode tentar usar o perfil de participante
+            DemoCustomer)</value>
         <value xml:lang="ru">Геолокация недоступна (для демо ты должен пытаться использовать DemoCustomer party profile)</value>
-        <value xml:lang="vi">Không Địa điểm địa lý nào sẵn có ( trong trường hợp ví dụ bạn có thể tham chiếu hồ sơ của 'Khách hàng ví vụ')</value>
+        <value xml:lang="vi">Không Địa điểm địa lý nào sẵn có ( trong trường hợp ví dụ bạn có thể tham chiếu hồ sơ của 'Khách hàng
+            ví vụ')</value>
         <value xml:lang="zh">没有可用的地理位置(作为演示，你可以使用演示客户会员资料)</value>
         <value xml:lang="zh_TW">沒有可用的地理位置(若作為Demo,你可以使用 DemoCustomer 團體相關資料)</value>
     </property>
@@ -7279,13 +7362,15 @@
     <property key="CommonNoPortalPageDataFound">
         <value xml:lang="ar">لا يوجد صفحة للبوابة. قد لا تتوفر لديك الإدخالات الضرورية لإستعراض المعلومة</value>
         <value xml:lang="cs">Nenalezena data pro stránku portálu.</value>
-        <value xml:lang="de">Keine Daten für eine Portalseite gefunden. Sie haben wahrscheinlich nicht die notwendigen Seed oder andere Daten dafür geladen.</value>
+        <value xml:lang="de">Keine Daten für eine Portalseite gefunden. Sie haben wahrscheinlich nicht die notwendigen Seed oder
+            andere Daten dafür geladen.</value>
         <value xml:lang="en">No portal page data found. You may not have the necessary seed or other data for it.</value>
         <value xml:lang="es">Datos de la página del portal no encontrados.</value>
         <value xml:lang="fr">Aucune donnée pour la page portail. Vous n'avez peut être pas chargé les données nécesaires.</value>
         <value xml:lang="it">Dati portal page non trovati.</value>
         <value xml:lang="ja">ポータルページのデータはありません。</value>
-        <value xml:lang="pt_BR">Não há dados da página do portal encontrados. Você pode não ter a semente ou outros dados necessários para isso.</value>
+        <value xml:lang="pt_BR">Não há dados da página do portal encontrados. Você pode não ter a semente ou outros dados necessários
+            para isso.</value>
         <value xml:lang="ru">Не найдено данных по порталу. Ты не должен иметь необходимый источник, или другие данные для этого</value>
         <value xml:lang="vi">Không có dữ liệu trang của Cổng thông tin nào được tìm thấy. Bạn cần thêm dữ liệu.</value>
         <value xml:lang="zh">没有找到门户页面数据。你可能没有它所需的种子或其它数据。</value>
@@ -7345,7 +7430,7 @@
         <value xml:lang="zh_TW">沒有找到記錄</value>
     </property>
     <property key="CommonNoStatesProvinces">
-    <!-- OFBIZ-5246 please use ": _NA_" at end, with a space between the colon and _NA_. getDependentDropdownValues relies on it  -->
+        <!-- OFBIZ-5246 please use ": _NA_" at end, with a space between the colon and _NA_. getDependentDropdownValues relies on it -->
         <value xml:lang="ar">لا يوجد ولايات / مقاطعات: _NA_</value>
         <value xml:lang="cs">Neexistují žádné státy/provincie: _NA_</value>
         <value xml:lang="de">Kein exitierendes Bundesland: _NA_</value>
@@ -8072,7 +8157,7 @@
         <value xml:lang="zh_TW">其他</value>
     </property>
     <property key="CommonOverridesSelection">
-        <value xml:lang="ar">تفنيد  أحد الإختيارين في الأعلى</value>
+        <value xml:lang="ar">تفنيد أحد الإختيارين في الأعلى</value>
         <value xml:lang="cs">(přepíše některou z předchozích voleb)</value>
         <value xml:lang="de">(überschreibt beide vorhergehende Auswahlen)</value>
         <value xml:lang="en">(overrides either of the above selections.)</value>
@@ -8401,20 +8486,33 @@
         <value xml:lang="zh_TW">權限錯誤</value>
     </property>
     <property key="CommonPermissionErrorMessage">
-        <value xml:lang="ar">خطأ أمني: لتشغيل ${resourceDescription} يجب أن تتوافر لك واحد من الصلاحيات التالية: EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
-        <value xml:lang="cs">Chyba oprávnění: Pro spuštění ${resourceDescription} musíte mít jedno z těchto oprávnění:   EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
-        <value xml:lang="de">Sicherheitsfehler: Um ${resourceDescription} auszuführen müssen Sie eine der folgenden Berechtigungen besitzen:   EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
-        <value xml:lang="en">Error  Security: To run ${resourceDescription}  you must have the one of the following permissions:   EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
-        <value xml:lang="es">Error de seguridad: Para ejecutar ${resourceDescription} debe disponer de alguno de estos permisos EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
-        <value xml:lang="fr">Erreur de sécurité : pour exécuter ${resourceDescription} vous devez avoir les autorisations suivantes :   EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
-        <value xml:lang="hi_IN">सुरक्षा त्रुटि: ${resourceDescription} चलाने के लिए आप के पास निम्न में से एक अनुमतियाँ हो: EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
-        <value xml:lang="it">Errore sicurezza: per eseguire ${resourceDescription}  tu devi avere uno dei seguenti permessi:   EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
+        <value xml:lang="ar">خطأ أمني: لتشغيل ${resourceDescription} يجب أن تتوافر لك واحد من الصلاحيات التالية:
+            EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
+        <value xml:lang="cs">Chyba oprávnění: Pro spuštění ${resourceDescription} musíte mít jedno z těchto oprávnění:
+            EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
+        <value xml:lang="de">Sicherheitsfehler: Um ${resourceDescription} auszuführen müssen Sie eine der folgenden Berechtigungen
+            besitzen: EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
+        <value xml:lang="en">Error Security: To run ${resourceDescription} you must have the one of the following permissions:
+            EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
+        <value xml:lang="es">Error de seguridad: Para ejecutar ${resourceDescription} debe disponer de alguno de estos permisos
+            EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
+        <value xml:lang="fr">Erreur de sécurité : pour exécuter ${resourceDescription} vous devez avoir les autorisations suivantes
+            : EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
+        <value xml:lang="hi_IN">सुरक्षा त्रुटि: ${resourceDescription} चलाने के लिए आप के पास निम्न में से एक अनुमतियाँ हो:
+            EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
+        <value xml:lang="it">Errore sicurezza: per eseguire ${resourceDescription} tu devi avere uno dei seguenti permessi:
+            EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
         <value xml:lang="ja">権限エラー: ${resourceDescription} の実行には、次の権限が必要です: EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
-        <value xml:lang="pt">Erro de Segurança: para executar ${resourceDescription} você deve ter o  EXAMPLE_${mainAction} ou permissão EXAMPLE_ADMIN</value>
-        <value xml:lang="pt_BR">Erro de segurança: Para executar ${resourceDescription} você deve ter a uma das seguintes permissões: EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
-        <value xml:lang="ru">Ошибка безопасности: для выполнения ${resourceDescription} у вас должны быть права EXAMPLE_${mainAction} или EXAMPLE_ADMIN</value>
-        <value xml:lang="th">Error  Security: ความปลอดภัยผิดพลาด ! ในการรัน ${resourceDescription} คุณต้องมีการอนุญาติก่อน EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
-        <value xml:lang="vi">Có lỗi phân quyền : Để thực thi ${resourceDescription} bạn cần có ít nhất một trong các quyền sau:   EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
+        <value xml:lang="pt">Erro de Segurança: para executar ${resourceDescription} você deve ter o EXAMPLE_${mainAction} ou
+            permissão EXAMPLE_ADMIN</value>
+        <value xml:lang="pt_BR">Erro de segurança: Para executar ${resourceDescription} você deve ter a uma das seguintes permissões:
+            EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
+        <value xml:lang="ru">Ошибка безопасности: для выполнения ${resourceDescription} у вас должны быть права
+            EXAMPLE_${mainAction} или EXAMPLE_ADMIN</value>
+        <value xml:lang="th">Error Security: ความปลอดภัยผิดพลาด ! ในการรัน ${resourceDescription} คุณต้องมีการอนุญาติก่อน
+            EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
+        <value xml:lang="vi">Có lỗi phân quyền : Để thực thi ${resourceDescription} bạn cần có ít nhất một trong các quyền sau:
+            EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
         <value xml:lang="zh">安全错误：要运行${resourceDescription}，你必须具有下列权限之一：EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
         <value xml:lang="zh_TW">安全錯誤:要執行${resourceDescription},你必須具有下列權限之一:EXAMPLE_${mainAction} EXAMPLE_ADMIN</value>
     </property>
@@ -9643,7 +9741,7 @@
         <value xml:lang="zh_TW">重設</value>
     </property>
     <property key="CommonResource">
-        <value  xml:lang="en">Resource</value>
+        <value xml:lang="en">Resource</value>
     </property>
     <property key="CommonResultLookup">
         <value xml:lang="ar">نتيجة البحث</value>
@@ -10147,7 +10245,8 @@
         <value xml:lang="de">Wählen Sie ein Portlet aus, an dem Sie mitarbeiten wollen....</value>
         <value xml:lang="en">Select a portlet you would like to have help on....</value>
         <value xml:lang="es">Seleccione un portlet del que desee obtener ayuda....</value>
-        <value xml:lang="fr">Liste des portlets contenues dans cette page, sélectionnez celle pour laquelle vous souhaitez de l'aide</value>
+        <value xml:lang="fr">Liste des portlets contenues dans cette page, sélectionnez celle pour laquelle vous souhaitez de
+            l'aide</value>
         <value xml:lang="ja">ヘルプを参照したいポートレットを選択してください....</value>
         <value xml:lang="ru">Выберите портлет, который вам может помочь</value>
         <value xml:lang="vi">Lựa chọn một ứng dụng porlet mà muốn có sự giúp đỡ...</value>
@@ -10412,14 +10511,18 @@
         <value xml:lang="zh_TW">返回錯誤服務:正在返回錯誤</value>
     </property>
     <property key="CommonSessionTimeoutPleaseLogIn">
-        <value xml:lang="ar">إنتهت صلاحية الجلسة ويتطلب إعادة تسجيل الدخول. يمكنك تحديث الصفحة أو حفظ البيانات الخاصة بك لتسجيل الدخول</value>
+        <value xml:lang="ar">إنتهت صلاحية الجلسة ويتطلب إعادة تسجيل الدخول. يمكنك تحديث الصفحة أو حفظ البيانات الخاصة بك لتسجيل
+            الدخول</value>
         <value xml:lang="cs">Vaše session expirovala. Je vyžadováno nové přihlášení. Pro přihlášení obnovte stránku.</value>
         <value xml:lang="de">Sie sind nicht mehr angemeldet. Bitte melden Sie sich erneut an.</value>
-        <value xml:lang="en">Your session has expired.  A login is required.  You can refresh the page or save your data to login.</value>
+        <value xml:lang="en">Your session has expired. A login is required. You can refresh the page or save your data to login.</value>
         <value xml:lang="es">No está conectado. Por favor, vuelva a conectarse.</value>
-        <value xml:lang="fr">Votre session est terminée. Veuillez vous identifier à nouveau pour utiliser l'application.  Pour vous connecter, vous pouvez actualiser la page, sauvegarder vos données ou utiliser le lien Connexion (ou Déconnexion) en haut à droite.</value>
+        <value xml:lang="fr">Votre session est terminée. Veuillez vous identifier à nouveau pour utiliser l'application. Pour vous
+            connecter, vous pouvez actualiser la page, sauvegarder vos données ou utiliser le lien Connexion (ou Déconnexion) en
+            haut à droite.</value>
         <value xml:lang="ja">セッションは失効しています。ログインしてください。ログインすると画面が更新され、データを保存できます。</value>
-        <value xml:lang="ru">Ваше время сессии истекло. Требуется авторизация. Вы можете обновить страницу или сохранить ваши данные после авторизации...</value>
+        <value xml:lang="ru">Ваше время сессии истекло. Требуется авторизация. Вы можете обновить страницу или сохранить ваши
+            данные после авторизации...</value>
         <value xml:lang="vi">Bạn chưa đăng nhập. Vui lòng đăng nhập lại.</value>
         <value xml:lang="zh">你的会话过期了。必须登录。你可以刷新本页或保存你的登录数据。</value>
         <value xml:lang="zh_TW">您的連線逾時.必須登入.你可以刷新本頁或再登入保存你的資料.</value>
@@ -10689,23 +10792,29 @@
     </property>
     <property key="CommonSorryYouCannotSend">
         <value xml:lang="ar">للأسف, لا يمكنكم إرسال هذه الصفحة لصديق. إختر بدل ذلك من نوع أو سلعة</value>
-        <value xml:lang="cs">Litujeme, ale tuto stránku nemůžete odeslat příteli. Prosíme vyberte si jinou v náhledu produktů či kategorií.</value>
-        <value xml:lang="de">Leider können Sie diese Seite nicht weiterempfehlen. Wählen Sie bitte aus einer Kategorie oder einem Artikel.</value>
-        <value xml:lang="en">Sorry, you cannot send this page to a friend.  Select rather from a category or an item</value>
+        <value xml:lang="cs">Litujeme, ale tuto stránku nemůžete odeslat příteli. Prosíme vyberte si jinou v náhledu produktů či
+            kategorií.</value>
+        <value xml:lang="de">Leider können Sie diese Seite nicht weiterempfehlen. Wählen Sie bitte aus einer Kategorie oder einem
+            Artikel.</value>
+        <value xml:lang="en">Sorry, you cannot send this page to a friend. Select rather from a category or an item</value>
         <value xml:lang="es">Lo siento, no puede enviar esta página a un amigo. Seleccione a partir de una categoría o un producto.</value>
-        <value xml:lang="fr">Désolé, vous ne pouvez envoyer cette page à un ami. Sélectionnez plutôt à partir d'un catégorie ou d'un article</value>
+        <value xml:lang="fr">Désolé, vous ne pouvez envoyer cette page à un ami. Sélectionnez plutôt à partir d'un catégorie ou
+            d'un article</value>
         <value xml:lang="hi_IN">क्षमा करें, आप इस पृष्ठ को अपने मित्र को नहीं भेज सकते, बल्कि एक वर्ग या एक मद में से चुनें</value>
-        <value xml:lang="it">Spiacente, non è possibile inviare questa pagina ad un'amico.  Seleziona da una categoria o una riga</value>
+        <value xml:lang="it">Spiacente, non è possibile inviare questa pagina ad un'amico. Seleziona da una categoria o una riga</value>
         <value xml:lang="ja">申し訳ございません、このページを送信できません。他のカテゴリかアイテムを選択してください。</value>
         <value xml:lang="nl">Sorry, u kunt deze pagina niet naar een kennis versturen. Selecteer een categorie of een item</value>
-        <value xml:lang="pt">Desculpe, você não pode enviar esta página a um amigo.  Seleccione antes uma categoria ou um item</value>
-        <value xml:lang="pt_BR">Desculpe, você não pode enviar esta página para um amigo. Ao invés disso selecione uma categoria ou um item</value>
-        <value xml:lang="ro">Imi pare rau, nu este posibila trimiterea acestei pagini la un prieten.  Selectioneaza dintr-o categorie o linie</value>
+        <value xml:lang="pt">Desculpe, você não pode enviar esta página a um amigo. Seleccione antes uma categoria ou um item</value>
+        <value xml:lang="pt_BR">Desculpe, você não pode enviar esta página para um amigo. Ao invés disso selecione uma categoria ou um
+            item</value>
+        <value xml:lang="ro">Imi pare rau, nu este posibila trimiterea acestei pagini la un prieten. Selectioneaza dintr-o
+            categorie o linie</value>
         <value xml:lang="ru">Вы не можете отправить эту страницу данному адресату. Выберите из предлагаемых категорий и позиций</value>
         <value xml:lang="th">ขอโทษค่ะ , คุณไม่สามารถส่งหน้านี้ให้เพื่อน. เลือกครั้งต่อไปจากหมวดหมู่หรือไอเทม</value>
-        <value xml:lang="vi">Xin lỗi, bạn không thể gửi Trang này tới bạn bè. Lựa chọn một trang khác trong phần Phân loại Quản lý hoặc chọn một Hạng mục trực tiếp</value>
+        <value xml:lang="vi">Xin lỗi, bạn không thể gửi Trang này tới bạn bè. Lựa chọn một trang khác trong phần Phân loại Quản lý
+            hoặc chọn một Hạng mục trực tiếp</value>
         <value xml:lang="zh">对不起，你没有把这个页面发送给朋友。请从目录或明细中选择</value>
-        <value xml:lang="zh_CN">对不起, 你不能将这页发给你的朋友.  选择一个分类或项目</value>
+        <value xml:lang="zh_CN">对不起, 你不能将这页发给你的朋友. 选择一个分类或项目</value>
         <value xml:lang="zh_TW">對不起,你沒有把這個頁面發送給朋友.請從目錄或細項中選擇</value>
     </property>
     <property key="CommonSortOrder">
@@ -11317,7 +11426,8 @@
         <value xml:lang="ru">Это</value>
         <value xml:lang="th">ที่</value>
         <value xml:lang="vi">Cái</value>
-        <value xml:lang="zh"> </value>
+        <value xml:lang="zh">
+        </value>
         <value xml:lang="zh_TW">此</value>
     </property>
     <property key="CommonTheFollowingRequiredFieldsWhereFoundEmpty">
@@ -11424,21 +11534,21 @@
     <property key="CommonThruDateTime">
         <value xml:lang="ar">تاريخ/وقت الإنتهاء</value>
         <value xml:lang="cs">Do data a času</value>
-        <value xml:lang="de">Bis Datum  Zeit</value>
-        <value xml:lang="en">Through Date  Time</value>
+        <value xml:lang="de">Bis Datum Zeit</value>
+        <value xml:lang="en">Through Date Time</value>
         <value xml:lang="es">Hasta la fecha y hora</value>
         <value xml:lang="fr">jusqu'à la date et l'heure</value>
         <value xml:lang="hi_IN">दिनांक समय तक</value>
         <value xml:lang="it">Fino alla data e ora</value>
         <value xml:lang="ja">終了日時</value>
-        <value xml:lang="nl">'Tot' Datum  Tijd</value>
-        <value xml:lang="pt">Data Final  Hora</value>
+        <value xml:lang="nl">'Tot' Datum Tijd</value>
+        <value xml:lang="pt">Data Final Hora</value>
         <value xml:lang="pt_BR">Horário da data limite</value>
         <value xml:lang="ro">Pana la Data si Ora</value>
-        <value xml:lang="ru">По дату  время</value>
+        <value xml:lang="ru">По дату время</value>
         <value xml:lang="th">ถึงวันที่ เวลา</value>
         <value xml:lang="vi">Tới Ngày/Giờ</value>
-        <value xml:lang="zh">截止日期  时间</value>
+        <value xml:lang="zh">截止日期 时间</value>
         <value xml:lang="zh_CN">终止日期和时间</value>
         <value xml:lang="zh_TW">截止日期時間</value>
     </property>
@@ -11611,7 +11721,8 @@
         <value xml:lang="en">To</value>
         <value xml:lang="es">Para</value>
         <value xml:lang="fr">Vers </value>
-    <!-- put a trailing white space because there are too much use of ${uiLabelMap.CommonTo}: and it seems that we can't prevent this to arise again. I keep Vers instead of A (à) because Vers imply a direction not à -->
+        <!-- put a trailing white space because there are too much use of ${uiLabelMap.CommonTo}: and it seems that we can't prevent 
+            this to arise again. I keep Vers instead of A (à) because Vers imply a direction not à -->
         <value xml:lang="hi_IN">को</value>
         <value xml:lang="it">A</value>
         <value xml:lang="ja">先</value>
@@ -11856,6 +11967,9 @@
         <value xml:lang="zh">合计金额</value>
         <value xml:lang="zh_TW">價值合計</value>
     </property>
+    <property key="CommonTransaction">
+        <value xml:lang="en">Transaction</value>
+    </property>
     <property key="CommonTrue">
         <value xml:lang="ar">صحيح</value>
         <value xml:lang="cs">Pravda</value>
@@ -12052,7 +12166,7 @@
         <value xml:lang="zh_CN">更新</value>
         <value xml:lang="zh_TW">更新</value>
     </property>
-  <value xml:lang="cs">Aktualizace dat</value>
+    <value xml:lang="cs">Aktualizace dat</value>
     <property key="CommonUpdateLink">
         <value xml:lang="ar">رابط التحديث</value>
         <value xml:lang="cs">Odkaz na aktualizaci</value>
@@ -12521,17 +12635,27 @@
         <value xml:lang="zh_TW">視覺風格識別找不到.</value>
     </property>
     <property key="CommonVisualThemeInvalidRecord">
-        <value xml:lang="cs">Nalezen chybný zdroj tématu: visualThemeId = ${visualThemeId}, resourceTypeEnumId = ${resourceTypeEnumId}.</value>
-        <value xml:lang="de">In der Layoutvorlage wurde ein ungültiger Ressourcen-Satz gefunden: visualThemeId = ${visualThemeId}, resourceTypeEnumId = ${resourceTypeEnumId}.</value>
-        <value xml:lang="en">Invalid Visual Theme resource record found: visualThemeId = ${visualThemeId}, resourceTypeEnumId = ${resourceTypeEnumId}.</value>
-        <value xml:lang="es">Se ha encontrado una entrada inválida de tema visual: visualThemeId = ${visualThemeId}, resourceTypeEnumId = ${resourceTypeEnumId}.</value>
-        <value xml:lang="fr">Ressource de charte graphique trouvée non valable : visualThemeId = ${visualThemeId}, resourceTypeEnumId = ${resourceTypeEnumId}.</value>
-        <value xml:lang="hi_IN">अवैध दृश्य शैली संसाधन रिकॉर्ड मिला: visualThemeId = ${visualThemeId}, resourceTypeEnumId = ${resourceTypeEnumId}.</value>
-        <value xml:lang="it">Risorsa tema grafico non trovato: visualThemeId = ${visualThemeId}, resourceTypeEnumId = ${resourceTypeEnumId}.</value>
+        <value xml:lang="cs">Nalezen chybný zdroj tématu: visualThemeId = ${visualThemeId}, resourceTypeEnumId =
+            ${resourceTypeEnumId}.</value>
+        <value xml:lang="de">In der Layoutvorlage wurde ein ungültiger Ressourcen-Satz gefunden: visualThemeId = ${visualThemeId},
+            resourceTypeEnumId = ${resourceTypeEnumId}.</value>
+        <value xml:lang="en">Invalid Visual Theme resource record found: visualThemeId = ${visualThemeId}, resourceTypeEnumId =
+            ${resourceTypeEnumId}.</value>
+        <value xml:lang="es">Se ha encontrado una entrada inválida de tema visual: visualThemeId = ${visualThemeId},
+            resourceTypeEnumId = ${resourceTypeEnumId}.</value>
+        <value xml:lang="fr">Ressource de charte graphique trouvée non valable : visualThemeId = ${visualThemeId},
+            resourceTypeEnumId = ${resourceTypeEnumId}.</value>
+        <value xml:lang="hi_IN">अवैध दृश्य शैली संसाधन रिकॉर्ड मिला: visualThemeId = ${visualThemeId}, resourceTypeEnumId =
+            ${resourceTypeEnumId}.</value>
+        <value xml:lang="it">Risorsa tema grafico non trovato: visualThemeId = ${visualThemeId}, resourceTypeEnumId =
+            ${resourceTypeEnumId}.</value>
         <value xml:lang="ja">外観のテーマリソースが正しくありません: visualThemeId = ${visualThemeId}, resourceTypeEnumId = ${resourceTypeEnumId}。</value>
-        <value xml:lang="pt_BR">Registro inválido de Tema visual encontrado: visualThemeId = ${visualThemeId}, resourceTypeEnumId = ${resourceTypeEnumId}.</value>
-        <value xml:lang="ru">Недействительная запись ресурса визуальной темы найдено: visualThemeId = ${visualThemeId}, resourceTypeEnumId = ${resourceTypeEnumId}.</value>
-        <value xml:lang="vi">Thông tin Giao diện (theme) không phù hợp : visualThemeId = ${visualThemeId}, resourceTypeEnumId = ${resourceTypeEnumId}.</value>
+        <value xml:lang="pt_BR">Registro inválido de Tema visual encontrado: visualThemeId = ${visualThemeId}, resourceTypeEnumId =
+            ${resourceTypeEnumId}.</value>
+        <value xml:lang="ru">Недействительная запись ресурса визуальной темы найдено: visualThemeId = ${visualThemeId},
+            resourceTypeEnumId = ${resourceTypeEnumId}.</value>
+        <value xml:lang="vi">Thông tin Giao diện (theme) không phù hợp : visualThemeId = ${visualThemeId}, resourceTypeEnumId =
+            ${resourceTypeEnumId}.</value>
         <value xml:lang="zh">找到了无效的视觉风格资源记录：visualThemeId = ${visualThemeId}, resourceTypeEnumId = ${resourceTypeEnumId}。</value>
         <value xml:lang="zh_TW">找到了無效的視覺風格資源記錄:visualThemeId = ${visualThemeId}, resourceTypeEnumId = ${resourceTypeEnumId}.</value>
     </property>
@@ -12585,12 +12709,17 @@
     </property>
     <property key="CommonVisualThemeUsage">
         <value xml:lang="cs">Klikněte na obrázku pro získání náhledu, na odkazu pro výběr tématu a na Dokončit pro potvrzení volby</value>
-        <value xml:lang="en">Click on an image to have a preview, on a link to select a theme, and then on Done to validate your choice</value>
-        <value xml:lang="es">Click en una imagen para obtener una vista previa, en un enlace para seleccionar un tema, y después en Hecho para validar la elección</value>
-        <value xml:lang="fr">Cliquer sur l'image pour afficher un aperçu, sur le lien pour sélectionner le thème puis sur terminer pour valider votre choix</value>
+        <value xml:lang="en">Click on an image to have a preview, on a link to select a theme, and then on Done to validate your
+            choice</value>
+        <value xml:lang="es">Click en una imagen para obtener una vista previa, en un enlace para seleccionar un tema, y después en
+            Hecho para validar la elección</value>
+        <value xml:lang="fr">Cliquer sur l'image pour afficher un aperçu, sur le lien pour sélectionner le thème puis sur terminer
+            pour valider votre choix</value>
         <value xml:lang="ja">プレビューするには画像を、テーマを選択するにはリンクを、選択を有効にするには完了をクリックしてください。</value>
-        <value xml:lang="ru">Нажмите на картинку для предварительного просмотра, на ссылке выбранной темы, и затем сделайте потверждение вашего выбора</value>
-        <value xml:lang="vi">Bạn có thể xem trước Giao diện bằng cách bấm vào hình, sau đó vào liên kết chọn giao diện, và bấm vào nút 'Hoàn tất' để thực hiện thiết lập Giao diện</value>
+        <value xml:lang="ru">Нажмите на картинку для предварительного просмотра, на ссылке выбранной темы, и затем сделайте
+            потверждение вашего выбора</value>
+        <value xml:lang="vi">Bạn có thể xem trước Giao diện bằng cách bấm vào hình, sau đó vào liên kết chọn giao diện, và bấm vào
+            nút 'Hoàn tất' để thực hiện thiết lập Giao diện</value>
         <value xml:lang="zh">点击图片来预览，点击链接来选择风格，然后点击“完成”来让你的选择生效</value>
         <value xml:lang="zh_TW">點擊圖片來預覽,點擊連結來選擇風格,然後點擊「完成」來讓您的選擇生效</value>
     </property>
@@ -13401,10 +13530,10 @@
         <value xml:lang="ja">問い合わせ方法ID</value>
         <value xml:lang="nl">Contact Mech Id</value>
         <value xml:lang="pt_BR">ID de mecanismo de Contato</value>
-    <!--value xml:lang="ro">Cod Contract</value-->
+        <!--value xml:lang="ro">Cod Contract</value -->
         <value xml:lang="ro">Numar Contact</value>
         <value xml:lang="ru">Код способа контакта</value>
-    <!--value xml:lang="th">รหัสการติดต่อการทำงาน</value-->
+        <!--value xml:lang="th">รหัสการติดต่อการทำงาน</value -->
         <value xml:lang="th">รหัสวิธีการติดต่อ</value>
         <value xml:lang="vi">Id thông tin liên lạc chi tiết</value>
         <value xml:lang="zh">联系方式标识</value>
@@ -13643,23 +13772,23 @@
         <value xml:lang="cs">Datum účinnosti</value>
         <value xml:lang="de">Effektives Datum</value>
         <value xml:lang="en">Effective Date</value>
-    <!--value xml:lang="es">Fecha efectivo</value-->
+        <!--value xml:lang="es">Fecha efectivo</value -->
         <value xml:lang="es">Fecha efectiva</value>
         <value xml:lang="fr">Date d'effet</value>
         <value xml:lang="hi_IN">प्रभावी दिनांक</value>
         <value xml:lang="it">Data effettiva</value>
-    <!--value xml:lang="nl">Werkelijke datum</value-->
+        <!--value xml:lang="nl">Werkelijke datum</value -->
         <value xml:lang="ja">発効日</value>
         <value xml:lang="nl">Effectieve Datum</value>
         <value xml:lang="pt">Data Efectiva</value>
         <value xml:lang="pt_BR">Data de Vigência</value>
         <value xml:lang="ro">Data Efectiva</value>
-    <!--value xml:lang="ru">Дата вст. в силу</value-->
+        <!--value xml:lang="ru">Дата вст. в силу</value -->
         <value xml:lang="ru">Дата вступления в силу</value>
-    <!--value xml:lang="th">วันที่มีประสิทธิภาพ</value-->
+        <!--value xml:lang="th">วันที่มีประสิทธิภาพ</value -->
         <value xml:lang="th">วันที่มีผล</value>
         <value xml:lang="vi">Ngày hiệu lực</value>
-    <!--value xml:lang="zh">生效日期</value-->
+        <!--value xml:lang="zh">生效日期</value -->
         <value xml:lang="zh">有效日期</value>
         <value xml:lang="zh_TW">有效日期</value>
     </property>
@@ -13741,7 +13870,7 @@
     <property key="FormFieldTitle_hasTable">
         <value xml:lang="ar">يحوز على جدول</value>
         <value xml:lang="cs">Má tabulku</value>
-    <!--value xml:lang="de">Hat Tabelle</value-->
+        <!--value xml:lang="de">Hat Tabelle</value -->
         <value xml:lang="de">Besitzt Tabelle</value>
         <value xml:lang="en">Has Table</value>
         <value xml:lang="es">Tiene tabla</value>
@@ -13750,7 +13879,7 @@
         <value xml:lang="it">Ha tabella</value>
         <value xml:lang="ja">テーブルあり</value>
         <value xml:lang="pt_BR">Contém tabela</value>
-    <!--value xml:lang="ro">Are Tabelul</value-->
+        <!--value xml:lang="ro">Are Tabelul</value -->
         <value xml:lang="ro">Are Tabela</value>
         <value xml:lang="ru">Есть таблица?</value>
         <value xml:lang="th">มีตาราง</value>
@@ -14793,18 +14922,29 @@
         <value xml:lang="zh_TW">無法找到這個頁面(${parameters.portalPageId})！</value>
     </property>
     <property key="PortalPageNotOwned">
-        <value xml:lang="ar">الصفحة ${portalPage.portalPageName} ${portalPage.portalPageId} ليست ممتلكة من قبلك, لذا لا يمكن تغييرها</value>
-        <value xml:lang="cs">Stránka '${portalPage.portalPageName}' [${portalPage.portalPageId}] není Vámi vlastněná a nemůže být změněna!</value>
-        <value xml:lang="de">Sie sind nicht Besitzer der Seite '${portalPage.portalPageName}' [${portalPage.portalPageId}] deshalb können Sie sie nicht ändern!</value>
-        <value xml:lang="en">The page '${portalPage.portalPageName}' [${portalPage.portalPageId}] is not owned by you, so cannot be changed!</value>
-        <value xml:lang="es">La página '${portalPage.portalPageName}' [${portalPage.portalPageId}] no es suya, por lo tanto no puede modificarla!</value>
-        <value xml:lang="fr">La page : '${portalPage.portalPageName}' [${portalPage.portalPageId}] ne vous appartient pas, vous ne pouvez la changer !</value>
-        <value xml:lang="hi_IN">यह पृष्ठ '${portalPage.portalPageName}' [${portalPage.portalPageId}] नहीं मिला,आपके द्वारा नहीं है, तो बदला नहीं जा सकता!</value>
-        <value xml:lang="it">La pagina '${portalPage.portalPageName}' [${portalPage.portalPageId}] non ti appartiene, così non può essere cambiata!</value>
+        <value xml:lang="ar">الصفحة ${portalPage.portalPageName} ${portalPage.portalPageId} ليست ممتلكة من قبلك, لذا لا يمكن
+            تغييرها</value>
+        <value xml:lang="cs">Stránka '${portalPage.portalPageName}' [${portalPage.portalPageId}] není Vámi vlastněná a nemůže být
+            změněna!</value>
+        <value xml:lang="de">Sie sind nicht Besitzer der Seite '${portalPage.portalPageName}' [${portalPage.portalPageId}] deshalb
+            können Sie sie nicht ändern!</value>
+        <value xml:lang="en">The page '${portalPage.portalPageName}' [${portalPage.portalPageId}] is not owned by you, so cannot be
+            changed!</value>
+        <value xml:lang="es">La página '${portalPage.portalPageName}' [${portalPage.portalPageId}] no es suya, por lo tanto no
+            puede modificarla!</value>
+        <value xml:lang="fr">La page : '${portalPage.portalPageName}' [${portalPage.portalPageId}] ne vous appartient pas, vous ne
+            pouvez la changer !</value>
+        <value xml:lang="hi_IN">यह पृष्ठ '${portalPage.portalPageName}' [${portalPage.portalPageId}] नहीं मिला,आपके द्वारा नहीं है, तो
+            बदला नहीं जा सकता!</value>
+        <value xml:lang="it">La pagina '${portalPage.portalPageName}' [${portalPage.portalPageId}] non ti appartiene, così non può
+            essere cambiata!</value>
         <value xml:lang="ja">'${portalPage.portalPageName}' [${portalPage.portalPageId}] ページは所有していないため、変更できません。</value>
-        <value xml:lang="pt_BR">A página '${portalPage.portalPageName}' [${portalPage.portalPageId}] não é de sua propriedade, por isso não pode ser alterado!</value>
-        <value xml:lang="ru">Эта страница '${portalPage.portalPageName}' [${portalPage.portalPageId}] не принадлежит тебе, и ты не можешь её изменить!</value>
-        <value xml:lang="vi">Trang '${portalPage.portalPageName}' [${portalPage.portalPageId}] không thuộc sở hữu của bạn, do vậy không thể thay đổi!</value>
+        <value xml:lang="pt_BR">A página '${portalPage.portalPageName}' [${portalPage.portalPageId}] não é de sua propriedade, por
+            isso não pode ser alterado!</value>
+        <value xml:lang="ru">Эта страница '${portalPage.portalPageName}' [${portalPage.portalPageId}] не принадлежит тебе, и ты не
+            можешь её изменить!</value>
+        <value xml:lang="vi">Trang '${portalPage.portalPageName}' [${portalPage.portalPageId}] không thuộc sở hữu của bạn, do vậy
+            không thể thay đổi!</value>
         <value xml:lang="zh">你不拥有页面'${portalPage.portalPageName}' [${portalPage.portalPageId}]，所以你不能修改它！</value>
         <value xml:lang="zh_TW">你不擁有頁面'${portalPage.portalPageName}' [${portalPage.portalPageId}],所以你不能修改它！</value>
     </property>
@@ -15250,7 +15390,7 @@
         <value xml:lang="vi">Hành động</value>
         <value xml:lang="zh">操作</value>
         <value xml:lang="zh_TW">操作</value>
-    </property>  
+    </property>
     <property key="CommonError">
         <value xml:lang="ar">خطأ</value>
         <value xml:lang="cs">Chyba</value>

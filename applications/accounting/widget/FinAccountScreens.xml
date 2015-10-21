@@ -437,7 +437,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
                     <decorator-section name="body">
-                        <link target="EditFinAccountTrans" text="${uiLabelMap.CommonCreateNew}" style="${styles.button_default}">
+                        <link target="EditFinAccountTrans" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonTransaction}" style="${styles.button_default}">
                             <parameter param-name="finAccountId" from-field="finAccountId"/>
                         </link>
                         <section>
@@ -477,7 +477,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
                     <decorator-section name="body">
-                        <link target="EditFinAccountTrans" text="${uiLabelMap.CommonCreateNew}" style="${styles.button_default}">
+                        <link target="EditFinAccountTrans" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonTransaction}" style="${styles.button_default}">
                             <parameter param-name="finAccountId" from-field="finAccountId"/>
                         </link>
                             <label style="heading" text="${uiLabelMap.AccountingReconcileFinAccountTransFor}"/>

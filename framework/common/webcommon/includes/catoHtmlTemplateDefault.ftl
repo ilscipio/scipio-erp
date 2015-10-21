@@ -279,7 +279,10 @@ levels manually, but most often should let @section menu handle them.
     forceEmptyMenu      = if true, always add menu and must be empty
     hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
 -->
-<#macro section type="generic" id="" title="" class=true padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" menuHtml="" menuClass="" menuLayout="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
+<#macro section type="" id="" title="" class=true padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" menuHtml="" menuClass="" menuLayout="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
+    <#if !type?has_content>
+        <#local type = "generic">
+    </#if>
     <#local addClass = parseAddClassArg(class)>
     <#local class = parseClassArg(class, "")>
     <#if id?has_content>
@@ -568,12 +571,18 @@ Not associated with an HTML element as is @fieldset.
     value           = display value or image URL
     description     = for image type: image alt
 -->
-<#macro field type="generic" label="" labelDetail="" name="" value="" valueType="generic" currentValue="" defaultValue="" class=true size=20 maxlength="" id="" onClick="" 
+<#macro field type="" label="" labelDetail="" name="" value="" valueType="" currentValue="" defaultValue="" class=true size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false nocontainer=""
         fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 
         labelType="" labelLayout="" labelArea="" description=""
         submitType="input" text="" href="" src="" confirmMsg="">
+<#if !type?has_content>
+  <#local type = "generic">
+</#if>
+<#if !valueType?has_content>
+  <#local valueType = "generic">
+</#if>
 <#-- treat these as synonyms for now -->
 <#if tooltip?has_content>
   <#if !description?has_content>
@@ -1512,9 +1521,14 @@ Helps define table. Required wrapper for all table sub-elem macros.
     </@table>
                     
    * General Attributes *
-    type            = [generic, data-list, data-complex, fields, summary], default generic
-                      DEV NOTE: TODO: WARN: these are WIP types, may not be enough (important part is to label things for easy search)
-                      generic: generic html table (free-form, complex), no features enabled by default
+    type            = [generic|(theme-specific)], default generic
+                      * STANDARD TYPES *
+                      These types must always be recognized by all styles themes:
+                      generic: generic html table (free-form, complex); no features enabled by default.
+                               similar to defining an html <table> manually, but more powerful.
+                      * DEFAULT STYLES TYPES *
+                      WARN: these are WIP types, may not be enough (important part is to label things for easy search)
+                      The following are currently recognized by the default cato styles (NOTE: targeted for backend):
                       data-list: record-containing table, one data record per row (but row cells may be complex and may have tfoot)
                                  similar to a form widget "list" or "multi" table; intended to resemble these, to unify them.
                       data-complex: record-containing table, but with complex structure (more than one row per record, separators, etc.)
@@ -1544,7 +1558,10 @@ Helps define table. Required wrapper for all table sub-elem macros.
     attribs               = hash of other legacy <table attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <table attributes and values, inlined
 -->
-<#macro table type="generic" class=true id="" cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro table type="" class=true id="" cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#if !type?has_content>
+  <#local type = "generic">
+</#if>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
 <#if open>

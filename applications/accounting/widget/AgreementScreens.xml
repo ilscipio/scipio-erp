@@ -9,85 +9,7 @@
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
     <!-- Custom apps can use their own agreement decorator by specifying its location in parameters.agreementDecoratorLocation -->
-    <screen name="CommonAgreementDecorator">
-        <section>
-            <actions>
-                <set field="headerItem" value="agreements" />
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true" />
-                <property-map resource="WorkEffortUiLabels" map-name="uiLabelMap" global="true" />
-            </actions>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
-                        <section>
-                            <condition>
-                                <and>
-                                    <if-service-permission service-name="acctgAgreementPermissionCheck"
-                                        main-action="VIEW" />
-                                    <not>
-                                        <if-empty field="agreement" />
-                                    </not>
-                                </and>
-                            </condition>
-                            <widgets>
-                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="AgreementSideBar" />
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                    <decorator-section name="body">
-                        <section>
-                            <condition>
-                                <if-service-permission service-name="acctgAgreementPermissionCheck"
-                                    main-action="VIEW" />
-                            </condition>
-                            <widgets>
-                                <section>
-                                    <condition>
-                                        <not>
-                                            <if-empty field="agreement" />
-                                        </not>
-                                    </condition>
-                                    <widgets>
-                                        <label style="heading">${agreement.description} [${agreement.agreementId}]</label>
-                                        <section>
-                                            <condition>
-                                                <not>
-                                                    <if-empty field="agreementItem" />
-                                                </not>
-                                            </condition>
-                                            <widgets>
-                                                <include-menu location="component://accounting/widget/AccountingMenus.xml"
-                                                    name="AgreementItemTabBar" />
-                                                <container style="button-bar">
-                                                    <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}"
-                                                        style="${styles.button_default} create" />
-                                                    <include-menu location="component://accounting/widget/AccountingMenus.xml"
-                                                        name="AgreementSubTabBar" />
-                                                </container>
-                                            </widgets>
-                                            <fail-widgets>
-                                                <container style="button-bar">
-                                                    <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}"
-                                                        style="${styles.button_default} create" />
-                                                    <include-menu location="component://accounting/widget/AccountingMenus.xml"
-                                                        name="AgreementSubTabBar" />
-                                                </container>
-                                            </fail-widgets>
-                                        </section>
-                                    </widgets>
-                                </section>
-                                <decorator-section-include name="body" />
-                            </widgets>
-                            <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.AccountingViewPermissionError}
-                                </label>
-                            </fail-widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
+    
 
     <!-- Agreement -->
     <screen name="FindAgreement">
@@ -96,7 +18,7 @@
                 <set field="titleProperty" value="PageTitleFindAgreement" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -139,7 +61,7 @@
 
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -178,7 +100,7 @@
                 <entity-one entity-name="AgreementItem" value-field="agreementItem" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditAgreementItem}">
                             <include-form name="EditAgreementItem" location="component://accounting/widget/AgreementForms.xml" />
@@ -201,7 +123,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListAgreementItems}">
                             <include-form name="ListAgreementItems" location="component://accounting/widget/AgreementForms.xml" />
@@ -222,7 +144,7 @@
                 <entity-one entity-name="Agreement" value-field="agreement" auto-field-map="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="add-agreement-roles" title="${uiLabelMap.PageTitleAddAgreementRoles}" collapsible="true">
                             <section>
@@ -247,7 +169,7 @@
                 <entity-one entity-name="Agreement" value-field="agreement" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AgreementTermPanel" title="${uiLabelMap.PageTitleEditAgreementTerm}" collapsible="true">
                             <include-form name="AddAgreementTerm" location="component://accounting/widget/AgreementForms.xml" />
@@ -268,7 +190,7 @@
                 <entity-one entity-name="Agreement" value-field="agreement" auto-field-map="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AgreementWorkEffortApplicsPanel" title="${uiLabelMap.AccountingAddAgreementWorkEffortApplic}"
                             collapsible="true">
@@ -294,7 +216,7 @@
                 <entity-one entity-name="AgreementPromoAppl" value-field="agreementPromoAppl" auto-field-map="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditAgreementPromoAppl}">
                             <include-form name="EditAgreementPromoAppl" location="component://accounting/widget/AgreementForms.xml" />
@@ -321,7 +243,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListAgreementPromoAppls}">
                             <include-form name="ListAgreementPromoAppls" location="component://accounting/widget/AgreementForms.xml" />
@@ -349,7 +271,7 @@
                     auto-field-map="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditAgreementGeographicalApplic}">
                             <include-form name="EditAgreementGeographicalApplic" location="component://accounting/widget/AgreementForms.xml" />
@@ -374,7 +296,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListAgreementGeographicalApplic}">
                             <include-form name="ListAgreementGeographicalApplic" location="component://accounting/widget/AgreementForms.xml" />
@@ -400,7 +322,7 @@
                 <entity-one entity-name="AgreementFacilityAppl" value-field="agreementFacilityAppl" auto-field-map="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditAgreementItemFacility}">
                             <include-form name="EditAgreementItemFacility" location="component://accounting/widget/AgreementForms.xml" />
@@ -426,7 +348,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListAgreementItemFacilities}">
                             <include-form name="ListAgreementItemFacilities" location="component://accounting/widget/AgreementForms.xml" />
@@ -481,7 +403,7 @@
                 <entity-one entity-name="AgreementPartyApplic" value-field="agreementPartyApplic" auto-field-map="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditAgreementItemParty}">
                             <include-form name="EditAgreementItemParty" location="component://accounting/widget/AgreementForms.xml" />
@@ -506,7 +428,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListAgreementItemParties}">
                             <include-form name="ListAgreementItemParties" location="component://accounting/widget/AgreementForms.xml" />
@@ -532,7 +454,7 @@
                 <entity-one entity-name="AgreementProductAppl" value-field="agreementProductAppl" auto-field-map="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditAgreementItemProduct}">
                             <include-form name="EditAgreementItemProduct" location="component://accounting/widget/AgreementForms.xml" />
@@ -558,7 +480,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListAgreementItemProducts}">
                             <include-form name="ListAgreementItemProducts" location="component://accounting/widget/AgreementForms.xml" />
@@ -628,13 +550,13 @@
                         </and>
                     </condition>
                     <widgets>
-                        <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                        <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="body">
                             </decorator-section>
                         </decorator-screen>
                     </widgets>
                     <fail-widgets>
-                        <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                        <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                             <decorator-section name="body">
                                 <label style="heading">${uiLabelMap.AccountingAgreementIsNotSetForSupplierProducts}
                                 </label>
@@ -661,7 +583,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
                             <link target="ListAgreementItemSupplierProductsReport" text="${uiLabelMap.CommonPrint}" style="${styles.button_default}">
@@ -726,7 +648,7 @@
                 <entity-one entity-name="AgreementTerm" value-field="agreementTerm" auto-field-map="true" />
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditAgreementItemTerm}">
                             <include-form name="EditAgreementItemTerm" location="component://accounting/widget/AgreementForms.xml" />
@@ -752,7 +674,7 @@
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="CommonAgreementDecorator" location="${parameters.agreementDecoratorLocation}">
+                <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListAgreementItemTerms}">
                             <include-form name="ListAgreementItemTerms" location="component://accounting/widget/AgreementForms.xml" />

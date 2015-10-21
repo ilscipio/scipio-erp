@@ -142,7 +142,7 @@ under the License.
                 <parameter param-name="budgetItemSeqId"/>
             </hyperlink>
         </field>
-       <field name="budgetItemTypeId" title=${uiLabelMap.CommonType}>
+       <field name="budgetItemTypeId" title="${uiLabelMap.CommonType}">
            <drop-down allow-empty="false">
                <entity-options entity-name="BudgetItemType" description="${description}" key-field-name="budgetItemTypeId"/>
            </drop-down>

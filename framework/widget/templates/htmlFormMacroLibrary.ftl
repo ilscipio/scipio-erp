@@ -474,6 +474,8 @@ not "current" context (too intrusive in current renderer design). still relies o
       <#if action?starts_with("redirect;")>
         <#local progressOptions = progressOptions + { "successRedirectUrl" : action?substring("redirect;"?length) }>
       <#elseif action == "reload" || action?starts_with("reload:")>
+        <#-- FIXME: js-based reload doesn't work right in too many cases (e.g. when just came back to screen from
+             switching visual theme and try to upload; url is something unrelated to page) -->
         <#local progressOptions = progressOptions + { "successReloadWindow" : true }>
       </#if>
       

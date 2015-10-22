@@ -514,7 +514,7 @@
                 <parameter param-name="finAccountId" />
             </link>
         </menu-item>
-        <menu-item name="EditFinAccountRoles" title="${uiLabelMap.PartyRoles}">
+        <menu-item name="EditFinAccountRoles" title="${uiLabelMap.CommonParties}">
             <link target="EditFinAccountRoles">
                 <parameter param-name="finAccountId" />
             </link>

@@ -402,7 +402,7 @@ under the License.
         </row-actions>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_default}">
            <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
                 <parameter param-name="partyId"/>
                 <parameter param-name="agreementId"/>

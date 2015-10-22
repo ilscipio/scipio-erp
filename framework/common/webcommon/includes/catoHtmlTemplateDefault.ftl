@@ -64,9 +64,10 @@
 <#if !(screenlib?? && screenlib?is_hash)>
   <#import "component://widget/templates/htmlScreenMacroLibrary.ftl" as screenlib>
 </#if>-->
+<#-- no longer in use
 <#if !(formlib?? && formlib?is_hash)>
   <#import "component://widget/templates/htmlFormMacroLibrary.ftl" as formlib>
-</#if>
+</#if>-->
 <#-- not in use
 <#if !(menulib?? && menulib?is_hash)>
   <#import "component://widget/templates/htmlMenuMacroLibrary.ftl" as menulib>
@@ -989,7 +990,7 @@ Not associated with an HTML element as is @fieldset.
     <@cell class=("${classes!}"+" field-entry-widget "+fieldEntryTypeClass)?trim nocells=(nocells || nocontainer)>
         <#switch type>
           <#case "input">
-            <@formlib.renderTextField name=name 
+            <@field_input_widget_impl name=name 
                                   className=class 
                                   alert=alert 
                                   value=value 
@@ -1008,7 +1009,7 @@ Not associated with an HTML element as is @fieldset.
                                   tooltip=tooltip/>
             <#break>
           <#case "textarea">
-            <@formlib.renderTextareaField name=name 
+            <@field_textarea_widget_impl name=name 
                                   className=class 
                                   alert=alert 
                                   cols=cols 
@@ -1020,7 +1021,7 @@ Not associated with an HTML element as is @fieldset.
             <#break>
           <#case "datetime">
             <#if dateType == "date"><#local shortDateInput=true/><#else><#local shortDateInput=false/></#if>
-            <@formlib.renderDateTimeField name=name 
+            <@field_datetime_widget_impl name=name 
                                   className=class 
                                   alert=alert 
                                   title=label 
@@ -1054,7 +1055,7 @@ Not associated with an HTML element as is @fieldset.
             <#local manualItems = true>
             <#local manualItemsOnly = true>
             
-            <@formlib.renderDropDownField name=name
+            <@field_select_widget_impl name=name
                                     className=class 
                                     alert=alert 
                                     id=id 
@@ -1087,31 +1088,31 @@ Not associated with an HTML element as is @fieldset.
                                     fullSearch=""
                                     tooltip=tooltip
                                     manualItems=manualItems
-                                    manualItemsOnly=manualItemsOnly><#nested></@formlib.renderDropDownField>
+                                    manualItemsOnly=manualItemsOnly><#nested></@field_select_widget_impl>
             <#break>
           <#case "lookup">
-            <@formlib.renderLookupField name=name formName=formName fieldFormName=fieldFormName className=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
+            <@field_lookup_widget_impl name=name formName=formName fieldFormName=fieldFormName className=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
           <#break>
           <#case "checkbox">
-                <@formlib.renderCheckBox id=id currentValue=value checked=checked name=name action=action />
+                <@field_checkbox_widget_impl id=id currentValue=value checked=checked name=name action=action />
             <#break>
           <#case "radio">
                 <#if radioSingle>
                     <#-- single radio button item mode -->
                     <#local items=[{"key":value, "description":label!""}]/>
-                    <@formlib.renderRadioField items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
+                    <@field_radio_widget_impl items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
                 <#else>
                     <#-- multi radio button item mode -->
                     <div<@fieldClassStr class alert />>
-                      <@formlib.renderRadioField items=items className="" alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
+                      <@field_radio_widget_impl items=items className="" alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
                     </div>
                 </#if>
             <#break>
           <#case "file">
-            <@formlib.renderFileField className=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
+            <@field_file_widget_impl className=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
             <#break> 
           <#case "password">
-            <@formlib.renderPasswordField className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") />
+            <@field_password_widget_impl className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") />
             <#break> 
           <#case "submit">
           <#case "submitarea">
@@ -1128,7 +1129,7 @@ Not associated with an HTML element as is @fieldset.
                 </#if>
                 <#local buttonType = catoSubmitFieldButtonTypeMap[submitType]!"button">
                 <#local inputType = catoSubmitFieldInputTypeMap[submitType]!"">
-                <@formlib.renderSubmitField buttonType=buttonType className=class alert=alert formName=formName name=name event="" action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false onClick=onClick href=href inputType=inputType disabled=disabled />
+                <@field_submit_widget_impl buttonType=buttonType className=class alert=alert formName=formName name=name event="" action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false onClick=onClick href=href inputType=inputType disabled=disabled />
               <#else>
                 <#nested>
               </#if>
@@ -1140,7 +1141,7 @@ Not associated with an HTML element as is @fieldset.
             </#if>
             <#break> 
           <#case "display">
-            <#-- TODO? may need formatting here based on valueType... not done by renderDisplayField... done in java OOTB... 
+            <#-- TODO? may need formatting here based on valueType... not done by field_display_widget_impl... done in java OOTB... 
                  can also partially detect type of value with ?is_, but is not enough... -->
             <#if !valueType?has_content || (valueType=="generic")>
               <#local displayType = "text">
@@ -1157,7 +1158,7 @@ Not associated with an HTML element as is @fieldset.
               <#local imageLocation = "">
               <#local desc = value>
             </#if>
-                <@formlib.renderDisplayField type=displayType imageLocation=imageLocation idName="" description=desc title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt=description/>
+                <@field_display_widget_impl type=displayType imageLocation=imageLocation idName="" description=desc title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt=description/>
                 <#-- FIXME: tooltip too crappy -->
               <#if tooltip?has_content>
                 <span class="tooltip">${tooltip}</span>
@@ -1165,7 +1166,7 @@ Not associated with an HTML element as is @fieldset.
             <#break> 
           <#default> <#-- "generic", empty or unrecognized -->
             <#if value?has_content>
-                <@formlib.renderField text=value/>
+                <@field_generic_widget_impl text=value/>
             <#else>
                 <#nested />
             </#if>
@@ -1260,6 +1261,648 @@ Not associated with an HTML element as is @fieldset.
        <@progressScript options=progressOptions htmlwrap=true />
     </#if>
   </@row>
+</#macro>
+
+
+<#-- INDIVIDUAL FIELD IMPLEMENTATIONS
+     DEV NOTE: see @section_impl for details on current _impl pattern used below (transitory)
+     TODO: clean up macro arguments
+     NOTE: "widget" here refers to the common meaning; not any specific ofbiz meaning -->
+
+<#-- migrated from renderTextField form widget macro -->
+<#macro field_input_widget_impl name="" className="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
+    mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false>
+  <#if mask?has_content && mask>
+    <script type="text/javascript">
+      jQuery(function($){jQuery("#${id}").mask("${mask!}");});
+    </script>
+  </#if>
+  <input type="text" name="${name?default("")?html}"<#t/>
+    <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
+    <@fieldClassStr className alert />
+    <#if value?has_content> value="${value}"</#if><#rt/>
+    <#if textSize?has_content> size="${textSize}"</#if><#rt/>
+    <#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>
+    <#if disabled?has_content && disabled> disabled="disabled"</#if><#rt/>
+    <#if readonly?has_content && readonly> readonly="readonly"</#if><#rt/>
+    <#if id?has_content> id="${id}"</#if><#rt/>
+    <#if event?has_content && action?has_content> ${event}="${action}"</#if><#rt/>
+    <#if clientAutocomplete?has_content && clientAutocomplete=="false"> autocomplete="off"</#if><#rt/>
+    <#if placeholder?has_content> placeholder="${placeholder}"</#if><#rt/>
+  /><#t/>
+  <#if ajaxUrl?has_content>
+    <#local defaultMinLength = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")>
+    <#local defaultDelay = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")>
+    <script language="JavaScript" type="text/javascript">ajaxAutoCompleter('${ajaxUrl}', false, ${defaultMinLength!2}, ${defaultDelay!300});</script><#lt/>
+  </#if>
+</#macro>
+
+<#-- migrated from renderTextareaField form widget macro -->
+<#macro field_textarea_widget_impl name="" className="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
+    buttons="" language="" tooltip="" title="" fieldTitleBlank=false collapse=false>
+
+  <textarea name="${name}"<#t/>
+    <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
+    <@fieldClassStr className alert />
+    <#if cols?has_content> cols="${cols}"</#if><#rt/>
+    <#if rows?has_content> rows="${rows}"</#if><#rt/>
+    <#if id?has_content> id="${id}"</#if><#rt/>
+    <#if readonly?has_content> readonly="readonly"</#if><#rt/>
+    <#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>
+    ><#t/>
+    <#if value?has_content>${value}</#if><#t/>
+  </textarea><#lt/>
+  
+  <#--
+  ToDo: Remove
+  <#if visualEditorEnable?has_content>
+    <script language="javascript" src="/images/jquery/plugins/elrte-1.3/js/elrte.min.js" type="text/javascript"></script><#rt/>
+    <#if language?has_content && language != "en">
+      <script language="javascript" src="/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!"en"}.js" type="text/javascript"></script><#rt/>
+    </#if>
+    <link href="/images/jquery/plugins/elrte-1.3/css/elrte.min.css" rel="stylesheet" type="text/css">
+    <script language="javascript" type="text/javascript">
+      var opts = {
+         cssClass : 'el-rte',
+         lang     : '${language!"en"}',
+         toolbar  : '${buttons?default("maxi")}',
+         doctype  : '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">', //'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">',
+         cssfiles : ['/images/jquery/plugins/elrte-1.3/css/elrte-inner.css']
+      }
+      jQuery('#${id?default("")}').elrte(opts);
+    </script>
+  </#if>
+  -->
+</#macro>
+
+<#-- Merges a yyyy-MM-dd into a full timestamp
+     TODO: move this out to js file -->
+<#assign mergeStdDateTimeJs>
+                var mergeStdDateTime = function(oldDate, newDate) {
+                    var result;
+                    if (oldDate.match(/^\d\d\d\d-\d\d-\d\d\s/)) {
+                       if (newDate.length >= oldDate.length) {
+                           result = newDate;
+                       }
+                       else {
+                           <#-- preserve everything after days -->
+                           result = newDate + oldDate.substr(newDate.length);
+                       }
+                    }
+                    else {
+                       var zeroPat = "0000-00-00 00:00:00.000";
+                       if (newDate.length >= zeroPat.length) {
+                           result = newDate;
+                       }
+                       else {
+                           <#-- append zeroes -->
+                           result = newDate + zeroPat.substr(newDate.length);
+                       }
+                    }
+                    return result;
+                };
+</#assign>
+
+<#-- migrated from renderDateTimeField form widget macro -->
+<#macro field_datetime_widget_impl name="" className="" title="" value="" size="" maxlength="" id="" dateType="" shortDateInput=false 
+    timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
+    hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
+    alert=false mask="" event="" action="" step="" timeValues="" tooltip=""collapse=false fieldTitleBlank=false>
+  
+  <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
+  <#-- Note: ofbiz never handled dateType=="date" here because it pass shortDateInput=true in renderer instead-->
+  <#-- These should be ~uiLabelMap.CommonFormatDate/Time/DateTime -->
+  <#local dateFormat><#if (shortDateInput!false) == true>yyyy-MM-dd<#elseif dateType=="time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
+  <#local useTsFormat = (((shortDateInput!false) == false) && dateType!="time")>
+
+  <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
+        <div class="${styles.grid_small!}11 ${styles.grid_cell!}">
+          <#if dateType == "time">
+            <input type="text" name="${name}" <@fieldClassStr className alert /><#rt/>
+            <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
+            <#if title?has_content> title="${title}"</#if>
+            <#if value?has_content> value="${value}"</#if>
+            <#if size?has_content> size="${size}"</#if><#rt/>
+            <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
+            <#if id?has_content> id="${id}"</#if> class="${styles.grid_small!}3 ${styles.grid_cell!}"/><#rt/>
+          <#else>
+            <input type="text" name="${name}_i18n" <@fieldClassStr className alert /><#rt/>
+            <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
+            <#if title?has_content> title="${title}"</#if>
+            <#if value?has_content> value="${value}"</#if>
+            <#if size?has_content> size="${size}"</#if><#rt/>
+            <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
+            <#if id?has_content> id="${id}_i18n"</#if> class="${styles.grid_small!}3 ${styles.grid_cell!}"/><#rt/>
+
+            <input type="hidden" name="${name}"<#if id?has_content> id="${id}"</#if><#if value?has_content> value="${value}"</#if> />
+          </#if>
+        </div>
+        <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
+        <span class="postfix"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
+        </div>
+      <#if dateType != "time">
+        <script type="text/javascript">
+            $(function() {
+
+                var dateI18nToNorm = function(date) {
+                    <#-- TODO (note: depends on dateType) -->
+                    return date;
+                };
+                
+                var dateNormToI18n = function(date) {
+                    <#-- TODO (note: depends on dateType) -->
+                    return date;
+                };
+            
+                jQuery("#${id}_i18n").change(function() {
+                    jQuery("#${id}").val(dateI18nToNorm(this.value));
+                });
+                
+              <#if useTsFormat>
+                ${mergeStdDateTimeJs}
+              </#if>
+                
+                var oldDate = "";
+                var onFDatePopup = function(ev) {
+                    oldDate = dateI18nToNorm(jQuery("#${id}_i18n").val());
+                };
+                var onFDateChange = function(ev) {
+                  <#if useTsFormat>
+                    jQuery("#${id}_i18n").val(dateNormToI18n(mergeStdDateTime(oldDate, dateI18nToNorm(jQuery("#${id}_i18n").val()))));
+                  </#if>
+                };
+                
+                <#if name??>
+                    <#local dateElemJs>$("input[name='${name?html}_i18n']")</#local>
+                <#else>
+                    <#local dateElemJs>$("input")</#local>
+                </#if>
+                ${dateElemJs}.fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
+            });
+        </script>
+      </#if>
+  </div>
+</#macro>
+
+<#-- migrated from renderDateFindField form widget macro -->
+<#macro field_datefind_widget_impl className="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" 
+    formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleStyle="" defaultOptionFrom="" defaultOptionThru="" 
+    opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="">
+
+  <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
+  <#-- note: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
+  <#local dateFormat><#if dateType == "date">yyyy-MM-dd<#elseif dateType=="time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
+  <#local useTsFormat = (dateType != "date" && dateType != "time")>
+  
+  <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
+        <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
+        <input class="${styles.grid_small!}3 ${styles.grid_cell!}" id="${name?html}_fld0_value" type="text" <@fieldClassStr className alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
+        </div>
+        <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
+        <span class="postfix"><i class="${styles.icon} ${styles.icon_calendar!}"></i></span>
+        </div>
+        <div class="${styles.grid_small!}5 ${styles.grid_cell!} ${styles.grid_small!}offset-1">
+        <select<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
+          <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
+          <option value="sameDay"<#if defaultOptionFrom=="sameDay"> selected="selected"</#if>>${opSameDay}</option><#rt/>
+          <option value="greaterThanFromDayStart"<#if defaultOptionFrom=="greaterThanFromDayStart"> selected="selected"</#if>>${opGreaterThanFromDayStart}</option><#rt/>
+          <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${opGreaterThan}</option><#rt/>
+        </select><#rt/>
+        </div>
+      <#if dateType != "time">
+        <script type="text/javascript">
+            $(function() {
+            
+              <#if useTsFormat>
+                ${mergeStdDateTimeJs}
+              </#if>
+                
+                var oldDate = "";
+                var onFDatePopup = function(ev) {
+                    oldDate = jQuery("#${name?html}_fld0_value").val();
+                };
+                var onFDateChange = function(ev) {
+                  <#if useTsFormat>
+                    jQuery("#${name?html}_fld0_value").val(mergeStdDateTime(oldDate, jQuery("#${name?html}_fld0_value").val()));
+                  </#if>
+                };
+            
+                <#if name??>
+                    <#local dateElemJs>$('#${name?html}_fld0_value')</#local>
+                <#else>
+                    <#local dateElemJs>$('input')</#local>
+                </#if>
+                ${dateElemJs}.fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
+            });
+        </script>
+      </#if>
+  </div>
+</#macro>
+
+<#-- migrated from renderDropDownField form widget macro -->
+<#macro field_select_widget_impl name="" className="" alert="" id="" multiple="" formName="" otherFieldName="" size="" firstInList="" 
+    currentValue="" explicitDescription="" allowEmpty="" options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
+    dDFCurrent="" noCurrentSelectedKey="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
+    ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false 
+    collapse=false fieldTitleBlank=false>
+
+    <select name="${name!""}<#rt/>" <@fieldClassStr className alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
+    <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>>
+    <#if !manualItemsOnly>  
+      <#if firstInList?has_content && currentValue?has_content && !multiple?has_content>
+        <option selected="selected" value="${currentValue}">${explicitDescription}</option><#rt/>
+        <option value="${currentValue}">---</option><#rt/>
+      </#if>
+      <#if allowEmpty?has_content || (!manualItems && !options?has_content)>
+        <option value="">&nbsp;</option>
+      </#if>
+      <#list options as item>
+        <#if multiple?has_content>
+          <option<#if currentValue?has_content && item.selected?has_content> selected="${item.selected}" <#elseif !currentValue?has_content && noCurrentSelectedKey?has_content && noCurrentSelectedKey == item.key> selected="selected" </#if> value="${item.key}">${item.description}</option><#rt/>
+        <#else>
+          <option<#if currentValue?has_content && currentValue == item.key && dDFCurrent?has_content && "selected" == dDFCurrent> selected="selected"<#elseif !currentValue?has_content && noCurrentSelectedKey?has_content && noCurrentSelectedKey == item.key> selected="selected"</#if> value="${item.key}">${item.description}</option><#rt/>
+        </#if>
+      </#list>
+    </#if>
+      <#nested>
+    </select>
+  <#if otherFieldName?has_content>
+    <noscript><input type='text' name='${otherFieldName}' /></noscript>
+    <script type='text/javascript' language='JavaScript'><!--
+      disa = ' disabled';
+      if(other_choice(document.${formName}.${fieldName}))
+        disa = '';
+      document.write("<input type='text' name='${otherFieldName}' value='${otherValue?js_string}' size='${otherFieldSize}'"+disa+" onfocus='check_choice(document.${formName}.${fieldName})' />");
+      if(disa && document.styleSheets)
+      document.${formName}.${otherFieldName}.styles.visibility  = 'hidden';
+    //--></script>
+  </#if>
+
+  <#if ajaxEnabled>
+    <script language="JavaScript" type="text/javascript">
+      ajaxAutoCompleteDropDown();
+      jQuery(function() {
+        jQuery("#${id}").combobox();
+      });
+    </script>
+  </#if>
+</#macro>
+
+<#-- migrated from renderLookupField form widget macro -->
+<#macro field_lookup_widget_impl name="" formName="" fieldFormName="" className="" alert="false" value="" size="" 
+    maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" 
+    targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" 
+    height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" 
+    lastViewName="main" title="" fieldTitleBlank=false>
+
+  <#if Static["org.ofbiz.widget.model.ModelWidget"].widgetBoundaryCommentsEnabled(context)>
+  </#if>
+  <#if (!ajaxUrl?has_content) && ajaxEnabled?has_content && ajaxEnabled>
+    <#local ajaxUrl = requestAttributes._REQUEST_HANDLER_.makeLink(request, response, fieldFormName)/>
+    <#local ajaxUrl = id + "," + ajaxUrl + ",ajaxLookup=Y" />
+  </#if>
+  <#if (!showDescription?has_content)>
+    <#local showDescriptionProp = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.lookup.showDescription", "N")>
+    <#if "Y" == showDescriptionProp>
+      <#local showDescription = "true" />
+    <#else>
+      <#local showDescription = "false" />
+    </#if>
+  </#if>
+  <#if ajaxEnabled?has_content && ajaxEnabled>
+    <script type="text/javascript">
+      jQuery(document).ready(function(){
+        if (!jQuery('form[name="${formName}"]').length) {
+          alert("Developer: for lookups to work you must provide a form name!")
+        }
+      });
+    </script>
+  </#if>
+  <span class="field-lookup">
+    <#if size?has_content && size=="0">
+      <input type="hidden" <#if name?has_content> name="${name}"/></#if>
+    <#else>
+      <input type="text" <@fieldClassStr className alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if>
+        <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#rt/>
+        <#if readonly?has_content && readonly> readonly="readonly"</#if><#rt/><#if event?has_content && action?has_content> ${event}="${action}"</#if><#rt/>
+        <#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/></#if>
+    <#if presentation?has_content && descriptionFieldName?has_content && presentation == "window">
+      <a href="javascript:call_fieldlookup3(document.${formName?html}.${name?html},document.${formName?html}.${descriptionFieldName},'${fieldFormName}', '${presentation}'<#rt/>
+      <#if targetParameterIter?has_content>
+        <#list targetParameterIter as item>
+          ,document.${formName}.${item}.value<#rt>
+        </#list>
+      </#if>
+      );"></a><#rt>
+    <#elseif presentation?has_content && presentation == "window">
+      <a href="javascript:call_fieldlookup2(document.${formName?html}.${name?html},'${fieldFormName}', '${presentation}'<#rt/>
+      <#if targetParameterIter?has_content>
+        <#list targetParameterIter as item>
+          ,document.${formName}.${item}.value<#rt>
+        </#list>
+      </#if>
+      );"></a><#rt>
+    <#else>
+      <#if ajaxEnabled?has_content && ajaxEnabled>
+        <#local defaultMinLength = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")>
+        <#local defaultDelay = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")>
+        <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
+        <#if !ajaxUrl?contains("searchValueFieldName=")>
+          <#if descriptionFieldName?has_content && showDescription == "true">
+            <#local ajaxUrl = ajaxUrl + "&amp;searchValueFieldName=" + descriptionFieldName />
+          <#else>
+            <#local ajaxUrl = ajaxUrl + "&amp;searchValueFieldName=" + name />
+          </#if>
+        </#if>
+      </#if>
+      <script type="text/javascript">
+        jQuery(document).ready(function(){
+          var options = {
+            requestUrl : "${fieldFormName}",
+            inputFieldId : "${id}",
+            dialogTarget : document.${formName?html}.${name?html},
+            dialogOptionalTarget : <#if descriptionFieldName?has_content>document.${formName?html}.${descriptionFieldName}<#else>null</#if>,
+            formName : "${formName?html}",
+            width : "${width}",
+            height : "${height}",
+            position : "${position}",
+            modal : "${fadeBackground}",
+            ajaxUrl : <#if ajaxEnabled?has_content && ajaxEnabled>"${ajaxUrl}"<#else>""</#if>,
+            showDescription : <#if ajaxEnabled?has_content && ajaxEnabled>"${showDescription}"<#else>false</#if>,
+            presentation : "${presentation!}",
+            defaultMinLength : "${defaultMinLength!2}",
+            defaultDelay : "${defaultDelay!300}",
+            args :
+              <#rt/>
+                <#if targetParameterIter?has_content>
+                  <#local isFirst = true>
+                  <#lt/>[<#rt/>
+                  <#list targetParameterIter as item>
+                    <#if isFirst>
+                      <#lt/>document.${formName}.${item}<#rt/>
+                      <#local isFirst = false>
+                    <#else>
+                      <#lt/> ,document.${formName}.${item}<#rt/>
+                    </#if>
+                  </#list>
+                  <#lt/>]<#rt/>
+                <#else>[]
+                </#if>
+                <#lt/>
+          };
+          new Lookup(options).init();
+        });
+      </script>
+    </#if>
+    <#if readonly?has_content && readonly>
+      <a id="${id}_clear" 
+        style="background:none;margin-left:5px;margin-right:15px;" 
+        class="clearField" 
+        href="javascript:void(0);" 
+        onclick="javascript:document.${formName}.${name}.value='';
+          jQuery('#' + jQuery('#${id}_clear').next().attr('id').replace('_button','') + '_${id}_lookupDescription').html('');
+          <#if descriptionFieldName?has_content>document.${formName}.${descriptionFieldName}.value='';</#if>">
+          <#if clearText?has_content>${clearText}<#else>${uiLabelMap.CommonClear}</#if>
+      </a>
+    </#if>
+  </span>
+  <#if ajaxEnabled?has_content && ajaxEnabled && (presentation?has_content && presentation == "window")>
+    <#if ajaxUrl?index_of("_LAST_VIEW_NAME_") < 0>
+      <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
+    </#if>
+    <script language="JavaScript" type="text/javascript">ajaxAutoCompleter('${ajaxUrl}', ${showDescription}, ${defaultMinLength!2}, ${defaultDelay!300});</script><#t/>
+  </#if>
+</#macro>
+
+<#-- migrated from renderCheckBox form widget macro -->
+<#macro field_checkbox_widget_impl id="" checked=false currentValue="N" name="" action="" tooltip="" fieldTitleBlank=false>
+    <div class="switch small">
+    <input type="checkbox" id="<#if id?has_content>${id}<#else>${name!}</#if>"<#rt/>
+      <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
+      <#if (checked?is_boolean && checked) || (checked?is_string && checked == "Y")> checked="checked"
+      <#elseif currentValue?has_content && currentValue=="Y"> checked="checked"</#if> 
+      name="${name!""?html}" value="${currentValue!}"<#if action?has_content> onClick="${action}"</#if>/><#rt/>
+      <label for="<#if id?has_content>${id}<#else>${name!}</#if>"></label>
+    </div>
+</#macro>
+
+<#-- migrated from renderRadioField form widget macro -->
+<#macro field_radio_widget_impl items="" className="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="">
+  <#list items as item>
+    <span <@fieldClassStr className alert />><#rt/>
+      <input type="radio"<#if currentValue?has_content><#if currentValue==item.key> checked="checked"</#if>
+        <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
+        <#elseif noCurrentSelectedKey?has_content && noCurrentSelectedKey == item.key> checked="checked"</#if> 
+        name="${name!""?html}" value="${item.key!""?html}"<#if item.event?has_content> ${item.event}="${item.action!}"<#elseif event?has_content> ${event}="${action!}"</#if>/><#rt/>
+      ${item.description}
+    </span>
+  </#list>
+</#macro>
+
+<#-- migrated from renderFileField form widget macro -->
+<#macro field_file_widget_impl className="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false>
+  <input type="file" <@fieldClassStr className alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+</#macro>
+
+<#-- migrated from renderPasswordField form widget macro -->
+<#macro field_password_widget_impl className="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" fieldTitleBlank=false>
+  <input type="password" <@fieldClassStr className alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/>
+</#macro>
+
+<#-- migrated from renderSubmitField form widget macro -->
+<#macro field_submit_widget_impl buttonType="" className="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
+    containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false>
+  <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
+  <#if buttonType!="image">
+    <#if !className?has_content || className=="smallSubmit">
+      <#local className = "${styles.button_default!}">
+    </#if>
+  </#if>
+
+  <#-- Cato: to omit button (show progress only), we use empty title hack " " similar to what ofbiz does with hyperlinks with no label -->
+  <#if (buttonType=="text-link" || buttonType!="image") && !(title?trim?has_content)>
+  <#local buttonMarkup = "">
+  <#else>
+  <#local buttonMarkup>
+  <#if buttonType=="text-link">
+    <a <@fieldClassStr className alert /> href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if>><#if title?has_content>${title}</#if></a>
+  <#elseif buttonType=="image">
+    <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}" <@fieldClassStr className alert /> <#if name?has_content> name="${name}"</#if>
+    <#if title?has_content> alt="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
+    <#if disabled> disabled="disabled"<#else>
+      <#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
+    </#if>/>
+  <#else>
+    <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>" <@fieldClassStr className alert />
+    <#if name?has_content> name="${name}"</#if><#if title?has_content> value="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
+    <#if disabled> disabled="disabled"<#else>
+      <#if onClick?has_content> onclick="${onClick}"<#else>
+        <#if containerId?has_content> onclick="<#if confirmation?has_content>if (confirm('${confirmation?js_string}')) </#if>ajaxSubmitFormUpdateAreas('${containerId}', '${ajaxUrl}')"<#else>
+        <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if>
+        </#if>
+      </#if>
+    </#if>/>
+  </#if>
+  </#local>
+  </#if>
+  <#if !(showProgress?is_boolean && showProgress == false) && 
+       ((showProgress?is_boolean && showProgress == true) ||
+        ((htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true))>
+      <#local baseId = htmlFormRenderFormInfo.name!"" + "_catouplprogform">       
+      <#local progressOptions = {
+        "formSel" : "form[name=${htmlFormRenderFormInfo.name}]",
+        "progBarId" : "${baseId}_progbar",
+        "progTextBoxId" : "${baseId}_textbox",
+        
+        "expectedResultContainerSel" : "#main-content",
+        "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
+        "errorResultAddWrapper" : false
+      }>
+      <#local action = htmlFormRenderFormInfo.progressSuccessAction!"">
+      <#if action?starts_with("redirect;")>
+        <#local progressOptions = progressOptions + { "successRedirectUrl" : action?substring("redirect;"?length) }>
+      <#elseif action == "reload" || action?starts_with("reload:")>
+        <#-- FIXME: js-based reload doesn't work right in too many cases (e.g. when just came back to screen from
+             switching visual theme and try to upload; url is something unrelated to page) -->
+        <#local progressOptions = progressOptions + { "successReloadWindow" : true }>
+      </#if>
+      
+      <#if htmlFormRenderFormInfo.progressOptions?has_content>
+        <#-- json is valid freemarker map -->
+        <#local addOpts = ("{" + htmlFormRenderFormInfo.progressOptions + "}")?eval>
+        <#if addOpts?has_content>
+          <#local progressOptions = progressOptions + addOpts>  
+        </#if>
+      </#if>
+        
+      <@fieldSubmitAreaProgress progressOptions=progressOptions nestedContent=buttonMarkup />
+  <#else>
+      ${buttonMarkup}
+  </#if>
+</#macro>
+
+<#-- migrated from renderDisplayField form widget macro -->
+<#macro field_display_widget_impl type="" imageLocation="" idName="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
+    inPlaceEditorParams="" imageAlt=""collapse=false fieldTitleBlank=false>
+  <#if type?has_content && type=="image">
+    <img src="${imageLocation}" alt="${imageAlt}"><#lt/>
+  <#else>
+    <#--
+    <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true" || title?has_content>
+      <span<#if idName?has_content> id="cc_${idName}"</#if><#if title?has_content> title="${title}"</#if> <@fieldClassStr class alert />><#t/>
+    </#if>
+    -->
+    <#if description?has_content>
+      ${description?replace("\n", "<br />")}<#t/>
+    <#else>
+      &nbsp;<#t/>
+    </#if>
+    <#--
+    <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true">
+      </span><#lt/>
+    </#if>
+    <#if inPlaceEditorUrl?has_content && idName?has_content>
+      <script language="JavaScript" type="text/javascript"><#lt/>
+        ajaxInPlaceEditDisplayField('cc_${idName}', '${inPlaceEditorUrl}', ${inPlaceEditorParams});<#lt/>
+      </script><#lt/>
+    </#if>-->
+    </#if>
+</#macro>
+
+<#-- migrated from renderRangeFindField form widget macro -->
+<#macro field_textfind_widget_impl name="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
+    opIsEmpty="" opNotEqual="" className="" alert="" size="" maxlength="" autocomplete="" titleStyle="" 
+    hideIgnoreCase="" ignCase="" ignoreCase="" title="" fieldTitleBlank=false>
+
+  <@row collapse=collapse!false>
+  <#if opEquals?has_content>
+            <#local class1="${styles.grid_small!}3 ${styles.grid_large!}3"/>
+            <#local class2="${styles.grid_small!}6 ${styles.grid_large!}6"/>
+            <#local class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>
+            
+        <#else>
+            <#local class1=""/>
+            <#local class2="${styles.grid_small!}9 ${styles.grid_large!}9"/>
+            <#local class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>
+      </#if>      
+      <#if opEquals?has_content>
+        <#local newName = "${name}"/>
+        <@cell class="${class1!}">
+    <select <#if name?has_content>name="${name}_op"</#if>    class="selectBox"><#rt/>
+      <option value="equals"<#if defaultOption=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
+      <option value="like"<#if defaultOption=="like"> selected="selected"</#if>>${opBeginsWith}</option><#rt/>
+      <option value="contains"<#if defaultOption=="contains"> selected="selected"</#if>>${opContains}</option><#rt/>
+      <option value="empty"<#rt/><#if defaultOption=="empty"> selected="selected"</#if>>${opIsEmpty}</option><#rt/>
+      <option value="notEqual"<#if defaultOption=="notEqual"> selected="selected"</#if>>${opNotEqual}</option><#rt/>
+    </select>
+        </@cell>
+  <#else>
+    <input type="hidden" name=<#if name?has_content> "${name}_op"</#if>    value="${defaultOption}"/><#rt/>
+  </#if>
+      <@cell class="${class2!}">
+    <input type="text" <@fieldClassStr className alert /> name="${name}"<#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+       
+      </@cell>
+      <@cell class="${class3!}"> 
+    <#if hideIgnoreCase>
+      <input type="hidden" name="${name}_ic" value=<#if ignCase>"Y"<#else> ""</#if>/><#rt/>
+    <#else>
+            <div class="">
+                <label for="${name}_ic"><input type="checkbox" id="${name}_ic" name="${name}_ic" value="Y" <#if ignCase> checked="checked"</#if> />
+                ${ignoreCase!}</label>
+                <#rt/>
+            </div>
+    </#if>
+      </@cell>
+  </@row>
+</#macro>
+
+<#-- migrated from renderRangeFindField form widget macro -->
+<#macro field_rangefind_widget_impl className="" alert="" name="" value="" size="" maxlength="" autocomplete="" titleStyle="" defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" value2="" defaultOptionThru="">
+  <#local class1="${styles.grid_small!}9 ${styles.grid_large!}9"/>
+  <#local class2="${styles.grid_small!}3 ${styles.grid_large!}3"/>
+  <@row collapse=collapse!false>
+    <@cell class=class1>
+      <input type="text" <@fieldClassStr className alert /><#if name?has_content> name="${name}_fld0_value"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+    </@cell>
+    <@cell class=class2>
+      <#if titleStyle?has_content>
+        <span class="${titleStyle}"><#rt/>
+      </#if>
+      <select<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
+        <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
+        <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${opGreaterThan}</option><#rt/>
+        <option value="greaterThanEqualTo"<#if defaultOptionFrom=="greaterThanEqualTo"> selected="selected"</#if>>${opGreaterThanEquals}</option><#rt/>
+      </select><#rt/>
+      <#if titleStyle?has_content>
+        </span><#rt/>
+      </#if>
+    </@cell>
+  </@row><#rt/>
+  <@row>
+    <@cell class=class1>
+      <input type="text" <@fieldClassStr className alert /><#if name?has_content> name="${name}_fld1_value"</#if><#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+    </@cell>
+    <@cell class=class2>
+      <#if titleStyle?has_content>
+        <span class="${titleStyle}"><#rt/>
+      </#if>
+      <select name=<#if name?has_content>"${name}_fld1_op"</#if> class="selectBox"><#rt/>
+        <option value="lessThan"<#if defaultOptionThru=="lessThan"> selected="selected"</#if>>${opLessThan?html}</option><#rt/>
+        <option value="lessThanEqualTo"<#if defaultOptionThru=="lessThanEqualTo"> selected="selected"</#if>>${opLessThanEquals?html}</option><#rt/>
+      </select><#rt/>
+      <#if titleStyle?has_content>
+        </span>
+      </#if>
+    </@cell>
+  </@row>
+</#macro>
+
+<#-- migrated from renderField form widget macro -->
+<#macro field_generic_widget_impl text="">
+  <#if text??>
+    ${text}<#lt/>
+  </#if>
 </#macro>
 
 

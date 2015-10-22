@@ -113,17 +113,14 @@
 <a href="#" class="${styles.button!} ${styles.button_color_default} ${styles.disabled}">Disabled Button</a>
 
 <@heading relLevel=+1>Button Groups</@heading>
-<ul class="${styles.button_group} ${styles.button_force!}">
-    <li><a href="#" class="${styles.button!} ${styles.small!}">Button 1</a></li>
-    <li><a href="#" class="${styles.button!} ${styles.small!} ${styles.disabled}">Button 2</a></li>
-    <li><a href="#" class="${styles.button!} ${styles.small!} ${styles.color_green}">Button 3</a></li>
-</ul>
+<@menu type="button">
+  <@menuitem type="link" text="Menu Button 1" />
+  <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
+  <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.color_green}">
+    <!-- nested menu item comment -->
+  </@menuitem>
+</@menu>
 
-<ul class="${styles.button_group} ${styles.button_force!}">
-    <li><a href="#" class="${styles.button!}">Button 1</a></li>
-    <li><a href="#" class="${styles.button!}">Button 2</a></li>
-    <li><a href="#" class="${styles.button!}">Button 3</a></li>
-</ul>
 </@section>                                     
 
 <@section>
@@ -257,7 +254,7 @@
 </@section>
 
 <@section title="Menus">
-<@menu type="button">
+<@menu type="tab">
   <@menuitem type="link" text="Menu Button 1" />
   <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
   <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.color_green}">
@@ -274,7 +271,7 @@
   {"type":"link", "text":"Menu Tab 6", "selected":true}
   {"type":"link", "text":"Menu Tab 7", "active":true}
 ]>
-<@menu type="button" items=menuItems sort=true sortDesc=true/>
+<@menu type="subtab" items=menuItems sort=true sortDesc=true/>
 </@section>
 
 <#-- The titleStyle usage here is a demo of what can be set in <label style="..." /> in screens,

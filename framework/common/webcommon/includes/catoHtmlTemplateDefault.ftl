@@ -2167,7 +2167,7 @@ Helps define table. Required wrapper for all table sub-elem macros.
   <#if scrollable>
   <#-- TODO: change this to something more foundation-like.
        this is a custom workaround to get scrolling, nothing else working. -->
-  <div class="scrollable-table-container">
+  <div class="${styles.table_responsive_wrap!}">
   </#if>
   <table<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#rt>
     <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "cellspacing"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
@@ -2817,6 +2817,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
                       normally case-insensitive.
     nestedFirst     = default false, if true, use nested items before items list, otherwise items list always first.
                       usually use only one of alternatives but versatile.
+    htmlWrap        = wrapping HTML element (ul|div|span, default: ul)
 -->
 <#macro menu args={} inlineArgs...>
   <#local type = inlineArgs.type!args.type!"generic">
@@ -2832,6 +2833,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#local sortBy = inlineArgs.sortBy!args.sortBy!"">
   <#local sortDesc = inlineArgs.sortDesc!args.sortDesc!false>
   <#local nestedFirst = inlineArgs.nestedFirst!args.nestedFirst!false>
+  <#local htmlWrap  = inlineArgs.htmlWrap!args.htmlWrap!"ul"/>
   <#t>
   <#local preItemsGlobal = catoMenuPreItems!"">
   <#global catoMenuPreItems = "">
@@ -2853,7 +2855,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#local classes = makeClassesArg(class, styles["menu_" + styleName]!"")>
   <#t>
   <#if !inlineItems>
-    <ul<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>>
+    <${htmlWrap!}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>>
   </#if>
   <#if !(preItems?is_boolean && preItems == false)>
     <#if preItems?is_sequence>
@@ -2900,7 +2902,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     </#if>
   </#if>
   <#if !inlineItems>
-    </ul>
+    </${htmlWrap!}>
   </#if>
   <#t>
   <#global catoCurrentMenuInfo = prevMenuInfo>
@@ -2939,6 +2941,8 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
                       for menu to use as sub-menu.
     wrapNested      = if true, nested content is wrapped in link or span element. default false (nested outside, following).
     nestedFirst     = if true, nested content comes before content elem. default false (comes after content elem/text).
+    htmlWrap        = wrapping HTML element (li|span|div, default: li)
+    inlineItem      = boolean, if true, generate only items, not menu container
 -->
 <#macro menuitem args={} inlineArgs...>
   <#local type = inlineArgs.type!args.type!"generic">
@@ -2964,6 +2968,8 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#local nestedMenu = inlineArgs.nestedMenu!args.nestedMenu!false>
   <#local wrapNested = inlineArgs.wrapNested!args.wrapNested!false>
   <#local nestedFirst = inlineArgs.nestedFirst!args.nestedFirst!false>
+  <#local htmlWrap  = inlineArgs.htmlWrap!args.htmlWrap!"li"/>
+  <#local inlineItem = inlineArgs.inlineItem!args.inlineItem!false>
   <#t>
   <#local menuType = (catoCurrentMenuInfo.type)!"">
   <#local menuStyleName = (catoCurrentMenuInfo.styleName)!"">
@@ -2975,7 +2981,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#elseif type == "text">
     <#local defaultContentClass = "text-entry">
   <#elseif type == "submit">
-    <#local defaultContentClass = "">
+    <#local defaultContentClass = styles["menu_" + menuStyleName + "_submit"]!"">
   <#else>
     <#local defaultContentClass = "">
   </#if>
@@ -2994,7 +3000,9 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     <#local classes = (classes + " active")?trim>
     <#local contentClasses = (contentClasses + " active")?trim>
   </#if>
-  <li<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
+  <#if !inlineItem>
+    <${htmlWrap!}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
+  </#if>
     <#if !nestedContent?is_boolean>
       <#-- use nestedContent -->
     <#elseif !nestedMenu?is_boolean>
@@ -3012,12 +3020,12 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     <#elseif type == "text">
       <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs exclude=["class","id","style","onclick"]/></#if><#if onClick?has_content> onclick="${onClick}"</#if>><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></span>
     <#elseif type == "submit">
-      <#if wrapNested && nestedFirst>${nestedContent}</#if><input type="submit"<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs exclude=["class","id","style","value","onclick","disabled","type"]/></#if> value="<#if text?has_content>${text}</#if>"<#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#if wrapNested && !nestedFirst>${nestedContent}</#if>
+      <#if wrapNested && nestedFirst>${nestedContent}</#if><button type="submit"<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs exclude=["class","id","style","value","onclick","disabled","type"]/></#if><#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#if text?has_content>${text}</#if></button><#if wrapNested && !nestedFirst> ${nestedContent}</#if>
     <#else>
       <#if text?has_content>${text}</#if><#if wrapNested>${nestedContent}</#if>
     </#if>
     <#if !wrapNested && !nestedFirst>${nestedContent}</#if>
-  </li><#lt>
+  <#if !inlineItem></${htmlWrap!}></#if><#lt>
   <#global catoCurrentMenuItemIndex = catoCurrentMenuItemIndex + 1>
 </#macro>
 

@@ -568,7 +568,7 @@ not "current" context (too intrusive in current renderer design). still relies o
        this is a custom workaround to get scrolling, nothing else working. -->
   <div class="scrollable-table-container">
   </#if>
-  <table cellspacing="0" class="<#if style?has_content>${style}<#else>basic-table form-widget-table dark-grid</#if>"><#lt/>
+  <table cellspacing="0" class="<#if style?has_content>${style}<#else>${styles.table_default!} form-widget-table dark-grid</#if>"><#lt/>
 </#macro>
 
 <#macro renderFormatListWrapperClose formName>

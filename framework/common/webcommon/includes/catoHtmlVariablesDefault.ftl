@@ -48,39 +48,48 @@
     <#-- Generic menu types -->
     "menu_generic" : "",  
     "menu_generic_item" : "", 
-    "menu_generic_itemlink" : "", 
+    "menu_generic_itemlink" : "",
+    "menu_generic_submit" : "", 
     "menu_button" : "button-group force-button",
     "menu_button_item" : "",
     "menu_button_itemlink" : "button tiny",
+    "menu_button_submit" : "button tiny",
     <#-- Main navigation menus -->
     "menu_main" : "dropdown",
     "menu_main_wrap" : "has-dropdown not-click active",        
     "menu_main_item" : "",
-    "menu_main_itemlink" : "", 
+    "menu_main_itemlink" : "",
+    "menu_main_submit" : "", 
     "menu_sidebar" : "side-nav",
     "menu_sidebar_wrap" :"", 
     "menu_sidebar_item" : "",
-    "menu_sidebar_itemlink" : "", 
+    "menu_sidebar_itemlink" : "",
+    "menu_sidebar_submit" : "", 
     <#-- Tab and secondary navigation menus-->
     "menu_tab" : "button-group force-button", 
     "menu_tab_item" : "", 
-    "menu_tab_itemlink" : "button tiny", 
+    "menu_tab_itemlink" : "button tiny",
+    "menu_tab_submit" : "button", 
     "menu_subtab" : "button-group force-button",
     "menu_subtab_item" : "",
-    "menu_subtab_itemlink" : "button tiny", 
+    "menu_subtab_itemlink" : "button tiny",
+    "menu_subtab_submit" : "button tiny", 
     <#-- Default section menu -->
     "menu_section" : "button-group",
     "menu_section_item" : "",
-    "menu_section_itemlink" : "button tiny", 
+    "menu_section_itemlink" : "button tiny",
+    "menu_section_submit" : "button tiny", 
     <#-- Default section menu inlined with title
         FIXME: looks too big/clumsy with these buttons (floats right of title) -->
     "menu_section_inline" : "button-group",
     "menu_section_inline_item" : "",
-    "menu_section_inline_itemlink" : "button tiny", 
+    "menu_section_inline_itemlink" : "button tiny",
+    "menu_section_inline_submit" : "button tiny", 
     <#-- default entry is used for any encountered menu types that have no specific entries in this hash -->    
     "menu_default" : "",  
     "menu_default_item" : "", 
-    "menu_default_itemlink" : "",  
+    "menu_default_itemlink" : "",
+    "menu_default_submit" : "",  
     
   <#-- Data and Tables -->  
     <#-- table type-based styles 
@@ -88,6 +97,7 @@
     "table_generic" : "",    <#-- represents free-form <table>. probably should have no class (let template decide). -->
     "table_generic_cellspacing" : "",
     "table_generic_rowtype" : "generic",    <#-- the default row type is normally "content", but generic tables need "generic" -->
+    "table_responsive_wrap" : "scrollable-table-container", <#-- responsive table wrapping div element -->
     "table_data_list" : "basic-table",  <#-- analogous to ofbiz "list" type form widgets -->
     "table_data_list_cellspacing" : 0,
     <#-- not enabled, but may be desirable: "table_data_list_autoaltrows" : true, -->

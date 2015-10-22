@@ -339,22 +339,22 @@
         <menu-item name="FindBillingAccount" title="${uiLabelMap.CommonFind}">
             <link target="FindBillingAccount" />
         </menu-item>
-        <menu-item name="EditBillingAccount" title="${uiLabelMap.AccountingAccount}">
+        <menu-item name="EditBillingAccount" title="${uiLabelMap.CommonAccount}">
             <link target="EditBillingAccount">
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
-        <menu-item name="EditBillingAccountRoles" title="${uiLabelMap.PartyRoles}">
+        <menu-item name="EditBillingAccountRoles" title="${uiLabelMap.CommonParties}">
             <link target="EditBillingAccountRoles">
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
-        <menu-item name="EditBillingAccountTerms" title="${uiLabelMap.PartyTerms}">
+        <menu-item name="EditBillingAccountTerms" title="${uiLabelMap.CommonTerms}">
             <link target="EditBillingAccountTerms">
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
-        <menu-item name="BillingAccountInvoices" title="${uiLabelMap.AccountingInvoices}">
+        <menu-item name="BillingAccountInvoices" title="${uiLabelMap.CommonInvoices}">
             <link target="BillingAccountInvoices">
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
@@ -364,7 +364,7 @@
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
-        <menu-item name="BillingAccountOrders" title="${uiLabelMap.AccountingOrders}">
+        <menu-item name="BillingAccountOrders" title="${uiLabelMap.CommonOrders}">
             <link target="BillingAccountOrders">
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>

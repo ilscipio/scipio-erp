@@ -28,8 +28,8 @@ under the License.
     <form name="FindFinAccounts" type="single" target="FindFinAccount"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-entity entity-name="FinAccount" default-field-type="find"/>
-        <field name="finAccountId"><text-find ignore-case="true"/></field>
-        <field name="finAccountTypeId" title="${uiLabelMap.CommonType}">
+        <field name="finAccountId" title="${uiLabelMap.CommonId}"><text-find ignore-case="true"/></field>
+        <field name="finAccountTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="FinAccountType">
                     <entity-order-by field-name="description"/>
@@ -153,9 +153,16 @@ under the License.
                 <order-by field-name="finAccountId"/>
             </entity-condition>
         </actions>
+        <row-actions>
+            <entity-one value-field="party" entity-name="PartyNameView"/>
+        </row-actions>
         <field name="finAccountId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.CommonParty}">
-            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}"/>
+        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_default}">
+           <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
+                <parameter param-name="partyId"/>
+                <parameter param-name="agreementId"/>
+                <parameter param-name="agreementItemSeqId"/>
+            </hyperlink>
         </field>
         <field name="roleTypeId" title="${uiLabelMap.CommonRole}"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
@@ -309,15 +316,15 @@ under the License.
     </form>
     <form name="QuickFindFinAccounts" type="single" target="FindFinAccount"
             header-row-style="header-row" default-table-style="basic-table">
-        <field name="finAccountId"><text-find ignore-case="true"/></field>
-        <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountType}">
+        <field name="finAccountId" title="${uiLabelMap.CommonId}"><text-find ignore-case="true"/></field>
+        <field name="finAccountTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="FinAccountType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="finAccountName"><text-find ignore-case="true"/></field>
+        <field name="finAccountName" title="${uiLabelMap.CommonName}"><text-find ignore-case="true"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>

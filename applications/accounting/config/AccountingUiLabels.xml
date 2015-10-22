@@ -7096,6 +7096,9 @@
         <value xml:lang="zh">总账账户</value>
         <value xml:lang="zh_TW">總帳科目</value>
     </property>
+    <property key="AccountingGlJournal">
+        <value xml:lang="en">Journal</value>
+    </property>
     <property key="AccountingGlJournals">
         <value xml:lang="de">Journale</value>
         <value xml:lang="en">Journals</value>

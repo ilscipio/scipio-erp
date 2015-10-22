@@ -900,16 +900,6 @@
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>
-        <menu-item name="sendPerEmail" title="${uiLabelMap.CommonSendPerEmail}">
-            <condition>
-                <not>
-                    <if-empty field="invoice.invoiceId" />
-                </not>
-            </condition>
-            <link target="sendPerEmail">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-            </link>
-        </menu-item>
         <menu-item name="commissionRun" title="${uiLabelMap.AccountingCommissionRun}">
             <link target="CommissionRun" />
         </menu-item>
@@ -933,31 +923,6 @@
             </condition>
             <link target="copyInvoice">
                 <parameter param-name="invoiceIdToCopyFrom" from-field="invoiceId" />
-            </link>
-        </menu-item>
-        <menu-item name="pdf" title="${uiLabelMap.CommonPdf}">
-            <condition>
-                <not>
-                    <if-empty field="invoice.invoiceId" />
-                </not>
-            </condition>
-            <link target="invoice.pdf" target-window="_BLANK">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-            </link>
-        </menu-item>
-        <menu-item name="pdfDfltCur" title="${uiLabelMap.AccountingInvoicePDFDefaultCur}(${defaultOrganizationPartyCurrencyUomId})">
-            <condition>
-                <and>
-                    <not>
-                        <if-empty field="invoice.invoiceId" />
-                    </not>
-                    <if-compare-field field="invoice.currencyUomId" operator="not-equals"
-                        to-field="defaultOrganizationPartyCurrencyUomId" />
-                </and>
-            </condition>
-            <link target="invoice.pdf" target-window="_BLANK">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-                <parameter param-name="currency" from-field="defaultOrganizationPartyCurrencyUomId" />
             </link>
         </menu-item>
         <menu-item name="statusToApproved" title="${uiLabelMap.AccountingInvoiceStatusToApproved}">
@@ -1151,6 +1116,41 @@
                 </and>
             </condition>
             <link target="InvoiceAcctgTransEntriesPdf">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+            </link>
+        </menu-item>
+        <menu-item name="pdfDfltCur" title="${uiLabelMap.AccountingInvoicePDFDefaultCur}(${defaultOrganizationPartyCurrencyUomId})">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="invoice.invoiceId" />
+                    </not>
+                    <if-compare-field field="invoice.currencyUomId" operator="not-equals"
+                        to-field="defaultOrganizationPartyCurrencyUomId" />
+                </and>
+            </condition>
+            <link target="invoice.pdf" target-window="_BLANK">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+                <parameter param-name="currency" from-field="defaultOrganizationPartyCurrencyUomId" />
+            </link>
+        </menu-item>
+        <menu-item name="pdf" title="${uiLabelMap.CommonPdf}">
+            <condition>
+                <not>
+                    <if-empty field="invoice.invoiceId" />
+                </not>
+            </condition>
+            <link target="invoice.pdf" target-window="_BLANK">
+                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
+            </link>
+        </menu-item>
+        <menu-item name="sendPerEmail" title="${uiLabelMap.CommonPdf}: ${uiLabelMap.CommonSendPerEmail}">
+            <condition>
+                <not>
+                    <if-empty field="invoice.invoiceId" />
+                </not>
+            </condition>
+            <link target="sendPerEmail" target-window="_blank">
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>

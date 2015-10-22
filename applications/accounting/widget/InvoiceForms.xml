@@ -26,10 +26,10 @@ under the License.
     <!-- Invoice forms -->
     <form name="FindInvoices" type="single" target="findInvoices" title="Find and list invoices"
         header-row-style="header-row" default-table-style="basic-table">
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="invoiceId"><text-find ignore-case="true"/></field>
+        <field name="invoiceId" title="${uiLabelMap.CommonId}"><text-find ignore-case="true"/></field>
+        <field name="invoiceDate" title="${uiLabelMap.CommonDate}" position="2"><date-find type="date"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
-        <field position="1" name="invoiceTypeId">
+        <field position="1" name="invoiceTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="InvoiceType"/>
             </drop-down>
@@ -41,11 +41,11 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
-        <field position="2" name="partyIdTo" parameter-name="partyId"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="1" name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="partyIdTo" parameter-name="partyId" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
-        <field name="invoiceDate"><date-find type="date"/></field>
         <field name="referenceNumber"><text-find/></field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -78,7 +78,7 @@ under the License.
                 .multiply(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceCurrencyConversionRate(delegator,invoiceId))}"/>
         </row-actions>
 
-        <field name="invoiceId" widget-style="${styles.link_default}" sort-field="true">
+        <field name="invoiceId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}" sort-field="true" widget-area-style="align-right" title-area-style="align-right">
             <hyperlink description="${invoiceId}" target="invoiceOverview">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
@@ -121,22 +121,22 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2"><display-entity entity-name="StatusItem"/></field>
         <field position="1" name="description"><display/></field>
         <field position="2" name="invoiceMessage"><display/></field>
-        <field position="1" name="partyIdFrom">
+        <field position="1" name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}">
             <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultFrom.fullName} [${invoice.partyIdFrom}]">
                 <parameter param-name="partyId" from-field="invoice.partyIdFrom"/>
             </hyperlink>
         </field>
-        <field position="2" name="partyIdTo" entry-name="partyId">
+        <field  title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}" position="2" name="partyIdTo" entry-name="partyId">
             <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultTo.fullName} [${invoice.partyId}]">
                 <parameter param-name="partyId" from-field="invoice.partyId"/>
             </hyperlink>
         </field>
-        <field position="1" name="roleTypeId"><display/></field>
+        <field position="1" name="roleTypeId" title="${uiLabelMap.CommonRole}"><display/></field>
         <field position="2" name="billingAccountId"><display/></field>
-        <field position="1" name="invoiceDate"><display type="date" description="${groovy:if(invoice.get(&quot;invoiceDate&quot;)!=null)return(invoice.getString(&quot;invoiceDate&quot;).substring(0,10));}"/></field>
-        <field position="2" name="dueDate"><display description="${groovy:if(invoice.get(&quot;dueDate&quot;)!=null)return(invoice.getString(&quot;dueDate&quot;).substring(0,10));}"/></field>
+        <field position="1" name="invoiceDate"><display type="date"/></field>
+        <field position="2" name="dueDate"><display type="date"/></field>
         <field position="1" name="total"><display description="${total}" type="currency" currency="${invoice.currencyUomId}"/></field>
-        <field position="2" name="paidDate"><display description="${groovy:if(invoice.get(&quot;paidDate&quot;)!=null)return(invoice.getString(&quot;paidDate&quot;).substring(0,10));}"/></field>
+        <field position="2" name="paidDate"><display type="date"/></field>
         <field position="1" name="referenceNumber" title="${uiLabelMap.FormFieldTitle_referenceNum}"><display/></field>
         <field name="currencyUomId"><hidden/></field>
     </form>
@@ -163,7 +163,7 @@ under the License.
         </field>
         <field name="orderItemSeqId" widget-area-style="align-text"><display/></field>
         <field name="inventoryItemId" widget-area-style="align-text"><display/></field>
-        <field name="quantity" widget-area-style="amounts"><display/></field>
+        <field name="quantity" widget-area-style="amount" title-area-style="align-right"><display/></field>
         <field name="amount" title="${uiLabelMap.AccountingUnitPrice}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
         <field name="total" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
         
@@ -212,30 +212,20 @@ under the License.
     </form>
     <form name="AcctgTransAndEntries" type="list" title="Accounting Transactions" list-name="acctgTransAndEntries"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
-        <auto-fields-entity entity-name="AcctgTransAndEntries" default-field-type="display"/>
-        <field name="invoiceId"><hidden/></field>
-        <field name="paymentId" title="${uiLabelMap.AccountingPayment}" widget-style="${styles.link_default}"><hyperlink target="paymentOverview?paymentId=${paymentId}" description="${paymentId}"/></field>
-        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="origAmount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${origCurrencyUomId}"/></field>
-        <field name="acctgTransId" widget-style="${styles.link_default}"><hyperlink description="${acctgTransId}" target="EditAcctgTrans?acctgTransId=${acctgTransId}&amp;organizationPartyId=${organizationPartyId}"/></field>
-        <field name="acctgTransTypeId"><display-entity entity-name="AcctgTransType"/></field>
-        <field name="glJournalId"><display-entity entity-name="GlJournal" description="${glJournalName}"/></field>
+        <field name="acctgTransId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}" widget-area-style="align-right" title-area-style="align-right">
+            <hyperlink description="${acctgTransId}" target="EditAcctgTrans?acctgTransId=${acctgTransId}&amp;organizationPartyId=${organizationPartyId}"/>
+        </field>
+        <field name="acctgTransTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="AcctgTransType"/></field>
+        <field name="transactionDate"><display/></field>
+        <field name="postedDate"><display/></field>
+        <field name="glJournalId" title="${uiLabelMap.AccountingGlJournal}"><display-entity entity-name="GlJournal" description="${glJournalId}"/></field>
+        <field name="glAccountId" title="${uiLabelMap.CommonAccount}"><display/></field>
         <field name="glAccountTypeId" title="${uiLabelMap.FormFieldTitle_glAccountType}"><display-entity entity-name="GlAccountType"/></field>
         <field name="glAccountClassId" title="${uiLabelMap.AccountingGlAccountClass}"><display-entity entity-name="GlAccountClass" description="${description}"/></field>
-        <field name="partyId" title="${uiLabelMap.PartyParty}"><display-entity entity-name="PartyNameView" description="${lastName} ${groupName}"/></field>
-        <field name="reconcileStatusId"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
-        <field name="origCurrencyUomId"><ignored/></field>
-        <field name="currencyUomId"><ignored/></field>
-        <field name="shipmentId"><ignored/></field>
-        <field name="receiptId"><ignored/></field>
-        <field name="inventoryItemId"><ignored/></field>
-        <field name="workEffortId"><ignored/></field>
-        <field name="physicalInventoryId"><ignored/></field>
-        <field name="transDescription"><ignored/></field>
-        <sort-order>
-            <sort-field name="acctgTransId"/>
-            <sort-field name="acctgTransEntrySeqId"/>
-        </sort-order>
+        <field name="reconcileStatusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
+        <field name ="debitCreditFlag" widget-area-style="aling-center"><display/></field>
+        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        
     </form>
 
     <form name="NewSalesInvoice" type="single" target="createInvoice" title="Edit Invoice Header" default-map-name="invoice"

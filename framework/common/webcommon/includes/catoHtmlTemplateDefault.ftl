@@ -1668,7 +1668,7 @@ Not associated with an HTML element as is @fieldset.
 
 <#-- migrated from @renderSubmitField form widget macro -->
 <#macro field_submit_widget_impl buttonType="" className="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
-    containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false>
+    containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions={}>
   <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
   <#if buttonType!="image">
     <#if !className?has_content || className=="smallSubmit">
@@ -1702,36 +1702,7 @@ Not associated with an HTML element as is @fieldset.
   </#if>
   </#local>
   </#if>
-  <#if !(showProgress?is_boolean && showProgress == false) && 
-       ((showProgress?is_boolean && showProgress == true) ||
-        ((htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true))>
-      <#local baseId = htmlFormRenderFormInfo.name!"" + "_catouplprogform">       
-      <#local progressOptions = {
-        "formSel" : "form[name=${htmlFormRenderFormInfo.name}]",
-        "progBarId" : "${baseId}_progbar",
-        "progTextBoxId" : "${baseId}_textbox",
-        
-        "expectedResultContainerSel" : "#main-content",
-        "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
-        "errorResultAddWrapper" : false
-      }>
-      <#local action = htmlFormRenderFormInfo.progressSuccessAction!"">
-      <#if action?starts_with("redirect;")>
-        <#local progressOptions = progressOptions + { "successRedirectUrl" : action?substring("redirect;"?length) }>
-      <#elseif action == "reload" || action?starts_with("reload:")>
-        <#-- FIXME: js-based reload doesn't work right in too many cases (e.g. when just came back to screen from
-             switching visual theme and try to upload; url is something unrelated to page) -->
-        <#local progressOptions = progressOptions + { "successReloadWindow" : true }>
-      </#if>
-      
-      <#if htmlFormRenderFormInfo.progressOptions?has_content>
-        <#-- json is valid freemarker map -->
-        <#local addOpts = ("{" + htmlFormRenderFormInfo.progressOptions + "}")?eval>
-        <#if addOpts?has_content>
-          <#local progressOptions = progressOptions + addOpts>  
-        </#if>
-      </#if>
-        
+  <#if progressOptions?has_content>
       <@fieldSubmitAreaProgress progressOptions=progressOptions nestedContent=buttonMarkup />
   <#else>
       ${buttonMarkup}

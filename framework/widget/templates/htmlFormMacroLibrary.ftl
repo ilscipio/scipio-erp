@@ -79,8 +79,40 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false>
+  <#local progressOptions = "">
+    <#if !(showProgress?is_boolean && showProgress == false) && 
+       ((showProgress?is_boolean && showProgress == true) ||
+        ((htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true))>
+      <#local baseId = htmlFormRenderFormInfo.name!"" + "_catouplprogform">       
+      <#local progressOptions = {
+        "formSel" : "form[name=${htmlFormRenderFormInfo.name}]",
+        "progBarId" : "${baseId}_progbar",
+        "progTextBoxId" : "${baseId}_textbox",
+        
+        "expectedResultContainerSel" : "#main-content",
+        "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
+        "errorResultAddWrapper" : false
+      }>
+      <#local action = htmlFormRenderFormInfo.progressSuccessAction!"">
+      <#if action?starts_with("redirect;")>
+        <#local progressOptions = progressOptions + { "successRedirectUrl" : action?substring("redirect;"?length) }>
+      <#elseif action == "reload" || action?starts_with("reload:")>
+        <#-- FIXME: js-based reload doesn't work right in too many cases (e.g. when just came back to screen from
+             switching visual theme and try to upload; url is something unrelated to page) -->
+        <#local progressOptions = progressOptions + { "successReloadWindow" : true }>
+      </#if>
+      
+      <#if htmlFormRenderFormInfo.progressOptions?has_content>
+        <#-- json is valid freemarker map -->
+        <#local addOpts = ("{" + htmlFormRenderFormInfo.progressOptions + "}")?eval>
+        <#if addOpts?has_content>
+          <#local progressOptions = progressOptions + addOpts>  
+        </#if>
+      </#if>
+    </#if>
+
   <#-- delegate to cato libs -->
-  <@field_submit_widget_impl buttonType=buttonType className=className alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation containerId=containerId ajaxUrl=ajaxUrl title=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled />
+  <@field_submit_widget_impl buttonType=buttonType className=className alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation containerId=containerId ajaxUrl=ajaxUrl title=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressOptions=progressOptions/>
 </#macro>
 
 <#macro renderResetField className alert name title="" fieldType="" fieldTitleBlank=false>

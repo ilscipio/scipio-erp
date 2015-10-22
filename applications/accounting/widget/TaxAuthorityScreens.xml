@@ -40,6 +40,25 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <condition>
+                                <and>
+                                    <if-service-permission service-name="acctgBasePermissionCheck"
+                                        main-action="VIEW" />
+                                    <not>
+                                        <if-empty field="taxAuthority" />
+                                    </not>
+                                </and>
+                            </condition>
+                            <widgets>
+                                <include-menu location="component://accounting/widget/TaxAuthorityMenus.xml" name="TaxAuthoritySideBar" />
+                            </widgets>
+                            <fail-widgets>
+                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="AccountingAppSideBar"/>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
                     <decorator-section name="body">
                         <section>
                             <!-- do check for ACCOUNTING, _VIEW permission -->
@@ -81,12 +100,27 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTaxAuthorityDecorator" location="${parameters.taxAuthDecoratorLocation}">
                     <decorator-section name="body">
-                        <container style="button-bar">
-                            <link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="${styles.button_default} create"/>
-                        </container>
-                        <screenlet title="${uiLabelMap.PageTitleFindTaxAuthority}">
-                            <include-form name="FindTaxAuthority" location="component://accounting/widget/TaxAuthorityForms.xml"/>
-                        </screenlet>
+                        <section>
+                            <widgets>
+                                <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                                    <decorator-section name="menu-bar">
+                                        <container style="button-bar">
+                                            <link target="EditTaxAuthority" text="${uiLabelMap.AccountingNewTaxAuthority}" style="${styles.button_default} create"/>
+                                        </container>
+                                    </decorator-section>
+                                    <decorator-section name="search-options">
+                                        <include-form name="FindTaxAuthority" location="component://accounting/widget/TaxAuthorityForms.xml"/>
+                                    </decorator-section>
+                                    <decorator-section name="search-results">
+                                        <include-form name="ListTaxAuthorities" location="component://accounting/widget/TaxAuthorityForms.xml" />
+                                    </decorator-section>
+                                </decorator-screen>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="perm-error-msg">${uiLabelMap.AccountingViewPermissionError}
+                                </label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

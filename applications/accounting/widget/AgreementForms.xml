@@ -64,7 +64,7 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
-
+    
     <form name="ListAgreements" list-name="listIt" target="" title="" type="list" paginate-target="FindAgreement"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar" header-row-style="header-row-2">
         <actions>

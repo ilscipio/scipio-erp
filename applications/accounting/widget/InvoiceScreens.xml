@@ -460,9 +460,6 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.invoiceDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingInvoiceItems}">
-                            <include-form name="EditInvoiceItems" location="component://accounting/widget/InvoiceForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.AccountingInvoiceItemAdd}">
                             <section>
                                 <condition>
@@ -475,6 +472,9 @@ under the License.
                                     <platform-specific><html><html-template location="component://accounting/webapp/accounting/invoice/InvoiceItemsPayrol.ftl"/></html></platform-specific>
                                 </fail-widgets>
                             </section>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.AccountingInvoiceItems}">
+                            <include-form name="EditInvoiceItems" location="component://accounting/widget/InvoiceForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

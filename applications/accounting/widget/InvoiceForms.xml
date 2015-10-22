@@ -177,16 +177,18 @@ under the License.
     <form name="invoiceRoles" type="list" use-row-submit="true" title="" list-name="invoiceRoles" paginate-target="invoiceRoles"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <!--auto-fields-entity entity-name="InvoiceRole" default-field-type="display"/-->
+        <row-actions>
+            <entity-one value-field="party" entity-name="PartyNameView"/>
+        </row-actions>
         <field name="invoiceId"><hidden/></field>
-        <field name="partyId" widget-style="${styles.link_default}">
-            <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_default}">
+           <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
                 <parameter param-name="partyId"/>
+                <parameter param-name="agreementId"/>
+                <parameter param-name="agreementItemSeqId"/>
             </hyperlink>
         </field>
-        <field name="name" entry-name="partyId">
-            <display-entity also-hidden="false" entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${firstName} ${lastName}"/>
-        </field>
-        <field name="roleTypeId">
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
             <display-entity also-hidden="false" entity-name="RoleType"/>
         </field>
         <field name="percentage"><display/></field>
@@ -240,14 +242,14 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="1" name="organizationPartyId" parameter-name="partyIdFrom">
+        <field position="1" name="organizationPartyId" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}" parameter-name="partyIdFrom">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field position="2" name="partyIdTo" parameter-name="partyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="partyIdTo" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}" parameter-name="partyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field position="1" name="createAction" widget-style="smallSubmit" title="${uiLabelMap.CommonCreate}">
             <submit button-type="button"/>
         </field>
@@ -264,14 +266,15 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="1" name="organizationPartyId" parameter-name="partyId">
+        <field position="1" name="partyIdFrom"  title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        
+        <field position="2" name="organizationPartyId" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}" parameter-name="partyId">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyId}">
                 <entity-options description="${groupName}" entity-name="PartyAcctgPrefAndGroup" key-field-name="partyId">
                     <entity-order-by field-name="groupName"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field position="2" name="partyIdFrom" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
         <field position="1" name="createAction" widget-style="smallSubmit" title="${uiLabelMap.CommonCreate}">
             <submit button-type="button"/>
         </field>
@@ -497,20 +500,21 @@ under the License.
 
     <form name="ListInvoiceRoles" type="list" use-row-submit="true" title="" list-name="invoiceRoles" paginate-target="invoiceRoles"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
-        <!--auto-fields-entity entity-name="InvoiceRole" default-field-type="display"/-->
+        <row-actions>
+            <entity-one value-field="party" entity-name="PartyNameView"/>
+        </row-actions>
         <field name="invoiceId"><hidden/></field>
-        <field name="partyId" widget-style="${styles.link_default}">
-            <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_default}">
+           <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
                 <parameter param-name="partyId"/>
+                <parameter param-name="agreementId"/>
+                <parameter param-name="agreementItemSeqId"/>
             </hyperlink>
         </field>
-        <field name="name" entry-name="partyId">
-            <display-entity also-hidden="false" entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${firstName} ${lastName}"/>
-        </field>
-        <field name="roleTypeId">
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
             <display-entity also-hidden="false" entity-name="RoleType"/>
         </field>
-        <field name="percentage"><display/></field>
+        <field name="percentage" widget-area-style="amount" title-area-style="align-right"><display/></field>
         <field name="datetimePerformed"><display/></field>
         <field name="removeAction" widget-style="${styles.button_default}">
            <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceRole">
@@ -524,18 +528,20 @@ under the License.
     </form>
     <form name="EditInvoiceRole" type="single" target="createInvoiceRole" title=""
         header-row-style="header-row" default-table-style="basic-table">
-        <auto-fields-entity entity-name="InvoiceRole"/>
         <field name="invoiceId"><hidden/></field>
-        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="roleTypeId">
+        <field name="partyId" title="${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}" position="2">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="RoleType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="percentage"><text/></field>
+        <field name="datetimePerformed" position="2"><date-time/></field>
+        <field name="submitAction" widget-style="smallSubmit" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
+    
     <form name="SendPerEmail" type="single" target="executeSendPerEmail" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <actions>
@@ -557,6 +563,7 @@ under the License.
         <field name="bodyText"><textarea/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
     <form name="EditTimeEntries" type="list" list-name="timeEntries"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <auto-fields-service service-name="updateTimeEntry" default-field-type="display"/>

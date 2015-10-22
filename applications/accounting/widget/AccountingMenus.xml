@@ -76,22 +76,22 @@
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
         </menu-item>
-        <menu-item name="AgreementTerms" title="${uiLabelMap.AccountingAgreementTerms}">
+        <menu-item name="AgreementTerms" title="${uiLabelMap.CommonTerms}">
             <link target="EditAgreementTerms">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
         </menu-item>
-        <menu-item name="AgreementItems" title="${uiLabelMap.AccountingAgreementItems}">
+        <menu-item name="AgreementItems" title="${uiLabelMap.CommonItems}">
             <link target="ListAgreementItems">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
         </menu-item>
-        <menu-item name="AgreementWorkEffortApplics" title="${uiLabelMap.AccountingAgreementWorkEffortApplics}">
+        <menu-item name="AgreementWorkEffortApplics" title="${uiLabelMap.WorkEffort}">
             <link target="EditAgreementWorkEffortApplics">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
         </menu-item>
-        <menu-item name="AgreementRoles" title="${uiLabelMap.AccountingAgreementRoles}">
+        <menu-item name="AgreementRoles" title="${uiLabelMap.CommonParties}">
             <link target="EditAgreementRoles">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
@@ -818,23 +818,7 @@
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>
-        <menu-item name="editInvoice" title="${uiLabelMap.AccountingInvoiceHeader}">
-            <condition>
-                <and>
-                    <not>
-                        <if-empty field="invoice.invoiceId" />
-                    </not>
-                    <or>
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS" />
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED" />
-                    </or>
-                </and>
-            </condition>
-            <link target="editInvoice">
-                <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
-            </link>
-        </menu-item>
-        <menu-item name="listInvoiceItems" title="${uiLabelMap.AccountingInvoiceItems}">
+        <menu-item name="listInvoiceItems" title="${uiLabelMap.CommonItems}">
             <condition>
                 <and>
                     <not>
@@ -866,16 +850,12 @@
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>
-        <menu-item name="invoiceRoles" title="${uiLabelMap.AccountingInvoiceRoles}">
+        <menu-item name="invoiceRoles" title="${uiLabelMap.CommonParties}">
             <condition>
                 <and>
                     <not>
                         <if-empty field="invoice.invoiceId" />
                     </not>
-                    <or>
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_IN_PROCESS" />
-                        <if-compare field="invoice.statusId" operator="equals" value="INVOICE_RECEIVED" />
-                    </or>
                 </and>
             </condition>
             <link target="invoiceRoles">

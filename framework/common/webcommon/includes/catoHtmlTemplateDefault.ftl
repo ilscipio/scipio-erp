@@ -1220,6 +1220,7 @@ Not associated with an HTML element as is @fieldset.
 
 <#-- INDIVIDUAL FIELD IMPLEMENTATIONS
      DEV NOTE: see @section_impl for details on current _impl pattern used below (transitory)
+     These are not final implementation pattern and transitory to eliminate macro lib dependencies.
      TODO: clean up macro arguments
      NOTE: "widget" here refers to the common meaning; not any specific ofbiz meaning -->
 

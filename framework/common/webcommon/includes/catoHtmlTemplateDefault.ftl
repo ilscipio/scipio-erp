@@ -260,8 +260,9 @@ levels manually, but most often should let @section menu handle them.
 <#-- 
     migrated from @renderScreenletBegin/End screen widget macro
     DEV NOTE: section_impl and similar macros ARE NOT a final implementation pattern. 
-          it was created initially strictly to remove dependency of cato libs on ofbiz macro library. may need refinement.
-    TODO: clean up macro arguments and dissect further
+        it was created initially strictly to remove dependency of cato libs on ofbiz macro library,
+        and to head toward separating macro logic and markup.
+    TODO: refinement, clean up macro arguments and dissect further
           
     fromWidgets: hint of whether called by renderer or ftl macros
     hasContent: hint to say there will be content, workaround for styling -->
@@ -1220,7 +1221,8 @@ Not associated with an HTML element as is @fieldset.
 
 <#-- INDIVIDUAL FIELD IMPLEMENTATIONS
      DEV NOTE: see @section_impl for details on current _impl pattern used below (transitory)
-     These are not final implementation pattern and transitory to eliminate macro lib dependencies.
+     These are not final implementation pattern and transitory to eliminate macro lib dependencies,
+     and to head toward separating macro logic and markup.
      TODO: clean up macro arguments
      NOTE: "widget" here refers to the common meaning; not any specific ofbiz meaning -->
 

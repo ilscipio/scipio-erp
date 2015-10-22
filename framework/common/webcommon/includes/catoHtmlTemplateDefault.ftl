@@ -1174,12 +1174,12 @@ Not associated with an HTML element as is @fieldset.
   <#return widgetFieldTypeToStyleNameMap[fieldType]!"other">
 </#function>
 
-<#-- migrated from renderClass form widget macro -->
+<#-- migrated from @renderClass form widget macro -->
 <#macro fieldClassStr className alert="false">
   <#if className?has_content || alert?string == "true"> class="${className!}<#if alert?string == "true"> alert</#if>" </#if>
 </#macro>
 
-<#-- migrated from renderSubmitFieldAreaProgress form widget macro -->
+<#-- migrated from @renderSubmitFieldAreaProgress form widget macro -->
 <#macro fieldSubmitAreaProgress progressOptions nestedContent=true>
   <#if !nestedContent?is_string>
     <#if nestedContent?is_boolean && nestedContent == false>
@@ -1223,7 +1223,7 @@ Not associated with an HTML element as is @fieldset.
      TODO: clean up macro arguments
      NOTE: "widget" here refers to the common meaning; not any specific ofbiz meaning -->
 
-<#-- migrated from renderTextField form widget macro -->
+<#-- migrated from @renderTextField form widget macro -->
 <#macro field_input_widget_impl name="" className="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
     mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false>
   <#if mask?has_content && mask>
@@ -1251,7 +1251,7 @@ Not associated with an HTML element as is @fieldset.
   </#if>
 </#macro>
 
-<#-- migrated from renderTextareaField form widget macro -->
+<#-- migrated from @renderTextareaField form widget macro -->
 <#macro field_textarea_widget_impl name="" className="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
     buttons="" language="" tooltip="" title="" fieldTitleBlank=false collapse=false>
 
@@ -1317,7 +1317,7 @@ Not associated with an HTML element as is @fieldset.
                 };
 </#assign>
 
-<#-- migrated from renderDateTimeField form widget macro -->
+<#-- migrated from @renderDateTimeField form widget macro -->
 <#macro field_datetime_widget_impl name="" className="" title="" value="" size="" maxlength="" id="" dateType="" shortDateInput=false 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
@@ -1398,7 +1398,7 @@ Not associated with an HTML element as is @fieldset.
   </div>
 </#macro>
 
-<#-- migrated from renderDateFindField form widget macro -->
+<#-- migrated from @renderDateFindField form widget macro -->
 <#macro field_datefind_widget_impl className="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" 
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleStyle="" defaultOptionFrom="" defaultOptionThru="" 
     opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="">
@@ -1453,7 +1453,7 @@ Not associated with an HTML element as is @fieldset.
   </div>
 </#macro>
 
-<#-- migrated from renderDropDownField form widget macro -->
+<#-- migrated from @renderDropDownField form widget macro -->
 <#macro field_select_widget_impl name="" className="" alert="" id="" multiple="" formName="" otherFieldName="" size="" firstInList="" 
     currentValue="" explicitDescription="" allowEmpty="" options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" noCurrentSelectedKey="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
@@ -1502,7 +1502,7 @@ Not associated with an HTML element as is @fieldset.
   </#if>
 </#macro>
 
-<#-- migrated from renderLookupField form widget macro -->
+<#-- migrated from @renderLookupField form widget macro -->
 <#macro field_lookup_widget_impl name="" formName="" fieldFormName="" className="" alert="false" value="" size="" 
     maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" 
     targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" 
@@ -1628,7 +1628,7 @@ Not associated with an HTML element as is @fieldset.
   </#if>
 </#macro>
 
-<#-- migrated from renderCheckBox form widget macro -->
+<#-- migrated from @renderCheckBox form widget macro -->
 <#macro field_checkbox_widget_impl id="" checked=false currentValue="N" name="" action="" tooltip="" fieldTitleBlank=false>
     <div class="switch small">
     <input type="checkbox" id="<#if id?has_content>${id}<#else>${name!}</#if>"<#rt/>
@@ -1640,7 +1640,7 @@ Not associated with an HTML element as is @fieldset.
     </div>
 </#macro>
 
-<#-- migrated from renderRadioField form widget macro -->
+<#-- migrated from @renderRadioField form widget macro -->
 <#macro field_radio_widget_impl items="" className="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="">
   <#list items as item>
     <span <@fieldClassStr className alert />><#rt/>
@@ -1653,17 +1653,17 @@ Not associated with an HTML element as is @fieldset.
   </#list>
 </#macro>
 
-<#-- migrated from renderFileField form widget macro -->
+<#-- migrated from @renderFileField form widget macro -->
 <#macro field_file_widget_impl className="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false>
   <input type="file" <@fieldClassStr className alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
 </#macro>
 
-<#-- migrated from renderPasswordField form widget macro -->
+<#-- migrated from @renderPasswordField form widget macro -->
 <#macro field_password_widget_impl className="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" fieldTitleBlank=false>
   <input type="password" <@fieldClassStr className alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/>
 </#macro>
 
-<#-- migrated from renderSubmitField form widget macro -->
+<#-- migrated from @renderSubmitField form widget macro -->
 <#macro field_submit_widget_impl buttonType="" className="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
     containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false>
   <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
@@ -1735,7 +1735,7 @@ Not associated with an HTML element as is @fieldset.
   </#if>
 </#macro>
 
-<#-- migrated from renderDisplayField form widget macro -->
+<#-- migrated from @renderDisplayField form widget macro -->
 <#macro field_display_widget_impl type="" imageLocation="" idName="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
     inPlaceEditorParams="" imageAlt=""collapse=false fieldTitleBlank=false>
   <#if type?has_content && type=="image">
@@ -1763,7 +1763,7 @@ Not associated with an HTML element as is @fieldset.
     </#if>
 </#macro>
 
-<#-- migrated from renderRangeFindField form widget macro -->
+<#-- migrated from @renderRangeFindField form widget macro -->
 <#macro field_textfind_widget_impl name="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
     opIsEmpty="" opNotEqual="" className="" alert="" size="" maxlength="" autocomplete="" titleStyle="" 
     hideIgnoreCase="" ignCase="" ignoreCase="" title="" fieldTitleBlank=false>
@@ -1811,7 +1811,7 @@ Not associated with an HTML element as is @fieldset.
   </@row>
 </#macro>
 
-<#-- migrated from renderRangeFindField form widget macro -->
+<#-- migrated from @renderRangeFindField form widget macro -->
 <#macro field_rangefind_widget_impl className="" alert="" name="" value="" size="" maxlength="" autocomplete="" titleStyle="" defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" value2="" defaultOptionThru="">
   <#local class1="${styles.grid_small!}9 ${styles.grid_large!}9"/>
   <#local class2="${styles.grid_small!}3 ${styles.grid_large!}3"/>
@@ -1852,7 +1852,7 @@ Not associated with an HTML element as is @fieldset.
   </@row>
 </#macro>
 
-<#-- migrated from renderField form widget macro -->
+<#-- migrated from @renderField form widget macro -->
 <#macro field_generic_widget_impl text="">
   <#if text??>
     ${text}<#lt/>
@@ -1991,7 +1991,7 @@ A fieldset including the HTML element.
                      single: produces a single pagination menu
                      content: decorates the nested content with one or more pagination menus
    type            = [default], default default, type of the pagination menu itself
-                     default: default cato pagination menu (currently @renderNextPrev numbered menu)
+                     default: default cato pagination menu
    layout          = [default|top|bottom|both], default default, type of layout, only meaningful for "content" mode
                      default: cato default layout (currently "both")
                      top: no more than one menu, always at top
@@ -2126,7 +2126,7 @@ A fieldset including the HTML element.
     <#local noResultsMode = "hide">
   </#if>
   <#local showNextPrev = (noResultsMode != "hide") || (listSize > 0)>  
-  <#-- DEV NOTE: make sure all @renderNextPrev calls same (DO NOT use #local capture; risks duplicate IDs) -->
+  <#-- DEV NOTE: make sure all @paginate_impl calls same (DO NOT use #local capture; risks duplicate IDs) -->
   <#if mode == "single">
       <#if showNextPrev>
         <@paginate_impl ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateStyle=classes paginateFirstStyle="${styles.pagination_item_first!}" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousStyle="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextStyle="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastStyle="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnStyle="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffStyle="" paginateOffLabel=uiLabelMap.CommonPagingOff />

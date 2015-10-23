@@ -21,14 +21,11 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 
 import freemarker.core.Environment;
-import freemarker.ext.beans.BeanModel;
 import freemarker.ext.util.WrapperTemplateModel;
-import freemarker.template.SimpleScalar;
 import freemarker.template.SimpleSequence;
-import freemarker.template.TemplateHashModel;
+import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateScalarModel;
 import javolution.util.FastMap;
 
 /**
@@ -713,53 +710,26 @@ public final class CommonFtlUtil {
         return res;
     }
 
-
-    public static boolean isObjectType(FtlObjectType ftlType, TemplateModel object) {
-        switch(ftlType) {
-        case STRING:
-            if (object instanceof SimpleScalar) {
-                return true;
-            }
-            else if (object instanceof WrapperTemplateModel) {
-                Object wrappedObject = ((WrapperTemplateModel) object).getWrappedObject();
-                if (wrappedObject instanceof CharSequence) {
-                    return true;
-                }
-            }
-            break;
-        case MAP:
-            if (object instanceof TemplateHashModel) {
-                if (object instanceof WrapperTemplateModel) {
-                    Object wrappedObject = ((WrapperTemplateModel) object).getWrappedObject();
-                    if (wrappedObject instanceof Map) { // in ofbiz context, this could be string or other
-                        return true;
-                    }
-                }
-                else {
-                    // doesn't wrap anything, so probably a simple hash model of some sort
-                    return true;
-                }
-            }
-            break;
-        case SIMPLEMAP:
-            if (object instanceof TemplateHashModel && !(object instanceof BeanModel)) {
-                // approximation
-                return true;
-            }
-            break;
-        case COMPLEXMAP:
-            if (object instanceof TemplateHashModel && object instanceof BeanModel) {
-                Object wrappedObject = ((WrapperTemplateModel) object).getWrappedObject();
-                if (wrappedObject instanceof Map) { // in ofbiz context, this could be string or other
-                    return true;
-                }
-            }
-            break;
-        }
-        return false;
-    }
-
+    /**
+     * Checks if the given model matches the logical FTL object type.
+     * 
+     * @see com.ilscipio.cato.webapp.ftl.OfbizFtlObjectType
+     */
     public static boolean isObjectType(String ftlTypeName, TemplateModel object) {
-        return isObjectType(FtlObjectType.fromFtlNameSafe(ftlTypeName), object);
+        return OfbizFtlObjectType.isObjectTypeSafe(ftlTypeName, object);
+    }
+    
+    public static Object getMapKeys(TemplateModel object) throws TemplateModelException {
+        if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
+            // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
+            Map<Object, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
+            return wrappedObject.keySet();
+        }
+        else if (object instanceof TemplateHashModelEx) {
+            return ((TemplateHashModelEx) object).keys();
+        }
+        else {
+            throw new TemplateModelException("object is not a map or does not support key iteration");
+        }
     }
 }

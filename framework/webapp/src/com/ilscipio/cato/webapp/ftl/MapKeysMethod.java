@@ -19,19 +19,22 @@
 package com.ilscipio.cato.webapp.ftl;
 
 import java.util.List;
+import java.util.Map;
 
+import org.ofbiz.base.util.UtilGenerics;
+
+import freemarker.ext.util.WrapperTemplateModel;
+import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateScalarModel;
 
 /**
- * Cato: IsObjectTypeMethod - Freemarker Method to check if variable is strictly a string or map or 
- * variant of, because ?is_string and ?is_hash are not sufficient for widget context vars.
+ * Cato: MapKeysMethod - Helper method to get the logical map keys for any type of map (?keys or .ketSet()).
  */
-public class IsObjectTypeMethod implements TemplateMethodModelEx {
+public class MapKeysMethod implements TemplateMethodModelEx {
 
-    public static final String module = IsObjectTypeMethod.class.getName();
+    public static final String module = MapKeysMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -39,13 +42,12 @@ public class IsObjectTypeMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        if (args == null || args.size() != 2) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 2)");
+        if (args == null || args.size() != 1) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 1)");
         }
-        String type = ((TemplateScalarModel) args.get(0)).getAsString();
-        TemplateModel object = (TemplateModel) args.get(1);
-
-        return OfbizFtlObjectType.isObjectTypeSafe(type, object);
+        TemplateModel object = (TemplateModel) args.get(0);
+        
+        return CommonFtlUtil.getMapKeys(object);
     }
     
 }

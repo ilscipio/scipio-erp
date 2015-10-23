@@ -343,16 +343,35 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
 *************
 * isObjectType function
 ************
+Checks the given FTL object against a set of logical types.
 Perform special logical type checks because ?is_string and ?is_hash are insufficient for BeanModel-based
 widget context vars.
+Implemented as java transform.
 
    * Parameters *
-    type        = [string|map|simplemap|wrappedmap]
+    type        = [string|map|simplemap|complexmap]
+                  string: Anything meant to be a string WITHOUT being a more complex type.
+                  map: Simple hash, or context map that exposes methods as keys (BeanModel with underlying Map) 
+                       (simplemap or complexmap)
+                  simplemap: Simple hash only (?keys to get elems).
+                  complexmap: Context map that exposes methods as keys (BeanModel) only (.keySet() to get elems).
     object      = the object to test
 
 <#function isObjectType type object>
 - implemented as java transform -
 </#function>
+-->
+
+<#-- 
+*************
+* mapKeys function
+************
+Gets the logical map keys from any object whether FTL hash (?keys) or context var (.ketSet()).
+Implemented as java transform.
+
+<#function mapKeys object>
+- implemented as java transform -
+</#function> 
 -->
 
 <#-- 
@@ -368,11 +387,10 @@ TODO? This is currently inefficient; but must guarantee immutability.
   <#-- WARN: context objects implement ?is_hash, in particular strings, so needs extra checks... -->
   <#if isObjectType("map", first)>
     <#if isObjectType("map", second)>
-      <#if isObjectType("complexmap", first) || isObjectType("complexmap", second)>
-        <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].concatMaps(first, second)>
-      <#else>
-        <#-- probably both FTL hashes -->
+      <#if isObjectType("simplemap", first) && isObjectType("simplemap", second)>
         <#return first + second>
+      <#else>
+        <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].concatMaps(first, second)>
       </#if>
     <#else>
       <#return first>
@@ -575,22 +593,12 @@ TODO: doesn't handle dates (ambiguous?)
         </#list> 
         <#if wrap>]</#if><#rt>
       <#else>[]</#if>
-    <#elseif isObjectType("complexmap", object)>
-        <#-- Map from java/groovy; doesn't work properly with ?keys even though implements ?is_hash_ex -->
+    <#elseif object?is_hash_ex && isObjectType("map", object)>
       <#if (maxDepth < 0) || (currDepth <= maxDepth)>
         <#if wrap>{</#if><#lt>
-        <#list object.keySet() as key>
+        <#list mapKeys(object) as key> 
             "${escapeScriptString(lang, key, escape)}" : <#if object[key]??><@objectAsScript lang=lang object=object[key] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) /><#else>null</#if><#if key_has_next || hasMore>,</#if>
-        </#list> 
-        <#if wrap>}</#if><#rt>
-      <#else>{}</#if>
-    <#elseif object?is_hash_ex && isObjectType("simplemap", object)> <#-- if no toString method, is probably a simple FTL hash type -->
-        <#-- check last because a lot of things implement ?is_hash_ex you might not expect - including strings... -->
-      <#if (maxDepth < 0) || (currDepth <= maxDepth)>
-        <#if wrap>{</#if><#lt>
-        <#list object?keys as key> 
-            "${escapeScriptString(lang, key, escape)}" : <#if object[key]??><@objectAsScript lang=lang object=object[key] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) /><#else>null</#if><#if key_has_next || hasMore>,</#if>
-        </#list> 
+        </#list>
         <#if wrap>}</#if><#rt>
       <#else>{}</#if>
     <#elseif object?is_string> 
@@ -1235,7 +1243,7 @@ Usage example:
                 <tr><td>${key}</td><td><@printVar value=var[key]!"" platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></td></tr>
             </#list>
             </table>-->
-            <@objectAsScript lang="json" object=var maxDepth=maxDepth currDepth=currDepth />
+            <#--<@objectAsScript lang="json" object=var maxDepth=maxDepth currDepth=currDepth />-->
           </#if>
         <#elseif var?is_string>
             ${var?string}

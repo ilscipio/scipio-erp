@@ -710,7 +710,7 @@
                 <parameter param-name="fixedAssetId" />
             </link>
         </menu-item>
-        <menu-item name="FixedAssetDepreciation" title="${uiLabelMap.AccountingFixedAssetDepreciation}">
+        <menu-item name="FixedAssetDepreciation" title="${uiLabelMap.AccountingDepreciation}">
             <link target="showFixedAssetDepreciation">
                 <parameter param-name="fixedAssetId" />
             </link>
@@ -1183,6 +1183,12 @@
             </link>
         </menu-item>
     </menu>
+    
+    <menu name="OrganizationAccountingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        selected-menuitem-context-field-name="active">
+        <include-elements menu-name="OrganizationAccountingTabBar" recursive="includes-only" />
+    </menu>
+    
     <menu name="OrganizationAccountingReportsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="tabButtonItem2" default-menu-item-name="TrialBalance">
         <menu-item name="TrialBalance" title="${uiLabelMap.AccountingTrialBalance}">

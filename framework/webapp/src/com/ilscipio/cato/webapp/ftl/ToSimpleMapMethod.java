@@ -20,16 +20,17 @@ package com.ilscipio.cato.webapp.ftl;
 
 import java.util.List;
 
+import freemarker.core.Environment;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * Cato: MapKeysMethod - Helper method to get the logical map keys for any type of map (?keys or .ketSet()).
+ * Cato: ToSimpleMapMethod -Another workaround for BeansWrapper kludge.
  */
-public class MapKeysMethod implements TemplateMethodModelEx {
+public class ToSimpleMapMethod implements TemplateMethodModelEx {
 
-    public static final String module = MapKeysMethod.class.getName();
+    public static final String module = ToSimpleMapMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -37,12 +38,12 @@ public class MapKeysMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        if (args == null || args.size() != 1) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 1)");
+        if (args == null || args.size() < 1 || args.size() > 2) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
         }
+        Environment env = FtlTransformUtil.getCurrentEnvironment();
         TemplateModel object = (TemplateModel) args.get(0);
-        
-        return CommonFtlUtil.getMapKeys(object);
+        return CommonFtlUtil.toSimpleMap(env.getObjectWrapper(), object);
     }
     
 }

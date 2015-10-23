@@ -364,6 +364,32 @@ Implemented as java transform.
 
 <#-- 
 *************
+* copyObject function
+************
+Performs a shallow copy of a map (TODO: lists). Usually not needed in FTL; for advanced usage.
+The resulting underlying type may differ from the original, but by default will be similar.
+Implemented as java transform.
+
+<#function copyObject object>
+- implemented as java transform -
+</#function>
+-->
+
+<#-- 
+*************
+* toSimpleMap function
+************
+Takes a bean-wrapped map and gives it a simple map adapter instead. Does not perform a copy.
+If it is not a complex map but already another type of map, returns it as-is. Other types throw errors.
+Implemented as java transform.
+
+<#function toSimpleMap object>
+- implemented as java transform -
+</#function>
+-->
+
+<#-- 
+*************
 * mapKeys function
 ************
 Gets the logical map keys from any object whether FTL hash (?keys) or context var (.ketSet()).

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,11 +22,20 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 
 import freemarker.core.Environment;
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.ext.beans.SimpleMapModel;
 import freemarker.ext.util.WrapperTemplateModel;
+import freemarker.template.ObjectWrapper;
+import freemarker.template.SimpleHash;
 import freemarker.template.SimpleSequence;
+import freemarker.template.TemplateCollectionModel;
+import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateModelIterator;
+import freemarker.template.TemplateScalarModel;
+import freemarker.template.TemplateSequenceModel;
 import javolution.util.FastMap;
 
 /**
@@ -730,6 +740,61 @@ public final class CommonFtlUtil {
         }
         else {
             throw new TemplateModelException("object is not a map or does not support key iteration");
+        }
+    }
+    
+    /**
+     * Shallow-copies map or list. Note: won't preserve order for maps.
+     * 
+     * @param object
+     * @param toSimpleType if true, converts to simple FTL type instead of beans, where possible
+     * @return
+     * @throws TemplateModelException
+     */
+    public static Object copyObject(ObjectWrapper objectWrapper, TemplateModel object, boolean toSimpleType) throws TemplateModelException {
+        if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
+            // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
+            Map<Object, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
+            if (toSimpleType) {
+                return new SimpleHash(wrappedObject, objectWrapper);
+            }
+            else {
+                return new HashMap<Object, Object>(wrappedObject);
+            }
+        }
+        else if (object instanceof TemplateHashModelEx && OfbizFtlObjectType.MAP.isObjectType(object)) {
+            TemplateHashModelEx hashModel = (TemplateHashModelEx) object;
+            SimpleHash res = new SimpleHash(objectWrapper);
+            TemplateCollectionModel modelColl = hashModel.keys();
+            TemplateModelIterator modelIt = modelColl.iterator();
+            while(modelIt.hasNext()) {
+                String key = ((TemplateScalarModel) modelIt.next()).getAsString();
+                res.put(key, hashModel.get(key));
+            }
+            return res;
+        }
+        else if (object instanceof TemplateCollectionModel) {
+            throw new TemplateModelException("object is not cloneable - TODO");
+        }
+        else if (object instanceof TemplateSequenceModel) {
+            throw new TemplateModelException("object is not cloneable - TODO");
+        }
+        else {
+            throw new TemplateModelException("object is not cloneable");
+        }
+    }
+    
+    public static TemplateHashModel toSimpleMap(ObjectWrapper objectWrapper, TemplateModel object) throws TemplateModelException {
+        if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
+            // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
+            Map<Object, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
+            return new SimpleMapModel(wrappedObject, (BeansWrapper) objectWrapper);
+        }
+        else if (object instanceof TemplateHashModel) {
+            return (TemplateHashModel) object;
+        }
+        else {
+            throw new TemplateModelException("object is not a recognized map type");
         }
     }
 }

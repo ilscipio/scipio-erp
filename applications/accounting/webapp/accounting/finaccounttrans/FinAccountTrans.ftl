@@ -130,7 +130,7 @@ function getFinAccountTransRunningTotalAndBalances() {
           <@th>${uiLabelMap.FormFieldTitle_transactionDate}</@th>
           <@th>${uiLabelMap.FormFieldTitle_entryDate}</@th>
           <@th class="align-right">${uiLabelMap.CommonAmount}</@th>
-          <@th>${uiLabelMap.FormFieldTitle_paymentId}</@th>
+          <@th>${uiLabelMap.CommonPayment}</@th>
           <@th>${uiLabelMap.OrderPaymentType}</@th>
           <@th>${uiLabelMap.CommonMethod}</@th>
           <@th>${uiLabelMap.CommonStatus}</@th>

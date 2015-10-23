@@ -42,7 +42,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glJournalId" position="2">
+        <field name="glJournalId" title="${uiLabelMap.AccountingGlJournal}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="GlJournal" description="${glJournalName} [${glJournalId}]">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -142,7 +142,7 @@ under the License.
         
         <field name="acctgTransId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field name="organizationPartyId" map-name="parameter"><hidden/></field>
-        <field name="acctgTransTypeId" title="${uiLabelMap.AccountingTransactionType}" position="2">
+        <field name="acctgTransTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down>
                 <entity-options entity-name="AcctgTransType" description="${description}">
                     <entity-order-by field-name="acctgTransTypeId"/>
@@ -156,7 +156,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glJournalId" position="2">
+        <field name="glJournalId" title="${uiLabelMap.AccountingGlJournal}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="GlJournal" description="${glJournalName} [${glJournalId}]">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -273,7 +273,7 @@ under the License.
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}">
             <display-entity entity-name="GlFiscalType"/>
         </field>
-        <field name="glJournalId" position="2">
+        <field name="glJournalId" title="${uiLabelMap.AccountingGlJournal}" position="2">
                 <display-entity entity-name="GlJournal" description="${glJournalName}"/>
         </field>
         <field name="transactionDate" position="1"/>
@@ -363,7 +363,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glJournalId" position="2">
+        <field name="glJournalId" title="${uiLabelMap.AccountingGlJournal}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="GlJournal" description="${glJournalName} [${glJournalId}]">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -666,7 +666,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glJournalId">
+        <field name="glJournalId" title="${uiLabelMap.AccountingGlJournal}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="GlJournal" description="${glJournalName} [${glJournalId}]">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -1212,7 +1212,7 @@ under the License.
         <field name="isPosted" use-when="${acctgTrans.isPosted!=null}"><display/></field>
         <field name="postedDate" use-when="${acctgTrans.postedDate!=null}"><display/></field>
         <field name="scheduledPostingDate" use-when="${acctgTrans.scheduledPostingDate!=null}"><display/></field>
-        <field name="glJournalId" use-when="${acctgTrans.glJournalId!=null}"><display/></field>
+        <field name="glJournalId" title="${uiLabelMap.AccountingGlJournal}" use-when="${acctgTrans.glJournalId!=null}"><display/></field>
         <field name="glFiscalTypeId" use-when="${acctgTrans.glFiscalTypeId!=null}">
             <display-entity entity-name="GlFiscalType" key-field-name="glFiscalTypeId"/>
         </field>

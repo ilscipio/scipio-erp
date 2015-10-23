@@ -28,7 +28,7 @@ under the License.
     <form name="CreateAcctgTrans" type="single" target="createAcctgTrans"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
-        <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}" position="2">
+        <field name="acctgTransTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down no-current-selected-key="_NA_">
                 <entity-options entity-name="AcctgTransType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -69,32 +69,32 @@ under the License.
             </drop-down>
         </field>
         <field name="description"><textarea/></field>
-        <field name="partyId" position="1">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" position="1">
             <lookup target-form-name="LookupPartyName" size="20" maxlength="20"/>
         </field>
-        <field name="roleTypeId" position="2">
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="invoiceId" position="1"><lookup target-form-name="LookupInvoice" size="20" maxlength="20"/></field>
-        <field name="paymentId" position="2"><lookup target-form-name="LookupPayment" size="20" maxlength="20"/></field>
-        <field name="productId" position="1"><lookup target-form-name="LookupProduct" size="20" maxlength="20"/></field>
-        <field name="shipmentId" position="2"><lookup target-form-name="LookupShipment" size="20" maxlength="20"/></field>
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" position="1"><lookup target-form-name="LookupInvoice" size="20" maxlength="20"/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" position="2"><lookup target-form-name="LookupPayment" size="20" maxlength="20"/></field>
+        <field name="productId" title="${uiLabelMap.CommonProduct}" position="1"><lookup target-form-name="LookupProduct" size="20" maxlength="20"/></field>
+        <field name="shipmentId" title="${uiLabelMap.CommonShipment}" position="2"><lookup target-form-name="LookupShipment" size="20" maxlength="20"/></field>
         <field name="inventoryItemId" position="1"><text/></field>
         <field name="physicalInventoryId" position="2"><text/></field>
-        <field name="receiptId" position="1"><text/></field>
+        <field name="receiptId" title="${uiLabelMap.CommonReceipt}" position="1"><text/></field>
         <field name="theirAcctgTransId" position="2"><text/></field>
-        <field name="fixedAssetId">
+        <field name="fixedAssetId" title="${uiLabelMap.CommonFixedAsset}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="FixedAsset" description="${fixedAssetId}">
                     <entity-order-by field-name="fixedAssetId"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="workEffortId" position="2"><lookup target-form-name="LookupWorkEffort" size="20" maxlength="20"/></field>
+        <field name="workEffortId" title="${uiLabelMap.WorkEffort}" position="2"><lookup target-form-name="LookupWorkEffort" size="20" maxlength="20"/></field>
         <field name="voucherRef" position="1"><text/></field>
         <field name="voucherDate" position="2"><date-time/></field>
         <field name="createAction" widget-style="smallSubmit"><submit button-type="button"/></field>

@@ -4299,6 +4299,9 @@
         <value xml:lang="zh">第一个</value>
         <value xml:lang="zh_TW">最前</value>
     </property>
+    <property key="CommonFixedAsset">
+        <value xml:lang="en">Fixed Asset</value>
+    </property>
     <property key="CommonFollowingErrorsOccurred">
         <value xml:lang="ar">الأخطاء التالية حدثت</value>
         <value xml:lang="cs">Vyskytly se následující chyby</value>
@@ -5632,6 +5635,9 @@
     </property>
     <property key="CommonInvoice">
         <value xml:lang="en">Invoice</value>
+    </property>
+    <property key="CommonInvoices">
+        <value xml:lang="en">Invoices</value>
     </property>
     <property key="CommonIsA">
         <value xml:lang="ar">هو</value>
@@ -8269,6 +8275,9 @@
     <property key="CommonParty">
         <value xml:lang="en">Party</value>
     </property>
+    <property key="CommonParties">
+        <value xml:lang="en">Parties</value>
+    </property>
     <property key="CommonPartyGroupName">
         <value xml:lang="ar">إسم المجموعة</value>
         <value xml:lang="cs">Název partnera</value>
@@ -9846,6 +9855,9 @@
     </property>
     <property key="CommonRole">
         <value xml:lang="en">Role</value>
+    </property>
+    <property key="CommonRoles">
+        <value xml:lang="en">Roles</value>
     </property>
     <property key="CommonRouting">
         <value xml:lang="ar">تمرير</value>

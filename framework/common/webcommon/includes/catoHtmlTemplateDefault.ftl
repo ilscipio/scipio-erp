@@ -3253,7 +3253,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#if progressOptions?has_content>
     <#local opts = progressOptions>
     <#if explicitId>
-      <#local opts = opts+{"progBarId":"${id}"}>
+      <#local opts = concatMaps(opts, {"progBarId":"${id}"})>
     </#if>
     <@progressScript options=opts htmlwrap=true />
   </#if>
@@ -3294,7 +3294,7 @@ TODO: document better if needed
         jQuery(document).ready(function() {
           <#if options.successRedirectUrl??>
             <#-- shouldn't have &amp; in script tag... but code may escape and should support... -->
-            <#local options = options + {"successRedirectUrl":options.successRedirectUrl?replace("&amp;", "&")}>
+            <#local options = concatMaps(options, {"successRedirectUrl":options.successRedirectUrl?replace("&amp;", "&")})>
           </#if>
             uploadProgress = new CatoUploadProgress(<@objectAsScript lang="js" object=options />);
             uploadProgress.reset();

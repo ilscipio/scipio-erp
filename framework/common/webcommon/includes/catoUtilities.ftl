@@ -380,9 +380,13 @@ Implemented as java transform.
 * concatMaps function
 ************
 Concatenates two maps similar to FTL "+" hash operator, but works with ofbiz maps as well.
-Currently if either result is an ofbiz map, result is an ofbiz map.
+Currently if either map is an ofbiz map, result is an ofbiz map.
+
+Using "+" on screen context bean maps causes problems such as "hiding" of the bean map type underneath
+an FTL wrapper, which wrecks all subsequent type checks. And others.
+
 TODO? This is currently inefficient; but must guarantee immutability.
-    note currently have to implement in FTL (not java transform) if want to exploit "+" operator
+    Note currently forced to implement in FTL (not java transform) if want to exploit "+" operator.
 -->
 <#function concatMaps first second>
   <#-- WARN: context objects implement ?is_hash, in particular strings, so needs extra checks... -->

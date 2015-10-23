@@ -467,7 +467,7 @@ under the License.
             <hyperlink description="${acctgTransId}" target="EditAcctgTrans?acctgTransId=${acctgTransId}&amp;organizationPartyId=${organizationPartyId}"/>
         </field>
         <field name="acctgTransTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="AcctgTransType"/></field>
-        <field name="glJournalId"><display-entity entity-name="GlJournal" description="${glJournalName}"/></field>
+        <field name="glJournalId" title="${uiLabelMap.AccountingGlJournal}"><display-entity entity-name="GlJournal" description="${glJournalName}"/></field>
         <field name="glAccountTypeId" title="${uiLabelMap.FormFieldTitle_glAccountType}"><display-entity entity-name="GlAccountType"/></field>
         <field name="glAccountClassId" title="${uiLabelMap.AccountingGlAccountClass}"><display-entity entity-name="GlAccountClass" description="${description}"/></field>
         <field name="partyId" title="${uiLabelMap.PartyParty}"><display-entity entity-name="PartyNameView" description="${lastName} ${groupName}"/></field>

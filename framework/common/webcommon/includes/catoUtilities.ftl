@@ -338,17 +338,22 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
   <#return addParamsToStr(addParamDelimToUrl(url, paramDelim), paramMap, paramDelim, includeEmpty)>
 </#function> 
 
+
 <#-- 
 *************
-* isObjectMap function
+* isObjectType function
 ************
-Perform special checks to make sure the given object is a hash or map.
-WARN: this is not trivial with bean objects from widget context; ?is_hash_ex will return true for non-map types.
--->
-<#function isObjectMap object>
-  <#-- if there's no toString method, it must be an FTL hash or some other kind of simple hash -->
-  <#return object?is_hash && (!object.toString!?is_method || object.keySet!?is_method)>
+Perform special logical type checks because ?is_string and ?is_hash are insufficient for BeanModel-based
+widget context vars.
+
+   * Parameters *
+    type        = [string|map|simplemap|wrappedmap]
+    object      = the object to test
+
+<#function isObjectType type object>
+- implemented as java transform -
 </#function>
+-->
 
 <#-- 
 *************
@@ -361,9 +366,9 @@ TODO? This is currently inefficient; but must guarantee immutability.
 -->
 <#function concatMaps first second>
   <#-- WARN: context objects implement ?is_hash, in particular strings, so needs extra checks... -->
-  <#if isObjectMap(first)>
-    <#if isObjectMap(second)>
-      <#if first.keySet!?is_method || second.keySet!?is_method>
+  <#if isObjectType("map", first)>
+    <#if isObjectType("map", second)>
+      <#if isObjectType("complexmap", first) || isObjectType("complexmap", second)>
         <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].concatMaps(first, second)>
       <#else>
         <#-- probably both FTL hashes -->
@@ -372,7 +377,7 @@ TODO? This is currently inefficient; but must guarantee immutability.
     <#else>
       <#return first>
     </#if>
-  <#elseif isObjectMap(second)>
+  <#elseif isObjectType("map", second)>
     <#return second>
   <#else>
     <#return {}>
@@ -546,10 +551,11 @@ TODO: doesn't handle dates (ambiguous?)
     wrap            = boolean, default true, if true, wrap in {}, [], "" as needed, otherwise omit
     hasMore         = boolean, default false, if true, always include trailing separator in hashes and arrays
     escape          = escape characters in strings
+    maxDepth        = maximum depth or -1 for no limit
 -->
-<#macro objectAsScript object lang wrap=true hasMore=false escape=true>
-    <#if object?is_string && (!object?is_hash || object.toLowerCase!?is_method)>
-        <#-- WARN: context strings also implement ?is_hash when bean models -->
+<#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1>
+    <#if isObjectType("string", object)>
+        <#-- WARN: context strings also implement ?is_hash when bean models; ?is_string not good enough -->
         <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
     <#elseif object?is_number> 
         ${object}<#t>
@@ -562,34 +568,40 @@ TODO: doesn't handle dates (ambiguous?)
         <#-- check this before string checks and hash because some of these from groovy 
              also implement ?string and ?is_hash_ex at same time (?).
              but usually for those if ?is_enumerable it means it was a list-like type. -->
+      <#if (maxDepth < 0) || (currDepth <= maxDepth)>
         <#if wrap>[</#if><#lt>
         <#list object as item> 
-            <#if item??><@objectAsScript lang=lang object=item wrap=true escape=escape /><#else>null</#if><#if item_has_next || hasMore>,</#if>
+            <#if item??><@objectAsScript lang=lang object=item wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1)/><#else>null</#if><#if item_has_next || hasMore>,</#if>
         </#list> 
         <#if wrap>]</#if><#rt>
-    <#elseif object?is_hash && object.keySet!?is_method>
+      <#else>[]</#if>
+    <#elseif isObjectType("complexmap", object)>
         <#-- Map from java/groovy; doesn't work properly with ?keys even though implements ?is_hash_ex -->
+      <#if (maxDepth < 0) || (currDepth <= maxDepth)>
         <#if wrap>{</#if><#lt>
         <#list object.keySet() as key>
-            "${escapeScriptString(lang, key, escape)}" : <#if object[key]??><@objectAsScript lang=lang object=object[key] wrap=true escape=escape /><#else>null</#if><#if key_has_next || hasMore>,</#if>
+            "${escapeScriptString(lang, key, escape)}" : <#if object[key]??><@objectAsScript lang=lang object=object[key] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) /><#else>null</#if><#if key_has_next || hasMore>,</#if>
         </#list> 
         <#if wrap>}</#if><#rt>
-    <#elseif object?is_hash_ex && !object.toString!?is_method> <#-- if no toString method, is probably a simple FTL hash type -->
+      <#else>{}</#if>
+    <#elseif object?is_hash_ex && isObjectType("simplemap", object)> <#-- if no toString method, is probably a simple FTL hash type -->
         <#-- check last because a lot of things implement ?is_hash_ex you might not expect - including strings... -->
+      <#if (maxDepth < 0) || (currDepth <= maxDepth)>
         <#if wrap>{</#if><#lt>
         <#list object?keys as key> 
-            "${escapeScriptString(lang, key, escape)}" : <#if object[key]??><@objectAsScript lang=lang object=object[key] wrap=true escape=escape /><#else>null</#if><#if key_has_next || hasMore>,</#if>
+            "${escapeScriptString(lang, key, escape)}" : <#if object[key]??><@objectAsScript lang=lang object=object[key] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) /><#else>null</#if><#if key_has_next || hasMore>,</#if>
         </#list> 
         <#if wrap>}</#if><#rt>
+      <#else>{}</#if>
     <#elseif object?is_string> 
         <#-- WARN: this may catch a lot of different context object types, but ones we care about are above -->
         <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
     <#-- some of the following are invalid/inconvertible types, but catch them because otherwise debugging impossible -->
-    <#elseif objectAsJsonTreatInvalidNonFatal && object?is_hash && !object?is_string> 
+    <#elseif objectAsScriptTreatInvalidNonFatal && object?is_hash && !object?is_string> 
         "__NONEXHASH__"<#t>
-    <#elseif objectAsJsonTreatInvalidNonFatal && object?is_method>
+    <#elseif objectAsScriptTreatInvalidNonFatal && object?is_method>
         "__METHOD__"<#t>
-    <#elseif objectAsJsonTreatInvalidNonFatal && object?is_directive>
+    <#elseif objectAsScriptTreatInvalidNonFatal && object?is_directive>
         "__DIRECTIVE__"<#t>
     <#else>
         <#-- fallback, best-effort. -->
@@ -619,7 +631,7 @@ TODO: doesn't handle dates (ambiguous?)
   </#if>
 </#function>
 
-<#global objectAsJsonTreatInvalidNonFatal = true>
+<#global objectAsScriptTreatInvalidNonFatal = true>
 
 
 <#-- 
@@ -804,6 +816,7 @@ see makeClassesArg, results of getElemSpecFromStyleStr.
 * pushRequestStack
 ************
 Pushes a value onto a global stack variable in request scope (request attributes, or if no request, globals).
+Now implemented as java transform.
 
    * Parameters *
     name        = global request stack var name; must be unique 
@@ -821,6 +834,7 @@ Pushes a value onto a global stack variable in request scope (request attributes
 ************
 Reads the last value added to the named global stack variable in request scope
 (request attributes, or if no request, globals), without popping.
+Now implemented as java transform.
 
    * Parameters *
     name        = global request stack var name; must be unique 
@@ -836,6 +850,7 @@ Reads the last value added to the named global stack variable in request scope
 * popRequestStack function
 ************
 Pops a global stack variable in request scope (request attributes, or if no request, globals).
+Now implemented as java transform.
 
    * Parameters *
     name        = global request stack var name; must be unique 
@@ -852,6 +867,7 @@ Pops a global stack variable in request scope (request attributes, or if no requ
 ************
 Sets a global var in request scope (request attributes, or if no request, globals).
 Values set by this method must be read using getRequestVar.
+Now implemented as java transform.
 
    * Parameters *
     name        = global request var name; must be unique 
@@ -870,6 +886,7 @@ Values set by this method must be read using getRequestVar.
 Gets a global var from request scope (request attributes, or if no request, globals).
 Should only be used to read values set by setRequestVar.
 Not meant to be used on regular request attributes.
+Now implemented as java transform.
 
    * Parameters *
     name        = global request var name; must be unique 
@@ -1155,4 +1172,80 @@ Checks the resourceNames in the given order.
 * For development and debugging purposes.
 -->
 
-<#-- (currently none) -->
+<#-- 
+*************
+* printVars macro
+************
+Iterates over all variable attributes & functions and prints in table; useful for determining current vars in context
+NOTE: since is in catoUtilities, keep generic and check platform.
+
+Usage example:  
+    <@printVars />           
+                    
+   * General Attributes *
+    var           = Custom var to be printed (default:context)
+    platform      = [html], default is do lookup
+    maxDepth      = default 5, to prevent endless recursion
+-->
+<#macro printVars var=context platform=true maxDepth=5>
+<#if platform?is_boolean><#if platform><#local platform = getRenderPlatformType()!""><#else><#local platform = ""></#if></#if>
+<#if platform == "html">
+    <table>
+    <#list var?keys as key>
+      <tr>
+        <td style="width:200px;">${key}</td>
+        <td>
+          <@printVar value=var[key]!"" platform=platform maxDepth=maxDepth currDepth=2/>
+        </td>
+      </tr>
+    </#list>
+    </table>
+</#if>
+</#macro>
+
+<#macro printVar value="" platform="" maxDepth=-1 currDepth=1>
+<#if platform == "html">
+  <#local var = value>
+
+      <#attempt><#compress>
+        <#-- WARN: ?is_ tests may not work as expected on widget context variables (BeanModel)
+             see @objectAsScript -->
+
+        <#if isObjectType("string", var)>
+            ${var?string}
+        <#elseif var?is_boolean>
+            ${var?c}
+        <#elseif var?is_date>
+            ${var?time}
+        <#elseif var?is_number>
+            ${var?string}
+        <#elseif var?is_enumerable>
+          <#if (maxDepth < 0) || (currDepth <= maxDepth)>
+            <ol>
+            <#list var?sort as i>
+                <li><@printVar value=i platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></li>
+            </#list>
+            </ol>
+          </#if>
+        <#elseif isObjectType("map", var)>
+          <#if (maxDepth < 0) || (currDepth <= maxDepth)>
+          <#-- takes too much space 
+            <table>
+            <#list var?keys?sort as key>
+                <tr><td>${key}</td><td><@printVar value=var[key]!"" platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></td></tr>
+            </#list>
+            </table>-->
+            <@objectAsScript lang="json" object=var maxDepth=maxDepth currDepth=currDepth />
+          </#if>
+        <#elseif var?is_string>
+            ${var?string}
+        </#if>
+        
+      </#compress>
+      <#recover>
+        <span style="color:red"><strong>${(.error)!"(generic)"}</strong></span>
+      </#attempt>
+
+</#if>
+</#macro>
+

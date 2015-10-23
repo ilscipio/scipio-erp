@@ -4,7 +4,7 @@ Cato: Common HTML macro library code
 
 <#-- Cato: This function imports all main namespace directives (macros and functions) into the current namespace
   if they don't already exist.
-  NO LONGER NEEDED for the time being; now dumping cato directives into global namespace instead.
+  NO LONGER NEEDED; now dumping cato directives into global namespace instead - see catoIncludes.ftl)
 <#function importCatoUtilities>
   <#if !catoUtilitiesDefined??>
     <#list .main?keys as varName>

@@ -143,7 +143,7 @@ under the License.
             </drop-down>
         </field>
         <field name="purchaseCost" position="2"><text/></field>
-        <field name="depreciation" position="2"><text/></field>
+        <field name="depreciation" title="${uiLabelMap.AccountingDepreciation}" position="2"><text/></field>
         <field name="salvageValue" position="2"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -151,7 +151,7 @@ under the License.
     <form name="ListFixedAssetProducts" type="list" list-name="fixedAssetProducts" target="updateFixedAssetProduct"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <field name="productId" title="${uiLabelMap.AccountingProduct}"><display-entity entity-name="Product" description="${description}[${productId}]"/></field>
-        <field name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductType}"><display-entity entity-name="FixedAssetProductType"/></field>
+        <field name="fixedAssetProductTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="FixedAssetProductType"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
         <field name="fixedAssetId"><hidden/></field>
@@ -169,24 +169,28 @@ under the License.
     <!-- create and update a product on a fixed asset -->
     <form name="AddFixedAssetProduct" type="single" target="addFixedAssetProduct" title="" default-map-name="fixedAssetProduct"
         header-row-style="header-row" default-table-style="basic-table">
-        <auto-fields-service service-name="addFixedAssetProduct" map-name="fixedAssetProduct"/>
 
         <field name="fixedAssetId"><hidden/></field>
-        <field name="productId" title="${uiLabelMap.ProductProductId}"><lookup target-form-name="LookupProduct"/></field>
-        <field name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductTypeId}">
+        <field name="productId" title="${uiLabelMap.CommonProduct}"><lookup target-form-name="LookupProduct"/></field>
+        <field name="fixedAssetProductTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="FixedAssetProductType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="quantityUomId">
+        <field name="quantity" title="${uiLabelMap.CommonQuantity}"><text/></field>
+        <field name="quantityUomId" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="UomAndType" key-field-name="uomId" description="[${typeDescription}] ${description}">
                     <entity-order-by field-name="uomTypeId"/>
                 </entity-options>
             </drop-down>
         </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="sequenceNum"><text/></field>
+        <field name="comments" position="2"><textarea/></field>
 
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -612,7 +616,7 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createFixedAssetDepMethod" default-field-type="edit"/>
         <field name="fixedAssetId"><hidden/></field>
-        <field name="depreciationCustomMethodId">
+        <field name="depreciationCustomMethodId" title="${uiLabelMap.CommonMethod}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="CustomMethod" key-field-name="customMethodId" description="${description}">
                     <entity-constraint name="customMethodTypeId" operator="equals" value="DEPRECIATION_FORMULA"/>
@@ -630,7 +634,7 @@ under the License.
         </actions>
         <auto-fields-entity entity-name="FixedAssetDepMethod" default-field-type="display"/>
         <field name="fixedAssetId"><hidden/></field>
-        <field name="depreciationCustomMethodId">
+        <field name="depreciationCustomMethodId" title="${uiLabelMap.CommonMethod}">
             <display-entity entity-name="CustomMethod" key-field-name="customMethodId"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -641,14 +645,16 @@ under the License.
             </hyperlink>
         </field>
     </form>
+    
     <form name="ListFixedAssetDepreciations" type="list" list-name="assetDepreciationInfoList" default-map-name="assetDepreciationInfo"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <field name="index"><display description="${itemIndex + 1}"/></field>
         <field name="year"><display/></field>
-        <field name="depreciation"><display type="currency" currency="${fixedAsset.purchaseCostUomId}"/></field>
+        <field name="depreciation" title="${uiLabelMap.AccountingDepreciation}"><display type="currency" currency="${fixedAsset.purchaseCostUomId}"/></field>
         <field name="depreciationTotal"><display type="currency" currency="${fixedAsset.purchaseCostUomId}"/></field>
         <field name="nbv" title="Net Book Value"><display type="currency" currency="${fixedAsset.purchaseCostUomId}"/></field>
     </form>
+    
     <form name="FixedAssetTransactions" type="list"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" list-name="fixedAssetTransactions">
         <actions>

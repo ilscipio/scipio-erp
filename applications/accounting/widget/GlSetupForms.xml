@@ -743,9 +743,10 @@ under the License.
         <alt-target use-when="glJournal!=null" target="updateGlJournal"/>
         <auto-fields-service service-name="createGlJournal"/>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="glJournalId" use-when="glJournal!=null"><display/></field>
+        <field name="glJournalId" title="${uiLabelMap.CommonId}" use-when="glJournal!=null"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
     </form>
+    
     <form name="ListGlJournals" type="list"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
@@ -756,11 +757,12 @@ under the License.
         </actions>
         <auto-fields-entity entity-name="GlJournal" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="glJournalId" widget-style="${styles.link_default}">
+        <field name="glJournalId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}">
             <hyperlink target="SetupGlJournals" description="${glJournalId}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="glJournalId"/>
             </hyperlink>
         </field>
+        <field name="glJournalName"  title="${uiLabelMap.CommonName}"><display/></field>
         <field name="removeAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteGlJournal" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="glJournalId"/>
@@ -772,8 +774,9 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <auto-fields-service service-name="updateProductGlAccount" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="glAccountTypeId"><display-entity entity-name="GlAccountType"/></field>
-        <field name="glAccountId" title="${uiLabelMap.ProductGlAccount}">
+        <field name="productId" title="${uiLabelMap.CommonProduct}"><display/></field>
+        <field name="glAccountTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="GlAccountType"/></field>
+        <field name="glAccountId" title="${uiLabelMap.CommonAccount}">
             <drop-down allow-empty="false">
                 <entity-options description="${accountCode} - ${accountName} [${glAccountId}]" entity-name="GlAccountOrganizationAndClass">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -792,14 +795,14 @@ under the License.
     <form name="AddProductGlAccount" type="single" target="createProductGlAccount"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden/></field>
-        <field name="glAccountTypeId" title="${uiLabelMap.ProductAccountType}">
+        <field name="glAccountTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="GlAccountType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glAccountId" title="${uiLabelMap.ProductGlAccount}">
+        <field name="glAccountId" title="${uiLabelMap.CommonAccount}">
             <drop-down allow-empty="false">
                 <entity-options description="${accountCode} - ${accountName} [${glAccountId}]" entity-name="GlAccountOrganizationAndClass">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -807,7 +810,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productId" title="${uiLabelMap.AccountingProductId}">
+        <field name="productId" title="${uiLabelMap.CommonProduct}">
             <lookup target-form-name="LookupProduct"/>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
@@ -817,8 +820,8 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <auto-fields-service service-name="updateFinAccountTypeGlAccount"/>
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
-        <field name="finAccountTypeId"><display-entity entity-name="FinAccountType"/></field>
-        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccountId}">
+        <field name="finAccountTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="FinAccountType"/></field>
+        <field name="glAccountId" title="${uiLabelMap.CommonAccount}">
             <drop-down allow-empty="false">
                 <entity-options description="${accountCode} - ${accountName} [${glAccountId}]" entity-name="GlAccountOrganizationAndClass">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -837,12 +840,12 @@ under the License.
     <form name="AddFinAccountTypeGlAccount" type="single" target="createFinAccountTypeGlAccount"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
-        <field name="finAccountTypeId" title="${uiLabelMap.FormFieldTitle_finAccountTypeId}">
+        <field name="finAccountTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="false">
                 <list-options key-name="finAccountTypeId" list-name="finAccountTypes" description="${description}"/>
             </drop-down>
         </field>
-        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccountId}">
+        <field name="glAccountId" title="${uiLabelMap.CommonAccount}">
             <drop-down allow-empty="false">
                 <entity-options description="${accountCode} - ${accountName} [${glAccountId}]" entity-name="GlAccountOrganizationAndClass">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -857,8 +860,8 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <auto-fields-service service-name="updateProductCategoryGlAccount" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="glAccountTypeId"><display-entity entity-name="GlAccountType"/></field>
-        <field name="glAccountId" title="${uiLabelMap.ProductGlAccount}">
+        <field name="glAccountTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="GlAccountType"/></field>
+        <field name="glAccountId" title="${uiLabelMap.CommonAccount}">
             <drop-down allow-empty="false">
                 <entity-options description="${accountCode} - ${accountName} [${glAccountId}]" entity-name="GlAccountOrganizationAndClass">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -877,14 +880,14 @@ under the License.
     <form name="AddProductCategoryGlAccount" type="single" target="createProductCategoryGlAccount"
         header-row-style="header-row" default-table-style="basic-table">
         <field name="organizationPartyId"><hidden/></field>
-        <field name="glAccountTypeId" title="${uiLabelMap.ProductAccountType}">
+        <field name="glAccountTypeId" title="${uiLabelMap.Type}">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="GlAccountType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glAccountId" title="${uiLabelMap.ProductGlAccount}">
+        <field name="glAccountId" title="${uiLabelMap.CommonAccount}">
             <drop-down allow-empty="false">
                 <entity-options description="${accountCode} - ${accountName} [${glAccountId}]" entity-name="GlAccountOrganizationAndClass">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -986,17 +989,17 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <auto-fields-service service-name="updateTaxAuthorityGlAccount" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="taxAuthGeoId" title="${uiLabelMap.AccountingTaxAuthorityGeo}">
+        <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}">
             <display-entity entity-name="Geo" key-field-name="geoId" description="[${geoId}] ${geoName}"/>
         </field>
-        <field name="taxAuthPartyId" title="${uiLabelMap.AccountingTaxAuthorityParty}">
+        <field name="taxAuthPartyId" title="${uiLabelMap.CommonParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink description="${taxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_default}">
                     <parameter param-name="partyId" from-field="taxAuthPartyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccountId}">
+        <field name="glAccountId" title="${uiLabelMap.CommonAccount}">
             <drop-down allow-empty="false">
                 <entity-options description="${accountCode} - ${accountName} [${glAccountId}]" entity-name="GlAccountOrganizationAndClass">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -1015,17 +1018,17 @@ under the License.
     <form name="AddTaxAuthorityGlAccount" type="list" target="createOrganizationTaxAuthorityGlAccount" list-name="taxAuthorityHavingNoGlAccountList"
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="organizationPartyId"><hidden/></field>
-        <field name="taxAuthGeoId" title="${uiLabelMap.AccountingTaxAuthorityGeo}">
+        <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}">
             <display-entity entity-name="Geo" key-field-name="geoId" description="[${geoId}] ${geoName}"/>
         </field>
-        <field name="taxAuthPartyId" title="${uiLabelMap.AccountingTaxAuthorityParty}">
+        <field name="taxAuthPartyId" title="${uiLabelMap.CommonParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink description="${taxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_default}">
                     <parameter param-name="partyId" from-field="taxAuthPartyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccountId}">
+        <field name="glAccountId" title="${uiLabelMap.CommonAccount}">
             <drop-down allow-empty="false">
                 <entity-options description="${accountCode} - ${accountName} [${glAccountId}]" entity-name="GlAccountOrganizationAndClass">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -1040,12 +1043,14 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <auto-fields-service service-name="updatePartyGlAccount" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="partyId" widget-style="${styles.link_default}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_default}">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyId}" target-type="inter-app">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
-        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccountId}">
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}"><display/></field>
+        <field name="glAccountTypeId" title="${uiLabelMap.CommonType}"><display/></field>
+        <field name="glAccountId" title="${uiLabelMap.CommonAccount}">
             <drop-down allow-empty="false">
                 <entity-options description="${accountCode} - ${accountName} [${glAccountId}]" entity-name="GlAccountOrganizationAndClass">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -1065,22 +1070,22 @@ under the License.
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createPartyGlAccount" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="roleTypeId" title="${uiLabelMap.FormFieldTitle_roleTypeId}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType" key-field-name="roleTypeId" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glAccountTypeId" title="${uiLabelMap.FormFieldTitle_glAccountTypeId}">
+        <field name="glAccountTypeId" title="${uiLabelMap.CommonType}">
             <drop-down>
                 <entity-options entity-name="GlAccountType" description="${description}" key-field-name="glAccountTypeId">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccountId}">
+        <field name="glAccountId" title="${uiLabelMap.CommonAccount}" position="2">
             <drop-down allow-empty="false">
                 <entity-options description="${accountCode} - ${accountName} [${glAccountId}]" entity-name="GlAccountOrganizationAndClass">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="organizationPartyId"/>
@@ -1268,15 +1273,15 @@ under the License.
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="FixedAssetTypeGlAccounts" type="list" list-name="fixedAssetTypeGlAccounts"
+    <form name="ListFixedAssetTypeGlAccounts" type="list" list-name="fixedAssetTypeGlAccounts"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
         <actions>
             <entity-condition entity-name="FixedAssetTypeGlAccount" list="fixedAssetTypeGlAccounts">
                 <condition-expr field-name="organizationPartyId" from-field="organizationPartyId"/>
             </entity-condition>
         </actions>
-        <field name="fixedAssetTypeId"><display-entity entity-name="FixedAssetType"/></field>
-        <field name="fixedAssetId"><display-entity entity-name="FixedAsset" description="${fixedAssetId} ${fixedAssetName}"/></field>
+        <field name="fixedAssetTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="FixedAssetType"/></field>
+        <field name="fixedAssetId" title="${uiLabelMap.CommonFixedAsset}"><display-entity entity-name="FixedAsset" description="${fixedAssetId} ${fixedAssetName}"/></field>
         <field name="assetGlAccountId"><display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]"/></field>
         <field name="accDepGlAccountId"><display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]"/></field>
         <field name="depGlAccountId"><display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]"/></field>

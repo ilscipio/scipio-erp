@@ -560,7 +560,7 @@ under the License.
                         <screenlet id="FixedAssetTypeGlAccountPanel" title="${uiLabelMap.CommonAdd}" collapsible="true">
                             <include-form name="AddFixedAssetTypeGlAccount" location="component://accounting/widget/GlSetupForms.xml"/>
                         </screenlet>
-                        <include-form name="FixedAssetTypeGlAccounts" location="component://accounting/widget/GlSetupForms.xml"/>
+                        <include-form name="ListFixedAssetTypeGlAccounts" location="component://accounting/widget/GlSetupForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

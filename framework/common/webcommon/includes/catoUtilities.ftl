@@ -156,7 +156,7 @@ Adds parameters from a hash to a URL param string (no full URL logic).
 -->
 <#function addParamsToStr paramStr paramMap paramDelim="&amp;" includeEmpty=true>
   <#local res = paramStr>
-  <#list paramMap?keys as key>
+  <#list mapKeys(paramMap) as key>
     <#if res?has_content && (!res?ends_with(paramDelim))>
       <#local res = res + paramDelim>
     </#if>
@@ -367,6 +367,7 @@ Implemented as java transform.
 * mapKeys function
 ************
 Gets the logical map keys from any object whether FTL hash (?keys) or context var (.ketSet()).
+Unlike ?keys, behaves as expected on both maps from screen context and FTL.
 Implemented as java transform.
 
 <#function mapKeys object>
@@ -1199,7 +1200,7 @@ Usage example:
 <#if platform?is_boolean><#if platform><#local platform = getRenderPlatformType()!""><#else><#local platform = ""></#if></#if>
 <#if platform == "html">
     <table>
-    <#list var?keys as key>
+    <#list mapKeys(var) as key>
       <tr>
         <td style="width:200px; vertical-align:top">${key}</td>
         <td>
@@ -1239,7 +1240,7 @@ Usage example:
           <#if (maxDepth < 0) || (currDepth <= maxDepth)>
             <#-- takes too much space 
             <table>
-            <#list var?keys?sort as key>
+            <#list mapKeys(var)?sort as key>
                 <tr><td>${key}</td><td><@printVar value=var[key]!"" platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></td></tr>
             </#list>
             </table>-->

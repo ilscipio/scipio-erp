@@ -21,9 +21,14 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 
 import freemarker.core.Environment;
+import freemarker.ext.beans.BeanModel;
+import freemarker.ext.util.WrapperTemplateModel;
+import freemarker.template.SimpleScalar;
 import freemarker.template.SimpleSequence;
+import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
 import javolution.util.FastMap;
 
 /**
@@ -35,7 +40,7 @@ import javolution.util.FastMap;
  * template macro markup (e.g. catoHtmlTemplateDefault.ftl) logic belongs in separate class.
  */
 public final class CommonFtlUtil {
-    
+
     public static final String module = CommonFtlUtil.class.getName();
     
     public static final int REQUEST_STACK_INITIAL_CAPACITY = 10; 
@@ -44,6 +49,7 @@ public final class CommonFtlUtil {
             UtilCache.createUtilCache("com.ilscipio.cato.webapp.ftl.CommonFtlUtil.headingElemSpecFromStyleStrCache");
     
     private static final Set<String> emptyStrSet = new HashSet<String>();
+    
     
     private CommonFtlUtil() {
     }
@@ -705,5 +711,55 @@ public final class CommonFtlUtil {
             res.putAll(second);
         }
         return res;
+    }
+
+
+    public static boolean isObjectType(FtlObjectType ftlType, TemplateModel object) {
+        switch(ftlType) {
+        case STRING:
+            if (object instanceof SimpleScalar) {
+                return true;
+            }
+            else if (object instanceof WrapperTemplateModel) {
+                Object wrappedObject = ((WrapperTemplateModel) object).getWrappedObject();
+                if (wrappedObject instanceof CharSequence) {
+                    return true;
+                }
+            }
+            break;
+        case MAP:
+            if (object instanceof TemplateHashModel) {
+                if (object instanceof WrapperTemplateModel) {
+                    Object wrappedObject = ((WrapperTemplateModel) object).getWrappedObject();
+                    if (wrappedObject instanceof Map) { // in ofbiz context, this could be string or other
+                        return true;
+                    }
+                }
+                else {
+                    // doesn't wrap anything, so probably a simple hash model of some sort
+                    return true;
+                }
+            }
+            break;
+        case SIMPLEMAP:
+            if (object instanceof TemplateHashModel && !(object instanceof BeanModel)) {
+                // approximation
+                return true;
+            }
+            break;
+        case COMPLEXMAP:
+            if (object instanceof TemplateHashModel && object instanceof BeanModel) {
+                Object wrappedObject = ((WrapperTemplateModel) object).getWrappedObject();
+                if (wrappedObject instanceof Map) { // in ofbiz context, this could be string or other
+                    return true;
+                }
+            }
+            break;
+        }
+        return false;
+    }
+
+    public static boolean isObjectType(String ftlTypeName, TemplateModel object) {
+        return isObjectType(FtlObjectType.fromFtlNameSafe(ftlTypeName), object);
     }
 }

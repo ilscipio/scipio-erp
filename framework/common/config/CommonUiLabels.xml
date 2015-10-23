@@ -1556,6 +1556,9 @@
         <value xml:lang="zh_CN">改变</value>
         <value xml:lang="zh_TW">修改</value>
     </property>
+    <property key="CommonCategory">
+        <value xml:lang="en">Category</value>
+    </property>
     <property key="CommonCharactorsLeft">
         <value xml:lang="ar">الأحرف المتبقية</value>
         <value xml:lang="cs">Zbývá znaků</value>
@@ -11058,6 +11061,9 @@
         <value xml:lang="vi">Trạng thái là 'hoàn thành'</value>
         <value xml:lang="zh">把状态设为完成</value>
         <value xml:lang="zh_TW">把狀態設為完成</value>
+    </property>
+    <property key="CommonStore">
+        <value xml:lang="en">Store</value>
     </property>
     <property key="CommonSubTitle">
         <value xml:lang="ar">العنوان الثانوي</value>

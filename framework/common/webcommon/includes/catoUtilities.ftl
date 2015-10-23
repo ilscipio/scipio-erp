@@ -1201,7 +1201,7 @@ Usage example:
     <table>
     <#list var?keys as key>
       <tr>
-        <td style="width:200px;">${key}</td>
+        <td style="width:200px; vertical-align:top">${key}</td>
         <td>
           <@printVar value=var[key]!"" platform=platform maxDepth=maxDepth currDepth=2/>
         </td>
@@ -1237,13 +1237,13 @@ Usage example:
           </#if>
         <#elseif isObjectType("map", var)>
           <#if (maxDepth < 0) || (currDepth <= maxDepth)>
-          <#-- takes too much space 
+            <#-- takes too much space 
             <table>
             <#list var?keys?sort as key>
                 <tr><td>${key}</td><td><@printVar value=var[key]!"" platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></td></tr>
             </#list>
             </table>-->
-            <#--<@objectAsScript lang="json" object=var maxDepth=maxDepth currDepth=currDepth />-->
+            <@objectAsScript lang="json" escape=false object=var maxDepth=maxDepth currDepth=currDepth />
           </#if>
         <#elseif var?is_string>
             ${var?string}

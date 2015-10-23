@@ -406,7 +406,7 @@ Implemented as java transform.
 * concatMaps function
 ************
 Concatenates two maps similar to FTL "+" hash operator, but works with ofbiz maps as well.
-Currently if either map is an ofbiz map, result is an ofbiz map.
+By default, result is now always a simple map, so type is more predictable, and usually this is what we want.
 
 Using "+" on screen context bean maps causes problems such as "hiding" of the bean map type underneath
 an FTL wrapper, which wrecks all subsequent type checks. And others.
@@ -414,20 +414,32 @@ an FTL wrapper, which wrecks all subsequent type checks. And others.
 TODO? This is currently inefficient; but must guarantee immutability.
     Note currently forced to implement in FTL (not java transform) if want to exploit "+" operator.
 -->
-<#function concatMaps first second>
-  <#-- WARN: context objects implement ?is_hash, in particular strings, so needs extra checks... -->
-  <#if isObjectType("map", first)>
-    <#if isObjectType("map", second)>
-      <#if isObjectType("simplemap", first) && isObjectType("simplemap", second)>
-        <#return first + second>
+<#function concatMaps first second toSimple=true>
+  <#if first?has_content>
+    <#if second?has_content>
+      <#if toSimple>
+        <#-- convert everything to simple map -->
+        <#return toSimpleMap(first) + toSimpleMap(second)>
       <#else>
-        <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].concatMaps(first, second)>
+        <#if isObjectType("simplemap", first) && isObjectType("simplemap", second)>
+          <#return first + second>
+        <#else>
+          <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].concatMaps(first, second)>
+        </#if>
       </#if>
     <#else>
-      <#return first>
+      <#if toSimple>
+        <#return toSimpleMap(first)>
+      <#else>
+        <#return first>
+      </#if>
     </#if>
-  <#elseif isObjectType("map", second)>
-    <#return second>
+  <#elseif second?has_content>
+    <#if toSimple>
+      <#return toSimpleMap(second)>
+    <#else>
+      <#return second>
+    </#if>
   <#else>
     <#return {}>
   </#if>

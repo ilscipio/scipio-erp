@@ -133,8 +133,7 @@ under the License.
         <include-elements menu-name="OrderTabBar" recursive="includes-only" />
     </menu>
     
-    <menu name="OrderSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="button-bar button-style-2">
+    <menu name="OrderSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="QuickShipOrder" title="${uiLabelMap.OrderQuickShipEntireOrder}">
             <condition>
                 <and>

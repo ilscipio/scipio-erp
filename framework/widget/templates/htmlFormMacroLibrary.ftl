@@ -188,7 +188,7 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#if scrollable>
   <#-- TODO: change this to something more foundation-like.
        this is a custom workaround to get scrolling, nothing else working. -->
-  <div class="scrollable-table-container">
+  <div class="${styles.table_responsive_wrap!}">
   </#if>
   <table cellspacing="0" class="<#if style?has_content>${style}<#else>${styles.table_default!} form-widget-table dark-grid</#if>"><#lt/>
 </#macro>

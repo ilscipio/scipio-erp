@@ -53,7 +53,7 @@ under the License.
       </@row>
     <@row>
         <@cell>
-        <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="fields" cellspacing="0" scrollable=true> <#-- orig: class="basic-table" -->
         <@thead>
           <@tr>
                 <@th>${uiLabelMap.WebtoolsParameterName}</@th>
@@ -110,7 +110,7 @@ under the License.
     <@cell>
         <@heading>${uiLabelMap.SecurityGroups}</@heading>
       <#if selectedServiceMap.permissionGroups != 'NA'>
-        <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="data-list" cellspacing="0" scrollable=true> <#-- orig: class="basic-table" -->
          <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.WebtoolsNameOrRole}</@th>
@@ -161,7 +161,7 @@ under the License.
 <@row>
    <@cell>
           <@heading>${uiLabelMap.WebtoolsServiceECA}</@heading>
-        <@table type="data-complex" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="data-complex" cellspacing="0" scrollable=true> <#-- orig: class="basic-table" -->
           <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.WebtoolsEventName}</@th>
@@ -298,7 +298,7 @@ under the License.
           <@heading>${paramList.title}</@heading>
 
         <#if paramList.paramList?? && paramList.paramList?has_content>
-          <@table type="data-list" class="+param-table" cellspacing="0"> <#-- orig: class="basic-table param-table" -->
+          <@table type="data-list" class="+param-table" cellspacing="0" scrollable=true> <#-- orig: class="basic-table param-table" -->
             <@thead>
               <@tr class="header-row">
                 <@th>${uiLabelMap.WebtoolsParameterName}</@th>
@@ -366,7 +366,7 @@ under the License.
   <@section menuContent=menuContent>
       <#--
       ${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName?default(uiLabelMap.CommonNA)} (${servicesFoundCount} ${uiLabelMap.CommonFound})-->
-      <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+      <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0" scrollable=true> <#-- orig: class="basic-table hover-bar" -->
         <@thead>
         <@tr class="header-row">
           <@th id="Service_all">${uiLabelMap.WebtoolsServiceName}</@th>

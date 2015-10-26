@@ -111,7 +111,7 @@ under the License.
         <field name="budgetId"><hidden/></field>
         <field name="budgetItemSeqId"><display/></field>
         <field name="budgetItemTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="BudgetItemType"/></field>
-        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display/></field>
         <field name="purpose" ><display/></field>
         <field name="justification" ><display/></field>
     </form>
@@ -149,7 +149,7 @@ under the License.
                <entity-options entity-name="BudgetItemType" description="${description}" key-field-name="budgetItemTypeId"/>
            </drop-down>
        </field>
-       <field name="amount" ><text size="10"/></field>
+       <field name="amount" title="${uiLabelMap.CommonAmount}" ><text size="10"/></field>
        <field name="purpose" ><text size="50"/></field>
        <field name="justification" ><text size="50"/></field>
        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}" ><submit button-type="text-link"/></field>
@@ -171,7 +171,7 @@ under the License.
                <entity-options entity-name="BudgetItemType" description="${description}" key-field-name="budgetItemTypeId"/>
            </drop-down>
        </field>
-       <field name="amount" ><text size="10"/></field>
+       <field name="amount" title="${uiLabelMap.CommonAmount}" ><text size="10"/></field>
        <field name="purpose" ><text size="50"/></field>
        <field name="justification" ><text size="50"/></field>
         <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" use-when="invoiceItem==null">

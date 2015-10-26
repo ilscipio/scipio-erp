@@ -38,7 +38,7 @@ under the License.
                         <section>
                             <condition>
                                 <and>
-                                    <if-service-permission service-name="acctgAgreementPermissionCheck"
+                                    <if-service-permission service-name="acctgPrefPermissionCheck"
                                         main-action="VIEW" />
                                     <not>
                                         <if-empty field="acctgTrans" />
@@ -46,7 +46,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="OrganizationAccountingSideBar" />
+                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="OrganizationSideBar" />
                             </widgets>
                             <fail-widgets>
                                 <include-menu location="component://accounting/widget/AccountingMenus.xml" name="AccountingAppSideBar"/>
@@ -54,7 +54,7 @@ under the License.
                         </section>
                     </decorator-section>
                     <decorator-section name="body">
-                        <include-menu name="OrganizationAccountingTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-menu location="component://accounting/widget/AccountingMenus.xml" name="OrganizationTabBar" />
                         <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
                         <decorator-section-include name="body"/>
                     </decorator-section>

@@ -191,12 +191,12 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="invoiceId">
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}">
             <lookup target-form-name="LookupInvoice" size="20" maxlength="20">
                 <sub-hyperlink target="invoiceOverview?invoiceId=${acctgTrans.invoiceId}" description="${acctgTrans.invoiceId}"/>
             </lookup>
         </field>
-        <field name="paymentId" position="2">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" position="2">
             <lookup target-form-name="LookupPayment" size="20" maxlength="20">
                 <sub-hyperlink target="paymentOverview?paymentId=${acctgTrans.paymentId}" description="${acctgTrans.paymentId}"/>
             </lookup>
@@ -291,8 +291,8 @@ under the License.
         </field>
         <field name="inventoryItemId" position="1"/>
         <field name="physicalInventoryId" position="2"/>
-        <field name="invoiceId" title="${uiLabelMap.AccountingInvoice}" position="1" widget-style="${styles.link_default}"><hyperlink target="invoiceOverview?invoiceId=${acctgTrans.invoiceId}" description="${acctgTrans.invoiceId}"/></field>
-        <field name="paymentId" title="${uiLabelMap.AccountingPayment}" position="2" widget-style="${styles.link_default}"><hyperlink target="paymentOverview?paymentId=${acctgTrans.paymentId}" description="${acctgTrans.paymentId}"/></field>
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" position="1" widget-style="${styles.link_default}"><hyperlink target="invoiceOverview?invoiceId=${acctgTrans.invoiceId}" description="${acctgTrans.invoiceId}"/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" position="2" widget-style="${styles.link_default}"><hyperlink target="paymentOverview?paymentId=${acctgTrans.paymentId}" description="${acctgTrans.paymentId}"/></field>
         <field name="productId" title="${uiLabelMap.CommonProduct}"><display/></field>
         <field name="shipmentId" title="${uiLabelMap.CommonShipment}" position="2"/>
         <field name="receiptId" title="${uiLabelMap.CommonReceipt}" position="1"/>
@@ -377,11 +377,11 @@ under the License.
                 <option description="${uiLabelMap.CommonYes}" key="Y"/>
             </drop-down>
         </field>
-        <field name="invoiceId" position="2"><lookup target-form-name="LookupInvoice" size="20" maxlength="20"/></field>
-        <field name="paymentId" position="1"><lookup target-form-name="LookupPayment" size="20" maxlength="20"/></field>
-        <field name="productId" position="2"><lookup target-form-name="LookupProduct" size="20" maxlength="20"/></field>
-        <field name="workEffortId" position="1"><lookup target-form-name="LookupWorkEffort" size="20" maxlength="20"/></field>
-        <field name="shipmentId" position="2"><lookup target-form-name="LookupShipment" size="20" maxlength="20"/></field>
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" position="2"><lookup target-form-name="LookupInvoice" size="20" maxlength="20"/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" position="1"><lookup target-form-name="LookupPayment" size="20" maxlength="20"/></field>
+        <field name="productId" title="${uiLabelMap.CommonProduct}" position="2"><lookup target-form-name="LookupProduct" size="20" maxlength="20"/></field>
+        <field name="workEffortId" title="${uiLabelMap.WorkEffort}" position="1"><lookup target-form-name="LookupWorkEffort" size="20" maxlength="20"/></field>
+        <field name="shipmentId" title="${uiLabelMap.CommonShipment}" position="2"><lookup target-form-name="LookupShipment" size="20" maxlength="20"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="performSearch" position="1"><hidden value="Y"/></field>
@@ -437,13 +437,13 @@ under the License.
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
-        <field name="invoiceId" use-when="invoiceId==null"><display/></field>
-        <field name="paymentId" use-when="paymentId!=null" widget-style="${styles.link_default}">
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" use-when="invoiceId==null"><display/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" use-when="paymentId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${paymentId}" target="editPayment">
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
-        <field name="paymentId" use-when="paymentId==null"><display/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" use-when="paymentId==null"><display/></field>
         <field name="workEffortId" use-when="workEffortId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${workEffortId}" target="/workeffort/control/EditWorkEffort" target-type="inter-app">
                 <parameter param-name="workEffortId"/>
@@ -487,16 +487,16 @@ under the License.
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
-        <field name="invoiceId" use-when="invoiceId==null"><display/></field>
-        <field name="paymentId" use-when="paymentId!=null" widget-style="${styles.link_default}">
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" use-when="invoiceId==null"><display/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" use-when="paymentId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${paymentId}" target="editPayment">
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
-        <field name="paymentId" use-when="paymentId==null"><display/></field>
-        <field name="partyId"><display/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" use-when="paymentId==null"><display/></field>
+        <field name="partyId" title="${uiLabelMap.CommonParty}"><display/></field>
         <field name="workEffortId"><display/></field>
-        <field name="shipmentId"><display/></field>
+        <field name="shipmentId" title="${uiLabelMap.CommonShipment}"><display/></field>
         <field name="verifyAction" title=" " widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.AccountingVerifyTransaction}" target="postAcctgTrans" also-hidden="false">
                 <parameter param-name="acctgTransId"/>
@@ -627,7 +627,7 @@ under the License.
             </drop-down>
         </field>
         <field name="origAmount"><display type="currency" currency="${origCurrencyUomId}"/></field>
-        <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="removeAction" title=" " widget-style="${styles.button_default}">
            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteAcctgTransEntry">
@@ -680,14 +680,14 @@ under the License.
                 <option description="${uiLabelMap.CommonYes}" key="Y"/>
             </drop-down>
         </field>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}">
             <lookup target-form-name="LookupPartyName" size="20" maxlength="20"/>
         </field>
-        <field name="invoiceId"><lookup target-form-name="LookupInvoice" size="20" maxlength="20"/></field>
-        <field name="paymentId"><lookup target-form-name="LookupPayment" size="20" maxlength="20"/></field>
-        <field name="productId"><lookup target-form-name="LookupProduct" size="20" maxlength="20"/></field>
-        <field name="workEffortId"><lookup target-form-name="LookupWorkEffort" size="20" maxlength="20"/></field>
-        <field name="shipmentId"><lookup target-form-name="LookupShipment" size="20" maxlength="20"/></field>
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}"><lookup target-form-name="LookupInvoice" size="20" maxlength="20"/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}"><lookup target-form-name="LookupPayment" size="20" maxlength="20"/></field>
+        <field name="productId" title="${uiLabelMap.CommonProduct}"><lookup target-form-name="LookupProduct" size="20" maxlength="20"/></field>
+        <field name="workEffortId" title="${uiLabelMap.WorkEffort}"><lookup target-form-name="LookupWorkEffort" size="20" maxlength="20"/></field>
+        <field name="shipmentId" title="${uiLabelMap.CommonShipment}"><lookup target-form-name="LookupShipment" size="20" maxlength="20"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="performSearch"><hidden value="Y"/></field>
@@ -745,47 +745,48 @@ under the License.
         <field name="transactionDate" position="2"><display/></field>
         <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}" position="2"><display-entity entity-name="AcctgTransType"/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}" position="2"><display-entity entity-name="GlFiscalType"/></field>
-        <field name="invoiceId" position="2" use-when="invoiceId!=null" widget-style="${styles.link_default}">
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" position="2" use-when="invoiceId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${invoiceId}" target="editInvoice">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
-        <field name="invoiceId" position="2" use-when="invoiceId==null"><display/></field>
-        <field name="paymentId" position="2" use-when="paymentId!=null" widget-style="${styles.link_default}">
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" position="2" use-when="invoiceId==null"><display/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" position="2" use-when="paymentId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${paymentId}" target="editPayment">
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
-        <field name="paymentId" position="2" use-when="paymentId==null"><display/></field>
-        <field name="workEffortId" position="2" use-when="workEffortId!=null" widget-style="${styles.link_default}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" position="2" use-when="paymentId==null"><display/></field>
+        <field name="workEffortId" title="${uiLabelMap.WorkEffort}" position="2" use-when="workEffortId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${workEffortId}" target="/workeffort/control/EditWorkEffort" target-type="inter-app">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
         </field>
-        <field name="workEffortId" position="2" use-when="workEffortId==null"><display/></field>
-        <field name="shipmentId" position="2" use-when="shipmentId!=null" widget-style="${styles.link_default}">
+        <field name="workEffortId" title="${uiLabelMap.WorkEffort}" position="2" use-when="workEffortId==null"><display/></field>
+        <field name="shipmentId" title="${uiLabelMap.CommonShipment}" position="2" use-when="shipmentId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${shipmentId}" target="/facility/control/EditShipment" target-type="inter-app">
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field>
-        <field name="shipmentId" position="2" use-when="shipmentId==null"><display/></field>
-        <field name="partyId" position="2" use-when="partyId!=null" widget-style="${styles.link_default}">
+        <field name="shipmentId" title="${uiLabelMap.CommonShipment}" position="2" use-when="shipmentId==null"><display/></field>
+        <field name="partyId" title="${uiLabelMap.CommonParty}" position="2" use-when="partyId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
-        <field name="partyId" position="2" use-when="partyId==null"><display/></field>
-        <field name="productId" position="2" use-when="productId!=null" widget-style="${styles.link_default}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" position="2" use-when="partyId==null"><display/></field>
+        <field name="productId" title="${uiLabelMap.CommonProduct}" position="2" use-when="productId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${productId}" target="/catalog/control/EditProduct" target-type="inter-app">
                 <parameter param-name="productId"/>
             </hyperlink>
         </field>
-        <field name="productId" position="2" use-when="productId==null"><display/></field>
+        <field name="productId" title="${uiLabelMap.CommonProduct}" position="2" use-when="productId==null"><display/></field>
         <field name="isPosted" position="2"><display/></field>
         <field name="postedDate" position="2"><display/></field>
         <field name="debitCreditFlag" position="2"><display/></field>
-        <field name="amount" position="2"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" position="2"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
+    
     <form name="ListFindAcctgTransEntriesByDate" type="list" title="List Accounting Transaction Entries" list-name="acctgTransEntryList"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
@@ -821,53 +822,53 @@ under the License.
         <field name="acctgTransEntrySeqId" widget-style="${styles.link_default}"><display/></field>
         <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}"><display-entity entity-name="AcctgTransType"/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}"><display-entity entity-name="GlFiscalType"/></field>
-        <field name="glAccountId"><display/></field>
+        <field name="glAccountId" title="${uiLabelMap.CommonAccount"><display/></field>
         <field name="glAccountDescription" title="${uiLabelMap.CommonDescription}">
             <display description="${accountCode} ${accountName}"/>
         </field>
-        <field name="glAccountClassId">
+        <field name="glAccountClassId" title="${uiLabelMap.CommonClass}">
             <display-entity entity-name="GlAccountClass"/>
         </field>
-        <field name="invoiceId" use-when="invoiceId!=null" widget-style="${styles.link_default}">
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" use-when="invoiceId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${invoiceId}" target="editInvoice">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
-        <field name="invoiceId" use-when="invoiceId==null"><display/></field>
-        <field name="paymentId" use-when="paymentId!=null" widget-style="${styles.link_default}">
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" use-when="invoiceId==null"><display/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" use-when="paymentId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${paymentId}" target="editPayment">
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
-        <field name="paymentId" use-when="paymentId==null"><display/></field>
-        <field name="workEffortId" use-when="workEffortId!=null" widget-style="${styles.link_default}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" use-when="paymentId==null"><display/></field>
+        <field name="workEffortId" title="${uiLabelMap.WorkEffort}" use-when="workEffortId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${workEffortId}" target="/workeffort/control/EditWorkEffort" target-type="inter-app">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
         </field>
-        <field name="workEffortId" use-when="workEffortId==null"><display/></field>
-        <field name="shipmentId" use-when="shipmentId!=null" widget-style="${styles.link_default}">
+        <field name="workEffortId" title="${uiLabelMap.WorkEffort}" use-when="workEffortId==null"><display/></field>
+        <field name="shipmentId" title="${uiLabelMap.CommonShipment}" use-when="shipmentId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${shipmentId}" target="/facility/control/EditShipment" target-type="inter-app">
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field>
-        <field name="shipmentId" use-when="shipmentId==null"><display/></field>
-        <field name="partyId" use-when="partyId!=null" widget-style="${styles.link_default}">
+        <field name="shipmentId" title="${uiLabelMap.CommonShipment}" use-when="shipmentId==null"><display/></field>
+        <field name="partyId" title="${uiLabelMap.CommonParty}" use-when="partyId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
-        <field name="partyId" use-when="partyId==null"><display/></field>
-        <field name="productId" use-when="productId!=null" widget-style="${styles.link_default}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" use-when="partyId==null"><display/></field>
+        <field name="productId" title="${uiLabelMap.CommonProduct}" use-when="productId!=null" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${productId}" target="/catalog/control/EditProduct" target-type="inter-app">
                 <parameter param-name="productId"/>
             </hyperlink>
         </field>
-        <field name="productId" use-when="productId==null"><display/></field>
+        <field name="productId" title="${uiLabelMap.CommonProduct}" use-when="productId==null"><display/></field>
         <field name="isPosted"><display/></field>
         <field name="postedDate"><display/></field>
         <field name="debitCreditFlag"><display/></field>
-        <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
     <form name="CreateAcctgTransAndEntries" type="single" target="quickCreateAcctgTransAndEntries" title=""
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -946,7 +947,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="amount"><text size="20" maxlength="20"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}"><text size="20" maxlength="20"/></field>
         <field name="transactionDate"><date-time/></field>
         <field name="description"><text size="60"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
@@ -962,7 +963,7 @@ under the License.
         </field>
         <field name="debitCreditFlag" widget-area-style="align-center" title-area-style="align-center"><display/></field>
         <field name="origAmount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${origCurrencyUomId}"/></field>
-        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="glAccountTypeId" title="${uiLabelMap.CommonType}">
             <display-entity entity-name="GlAccountType"/>
         </field>
@@ -1022,7 +1023,7 @@ under the License.
                 <parameter param-name="partyId" from-field="organizationPartyId"/>
             </hyperlink>
         </field>
-        <field name="amount"><display/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="submitAction" title="${uiLabelMap.AccountingCreateAcctRecons}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
@@ -1147,7 +1148,7 @@ under the License.
         <field name="glAccountId"><display/></field>
         <field name="glAccountDescription"><display description="${accountName}"/></field>
         <field name="glAccountClassId" title="${uiLabelMap.AccountingGlAccountClass}"><display-entity entity-name="GlAccountClass"/></field>
-        <field name="invoiceId"><display/></field>
+        <field name="invoiceId" title="${uiLabelMap.CommonAmount}"><display/></field>
         <field name="paymentId"><display/></field>
         <field name="workEffortId"><display/></field>
         <field name="shipmentId"><display/></field>
@@ -1156,7 +1157,7 @@ under the License.
         <field name="isPosted"><display/></field>
         <field name="postedDate"><display/></field>
         <field name="debitCreditFlag"><display/></field>
-        <field name="amount"><display/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}"><display/></field>
     </form>
 
     <form name="AcctgTransSearchResultsCsv" type="list" title="List Accounting Transactions" list-name="acctgTransList" paginate="false">

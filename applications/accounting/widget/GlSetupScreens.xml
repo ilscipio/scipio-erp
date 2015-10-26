@@ -71,7 +71,7 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.AccountingAvailableInternalOrganizations}" navigation-menu-name="newAccountOrganization">
-                            <include-menu location="component://accounting/widget/AccountingMenus.xml" name="newAccountOrganization"/>
+                            <include-menu location="component://accounting/widget/AccountingMenus.xml" name="OrganizationSubTabBar"/>
                             <include-form name="ListCompanies" location="component://accounting/widget/GlSetupForms.xml"/>
                         </screenlet>
                     </decorator-section>

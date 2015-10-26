@@ -212,7 +212,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.CommonParty}" position="2"><lookup target-form-name="LookupPartyName"/></field>
         <field name="transactionDate"> <date-time/> </field>
         <field name="entryDate" position="2"><date-time/></field>
-        <field name="paymentId" title="${uiLabelMap.AccountingPayment}"><lookup target-form-name="LookupPayment"/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}"><lookup target-form-name="LookupPayment"/></field>
         <field name="orderId" title="${uiLabelMap.CommonOrder}"><lookup target-form-name="LookupOrderHeader"/></field>
         <field name="orderItemSeqId" position="2"><text/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
@@ -256,7 +256,7 @@ under the License.
         <auto-fields-service service-name="createFinAccountAuth"/>
         <field name="finAccountId"><hidden/></field>
         <field name="finAccountAuthId"><hidden/></field>
-        <field name="amount"><text/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}"><text/></field>
         <field name="authorizationDate"><date-time/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
@@ -398,7 +398,7 @@ under the License.
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="partyIdTo" position="2"><lookup target-form-name="LookupInternalOrganization"/></field>
-        <field name="amount" position="2"><text size="6"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" position="2"><text size="6"/></field>
         <field name="comments" position="2"><text size="35"/></field>
         <field name="finAccountId"><hidden value="${finAccountId}"/></field>
         <field name="finAccountTypeId"><hidden value="${finAccountTypeId}"/></field>

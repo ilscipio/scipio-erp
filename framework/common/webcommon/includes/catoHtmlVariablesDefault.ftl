@@ -37,6 +37,7 @@
     "postfix" : "postfix",
     "hidden" : "hide",
     "icon" : "fi",
+    "icon_prefix" : "fi-",
     "icon_button" : "fi-widget",
     "icon_button_value" : "&#xf214;",
     "icon_calendar" : "fi-calendar",

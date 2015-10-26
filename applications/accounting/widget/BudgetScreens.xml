@@ -45,7 +45,7 @@ under the License.
                                 </section>
                             </decorator-section>
                             <decorator-section name="search-options">
-                                <include-form name="FindBudgetOptions" location="component://accounting/widget/BudgetForms.xml"/>
+                                <include-form location="component://accounting/widget/BudgetForms.xml" name="FindBudgetOptions"/>
                             </decorator-section>
                             <decorator-section name="search-results">
                                 <include-screen name="BudgetSearchResults"/>

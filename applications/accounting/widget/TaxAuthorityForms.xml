@@ -161,17 +161,16 @@ under the License.
                 <order-by field-name="productCategoryId"/>
             </entity-condition>
         </actions>
-
+        <row-actions>
+            <entity-one entity-name="ProductCategory" value-field="category"></entity-one>
+        </row-actions>
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
-        <field name="productCategoryId" title="${uiLabelMap.CommonCategory}">
-            <display-entity entity-name="ProductCategory" description="${description}">
-                <sub-hyperlink description="${productCategoryId}" target="/catalog/control/EditCategory" target-type="inter-app" link-style="${styles.link_default}">
-                    <parameter param-name="productCategoryId"/>
-                </sub-hyperlink>
-            </display-entity>
+        <field name="productCategoryId" title="${uiLabelMap.CommonCategory}" widget-style="${styles.link_default}">
+           <hyperlink also-hidden="false" description="${productCategoryId} - ${category.categoryName}" target="/catalog/control/EditCategory" target-type="inter-app" >
+                <parameter param-name="productCategoryId"/>
+            </hyperlink>
         </field>
-
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteTaxAuthorityCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
@@ -180,6 +179,7 @@ under the License.
             </hyperlink>
         </field>
     </form>
+    
     <form name="AddTaxAuthorityCategory" type="single" target="createTaxAuthorityCategory" title="" default-map-name="taxAuthorityCategory"
         header-row-style="header-row" default-table-style="basic-table">
         <auto-fields-service service-name="createTaxAuthorityCategory"/>

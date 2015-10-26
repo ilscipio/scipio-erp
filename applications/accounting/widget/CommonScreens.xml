@@ -339,8 +339,8 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.partyDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="OrganizationAccountingTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                        <include-menu name="OrganizationAccountingReportsTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-menu name="OrganizationTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-menu name="OrganizationReportsTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
                         <decorator-section-include name="body"/>
                     </decorator-section>
@@ -360,7 +360,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyDecorator" location="${parameters.partyDecoratorLocation}">
                     <decorator-section name="body">
-                        <include-menu name="OrganizationAccountingTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                        <include-menu name="OrganizationTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <include-menu name="PartyAccountingChecksTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <label style="heading">${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
                         <decorator-section-include name="checks-body"/>

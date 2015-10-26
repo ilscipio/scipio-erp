@@ -26,7 +26,7 @@ under the License.
     
     <!-- Accounting Transaction -->
     <form name="CreateAcctgTrans" type="single" target="createAcctgTrans"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="acctgTransTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down no-current-selected-key="_NA_">
@@ -138,7 +138,7 @@ under the License.
         </sort-order>
     </form>
     <form name="EditAcctgTrans" type="single" target="updateAcctgTrans" default-map-name="acctgTrans"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         
         <field name="acctgTransId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field name="organizationPartyId" map-name="parameter"><hidden/></field>
@@ -264,7 +264,7 @@ under the License.
     </form>
     
     <form name="ViewAcctgTrans" type="single" default-map-name="acctgTrans"
-            default-table-style="basic-table">
+            default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="AcctgTrans" default-field-type="display"/>
         <field name="acctgTransId" position="1"/>
         <field name="acctgTransTypeId" title="${uiLabelMap.CommonType}" position="2">
@@ -344,7 +344,7 @@ under the License.
     </form>
     
     <form name="FindAcctgTrans" target="FindAcctgTrans" type="single" title="" default-map-name="journal"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="organizationPartyId"><hidden/></field>
         <field name="acctgTransId" title="${uiLabelMap.FormFieldTitle_acctgTransId}" entity-name="AcctgTrans" position="1">
             <text size="20"/>
@@ -389,7 +389,7 @@ under the License.
     </form>
 
     <form name="ListAcctgTrans" type="list" title="List Accounting Transactions" list-name="acctgTransList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="AcctgTransAndEntries" list="acctgTransList" distinct="true">
                 <condition-list>
@@ -472,7 +472,7 @@ under the License.
     </form>
 
     <form name="ListUnpostedAcctgTrans" type="list" title="Unposted Accounting Transactions" list-name="transactions"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="acctgTransId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="EditAcctgTrans">
                 <parameter param-name="acctgTransId"/>
@@ -574,7 +574,7 @@ under the License.
     </form>
     
     <form name="ListAcctgTransEntries" type="list" list-name="acctgTransEntries" default-entity-name="AcctgTransEntry" target="updateAcctgTransEntry"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="organizationPartyId"><hidden/></field>
         <field name="acctgTransId"><hidden/></field>
         <field name="acctgTransEntrySeqId"><display/></field>
@@ -639,7 +639,7 @@ under the License.
     </form>
     
     <form name="FindAcctgTransEntries" target="FindAcctgTransEntries" type="single" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="organizationPartyId"><hidden/></field>
         <field name="acctgTransId" title="${uiLabelMap.FormFieldTitle_acctgTransId}" entity-name="AcctgTrans">
             <text size="20"/>
@@ -700,7 +700,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListFindAcctgTransEntriesByAccount" type="list" title="List Accounting Transaction Entries" list-name="acctgTransEntryList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="AcctgTransAndEntries" list="acctgTransEntryList">
                 <condition-list>
@@ -787,7 +787,7 @@ under the License.
         <field name="amount" position="2"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
     <form name="ListFindAcctgTransEntriesByDate" type="list" title="List Accounting Transaction Entries" list-name="acctgTransEntryList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="AcctgTransAndEntries" list="acctgTransEntryList">
                 <condition-list>
@@ -870,7 +870,7 @@ under the License.
         <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
     <form name="CreateAcctgTransAndEntries" type="single" target="quickCreateAcctgTransAndEntries" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <set field="debitGlAccountClassId" from-field="parameters.debitGlAccountClassId"/>
             <set field="creditGlAccountClassId" from-field="parameters.creditGlAccountClassId"/>
@@ -953,7 +953,7 @@ under the License.
     </form>
     
     <form name="ViewAcctgTransEntries" type="list" list-name="acctgTransEntries" default-entity-name="AcctgTransEntry"
-           default-table-style="basic-table">
+           default-table-style="${styles.table_basic}">
         <field name="organizationPartyId"><hidden/></field>
         <field name="acctgTransId"><hidden/></field>
         <field name="acctgTransEntrySeqId"><display/></field>
@@ -974,7 +974,7 @@ under the License.
     
     <!-- Reconciliations -->
     <form name="FindGlAccountReconciliation" type="single" title="" target="findGlAccountReconciliation"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="organizationPartyId"><hidden/></field>
         <field name="glAccountId">
             <drop-down allow-empty="false">
@@ -987,7 +987,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSearch}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListGlAccountReconciliation" type="multi" use-row-submit="true" target="EditGlReconciliation?organizationPartyId=${organizationPartyId}&amp;tabButtonItem=AccountReconciliation"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="AcctgTransEntry">
                 <condition-list>
@@ -1027,7 +1027,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.AccountingCreateAcctRecons}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="EditGlReconciliation" type="single" target="updateGlReconciliation?tabButtonItem=${tabButtonItem}" default-map-name="glReconciliation"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="updateGlReconciliation"/>
         <field name="glReconciliationId"><display/></field>
         <field name="glReconciliationName"><text/></field>
@@ -1048,7 +1048,7 @@ under the License.
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="glReconciliationId!=null" widget-style="${styles.button_default}" ><submit button-type="text-link"/></field>
     </form>
     <form name="ListGlReconciliationEntries" type="list" use-row-submit="true"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="GlReconciliationEntry">
                 <condition-list>
@@ -1064,7 +1064,7 @@ under the License.
     </form>
     
     <form name="FindGlAccountReconciliations" type="single" title="" target="findGlAccountReconciliations"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="organizationPartyId"><hidden/></field>
         <field name="glAccountId">
             <drop-down allow-empty="false">
@@ -1080,7 +1080,7 @@ under the License.
     </form>
     
     <form name="ListGlAccountReconciliations" type="list" default-entity-name="GlReconciliation"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="GlReconciliation">
                 <condition-list>

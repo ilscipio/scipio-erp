@@ -22,7 +22,7 @@ under the License.
        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="TrackingCodeReportOptions" type="single" target="TrackingCodeReport" title="${uiLabelMap.MarketingTrackingCodeReportTitle}"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="fromDate" title="${uiLabelMap.CommonFrom} (${uiLabelMap.CommonDate}&gt;=)">
             <date-time type="timestamp"/>
         </field>
@@ -44,7 +44,7 @@ under the License.
     </form>
 
     <form name="MarketingCampaignOptions" type="single" target="MarketingCampaignReport"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="fromDate" title="${uiLabelMap.CommonFrom} (${uiLabelMap.CommonDate}&gt;=)">
             <date-time type="timestamp"/>
         </field>
@@ -66,7 +66,7 @@ under the License.
     </form>
 
     <form name="EmailStatusOptions" type="single" target="EmailStatusReport" 
-            header-row-style="header-row" default-table-style="basic-table">
+            header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="fromDate" title="${uiLabelMap.CommonFrom} (${uiLabelMap.CommonDate}&gt;=)">
             <date-time type="timestamp"/>
         </field>
@@ -101,7 +101,7 @@ under the License.
     </form>
 
     <form name="PartyStatusOptions" type="single" target="PartyStatusReport" 
-            header-row-style="header-row" default-table-style="basic-table">
+            header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="fromDate" title="${uiLabelMap.CommonFrom} (${uiLabelMap.CommonDate}&gt;=)">
             <date-time type="timestamp"/>
         </field>
@@ -132,7 +132,7 @@ under the License.
     </form>
 
     <form name="TrackingCodeReport" list-name="trackingCodeVisitAndOrders" target="" title="${uiLabelMap.MarketingTrackingCodeReportTitle}" type="list" paginate-target="TrackingCodeReport"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="trackingCodeId" title="${uiLabelMap.MarketingTrackingCode}">
             <display-entity entity-name="TrackingCode" key-field-name="trackingCodeId" description="${description} [${trackingCodeId}]"/>
         </field>
@@ -143,7 +143,7 @@ under the License.
     </form>
 
    <form name="MarketCampaignReport" title="${uiLabelMap.MarketingCampaignReportTitle}" type="list" list-name="marketingCampaignVisitAndOrders" target="" paginate-target="MarketCampaignReport"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="marketingCampaignId" title="${uiLabelMap.MarketingCampaignName}">
             <display-entity entity-name="MarketingCampaign" key-field-name="marketingCampaignId" description="${campaignName} [${marketingCampaignId}]"/>
         </field>
@@ -154,7 +154,7 @@ under the License.
     </form>
 
     <form name="EmailStatusReport" title="${uiLabelMap.MarketingEmailStatusReport}" type="list" list-name="commStatausList" target="" paginate-target="EmailStatusReport"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <row-actions>
             <entity-one entity-name="CommunicationEventType" value-field="communicationEventType"/>
         </row-actions>
@@ -173,7 +173,7 @@ under the License.
     </form>
 
     <form name="PartyStatusReport" title="${uiLabelMap.MarketingPartyStatusReport}" type="list" list-name="partyStatusLists" target="" paginate-target="PartyStatusReport"
-            odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+            odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
             <row-actions>
                 <entity-one entity-name="StatusItem" value-field="statusItem"/>
             </row-actions>

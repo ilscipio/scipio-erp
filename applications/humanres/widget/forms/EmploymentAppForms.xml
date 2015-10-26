@@ -20,7 +20,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="ListEmploymentApps" type="multi" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmploymentAppExt?partyId=${partyId}&amp;&amp;referredByPartyId=${partyId}" paginate-target="FindEmploymentApps"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar" >
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar" >
         <actions>
             <set field="partyId" from-field="parameters.partyId"/>
             <set field="referredByPartyId" from-field="parameters.partyId"/>
@@ -70,7 +70,7 @@ under the License.
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
     </form>
-    <form name="FindEmploymentApps" type="single" target="FindEmploymentApps" header-row-style="header-row" default-table-style="basic-table" default-map-name="employmentApp">
+    <form name="FindEmploymentApps" type="single" target="FindEmploymentApps" header-row-style="header-row" default-table-style="${styles.table_basic}" default-map-name="employmentApp">
         <actions>
             <set field="referredByPartyId" from-field="parameters.partyId"/>
         </actions>
@@ -103,7 +103,7 @@ under the License.
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddEmploymentApp" type="single" target="createEmploymentApp" default-entity-name="EmploymentApp" paginate-target="FindEmploymentApps"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <set field="insideEmployee" from-field="parameters.insideEmployee"/>
         </actions>

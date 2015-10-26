@@ -25,7 +25,7 @@ under the License.
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <!-- Invoice forms -->
     <form name="FindInvoices" type="single" target="findInvoices" title="Find and list invoices"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="invoiceId" title="${uiLabelMap.CommonId}"><text-find ignore-case="true"/></field>
         <field name="invoiceDate" title="${uiLabelMap.CommonDate}" position="2"><date-find type="date"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
@@ -50,7 +50,7 @@ under the License.
     </form>
 
     <form name="ListInvoices" type="list" separate-columns="true" title="Invoice List" list-name="listIt" target="" default-entity-name="Invoice" paginate-target="findInvoices"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <set field="parameters.sortField" from-field="parameters.sortField" default-value="-invoiceDate"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -102,7 +102,7 @@ under the License.
     </form>
 
     <form name="invoiceHeader" type="single" title="Invoice header information" default-map-name="invoice"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <set field="total" value="${groovy:return(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(invoice));}"/>
             <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
@@ -142,7 +142,7 @@ under the License.
     </form>
 
 <form name="invoiceItems" list-name="invItemAndOrdItems" target="" title="" type="list" separate-columns="true" paginate-target="invoiceOverview"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <row-actions>
             <set field="quantity" value="${groovy: quantity ?: 1}" type="BigDecimal"/>
             <set field="total" value="${groovy: quantity * amount ?: 0}" type="BigDecimal"/>
@@ -175,7 +175,7 @@ under the License.
     </form>
 
     <form name="invoiceRoles" type="list" use-row-submit="true" title="" list-name="invoiceRoles" paginate-target="invoiceRoles"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <!--auto-fields-entity entity-name="InvoiceRole" default-field-type="display"/-->
         <row-actions>
             <entity-one value-field="party" entity-name="PartyNameView"/>
@@ -196,7 +196,7 @@ under the License.
     </form>
 
     <form name="ListInvoiceApplications" type="list" list-name="invoiceApplications" default-entity-name="InvoiceItem" use-row-submit="true"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar"
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar"
         target="updatePaymentApplication" title="Apply payments to invoices" separate-columns="false">
         <field name="invoiceItemSeqId"><display/></field>
         <field name="productId"><display/></field>
@@ -213,7 +213,7 @@ under the License.
         <field name="amountApplied" widget-area-style="amount"><display type="currency" currency="${invoice.currencyUomId}"/></field>
     </form>
     <form name="AcctgTransAndEntries" type="list" title="Accounting Transactions" list-name="acctgTransAndEntries"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="acctgTransId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}" widget-area-style="align-right" title-area-style="align-right">
             <hyperlink description="${acctgTransId}" target="EditAcctgTrans?acctgTransId=${acctgTransId}&amp;organizationPartyId=${organizationPartyId}"/>
         </field>
@@ -231,7 +231,7 @@ under the License.
     </form>
 
     <form name="NewSalesInvoice" type="single" target="createInvoice" title="Edit Invoice Header" default-map-name="invoice"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="statusId"><hidden value="INVOICE_IN_PROCESS"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field position="2" name="invoiceTypeId">
@@ -255,7 +255,7 @@ under the License.
         </field>
     </form>
     <form name="NewPurchaseInvoice" type="single" target="createInvoice" title="Edit Invoice Header" default-map-name="invoice"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="statusId"><hidden value="INVOICE_IN_PROCESS"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field position="2" name="invoiceTypeId">
@@ -281,7 +281,7 @@ under the License.
     </form>
 
     <form name="EditInvoice" type="single" target="updateInvoice" title="Edit Invoice Header" default-map-name="invoice"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="invoice==null" target="createInvoice"/>
         <field name="invoiceId"><hidden/></field>
         <field position="1" name="invoiceDate"><date-time/></field>
@@ -342,7 +342,7 @@ under the License.
     </form>
 
    <form name="EditInvoiceItems" type="multi" list-name="invoiceItems" default-entity-name="InvoiceItem" target="updateInvoiceItem?invoiceId=${invoiceId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}" title="Edit Invoice Items" paginate-target="listInvoiceItems"
-       odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+       odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
        <row-actions>
            <set field="total" value="${groovy: (quantity ?: 1) * (amount ?: 0)}" type="BigDecimal"/>
        </row-actions>
@@ -384,7 +384,7 @@ under the License.
     </form>
 
     <form name="EditInvoiceItem" type="single" target="createInvoiceItem" title="" default-map-name="invoiceItem" default-entity-name="InvoiceItem"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="invoiceId"><hidden/></field>
         <field position="1" name="invoiceItemTypeId">
             <drop-down allow-empty="false">
@@ -429,14 +429,14 @@ under the License.
     </form>
 
     <form name="ListInvoiceStatus" list-name="invoiceStatus" target="" title="" type="list" paginate-target="ListInvoiceStatus"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="invoiceId"><hidden/></field>
         <field name="statusDate"><display description="${groovy:statusDate.toString().substring(0,10)}"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
     </form>
 
     <form name="ListInvoiceTerms" list-name="invoiceTerms" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="InvoiceTerm" default-field-type="display"/>
         <field name="invoiceId"><hidden/></field>
         <field name="invoiceTermId"><hidden/></field>
@@ -446,7 +446,7 @@ under the License.
     </form>
 
     <form name="EditInvoiceApplications" type="list" list-name="invoiceApplications" default-entity-name="InvoiceItem" use-row-submit="true" target="updateInvoiceApplication" title="Apply payments to invoices" separate-columns="false"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="statusId"><hidden/></field>
         <field name="paymentApplicationId"><hidden/></field>
         <field name="invoiceItemSeqId"><display/></field>
@@ -469,7 +469,7 @@ under the License.
     </form>
 
     <form name="AddPayment" type="single" target="updateInvoiceApplication" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="invoiceId"><hidden/></field>
         <field name="paymentId" title="${uiLabelMap.CommonPayment}"><lookup target-form-name="LookupPayment"/></field>
         <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
@@ -480,7 +480,7 @@ under the License.
     </form>
 
     <form name="ListPaymentsNotApplied" type="list" list-name="payments" target="updateInvoiceApplication" title=""
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="invoiceId"><hidden/></field>
         <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_default}">
             <hyperlink target="paymentOverview" description="[${paymentId}]">
@@ -499,7 +499,7 @@ under the License.
     <form name="ListPaymentsNotAppliedForeignCurrency" extends="ListPaymentsNotApplied" list-name="paymentsActualCurrency"/>
 
     <form name="ListInvoiceRoles" type="list" use-row-submit="true" title="" list-name="invoiceRoles" paginate-target="invoiceRoles"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <row-actions>
             <entity-one value-field="party" entity-name="PartyNameView"/>
         </row-actions>
@@ -527,7 +527,7 @@ under the License.
         </field>
     </form>
     <form name="EditInvoiceRole" type="single" target="createInvoiceRole" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="invoiceId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="roleTypeId" title="${uiLabelMap.CommonRole}" position="2">
@@ -543,7 +543,7 @@ under the License.
     </form>
     
     <form name="SendPerEmail" type="single" target="executeSendPerEmail" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <service service-name="getPartyEmail" result-map="mapFrom">
                 <field-map field-name="partyId" value="${invoice.partyIdFrom}"/>
@@ -565,7 +565,7 @@ under the License.
     </form>
     
     <form name="EditTimeEntries" type="list" list-name="timeEntries"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-service service-name="updateTimeEntry" default-field-type="display"/>
 
         <field name="invoiceId"><hidden/></field>
@@ -580,7 +580,7 @@ under the License.
         </field>
     </form>
     <form name="ListTimeEntries" type="list" list-name="timeEntries"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <row-actions>
             <entity-one entity-name="Timesheet" value-field="timesheet">
                 <field-map field-name="timesheetId" from-field="timesheetId"/>
@@ -622,7 +622,7 @@ under the License.
         <field name="comments"><display/></field>
     </form>
     <form name="lookupInvoicesStatus" type="single" target="BillingAccountInvoices" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="billingAccountId"><hidden/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
@@ -636,7 +636,7 @@ under the License.
     </form>
 
     <form name="ListInvoicePaymentInfo" type="list" list-name="invoicePaymentInfoList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="getInvoicePaymentInfoList" result-map-list="invoicePaymentInfoList">
                 <field-map field-name="invoiceId" from-field="parameters.invoiceId"/>
@@ -653,13 +653,13 @@ under the License.
     </form>
 
     <form name="ListCustomerInvoices" extends="ListInvoices" list-name="invoices"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="partyIdFrom"><ignored/></field>
         <field name="partyIdTo"><ignored/></field>
     </form>
     
     <form name="ListSupplierInvoices" extends="ListInvoices" list-name="invoiceslistexternal"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="partyIdFrom"><ignored/></field>
         <field name="partyIdTo"><ignored/></field>
     </form>

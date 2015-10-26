@@ -23,7 +23,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="findContent" default-entity-name="ContentAssocDataResourceViewFrom" target="CMSContentFind" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="caContentIdTo"><text-find/></field>
         <field name="caMapKey"><text-find/></field>
         <field name="caContentAssocTypeId"><text-find/></field>
@@ -35,7 +35,7 @@ under the License.
     </form>
 
     <form name="listFindContent" type="list" list-name="listIt" target="" paginate-target="/CMSContentFind" view-size="20"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="requestParameters"/>
@@ -75,7 +75,7 @@ under the License.
     </form>
 
     <form name="EditContent" target="uploadContentAndImage" title="" type="upload"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="imageData" >
             <file />
         </field>
@@ -184,7 +184,7 @@ under the License.
 
     <!-- ContentPurposeOperation forms -->
    <form name="UpdateContentPurposeOperation" list-name="contentList" target="updateContentPurposeOperation" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-service service-name="updateContentPurposeOperation" default-field-type="display"/>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentPurposeOperation">
@@ -197,7 +197,7 @@ under the License.
         </field>
     </form>
     <form name="AddContentPurposeOperation" target="addContentPurposeOperation" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentPurposeOperation"/>
         <field name="contentPurposeTypeId">
             <drop-down allow-empty="false">
@@ -241,7 +241,7 @@ under the License.
         </field>
     </form>
     <form name="EditAddContentMaster" target="" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="dataResourceId" map-name="currentValue">
             <hidden/>
         </field>
@@ -306,16 +306,16 @@ under the License.
                 <hidden value="true"/>
         </field>
     </form>
-    <form name="EditAddContent" target="persistContent" title="" type="single" extends="EditAddContentMaster" header-row-style="header-row" default-table-style="basic-table">
+    <form name="EditAddContent" target="persistContent" title="" type="single" extends="EditAddContentMaster" header-row-style="header-row" default-table-style="${styles.table_basic}">
     </form>
-    <form name="EditAddBioContent" target="persistBioContent" title="" type="single" extends="EditAddContentMaster" header-row-style="header-row" default-table-style="basic-table">
+    <form name="EditAddBioContent" target="persistBioContent" title="" type="single" extends="EditAddContentMaster" header-row-style="header-row" default-table-style="${styles.table_basic}">
     </form>
 <!--
     <form name="AddResponse" target="uploadResponse" title="" type="single" extends="EditAddContentMaster">
     </form>
 -->
 
-    <form name="EditAddImageMaster" target="" title="" type="upload" header-row-style="header-row" default-table-style="basic-table">
+    <form name="EditAddImageMaster" target="" title="" type="upload" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="dataResourceId" map-name="currentValue">
             <hidden/>
         </field>
@@ -385,13 +385,13 @@ under the License.
                 <hidden value="true"/>
         </field>
     </form>
-    <form name="EditAddImage" target="persistImage" title="" type="upload" extends="EditAddImageMaster" header-row-style="header-row" default-table-style="basic-table">
+    <form name="EditAddImage" target="persistImage" title="" type="upload" extends="EditAddImageMaster" header-row-style="header-row" default-table-style="${styles.table_basic}">
     </form>
-    <form name="EditAddBioImage" target="persistBioImage" title="" type="upload" extends="EditAddImageMaster" header-row-style="header-row" default-table-style="basic-table">
+    <form name="EditAddBioImage" target="persistBioImage" title="" type="upload" extends="EditAddImageMaster" header-row-style="header-row" default-table-style="${styles.table_basic}">
     </form>
 
     <form name="EditAddContentStuff" target="persistContentStuff" title="" type="upload" default-map-name="currentValue"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="contentAssocTitle" title="${uiLabelMap.ContentAssoc}" title-style="h1" map-name="dummy">
             <display description=""/>
         </field>
@@ -602,7 +602,7 @@ under the License.
         <field name="MASTER_drDataResource" ><hidden value="${MASTER_drDataResource}"/></field>
     </form>
     <form name="EditAddSubContentStuff" target="persistSubContentStuff" title="" type="upload" default-map-name="currentValue" extends="EditAddContentStuff"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
     </form>
 
 </forms>

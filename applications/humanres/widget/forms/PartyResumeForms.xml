@@ -20,7 +20,7 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-    <form name="FindPartyResumes" type="single" target="FindPartyResumes" header-row-style="header-row" default-table-style="basic-table">
+    <form name="FindPartyResumes" type="single" target="FindPartyResumes" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="PartyResume" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
@@ -29,7 +29,7 @@ under the License.
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListPartyResumes" type="list" separate-columns="true" default-entity-name="PartyResume" list-name="listIt" paginate-target="FindPartyResumes" paginate="true"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="partyResumeCtx"/>
@@ -59,7 +59,7 @@ under the License.
        </field>
     </form>
     <form name="EditPartyResume" type="single" target="createPartyResume" title="" default-map-name="partyResume"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="partyResume != null" target="updatePartyResume"/>
         <field name="resumeId" use-when="partyResume!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field name="resumeId" use-when="partyResume==null" required-field="true"><text/></field>

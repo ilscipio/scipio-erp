@@ -24,7 +24,7 @@ under the License.
 
     <!-- form whose input filters the ListGatewayResponses -->
     <form name="FindGatewayResponses" type="single" target="FindGatewayResponses" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="paymentGatewayResponseId" title="${uiLabelMap.AccountingPaymentGatewayResponseId}">
             <text-find/>
         </field>
@@ -66,7 +66,7 @@ under the License.
     
     <!-- Brings up a list of gateway responses. TODO: should cut down data displayd -->
     <form name="ListGatewayResponses" type="list" use-row-submit="true" target="" title="" list-name="listIt" paginate-target="FindGatewayResponses"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <set field="entityName" value="PaymentGatewayResponse"/>
             <set field="orderBy" value="transactionDate DESC"/>
@@ -98,7 +98,7 @@ under the License.
     
     <!-- presents the orderId and orderPaymentPreferenceId for a gateway response with links to the order -->
     <form name="ViewGatewayResponseRelations" type="single" target="" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="orderId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="inter-app" description="${orderId}" target="/ordermgr/control/orderview">
                 <parameter param-name="orderId"/>
@@ -136,7 +136,7 @@ under the License.
     
     <!-- displays the gateway response in detail -->
     <form name="ViewGatewayResponse" type="single" target="processCaptureTransaction" title="" default-map-name="paymentGatewayResponse"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="PaymentGatewayResponse" default-field-type="display"/>
         <!-- TODO: what is the correct way to ensure that the response was authorized?
         <field name="submitAction" use-when="paymentGatewayResponse!=null&amp;&amp;paymentGatewayResponse.getString(&quot;gatewayFlag&quot;).equals(&quot;A&quot;)" title="${uiLabelMap.AccountingCapture}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -154,7 +154,7 @@ under the License.
     
     <!-- form for authorizing a transaction -->
     <form name="AuthorizeTransaction" type="single" target="processAuthorizeTransaction" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="orderId"><text/></field>
         <field name="orderPaymentPreferenceId"><text/></field>
         <field name="paymentMethodTypeId" title="${uiLabelMap.CommonPaymentMethodType}">
@@ -168,7 +168,7 @@ under the License.
     
     <!-- form for capturing a transaction -->
     <form name="CaptureTransaction" type="single" target="processCaptureTransaction" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="orderId"><text/></field>
         <field name="orderPaymentPreferenceId"><text/></field>
         <field name="paymentMethodTypeId" title="${uiLabelMap.CommonPaymentMethodType}">

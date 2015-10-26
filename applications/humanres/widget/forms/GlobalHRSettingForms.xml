@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="ListSkillTypes" type="multi" title="" target="updateSkillType"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="SkillType"><order-by field-name="skillTypeId"/></entity-condition>
         </actions>
@@ -37,14 +37,14 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
     </form>
     <form name="AddSkillType" type="single" target="createSkillType" default-map-name="skillType"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createSkillType" default-field-type="hidden"/>
         <field name="skillTypeId" title="${uiLabelMap.HumanResSkillTypeId}"><text/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" required-field="true"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListResponsibilityTypes" type="multi" list-name="responsibilityTypes" target="updateResponsibilityType"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="ResponsibilityType"><order-by field-name="responsibilityTypeId"/></entity-condition>
         </actions>
@@ -66,7 +66,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListTerminationTypes" type="multi" title="" target="updateTerminationType"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="TerminationType"><order-by field-name="terminationTypeId"/></entity-condition>
         </actions>
@@ -82,13 +82,13 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
     </form>
     <form name="AddTerminationType" type="single" target="createTerminationType" default-map-name="TerminationType"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createTerminationType" default-field-type="hidden"/>
         <field name="terminationTypeId"><text/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" required-field="true"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
-    <form name="FindEmplPositionTypes" type="single" header-row-style="header-row" default-table-style="basic-table">
+    <form name="FindEmplPositionTypes" type="single" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="EmplPositionType" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="emplPositionTypeId">
@@ -100,7 +100,7 @@ under the License.
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplPositionTypes" type="list" list-name="listIt" target="updateEmplPositionType"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="emplPositionTypeCtx"/>
@@ -123,7 +123,7 @@ under the License.
         </field>
     </form>
     <form name="EditEmplPositionTypes" type="single" target="updateEmplPositionType" default-map-name="emplPositionType"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="emplPositionType==null" target="createEmplPositionType"/>
         <auto-fields-service service-name="updateEmplPositionType"/>
         <field name="emplPositionTypeId" use-when="emplPositionType==null"><text/></field>
@@ -133,7 +133,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="emplPositionType!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplPositionTypeRates" type="list" title="" target="deleteEmplPositionTypeRate"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <set field="nowDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.nowDateString(&quot;yyyy-MM-dd HH:mm:ss.S&quot;)}" type="String"/>
             <entity-condition entity-name="EmplPositionTypeRateAndAmount" filter-by-date="true">
@@ -163,7 +163,7 @@ under the License.
         <field name="deleteAction" widget-style="${styles.button_default}"><submit/></field>
     </form>
     <form name="AddEmplPositionTypeRate" type="single" target="updateEmplPositionTypeRate" default-map-name="emplPositionTypeRate" paginate-target="EditEmplPositionTypeRates"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
         </actions>
@@ -196,7 +196,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListTerminationReasons" type="multi" title="" target="updateTerminationReason" paginate-target="EditTerminationReasons"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="TerminationReason"><order-by field-name="terminationReasonId"/></entity-condition>
         </actions>
@@ -212,14 +212,14 @@ under the License.
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
     </form>
     <form name="AddTerminationReason" type="single" target="createTerminationReason" title="" default-map-name = "terminationReason"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createTerminationReason"/>
         <field name="terminationReasonId"><text/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" required-field="true"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListJobInterviewType" type="multi" target="updateJobInterviewType" odd-row-style="alternate-row" header-row-style="header-row-2"
-        default-table-style="basic-table hover-bar">
+        default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="JobInterviewType"><order-by field-name="jobInterviewTypeId"/></entity-condition>
         </actions>
@@ -233,13 +233,13 @@ under the License.
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
     </form>
-    <form name="AddJobInterviewType" type="single" target="createJobInterviewType" header-row-style="header-row" default-table-style="basic-table">
+    <form name="AddJobInterviewType" type="single" target="createJobInterviewType" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="jobInterviewTypeId"><text/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" required-field="true"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListTrainingTypes" type="multi" title="" target="updateTrainingTypes" odd-row-style="alternate-row" header-row-style="header-row-2" 
-        default-table-style="basic-table hover-bar">
+        default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="TrainingClassType"><order-by field-name="trainingClassTypeId"/></entity-condition>
         </actions>
@@ -254,21 +254,21 @@ under the License.
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
     </form>            
-    <form name="AddTrainingTypes" type="single" target="createTrainingTypes" header-row-style="header-row" default-table-style="basic-table">
+    <form name="AddTrainingTypes" type="single" target="createTrainingTypes" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}" required-field="true"><text/></field>
         <field name="parentTypeId" title="${uiLabelMap.HumanResPreRequisiteSkill}"><lookup target-form-name="LookupTraining"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" required-field="true"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="AddEmplLeaveType" type="single" target="createEmplLeaveType" default-map-name="emplLeaveType"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createEmplLeaveType" default-field-type="hidden"/>
         <field name="leaveTypeId"><text/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" required-field="true"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListEmplLeaveTypes" type="multi" title="" target="updateEmplLeaveType"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="EmplLeaveType"><order-by field-name="leaveTypeId"/></entity-condition>
         </actions>
@@ -284,14 +284,14 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit/></field>
     </form>
     <form name="AddEmplLeaveReasonType" type="single" target="createEmplLeaveReasonType" default-map-name="emplLeaveReasonType"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createEmplLeaveReasonType" default-field-type="hidden"/>
         <field name="emplLeaveReasonTypeId"><text/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" required-field="true"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListEmplLeaveReasonTypes" type="multi" title="" target="updateEmplLeaveReasonType"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="EmplLeaveReasonType"><order-by field-name="emplLeaveReasonTypeId"/></entity-condition>
         </actions>

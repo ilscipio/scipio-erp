@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="ListWorkEffortOrderHeaders" separate-columns="true" target="" title="" type="list"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="WorkEffortOrderHeaderView">
                 <field-map field-name="workEffortId"/>
@@ -47,7 +47,7 @@ under the License.
         </field>
     </form>
     <form name="AddWorkEffortOrderHeader" target="createWorkEffortOrderHeader" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="workEffortId"><hidden/></field>
         <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>

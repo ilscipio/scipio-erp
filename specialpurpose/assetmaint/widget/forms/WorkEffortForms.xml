@@ -22,7 +22,7 @@
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="EditWorkEffort" target="updateWorkEffort" title="" type="single" default-map-name="workEffort"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <entity-one entity-name="WorkEffortAssoc" value-field="workEffortAssoc"/>
             <set field="workEffortIdFrom" from-field="parameters.workEffortIdFrom"/>
@@ -101,7 +101,7 @@
     </form>
 
     <form name="ListWorkEffortPartyAssigns" extends="ListWorkEffortPartyAssigns" extends-resource="component://workeffort/widget/WorkEffortPartyAssignForms.xml"
-        header-row-style="header-row-2" default-table-style="basic-table">
+        header-row-style="header-row-2" default-table-style="${styles.table_basic}">
         <field name="partyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
@@ -113,7 +113,7 @@
     </form>
 
     <form name="AddWorkEffortChild" target="createWorkEffortAndAssoc" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="fixedAssetId"><hidden/></field>
         <field name="maintHistSeqId"><hidden/></field>
         <field name="workEffortIdTo"><hidden/></field>
@@ -156,7 +156,7 @@
     </form>
 
     <form name="ListWorkEffortChildren" type="list"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}">
         <actions>
             <entity-condition entity-name="WorkEffortAssocView">
                 <condition-expr field-name="workEffortIdFrom" operator="equals" from-field="workEffortId"/>

@@ -21,7 +21,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="FindProductPriceRules" list-name="listIt" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="FindProductPriceRules">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="FindProductPriceRules">
         <actions>
             <set field="noConditionFind" value="Y"/>
             <set field="parameters.productPriceRuleId" value=""/>
@@ -54,7 +54,7 @@
     
     <!-- Below, I tried also single forms but lists are better as long as we have not introduced a better way to handle positions -->   
     <form name="EditProductPriceRule" type="list" target="updateProductPriceRule" title="" list-name="productPriceRules" 
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" separate-columns="true">
         <field name="productPriceRuleId"><hidden/></field><!-- Users don't need this information there, the screen is already sufficiently complex! -->
         <field name="ruleName" title="${uiLabelMap.CommonName}"><text size="25"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text size="60"/></field>
@@ -75,7 +75,7 @@
         </field>        
     </form>            
     <form name="EditProductPriceRulesCond" type="list" target="updateProductPriceCond" title="" list-name="productPriceConds" 
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" separate-columns="true">
         <field name="productPriceRuleId"><hidden/></field><!-- Users don't need this information there, the screen is already sufficiently complex! -->
         <field name="productPriceCondSeqId"><hidden/></field><!-- Users don't need this information there, the screen is already sufficiently complex! -->
         <field name="inputParamEnumId" title="${uiLabelMap.ProductInput}">
@@ -107,7 +107,7 @@
         </field>        
     </form>
     <form name="AddProductPriceRulesCond" type="list" target="createProductPriceCond" title="" list-name="productPriceCondAdd" 
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" separate-columns="true">
         <field name="productPriceRuleId"><hidden/></field><!-- Users don't need this information there, the screen is already sufficiently complex! -->
         <field name="new" title="${uiLabelMap.CommonNew}"><display default-value="${uiLabelMap.ProductPriceRulesNewCond}"/></field>
         <field name="inputParamEnumId" title="${uiLabelMap.ProductInput}">
@@ -133,7 +133,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit/></field>        
     </form>
     <form name="EditProductPriceRulesAction" type="list" target="updateProductPriceAction" title="" list-name="productPriceActions" 
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" separate-columns="true">
         <field name="productPriceRuleId"><hidden/></field><!-- Users don't need this information there, the screen is already sufficiently complex! -->
         <field name="productPriceActionSeqId"><hidden/></field><!-- Users don't need this information there, the screen is already sufficiently complex! -->
         <field name="productPriceActionTypeId" title="${uiLabelMap.ProductActionType}">
@@ -151,7 +151,7 @@
         </field>        
     </form>        
     <form name="AddProductPriceRulesAction" type="list" target="createProductPriceAction" title="" list-name="productPriceActionAdd" 
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">            
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" separate-columns="true">            
         <field name="productPriceRuleId"><hidden/></field><!-- Users don't need this information there, the screen is already sufficiently complex! -->
         <field name="new" title="${uiLabelMap.CommonNew}"><display default-value="${uiLabelMap.ProductPriceRulesNewAction}"/></field>
         <field name="productPriceActionTypeId" title="${uiLabelMap.ProductActionType}">

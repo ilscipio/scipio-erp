@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="FilterUserJobs" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down no-current-selected-key="SERVICE_RUNNING">
                 <entity-options description="${description}" entity-name="StatusItem">
@@ -33,7 +33,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
     <form name="UserJobsList" list-name="userJobs" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="JobSandbox" default-field-type="display"/>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" description="${description}"></display-entity>
@@ -50,7 +50,7 @@ under the License.
     </form>
 
     <form name="EditWorkEffort" default-map-name="workEffort" target="updateWorkEffort" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target target="createWorkEffort" use-when="workEffort==null"/>
         <auto-fields-service service-name="updateWorkEffort"/>
 
@@ -267,7 +267,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListLookupWorkEffort" target="" title="" list-name="listIt" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -285,7 +285,7 @@ under the License.
     </form>
 
     <form name="AddWorkEffortAndAssoc" extends="EditWorkEffort" default-map-name="workEffort" target="createWorkEffortAndAssoc" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <!-- Commenting this field for now as the form widget cannot override useWhen fields from
              the form it is extending (results in two workEffortId fields in the form)
         <field name="workEffortId"><hidden value=""/></field>
@@ -317,7 +317,7 @@ under the License.
     </form>
 
     <form name="AddWorkEffortAssoc" target="createWorkEffortAssoc" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="workEffortIdFrom"><display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName} [${workEffortId}]"/></field>
         <field name="workEffortIdTo"><lookup target-form-name="LookupWorkEffort"/></field>
         <field name="workEffortAssocTypeId">
@@ -335,7 +335,7 @@ under the License.
     </form>
 
     <form name="EditWorkEffortAssoc" target="updateWorkEffortAssoc" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="workEffortIdFrom" map-name="workEffortAssoc">
             <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName}">
                 <sub-hyperlink description="${workEffortIdFrom}" target="EditWorkEffort" link-style="${styles.link_default}">
@@ -361,7 +361,7 @@ under the License.
     </form>
 
     <form name="EditWorkEffortAndAssoc" extends="EditWorkEffort" default-map-name="workEffort" target="updateWorkEffortAndAssoc" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target target="createWorkEffortAndAssoc" use-when="workEffortAssoc==null"/>
         <field name="workEffortIdFrom" map-name="workEffortAssoc">
             <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName}">
@@ -397,7 +397,7 @@ under the License.
     </form>
 
     <form name="ListWorkEfforts" type="list" list-name="listIt" paginate-target="ListWorkEfforts" 
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <set field="fieldList" value="${groovy:['workEffortId','workEffortTypeId','currentStatusId','workEffortPurposeTypeId','description','priority','lastModifiedDate','estimatedStartDate','estimatedCompletionDate','actualStartDate','actualCompletionDate']}" type="List"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -454,7 +454,7 @@ under the License.
     <form name="FoundWorkEfforts" extends="ListWorkEfforts" paginate-target="FindWorkEffort" header-row-style="header-row-2"/>
 
     <form name="WorkEffortTreeLine" hide-header="true" target="ListWorkEfforts" title="" type="list" list-name="listIt"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${workEffortName} [${workEffortId}]" target="EditWorkEffort">
                 <parameter param-name="workEffortId"/>
@@ -475,7 +475,7 @@ under the License.
     </form>
 
     <form name="EditWorkEffortParty" default-map-name="workEffortParty" target="updateWorkEffortParty" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target target="createWorkEffortParty" use-when="workEffortParty==null"/>
         <field name="workEffortId"><hidden/></field>
         <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
@@ -493,7 +493,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="FindWorkEffortParties" target="ListWorkEffortParties" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="workEffortId"><text-find/></field>
         <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
@@ -509,7 +509,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form  name="ListWorkEffortParties" list-name="listIt" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map from-field="parameters" field-name="inputFields"/>
@@ -533,7 +533,7 @@ under the License.
         </field>
     </form>
     <form  name="DisplayWorkEffortPartyAssigns" type="list" list-name="partyAssignments"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <field name="partyId" title="${uiLabelMap.PartyParty}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} ${groupName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="${styles.link_default}">
@@ -548,7 +548,7 @@ under the License.
         <field name="expectationEnumId" title="${uiLabelMap.WorkEffortExpectation}"><display-entity entity-name="Enumeration" key-field-name="enumId"/></field>
     </form>
     <form name="EditWorkEffortCommEvent" default-map-name="workEffortCommEvent" target="updateWorkEffortCommEvent" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target target="createWorkEffortCommEvent" use-when="communicationEvent==null"/>
         <field name="communicationEventId" use-when="communicationEvent!=null"><display/></field>
         <field name="communicationEventTypeId">
@@ -639,7 +639,7 @@ under the License.
         <field name="cancelAction" title=" " widget-style="${styles.button_default}"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
     <form name="FindWorkEffortCommEvents" default-map-name="workEffortCommEvent" target="ListWorkEffortCommEvents" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="workEffortId"><hidden/></field>
         <field name="commEventId" title="${uiLabelMap.FormFieldTitle_communicationEventId}"><lookup target-form-name="LookupCommEvent"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
@@ -647,7 +647,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListWorkEffortCommEvents" default-map-name="workEffortCommEvent" title="" list-name="listIt" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map from-field="requestParameters" field-name="inputFields"/>
@@ -687,7 +687,7 @@ under the License.
     </form>
 
     <form  name="ListPreferredContactMech" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="PartyAndContactMech">
                 <field-map field-name="partyId"/>
@@ -699,7 +699,7 @@ under the License.
         <field name="contactMechTypeId"><display-entity entity-name="ContactMechType"/></field>
     </form>
     <form name="LookupCommEvent" target="LookupCommEvent" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="communicationEventId" title="${uiLabelMap.WorkEffortCommEventId}"><text-find/></field>
         <field name="partyIdFrom" title="${uiLabelMap.PartyPartyId} ${uiLabelMap.CommonFrom}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="partyIdTo" title="${uiLabelMap.PartyPartyId} ${uiLabelMap.CommonTo}"><lookup target-form-name="LookupPartyName"/></field>
@@ -731,7 +731,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
     <form name="ListLookupCommEvent" target="" title="" list-name="listIt" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map from-field="parameters" field-name="inputFields"/>
@@ -769,7 +769,7 @@ under the License.
 
     <!-- WorkEffortRate -->
     <form name="ListWorkEffortRates" type="list" list-name="workEffortRates" target="deleteWorkEffortRate"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="RateAmount" filter-by-date="true">
                 <condition-expr field-name="workEffortId" from-field="workEffortId"/>
@@ -787,7 +787,7 @@ under the License.
         <field name="deleteAction" widget-style="smallSubmit"><submit /></field>
     </form>
     <form name="AddWorkEffortRate" type="single" target="updateWorkEffortRate" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
             <set field="periodTypeId" value="RATE_HOUR"/>
@@ -822,7 +822,7 @@ under the License.
 
     <!-- TimeEntry -->
     <form name="ListWorkEffortTimeEntries" type="list" list-name="timesheetEntries" target="updateWorkEffortTimeEntry"
-        header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="TimeEntry">
                 <condition-expr field-name="workEffortId" from-field="workEffortId"/>
@@ -868,7 +868,7 @@ under the License.
         </field>
     </form>
     <form name="AddWorkEffortTimeEntry" type="single" target="createWorkEffortTimeEntry" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createTimeEntry"/>
 
         <field name="timeEntryId"><ignored/><!-- don't pass, will be sequenced --></field>
@@ -891,7 +891,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddWorkEffortTimeToInvoice" target="addWorkEffortTimeToInvoice" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="workEffortId"><hidden/></field>
         <field name="invoiceId"><lookup target-form-name="LookupInvoice"/></field>
         <field name="submitAction" title="${uiLabelMap.PageTitleAddWorkEffortTimeToInvoice}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -906,7 +906,7 @@ under the License.
 
     <!-- WorkEffort Note -->
     <form name="ListWorkEffortNotes" type="list" list-name="workEffortNotes"
-        header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="WorkEffortNoteAndData">
                 <condition-expr field-name="workEffortId" from-field="workEffortId"/>
@@ -943,7 +943,7 @@ under the License.
     </form>
 
     <form name="AddWorkEffortNote" type="single" target="updateWorkEffortNote" title="" default-map-name="workEffortNoteAndData"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="noteId == null" target="createWorkEffortNote"/>
         <auto-fields-service service-name="createWorkEffortNote"/>
         <field name="noteId" use-when="noteId != null"><hidden/></field>
@@ -963,7 +963,7 @@ under the License.
 
     <!-- WorkEffortContent forms -->
     <form name="AddWorkEffortContent" target="createWorkEffortContent" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createWorkEffortContent"/>
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
         <field name="contentId">
@@ -979,7 +979,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListWorkEffortContents" type="list" target="updateWorkEffortContent" list-name="workEffortContents"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="WorkEffortContent" use-cache="true" list="workEffortContents">
                 <field-map from-field="workEffortId" field-name="workEffortId"/>
@@ -1009,7 +1009,7 @@ under the License.
 
     <!-- WorkEffort Good Standard forms -->
     <form name="AddWorkEffortGoodStandard" target="createWorkEffortGoodStandard" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createWorkEffortGoodStandard"/>
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
         <field name="productId">
@@ -1033,7 +1033,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListWorkEffortGoodStandards" type="list" target="updateWorkEffortGoodStandard" list-name="workEffortGoodStandards"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="WorkEffortGoodStandard" use-cache="true" list="workEffortGoodStandards">
                 <field-map from-field="workEffortId" field-name="workEffortId"/>
@@ -1071,7 +1071,7 @@ under the License.
 
     <!-- WorkEffort Reviews -->
     <form name="AddWorkEffortReview" target="createWorkEffortReview" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createWorkEffortReview"/>
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
         <field name="userLoginId">
@@ -1090,7 +1090,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListWorkEffortReviews" type="list" target="updateWorkEffortReview" list-name="productWorkEfforts" separate-columns="true"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="WorkEffortReview" use-cache="true" list="workEffortReviews">
                 <field-map from-field="workEffortId" field-name="workEffortId"/>
@@ -1125,7 +1125,7 @@ under the License.
     </form>
     <!-- WorkEffortKeyword forms -->
     <form name="AddWorkEffortKeyword" target="createWorkEffortKeyword" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createWorkEffortKeyword"/>
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
         <field name="keyword" title="${uiLabelMap.WorkEffortKeyword}*"><text size="10"/></field>
@@ -1133,7 +1133,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListWorkEffortKeywords" type="list" target="" list-name="listWorkEffortKeywords"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="WorkEffortKeyword" use-cache="true" list="workEffortkeywords">
                 <field-map from-field="workEffortId" field-name="workEffortId"/>
@@ -1152,14 +1152,14 @@ under the License.
 
     <!-- WorkEffortKeyword forms -->
     <form name="AddWorkEffortContactMech" target="createWorkEffortContactMech" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
         <field name="contactMechId"><lookup target-form-name="LookupContactMech"/></field>
         <field name="comments"><text size="50"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
     <form name="ListWorkEffortContactMechs" type="list" target="" list-name="workEffortContactMechs"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="WorkEffortContactMech" list="workEffortContactMechs">
                 <field-map from-field="workEffortId" field-name="workEffortId"/>
@@ -1185,7 +1185,7 @@ under the License.
     </form>
     <!-- Agreement WorkEffort Appl-->
     <form name="AddAgreementWorkEffortApplic" target="createAgreementWorkEffortApplic" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
         <field name="agreementId">
             <lookup target-form-name="LookupAgreement"/>
@@ -1196,7 +1196,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListAgreementWorkEffortApplics" type="list" target="updateAgreementWorkEffortApplic" list-name="agreementWorkEffortApplics"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="AgreementWorkEffortApplic" use-cache="true" list="agreementWorkEffortApplics">
                 <field-map from-field="workEffortId" field-name="workEffortId"/>
@@ -1221,7 +1221,7 @@ under the License.
     </form>
 
     <form name="ListWorkEffortFixedAssetAssigns" type="list" target="updateWorkEffortFixedAssetAssign"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="WorkEffortFixedAssetAssign" filter-by-date="true">
                 <condition-expr field-name="workEffortId" operator="equals" from-field="workEffortId"/>
@@ -1267,7 +1267,7 @@ under the License.
     </form>
 
     <form name="DisplayWorkEffortFixedAssetAssigns" type="list" list-name="fixedAssetAssignments"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAsset}">
             <display-entity entity-name="FixedAsset" description="${fixedAssetName}">
                 <sub-hyperlink target="/accounting/control/EditFixedAsset" target-type="inter-app" description="${fixedAssetId}" link-style="${styles.link_default}">
@@ -1284,7 +1284,7 @@ under the License.
     </form>
 
     <form name="EditWorkEffortFixedAssetAssign" target="createWorkEffortFixedAssetAssign" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
 <!--        <alt-target target="updateWorkEffortFixedAssetAssign" use-when="workEffortFixedAssetAssign!=null"/> -->
         <field name="workEffortId"><hidden/></field>
         <field name="fixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
@@ -1312,7 +1312,7 @@ under the License.
     </form>
 
     <form name="ListWorkEffortEventReminders" type="list" target="updateWorkEffortEventReminder"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="WorkEffortEventReminder">
                 <condition-expr field-name="workEffortId" operator="equals" from-field="workEffortId"/>
@@ -1338,7 +1338,7 @@ under the License.
     </form>
 
     <form name="EditWorkEffortEventReminder" target="createWorkEffortEventReminder" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="workEffortId"><hidden/></field>
         <field name="localeId"><hidden value="${locale}"/></field>
         <field name="timeZoneId"><hidden value="${timeZone}"/></field>
@@ -1421,7 +1421,7 @@ under the License.
     </form>
  
     <form name="ListIcalendars" list-name="listIt" type="list"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="WorkEffortAndPartyAssign" list="listIt" filter-by-date="true">
                 <field-map field-name="workEffortTypeId" value="PUBLISH_PROPS"/>

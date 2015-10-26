@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="EditInventoryItem" type="single" target="UpdateInventoryItem" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <set field="inventoryItemTypeId" from-field="inventoryItem.inventoryItemTypeId"/>
             <set field="productId" from-field="inventoryItem.productId"/>
@@ -151,7 +151,7 @@ under the License.
     </form>
 
     <form name="CreatePhysicalInventoryAndVariance" type="single" target="createPhysicalInventoryAndVariance" title=""
-        default-table-style="basic-table">
+        default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createPhysicalInventoryAndVariance"/>
         <field name="physicalInventoryId"><ignored/></field>
         <field name="physicalInventoryDate"><ignored/></field>
@@ -169,14 +169,14 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ViewPhysicalInventoryAndVariance" type="list" target="" title="" list-name="physicalInventoryAndVarianceDatas"
-        header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="PhysicalInventoryAndVariance" map-name="physicalInventoryAndVariance" default-field-type="display"/>
         <field name="inventoryItemId"><hidden/></field>
         <field name="partyId"><display description="${person.firstName} ${person.lastName} ${partyGroup.groupName} [${physicalInventoryAndVariance.partyId}]"/></field>
         <field name="varianceReasonId"><display description="${varianceReason.description}"/></field>
     </form>
     <form name="ViewInventoryItemShipmentReceipts" type="list" target="" title="" list-name="shipmentReceiptList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="ShipmentReceipt" list="shipmentReceiptList">
                 <field-map field-name="inventoryItemId"/>
@@ -187,7 +187,7 @@ under the License.
     </form>
 
     <form name="ListInventoryItemDetail" type="list" target="" title="" list-name="inventoryItemDetails"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="InventoryItemDetail" map-name="inventoryItemDetail" default-field-type="display"/>
         <field name="inventoryItemId"><hidden/></field> <!-- this field is redundant -->
         <field name="orderId" widget-style="${styles.link_default}">
@@ -207,7 +207,7 @@ under the License.
         itemIssuanceId, receiptId, physicalInventoryId - no natural screens to show these -->
     </form>
     <form name="InventoryItemReservations" type="list" target="" title="" list-name="inventoryItemReservations"
-        header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="OrderItemShipGrpInvRes" default-field-type="display"/>
         <field name="inventoryItemId"><hidden/></field>
         <field name="orderId" widget-style="${styles.link_default}">
@@ -218,7 +218,7 @@ under the License.
     </form>
     <!-- Inventory Item Labels -->
     <form name="UpdateInventoryItemLabelAppls" type="list" target="updateInventoryItemLabelApplFromItem" title="" list-name="inventoryItemLabelAppls"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-service service-name="updateInventoryItemLabelAppl"/>
         <field name="inventoryItemLabelId" title=" " widget-style="${styles.link_default}">
             <hyperlink target="EditInventoryItemLabel" description="${inventoryItemLabelId}" also-hidden="true">
@@ -241,7 +241,7 @@ under the License.
         </field>
     </form>
     <form name="AddInventoryItemLabelAppl" type="single" target="createInventoryItemLabelApplFromItem" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createInventoryItemLabelAppl"/>
         <field name="facilityId"><hidden/></field>
         <field name="inventoryItemId"><hidden/></field>

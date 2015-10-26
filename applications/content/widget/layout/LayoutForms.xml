@@ -24,7 +24,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <!-- LayoutFind forms -->
     <form name="findLayout" default-entity-name="Content" target="FindLayout" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <!--<auto-fields-entity entity-name="Content" default-field-type="find"/>-->
         <field name="contentTypeId">
             <hidden value="DOCUMENT"/>
@@ -57,7 +57,7 @@ under the License.
 
     <!-- LayoutEdit forms -->
     <form name="EditLayout" default-entity-name="SubContentDataResourceView" default-map-name="currentValue" extends="LayoutSubContentMaster" target="updateLayoutSubContent" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="contentId" >
             <display/>
         </field>
@@ -101,7 +101,7 @@ under the License.
         -->
     </form>
     <form name="AddLayout" default-entity-name="SubContentDataResourceView" default-map-name="currentValue" extends="LayoutSubContentMaster" target="createLayoutSubContent" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="contentId" >
             <text/>
         </field>
@@ -145,7 +145,7 @@ under the License.
     </form>
 
     <form name="listFindLayout" default-entity-name="ContentDataResourceView" title="" type="list" list-name="listIt" target="" paginate-target="FindLayout"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
           <actions>
             <set field="requestParameters.contentTypeId" value="DOCUMENT"/>
               <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -186,7 +186,7 @@ under the License.
     </form>
 
     <form name="listListLayout" default-entity-name="ContentAssocDataResourceViewFrom" list-name="layoutList" target="" title="" type="list" paginate-target="FindLayout"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="contentId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${contentId}" target="EditLayout">
                 <parameter param-name="contentId"/>
@@ -207,7 +207,7 @@ under the License.
     </form>
 
     <form name="LayoutSubContentMaster" default-entity-name="SubContentDataResourceView" default-map-name="currentValue" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="contentId" position="1" >
         </field>
         <field name="contentTypeIdDisplay" title="${uiLabelMap.ContentType}" position="2" map-name="dummy">
@@ -240,7 +240,7 @@ under the License.
     </form>
 
     <form name="EditLayoutHtml" default-entity-name="SubContentDataResourceView" default-map-name="currentValue" extends="LayoutSubContentMaster" target="updateLayoutHtml" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="currentValue==null" target="createLayoutHtml"/>
         <field name="drDataResourceTypeId" >
             <display description="ELECTRONIC_TEXT"/>
@@ -269,7 +269,7 @@ under the License.
     </form>
 
     <form name="EditLayoutText" default-entity-name="SubContentDataResourceView" default-map-name="currentValue" extends="LayoutSubContentMaster" target="updateLayoutText" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="currentValue==null" target="createLayoutText"/>
         <field name="drDataResourceTypeId" >
             <display description="ELECTRONIC_TEXT"/>
@@ -298,7 +298,7 @@ under the License.
     </form>
 
     <form name="EditLayoutImage" default-entity-name="SubContentDataResourceView" default-map-name="currentValue" extends="LayoutSubContentMaster" target="updateLayoutImage" title="" type="upload"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="drDataResourceTypeId" >
             <display description="IMAGE_OBJECT"/>
         </field>
@@ -333,7 +333,7 @@ under the License.
         </field>
     </form>
     <form name="AddLayoutImage" default-entity-name="SubContentDataResourceView" default-map-name="currentValue" extends="LayoutSubContentMaster" target="createLayoutImage" title="" type="upload"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="drDataResourceTypeId" >
             <hidden value="IMAGE_OBJECT"/>
         </field>
@@ -360,7 +360,7 @@ under the License.
     </form>
 
     <form name="EditLayoutUrl" default-entity-name="SubContentDataResourceView" default-map-name="currentValue" extends="LayoutSubContentMaster" target="updateLayoutUrl" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="currentValue==null" target="createLayoutUrl"/>
         <field name="drDataResourceTypeId" >
             <display description="URL_RESOURCE"/>
@@ -388,7 +388,7 @@ under the License.
         </field>
     </form>
     <form name="ListRelatedLayouts" default-entity-name="ContentDataResourceView" list-name="entityList" target="" title="" type="list" paginate-target="FindLayout"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="contentId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" description="${contentId}" target="EditLayout">
                 <parameter param-name="contentId"/>
@@ -401,7 +401,7 @@ under the License.
     </form>
 
     <form name="EditLayoutSubContent" default-entity-name="SubContentDataResourceView" default-map-name="currentValue" extends="LayoutSubContentMaster" target="updateLayoutSubContent" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="currentValue==null" target="createLayoutSubContent"/>
         <field name="contentIdToDisplay" title="${uiLabelMap.ContentParent}">
            <ignored/>

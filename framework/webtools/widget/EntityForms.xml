@@ -34,7 +34,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
     </form>
 
-    <form name="ListPerformanceResults" type="list" list-name="performanceList" paginate-target="EntityPerformanceTest" separate-columns="true" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+    <form name="ListPerformanceResults" type="list" list-name="performanceList" paginate-target="EntityPerformanceTest" separate-columns="true" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="operation" title="${uiLabelMap.WebtoolsPerformanceOperation}"><display/></field>
         <field name="entity" title="${uiLabelMap.WebtoolsEntity}"><display/></field>
         <field name="calls" title="${uiLabelMap.WebtoolsPerformanceCalls}"><display/></field>

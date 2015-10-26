@@ -25,7 +25,7 @@ under the License.
 
     <!-- WebSite Forms -->
     <form name="EditWebSite" type="single" target="updateWebSite" title="" default-map-name="webSite"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="webSite==null" target="createWebSite"/>
 
         <auto-fields-service service-name="updateWebSite" map-name=""/>
@@ -60,7 +60,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
     </form>
     <form name="ListWebSites" target="" title="" type="list" list-name="webSites" paginate-target="FindWebSite" paginate="true"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" header-row-style="header-row-2">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2">
         <actions>
             <set field="parameters.sortField" from-field="parameters.sortField" default-value="-webSiteId"/>
             <entity-condition entity-name="WebSite" list="webSites">
@@ -76,7 +76,7 @@ under the License.
         <field name="httpHost" sort-field="true"><display/></field>
     </form>
 
-    <form name="FindWebSitePathAlias" target="WebSiteAliases" type="single" header-row-style="header-row" default-table-style="basic-table">
+    <form name="FindWebSitePathAlias" target="WebSiteAliases" type="single" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="webSiteId"><hidden value="${webSiteId}"/></field>
         <field name="pathAlias"><text-find ignore-case="true"/></field>
@@ -84,7 +84,7 @@ under the License.
     </form>
 
     <form name="ListWebSitePathAlias" target="" title="" list-name="listIt" type="list" paginate-target="WebSiteAliases"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -109,7 +109,7 @@ under the License.
 
     <!-- WebSite Content Forms -->
     <form name="ListWebSiteContent" type="list" list-name="webSiteContent" target="UpdateWebSiteContent"
-        paginate-target="ListWebSiteContent" paginate="true" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        paginate-target="ListWebSiteContent" paginate="true" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-service service-name="updateWebSiteRole"/>
         <field name="sequenceNum"><hidden/></field>
         <field name="roleTypeId"><hidden/></field>
@@ -156,7 +156,7 @@ under the License.
         </sort-order>
     </form>
     <form name="CreateWebSiteContent" type="single" target="CreateWebSiteContent" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createWebSiteContent"/>
         <field name="webSiteId" map-name="webSite"><display also-hidden="true"/></field>
         <field name="contentId"><lookup target-form-name="LookupContent"/></field>
@@ -172,7 +172,7 @@ under the License.
 
     <!-- WebSite Role Forms -->
     <form name="CreateWebSiteRole" type="single" target="createWebSiteRole" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createWebSiteRole"/>
         <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="webSiteId" map-name="webSite"><hidden/></field>
@@ -186,7 +186,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
     <form name="UpdateWebSiteRole" type="list" target="updateWebSiteRole" title="" list-name="webSiteRoleDatas"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-service service-name="updateWebSiteRole" map-name="webSiteRole"/>
         <field name="webSiteId"><hidden/></field>
         <!-- three possibilities for the Party: person, partyGroup, neither... just print everything and if it's empty, no biggie -->
@@ -211,7 +211,7 @@ under the License.
         </field>
     </form>
     <form name="AutoCreateWebsiteContent" type="single" target="autoCreateWebSiteContent" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="webSiteId"><hidden/></field>
         <field name="webSiteContentTypeId">
             <check all-checked="false">
@@ -225,7 +225,7 @@ under the License.
 
     <!-- WebSite SEO Form -->
     <form name="CreateWebsiteSEO" type="single" target="generateMissingSeoUrlForWebsite" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="webSiteId"><hidden/></field>
         <field name="prodCatalogId" title="${uiLabelMap.Catalog}">
             <drop-down>
@@ -245,7 +245,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
     </form>
     <form name="CreateWebSiteContactList" type="single" target="createWebSiteContactList" 
-            default-map-name="webSite" title="" header-row-style="header-row" default-table-style="basic-table">
+            default-map-name="webSite" title="" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <set field="fromDate" value="${groovy: import org.ofbiz.base.util.UtilDateTime; return UtilDateTime.nowTimestamp();}" type="Timestamp"/>
         </actions>
@@ -260,7 +260,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
     <form name="ViewWebSiteContactList" type="list" target="updateWebSiteContactList" list-name="webSiteContactLists" title="" 
-            header-row-style="header-row" default-table-style="basic-table">
+            header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <entity-one entity-name="ContactList" value-field="contactList">
                 <field-map field-name="contactListId" from-field="contactListId"/>

@@ -112,7 +112,7 @@
         <field name="UpdateAction" use-when="task!=null" title="${uiLabelMap.CommonUpdate}"><submit/></field>
     </form>
     <form name="SprintTasksList" target="updateSprintTask?projectId=${parameters.projectId}" type="list" list-name="tasksList" separate-columns="true" odd-row-style="alternate-row" even-row-style="even-row" 
-        header-row-style="header-row" default-table-style="basic-table hover-bar" use-row-submit="true">
+        header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true">
         <row-actions>
             <entity-and entity-name="CustRequestWorkEffort" list="custRequestWorkEfforts">
                 <field-map field-name="workEffortId" from-field="workEffortId"/>
@@ -324,7 +324,7 @@
     </form>
     
     <form name="TaskMembersList" type="list" target="removeTaskMember" default-map-name="workEffort" list-name="listIt" use-row-submit="true" paginate-target="taskView" separate-columns="true"
-        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="WorkEffortPartyAssignView" list="listIt" filter-by-date="true">
                 <field-map field-name="workEffortId" from-field="parameters.taskId"/>
@@ -525,7 +525,7 @@
         <field name="create" title="${uiLabelMap.CommonCreate}" use-when="task==null" action="javascript:document.EditTask.action='createTask';document.EditTask.enctype='multipart/form-data';document.EditTask.submit();" event="onclick"><submit/></field>
         <field name="update" title="${uiLabelMap.CommonUpdate}" use-when="task!=null"><submit/></field>
     </form>
-    <form name="AddTaskNote" type="single" header-row-style="header-row" default-table-style="basic-table" 
+    <form name="AddTaskNote" type="single" header-row-style="header-row" default-table-style="${styles.table_basic}" 
         target="createTaskNote?taskId=${parameters.taskId}">
         <field name="workEffortId"><hidden/></field>
         <field name="noteName"><text/> </field>
@@ -533,7 +533,7 @@
         <field name="createAction"><submit button-type="button"/></field>
     </form>
     <form name="ListTaskNote" type="list" list-name="workNoteList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="TaskNote">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="TaskNote">
         <row-actions>
             <entity-one entity-name="NoteData" auto-field-map="true"/>
         </row-actions>
@@ -554,7 +554,7 @@
         <field name="removeNote"><ignored/></field>
     </form>
     <form name="AddTaskPartyAssign" target="addScrumTaskAssignment" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <entity-one entity-name="WorkEffort" value-field="task"/>
             <entity-condition entity-name="WorkEffortPartyAssignView" filter-by-date="true" list="sprintMembers">
@@ -584,7 +584,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListTaskParties" type="list" list-name="taskMembers" target="deleteTaskPartyAssign"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" use-row-submit="true">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true">
         <actions>
             <entity-condition entity-name="WorkEffortPartyAssignView" filter-by-date="true" list="taskMembers">
                 <condition-expr field-name="workEffortId" from-field="parameters.taskId"/>
@@ -611,7 +611,7 @@
     </form>
     
     <form name="MyTasks" type="list" list-name="taskPartyList" paginate-target="MyWork" paginate-index-field="MyTasks_index" paginate-size-field="MyTasks_size"
-    odd-row-style="alternate-row" default-table-style="basic-table hover-bar" target="updateMyTask?${MyTasks_url}">
+    odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" target="updateMyTask?${MyTasks_url}">
         <row-actions>
             <service service-name="getScrumActualHour" result-map="results">
                 <field-map field-name="taskId" from-field="taskId"/>
@@ -670,7 +670,7 @@
     </form>
     
     <form name="TasksList" type="list" list-name="projectSprintBacklogAndTasks" target="updateTaskList" paginate-target="FindTask" separate-columns="true"
-        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="basic-table hover-bar" use-row-submit="true">
+        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true">
         <row-actions>
             <entity-condition entity-name="ScrumMemberUserLoginAndSecurityGroup" list="party">
                 <condition-list combine="and">
@@ -818,14 +818,14 @@
     <form name="TasksListCodingNoAction" extends="TasksListNoAction" list-name="implementTaskList" paginate-index-field="TasksListCodingNoAction_index" paginate-size-field="TasksListCodingNoAction_size">
     </form>
     <form name="FindTaskRevision" target="FindTaskRevision" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="productId"><text/> </field>
         <field name="custRequestId" title="${uiLabelMap.ScrumBacklogId}"><text/> </field>
         <field name="workEffortId" title="${uiLabelMap.ScrumTaskId}"><text/> </field>
         <field name="findAction" title="${uiLabelMap.CommonFind}"><submit/></field>
      </form>
     <form name="ListTaskRevisions" list-name="listIt" title="" type="list" paginate-target="TaskView" separate-columns="true"
-        odd-row-style="alternate-row" even-row-style="even-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" even-row-style="even-row" default-table-style="${styles.table_basic} hover-bar">
         <row-actions>
             <entity-and entity-name="ContentRole" list="contentRole">
                 <field-map field-name="roleTypeId" value="OWNER"/>
@@ -938,7 +938,7 @@
     </form>
     
     <form name="taskMemberList" type="list" target="removeMemberTask" list-name="taskMembers" use-row-submit="true" paginate-target="taskMember" separate-columns="true"
-        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="WorkEffortPartyAssignView" list="taskMembers" filter-by-date="true">
                 <field-map field-name="workEffortId" from-field="workEffortId"/>
@@ -962,11 +962,11 @@
         <field name="submitAction" title="${uiLabelMap.CommonRemove}"><submit/></field>
     </form>
     <form name="taskMemberListInfo" type="list" extends="taskMemberList" separate-columns="true"
-        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="submitAction" title="${uiLabelMap.CommonAdd}"><hidden/></field>
     </form>
     <form name="taskMemberListInfoForStakeholder" type="list" extends="taskMemberList" separate-columns="true"
-        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="memberName" title="${uiLabelMap.ScrumMembersName}">
             <display description="${lastName} ${firstName} ${middleName} [${partyId}]"></display>
         </field>

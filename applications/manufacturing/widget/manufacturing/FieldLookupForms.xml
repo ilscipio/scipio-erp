@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="lookupRouting" target="LookupRouting" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="lookupRoutingTask" default-field-type="hidden"/>
         <field name="workEffortName" title="${uiLabelMap.ManufacturingTaskName}"><text-find/></field>
         <field name="workEffortTypeId"><hidden value="ROUTING"/></field>
@@ -31,7 +31,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupRouting" list-name="listIt" title="" type="list"
-        paginate-target="LookupRouting" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        paginate-target="LookupRouting" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="requestParameters"/>
@@ -49,7 +49,7 @@ under the License.
     </form>
 
     <form name="lookupRoutingTask" target="LookupRoutingTask" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="lookupRoutingTask" default-field-type="find"/>
         <field name="workEffortTypeId"><hidden value="ROU_TASK"/></field>
         <field name="fixedAssetId" >
@@ -66,7 +66,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupRoutingTask" list-name="listIt" title="" type="list"
-        paginate-target="LookupRoutingTask" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        paginate-target="LookupRoutingTask" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="requestParameters"/>

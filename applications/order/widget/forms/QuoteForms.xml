@@ -21,7 +21,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="FindQuotes" target="FindQuote" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <!-- 
         <auto-fields-entity entity-name="Quote" default-field-type="find"/>
          -->
@@ -77,7 +77,7 @@ under the License.
     </form>
     
     <form name="ListQuotes" list-name="listIt" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="FindQuote">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="FindQuote">
         <actions>
               <service service-name="performFind" result-map="result" result-map-list="listIt">
                   <field-map field-name="inputFields" from-field="parameters"/>
@@ -113,7 +113,7 @@ under the License.
     </form>
     
     <form name="EditQuote" type="single" target="updateQuote" title="" default-map-name="quote"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
                 <field-map field-name="statusId" from-field="quote.statusId"/>
@@ -170,7 +170,7 @@ under the License.
     </form>
     <form name="ListQuoteRoles" target="" title="" type="list" list-name="quoteRoles"
     
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ListQuoteRoles">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ListQuoteRoles">
         <auto-fields-entity entity-name="QuoteRole" default-field-type="display"/>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}"/>
@@ -186,7 +186,7 @@ under the License.
         </field>
     </form>
     <form name="EditQuoteRole" type="single" target="createQuoteRole" title="" default-map-name="quoteRole"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="QuoteRole" default-field-type="edit"/>
         <field name="quoteId"><hidden/></field>
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}">
@@ -202,7 +202,7 @@ under the License.
     
     <!-- Quote Items -->
     <form name="EditQuoteItem" type="single" target="updateQuoteItem" title="" default-map-name="quoteItem"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="quoteItem==null" target="createQuoteItem"/>
         <field name="quoteId"><hidden/></field>
         <field name="isPromo"><hidden/></field>
@@ -287,7 +287,7 @@ under the License.
     </form>
     
     <form name="ListQuoteItems" list-name="quoteItems" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ListQuoteItems">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ListQuoteItems">
         <!--
         <auto-fields-entity entity-name="QuoteItem" default-field-type="display"/>
           -->
@@ -338,7 +338,7 @@ under the License.
     
     <!-- Quote Attributes -->
     <form name="EditQuoteAttribute" type="single" target="updateQuoteAttribute" title="" default-map-name="quoteAttribute"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="quoteAttribute==null" target="createQuoteAttribute"/>
         <auto-fields-entity entity-name="QuoteAttribute" default-field-type="edit"/>
         <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}" use-when="quoteAttribute==null"><text/></field>
@@ -349,7 +349,7 @@ under the License.
     </form>
     
     <form name="ListQuoteAttributes" target="" title="" type="list" list-name="quoteAttributes"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ListQuoteAttributes">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ListQuoteAttributes">
         <auto-fields-entity entity-name="QuoteAttribute" default-field-type="display"/>
         <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${attrName}" target="EditQuoteAttribute">
@@ -368,7 +368,7 @@ under the License.
     </form>
     
     <form name="ListQuoteCoefficients" target="" title="" type="list" list-name="quoteCoefficients"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ListQuoteCoefficients">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ListQuoteCoefficients">
         <auto-fields-entity entity-name="QuoteCoefficient" default-field-type="display"/>
         <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoeffName}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${coeffName}" target="EditQuoteCoefficient">
@@ -386,7 +386,7 @@ under the License.
         </field>
     </form>
     <form name="EditQuoteCoefficient" type="single" target="updateQuoteCoefficient" title="" default-map-name="quoteCoefficient"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="quoteCoefficient==null" target="createQuoteCoefficient"/>
         <auto-fields-entity entity-name="QuoteCoefficient" default-field-type="edit"/>
         <field name="quoteId"><hidden/></field>
@@ -396,7 +396,7 @@ under the License.
     </form>
 
     <form name="ManageQuotePrices" title="" type="multi" list-name="quoteItemAndCostInfos" target="autoUpdateQuotePrices?quoteId=${quoteId}" use-row-submit="true"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ManageQuotePrices">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ManageQuotePrices">
         <field name="custRequestId" title="${uiLabelMap.OrderRequest}" widget-style="${styles.link_default}">
             <hyperlink target-type="inter-app" also-hidden="false" description="${custRequestId}-${custRequestItemSeqId}" target="/workeffort/control/requestitem">
                 <parameter param-name="custRequestId"/>
@@ -425,7 +425,7 @@ under the License.
     </form>
     
     <form name="ListQuoteAdjustments" target="" title="" type="list" list-name="quoteAdjustments"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ListQuoteAdjustments">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ListQuoteAdjustments">
         <field name="quoteId"><hidden/></field>
         <field name="quoteAdjustmentId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}" use-when="${groovy:productPromoId==null}">
             <hyperlink also-hidden="false" description="${quoteAdjustmentId}" target="EditQuoteAdjustment">
@@ -451,7 +451,7 @@ under the License.
     </form>
     
     <form name="EditQuoteAdjustment" type="single" target="updateQuoteAdjustment" title="" default-map-name="quoteAdjustment"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="quoteAdjustment==null" target="createQuoteAdjustment"/>
         <auto-fields-entity entity-name="QuoteAdjustment" default-field-type="edit"/>
         <field name="quoteId"><hidden/></field>
@@ -480,7 +480,7 @@ under the License.
     </form>
     
     <form name="EditQuoteReportMail" type="single" target="sendQuoteReportMail" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="quoteId"><hidden/></field>
         <field name="emailType"><hidden/></field>
         <field name="sendTo"><text/></field>
@@ -496,7 +496,7 @@ under the License.
     
     <!-- Terms -->
     <form name="EditQuoteTerm" type="single" target="updateQuoteTerm" title="" default-map-name="quoteTerm"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
                 <field-map field-name="statusId" from-field="quote.statusId"/>
@@ -538,12 +538,12 @@ under the License.
     </form>
     
     <form name="EditQuoteTermItem" type="single" target="updateQuoteTermFromItem" title="" default-map-name="quoteTerm"
-        header-row-style="header-row" default-table-style="basic-table" extends="EditQuoteTerm">
+        header-row-style="header-row" default-table-style="${styles.table_basic}" extends="EditQuoteTerm">
         <alt-target use-when="quoteTerm==null" target="createQuoteTermFromItem"/>
     </form>
     
     <form name="ListQuoteTerms" type="list" list-name="quoteTerms"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ListQuoteTerms">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ListQuoteTerms">
         <field name="quoteId"><hidden/></field>
         <field name="quoteItemSeqId"><display/></field>
         <field name="termTypeId" title="${uiLabelMap.CommonType}">
@@ -596,7 +596,7 @@ under the License.
     
     <!-- Notes -->
     <form name="ListQuoteNotes" target="" title="" type="list" list-name="quoteNotes"
-        header-row-style="${headerRowStyle}" odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ListQuoteNotes">
+        header-row-style="${headerRowStyle}" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ListQuoteNotes">
         <auto-fields-entity entity-name="QuoteNoteView" default-field-type="display"/>
         <field name="quoteId"><hidden/></field>
         <field name="noteId"><hidden/></field>
@@ -643,7 +643,7 @@ under the License.
     </form>
     
     <form name="ViewQuoteProfit" title="" type="list" list-name="quoteItemAndCostInfos" target=""
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="ViewQuoteProfit">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ViewQuoteProfit">
         <field name="custRequestId" title="${uiLabelMap.OrderRequest}" widget-style="${styles.link_default}">
             <hyperlink target-type="inter-app" also-hidden="false" description="${custRequestId}-${custRequestItemSeqId}" target="/workeffort/control/requestitem">
                 <parameter param-name="custRequestId"/>

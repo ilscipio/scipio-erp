@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="lookupPartyName" target="LookupPartyName" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <!--<auto-fields-entity entity-name="PartyNameView" default-field-type="find"/>-->
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find/></field>
         <field name="partyTypeId" title="${uiLabelMap.PartyTypeId}">
@@ -38,7 +38,7 @@ under the License.
     </form>
 
     <form name="listLookupPartyName" type="list" list-name="listIt" paginate-target="LookupPartyName"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <set field="inputFields" from-field="parameters"/>
             <set field="orderBy" value="partyId"/>
@@ -58,7 +58,7 @@ under the License.
     </form>
 
     <form name="lookupPartyEmail" target="LookupPartyEmail" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find/></field>
         <field name="partyTypeId" title="${uiLabelMap.PartyTypeId}">
             <drop-down allow-empty="true">
@@ -73,7 +73,7 @@ under the License.
     </form>
 
     <form name="listLookupPartyEmail" type="list" list-name="listIt" paginate-target="LookupPartyEmail"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <set field="parameters.contactMechTypeId" value="EMAIL_ADDRESS"/>
             <set field="filterByDate" value="Y"/>
@@ -94,7 +94,7 @@ under the License.
     </form>
 
     <form name="lookupCustomerName" target="LookupCustomerName" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="roleTypeId"><hidden value="CUSTOMER"/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find/></field>
         <field name="partyTypeId" title="${uiLabelMap.PartyTypeId}">
@@ -109,7 +109,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupCustomerName" type="list" list-name="listIt" paginate-target="LookupCustomerName"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <set field="inputFields" from-field="parameters"/>
             <set field="orderBy" value="partyId"/>
@@ -128,7 +128,7 @@ under the License.
     </form>
 
     <form name="lookupCustomerNameForSalesRep" target="LookupCustomerNameForSalesRep" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="roleTypeId"><hidden value="CUSTOMER"/></field>
         <field name="roleTypeIdFrom"><hidden value="SALES_REP"/></field>
         <field name="roleTypeIdTo"><hidden value="CUSTOMER"/></field>
@@ -147,7 +147,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupCustomerNameForSalesRep" type="list" list-name="listIt" paginate-target="LookupCustomerNameForSalesRep"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -170,7 +170,7 @@ under the License.
 
     <!-- Person Lookup forms -->
     <form name="lookupPerson" type="single" target="LookupPerson"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <!--<auto-fields-entity entity-name="Person" default-field-type="find"/>-->
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find/></field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}"><text-find/></field>
@@ -180,7 +180,7 @@ under the License.
     </form>
 
     <form name="listLookupPerson" type="list" list-name="listIt" paginate-target="LookupPerson"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <script location="component://party/webapp/partymgr/WEB-INF/actions/party/FindLookUp.groovy"/>
         </actions>
@@ -197,7 +197,7 @@ under the License.
     </form>
 
     <form name="lookupPartyAndUserLoginAndPerson" type="single" target="LookupPartyAndUserLoginAndPerson"
-        paginate-target="LookupPartyAndUserLoginAndPerson" header-row-style="header-row" default-table-style="basic-table">
+        paginate-target="LookupPartyAndUserLoginAndPerson" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <!--<auto-fields-entity entity-name="PartyAndUserLoginAndPerson" default-field-type="find"/>-->
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find/></field>
         <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}"><text-find/></field>
@@ -211,7 +211,7 @@ under the License.
     </form>
 
     <form name="listLookupPartyAndUserLoginAndPerson" type="list" list-name="listIt" paginate-target="LookupPartyAndUserLoginAndPerson"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <set field="inputFields" from-field="requestParameters"/>
             <set field="entityName" value="PartyAndUserLoginAndPerson"/>
@@ -228,7 +228,7 @@ under the License.
     </form>
 
     <form name="lookupUserLoginAndPartyDetails" type="single" target="LookupUserLoginAndPartyDetails"
-        paginate-target="LookupUserLoginAndPartyDetails" header-row-style="header-row" default-table-style="basic-table">
+        paginate-target="LookupUserLoginAndPartyDetails" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}"><text-find/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find/></field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}"><text-find/></field>
@@ -241,7 +241,7 @@ under the License.
     </form>
 
     <form name="listLookupUserLoginAndPartyDetails" type="list" list-name="listIt" paginate-target="LookupUserLoginAndPartyDetails"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <set field="inputFields" from-field="requestParameters"/>
             <set field="entityName" value="UserLoginAndPartyDetails"/>
@@ -258,7 +258,7 @@ under the License.
     </form>
 
     <form name="lookupPartyGroup" type="single" target="LookupPartyGroup"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <!--<auto-fields-entity entity-name="PartyGroup" default-field-type="find"/>-->
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find/></field>
         <field name="groupName" title="${uiLabelMap.PartyGroupName}"><text-find/></field>
@@ -267,7 +267,7 @@ under the License.
     </form>
 
     <form name="listLookupPartyGroup" type="list" list-name="listIt" paginate-target="LookupPartyGroup"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <script location="component://party/webapp/partymgr/WEB-INF/actions/party/FindLookUp.groovy"/>
         </actions>
@@ -281,7 +281,7 @@ under the License.
     </form>
 
     <form name="LookupPartyClassificationGroup" type="single" target="LookupPartyClassificationGroup"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="PartyClassificationGroup" default-field-type="find"/>
         <field name="partyClassificationTypeId">
             <drop-down allow-empty="true">
@@ -295,7 +295,7 @@ under the License.
     </form>
 
     <form name="listLookupPartyClassificationGroup" type="list" list-name="listIt"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -315,7 +315,7 @@ under the License.
     </form>
 
     <form name="LookupCommEvent" type="single" target="LookupCommEvent"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="communicationEventId" title="${uiLabelMap.MarketingContactListCommEventId}"><text-find/></field>
         <field name="partyIdFrom" title="${uiLabelMap.PartyPartyFrom}"><lookup  target-form-name="LookupPartyName"/></field>
         <field name="partyIdTo" title="${uiLabelMap.PartyPartyTo}"><lookup  target-form-name="LookupPartyName"/></field>
@@ -357,7 +357,7 @@ under the License.
     </form>
 
     <form name="ListLookupCommEvent" type="list" list-name="listIt"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map-list="listIt" result-map="result">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -385,7 +385,7 @@ under the License.
     </form>
 
     <form name="lookupContactMech" target="LookupContactMech" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="contactMechId"><text-find/></field>
         <field name="contactMechTypeId">
             <drop-down allow-empty="true" no-current-selected-key="EMAIL_ADDRESS">
@@ -409,7 +409,7 @@ under the License.
     </form>
 
     <form name="listLookupContactMech" type="list" list-name="listIt" paginate-target="LookupContactMech"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <set field="inputFields" from-field="parameters"/>
             <set field="entityName" value="PartyAndContactMech"/>
@@ -426,7 +426,7 @@ under the License.
         <field name="cmDetail"><display description="[${infoString}] [${tnCountryCode}-${tnAreaCode}-${tnContactNumber}] [${paAddress1}, ${paAddress2}, ${paCity}, ${paStateProvinceGeoId}, ${paPostalCode}, ${paPostalCodeExt} ${paCountryGeoId}]" also-hidden="false"/></field>
     </form>
     
-    <form name="LookupInternalOrganization" type="single" target="LookupInternalOrganization" default-table-style="basic-table">
+    <form name="LookupInternalOrganization" type="single" target="LookupInternalOrganization" default-table-style="${styles.table_basic}">
         <field name="roleTypeId"><hidden value="INTERNAL_ORGANIZATIO"/></field>
         <field name="partyId"><text-find/></field>
         <field name="groupName"><text-find/></field>

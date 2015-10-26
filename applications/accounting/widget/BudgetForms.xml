@@ -24,7 +24,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <!-- list all assets in a tabular format -->
     <form name="ListBudgets" type="list" list-name="listIt" paginate-target="ListBudgets"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -57,7 +57,7 @@ under the License.
 
     <!-- create and update a fixed asset -->
     <form name="EditBudget" type="single" target="updateBudget" title="" default-map-name="budget"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="budget == null" target="createBudget"/>
         <field use-when="budget != null" name="budgetId"><display/></field>
         <field name="budgetTypeId" title="${uiLabelMap.CommonType}">
@@ -74,7 +74,7 @@ under the License.
     </form>
 
     <form name="BudgetHeader" type="single" title="Budget header information" default-map-name="budget"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="budgetId"><hidden/></field>
         <field position="1" name="budgetTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="BudgetType"/></field>
         <field name="customTimePeriodId" position="2"><display/></field>
@@ -82,14 +82,14 @@ under the License.
     </form>
     
     <form name="BudgetStatus" list-name="budgetStatuses" target="" title="" type="list" separate-columns="true" paginate-target="budgetOverview"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="budgetId"><hidden/></field>
         <field name="statusDate"><display type="date"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
     </form>
     
     <form name="BudgetRoles" type="list" use-row-submit="true" title="" list-name="budgetRoles" paginate-target="BudgetOverview"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <!--auto-fields-entity entity-name="InvoiceRole" default-field-type="display"/-->
         <field name="budgetId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.PartyParty}" widget-style="${styles.link_default}">
@@ -106,7 +106,7 @@ under the License.
     </form>
     
     <form name="BudgetItems" list-name="budgetItems" target="" title="" type="list" separate-columns="true" paginate-target="BudgetOverview"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="BudgetItem" default-field-type="display"/>
         <field name="budgetId"><hidden/></field>
         <field name="budgetItemSeqId"><display/></field>
@@ -117,7 +117,7 @@ under the License.
     </form>
     
     <form name="BudgetReviews" list-name="budgetReviews" target="" title="" type="list" separate-columns="true" paginate-target="BudgetOverview"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="budgetReviewId"><display/></field>
         <field name="partyId" widget-style="${styles.link_default}">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
@@ -134,7 +134,7 @@ under the License.
     </form>
     
     <form name="EditBudgetItems" type="multi" list-name="budgetItems" default-entity-name="BudgetItem" target="updateBudgetItem?budgetId=${budgetId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}" title="Edit Budget Items" paginate-target="EditBudgetItems"
-       odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+       odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
        <field name="viewSize"><hidden value="${viewSize}"/></field>
        <field name="viewIndex"><hidden value="${viewIndex}"/></field>
        <field name="budgetId"><hidden/></field>
@@ -164,7 +164,7 @@ under the License.
     </form>
     
     <form name="EditBudgetItem" type="single" target="createBudgetItem" title="" default-map-name="budgetItem" default-entity-name="BudgetItem"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="budgetId"><hidden/></field>
        <field name="budgetItemTypeId" title="${uiLabelMap.CommonType}">
            <drop-down allow-empty="false">
@@ -183,7 +183,7 @@ under the License.
     </form>
     
     <form name="EditBudgetRole" type="single" target="createBudgetRole" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="BudgetRole"/>
         <field name="budgetId"><hidden/></field>
         <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
@@ -198,7 +198,7 @@ under the License.
     </form>
     
     <form name="ListBudgetRoles" type="list" use-row-submit="true" title="" list-name="budgetRoles" paginate-target="BudgetRoles"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <field name="budgetId"><hidden/></field>
         <field name="partyId" widget-style="${styles.link_default}">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
@@ -223,7 +223,7 @@ under the License.
     </form>
     
     <form name="EditBudgetReview" type="single" target="createBudgetReview" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="budgetId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="budgetReviewResultTypeId" title="${uiLabelMap.AccountingBudgetReviewResult}">
@@ -238,7 +238,7 @@ under the License.
     </form>
     
     <form name="ListBudgetReviews" type="list" use-row-submit="true" title="" list-name="budgetReviews" paginate-target="BudgetReviews"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <field name="budgetId"><hidden/></field>
         <field name="budgetReviewId"><display/></field>
         <field name="partyId" widget-style="${styles.link_default}">

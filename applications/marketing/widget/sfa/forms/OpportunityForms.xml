@@ -22,7 +22,7 @@ under the License.
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="FindSalesOpportunity" type="single" target="FindSalesOpportunity"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="salesOpportunityId"><hidden/></field>
         <field name="opportunityName" title="${uiLabelMap.SfaFindOpportunities}"><text-find size="25"></text-find></field>
         <field name="partyId" title="${uiLabelMap.SfaLead}"><lookup target-form-name="LookupLeads"/></field>
@@ -45,7 +45,7 @@ under the License.
     </form>
 
     <form name="ListSalesOpportunity" type="list" list-name="listIt" paginate-target="FindSalesOpportunity" view-size="20"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" header-row-style="header-row-2">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2">
         <actions>
             <set field="parameters.noConditionFind" value="Y"/>
             <set field="opportunityStageId" from-field="parameters.opportunityStageId"/>
@@ -94,7 +94,7 @@ under the License.
     </form>
 
     <form name="EditSalesOpportunity" type="single" target="updateSalesOpportunity" default-map-name="salesOpportunity"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="salesOpportunity==null" target="createSalesOpportunity"/>
         <field name="salesOpportunityId" use-when="salesOpportunity!=null" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field name="salesOpportunityId" use-when="salesOpportunity==null&amp;&amp;salesOpportunityId==null"><text/></field>
@@ -160,7 +160,7 @@ under the License.
     </form>
 
     <form name="ViewSalesOpportunity" type="single" default-map-name="salesOpportunity"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="salesOpportunityId"><display/></field>
         <field name="opportunityName" position="1" title="${uiLabelMap.SfaOpportunityName}"><display/></field>
         <field name="accountPartyId" position="1" title="${uiLabelMap.SfaInitialAccount}" map-name="accountParty" field-name="partyId"><display-entity description="${firstName} ${lastName} ${groupName} [${partyId}]" entity-name="PartyNameView"/></field>

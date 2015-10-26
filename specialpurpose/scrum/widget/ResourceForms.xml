@@ -20,7 +20,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="FindResource" type="single" target="FindResource"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="resourceName" parameter-name="partyId" title="${uiLabelMap.ScrumResourceName}"><text/></field>
         <field name="find" title="${uiLabelMap.CommonFind}"><submit/></field>
     </form>
@@ -50,7 +50,7 @@
         <field name="find" title="${uiLabelMap.CommonFind}"><submit/></field>
     </form>
     <form name="ListResources" type="list" list-name="listIt" paginate-target="FindResource"
-        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <script location="component://scrum/webapp/scrum/WEB-INF/actions/ListScrumResource.groovy"/>
             <entity-one entity-name="UserLogin" value-field="systemUserLogin">
@@ -111,7 +111,7 @@
         </field>
     </form>
     <form name="AddResource" type="single" target="addResource"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <entity-condition entity-name="SecurityGroup" list="securityGroupList">
                 <condition-list combine="or">
@@ -160,7 +160,7 @@
         </field>
     </form>
     <form name="ListPreference" type="multi" target="updatePreference?partyId=${parameters.partyId}" list-name="userPreferenceList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" separate-columns="true">
         <row-actions>
             <service service-name="getUserPreference" result-map="values">
                 <field-map field-name="userPrefTypeId" from-field="enumId"/>
@@ -292,7 +292,7 @@
         <field name="createAction" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
     <form name="UpdateCompanyAndOwner" type="single" extends="EditProduct" extends-resource="component://scrum/widget/scrumForms.xml" 
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="product!=null" target="UpdateCompanyAndOwner"/>
         <field name="partyId" title="${uiLabelMap.ScrumCompanyAndPerson}" tooltip="${uiLabelMap.ScrumCompanyNameShow} - ${uiLabelMap.ScrumProductName}" event="onchange" action="javascrip:document.UpdateCompanyAndOwner.partyCompany.value=this.options[this.selectedIndex].text;" parameter-name="partyId" use-when="companyCurrent!=null">
             <drop-down allow-empty="false" current-description="${companyCurrentList[0].groupName}[${companyCurrentList[0].partyIdFrom}] - ${companyCurrentList[0].lastName} ${companyCurrentList[0].firstName} ${companyCurrentList[0].middleName}" >
@@ -307,7 +307,7 @@
         <field name="submitAction" title="${uiLabelMap.ScrumAssign}"><submit button-type="button"/></field>
     </form>
     <form name="AddProductMember" type="single" target="addProductMember" 
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
          <actions>
             <entity-condition entity-name="ScrumMemberUserLoginAndSecurityGroup" distinct="true" list="listPerson">
                 <condition-list combine="and">
@@ -344,7 +344,7 @@
         <field name="submitAction" title="${uiLabelMap.ScrumAssign}"><submit button-type="button"/></field>
     </form>
     <form name="ProductMemberList" type="list" list-name="productAndRoleList" paginate-target="ProductMember"
-        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="ProductAndRole" list="productAndRoleList">
                 <condition-list combine="and">
@@ -389,7 +389,7 @@
         <field name="removeAction" use-when="!compCheck"><ignored/></field>
     </form>
     <form name="QuickAddPartyRate" type="single" target="updateQuickAddPartyRate" default-map-name="partyRateMap"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="periodTypeId"><hidden value="${periodTypeId}"/> </field>
         <field name="rateCurrencyUomId"><hidden value="${rateCurrencyUomId}"/></field>
         <field name="partyId"><display/></field>

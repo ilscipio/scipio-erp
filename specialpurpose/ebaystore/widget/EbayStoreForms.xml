@@ -22,7 +22,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="EbayStoreList" type="single" list-name="ebayStoreList" target="ebayAccount"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="productStoreId" title="${uiLabelMap.ProductProductStore}" >
             <drop-down current="selected" >
                 <list-options list-name="ebayStoreList" description="${storeName} [${productStoreId}]" key-name="productStoreId"/>
@@ -31,7 +31,7 @@ under the License.
         <field name="submitAction" ><submit button-type="button"/></field>
     </form>
     <form name="EbayAccountSelection" type="single" list-name="ebayAccountList" target="ebayAccount"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <script location="component://ebaystore/webapp/ebaystore/WEB-INF/actions/store/StoreAccount.groovy"/>
         </actions>
@@ -42,7 +42,7 @@ under the License.
         </field>
     </form>
     <form name="EbayAccountList" type="single" list-name="ebayAccountList" target="ebayAccount"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <script location="component://ebaystore/webapp/ebaystore/WEB-INF/actions/store/StoreAccount.groovy"/>
         </actions>
@@ -54,7 +54,7 @@ under the License.
         <field name="submitAction" ><submit button-type="button"/></field>
     </form>
     <form name="ListCurrentStores" type="single" target="exportCategoryEbayStore"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <entity-and entity-name="ProductStoreCatalog" list="storeCatalog">
                 <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -72,7 +72,7 @@ under the License.
         <field name="submitAction" title="Find"><submit button-type="button"/></field>
     </form>
     <form name="ListCategories" type="multi" use-row-submit="true" target="deleteCategoriesFromEbayStore" title="" list-name="categoriesList"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <row-actions>
             <entity-one entity-name="ProductCategory" value-field="prodCategory">
                 <field-map field-name="productCategoryId" value="${productCategoryId}"/>
@@ -128,7 +128,7 @@ under the License.
         </field>
         <field name="submit" title="${uiLabelMap.CommonAdd}"><submit/></field>
     </form>
-    <form name="CatalogList" type="list" list-name="prodStoreCatalogList" odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+    <form name="CatalogList" type="list" list-name="prodStoreCatalogList" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="productStoreId"><display/></field>
         <field name="prodCatalogId">
             <display-entity entity-name="ProdCatalog" description="${catalogName}" key-field-name="prodCatalogId"/>
@@ -142,7 +142,7 @@ under the License.
         </field>
     </form>
     <form name="errorMessageList" type="list" target="" list-name="errorMsgList" view-size="30"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="createDatetime"><display/></field>
         <field name="logAck"><display/></field>
         <field name="functionName"><display/></field>

@@ -182,7 +182,7 @@
         <field name="find" title="${uiLabelMap.CommonFind}"><submit/></field>
     </form>
     <form name="ListTasks" type="list" separate-columns="true" title="Task List" list-name="listIt" paginate-target="FindTask"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <set field="parameters.sortField" from-field="parameters.sortField" default-value="-lastStatusUpdate"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -223,7 +223,7 @@
         <field name="actualHours" title="${uiLabelMap.ProjectMgrActualHours}"><display/></field>
     </form>
     <form name="MyTasks" type="list" list-name="tasks" paginate-target="MyTasks" target="updateTaskAssigment"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar scrollable">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar scrollable">
         <row-actions>
             <service service-name="getProjectTask" result-map="result">
                 <field-map field-name="taskId" from-field="workEffortId"/>
@@ -328,7 +328,7 @@
         <field name="addAction"><submit/></field>
     </form>
     <form name="DependenciesBefore" target="removeDependency" title="" list-name="depList" type="list" separate-columns="true" paginate-target="Dependencies"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <row-actions>
             <service service-name="getProjectTask" result-map="r">
                 <field-map field-name="taskId" from-field="workEffortIdFrom"/>
@@ -353,7 +353,7 @@
     </form>
     
     <form name="DependenciesAfter" target="removeDependency" title="" list-name="depList" type="list" separate-columns="true" paginate-target="Dependencies"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <row-actions>
             <service service-name="getProjectTask" result-map="r">
                 <field-map field-name="taskId" from-field="workEffortIdTo"/>
@@ -409,7 +409,7 @@
         <field name="addAction"><submit/></field>
     </form>
     <form name="ListTaskSkills" type="list" target="updateTaskSkillStandard" list-name="workEffortSkillStandards" paginate-target="EditTaskSkills" separate-columns="true"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <field name="workEffortId" title="${uiLabelMap.ProjectMgrWorkEffortId}">
             <display-entity entity-name="WorkEffort" description="${workEffortName}">
                 <sub-hyperlink target="EditTask" description="${workEffortId}" link-style="${styles.link_default}">
@@ -435,7 +435,7 @@
         <field name="add" title="${uiLabelMap.CommonAdd}"><submit/></field>
     </form>
     <form name="ListTimeEntries" type="list" list-name="timesheetEntries" target="updateTimeEntry" paginate-target="EditTimeEntries"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="TimeEntry">
                 <condition-expr field-name="workEffortId" from-field="workEffortId"/>
@@ -513,7 +513,7 @@
         <field name="addAction" title="${uiLabelMap.CommonAdd}"><submit/></field>
     </form>
     <form name="ListTaskNotes" extends="ListWorkEffortNotes" extends-resource="component://workeffort/widget/WorkEffortForms.xml" type="list" list-name="taskNotes" paginate-target="EditTaskNotes"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="WorkEffortNoteAndData">
                 <condition-expr field-name="workEffortId" from-field="workEffortId"/>
@@ -560,7 +560,7 @@
         <field name="actualHours"><display/></field>
     </form>
     <form name="EditWorkEffortPartyAssigns" target="deleteTaskPartyAssign" title="" type="list" paginate-target="EditTaskPartyAssigns"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="WorkEffortPartyAssignment">
                 <condition-expr field-name="workEffortId" operator="equals" from-field="workEffortId"/>
@@ -596,7 +596,7 @@
         </field>
     </form>
     <form name="ListTaskParties" type="list" list-name="taskParties"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="partyId" title="${uiLabelMap.CommonName}">
             <hyperlink target="viewprofile" description="${partyName}">
                 <parameter param-name="partyId"/>
@@ -608,7 +608,7 @@
         <field name="actualHours"><display/></field>
     </form>
     <form name="ListTaskContent" type="list" paginate-target="/ListCommContent"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="WorkEffortAndContentDataResource">
                 <field-map field-name="workEffortId" from-field="workEffortId"/>
@@ -628,7 +628,7 @@
         <field name="drMimeTypeId"><display-entity entity-name="MimeType" description="${description}" key-field-name="mimeTypeId"/></field>
     </form>
     <form name="ListWorkEffortRequests" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="WorkEffortCustRequestView">
                 <field-map field-name="workEffortId"/>
@@ -645,7 +645,7 @@
         <field name="statusItemDescription"><display/></field>
     </form>
     <form name="TaskBefore" target="removeDependency" title="" list-name="depList" type="list" separate-columns="true" paginate-target="taskView"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <row-actions>
             <service service-name="getProjectTask" result-map="result">
                 <field-map field-name="taskId" from-field="workEffortIdFrom"/>
@@ -672,7 +672,7 @@
         <field name="actualCompletionDate" entry-name="result.taskInfo.actualCompletionDate" title="${uiLabelMap.FormFieldTitle_actualCompletionDate}"><display type="date"/></field>
     </form>
     <form name="TaskAfter" target="removeDependency" title="" list-name="depList" type="list" separate-columns="true" paginate-target="taskView"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <row-actions>
             <service service-name="getProjectTask" result-map="result">
                 <field-map field-name="taskId" from-field="workEffortIdTo"/>

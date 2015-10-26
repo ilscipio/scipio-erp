@@ -20,12 +20,12 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="FindResource" type="single" target="FindResource"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="resourceName" parameter-name="partyId" title="${uiLabelMap.ProjectMgrResourceName}"><text/></field>
         <field name="find" title="${uiLabelMap.CommonFind}"><submit/></field>
     </form>
     <form name="ListResources" type="list" list-name="resources" paginate-target="FindResource"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <row-actions>
             <service service-name="getPartyEmail" result-map="emailResult"/>
             <service service-name="getPartyTelephone" result-map="telResult"/>
@@ -55,7 +55,7 @@
         </field>
     </form>
     <form name="ListBillingHours" type="list" list-name="billingList" paginate-target="ListResourcesBillingHours"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="projectName">
             <hyperlink target="projectView" description="${projectName} [${projectId}]">
                 <parameter param-name="projectId"/>
@@ -66,7 +66,7 @@
         <field name="actualNonBilledHours"><display/></field>
     </form>
     <form name="AddResource" type="single" target="addResource"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="PartyId" parameter-name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="roleTypeId">
             <drop-down allow-empty="false">

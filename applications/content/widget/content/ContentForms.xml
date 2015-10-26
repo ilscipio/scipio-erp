@@ -24,7 +24,7 @@ under the License.
  xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="FindContent" target="findContent" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <!--auto-fields-entity entity-name="Content" default-field-type="find" /-->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="contentId"><text-find ignore-case="true"/></field>
@@ -73,7 +73,7 @@ under the License.
     </form>
 
     <form name="ListContent" target="" title="" list-name="listIt" type="list" paginate-target="findContent"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -116,10 +116,10 @@ under the License.
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="findContentSearchResults"/>
     </form>
 
-    <form name="LookupContent" target="LookupContent" title="" type="single" extends="FindContent" header-row-style="header-row" default-table-style="basic-table"/>
+    <form name="LookupContent" target="LookupContent" title="" type="single" extends="FindContent" header-row-style="header-row" default-table-style="${styles.table_basic}"/>
 
     <form name="ListLookupContent" extends="ListContent" type="list" list-name="listIt" paginate-target="LookupContent"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <set field="parameters.sortField" from-field="parameters.sortField" default-value="contentId"/>
             <call-parent-actions/>
@@ -133,7 +133,7 @@ under the License.
     </form>
 
     <form name="EditContent" target="updateContent" title="" type="single" default-map-name="currentValue"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
                 <field-map field-name="statusId" from-field="currentValue.statusId"/>
@@ -221,7 +221,7 @@ under the License.
 
     <!-- Content Lookup forms -->
     <form name="mruLookupContent" default-entity-name="Content" list-name="mruList" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
 
         <field name="contentId" widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
@@ -231,7 +231,7 @@ under the License.
     </form>
     <!-- ContentAssoc forms -->
     <form name="EditContentAssoc" target="updateContentAssoc" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <entity-one entity-name="ContentAssoc" use-cache="true">
                 <field-map from-field="contentId" field-name="contentId"/>
@@ -248,7 +248,7 @@ under the License.
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="AddContentAssoc" target="createContentAssoc" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="ContentAssoc"/>
         <field name="contentId"><display description="${contentId}"/></field>
         <field name="contentIdTo" map-name="currentValue">
@@ -275,7 +275,7 @@ under the License.
         <field name="lastModifiedByUserLogin"><hidden/></field>
     </form>
     <form name="ListContentAssocFrom" target="updateContentAssoc" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="ContentAssoc" use-cache="true">
                 <field-map from-field="contentId" field-name="contentId"/>
@@ -307,7 +307,7 @@ under the License.
         </field>
     </form>
     <form name="ListContentAssocTo" target="EditContentAssoc" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="ContentAssoc" use-cache="true">
                 <field-map from-field="contentId" field-name="contentIdTo"/>
@@ -340,7 +340,7 @@ under the License.
 
     <!-- ContentRole forms -->
     <form name="AddContentRole" target="addContentRole" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentRole"/>
         <field name="contentId" widget-style="${styles.button_default}" >
             <lookup target-form-name="LookupContent"/>
@@ -358,12 +358,12 @@ under the License.
         </field>
     </form>
     <form name="EditContentRole" target="Edit${contentRoleTarget}ContentRole" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentRole"/>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListContentRole" target="update${contentRoleTarget}ContentRole" title="" type="list"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="ContentRole" use-cache="true">
                 <field-map from-field="contentId" field-name="contentId"/>
@@ -386,7 +386,7 @@ under the License.
 
     <!-- ContentPurpose forms -->
     <form name="AddContentPurpose" target="addContentPurpose" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentPurpose"/>
         <field name="contentId" title=" " widget-style="${styles.button_default}" ><lookup target-form-name="LookupContent"/></field>
         <field name="contentPurposeTypeId">
@@ -399,7 +399,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListContentPurpose" target="updateContentPurpose" title="" type="list"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="ContentPurpose" use-cache="true">
                 <field-map from-field="contentId" field-name="contentId"/>
@@ -417,7 +417,7 @@ under the License.
 
     <!-- ContentAttribute forms -->
     <form name="AddContentAttribute" target="addContentAttribute" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentAttribute"/>
         <field name="contentId" title=" " widget-style="${styles.button_default}" >
             <lookup target-form-name="LookupContent"/>
@@ -425,7 +425,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListContentAttribute" target="updateContentAttribute" title="" type="list"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="ContentAttribute" use-cache="true">
                 <field-map from-field="contentId" field-name="contentId"/>
@@ -444,7 +444,7 @@ under the License.
 
     <!-- ContentMetaData forms -->
     <form name="AddContentMetaData" target="addContentMetaData" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentMetaData"/>
         <field name="contentId" title=" " widget-style="${styles.button_default}" >
             <lookup target-form-name="LookupContent"/>
@@ -457,7 +457,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListWebSites" type="list" paginate-target="ListWebSite" paginate="true" list-name="webSites"
-            odd-row-style="alternate-row" default-table-style="basic-table hover-bar" header-row-style="header-row-2">
+            odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2">
         <field name="webSiteId" title="${uiLabelMap.CommonId}" widget-style="${styles.button_default}" sort-field="true">
             <hyperlink description="${webSiteId}" target="EditWebSite" also-hidden="false">
                 <parameter param-name="webSiteId"/>
@@ -470,7 +470,7 @@ under the License.
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
     </form>
     <form name="ListContentMetaData" target="updateContentMetaData" title="" type="list"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="ContentMetaData" use-cache="true">
                 <field-map from-field="contentId" field-name="contentId"/>
@@ -490,7 +490,7 @@ under the License.
 
     <!-- Person Lookup forms -->
     <form name="mruLookupPerson" list-name="mruList" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="partyId" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}')"/>
         </field>
@@ -498,7 +498,7 @@ under the License.
         <field name="lastName" title=" " widget-style="${styles.button_default}"><display/></field>
     </form>
     <form name="mruLookupPartyAndUserLoginAndPerson" list-name="mruList" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="partyId" title=" " widget-style="${styles.button_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}', '${userLoginId}')"/>
         </field>
@@ -508,7 +508,7 @@ under the License.
 
     <!-- ContentWorkEffort forms -->
     <form name="AddWorkEffortContent" target="createWorkEffortContent" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createWorkEffortContent"/>
         <field name="contentId"><hidden value="${parameters.contentId}"/></field>
         <field name="workEffortId">
@@ -524,7 +524,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListWorkEffortContents" type="list" target="updateWorkEffortContent" list-name="workEffortContents"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-and entity-name="WorkEffortContent" use-cache="true" list="workEffortContents">
                 <field-map from-field="contentId" field-name="contentId"/>
@@ -552,7 +552,7 @@ under the License.
         </field>
     </form>
     <!--form name="ListDocument" target="" type="list" list-name="contentAssoc" paginate-target="navigateContent"
-        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="contentId" use-when="&quot;application/pdf&quot;.equals(mimeTypeId)">
             <hyperlink also-hidden="false" description="${contentName} [${contentId}]" target="showContentPdf?contentId=${contentId}" target-window="_blank"/>
         </field>
@@ -579,7 +579,7 @@ under the License.
         </field>
     </form-->
     <form name="AddDocument" target="addDocumentToTree" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <entity-one entity-name="Content" value-field="content">
                 <field-map field-name="contentId" from-field="parameters.contentId"/>
@@ -638,14 +638,14 @@ under the License.
     
     <!-- Content Keyword Forms -->
     <form name="AddContentKeyword" target="createContentKeyword" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentKeyword"/>
         <field name="contentId"><hidden value="${parameters.contentId}"/></field>
         <field name="keyword" title="${uiLabelMap.ContentKeyword}*"><text size="10"/></field>
         <field name="relevancyWeight" title="${uiLabelMap.ProductWeight}"><text size="5"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
-    <form name="ListContentKeywords" type="list" target="deleteContentKeyword" odd-row-style="alternate-row" default-table-style="basic-table">
+    <form name="ListContentKeywords" type="list" target="deleteContentKeyword" odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <actions>
             <entity-and entity-name="ContentKeyword" use-cache="true">
                 <field-map from-field="contentId" field-name="contentId"/>

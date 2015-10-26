@@ -25,7 +25,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="LookupInvoice" target="LookupInvoice" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field position="1" name="invoiceId"><text-find/></field>
         <field position="1" name="invoiceTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true" no-current-selected-key="SALES_INVOICE">
@@ -52,7 +52,7 @@ under the License.
     </form>
 
     <form name="LookupPayment" target="LookupPayment" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="Payment" default-field-type="hidden"/>
         <field name="paymentId" title="${uiLabelMap.AccountingPaymentID}"><text-find/></field>
         <field name="paymentTypeId" title="${uiLabelMap.CommonType}">

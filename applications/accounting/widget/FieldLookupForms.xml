@@ -25,7 +25,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="lookupFixedAsset" target="LookupFixedAsset" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="FixedAsset" default-field-type="hidden"/>
         <field name="fixedAssetId"><text-find/></field>
         <field name="fixedAssetName"><text-find/></field>
@@ -40,7 +40,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupFixedAsset" list-name="listIt" title="" type="list" paginate-target="LookupFixedAsset"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -57,7 +57,7 @@ under the License.
     </form>
     
     <form name="lookupBudget" target="LookupBudget" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="Budget" default-field-type="hidden"/>
         <field name="budgetId"><text-find/></field>
         <field name="budgetTypeId" title="${uiLabelMap.CommonType}">
@@ -73,7 +73,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupBudget" list-name="listIt" title="" type="list" paginate-target="LookupBudget"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -89,7 +89,7 @@ under the License.
         <field name="fixedAssetTypeId" title="${uiLabelMap.AccountingFixedAssetTypeId}"><display-entity entity-name="FixedAssetType"/></field>
     </form>
     <form name="lookupBillingAccount" target="LookupBillingAccount" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="BillingAccount" default-field-type="hidden"/>
         <field name="billingAccountId" title="${uiLabelMap.AccountingBillingAccountId}"><text-find/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
@@ -99,7 +99,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listBillingAccount" list-name="listIt" title="" type="list" paginate-target="LookupBillingAccount"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -117,7 +117,7 @@ under the License.
     </form>
 
     <form name="lookupGlAccount" target="LookupGlAccount" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="GlAccount" default-field-type="hidden"/>
         <field name="glAccountId" title="${uiLabelMap.AccountingGlAccountId}"><text-find/></field>
         <field name="accountName" title="${uiLabelMap.CommonName}"><text-find/></field>
@@ -139,7 +139,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupGlAccount" list-name="listIt" title="" type="list" paginate-target="LookupGlAccount"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -156,7 +156,7 @@ under the License.
         <field name="glAccountClassId" title="${uiLabelMap.AccountingGlAccountClass}"><display-entity entity-name="GlAccountClass"/></field>
     </form>
     <form name="lookupPayment" target="LookupPayment" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="Payment" default-field-type="hidden"/>
         <field name="paymentId" title="${uiLabelMap.AccountingPaymentID}"><text-find/></field>
         <field name="partyIdFrom"><lookup  target-form-name="LookupPartyName"/></field>
@@ -167,7 +167,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listPayment" list-name="listIt" title="" type="list" paginate-target="LookupPayment"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -187,7 +187,7 @@ under the License.
     </form>
 
     <form name="lookupInvoice" target="LookupInvoice" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <!--auto-fields-entity entity-name="Invoice" default-field-type="hidden" /-->
         <field name="invoiceId" title="${uiLabelMap.AccountingInvoice}"><text-find/></field>
         <field name="invoiceTypeId" title="${uiLabelMap.CommonType}">
@@ -212,7 +212,7 @@ under the License.
     </form>
     
     <form name="listInvoice" list-name="listIt" title="" type="list" paginate-target="LookupInvoice"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -234,7 +234,7 @@ under the License.
     </form>
 
     <form name="lookupAgreement" target="LookupAgreement" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="agreementId" ><text-find/></field>
         <field name="productId" ><text-find/></field>
         <field name="partyIdFrom"><text-find/></field>
@@ -244,7 +244,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listAgreements" list-name="listIt" title="" type="list" target="LookupAgreement"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -263,7 +263,7 @@ under the License.
     </form>
 
     <form name="lookupAgreementItem" target="LookupAgreementItem" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="agreementId"><text-find/></field>
         <field name="agreementItemSeqId"><text-find/></field>
         <field name="agreementItemTypeId" title="${uiLabelMap.CommonType}">
@@ -275,7 +275,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listAgreementItems" list-name="listIt" title="" type="list" target="LookupAgreementItem"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -292,7 +292,7 @@ under the License.
         <field name="currencyUomId"><display/></field>
     </form>
 
-    <form name="lookupPaymentGroupMember" target="LookupPaymentGroupMember" title="" type="single" header-row-style="header-row" default-table-style="basic-table">
+    <form name="lookupPaymentGroupMember" target="LookupPaymentGroupMember" title="" type="single" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="paymentGroupId"><text-find/></field>
         <field name="paymentId"><text-find/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time type="date"/></field>
@@ -302,7 +302,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listPaymentGroupMember" list-name="listIt" title="" type="list" target="LookupPaymentGroupMember"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -319,7 +319,7 @@ under the License.
     </form>
 
     <form name="LookupGlReconciliation" target="LookupGlReconciliation" type="single"
-            header-row-style="header-row" default-table-style="basic-table">
+            header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="glReconciliationId" title="${uiLabelMap.FormFieldTitle_glReconciliationId}"><text-find/></field>
         <field name="glReconciliationName" title="${uiLabelMap.FormFieldTitle_glReconciliationName}"><text-find/></field>
         <field name="organizationPartyId" title="${uiLabelMap.FormFieldTitle_organizationPartyId}"><lookup  target-form-name="LookupPartyName"/></field>
@@ -329,7 +329,7 @@ under the License.
     </form>
     
     <form name="ListLookupReconciliation" list-name="listIt" type="list" target="LookupGlReconciliation"
-            odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+            odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -347,7 +347,7 @@ under the License.
     </form>
     
     <form name="lookupCustomTimePeriod" target="LookupCustomTimePeriod" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="CustomTimePeriod" default-field-type="hidden"/>
         <field name="customTimePeriodId"><text-find/></field>
         <field name="parentPeriodId"><text-find/></field>
@@ -372,7 +372,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupCustomTimePeriod" list-name="listIt" title="" type="list" paginate-target="LookupCustomTimePeriod"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>

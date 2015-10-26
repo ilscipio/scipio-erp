@@ -21,7 +21,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="EditProductFeature" type="single" target="updateProductFeature" title="" default-map-name="productFeature"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
 
         <alt-target use-when="productFeature==null" target="createProductFeature"/>
 
@@ -65,7 +65,7 @@
     </form>
 
     <form name="CreateSupplierProductFeature" type="single" target="createSupplierProductFeature" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createSupplierProductFeature" default-field-type="edit"/>
         <field name="partyId" title="${uiLabelMap.ProductSuppliers}">
             <drop-down allow-empty="false">
@@ -86,7 +86,7 @@
         <field name="submitForm" title="${uiLabelMap.CommonCreate}"><submit/></field>
     </form>
     <form name="EditSupplierProductFeatures" type="list" target="updateSupplierProductFeature" title="" list-name="supplierProductFeatures"
-        odd-row-style="alternate-row" default-table-style="basic-table">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="updateSupplierProductFeature" default-field-type="display"/>
         <field name="productFeatureId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.ProductSuppliers}">
@@ -109,13 +109,13 @@
         </field>
     </form>
     <form name="FindFeatureType" type="single" target="EditFeatureTypes"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureTypeId"><text-find size="25"></text-find></field>
         <field name="description"><text-find size="25"></text-find></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>
     </form>
     <form name="ListFeatureTypes" list-name="listIt" target="" title="" type="list" paginate-target="EditFeatureTypes"
-        odd-row-style="alternate-row" default-table-style="basic-table">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <actions>
             <set field="parameters.noConditionFind" value="Y"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -146,7 +146,7 @@
         </field>
     </form>
     <form name="EditFeatureType" type="single" target="updateProductFeatureType" title="" default-map-name="productFeatureType"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="productFeatureType==null" target="createProductFeatureType"/>
         <auto-fields-entity entity-name="ProductFeatureType"/>
         <field use-when="productFeatureType!=null" name="productFeatureTypeId" title="${uiLabelMap.ProductFeatureType}"><display/></field>
@@ -162,13 +162,13 @@
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="FindFeatureInterAction" type="single" target="EditFeatureInterActions"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureId"><text-find size="25"></text-find></field>
         <field name="productFeatureIdTo"><text-find size="25"></text-find></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>
     </form>
     <form name="ListFeatureInterActions" list-name="listIt" target="" title="" type="list" paginate-target="EditFeatureInterAction"
-        odd-row-style="alternate-row" default-table-style="basic-table">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <actions>
             <set field="parameters.noConditionFind" value="Y"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -204,7 +204,7 @@
         </field>
         </form>
     <form name="EditFeatureInterAction" type="single" target="createProductFeatureIactn" title="" default-map-name="productFeatureIactn"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureId">
             <drop-down allow-empty="true">
                 <entity-options description="${description} [${productFeatureId}]" entity-name="ProductFeature">
@@ -231,7 +231,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="ListFeatureGroupAppls" type="multi" use-row-submit="false" list-name="productFeatureGroupAndAppls" target="UpdateProductFeatureGroupAppl?productFeatureGroupId=${productFeatureGroupId}" title=""
-        odd-row-style="alternate-row" default-table-style="basic-table">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureGroupId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden/></field>
         <field name="productFeatureId" title="${uiLabelMap.CommonId}"><display/></field>
@@ -255,7 +255,7 @@
         </field>
     </form>
     <form name="QuickApplyFeatureToGroup" type="single" target="CreateProductFeatureGroupAppl" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureGroupId"><hidden/></field>
         <field name="productFeatureId" title="${uiLabelMap.ProductFeatureId}"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
@@ -263,7 +263,7 @@
         </field>
     </form>
     <form name="ApplyFeatureCategoryToGroup" type="single" target="EditFeatureGroupAppls" title=""
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureGroupId"><hidden/></field>
         <field name="productFeatureCategoryId">
             <drop-down>
@@ -275,7 +275,7 @@
         </field>
     </form>
     <form name="ApplyFeaturesFromCategoryToGroup" type="multi" use-row-submit="true" list-name="productFeatures" target="ApplyFeaturesFromCategoryToGroup?productFeatureGroupId=${productFeatureGroupId}" title=""
-        odd-row-style="alternate-row" default-table-style="basic-table">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureGroupId"><hidden/></field>
         <field name="productFeatureId" title="${uiLabelMap.CommonId}"><display/></field>
         <field name="productFeatureTypeId" title="${uiLabelMap.CommonType}">
@@ -291,14 +291,14 @@
     </form>
 
     <form name="FindProductFeature" type="single" target="EditFeatureCategories"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureCategoryId" title="${uiLabelMap.CommonId}"><text-find size="20" maxlength="255"></text-find></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find size="25"></text-find></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit find"><submit/></field>
     </form>
 
     <form name="ListProductFeature" type="list" list-name="listIt" paginate-target="EditFeatureCategories" target="UpdateFeatureCategory"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" separate-columns="true">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" separate-columns="true">
         <actions>
             <set field="parameters.noConditionFind" value="Y"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -330,7 +330,7 @@
 
     </form>
     <form name="ListFeaturePrice" type="list" target="updateFeaturePrice" list-name="productFeaturePrice"
-        odd-row-style="alternate-row" default-table-style="basic-table">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <actions>
             <entity-and entity-name="ProductFeaturePrice" list="productFeaturePrice">
                 <field-map field-name="productFeatureId" from-field="parameters.productFeatureId"/>

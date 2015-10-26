@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     
     <form name="lookupProductBacklog" target="LookupProductBacklog" title="" type="single"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="custRequestId" title="Product Backlog Id"><text-find/></field>
         <field name="custRequestTypeId"><hidden value="RF_PROD_BACKLOG"/></field>
         <field name="description" title="Product Backlog Item"><text-find/></field>
@@ -39,7 +39,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductBacklog" list-name="listIt" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="basic-table hover-bar" paginate-target="LookupProductBacklog">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="LookupProductBacklog">
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>

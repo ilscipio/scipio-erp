@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="selectStarSchema" title="" type="single" target="ReportBuilderSelectStarSchemaFields"
-        header-row-style="header-row" default-table-style="basic-table">
+        header-row-style="header-row" default-table-style="${styles.table_basic}">
         <actions>
             <script location="component://bi/webapp/bi/WEB-INF/actions/reportbuilder/GetStarSchemas.groovy"/>
         </actions>

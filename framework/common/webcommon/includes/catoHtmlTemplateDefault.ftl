@@ -878,7 +878,7 @@ Not associated with an HTML element as is @fieldset.
   <#if isChildField && (catoFieldNoContainerChildren[type]?? || catoFieldNoContainerParent[parentFieldInfo.type!]??)>
     <#local nocontainer = true>
   <#else> 
-    <#local nocontainer = false>
+    <#local nocontainer = nocontainer?boolean>
   </#if>
 </#if>
 

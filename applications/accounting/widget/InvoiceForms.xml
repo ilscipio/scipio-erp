@@ -78,7 +78,7 @@ under the License.
                 .multiply(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceCurrencyConversionRate(delegator,invoiceId))}"/>
         </row-actions>
 
-        <field name="invoiceId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}" sort-field="true" widget-area-style="align-right" title-area-style="align-right">
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" widget-style="${styles.link_default}" sort-field="true" widget-area-style="align-right" title-area-style="align-right">
             <hyperlink description="${invoiceId}" target="invoiceOverview">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
@@ -203,7 +203,7 @@ under the License.
         <field name="description" encode-output="false"><display/></field>
         <field name="total" widget-area-style="amount"><display type="currency" currency="${invoice.currencyUomId}"/></field>
         <field name="invoiceId"><hidden/></field>
-        <field name="paymentId" widget-style="linktext ${styles.link_default}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="linktext ${styles.link_default}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -226,7 +226,7 @@ under the License.
         <field name="glAccountClassId" title="${uiLabelMap.AccountingGlAccountClass}"><display-entity entity-name="GlAccountClass" description="${description}"/></field>
         <field name="reconcileStatusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name ="debitCreditFlag" widget-area-style="aling-center"><display/></field>
-        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
         
     </form>
 
@@ -454,7 +454,7 @@ under the License.
         <field name="description"><display/></field>
         <field name="total"><display type="currency" currency="${invoice.currencyUomId}"/></field>
         <field name="invoiceId"><hidden/></field>
-        <field name="paymentId"><lookup target-form-name="LookupPayment"/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}"><lookup target-form-name="LookupPayment"/></field>
         <field name="billingAccountId"><hidden/></field>
         <field name="amountToApply"><text size="10" disabled="true"/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
@@ -471,7 +471,7 @@ under the License.
     <form name="AddPayment" type="single" target="updateInvoiceApplication" title=""
         header-row-style="header-row" default-table-style="basic-table">
         <field name="invoiceId"><hidden/></field>
-        <field name="paymentId"><lookup target-form-name="LookupPayment"/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}"><lookup target-form-name="LookupPayment"/></field>
         <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
         <field name="applyAction" widget-style="smallSubmit">
@@ -482,12 +482,12 @@ under the License.
     <form name="ListPaymentsNotApplied" type="list" list-name="payments" target="updateInvoiceApplication" title=""
         odd-row-style="alternate-row" default-table-style="basic-table hover-bar">
         <field name="invoiceId"><hidden/></field>
-        <field name="paymentId" widget-style="${styles.link_default}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_default}">
             <hyperlink target="paymentOverview" description="[${paymentId}]">
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
-        <field name="amount"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="effectiveDate"><display type="date"/></field>
         <field name="amountApplied" parameter-name="dummy"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
@@ -646,10 +646,10 @@ under the License.
         <field name="termTypeId" title="${uiLabelMap.CommonType}">
             <display-entity entity-name="TermType" description="${description}"/>
         </field>
-        <field name="dueDate"><display type="date"/></field>
-        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
-        <field name="paidAmount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
-        <field name="outstandingAmount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
+        <field name="dueDate" title="${uiLabelMap.CommonDue}"><display type="date"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
+        <field name="paidAmount" title="${uiLabelMap.CommonPaid}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
+        <field name="outstandingAmount" title="${uiLabelMap.CommonOutStanding}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
     </form>
 
     <form name="ListCustomerInvoices" extends="ListInvoices" list-name="invoices"

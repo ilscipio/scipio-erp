@@ -54,7 +54,7 @@ under the License.
     <form name="LookupPayment" target="LookupPayment" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="Payment" default-field-type="hidden"/>
-        <field name="paymentId" title="${uiLabelMap.AccountingPaymentID}"><text-find/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}"><text-find/></field>
         <field name="paymentTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true" no-current-selected-key="CUSTOMER_PAYMENT">
                 <entity-options description="${description}" entity-name="PaymentType" key-field-name="paymentTypeId">

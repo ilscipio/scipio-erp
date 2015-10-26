@@ -131,7 +131,7 @@ under the License.
         </field>
         <field name="effectiveDate"><display/></field>
         <field name="currencyUomId"><hidden/></field>
-        <field name="amount"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
     </form>
     
     <!-- displays the gateway response in detail -->

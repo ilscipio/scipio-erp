@@ -1136,16 +1136,17 @@
         </menu-item>
     </menu>
 
-    <menu name="newAccountOrganization">
-        <menu-item name="addCompany" title="${uiLabelMap.AccountingNewCompany}">
+    <menu name="OrganizationSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        menu-container-style="button-bar button-style-2">
+        <menu-item name="addCompany" title="${uiLabelMap.AccountingNewCompany}" widget-style="+create">
             <condition>
                 <if-compare field="hasPrefPermission" operator="equals" value="true" type="Boolean" />
             </condition>
-            <link target="AddCompany" link-type="auto" />
+            <link target="AddCompany" />
         </menu-item>
     </menu>
 
-    <menu name="OrganizationAccountingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="OrganizationTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="PartyAccountsSummary">
         <menu-item name="PartyAccountsSummary" title="${uiLabelMap.AcctgPartyGlJournalSummary}">
             <link target="PartyAccountsSummary">
@@ -1184,12 +1185,12 @@
         </menu-item>
     </menu>
     
-    <menu name="OrganizationAccountingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="OrganizationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="active">
-        <include-elements menu-name="OrganizationAccountingTabBar" recursive="includes-only" />
+        <include-elements menu-name="OrganizationTabBar" recursive="includes-only" />
     </menu>
     
-    <menu name="OrganizationAccountingReportsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="OrganizationReportsTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="tabButtonItem2" default-menu-item-name="TrialBalance">
         <menu-item name="TrialBalance" title="${uiLabelMap.AccountingTrialBalance}">
             <link target="TrialBalance">

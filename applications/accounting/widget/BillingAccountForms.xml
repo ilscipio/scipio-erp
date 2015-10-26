@@ -341,7 +341,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="amount" position="2"><text/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" position="2"><text/></field>
         <field name="createAction" title="${uiLabelMap.CommonCreate}">
             <submit button-type="button"/>
         </field>

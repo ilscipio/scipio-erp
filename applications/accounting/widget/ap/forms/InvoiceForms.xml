@@ -63,7 +63,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="dueDate"><display type="date"/></field>
-        <field name="total" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="total" title="${uiLabelMap.CommonTotal}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
    </form>
     

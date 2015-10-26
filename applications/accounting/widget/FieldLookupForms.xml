@@ -158,7 +158,7 @@ under the License.
     <form name="lookupPayment" target="LookupPayment" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="Payment" default-field-type="hidden"/>
-        <field name="paymentId" title="${uiLabelMap.AccountingPaymentID}"><text-find/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}"><text-find/></field>
         <field name="partyIdFrom"><lookup  target-form-name="LookupPartyName"/></field>
         <field name="partyIdTo"><lookup  target-form-name="LookupPartyName"/></field>
         <field name="amountApplied"><text-find default-value=""></text-find> </field>
@@ -176,13 +176,13 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="paymentId" widget-style="${styles.link_default}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${paymentId}" target="javascript:set_value('${paymentId}')"/>
         </field>
         <field name="partyIdFrom"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
         <field name="partyIdTo"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
         <field name="effectiveDate"><display/></field>
-        <field name="amount"><display/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}"><display/></field>
         <field name="currencyUomId"><display/></field>
     </form>
 
@@ -230,7 +230,7 @@ under the License.
         <field name="partyIdFrom"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
         <field name="partyId" title="${uiLabelMap.AccountingPartyIdTo}"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
         <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}"><display/></field>
-        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
 
     <form name="lookupAgreement" target="LookupAgreement" title="" type="single"
@@ -294,7 +294,7 @@ under the License.
 
     <form name="lookupPaymentGroupMember" target="LookupPaymentGroupMember" title="" type="single" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="paymentGroupId"><text-find/></field>
-        <field name="paymentId"><text-find/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}"><text-find/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="sequenceNum"><text-find/></field>
@@ -314,8 +314,8 @@ under the License.
         <field name="paymentGroupId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" target-type="plain" description="${paymentGroupId}" target="javascript:set_value('${paymentGroupId}')"/>
         </field>
-        <field name="paymentId"><display/></field>
-        <field name="sequenceNum"><display/></field>        
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}"><display/></field>
+        <field name="sequenceNum"><display/></field>
     </form>
 
     <form name="LookupGlReconciliation" target="LookupGlReconciliation" type="single"

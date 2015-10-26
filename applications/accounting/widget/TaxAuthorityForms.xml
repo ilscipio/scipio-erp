@@ -200,21 +200,24 @@ under the License.
                 <order-by field-name="toTaxAuthGeoId"/>
             </entity-condition>
         </actions>
-        <auto-fields-service service-name="updateTaxAuthorityAssoc"/>
+        <row-actions>
+            <set field="partyId" from-field="toTaxAuthPartyId"/>
+            <entity-one entity-name="PartyNameView"  value-field="party"></entity-one>
+        </row-actions>
 
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
 
-        <field name="toTaxAuthPartyId" title="${uiLabelMap.CommonParty}">
-            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${toTaxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_default}">
-                    <parameter param-name="partyId" from-field="toTaxAuthPartyId"/>
-                </sub-hyperlink>
-            </display-entity>
+        <field name="toTaxAuthPartyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_default}">
+           <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditTaxAuthority">
+                <parameter param-name="taxAuthPartyId" from-field="toTaxAuthPartyId"/>
+                <parameter param-name="taxAuthGeoId" from-field="toTaxAuthGeoId"/>
+            </hyperlink>
         </field>
         <field name="toTaxAuthGeoId" title="${uiLabelMap.CommonGeo}"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} [${geoCode}] [${geoId}]"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
-
+        
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelmap.CommonThru}"><date-time type="date"/></field>
         <field name="taxAuthorityAssocTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="TaxAuthorityAssocType" description="${description}">
@@ -222,7 +225,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="thruDate" title="${uiLabelmap.CommonThru}"><display type="date"/></field>
+        
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteTaxAuthorityAssoc" description="${uiLabelMap.CommonDelete}" also-hidden="false">

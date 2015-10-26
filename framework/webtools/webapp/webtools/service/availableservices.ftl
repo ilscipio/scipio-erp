@@ -51,7 +51,6 @@ under the License.
           </form>
         </@cell>
       </@row>
-
     <@row>
         <@cell>
         <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->

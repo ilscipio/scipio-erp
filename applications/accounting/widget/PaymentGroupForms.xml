@@ -193,7 +193,7 @@ under the License.
             <set field="partyIdFrom" from-field="payment.partyIdFrom"/>
             <set field="partyIdTo" from-field="payment.partyIdTo"/>
         </row-actions>
-        <field name="paymentId" widget-style="${styles.link_default}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_default}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -212,9 +212,9 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="paymentTypeId" title="${uiLabelMap.OrderPaymentType}"><display-entity entity-name="PaymentType" description="${description}"/></field>
-        <field name="statusId" title="${uiLabelMap.AccountingPaymentStatus}"><display-entity entity-name="StatusItem"/></field>
-        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display also-hidden="false" type="currency" currency="${payment.currencyUomId}"/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="PaymentType" description="${description}"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display also-hidden="false" type="currency" currency="${payment.currencyUomId}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
     </form>

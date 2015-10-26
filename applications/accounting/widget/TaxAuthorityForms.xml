@@ -265,22 +265,25 @@ under the License.
                 <order-by field-name="glAccountId"/>
             </entity-condition>
         </actions>
-
+        <row-actions>
+            <entity-one entity-name="GlAccount" value-field="glAccount" />
+            
+            <set field="partyId" from-field="organizationPartyId"/>
+            <entity-one entity-name="PartyNameView" value-field="party"/>
+        </row-actions>
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
-        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccount}">
-            <display-entity entity-name="GlAccount" description="${accountName}">
-                <sub-hyperlink description="${glAccountId}" target="EditGlobalGlAccount" link-style="${styles.link_default}">
-                    <parameter param-name="glAccountId"/>
-                </sub-hyperlink>
-            </display-entity>
+        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccount}" widget-style="${styles.link_default}">
+            <hyperlink also-hidden="false" description="${glAccount.accountCode} - ${glAccount.accountName}" target="GlAccountNavigate">
+                <parameter param-name="glAccountId"/>
+            </hyperlink>
         </field>
-        <field name="organizationPartyId" title="${uiLabelMap.PartyOrganizationParty}">
-            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${organizationPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_default}">
-                    <parameter param-name="partyId" from-field="organizationPartyId"/>
-                </sub-hyperlink>
-            </display-entity>
+        <field name="organizationPartyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_default}">
+           <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
+                <parameter param-name="partyId"/>
+                <parameter param-name="agreementId"/>
+                <parameter param-name="agreementItemSeqId"/>
+            </hyperlink>
         </field>
 
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -412,7 +415,7 @@ under the License.
         <field name="taxAuthGeoId"><hidden/></field>
 
         <field name="partyId" title="${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="partyTaxId" position="2"><text-find/></field>
+        <field name="partyTaxId" title="${uiLabelMap.PartyTaxId}" position="2"><text-find/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-find/></field>
         <field name="isExempt" widget-style="smallSelect">
@@ -435,18 +438,21 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
+        <row-actions>
+            <entity-one value-field="party" entity-name="PartyNameView"/>
+        </row-actions>
 
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
-
-        <field name="partyId" title="${uiLabelMap.CommonParty}">
-            <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_default}">
-                    <parameter param-name="partyId"/>
-                </sub-hyperlink>
-            </display-entity>
+        
+        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_default}">
+           <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
+                <parameter param-name="partyId"/>
+                <parameter param-name="agreementId"/>
+                <parameter param-name="agreementItemSeqId"/>
+            </hyperlink>
         </field>
-        <field name="partyTaxId"><display/></field>
+        <field name="partyTaxId" title="${uiLabelMap.PartyTaxId}"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <field name="isExempt"><display/></field>

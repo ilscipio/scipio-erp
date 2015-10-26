@@ -682,7 +682,7 @@ under the License.
         <field name="transactionDate"><display/></field>
         <field name="accountCode"><display/></field>
         <field name="accountName"><display/></field>
-        <field name="amount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currency}"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currency}"/></field>
         <field name="debitCreditFlag"><display/></field>
         <field name="isPosted"><display/></field>
     </form>

@@ -60,7 +60,7 @@
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PartyPersonalInformation}" navigation-menu-name="personUpdate" id="PartyPersonalInformationPanel">
-                                    <include-menu name="personUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                                    <include-menu name="PersonUpdateSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
                                     <include-form name="ViewPartyPerson" location="component://party/widget/partymgr/PartyForms.xml"/>
                                     <section>
                                         <condition>
@@ -157,7 +157,7 @@
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.PartyPartyIdentifications}" navigation-menu-name="newPartyIdentification" id="PartyIdentificationPanel">
-                    <include-menu name="newPartyIdentification" location="component://party/widget/partymgr/PartyMenus.xml"/>                
+                    <include-menu name="PartyIdentificationSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>                
                     <include-form name="listPartyIdentification" location="component://party/widget/partymgr/PartyForms.xml"/>
                 </screenlet>
             </widgets>
@@ -560,7 +560,7 @@
                     </condition>
                     <widgets>                        
                         <screenlet title="${uiLabelMap.PartyListRelatedAccounts}" navigation-menu-name="addRelContactAccounts">  
-                            <include-menu name="addRelContactAccounts" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                            <include-menu name="RelContactAccountsSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
                             <section>
                                 <condition>
                                     <not><if-empty field="parameters.editPartyRel"/></not>

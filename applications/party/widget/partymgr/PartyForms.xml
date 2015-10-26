@@ -954,7 +954,7 @@ under the License.
             <display-entity entity-name="InvoiceType" key-field-name="invoiceTypeId" description="${description}"/>
         </field>
         <field name="invoiceDate"><display type="date"/></field>
-        <field name="amount"><display type="currency" currency="${invoiceCurrencyUomId}"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoiceCurrencyUomId}"/></field>
         <field name="unAppliedAmount"><display type="currency" currency="${invoiceCurrencyUomId}"/></field>
     </form>
     <form name="ListUnAppliedPayments" type="list" list-name="paymentList"
@@ -965,7 +965,7 @@ under the License.
             <script location="component://party/webapp/partymgr/WEB-INF/actions/party/UnAppliedPaymentsForParty.groovy"/>
         </actions>
         <field name="paymentId"><hidden/></field>
-        <field name="paymentId">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}">
             <display-entity entity-name="Payment" description=" ">
                 <sub-hyperlink target="/accounting/control/paymentOverview" description="[${paymentId}]" target-type="inter-app">
                     <parameter param-name="paymentId"/>
@@ -973,13 +973,13 @@ under the License.
             </display-entity>
         </field>
         <field name="effectiveDate"><display type="date"/></field>
-        <field name="paymentTypeId">
+        <field name="paymentTypeId" title="${uiLabelMap.CommonType}">
             <display-entity entity-name="PaymentType" description="${description}"/>
         </field>
-        <field name="paymentParentTypeId">
+        <field name="paymentParentTypeId" title="${uiLabelMap.CommonPayment}">
             <display-entity entity-name="PaymentType" key-field-name="paymentTypeId" description="${description}"/>
         </field>
-        <field name="amount"><display type="currency" currency="${paymentCurrencyUomId}"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${paymentCurrencyUomId}"/></field>
         <field name="unAppliedAmount"><display type="currency" currency="${paymentCurrencyUomId}"/></field>
     </form>
     <form name="partyFinancialSummary" type="single" title="Financial summary" default-map-name="finanSummary"

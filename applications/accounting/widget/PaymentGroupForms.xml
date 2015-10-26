@@ -94,18 +94,22 @@ under the License.
         <field use-when="paymentGroup==null @and paymentGroupId==null" name="paymentGroupId"><ignored/></field>
         <field use-when="paymentGroup==null @and paymentGroupId!=null" name="paymentGroupId"><display description="${uiLabelMap.CommonCannotBeFound}: [${paymentGroupId}]" also-hidden="false"/></field>
         <field name="paymentGroupId" use-when="display==true"><display/></field>
-        <field name="paymentGroupTypeId" title="${uiLabelMap.CommonType}">
+        <field name="paymentGroupTypeId" title="${uiLabelMap.CommonType}" position="2">
             <display-entity entity-name="PaymentGroupType" description="${description}"/>
         </field>
-        <field name="paymentGroupTypeId" use-when="paymentGroup==null" title="${uiLabelMap.CommonType}">
+        <field name="paymentGroupTypeId" use-when="paymentGroup==null" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PaymentGroupType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field use-when="finAccount!=null" name="finAccountName" title="${uiLabelMap.FormFieldTitle_finAccountName}"><display description="${finAccount.finAccountName}" type="text"></display></field>
-        <field use-when="finAccount!=null" name="ownerPartyId" title="${uiLabelMap.FormFieldTitle_ownerPartyId}"><display description="${finAccount.ownerPartyId}" type="text"></display></field>
+        <field use-when="finAccount!=null" name="finAccountName" title="${uiLabelMap.FormFieldTitle_finAccountName}">
+            <display description="${finAccount.finAccountName}" type="text"/>
+        </field>
+        <field use-when="finAccount!=null" name="ownerPartyId" title="${uiLabelMap.FormFieldTitle_ownerPartyId}" position="2">
+            <display description="${finAccount.ownerPartyId}" type="text"/>
+        </field>
         <field name="paymentGroupName" use-when="display==true"><display/></field>
         <field name="submitAction" use-when="paymentGroup==null" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
         <field name="submitAction" use-when="paymentGroup!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
@@ -129,35 +133,37 @@ under the License.
             <set field="paymentRefNum" from-field="payment.paymentRefNum"/>
         </row-actions>
         <field name="paymentGroupId"><hidden/></field>
-        <field name="paymentId" widget-style="${styles.link_default}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_default}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
         <field name="paymentRefNum" title="${uiLabelMap.AccountingReferenceNumber}"><display/></field>
-        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
+        <field name="partyIdFrom" title="${uiLabelMap.CommonFrom}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${lastName} ${firstName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" >
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}">
+        <field name="partyIdTo" title="${uiLabelMap.CommonTo}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${lastName} ${firstName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" >
                     <parameter param-name="partyId" from-field="partyIdTo"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="paymentTypeId" title="${uiLabelMap.OrderPaymentType}"><display-entity entity-name="PaymentType" description="${description}"/></field>
-        <field name="paymentMethodTypeId" use-when="cardType!=null">
+        <field name="paymentTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="PaymentType" description="${description}"/></field>
+        <field name="paymentMethodTypeId" title="${uiLabelMap.CommonMethod}" use-when="cardType!=null">
             <display-entity entity-name="PaymentMethodType" description="${description} (${cardType})"/>
         </field>
-        <field name="paymentMethodTypeId" use-when="cardType==null">
+        <field name="paymentMethodTypeId" title="${uiLabelMap.CommonMethod}" use-when="cardType==null">
             <display-entity entity-name="PaymentMethodType" description="${description}"/>
         </field>
-        <field name="amount"><display currency="${payment.currencyUomId}" type="currency"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right">
+            <display currency="${payment.currencyUomId}" type="currency"/>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="deleteAction" title="" widget-style="${styles.button_default}">
             <hyperlink target="expirePaymentGroupMember" description="${uiLabelMap.CommonCancel}" also-hidden="false">
@@ -170,10 +176,11 @@ under the License.
     </form>
 
     <form name="AddPaymentGroupMember" type="single" target="createPaymentGroupMember">
-        <auto-fields-service service-name="createPaymentGroupMember"/>
         <field name="paymentGroupId"><hidden/></field>
-        <field name="paymentId"><lookup target-form-name="LookupPayment"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time default-value="${nowTimestamp}"/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}"><lookup target-form-name="LookupPayment"/></field>
+        <field name="sequenceNum" position="2"><text/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date" default-value="${nowTimestamp}"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date" default-value="${nowTimestamp}"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
     <form name="PaymentGroupMembers" type="list" list-name="paymentGroupMembers"

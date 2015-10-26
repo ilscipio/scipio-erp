@@ -474,7 +474,7 @@ under the License.
         <field name="paymentId" title="${uiLabelMap.CommonPayment}"><lookup target-form-name="LookupPayment"/></field>
         <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
-        <field name="applyAction" widget-style="smallSubmit">
+        <field name="applyAction"  title="${uiLabelMap.CommonApply}" widget-style="${styles.button_default}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -487,12 +487,12 @@ under the License.
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
-        <field name="amount" title="${uiLabelMap.CommonAmount}"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="effectiveDate"><display type="date"/></field>
         <field name="amountApplied" parameter-name="dummy"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
-        <field name="applyAction" widget-style="smallSubmit">
-            <submit button-type="button"/>
+        <field name="applyAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.button_default}">
+            <submit button-type="button" />
         </field>
     </form>
 

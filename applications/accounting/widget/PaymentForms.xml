@@ -539,6 +539,7 @@ under the License.
             <submit button-type="button"/>
         </field>
     </form>
+    
     <form name="FindPurchaseInvoicesByDueDate" type="single" target="findPurchaseInvoicesByDueDate"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="invoiceTypeId"><hidden value="PURCHASE_INVOICE"/></field>
@@ -559,6 +560,9 @@ under the License.
     
     <form name="ListInvoicesByDueDate" type="list" list-name="invoicePaymentInfoList"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        <row-actions>
+            <entity-one entity-name="Invoice" value-field="invoice" ></entity-one>
+        </row-actions>
         <field name="invoiceId"  title="${uiLabelMap.CommonInvoice}" widget-style="${styles.link_default}">
             <hyperlink target="invoiceOverview" description="${invoiceId}">
                 <parameter param-name="invoiceId"/>
@@ -568,9 +572,9 @@ under the License.
             <display-entity entity-name="TermType" description="${description}"/>
         </field>
         <field name="dueDate" title="${uiLabelMap.CommonDue}"><display type="date"/></field>
-        <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display/></field>
-        <field name="paidAmount" title="${uiLabelMap.CommonPaid}" widget-area-style="amount" title-area-style="align-right"><display/></field>
-        <field name="outstandingAmount" title="${uiLabelMap.CommonOutstanding}" widget-area-style="amount" title-area-style="align-right"><display/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
+        <field name="paidAmount" title="${uiLabelMap.CommonPaid}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
+        <field name="outstandingAmount" title="${uiLabelMap.CommonOutstanding}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
     </form>
     
     <form name="FinAccountTransAssociatedWithPayment" type="single" default-map-name="finAccountTrans" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

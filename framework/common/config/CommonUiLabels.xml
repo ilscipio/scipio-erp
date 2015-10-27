@@ -8472,6 +8472,22 @@
         <value xml:lang="en">PDF</value>
         <value xml:lang="hi_IN">पीडीऍफ़(PDF)</value>
     </property>
+    <property key="CommonPercentage">
+        <value xml:lang="en">Percentage</value>
+        <value xml:lang="es">Porcentaje</value>
+        <value xml:lang="fr">Pourcentage</value>
+        <value xml:lang="hi_IN">प्रतिशत</value>
+        <value xml:lang="it">Percentuale</value>
+        <value xml:lang="ja">割合(%)</value>
+        <value xml:lang="nl">Percentage</value>
+        <value xml:lang="pt">Porcentagem</value>
+        <value xml:lang="ro">Procent</value>
+        <value xml:lang="ru">Процент</value>
+        <value xml:lang="th">อัตราร้อยละ</value>
+        <value xml:lang="vi">Phần trăm</value>
+        <value xml:lang="zh">百分比</value>
+        <value xml:lang="zh_TW">百分比</value>
+    </property>
     <property key="CommonPerform">
         <value xml:lang="ar">إحراء</value>
         <value xml:lang="cs">Provést</value>
@@ -10822,6 +10838,11 @@
         <value xml:lang="zh">小</value>
         <value xml:lang="zh_CN">小</value>
         <value xml:lang="zh_TW">小</value>
+    </property>
+    <property key="CommonSold">
+        <value xml:lang="en">Sold</value>
+        <value xml:lang="zh">售出</value>
+        <value xml:lang="zh_TW">售出</value>
     </property>
     <property key="CommonSorryYouCannotSend">
         <value xml:lang="ar">للأسف, لا يمكنكم إرسال هذه الصفحة لصديق. إختر بدل ذلك من نوع أو سلعة</value>

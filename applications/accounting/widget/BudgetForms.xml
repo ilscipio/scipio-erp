@@ -39,9 +39,9 @@ under the License.
                 <parameter param-name="budgetId"/>
             </hyperlink>
         </field>
-        <field name="budgetTypeId"  title="${uiLabelMap.CommonType}" sort-field="true"><display-entity entity-name="BudgetType"/></field>
-        <field name="customTimePeriodId" sort-field="true">
-            <display/>
+        <field name="budgetTypeId" title="${uiLabelMap.CommonType}" sort-field="true"><display-entity entity-name="BudgetType"/></field>
+        <field name="customTimePeriodId" title="${uiLabelMap.CommonPeriod}" sort-field="true">
+            <display-entity entity-name="CustomTimePeriod" description="${customTimePeriodId}: ${fromDate} - ${thruDate}"/>
         </field>
         <field name="comments" sort-field="true">
             <display/>
@@ -67,7 +67,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="customTimePeriodId"><lookup target-form-name="LookupCustomTimePeriod"/></field>
+        <field name="customTimePeriodId" title="${uiLabelMap.CommonPeriod}" position="2"><lookup target-form-name="LookupCustomTimePeriod"/></field>
         <field name="comments" ><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="budget == null"><submit /></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="budget != null"><submit /></field>
@@ -77,7 +77,9 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="budgetId"><hidden/></field>
         <field position="1" name="budgetTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="BudgetType"/></field>
-        <field name="customTimePeriodId" position="2"><display/></field>
+        <field name="customTimePeriodId" title="${uiLabelMap.CommonPeriod}" position="2">
+            <display-entity entity-name="CustomTimePeriod" description="${customTimePeriodId}: ${fromDate} - ${thruDate}"/>
+        </field>
         <field position="1" name="comments"><display/></field>
     </form>
     
@@ -90,14 +92,14 @@ under the License.
     
     <form name="BudgetRoles" type="list" use-row-submit="true" title="" list-name="budgetRoles" paginate-target="BudgetOverview"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <!--auto-fields-entity entity-name="InvoiceRole" default-field-type="display"/-->
+        <auto-fields-entity entity-name="InvoiceRole" default-field-type="display"/>
         <field name="budgetId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.PartyParty}" widget-style="${styles.link_default}">
+        <field name="partyId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
-        <field name="name" title="${uiLabelMap.PartyParty}" entry-name="partyId">
+        <field name="name" title="${uiLabelMap.CommonParty}" entry-name="partyId">
             <display-entity also-hidden="false" entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${firstName} ${lastName}"/>
         </field>
         <field name="roleTypeId" title="${uiLabelMap.CommonRole}">

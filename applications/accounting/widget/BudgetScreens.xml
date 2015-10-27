@@ -234,11 +234,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonBudgetDecorator" location="${parameters.budgetDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingBudgetItems}">
-                            <include-form name="EditBudgetItems" location="component://accounting/widget/BudgetForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.AccountingBudgetItemsAdd}">
                             <include-form name="EditBudgetItem" location="component://accounting/widget/BudgetForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.AccountingBudgetItems}">
+                            <include-form name="EditBudgetItems" location="component://accounting/widget/BudgetForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

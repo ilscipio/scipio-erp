@@ -528,6 +528,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="FindPurchaseInvoicesByDueDate">
         <section>
             <actions>

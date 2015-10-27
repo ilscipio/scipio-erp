@@ -744,11 +744,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductGoodIdentifications}">
-                            <include-form name="UpdateProductGoodIdentifications" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleCreateProductGoodIdentifications}">
                             <include-form name="AddProductGoodIdentification" location="component://product/widget/catalog/ProductForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleEditProductGoodIdentifications}">
+                            <include-form name="UpdateProductGoodIdentifications" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

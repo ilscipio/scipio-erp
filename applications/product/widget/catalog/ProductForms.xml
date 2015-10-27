@@ -2843,6 +2843,7 @@
             <submit button-type="button" />
         </field>
     </form>
+    
     <!-- ProductIDs -->
     <form name="AddProductGoodIdentification" type="single" target="createGoodIdentification" title="" header-row-style="header-row"
         default-table-style="${styles.table_basic}">
@@ -2850,27 +2851,28 @@
         <field name="productId">
             <hidden />
         </field>
-        <field name="goodIdentificationTypeId" title="${uiLabelMap.ProductIdType}">
+        <field name="goodIdentificationTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="false" no-current-selected-key="ISBN">
                 <entity-options entity-name="GoodIdentificationType" description="${description}">
                     <entity-order-by field-name="description" />
                 </entity-options>
             </drop-down>
         </field>
+        <field name="idValue"  title="${uiLabelMap.CommonValue}" position="2"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}">
             <submit button-type="button" />
         </field>
     </form>
+    
     <form name="UpdateProductGoodIdentifications" type="list" target="updateGoodIdentification" title="" list-name="goodIdentifications"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
-        <auto-fields-service service-name="updateGoodIdentification" map-name="updateGoodIdentification" />
-        <field name="goodIdentificationTypeId" title="${uiLabelMap.ProductIdType}">
-            <display-entity entity-name="GoodIdentificationType" />
-        </field>
         <field name="productId">
             <hidden />
         </field>
-        <field name="idValue" />
+        <field name="goodIdentificationTypeId" title="${uiLabelMap.ProductIdType}">
+            <display-entity entity-name="GoodIdentificationType" />
+        </field>
+        <field name="idValue"  title="${uiLabelMap.CommonValue}"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
             <submit button-type="button" />
         </field>
@@ -2881,6 +2883,7 @@
             </hyperlink>
         </field>
     </form>
+    
     <!-- ProductKeywords -->
     <form name="AddProductKeyword" type="single" target="createProductKeyword" title="" header-row-style="header-row"
         default-table-style="${styles.table_basic}">

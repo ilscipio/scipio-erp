@@ -23,36 +23,36 @@ under the License.
             <@pul title="${uiLabelMap.AccountingInvoicesMenu}">
                 <@pli><a href="<@ofbizUrl>findInvoices?noConditionFind=Y&amp;lookupFlag=Y</@ofbizUrl>">${uiLabelMap.AccountingShowAllInvoices}</a></@pli>
 <#list invoiceTypes as invoiceType>
-                    <@pli><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&amp;invoiceTypeId=${invoiceType.invoiceTypeId}</@ofbizUrl>">${uiLabelMap.AccountingShowInvoices} ${invoiceType.get("description",locale)!invoiceType.invoiceTypeId}</a></@pli>
+                    <@pli><a href="<@ofbizUrl>findInvoices?noConditionFind=Y&amp;lookupFlag=Y&amp;invoiceTypeId=${invoiceType.invoiceTypeId}</@ofbizUrl>">${invoiceType.get("description",locale)!invoiceType.invoiceTypeId}</a></@pli>
 </#list>
             </@pul>
         </li>
         <li>
             <@pul title="${uiLabelMap.AccountingInvoicesMenu}: ${uiLabelMap.CommonStatus}">
 <#list invoiceStatus as status>
-                    <@pli><a href="<@ofbizUrl>findInvoices?lookupFlag=Y&amp;statusId=${status.statusId}</@ofbizUrl>">${uiLabelMap.AccountingShowInvoices} ${status.get("description",locale)!status.statusId}</a></@pli>
+                    <@pli><a href="<@ofbizUrl>findInvoices?noConditionFind=Y&amp;lookupFlag=Y&amp;statusId=${status.statusId}</@ofbizUrl>">${status.get("description",locale)!status.statusId}</a></@pli>
 </#list>
             </@pul>
         </li>
          <li>
-            <@pul title="${uiLabelMap.AccountingPaymentsMenu}">  
+            <@pul title="${uiLabelMap.AccountingPaymentsMenu}">
                 <@pli><a href="<@ofbizUrl>findPayments?noConditionFind=Y&amp;lookupFlag=Y</@ofbizUrl>">${uiLabelMap.AccountingShowAllPayments}</a></@pli>
 <#list paymentTypes as paymentType>
-                    <@pli><a href="<@ofbizUrl>findPayments?lookupFlag=Y&amp;paymentTypeId=${paymentType.paymentTypeId}</@ofbizUrl>">${uiLabelMap.AccountingShowPayments} ${paymentType.get("description",locale)!paymentType.paymentTypeId}</a></@pli>
+                    <@pli><a href="<@ofbizUrl>findPayments?noConditionFind=Y&amp;lookupFlag=Y&amp;paymentTypeId=${paymentType.paymentTypeId}</@ofbizUrl>">${paymentType.get("description",locale)!paymentType.paymentTypeId}</a></@pli>
 </#list>
             </@pul>
         </li>
         <li>
-            <@pul title="${uiLabelMap.AccountingPaymentsMenu}: ${uiLabelMap.CommonPaymentMethodType}">  
-<#list paymentMethodTypes as paymentMethodType>
-                    <@pli><a href="<@ofbizUrl>findPayments?lookupFlag=Y&amp;paymentMethodTypeId=${paymentMethodType.paymentMethodTypeId}</@ofbizUrl>">${uiLabelMap.AccountingShowPayments} ${paymentMethodType.get("description",locale)!paymentMethodType.paymentMethodTypeId}</a></@pli>
-</#list>
-            </@pul>
-        </li>
-        <li>
-            <@pul title="${uiLabelMap.AccountingPaymentsMenu}: ${uiLabelMap.CommonStatus}">  
+            <@pul title="${uiLabelMap.AccountingPaymentsMenu}: ${uiLabelMap.CommonStatus}">
 <#list paymentStatus as status>
-                    <@pli><a href="<@ofbizUrl>findPayments?lookupFlag=Y&amp;statusId=${status.statusId}</@ofbizUrl>">${uiLabelMap.AccountingShowPayments} ${status.get("description",locale)!status.statusId}</a></@pli>
+                    <@pli><a href="<@ofbizUrl>findPayments?noConditionFind=Y&amp;lookupFlag=Y&amp;statusId=${status.statusId}</@ofbizUrl>">${status.get("description",locale)!status.statusId}</a></@pli>
+</#list>
+            </@pul>
+        </li>
+        <li>
+            <@pul title="${uiLabelMap.AccountingPaymentsMenu}: ${uiLabelMap.CommonType}">  
+<#list paymentMethodTypes as paymentMethodType>
+                    <@pli><a href="<@ofbizUrl>findPayments?noConditionFind=Y&amp;lookupFlag=Y&amp;paymentMethodTypeId=${paymentMethodType.paymentMethodTypeId}</@ofbizUrl>">${paymentMethodType.get("description",locale)!paymentMethodType.paymentMethodTypeId}</a></@pli>
 </#list>
             </@pul>
         </li>

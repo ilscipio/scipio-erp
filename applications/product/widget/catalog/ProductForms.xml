@@ -2887,14 +2887,13 @@
     <!-- ProductKeywords -->
     <form name="AddProductKeyword" type="single" target="createProductKeyword" title="" header-row-style="header-row"
         default-table-style="${styles.table_basic}">
-        <auto-fields-service service-name="createProductKeyword" />
         <field name="productId">
             <hidden />
         </field>
-        <field name="relevancyWeight">
-            <text default-value="1" />
+        <field name="keyword">
+            <text />
         </field>
-        <field name="keywordTypeId">
+        <field name="keywordTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down>
                 <entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
                     <entity-constraint name="enumTypeId" operator="equals" value="KEYWORD_TYPE" />
@@ -2902,7 +2901,10 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+        <field name="relevancyWeight">
+            <text default-value="1" />
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description}">
                     <entity-constraint name="statusTypeId" value="KEYWORD_STATUS" />
@@ -2933,7 +2935,7 @@
         <field name="keyword">
             <display />
         </field>
-        <field name="keywordTypeId" title="${uiLabelMap.FormFieldTitle_keywordType}">
+        <field name="keywordTypeId" title="${uiLabelMap.CommonType}">
             <display-entity entity-name="Enumeration" description="${description}" key-field-name="enumId" />
         </field>
         <field name="relevancyWeight">

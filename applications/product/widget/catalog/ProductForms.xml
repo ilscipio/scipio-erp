@@ -573,13 +573,14 @@
     <!-- ProductPrice -->
     <form name="AddProductPrice" type="single" target="createProductPrice" title="" header-row-style="header-row"
         default-table-style="${styles.table_basic}">
-        <auto-fields-service service-name="createProductPrice" />
         <field name="productId">
             <hidden />
         </field>
-        <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}">
-            <drop-down allow-empty="false" no-current-selected-key="DEFAULT_PRICE">
-                <entity-options entity-name="ProductPriceType" description="${description}">
+        <field name="price" required-field="true"><text/></field>
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}" position="2">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
+                <entity-options key-field-name="uomId" description="${uomId} - ${description}" entity-name="Uom">
+                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE" />
                     <entity-order-by field-name="description" />
                 </entity-options>
             </drop-down>
@@ -591,15 +592,29 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="currencyUomId" title="${uiLabelMap.ProductCurrencyUomId}">
-            <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
-                <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
-                    <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE" />
+        <field name="productPriceTypeId" title="${uiLabelMap.CommonType}" position="2">
+            <drop-down allow-empty="false" no-current-selected-key="DEFAULT_PRICE">
+                <entity-options entity-name="ProductPriceType" description="${description}">
                     <entity-order-by field-name="description" />
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productStoreGroupId" title="${uiLabelMap.ProductProductStoreGroupId}">
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true">
+            <date-time type="date" />
+        </field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2">
+            <date-time type="date" />
+        </field>
+        <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}"><text/></field>
+        <field name="taxAuthPartyId" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonParty}" position="2"><text/></field>
+        <field name="taxPercentage" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonPercentage}"><text/></field>
+        <field name="taxInPrice" position="2">
+            <drop-down allow-empty="true">
+                <option description="${uiLabelMap.CommonNo}" key="N"/>
+                <option description="${uiLabelMap.CommonYes}" key="Y"/>
+            </drop-down>
+        </field>
+        <field name="productStoreGroupId" title="${uiLabelMap.CommonStore} ${uiLabelMap.CommonGroup}" position="2">
             <drop-down allow-empty="false" no-current-selected-key="_NA_">
                 <entity-options entity-name="ProductStoreGroup" description="${productStoreGroupName}">
                     <entity-order-by field-name="productStoreGroupName" />
@@ -616,7 +631,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="customPriceCalcService">
+        <field name="customPriceCalcService" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="CustomMethod" key-field-name="customMethodId" description="${description}">
                     <entity-constraint name="customMethodTypeId" operator="equals" value="PRICE_FORMULA" />
@@ -627,28 +642,40 @@
             <submit button-type="button" />
         </field>
     </form>
+    
     <form name="UpdateProductPrice" type="list" target="updateProductPrice" title="" list-name="productPrices" odd-row-style="alternate-row"
         default-table-style="${styles.table_basic}">
-        <auto-fields-service service-name="updateProductPrice" map-name="productPrice" />
         <field name="productId">
             <hidden />
-        </field>
-        <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}">
-            <display-entity entity-name="ProductPriceType" />
         </field>
         <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}">
             <display-entity entity-name="ProductPricePurpose" />
         </field>
-        <field name="currencyUomId" title="${uiLabelMap.ProductCurrency}">
-            <display-entity entity-name="Uom" key-field-name="uomId" description="${description} [${uomId}]" />
+        <field name="productPriceTypeId" title="${uiLabelMap.CommonType}">
+            <display-entity entity-name="ProductPriceType" />
         </field>
-        <field name="productStoreGroupId" title="${uiLabelMap.ProductProductStoreGroup}">
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
+            <display-entity entity-name="Uom" key-field-name="uomId" description="${uomId}" />
+        </field>
+        <field name="productStoreGroupId" title="${uiLabelMap.CommonStore} ${uiLabelMap.CommonGroup}">
             <display-entity entity-name="ProductStoreGroup" description="${productStoreGroupName}" />
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}">
-            <display />
+            <display type="date" />
         </field>
-
+        <field name="thruDate" title="${uiLabelMap.CommonThru}">
+            <date-time type="date" />
+        </field>
+        <field name="price" required-field="true"><text/></field>
+        <field name="taxAuthGeoId" title="${uiLabelMap.CommonGeo}"><text/></field>
+        <field name="taxAuthPartyId" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonParty}"><text/></field>
+        <field name="taxPercentage" title="${uiLabelMap.CommonTax} ${uiLabelMap.CommonPercentage}"><text/></field>
+        <field name="taxInPrice">
+            <drop-down allow-empty="true">
+                <option description="${uiLabelMap.CommonNo}" key="N"/>
+                <option description="${uiLabelMap.CommonYes}" key="Y"/>
+            </drop-down>
+        </field>
         <field name="termUomId">
             <drop-down allow-empty="true">
                 <entity-options entity-name="UomAndType" key-field-name="uomId"
@@ -666,15 +693,9 @@
                 </entity-options>
             </drop-down>
         </field>
-
-        <field name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:">
-            <display description="[${lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${lastModifiedDate}" also-hidden="false" />
-        </field>
-
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
             <submit button-type="button" />
         </field>
-
         <field name="viewHistoryAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="ProductPriceHistory" description="${uiLabelMap.ProductHistory}" also-hidden="false">
                 <parameter param-name="productId" />
@@ -682,7 +703,6 @@
                 <parameter param-name="fromDate" />
             </hyperlink>
         </field>
-
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductPrice" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
@@ -694,7 +714,41 @@
             </hyperlink>
         </field>
     </form>
-
+    
+    <form name="ListProductPriceHistory" type="list" list-name="productPricesChanges" header-row-style="header-row"
+        default-table-style="${styles.table_basic}">
+        <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}">
+            <display-entity entity-name="ProductPricePurpose" />
+        </field>
+        <field name="productPriceTypeId" title="${uiLabelMap.CommonType}">
+            <display-entity entity-name="ProductPriceType" />
+        </field>
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}">
+            <display />
+        </field>
+        <field name="price" widget-area-style="amount" title-area-style="align-right">
+            <display type="currency" currency="${currencyUomId}" />
+        </field>
+        <field name="oldPrice" widget-area-style="amount" title-area-style="align-right">
+            <display type="currency" currency="${currencyUomId}" />
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}">
+            <display type="date"/>
+        </field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}">
+            <display type="date"/>
+        </field>
+        <field name="productStoreGroupId" title="${uiLabelMap.CommonStore} ${uiLabelMap.CommonGroup}">
+            <display-entity entity-name="ProductStoreGroup" description="${productStoreGroupName}" />
+        </field>
+        <field name="changedByUserLogin" title="${uiLabelMap.ProductLastModifiedBy}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${firstName} ${lastName}"/>
+        </field>
+        <field name="changedDate">
+            <display />
+        </field>
+    </form>
+    
     <!-- ProductPaymentMethodType -->
     <form name="AddProductPaymentMethodType" type="single" target="createProductPaymentMethodType" title="" header-row-style="header-row"
         default-table-style="${styles.table_basic}">
@@ -3244,40 +3298,6 @@
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
             <submit button-type="button" />
-        </field>
-    </form>
-
-    <form name="ListProductPriceHistory" type="list" list-name="productPricesChanges" header-row-style="header-row"
-        default-table-style="${styles.table_basic}">
-        <field name="productPriceTypeId" title="${uiLabelMap.ProductPriceType}">
-            <display-entity entity-name="ProductPriceType" />
-        </field>
-        <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}">
-            <display />
-        </field>
-        <field name="currencyUomId" title="${uiLabelMap.ProductCurrency}">
-            <display />
-        </field>
-        <field name="productStoreGroupId" title="${uiLabelMap.ProductProductStoreGroup}">
-            <display-entity entity-name="ProductStoreGroup" description="${productStoreGroupName}" />
-        </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}">
-            <display />
-        </field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}">
-            <display />
-        </field>
-        <field name="price" title="${uiLabelMap.ProductPrice}">
-            <display />
-        </field>
-        <field name="oldPrice">
-            <display />
-        </field>
-        <field name="changedByUserLogin" title="${uiLabelMap.ProductLastModifiedBy}">
-            <display />
-        </field>
-        <field name="changedDate">
-            <display />
         </field>
     </form>
 

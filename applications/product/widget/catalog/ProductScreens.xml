@@ -216,12 +216,12 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductPrices}">
-                            <include-form name="UpdateProductPrice" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleAddProductPrices}">
                             <label text="${uiLabelMap.ProductPricesWarning}"/>
                             <include-form name="AddProductPrice" location="component://product/widget/catalog/ProductForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleEditProductPrices}">
+                            <include-form name="UpdateProductPrice" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>
@@ -1440,6 +1440,7 @@ under the License.
                     <field-map field-name="productPriceTypeId" from-field="parameters.productPriceTypeId"/>
                     <field-map field-name="fromDate" from-field="parameters.fromDate"/>
                     <order-by field-name="fromDate"/>
+                    <order-by field-name="changedDate DESC"/>
                 </entity-and>
 
                 <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
@@ -1447,9 +1448,6 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                        <link target="EditProductPrices" text="${uiLabelMap.CommonBack}" style="${styles.button_default}">
-                            <parameter param-name="productId"/>
-                        </link>
                         <screenlet title="${uiLabelMap.PageTitleProductPricesHistory}">
                             <include-form name="ListProductPriceHistory" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>

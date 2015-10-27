@@ -254,24 +254,53 @@
 </@section>
 
 <@section title="Menus">
-<@menu type="tab">
-  <@menuitem type="link" text="Menu Button 1" />
-  <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
-  <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.color_green}">
-    <!-- nested menu item comment -->
-  </@menuitem>
-</@menu>
+  <@menu type="tab">
+    <@menuitem type="link" text="Menu Button 1" />
+    <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
+    <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.color_green}">
+      <!-- nested menu item comment -->
+    </@menuitem>
+  </@menu>
 
-<#assign menuItems = [
-  {"type":"link", "text":"Menu Tab 2", "disabled":true},
-  {"type":"link", "text":"Menu Tab 1", "href":"ofbizUrl://WebtoolsLayoutDemo"},
-  {"type":"link", "text":"Menu Tab 4", "contentClass":"+${styles.color_green}", "onClick":"javascript:alert('Clicked menu item!');"},
-  {"type":"text", "text":"Menu Tab 3 (text entry)", "nestedContent":"<!-- hidden nested menu item comment -->"}
-  {"type":"submit", "text":"Menu Tab 5 (submit)", "disabled":true}
-  {"type":"link", "text":"Menu Tab 6", "selected":true}
-  {"type":"link", "text":"Menu Tab 7", "active":true}
-]>
-<@menu type="subtab" items=menuItems sort=true sortDesc=true/>
+  <#assign menuItems = [
+    {"type":"link", "text":"Menu Tab 2", "disabled":true},
+    {"type":"link", "text":"Menu Tab 1", "href":"ofbizUrl://WebtoolsLayoutDemo"},
+    {"type":"link", "text":"Menu Tab 4", "contentClass":"+${styles.color_green}", "onClick":"javascript:alert('Clicked menu item!');"},
+    {"type":"text", "text":"Menu Tab 3 (text entry)", "nestedContent":"<!-- hidden nested menu item comment -->"}
+    {"type":"submit", "text":"Menu Tab 5 (submit)", "disabled":true}
+    {"type":"link", "text":"Menu Tab 6", "selected":true}
+    {"type":"link", "text":"Menu Tab 7", "active":true}
+  ]>
+  <@menu type="subtab" items=menuItems sort=true sortDesc=true/>
+
+  <#macro menuContent menuArgs>
+    <@menu class="+mymenu" args=menuArgs>
+      <@menuitem type="link" text="Menu Button 1" />
+      <@menuitem type="link" text="Menu Button 2" />
+    </@menu>
+  </#macro>
+  <@section title="Section with macro menu def" menuContent=menuContent>
+    [section content]
+  </@section>
+
+  <#assign menuContent = {"type":"section", "items":[
+    {"type":"link", "text":"Menu Button 1" },
+    {"type":"link", "text":"Menu Button 2" }
+  ]}>
+  <@section title="Section with hash/map menu def" menuContent=menuContent>
+    [section content]
+  </@section>
+
+  <#assign menuContent>
+    <@menu type="section" inlineItems=true>
+      <@menuitem type="link" text="Menu Button 1" />
+      <@menuitem type="link" text="Menu Button 2" />
+    </@menu>
+  </#assign>
+  <@section title="Section with string/html menu def (old)" menuContent=menuContent>
+   [section content]
+  </@section>
+
 </@section>
 
 <#-- The titleStyle usage here is a demo of what can be set in <label style="..." /> in screens,

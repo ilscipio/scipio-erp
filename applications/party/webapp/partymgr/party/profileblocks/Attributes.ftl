@@ -17,13 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <#assign menuContent>
-    <@menu type="section" inlineItems=true>
+  <#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
     <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
       <@menuitem type="link" href=makeOfbizUrl("editPartyAttribute?partyId=${party.partyId!}") text="${uiLabelMap.CommonNew}" />
     </#if>
     </@menu>
-  </#assign>
+  </#macro>
   <@section id="partyAttributes" title="${uiLabelMap.PartyAttributes}" menuContent=menuContent>
       <#if attributes?has_content>
         <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->

@@ -26,8 +26,8 @@ under the License.
       <#assign allowPriceChange = true/>
   </#if>
 
-  <#assign menuContent>
-    <@menu type="section" inlineItems=true>
+  <#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
     <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
       <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
         <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelSelectedOrderItems')}';document.updateItemInfo.submit()" text="${uiLabelMap.OrderCancelSelectedItems}" />
@@ -36,7 +36,7 @@ under the License.
       </#if>
     </#if>
     </@menu>
-  </#assign>
+  </#macro>
   <@section title="${uiLabelMap.OrderOrderItems}" menuContent=menuContent>
 
         <#if !orderItemList?has_content>

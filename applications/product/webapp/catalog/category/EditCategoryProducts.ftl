@@ -17,15 +17,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
   <#if activeOnly>
     <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=false") text="${uiLabelMap.ProductActiveAndInactive}" />
   <#else>
     <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=true") text="${uiLabelMap.ProductActiveOnly}" />
   </#if>
   </@menu>
-</#assign>
+</#macro>
 <@section title="${uiLabelMap.PageTitleEditCategoryProducts}" menuContent=menuContent>
       <#macro categoryProductsNav>
         <@menu type="button">

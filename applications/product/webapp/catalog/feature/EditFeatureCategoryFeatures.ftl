@@ -16,11 +16,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text="${uiLabelMap.ProductCreateNewFeature}" contentClass="+create" />
   </@menu>
-</#assign>
+</#macro>
 <@section title="${uiLabelMap.ProductEditFeaturesForFeatureCategory} \"${(curProductFeatureCategory.description)!}\"" menuContent=menuContent>
     <form action="<@ofbizUrl>QuickAddProductFeatures</@ofbizUrl>" method="post">
       <div>

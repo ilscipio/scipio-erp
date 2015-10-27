@@ -16,11 +16,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("EditWorkEffort?workEffortTypeId=TASK&amp;currentStatusId=CAL_NEEDS_ACTION") text="${uiLabelMap.WorkEffortNewTask}" contentClass="+create" />
   </@menu>
-</#assign>
+</#macro>
 <@section title="${uiLabelMap.PageTitleViewActivityAndTaskList}" menuContent=menuContent>
 
   <@section title="${uiLabelMap.WorkEffortAssignedTasks}">

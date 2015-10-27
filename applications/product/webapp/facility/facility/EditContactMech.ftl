@@ -17,14 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("authview/${donePage}?facilityId=${facilityId}") text="${uiLabelMap.CommonGoBack}" />
   <#if (mechMap.contactMechTypeId)?has_content && (mechMap.contactMech)?has_content>
     <@menuitem type="link" href=makeOfbizUrl("EditContactMech?facilityId=${facilityId}") text="${uiLabelMap.ProductNewContactMech}" />
   </#if>
   </@menu>
-</#assign>
+</#macro>
 <@section menuContent=menuContent>
 
 <#if !mechMap.facilityContactMech?? && mechMap.contactMech??>

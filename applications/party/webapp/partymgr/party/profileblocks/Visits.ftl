@@ -17,11 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <#assign menuContent>
-    <@menu type="section" inlineItems=true>
+  <#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("findVisits?partyId=${partyId}") text="${uiLabelMap.CommonListAll}" />
     </@menu>
-  </#assign>
+  </#macro>
   <@section id="partyVisits" title="${uiLabelMap.PartyVisits}" menuContent=menuContent>
       <#if visits?has_content>
         <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->

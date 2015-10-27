@@ -18,13 +18,13 @@ under the License.
 -->
 
 <#if hasPermission>
-  <#assign menuContent>
-    <@menu type="section" inlineItems=true>
+  <#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
     <#if orderId??>
       <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}") text="${uiLabelMap.OrderViewOrder}" />
     </#if>
     </@menu>
-  </#assign>
+  </#macro>
   <@section title="${uiLabelMap.OrderScheduleDelivery}" menuContent=menuContent>
     <#if orderId?has_content>
       ${updatePODeliveryInfoWrapper.renderFormString(context)}

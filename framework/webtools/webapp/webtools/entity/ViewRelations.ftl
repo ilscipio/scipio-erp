@@ -16,11 +16,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0") text="${uiLabelMap.WebtoolsBackToFindScreen}" />
   </@menu>
-</#assign>
+</#macro>
 <@section title="${uiLabelMap.WebtoolsRelations}">
     <#if hasViewPermission>
         <@heading>${uiLabelMap.WebtoolsForEntity}: ${entityName}</@heading>

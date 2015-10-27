@@ -16,15 +16,15 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
   <#if parameters.showAllFacilities??>
     <@menuitem type="link" href="EditProductInventoryItems?productId=${productId}" text="${uiLabelMap.ProductShowProductFacilities}" />
   <#else>
     <@menuitem type="link" href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" text="${uiLabelMap.ProductShowAllFacilities}" />
   </#if>
   </@menu>
-</#assign>
+</#macro>
 <@section title="${uiLabelMap.ProductInventorySummary}" menuContent=menuContent>
   <#if product??>
         <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->

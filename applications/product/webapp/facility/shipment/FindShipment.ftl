@@ -29,15 +29,15 @@ function lookupShipments() {
 }
 // -->
 </script>
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
   <#if requestParameters.facilityId?has_content>
     <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?facilityId=${requestParameters.facilityId}") text="${uiLabelMap.ProductQuickShipOrder}" />
   </#if>
     <@menuitem type="link" href=makeOfbizUrl("EditShipment") text="${uiLabelMap.ProductNewShipment}" />
     <#--<@menuitem type="link" href="javascript:lookupShipments();" text="${uiLabelMap.ProductFindShipment}" />-->
   </@menu>
-</#assign>
+</#macro>
 <@section id="findOrders" menuContent=menuContent> <#-- title="${uiLabelMap.ProductFindShipmentTitle}" -->
         <form method="post" name="lookupShipmentForm" action="<@ofbizUrl>FindShipment</@ofbizUrl>">
             <input type="hidden" name="lookupFlag" value="Y" />
@@ -121,15 +121,15 @@ function lookupShipments() {
 </@section>
 
 <#if shipmentList??>
-  <#assign menuContent>
-    <@menu type="section" inlineItems=true>
+  <#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
     <#if (0 < shipmentList?size)>
       <@menuitem type="link" href=makeOfbizUrl("FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${paramList}&amp;lookupFlag=Y") text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 1)) contentClass="+nav-previous" />
       <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${shipmentList?size}" />
       <@menuitem type="link" href=makeOfbizUrl("FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${paramList}&amp;lookupFlag=Y") text="${uiLabelMap.CommonPrevious}" disabled=(!(shipmentList?size > highIndex)) contentClass="+nav-next" />
     </#if>
     </@menu>
-  </#assign>
+  </#macro>
   <@section id="findOrders_2" title="${uiLabelMap.ProductShipmentsFound}" menuContent=menuContent>
       <#if shipmentList?has_content>  
         <@table type="data-list" autoAltRows=true cellspacing="0" cellpadding="2" class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->

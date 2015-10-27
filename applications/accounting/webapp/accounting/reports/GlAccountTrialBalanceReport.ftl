@@ -20,11 +20,11 @@ under the License.
 -->
 
     <#if glAcctgTrialBalanceList?has_content>
-        <#assign menuContent>
-          <@menu type="section" inlineItems=true>
+        <#macro menuContent menuArgs={}>
+          <@menu args=menuArgs>
             <@menuitem type="link" href=makeOfbizUrl("GlAccountTrialBalanceReportPdf.pdf?organizationPartyId=${organizationPartyId}&amp;timePeriod=${parameters.timePeriod}&amp;isPosted=${parameters.isPosted}&amp;glAccountId=${parameters.glAccountId}") text="${uiLabelMap.AccountingInvoicePDF}" target="_BLANK" />
           </@menu>
-        </#assign>
+        </#macro>
         <@section menuContent=menuContent>
             <form name="glAccountTrialBalanceReport" id="glAccountTrialBalanceReport">
                 <@heading>${uiLabelMap.AccountingSubsidiaryLedger}</@heading>

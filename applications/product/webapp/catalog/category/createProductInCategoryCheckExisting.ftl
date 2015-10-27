@@ -17,13 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
   <#if productCategoryId?has_content>
     <@menuitem type="link" href=makeOfbizUrl("EditCategory?productCategoryId=${productCategoryId}") text="[${uiLabelMap.ProductBackToEditCategory}]" />
   </#if>
   </@menu>
-</#assign>
+</#macro>
 <#assign sectionTitle>
     <b>${uiLabelMap.ProductCheckingForExistingProductInCategory} <#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [${uiLabelMap.CommonId}:${productCategoryId!}]</b>
     <#if productFeatureAndTypeDatas?has_content>

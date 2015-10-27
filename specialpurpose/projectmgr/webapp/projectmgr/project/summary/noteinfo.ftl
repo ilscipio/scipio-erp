@@ -16,15 +16,15 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-  <#assign menuContent>
-    <@menu type="section" inlineItems=true>
+  <#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
       <#--if project?has_content>
         <@menuitem type="link" href=makeOfbizUrl("newNotesForProject?workEffortId=${project.workEffortId!}&amp;showForm=Y") text="${uiLabelMap.ProjectMgrNotesCreateNew}" />
       <#else>
         <@menuitem type="link" href=makeOfbizUrl("newNotesForTask?workEffortId=${task.workEffortId!}&amp;showForm=Y") text="${uiLabelMap.ProjectMgrNotesCreateNew}" />
       </#if-->
     </@menu>
-  </#assign>
+  </#macro>
   <@section title="${uiLabelMap.WorkEffortNotes}" menuContent=menuContent>
       <@table type="generic" width="100%" border="0" cellspacing="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <@tr>

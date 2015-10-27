@@ -51,11 +51,11 @@ under the License.
 <#if shipGroups?has_content && (!orderHeader.salesChannelEnumId?? || orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL")>
   <#if parameters.view?has_content && parameters.view = "OISGA">
   <#-- New in Ofbiz 14.12 -->
-  <#assign menuContent>
-    <@menu type="section" inlineItems=true>
+  <#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
        <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}") text="${uiLabelMap.OrderShipmentInformationByOISG}" />
     </@menu>
-  </#assign>
+  </#macro>
   <@section title="${uiLabelMap.OrderShipmentInformation}" menuContent=menuContent>
       <@table type="data-complex" cellspacing="0" role="grid"> <#-- orig: class="basic-table" -->
         <@thead>
@@ -209,8 +209,8 @@ under the License.
 <#list shipGroups as shipGroup>
   <#assign shipmentMethodType = shipGroup.getRelatedOne("ShipmentMethodType", false)!>
   <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress", false)!>
-    <#assign menuContent>
-       <@menu type="section" inlineItems=true>
+    <#macro menuContent menuArgs={}>
+       <@menu args=menuArgs>
          <#--<@menuitem type="link" onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" text="&nbsp;" title="Collapse" />-->
          <@menuitem type="link" href=makeOfbizUrl("shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}") text="${uiLabelMap.OrderShipGroup} PDF" target="_BLANK" />
          <#-- Foundation: Button migrated from removed header to access OISGA -->
@@ -218,7 +218,7 @@ under the License.
            <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}&amp;view=OISGA") text="${uiLabelMap.OrderShipmentInformationByOrderItem}" />
          </#if>
        </@menu>
-    </#assign>
+    </#macro>
     <@section title="${uiLabelMap.OrderShipmentInformation} - ${shipGroup.shipGroupSeqId}" menuContent=menuContent>
     <div id="ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}">
           <form name="updateOrderItemShipGroup" method="post" action="<@ofbizUrl>updateShipGroupShipInfo</@ofbizUrl>">

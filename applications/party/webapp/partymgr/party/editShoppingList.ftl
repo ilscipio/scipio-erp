@@ -17,15 +17,15 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
     <@menuitem type="link" href="javascript:document.getElementById('createEmptyShoppingList').submit();" text="${uiLabelMap.CommonNew}">
       <form id="createEmptyShoppingList" action="<@ofbizUrl>createEmptyShoppingList</@ofbizUrl>" method="post">
         <input type="hidden" name="partyId" value="${partyId!}" />
       </form>
     </@menuitem>
   </@menu>
-</#assign>
+</#macro>
 <@section title="${uiLabelMap.PartyShoppingLists}" menuContent=menuContent>
     <#if shoppingLists?has_content>
       <form name="selectShoppingList" method="post" action="<@ofbizUrl>editShoppingList</@ofbizUrl>">
@@ -54,8 +54,8 @@ under the License.
 
 <#if shoppingList?has_content>
 
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
       <@menuitem type="link" href="javascript:document.updateList.submit();" text="${uiLabelMap.CommonSave}" />
       <@menuitem type="link" href="javascript:document.createQuoteFromShoppingListForm.submit()" text="${uiLabelMap.PartyCreateNewQuote}">
         <form method="post" name="createQuoteFromShoppingListForm" action="/ordermgr/control/createQuoteFromShoppingList">
@@ -66,7 +66,7 @@ under the License.
       <@menuitem type="link" href="/ordermgr/control/createCustRequestFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}" text="${uiLabelMap.PartyCreateNewCustRequest}" />
       <@menuitem type="link" href="/ordermgr/control/loadCartFromShoppingList?shoppingListId=${shoppingList.shoppingListId!}" text="${uiLabelMap.OrderNewOrder}" />
   </@menu>
-</#assign>
+</#macro>
 <@section title="${uiLabelMap.PartyShoppingListDetail} - ${shoppingList.listName}" menuContent=menuContent>
     <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
       <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}" />
@@ -119,11 +119,11 @@ under the License.
 </@section>
 
 <#if childShoppingListDatas?has_content>
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes") text="${uiLabelMap.PartyAddChildListsToCart}" />
   </@menu>
-</#assign>
+</#macro>
 <@section title="${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}" menuContent=menuContent>
     <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
       <@thead>
@@ -148,11 +148,11 @@ under the License.
 </@section>
 </#if>
 
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
 <#-- <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}") text="${uiLabelMap.PartyAddListToCart}" /> -->
   </@menu>
-</#assign>
+</#macro>
 <@section title="${uiLabelMap.PartyListItems} - ${shoppingList.listName}" menuContent=menuContent>
     <#if shoppingListItemDatas?has_content>
         <#-- Pagination -->

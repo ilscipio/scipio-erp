@@ -19,8 +19,8 @@ under the License.
 
 <#assign extInfo = parameters.extInfo?default("N")>
 
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
   <#if parameters.hideFields?default("N") == "Y">
     <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N${paramList}") text="${uiLabelMap.CommonShowLookupFields}" />
   <#else>
@@ -28,7 +28,7 @@ under the License.
     <@menuitem type="link" href="javascript:document.lookupparty.submit();" text="${uiLabelMap.PartyLookupParty}" />
   </#if>
   </@menu>
-</#assign>
+</#macro>
 <@section id="findEmployee" title="${uiLabelMap.CommonFind} ${uiLabelMap.HumanResEmployee}" menuContent=menuContent>
     <#if parameters.hideFields?default("N") != "Y">
       <#-- NOTE: this form is setup to allow a search by partial partyId or userLoginId; to change it to go directly to
@@ -121,15 +121,15 @@ under the License.
   </#if>
     
   <#if partyList??>
-    <#assign menuContent>
-      <@menu type="section" inlineItems=true>
+    <#macro menuContent menuArgs={}>
+      <@menu args=menuArgs>
       <#if (partyListSize > 0)>
         <@menuitem type="link" href=makeOfbizUrl("findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${parameters.hideFields?default('N')}${paramList}") text="${uiLabelMap.CommonNext}" contentClass="+nav-next" disabled=(!(partyListSize > highIndex)) />
         <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${partyListSize}" />
         <@menuitem type="link" href=makeOfbizUrl("findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${parameters.hideFields?default('N')}${paramList}") text="${uiLabelMap.CommonPrevious}" contentClass="+nav-previous" disabled=(!(viewIndex > 0)) />
       </#if>
       </@menu>
-    </#assign>
+    </#macro>
     <@section id="findEmployeeResults" title="${uiLabelMap.PartyPartiesFound}" menuContent=menuContent>
     <#if partyList?has_content>
         <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->

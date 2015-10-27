@@ -19,13 +19,13 @@ under the License.
 
 <#if orderHeader?has_content>
 
-  <#assign menuContent>
-    <@menu type="section" inlineItems=true>
+  <#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
     <#if security.hasEntityPermission("ORDERMGR", "_NOTE", session)>
       <@menuitem type="link" href=makeOfbizUrl("createnewnote?${paramString}") text="${uiLabelMap.OrderNotesCreateNew}" />
     </#if>
     </@menu>
-  </#assign>
+  </#macro>
   <@section title="${uiLabelMap.OrderNotes}" menuContent=menuContent>
  
   <#if orderNotes?has_content>

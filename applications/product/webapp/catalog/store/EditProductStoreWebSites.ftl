@@ -16,11 +16,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
     <@menuitem type="link" href="/content/control/EditWebSite?productStoreId=${productStoreId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" text="${uiLabelMap.ProductCreateNewProductStoreWebSite}" />
   </@menu>
-</#assign>
+</#macro>
 <@section title="${uiLabelMap.PageTitleEditProductStoreWebSites}" menuContent=menuContent>
         <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
           <@thead>

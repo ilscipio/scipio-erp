@@ -24,15 +24,15 @@ under the License.
     }
 </script>
 
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
   <#if picklistInfoList?has_content && (0 < picklistInfoList?size)>
     <@menuitem type="link" href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')" text="${uiLabelMap.CommonNext}" disabled=(!(picklistCount > highIndex)) />
     <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${picklistCount}" />
     <@menuitem type="link" href="javascript:paginateOrderList('${viewSize}', '${viewIndex-1}')" text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 0)) />
   </#if>
   </@menu>
-</#assign>
+</#macro>
 <@section title="${uiLabelMap.ProductPicklistManage}" menuContent=menuContent>
 
   <form name="paginationForm" method="post" action="<@ofbizUrl>PicklistManage</@ofbizUrl>">

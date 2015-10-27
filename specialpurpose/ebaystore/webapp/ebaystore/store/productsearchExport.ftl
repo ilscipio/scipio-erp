@@ -192,14 +192,14 @@ under the License.
         }
     }
 </script>
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("clearExpListing?productStoreId=${productStoreId!}") text="Clear Listing" />
     <#if isExportValid?? && isExportValid == "true">
       <@menuitem type="link" href=makeOfbizUrl("exportListingToEbay?productStoreId=${productStoreId!}") text="Export Products Listing" />
     </#if>
   </@menu>
-</#assign>
+</#macro>
 <@section title="Items to export" menuContent=menuContent>
 <form id="ProductsExportToEbay" method="post" action="<@ofbizUrl>exportProductsFromEbayStore</@ofbizUrl>" name="ProductsExportToEbay">
     <input type="hidden" name="productStoreId" value="${productStoreId!}"/>

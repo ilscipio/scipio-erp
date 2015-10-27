@@ -16,13 +16,13 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
   <#if (maySelectItems!"N") == "Y">
     <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" text="${uiLabelMap.OrderAddAllToCart}" />
   </#if>
   </@menu>
-</#assign>
+</#macro>
 
 <@section title="${uiLabelMap.OrderOrderQuoteItems}" menuContent=menuContent>
 

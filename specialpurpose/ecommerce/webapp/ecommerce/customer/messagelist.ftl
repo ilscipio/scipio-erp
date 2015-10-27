@@ -59,15 +59,15 @@ under the License.
             </#if>
         </div>
 -->
-<#assign menuContent>
-    <@menu type="section-inline" inlineItems=true>
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
         <#if parameters.showSent! == "true">
           <@menuitem type="link" href=makeOfbizUrl("messagelist") text="${uiLabelMap.EcommerceViewReceivedOnly}" />
         <#else>
           <@menuitem type="link" href=makeOfbizUrl("messagelist?showSent=true") text="${uiLabelMap.EcommerceViewSent}" />
         </#if>
     </@menu>
-</#assign>
+</#macro>
 <@section title="${uiLabelMap.CommonMessages}" menuContent=menuContent menuLayout="inline-title" class="+screenlet">
         <@table width="100%" border="0" cellpadding="1">
           <#if (!receivedCommunicationEvents?has_content && !sentCommunicationEvents?has_content)>

@@ -24,15 +24,15 @@ under the License.
   <input name="finAccountId" type="hidden" value="${finAccountId}"/>
   <input name="glReconciliationId" type="hidden" value="${glReconciliationId}"/>
   
-  <#assign menuContent>
-    <@menu type="section" inlineItems=true>
+  <#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
       <@menuitem type="link" href=makeOfbizUrl("EditFinAccountReconciliations?finAccountId=${finAccountId}&amp;glReconciliationId=${glReconciliationId}") text="${uiLabelMap.CommonEdit}" />
       <#assign finAcctTransCondList = delegator.findByAnd("FinAccountTrans", {"glReconciliationId" : glReconciliationId, "statusId" : "FINACT_TRNS_CREATED"}, null, false)>
     <#if finAcctTransCondList?has_content>
       <@menuitem type="link" href="javascript:document.CancelBankReconciliationForm.submit();" text="${uiLabelMap.AccountingCancelBankReconciliation}" />
     </#if>
     </@menu>
-  </#assign>
+  </#macro>
   <@section title="${uiLabelMap.AccountingCurrentBankReconciliation}" menuContent=menuContent>
       
   </@section>

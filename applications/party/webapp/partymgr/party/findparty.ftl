@@ -35,8 +35,8 @@ under the License.
   <#assign createUrl = "createnew"/>
 </#if>
 
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("${createUrl}") text="${uiLabelMap.CommonNew}" contentClass="+create" />
 <#if partyList?has_content>    
   <#if hideFields == "Y">
@@ -46,7 +46,7 @@ under the License.
   </#if>
 </#if>  
   </@menu>
-</#assign>
+</#macro>
 <@section menuContent=menuContent>
   
     <div id="findPartyParameters" <#if hideFields != "N"> style="display:none" </#if> >

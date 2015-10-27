@@ -17,11 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign sectionTitle>${uiLabelMap.ProductReceiveReturn} ${uiLabelMap.CommonInto} <#if facility?has_content>"${facility.facilityName?default("Not Defined")}"</#if> [${uiLabelMap.CommonId}:${facility.facilityId!}]</#assign>
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("EditFacility") text="${uiLabelMap.ProductNewFacility}" />
   </@menu>
-</#assign>
+</#macro>
 <@section title=sectionTitle menuContent=menuContent>
         
         <#-- Receiving Results -->

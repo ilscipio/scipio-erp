@@ -100,8 +100,8 @@ function submitFindForm(val){
 <input type="hidden" name="viewSize" value="${viewSize}"/>
 <input type="hidden" name="viewIndex" value="${viewIndex}"/>
 
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
   <#if (requestParameters.hideFields!"N") == "Y">
     <@menuitem type="link" href="javascript:document.lookupandhidefields${requestParameters.hideFields}.submit()" text="${uiLabelMap.CommonShowLookupFields}" />
   <#else>
@@ -112,7 +112,7 @@ function submitFindForm(val){
     <@menuitem type="link" href="javascript:lookupOrders(true);" text="${uiLabelMap.OrderLookupOrder}" />
   </#if>
   </@menu>
-</#assign>
+</#macro>
 <#assign showFields = ((parameters.hideFields!"N") != "Y")>
 <@section menuContent=menuContent hasContent=showFields>
 <#if showFields>

@@ -49,11 +49,11 @@ under the License.
   </form>
 </@section>  
   
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}") text="${uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked}" />
   </@menu>
-</#assign>
+</#macro>
 <@section title="${uiLabelMap.ProductFindOrdersToPick}" menuContent=menuContent>
   <#if pickMoveInfoList?has_content>
     <@table type="data-complex" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->

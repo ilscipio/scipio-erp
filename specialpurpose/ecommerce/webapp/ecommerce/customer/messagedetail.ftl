@@ -34,14 +34,14 @@ under the License.
             <a href="<@ofbizUrl>messagelist</@ofbizUrl>" class="submenutextright">${uiLabelMap.EcommerceViewList}</a>
         </div>
 -->
-<#assign menuContent>
-    <@menu type="section-inline" inlineItems=true>
+<#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
         <#if (communicationEvent.partyIdFrom! != (userLogin.partyId)!)>
           <@menuitem type="link" href=makeOfbizUrl("newmessage?communicationEventId=${communicationEvent.communicationEventId}") text="${uiLabelMap.PartyReply}" />
         </#if>
         <@menuitem type="link" href=makeOfbizUrl("messagelist") text="${uiLabelMap.EcommerceViewList}" />
     </@menu>
-</#assign>
+</#macro>
 <@section title="${uiLabelMap.EcommerceReadMessage}" menuContent=menuContent menuLayout="inline-title" class="+screenlet">
         <@table width="100%" border="0" cellpadding="1">
           <@tr><@td>&nbsp;</@td></@tr>

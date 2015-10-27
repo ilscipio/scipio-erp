@@ -210,33 +210,33 @@ under the License.
   <#-- new question / category -->
   <#if requestParameters.newCategory?default("N") == "Y">
     <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestionCategory}</#assign>
-    <#assign menuContent>
-      <@menu type="section" inlineItems=true>  
+    <#macro menuContent menuArgs={}>
+      <@menu args=menuArgs>  
         <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}") text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}" />
       </@menu>
-    </#assign>
+    </#macro>
   <#else>
     <#if surveyQuestionId?has_content>
       <#assign sectionTitle>${uiLabelMap.CommonEdit} ${uiLabelMap.ContentSurveyQuestion}</#assign>
-      <#assign menuContent>
-        <@menu type="section" inlineItems=true>  
+      <#macro menuContent menuArgs={}>
+        <@menu args=menuArgs>  
           <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}") text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion}" />
         </@menu>
-      </#assign>
+      </#macro>
     <#else>
       <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestion}</#assign>
-      <#assign menuContent>
-        <@menu type="section" inlineItems=true>  
+      <#macro menuContent menuArgs={}>
+        <@menu args=menuArgs>  
         </@menu>
-      </#assign>
+      </#macro>
     </#if>
 
-    <#assign menuContent>
-      <@menu type="section" inlineItems=true>
+    <#macro menuContent menuArgs={}>
+      <@menu args=menuArgs>
         ${menuContent}
         <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;newCategory=Y") text="${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyQuestion} ${uiLabelMap.ContentSurveryCategory}" />
       </@menu>
-    </#assign>
+    </#macro>
   </#if>
 <@section title=sectionTitle menuContent=menuContent>
   <#if requestParameters.newCategory?default("N") == "Y">
@@ -277,17 +277,17 @@ under the License.
 
     <#if !surveyQuestionOption?has_content>
       <#assign sectionTitle>${uiLabelMap.ContentSurveyCreateQuestionOption}</#assign>
-      <#assign menuContent>
-        <@menu type="section" inlineItems=true>
+      <#macro menuContent menuArgs={}>
+        <@menu args=menuArgs>
         </@menu>
-      </#assign>
+      </#macro>
     <#else>
       <#assign sectionTitle>${uiLabelMap.ContentSurveyEditQuestionOption}</#assign>
-      <#assign menuContent>
-        <@menu type="section" inlineItems=true>
+      <#macro menuContent menuArgs={}>
+        <@menu args=menuArgs>
           <@menuitem type="link" href=makeOfbizUrl("EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionOption.surveyQuestionId}") text="[${uiLabelMap.CommonNew} ${uiLabelMap.ContentSurveyOption}]" />
         </@menu>
-      </#assign>
+      </#macro>
     </#if>
   <@section title=sectionTitle menuContent=menuContent>
     ${createSurveyOptionWrapper.renderFormString()}

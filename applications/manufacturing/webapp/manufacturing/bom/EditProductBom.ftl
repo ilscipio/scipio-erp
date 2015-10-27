@@ -28,13 +28,13 @@ function lookupBom() {
 </script>
 
 <#assign sectionTitle>${uiLabelMap.PageTitleEditProductBom}<#if product??> ${(product.internalName)!}</#if>&nbsp;[${uiLabelMap.CommonId}&nbsp;${productId!}]</#assign>
-<#assign menuContent>
-  <@menu type="section" inlineItems=true>
+<#macro menuContent menuArgs={}>
+  <@menu args=menuArgs>
   <#if product?has_content>
     <@menuitem type="link" href=makeOfbizUrl("BomSimulation?productId=${productId}&amp;bomType=${productAssocTypeId}") text="${uiLabelMap.ManufacturingBomSimulation}" />
   </#if>
   </@menu>
-</#assign>
+</#macro>
 <@section title=sectionTitle menuContent=menuContent>
     
   <form name="searchform" action="<@ofbizUrl>UpdateProductBom</@ofbizUrl>#topform" method="post">

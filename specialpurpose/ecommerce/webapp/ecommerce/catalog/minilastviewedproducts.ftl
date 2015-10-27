@@ -21,14 +21,14 @@ under the License.
 <#assign lastViewedProducts = sessionAttributes.lastViewedProducts!/>
 <#if lastViewedProducts?has_content>
   <#if (lastViewedProducts?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(lastViewedProducts?size-1)/></#if>
-  <#assign menuContent>
-    <@menu type="section" inlineItems=true>
+  <#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
         <@menuitem type="link" href=makeOfbizUrl("clearLastViewed") text="[${uiLabelMap.CommonClear}]" />
         <#if (lastViewedProducts?size > maxToShow)>
           <@menuitem type="link" href=makeOfbizUrl("lastviewedproducts") text="[${uiLabelMap.CommonMore}]" />
         </#if>
     </@menu>
-  </#assign>
+  </#macro>
   <@section title="${uiLabelMap.EcommerceLastProducts}" menuContent=menuContent id="minilastviewedproducts" class="+screenlet">
       <ul>
         <#list lastViewedProducts[0..limit] as productId>

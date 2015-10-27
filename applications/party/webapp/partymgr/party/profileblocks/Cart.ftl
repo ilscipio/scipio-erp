@@ -18,8 +18,8 @@ under the License.
 -->
 
   <#if savedCartItems?has_content>
-    <#assign menuContent>
-      <@menu type="section" inlineItems=true>
+    <#macro menuContent menuArgs={}>
+      <@menu args=menuArgs>
       <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
         <#if savedCartListId?has_content>
           <#assign listParam = "&amp;shoppingListId=" + savedCartListId>
@@ -29,7 +29,7 @@ under the License.
         <@menuitem type="link" href=makeOfbizUrl("editShoppingList?partyId=${partyId}${listParam}") text="${uiLabelMap.CommonEdit}" />
       </#if>
       </@menu>
-    </#assign>
+    </#macro>
     <@section id="partyShoppingCart" title="${uiLabelMap.PartyCurrentShoppingCart}">
         <#if savedCartItems?has_content>
           <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->

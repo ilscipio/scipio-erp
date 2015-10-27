@@ -358,11 +358,11 @@ under the License.
       </@nav>
   </#if>
 
-  <#assign menuContent>
-    <@menu type="section" inlineItems=true>
+  <#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
       <@menuitem type="link" href=makeOfbizUrl("${url}") text="${uiLabelMap.CommonListAll}" />
     </@menu>
-  </#assign>
+  </#macro>
   <@section menuContent=menuContent>
       <#--
       ${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName?default(uiLabelMap.CommonNA)} (${servicesFoundCount} ${uiLabelMap.CommonFound})-->

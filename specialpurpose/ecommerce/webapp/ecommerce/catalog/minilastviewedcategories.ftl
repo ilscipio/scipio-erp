@@ -21,11 +21,11 @@ under the License.
 <#assign lastViewedCategories = sessionAttributes.lastViewedCategories!/>
 <#if lastViewedCategories?has_content>
   <#if (lastViewedCategories?size > maxToShow)><#assign limit=maxToShow/><#else><#assign limit=(lastViewedCategories?size-1)/></#if>
-  <#assign menuContent>
-    <@menu type="section" inlineItems=true>
+  <#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
         <@menuitem type="link" href=makeOfbizUrl("clearLastViewed") text="[${uiLabelMap.CommonClear}]" />
     </@menu>      
-  </#assign>
+  </#macro>
   <@section title="${uiLabelMap.EcommerceLastCategories}" menuContent=menuContent id="minilastviewedcategories" class="+screenlet">
       <ul class="browsecategorylist">
         <#list lastViewedCategories[0..limit] as categoryId>

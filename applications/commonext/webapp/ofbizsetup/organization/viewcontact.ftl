@@ -19,13 +19,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-  <#assign menuContent>
-    <@menu type="section" inlineItems=true>
+  <#macro menuContent menuArgs={}>
+    <@menu args=menuArgs>
         <#--if security.hasEntityPermission("PARTYMGR", "_CREATE", session) || userLogin.partyId == partyId>
           <@menuitem type="link" href=makeOfbizUrl("editcontactmech?partyId=${partyId}") text="${uiLabelMap.CommonCreateNew}" />
         </#if-->
     </@menu>
-  </#assign>
+  </#macro>
   <@section id="partyContactInfo" title="${uiLabelMap.PartyContactInformation}" menuContent=menuContent>
       <#if contactMeches?has_content>
         <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->

@@ -3376,16 +3376,11 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
                       alternatively, the items can be specified as nested content.
     preItems        = special-case list of hashes of items, added before items and #nested.
                       excluded from sorting.
-                      avoid use unless specific need; may be needed by cato menu handling.
-                      **SPECIAL**: this can also be specified as the #global variable catoMenuPreItems,
-                          which if present is read and unset by macro (does not work on nested menus).
-                          force-disabled if preItems==false.
+                      templates should generally avoid use unless specific need, but may be used by other macros.
     postItems       = special-case list of hashes of items, added after items and #nested
                       excluded from sorting.
                       avoid use unless specific need; may be needed by cato menu handling.
-                      **SPECIAL**: this can also be specified as the #global variable catoMenuPostItems,
-                          which if present is read and unset by macro (does not work on nested menus).
-                          force-disabled if postItems==false.
+                      templates should generally avoid use unless specific need, but may be used by other macros.
     sort,
     sortBy,
     sortDesc        = items sorting behavior; will only work if items are specified
@@ -3412,11 +3407,6 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#local nestedFirst = inlineArgs.nestedFirst!args.nestedFirst!false>
   <#local htmlWrap  = inlineArgs.htmlWrap!args.htmlWrap!"ul"/>
   <#t>
-  <#local preItemsGlobal = catoMenuPreItems!"">
-  <#global catoMenuPreItems = "">
-  <#local postItemsGlobal = catoMenuPostItems!"">
-  <#global catoMenuPostItems = "">
-  <#t>
   <#local prevMenuInfo = catoCurrentMenuInfo!>
   <#local prevMenuItemIndex = catoCurrentMenuItemIndex!>
   <#local styleName = type?replace("-","_")>
@@ -3438,11 +3428,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     <#if preItems?is_sequence>
       <#list preItems as item>
         <@menuitem args=item />
-      </#list>
-    <#elseif preItemsGlobal?is_sequence>
-      <#list preItemsGlobal as item>
-        <@menuitem args=item />
-      </#list>      
+      </#list>    
     </#if>
   </#if>
   <#if !(items?is_boolean && items == false)>
@@ -3470,10 +3456,6 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#if !(postItems?is_boolean && postItems == false)>
     <#if postItems?is_sequence>
       <#list postItems as item>
-        <@menuitem args=item />
-      </#list>
-    <#elseif postItemsGlobal?is_sequence>
-      <#list postItemsGlobal as item>
         <@menuitem args=item />
       </#list>
     </#if>

@@ -732,6 +732,9 @@ earlier in macro:
   <#local addClass = parseAddClassArg(class)>
   <#local class = parseClassArg(class, "my-macro-default")>
 where my-macro-default is what you'd have had as arg default in the macro def
+
+TODO/FIXME: review what should happen when have two class args, e.g. one from inlineArgs and one from args map,
+if should combine or inlineArgs always overrides.
 -->
 
 <#-- get combined classes string with additionals/boolean logic, use default as needed,

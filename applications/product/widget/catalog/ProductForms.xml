@@ -879,10 +879,10 @@ under the License.
             </drop-down>
         </field>
         <field name="availableFromDate" use-when="supplierProduct==null">
-            <date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.nowTimestamp()}"/>
+            <date-time type ="date"/>
         </field>
         <field name="availableFromDate" use-when="supplierProduct!=null">
-            <display/>
+            <display type="date"/>
         </field>
         <field name="minimumOrderQuantity" use-when="supplierProduct==null">
             <text default-value="0" size="5"/>
@@ -890,7 +890,7 @@ under the License.
         <field name="minimumOrderQuantity" use-when="supplierProduct!=null">
             <display/>
         </field>
-        <field name="currencyUomId" title="${uiLabelMap.ProductCurrencyUomId}" use-when="supplierProduct==null">
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}" use-when="supplierProduct==null">
             <drop-down allow-empty="false" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
@@ -898,7 +898,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="currencyUomId" title="${uiLabelMap.ProductCurrencyUomId}" use-when="supplierProduct!=null">
+        <field name="currencyUomId" title="${uiLabelMap.CommonCurrency}" use-when="supplierProduct!=null">
             <display-entity entity-name="Uom" key-field-name="uomId"/>
         </field>
         <field name="supplierPrefOrderId">
@@ -933,6 +933,7 @@ under the License.
         <field use-when="supplierProduct == null" name="submitAction" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
         <field use-when="supplierProduct != null" name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
+    
     <form name="ListSupplierProducts" type="list" target="updateSupplierProduct" title="" list-name="productSuppliers"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <field name="partyId" title="${uiLabelMap.ProductSupplier}">
@@ -943,7 +944,7 @@ under the License.
             </display-entity>
         </field>
         <field name="supplierProductId"><display/></field>
-        <field name="minimumOrderQuantity" title="${uiLabelMap.ProductMinimumOrderQuantity}" sort-field="true">
+        <field name="minimumOrderQuantity" title="${uiLabelMap.ProductMinimumOrderQuantity}" widget-area-style="amount" title-area-style="align-right" sort-field="true">
             <display/>
         </field>
         <field name="orderQtyIncrements" title="${uiLabelMap.ProductOrderQtyIncrements}" sort-field="true">
@@ -952,14 +953,14 @@ under the License.
         <field name="supplierPrefOrderId">
             <display-entity entity-name="SupplierPrefOrder"/>
         </field>
-        <field name="availableFromDate" title="${uiLabelMap.ProductAvailableFromDate}" red-when="after-now" sort-field="true"><display/></field>
-        <field name="availableThruDate" title="${uiLabelMap.ProductAvailableThruDate}" red-when="before-now" sort-field="true"><display/></field>
+        <field name="availableFromDate" title="${uiLabelMap.ProductAvailableFromDate}" red-when="after-now" sort-field="true"><display type="date"/></field>
+        <field name="availableThruDate" title="${uiLabelMap.ProductAvailableThruDate}" red-when="before-now" sort-field="true"><display type="date"/></field>
         <field name="quantityUomId"><display-entity entity-name="Uom" key-field-name="uomId"/></field>
         <!-- field name="supplierCommissionPerc"><display/></field--><!-- Unused field, better use commission run using agreements in accounting -->
-        <field name="lastPrice" sort-field="true">
+        <field name="lastPrice" widget-area-style="amount" title-area-style="align-right" sort-field="true">
             <display type="currency" currency="${currencyUomId}"/>
         </field>
-        <field name="shippingPrice">
+        <field name="shippingPrice" widget-area-style="amount" title-area-style="align-right">
             <display type="currency" currency="${currencyUomId}"/>
         </field>
         <field name="editAction" title=" " widget-style="${styles.button_default}">
@@ -1448,10 +1449,10 @@ under the License.
     <!-- create ProductMaint-->
     <form name="AddProductMaint" type="single" target="createProductMaint" title=""
         header-row-style="header-row" default-table-style="${styles.table_basic}">
-        <auto-fields-service service-name="createProductMaint"/>
         <field name="productId"><hidden/></field>
         <field name="productMaintSeqId"><ignored/></field>
-        <field name="productMaintTypeId">
+        <field name="maintName" title="${uiLabelMap.CommonName}"><text/></field>
+        <field name="productMaintTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="false">
                 <entity-options entity-name="ProductMaintType" description="${description}">
                     <entity-order-by field-name="description"/>
@@ -1459,7 +1460,8 @@ under the License.
             </drop-down>
         </field>
         <field name="maintTemplateWorkEffortId"><lookup target-form-name="LookupWorkEffort"/></field>
-        <field name="intervalUomId">
+        <field name="intervalQuantity" title="${uiLabelMap.CommonQuantity}"><text/></field>
+        <field name="intervalUomId" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
                     <entity-order-by field-name="description"/>
@@ -1473,8 +1475,10 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
+        <field name="repeatCount" position="2"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
     <form name="ListProductMaints" type="list" list-name="productMaints" target="updateProductMaint"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <actions>
@@ -1485,14 +1489,14 @@ under the License.
         <auto-fields-service service-name="updateProductMaint"/>
         <field name="productId"><hidden/></field>
         <field name="productMaintSeqId"><hidden/></field>
-        <field name="productMaintTypeId">
+        <field name="productMaintTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true" >
                 <entity-options description="${description}" entity-name="ProductMaintType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="maintName"><text size="20"/></field>
+        <field name="maintName" title="${uiLabelMap.CommonName}"><text size="20"/></field>
         <field name="maintTemplateWorkEffortId"><lookup  target-form-name="LookupWorkEffort"/></field>
         <field name="intervalUomId">
             <drop-down allow-empty="false">

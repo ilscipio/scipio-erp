@@ -982,6 +982,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditProductAttributes">
         <section>
             <actions>
@@ -998,11 +999,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductAttributes}">
-                            <include-form name="UpdateProductAttribute" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.ProductAddProductAttributeNameValueType}">
                             <include-form name="AddProductAttribute" location="component://product/widget/catalog/ProductForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleEditProductAttributes}">
+                            <include-form name="UpdateProductAttribute" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

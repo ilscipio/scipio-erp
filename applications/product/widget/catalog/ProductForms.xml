@@ -2081,21 +2081,22 @@ under the License.
             </hyperlink>
         </field>
     </form>
+    
     <!-- ProductAttribute -->
     <form name="AddProductAttribute" type="single" target="createProductAttribute" title=""
         header-row-style="header-row" default-table-style="${styles.table_basic}">
-        <auto-fields-service service-name="createProductAttribute"/>
         <field name="productId"><hidden/></field>
-        <field name="attrName"></field>
+        <field name="attrName" title="${uiLabelMap.CommonName}"><text/></field>
+        <field name="attrType" title="${uiLabelMap.CommonType}" position="2"><text/></field>
+        <field name="attrValue" title="${uiLabelMap.CommonValue}" position="2"><text></text></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductAttribute" type="list" target="updateProductAttribute" title="" list-name="productAttributes"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
-        <auto-fields-service service-name="updateProductAttribute" map-name="updateProductAttribute"/>
-        <field name="attrName"><display/></field>
         <field name="productId"><hidden/></field>
-        <field name="attrType"><text/></field>
-        <field name="attrValue"><text/></field>
+        <field name="attrName" title="${uiLabelMap.CommonName}"><display/></field>
+        <field name="attrType" title="${uiLabelMap.CommonType}"><text/></field>
+        <field name="attrValue" title="${uiLabelMap.CommonValue}"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductAttribute" description="${uiLabelMap.CommonDelete}" also-hidden="false">

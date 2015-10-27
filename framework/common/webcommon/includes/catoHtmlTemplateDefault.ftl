@@ -353,131 +353,135 @@ levels manually, but most often should let @section menu handle them.
     <#local dummy = pushRequestStack("renderScreenletStack", {"autoHeadingLevel":autoHeadingLevel, "updatedHeadingLevel":updatedHeadingLevel, "prevHeadingLevel":prevHeadingLevel, "prevSectionLevel":prevSectionLevel})>
 <#-- auto-heading-level logic end -->
 
-<#-- Cato: menuString is not wrapped in UL when it's received here from macro renderer... 
-     note: with recent patch, menuString passed by renderer is rendered by macro renderer. -->
-<#local menuString = menuString?trim>
-<#local hasMenu = (menuString?has_content || requireMenu || forceEmptyMenu)>
-<#local hasTitle = title?has_content>
-<#local contentFlagClasses> section-level-${sLevel} heading-level-${hLevel}<#if hasTitle> has-title<#else> no-title</#if><#if hasMenu> has-menu<#else> no-menu</#if><#if hasContent> has-content<#else> no-content</#if></#local>
-<div class="section-screenlet${contentFlagClasses}<#if collapsed> toggleField</#if>">
-<#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title!}</p></#if>
-<div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
-<div class="<#if classes?has_content>${classes}<#else>${styles.grid_large!}12</#if><#if addClasses?has_content> ${addClasses}</#if> ${styles.grid_cell!} section-screenlet-container${contentFlagClasses}">
+    <#-- Cato: menuString is not wrapped in UL when it's received here from macro renderer... 
+        note: with recent patch, menuString passed by renderer is rendered by macro renderer. -->
+    <#local menuString = menuString?trim>
+    <#local hasMenu = (menuString?has_content || requireMenu || forceEmptyMenu)>
+    <#local hasTitle = title?has_content>
 
-<#if showMore>
-
-<#if hasMenu>
-<#local menuContent>
-  <#-- temporarily (?) unnecessary; all use styles.button_group and hacks moved
-       menuRole and widgetRender were mostly to figure out the context to apply defaults at the time.
-       don't remove.
-  <#local screenletPaginateMenu = (menuRole == "paginate-menu") && widgetRender>
-  <#local screenletNavMenu = (menuRole == "nav-menu") && widgetRender>
-  <#local ftlNavMenu = (menuRole == "nav-menu") && !widgetRender>
-  -->
-
-  <#-- note: menuString shouldn't contain <ul because li may be added here (traditionally), but check anyway, may have to allow -->
-  <#local menuItemsInlined = menuString?matches(r'(\s*<!--((?!<!--).)*?-->\s*)*\s*<li(\s|>).*', 'rs')>
-  
-  <#if !menuClass?has_content>
-    <#-- FIXME: for @section macro menuContent arg, this is redundant and problematic
-        and pretty much hardcoded.
-        currently have no good solution to avoid redundancy.  
-        on <#assign menuContent><@menu type="section" ...> defintions, could omit
-        inlineItems=true to generate the <ul> there, but then later impossible to append
-        extra list items cleanly (used in stock ofbiz here) via preMenuItems/postMenuItems. 
-        and specifying menuClass on @section defeats purpose of having menu type on @menu (having menu type
-        there is ideal, though it's not meant to influence menuLayout, only menuClass).
-        instead of menuString could have a menu macro directive to call as #macro instead of #assign, but ugly for clients to use.
-        the most versatile solution is require pass entire menu to @section as a @menu args hash
-        as a menuMap arg (usually can do <@menu args={my menu def} />), but this is heavy too...
-        may be forced to use one of these however because otherwise preMenuItems/postMenuItems
-        are unaware of menu type completely, not just add items problem...
-        UNTIL RESOLVED we're assuming all menus passed are menus of type "section" or "section-inline".
-        until then no clean way to support more types. 
-    -->
-    <#if menuLayout == "inline-title">
-      <#local menuClass = "${styles.menu_section_inline!}">
-    <#else>
-      <#local menuClass = "${styles.menu_section!}">
-    </#if>
-  <#elseif menuClass == "none">
-    <#local menuClass = "">
-  </#if>
-
-  <#local preMenuItems></#local>
-  <#local postMenuItems>
-    <#-- would only have added this if menu was post-title, and if menu was another type,
-         probably add an extra post-title menu? gets complex
-    <#if menuLayout != "pre-title" && menuLayout != "inline-title">
-    <#if collapsible>
-    <li class="<#rt/>
-    <#if collapsed>
-    collapsed"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if expandToolTip?has_content> title="${expandToolTip}"</#if>
-    <#else>
-    expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if collapseToolTip?has_content> title="${collapseToolTip}"</#if>
-    </#if>
-    >&nbsp;</a></li>
-    </#if>
-    </#if>
-     -->
-  </#local>
-
-  <#if !menuString?has_content || menuItemsInlined><ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>></#if>
-
-  <#if !forceEmptyMenu>
-    <#-- FIXME: can't do this because currently may need to have menuString open the <ul>
-    ${preMenuItems} -->
-    ${menuString}
-    <#--
-    ${postMenuItems} -->
-  </#if>
-  
-  <#if !menuString?has_content || menuItemsInlined></ul></#if>
-</#local>
-</#if>
-
-<#if hasTitle>
-<#local titleContent>
-  <@heading level=hLevel elemType=titleElemType class=titleClass containerElemType=titleContainerElemType containerClass=titleContainerClass>${title}</@heading>
-</#local>
-</#if>    
-
-<#-- Currently supports only one menu. could have one for each layout (with current macro
-     args as post-title), but tons of macro args needed and complicates. -->
-<#if menuLayout == "pre-title">
-  <#if hasMenu>
-    ${menuContent}
-  </#if>
-  <#if hasTitle>
-    ${titleContent}
-  </#if>
-<#elseif menuLayout == "inline-title">
-  <div class="${styles.float_clearfix!}">
-    <div class="${styles.float_left!}">
-      <#if hasTitle>
-        ${titleContent}
+  <#if showMore>
+    <#if hasMenu>
+      <#local menuContent>
+      <#-- temporarily (?) unnecessary; all use styles.button_group and hacks moved
+           menuRole and widgetRender were mostly to figure out the context to apply defaults at the time.
+           don't remove.
+      <#local screenletPaginateMenu = (menuRole == "paginate-menu") && widgetRender>
+      <#local screenletNavMenu = (menuRole == "nav-menu") && widgetRender>
+      <#local ftlNavMenu = (menuRole == "nav-menu") && !widgetRender>
+      -->
+    
+      <#-- note: menuString shouldn't contain <ul because li may be added here (traditionally), but check anyway, may have to allow -->
+      <#local menuItemsInlined = menuString?matches(r'(\s*<!--((?!<!--).)*?-->\s*)*\s*<li(\s|>).*', 'rs')>
+      
+      <#if !menuClass?has_content>
+      <#-- FIXME: for @section macro menuContent arg, this is redundant and problematic
+            and pretty much hardcoded.
+            currently have no good solution to avoid redundancy.  
+            on <#assign menuContent><@menu type="section" ...> defintions, could omit
+            inlineItems=true to generate the <ul> there, but then later impossible to append
+            extra list items cleanly (used in stock ofbiz here) via preMenuItems/postMenuItems. 
+            and specifying menuClass on @section defeats purpose of having menu type on @menu (having menu type
+            there is ideal, though it's not meant to influence menuLayout, only menuClass).
+            instead of menuString could have a menu macro directive to call as #macro instead of #assign, but ugly for clients to use.
+            the most versatile solution is require pass entire menu to @section as a @menu args hash
+            as a menuMap arg (usually can do <@menu args={my menu def} />), but this is heavy too...
+            may be forced to use one of these however because otherwise preMenuItems/postMenuItems
+            are unaware of menu type completely, not just add items problem...
+            UNTIL RESOLVED we're assuming all menus passed are menus of type "section" or "section-inline".
+            until then no clean way to support more types. 
+        -->
+        <#if menuLayout == "inline-title">
+          <#local menuClass = "${styles.menu_section_inline!}">
+        <#else>
+          <#local menuClass = "${styles.menu_section!}">
+        </#if>
+      <#elseif menuClass == "none">
+        <#local menuClass = "">
       </#if>
-    </div>
-    <div class="${styles.float_right!}">
+    
+      <#local preMenuItems></#local>
+      <#local postMenuItems>
+        <#-- would only have added this if menu was post-title, and if menu was another type,
+             probably add an extra post-title menu? gets complex
+        <#if menuLayout != "pre-title" && menuLayout != "inline-title">
+        <#if collapsible>
+        <li class="<#rt/>
+        <#if collapsed>
+        collapsed"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if expandToolTip?has_content> title="${expandToolTip}"</#if>
+        <#else>
+        expanded"><a <#if javaScriptEnabled>onclick="javascript:toggleScreenlet(this, '${collapsibleAreaId}', '${saveCollapsed?string}', '${expandToolTip}', '${collapseToolTip}');"<#else>href="${fullUrlString}"</#if><#if collapseToolTip?has_content> title="${collapseToolTip}"</#if>
+        </#if>
+        >&nbsp;</a></li>
+        </#if>
+        </#if>
+         -->
+      </#local>
+    
+      <#if !menuString?has_content || menuItemsInlined><ul<#if menuId?has_content> id="${menuId}"<#elseif id?has_content> id="${id}_menu"</#if><#if menuClass?has_content> class="${menuClass}"</#if>></#if>
+    
+      <#if !forceEmptyMenu>
+        <#-- FIXME: can't do this because currently may need to have menuString open the <ul>
+        ${preMenuItems} -->
+        ${menuString}
+        <#--
+        ${postMenuItems} -->
+      </#if>
+      
+      <#if !menuString?has_content || menuItemsInlined></ul></#if>
+    </#local>
+    </#if>
+    
+    <#if hasTitle>
+      <#local titleContent>
+        <@heading level=hLevel elemType=titleElemType class=titleClass containerElemType=titleContainerElemType containerClass=titleContainerClass>${title}</@heading>
+      </#local>
+    </#if> 
+  </#if>
+
+    <#local contentFlagClasses> section-level-${sLevel} heading-level-${hLevel}<#if hasTitle> has-title<#else> no-title</#if><#if hasMenu> has-menu<#else> no-menu</#if><#if hasContent> has-content<#else> no-content</#if></#local>
+
+    <div class="section-screenlet${contentFlagClasses}<#if collapsed> toggleField</#if>">
+    <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title!}</p></#if>
+    <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
+    <div class="<#if classes?has_content>${classes}<#else>${styles.grid_large!}12</#if><#if addClasses?has_content> ${addClasses}</#if> ${styles.grid_cell!} section-screenlet-container${contentFlagClasses}">
+
+  <#if showMore>
+
+    <#-- Currently supports only one menu. could have one for each layout (with current macro
+         args as post-title), but tons of macro args needed and complicates. -->
+    <#if menuLayout == "pre-title">
       <#if hasMenu>
         ${menuContent}
       </#if>
-    </div>
-  </div>
-<#else>
-  <#if hasTitle>
-    ${titleContent}
+      <#if hasTitle>
+        ${titleContent}
+      </#if>
+    <#elseif menuLayout == "inline-title">
+      <div class="${styles.float_clearfix!}">
+        <div class="${styles.float_left!}">
+          <#if hasTitle>
+            ${titleContent}
+          </#if>
+        </div>
+        <div class="${styles.float_right!}">
+          <#if hasMenu>
+            ${menuContent}
+          </#if>
+        </div>
+      </div>
+    <#else>
+      <#if hasTitle>
+        ${titleContent}
+      </#if>
+      <#if hasMenu>
+        ${menuContent}
+      </#if>
+    </#if>
   </#if>
-  <#if hasMenu>
-    ${menuContent}
-  </#if>
-</#if>
 
-</#if>
-    <#-- note: may need to keep this div free of foundation grid classes -->
+    <#-- note: may need to keep this div free of foundation grid classes (for margins collapse?) -->
     <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if> class="section-screenlet-content${contentFlagClasses}"><#rt>
-</#if> <#-- /#if open -->
+</#if> <#-- /#(if open) -->
 
 <#-- nested content -->
     <#nested>
@@ -501,7 +505,7 @@ levels manually, but most often should let @section menu handle them.
     
 <#-- auto-heading-level logic end -->
     <#lt></div></div></div></div>
-</#if> <#-- /#if close -->
+</#if> <#-- /#(if close) -->
 </#macro>
 
 

@@ -709,9 +709,8 @@ so currently these functions do the following:
   false means don't use non-essential defaults
   should put class=true as macro default on macros.
   NOW ALSO accepts string repr of booleans.
-- empty string means don't use non-essentail defaults, same as class=false
-  (i.e. if you specify class="" it's like saying "I want empty class")
-  could change this and use class=false only... tbd
+- 2015-10-27: empty string now means use defaults, same as class=true.
+  This is more consistent with other arguments in general 
 - if class starts with "+", you only append additional classes to the defaults,
   never replace
 - class now also supports being a list of strings that will be joined;
@@ -747,15 +746,23 @@ where my-macro-default is what you'd have had as arg default in the macro def
         <#return joinStyleNamesList(class)>
       </#if>
     <#else>
-      <#return "">
+      <#return defaultVal>
     </#if>
   <#-- check string last because ?is_string doesn't always behave as expected -->
   <#elseif class?is_string>
     <#local class = class?trim> <#-- for convenience, trim the class here, though may hide minor errors -->
     <#if class?starts_with("+")>
       <#return (defaultVal + " " + class?substring(1))?trim>
+    <#elseif class?has_content>
+      <#if class == "true">
+        <#return defaultVal>
+      <#elseif class == "false">
+        <#return "">
+      <#else>
+        <#return class>
+      </#if>
     <#else>
-      <#return class>
+      <#return defaultVal>
     </#if>
   <#else>
     <#-- invalid -->
@@ -790,15 +797,21 @@ where my-macro-default is what you'd have had as arg default in the macro def
         <#return joinStyleNamesList(class)>
       </#if>
     <#else>
-      <#return "">
+      <#return defaultVal>
     </#if>
   <#elseif class?is_string> 
     <#if class?starts_with("+")>
       <#return defaultVal>
     <#elseif class?has_content>
-      <#return class>
+      <#if class == "true">
+        <#return defaultVal>
+      <#elseif class == "false">
+        <#return "">
+      <#else>
+        <#return class>
+      </#if>
     <#else>
-      <#return "">
+      <#return defaultVal>
     </#if>
   <#else>
     <#-- invalid -->
@@ -835,8 +848,8 @@ macro args processed by makeClassesArg.
 
 usually those macro args take true or false by default.
 
-Needed for string repr of booleans and because empty string "" in style string means "not specified"
-and not "omit" as usually specified on macros. also translates booleans.
+Needed for string repr of booleans and because empty string "" may have different meanings
+depending on context. also translates booleans.
 
 see makeClassesArg, results of getElemSpecFromStyleStr.
 -->

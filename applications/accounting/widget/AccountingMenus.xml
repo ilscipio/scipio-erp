@@ -386,23 +386,7 @@
                 <parameter param-name="budgetId" />
             </link>
         </menu-item>
-        <menu-item name="EditBudget" title="${uiLabelMap.AccountingBudgetHeader}">
-            <condition>
-                <and>
-                    <not>
-                        <if-empty field="budgetId" />
-                    </not>
-                    <or>
-                        <if-compare field="statusId" operator="equals" value="BG_CREATED" />
-                        <if-compare field="statusId" operator="equals" value="BG_REVIEWED" />
-                    </or>
-                </and>
-            </condition>
-            <link target="EditBudget">
-                <parameter param-name="budgetId" />
-            </link>
-        </menu-item>
-        <menu-item name="BudgetItem" title="${uiLabelMap.AccountingBudgetItems}">
+        <menu-item name="BudgetItem" title="${uiLabelMap.CommonItems}">
             <condition>
                 <and>
                     <not>
@@ -418,18 +402,7 @@
                 <parameter param-name="budgetId" />
             </link>
         </menu-item>
-        <menu-item name="BudgetRoles" title="${uiLabelMap.AccountingBudgetRoles}">
-            <condition>
-                <and>
-                    <not>
-                        <if-empty field="budgetId" />
-                    </not>
-                    <or>
-                        <if-compare field="statusId" operator="equals" value="BG_CREATED" />
-                        <if-compare field="statusId" operator="equals" value="BG_REVIEWED" />
-                    </or>
-                </and>
-            </condition>
+        <menu-item name="BudgetRoles" title="${uiLabelMap.CommonParties}">
             <link target="BudgetRoles">
                 <parameter param-name="budgetId" />
             </link>
@@ -456,6 +429,22 @@
 
     <menu name="BudgetSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
+        <menu-item name="EditBudget" title="${uiLabelMap.CommonEdit}">
+            <condition>
+                <and>
+                    <not>
+                        <if-empty field="budgetId" />
+                    </not>
+                    <or>
+                        <if-compare field="statusId" operator="equals" value="BG_CREATED" />
+                        <if-compare field="statusId" operator="equals" value="BG_REVIEWED" />
+                    </or>
+                </and>
+            </condition>
+            <link target="EditBudget">
+                <parameter param-name="budgetId" />
+            </link>
+        </menu-item>
         <menu-item name="statusToApproved" title="${uiLabelMap.AccountingBudgetStatusToApproved}">
             <condition>
                 <and>

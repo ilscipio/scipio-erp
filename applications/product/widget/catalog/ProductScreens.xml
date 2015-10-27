@@ -1322,11 +1322,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditVendorProduct}">
-                            <include-form name="ListVendorProducts" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleAddVendorProduct}">
                             <include-form name="EditVendorProduct" location="component://product/widget/catalog/ProductForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleEditVendorProduct}">
+                            <include-form name="ListVendorProducts" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

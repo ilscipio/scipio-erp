@@ -3145,10 +3145,10 @@
         <field name="productId">
             <hidden />
         </field>
-        <field name="vendorPartyId">
+        <field name="vendorPartyId" title="${uiLabelMap.CommonParty}">
             <display />
         </field>
-        <field name="productStoreGroupId">
+        <field name="productStoreGroupId" title="${uiLabelMap.CommonStore} ${uiLabelMap.CommonGroup}">
             <display />
         </field>
 
@@ -3162,10 +3162,10 @@
         <field name="productId">
             <hidden />
         </field>
-        <field name="vendorPartyId">
+        <field name="vendorPartyId" title="${uiLabelMap.CommonParty}">
             <lookup target-form-name="LookupPartyName" />
         </field>
-        <field name="productStoreGroupId">
+        <field name="productStoreGroupId" title="${uiLabelMap.CommonStore} ${uiLabelMap.CommonGroup}" position="2">
             <drop-down current="selected" allow-empty="false">
                 <entity-options entity-name="ProductStoreGroup" key-field-name="productStoreGroupId" description="${description}" />
             </drop-down>

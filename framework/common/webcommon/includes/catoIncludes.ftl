@@ -89,7 +89,7 @@
 </#list>
 
 <#-- compatibility mode: define styles hash entries as individual style_ vars
-<#list styles?keys as name>
+<#list mapKeys(styles) as name>
   <@'<#global "style_${name}" = "${styles[name]}">'?interpret />
 </#list>-->
 

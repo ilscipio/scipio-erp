@@ -883,7 +883,7 @@ $(function(){
                 <ul>
                     <li>
                     <#assign no = 0 />
-                    <#list productTags?keys?sort as productTag>
+                    <#list mapKeys(productTags)?sort as productTag>
                         <#assign tagValue = productTags.get(productTag)!/>
                         <#if tagValue?has_content>
                               <span><a href="javascript:void(0);" id="productTag_${productTag}">${productTag}</a> (${tagValue}) <#if no < (productTags.size() - 1)> | </#if></span>

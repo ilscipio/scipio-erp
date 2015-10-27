@@ -460,10 +460,10 @@ under the License.
                              <#if checkSpecific == "true">
                              <@section title="Item specifices">
                                         <@table type="fields" width="50%" height="100%" id="table2"  cellspacing="0"> <#-- orig: class="" -->
-                                        <#list categorySpecifix?keys as key>
+                                        <#list mapKeys(categorySpecifix) as key>
                                             <#assign values = categorySpecifix.get(key)!/>
                                             <#assign i = 0/>
-                                            <#list values?keys as nameSpecific>
+                                            <#list mapKeys(values) as nameSpecific>
                                             <#assign itemSpecifics = values.get(nameSpecific)!/>
                                                 <#if itemSpecifics?has_content>
                                                     <@tr>

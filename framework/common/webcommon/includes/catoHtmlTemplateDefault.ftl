@@ -236,7 +236,7 @@ levels manually, but most often should let @section menu handle them.
                             with defaults added underneath (but user-passed args override).
                           as string/html:
                             should be <li> elements only, generated manually or using <@menu type="section" ... inlineItems=true>.
-                            WARN: if using @menu to generate the menu, the menu arguments such as "type" are lost and 
+                            WARN: if using @menu to pre-generate the menu as string/html, the menu arguments such as "type" are lost and 
                             assumed to be "section" or "section-inline".
     optional menu data or markup, li elements only (ul auto added)
     menuClass           = menu class, default is section menu (FIXME: doesn't really mean anything at the moment). "none" prevents class. this is a low-level control; avoid if possible (FIXME: currently impossible to avoid).

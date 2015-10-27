@@ -231,7 +231,7 @@ function ShowTab(lname) {
                     <@th class="${styles.grid_large!}9">${uiLabelMap.CommonValue}</@th>
                   </@tr>
                   </@thead>
-                  <#list fields as field>
+                  <#list fields as field> <#-- FIXME: name clash with macros cause crash -->
                     <@tr>
                       <@td>${field.name}</@td>
                       <@td>${field.value}</@td>

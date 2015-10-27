@@ -40,28 +40,28 @@ under the License.
                 <field-map field-name="fixedAssetId" from-field="fixedAssetId"/>
             </service>
         </row-actions>
-        <field name="fixedAssetId" widget-style="linktext ${styles.link_default}" sort-field="true">
+        <field name="fixedAssetId" title="${uiLabelMap.CommonId}" widget-style="linktext ${styles.link_default}" sort-field="true">
             <hyperlink also-hidden="false" description="${fixedAssetId}" target="EditFixedAsset">
                 <parameter param-name="fixedAssetId"/>
             </hyperlink>
         </field>
-        <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}" sort-field="true">
+        <field name="fixedAssetName" title="${uiLabelMap.CommonName}" sort-field="true">
             <display/>
         </field>
-        <field name="fixedAssetTypeId" sort-field="true"><display-entity entity-name="FixedAssetType"/></field>
-        <field name="parentFixedAssetId" sort-field="true">
+        <field name="fixedAssetTypeId" title="${uiLabelMap.CommonType}" sort-field="true"><display-entity entity-name="FixedAssetType"/></field>
+        <field name="parentFixedAssetId" title="${uiLabelMap.CommonParent}" sort-field="true">
             <display-entity entity-name="FixedAsset" key-field-name="fixedAssetId" description="${fixedAssetName}">
                 <sub-hyperlink target="EditFixedAsset" description="${parentFixedAssetId}">
                     <parameter param-name="fixedAssetId" from-field="parentFixedAssetId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="dateAcquired" sort-field="true"><display/></field>
-        <field name="expectedEndOfLife" sort-field="true"><display/></field>
-        <field name="purchaseCost" sort-field="true"><display type="currency" currency="${purchaseCostUomId}"/></field>
-        <field name="salvageValue" sort-field="true"><display type="currency" currency="${purchaseCostUomId}"/></field>
-        <field name="depreciation" sort-field="true"><display type="currency" currency="${purchaseCostUomId}"/></field>
-        <field name="plannedPastDepreciationTotal"><display description="${assetDepreciationResultMap.plannedPastDepreciationTotal}"/></field>
+        <field name="dateAcquired" sort-field="true"><display type="date"/></field>
+        <field name="expectedEndOfLife" sort-field="true"><display type="date"/></field>
+        <field name="purchaseCost" widget-area-style="amount" title-area-style="align-right" sort-field="true"><display type="currency" currency="${purchaseCostUomId}"/></field>
+        <field name="salvageValue" widget-area-style="amount" title-area-style="align-right" sort-field="true"><display type="currency" currency="${purchaseCostUomId}"/></field>
+        <field name="depreciation" widget-area-style="amount" title-area-style="align-right" sort-field="true"><display type="currency" currency="${purchaseCostUomId}"/></field>
+        <field name="plannedPastDepreciationTotal" widget-area-style="amount" title-area-style="align-right"><display description="${assetDepreciationResultMap.plannedPastDepreciationTotal}"/></field>
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="FixedAssetSearchResults"/>
     </form>
 
@@ -88,9 +88,9 @@ under the License.
             </drop-down>
         </field>
         <field name="fixedAssetName" title="${uiLabelMap.CommonName}"><text/></field>
-        <field name="parentFixedAssetId" position="2"><lookup target-form-name="LookupFixedAsset"/></field>
+        <field name="parentFixedAssetId" title="${uiLabelMap.CommonParent}" position="2"><lookup target-form-name="LookupFixedAsset"/></field>
         <field name="instanceOfProductId"><lookup target-form-name="LookupProduct"/></field>
-        <field name="classEnumId" position="2">
+        <field name="classEnumId" title="${uiLabelMap.CommonClass}" position="2">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="Enumeration" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" operator="equals" value="FXAST_CLASS"/>
@@ -101,7 +101,7 @@ under the License.
         <field name="locatedAtFacilityId"><lookup target-form-name="LookupFacility"/></field>
         <field name="locatedAtLocationSeqId" position="2"><lookup target-form-name="LookupFacilityLocation"/></field>
         
-        <field name="productionCapacity"><text/></field>
+        <field name="productionCapacity" title="${uiLabelMap.CommonCapacity}"><text/></field>
         <field name="uomId" title="${uiLabelMap.CommonUom}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="UomAndType" description="${description} [${typeDescription}]">
@@ -112,7 +112,7 @@ under the License.
             </drop-down>
         </field>
         <!--<field name="calendarId"><hidden/></field>-->  <!-- not show, can better be maintained by the system -->
-        <field name="calendarId">
+        <field name="calendarId" title="${uiLabelMap.CommonCalendar}">
             <drop-down allow-empty="true">
                 <entity-options entity-name="TechDataCalendar" description="[${calendarId}] ${description}">
                     <entity-order-by field-name="calendarId"/>

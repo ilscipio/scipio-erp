@@ -13,10 +13,17 @@
         <field name="noConditionFind">
             <hidden value="Y" /><!-- if this isn't there then with all fields empty no query will be done -->
         </field>
-        <field name="productId" title="${uiLabelMap.ProductProductId}">
+        <field name="productId" title="${uiLabelMap.CommonId}">
             <text-find />
         </field>
-        <field name="internalName" title="${uiLabelMap.ProductInternalName}">
+        <field name="productTypeId" title="${uiLabelMap.CommonType}" position="2">
+            <drop-down allow-empty="true">
+            </drop-down>
+        </field>
+        <field name="internalName" title="${uiLabelMap.CommonName}">
+            <text-find />
+        </field>
+        <field name="productName" position="2">
             <text-find />
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
@@ -36,22 +43,22 @@
                 <field-map field-name="viewSize" from-field="viewSize" />
             </service>
         </actions>
-        <field name="productId" sort-field="true" widget-style="${styles.link_default}">
+        <field name="productId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${productId}" target="EditProduct">
                 <parameter param-name="productId" />
             </hyperlink>
         </field>
-        <field name="productTypeId" sort-field="true">
-            <display-entity entity-name="ProductType" description="${description}" />
+        <field name="internalName" title="${uiLabelMap.CommonName}" sort-field="true">
+            <display />
         </field>
-        <field name="internalName" sort-field="true">
+        <field name="productName" sort-field="true">
             <display />
         </field>
         <field name="brandName" sort-field="true">
             <display />
         </field>
-        <field name="productName" sort-field="true">
-            <display />
+        <field name="productTypeId" title="${uiLabelMap.CommonType}" sort-field="true">
+            <display-entity entity-name="ProductType" description="${description}" />
         </field>
         <field name="description" sort-field="true">
             <display />

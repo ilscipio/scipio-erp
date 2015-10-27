@@ -145,13 +145,13 @@ under the License.
             </widgets>
          </section>
     </screen>
+    
     <screen name="EditProduct">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProduct"/>
                 <set field="tabButtonItem" value="EditProduct"/>
                 <set field="labelTitleProperty" value="ProductProduct"/>
-
                 <set field="parameters.bypassIfNoProduct" value="true"/>
             </actions>
             <widgets>
@@ -160,7 +160,6 @@ under the License.
                         <screenlet title="${uiLabelMap.PageTitleEditProduct}">
                             <include-form location="component://product/widget/catalog/ProductForms.xml" name="EditProduct"/>
                         </screenlet>
-
                         <!-- 
                         <section>
                             <condition>
@@ -641,6 +640,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditProductKeyword">
         <section>
             <actions>
@@ -725,6 +725,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditProductGoodIdentifications">
         <section>
             <actions>

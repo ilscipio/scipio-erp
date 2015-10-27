@@ -2719,14 +2719,26 @@
     <!-- ProductWorkEfforts forms -->
     <form name="AddProductWorkEffort" target="createWorkEffortGoodStandard" title="" type="single" header-row-style="header-row"
         default-table-style="${styles.table_basic}">
-        <auto-fields-service service-name="createWorkEffortGoodStandard" />
         <field name="productId">
             <hidden value="${parameters.productId}" />
         </field>
-        <field name="workEffortId">
+        <field name="workEffortId" title="${uiLabelMap.WorkEffort}">
             <lookup target-form-name="LookupWorkEffort" />
         </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+        <field name="workEffortGoodStdTypeId" title="${uiLabelMap.CommonType}" position="2">
+            <drop-down no-current-selected-key="">
+                <entity-options entity-name="WorkEffortGoodStandardType" description="${description}" key-field-name="workEffortGoodStdTypeId">
+                    <entity-order-by field-name="description" />
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true">
+            <date-time type="date" />
+        </field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2">
+            <date-time type="date" />
+        </field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="StatusItem" key-field-name="statusId" description="${description}">
                     <entity-constraint name="statusTypeId" value="WEFG_STATUS" />
@@ -2734,17 +2746,17 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="workEffortGoodStdTypeId">
-            <drop-down no-current-selected-key="">
-                <entity-options entity-name="WorkEffortGoodStandardType" description="${description}" key-field-name="workEffortGoodStdTypeId">
-                    <entity-order-by field-name="description" />
-                </entity-options>
-            </drop-down>
+        <field name="estimatedQuantity">
+            <text />
+        </field>
+        <field name="estimatedCost" position="2">
+            <text />
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
             <submit button-type="button" />
         </field>
     </form>
+    
     <form name="ListProductWorkEfforts" type="list" target="updateWorkEffortGoodStandard" list-name="productWorkEfforts"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <actions>
@@ -2752,8 +2764,10 @@
                 <field-map from-field="productId" field-name="productId" />
             </entity-and>
         </actions>
-        <auto-fields-service service-name="updateWorkEffortGoodStandard" default-field-type="edit" />
-        <field name="workEffortId">
+        <field name="productId">
+            <hidden />
+        </field>
+        <field name="workEffortId" title="${uiLabelMap.WorkEffort}">
             <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName}"
                 also-hidden="true">
                 <sub-hyperlink target="/workeffort/control/EditWorkEffort" description="${workEffortId}" link-style="${styles.link_default}"
@@ -2762,14 +2776,14 @@
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="workEffortGoodStdTypeId">
+        <field name="workEffortGoodStdTypeId" title="${uiLabelMap.CommonType}">
             <display-entity entity-name="WorkEffortGoodStandardType" description="${description}" />
-        </field>
-        <field name="productId">
-            <hidden />
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}">
             <display />
+        </field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}">
+            <date-time type="date" />
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <drop-down allow-empty="true">
@@ -2778,6 +2792,12 @@
                     <entity-order-by field-name="description" />
                 </entity-options>
             </drop-down>
+        </field>
+        <field name="estimatedQuantity">
+            <text />
+        </field>
+        <field name="estimatedCost">
+            <text />
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
             <submit button-type="button" />

@@ -2217,27 +2217,29 @@
         <field name="productId">
             <hidden />
         </field>
-        <field name="productMeterTypeId">
+        <field name="productMeterTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="ProductMeterType" description="${description}">
                     <entity-order-by field-name="description" />
                 </entity-options>
             </drop-down>
         </field>
-        <field name="meterUomId">
+        <field name="meterUomId" title="${uiLabelMap.CommonUom}" position="2">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
+                    <entity-constraint name="uomTypeId" operator="not-equals" value="CURRENCY_MEASURE"/>
                     <entity-order-by field-name="description" />
                 </entity-options>
             </drop-down>
         </field>
-        <field name="meterName">
+        <field name="meterName" title="${uiLabelMap.CommonName}">
             <text size="20" />
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
             <submit button-type="button" />
         </field>
     </form>
+    
     <form name="ListProductMeters" type="list" list-name="productMeters" target="updateProductMeter" odd-row-style="alternate-row"
         default-table-style="${styles.table_basic}">
         <actions>
@@ -2249,17 +2251,17 @@
         <field name="productId">
             <hidden />
         </field>
-        <field name="productMeterTypeId">
+        <field name="productMeterTypeId"  title="${uiLabelMap.CommonType}">
             <display-entity entity-name="ProductMeterType" />
         </field>
-        <field name="meterUomId">
+        <field name="meterUomId" title="${uiLabelMap.CommoUom}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Uom" description="${description}" key-field-name="uomId">
                     <entity-order-by field-name="description" />
                 </entity-options>
             </drop-down>
         </field>
-        <field name="meterName">
+        <field name="meterName" title="${uiLabelMap.CommonName}">
             <text size="20" />
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">

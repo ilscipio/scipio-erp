@@ -802,6 +802,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditProductPaymentMethodTypes">
         <section>
             <actions>
@@ -820,11 +821,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductPaymentMethodType}">
-                            <include-form name="UpdateProductPaymentMethodType" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleAddProductPaymentMethodType}">
                             <include-form name="AddProductPaymentMethodType" location="component://product/widget/catalog/ProductForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleEditProductPaymentMethodType}">
+                            <include-form name="UpdateProductPaymentMethodType" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

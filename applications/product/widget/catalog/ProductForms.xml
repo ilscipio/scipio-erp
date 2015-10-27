@@ -698,7 +698,6 @@
     <!-- ProductPaymentMethodType -->
     <form name="AddProductPaymentMethodType" type="single" target="createProductPaymentMethodType" title="" header-row-style="header-row"
         default-table-style="${styles.table_basic}">
-        <auto-fields-service service-name="createProductPaymentMethodType" />
         <field name="productId">
             <hidden />
         </field>
@@ -709,33 +708,43 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="paymentMethodTypeId" widget-style="smallSelect">
+        <field name="paymentMethodTypeId" title="${uiLabelMap.CommonType}" widget-style="smallSelect" position="2">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PaymentMethodType" description="${description}">
                     <entity-order-by field-name="description" />
                 </entity-options>
             </drop-down>
         </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}">
+            <date-time type="date" />
+        </field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2">
+            <date-time type="date" />
+        </field>
+        <field name="sequenceNum" position="2"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
             <submit button-type="button" />
         </field>
     </form>
+    
     <form name="UpdateProductPaymentMethodType" type="list" target="updateProductPaymentMethodType" title=""
         list-name="productPaymentMethodTypes" odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
-        <auto-fields-service service-name="updateProductPaymentMethodType" map-name="productPrice" />
         <field name="productId">
             <hidden />
         </field>
         <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}">
             <display-entity entity-name="ProductPricePurpose" />
         </field>
-        <field name="paymentMethodTypeId">
+        <field name="paymentMethodTypeId" title="${uiLabelMap.CommonType}">
             <display-entity entity-name="PaymentMethodType" />
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}">
-            <display />
+            <display type="date" />
         </field>
-
+        <field name="thruDate" title="${uiLabelMap.CommonThru}">
+            <date-time type="date" />
+        </field>
+        <field name="sequenceNum"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
             <submit button-type="button" />
         </field>

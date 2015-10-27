@@ -31,6 +31,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 -->
 <#macro renderMenuBegin boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="">
   <#local styleSet = splitStyleNamesToSet(style)>
+  <#local remStyle = "">
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
@@ -71,6 +72,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 
 <#macro renderMenuEnd boundaryComment="" style="" inlineEntries=false menuCtxRole="">
   <#local styleSet = splitStyleNamesToSet(style)>
+  <#local menu = popRequestStack("renderMenuStack")>
   <#if !inlineEntries>
     <#--        
     <#if isSubMenu>

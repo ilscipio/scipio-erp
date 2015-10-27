@@ -1425,6 +1425,9 @@
         <value xml:lang="zh">从CDyne的ReturnCityState服务得到 ServiceError=true；zipcode=${zipcode}</value>
         <value xml:lang="zh_TW">從CDyne的ReturnCityState服務得到 ServiceError=true 的錯誤;zipcode=${zipcode}</value>
     </property>
+    <property key="CommonCalendar">
+        <value xml:lang="en">Calendar</value>
+    </property>
     <property key="CommonCancel">
         <value xml:lang="ar">إلغاء</value>
         <value xml:lang="cs">Storno</value>
@@ -1522,6 +1525,9 @@
         <value xml:lang="vi">Không thể tìm thấy</value>
         <value xml:lang="zh">无法找到</value>
         <value xml:lang="zh_TW">無法找到</value>
+    </property>
+    <property key="CommonCapacity">
+        <value xml:lang="en">Capacity</value>
     </property>
     <property key="CommonCaptchaCode">
         <value xml:lang="ar">رمز كلمة التحقق</value>
@@ -3023,6 +3029,9 @@
         <value xml:lang="vi">Đã tải xuống</value>
         <value xml:lang="zh">已下载。</value>
         <value xml:lang="zh_TW">已下載.</value>
+    </property>
+    <property key="CommonDue">
+        <value xml:lang="en">Due</value>
     </property>
     <property key="CommonDuplicate">
         <value xml:lang="ar">مضاعفة</value>
@@ -8165,6 +8174,9 @@
         <value xml:lang="zh">其它</value>
         <value xml:lang="zh_TW">其他</value>
     </property>
+    <property key="CommonOutstanding">
+        <value xml:lang="en">Outstanding</value>
+    </property>
     <property key="CommonOverridesSelection">
         <value xml:lang="ar">تفنيد أحد الإختيارين في الأعلى</value>
         <value xml:lang="cs">(přepíše některou z předchozích voleb)</value>
@@ -8258,6 +8270,9 @@
         <value xml:lang="vi">Bật phân trang</value>
         <value xml:lang="zh">启用分页</value>
         <value xml:lang="zh_TW">啟用分頁</value>
+    </property>
+    <property key="CommonPaid">
+        <value xml:lang="en">Paid</value>
     </property>
     <property key="CommonParent">
         <value xml:lang="ar">الوالد</value>

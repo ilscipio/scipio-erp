@@ -1471,11 +1471,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ProductGroupOrder}">
-                            <include-form name="ListProductGroupOrder" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.ProductAddGroupOrder}">
                             <include-form name="CreateProductGroupOrder" location="component://product/widget/catalog/ProductForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.ProductGroupOrder}">
+                            <include-form name="ListProductGroupOrder" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

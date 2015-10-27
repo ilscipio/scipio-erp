@@ -3326,20 +3326,20 @@
         <field name="productId">
             <hidden />
         </field>
-        <field name="groupOrderId">
+        <field name="groupOrderId" title="${uiLabelMap.CommonId}">
             <display />
         </field>
-        <field name="reqOrderQty" title="${uiLabelMap.ProductDealQuantity}">
+        <field name="reqOrderQty" title="${uiLabelMap.CommonQuantity}">
             <display />
         </field>
-        <field name="soldOrderQty" title="${uiLabelMap.ProductSoldQuantity}">
+        <field name="soldOrderQty" title="${uiLabelMap.CommonSold}">
             <display />
         </field>
-        <field name="fromDate" title="${uiLabelMap.ProductDealStartDate}">
-            <display />
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}">
+            <display type="date"/>
         </field>
-        <field name="thruDate" title="${uiLabelMap.ProductDealEndDate}">
-            <display />
+        <field name="thruDate" title="${uiLabelMap.CommonThru}">
+            <display type="date"/>
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}" />
@@ -3371,14 +3371,14 @@
         <field name="soldOrderQty">
             <hidden value="0" />
         </field>
-        <field name="reqOrderQty" title="${uiLabelMap.ProductDealQuantity}" required-field="true">
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true">
+            <date-time type="date"/>
+        </field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" required-field="true" position="2" >
+            <date-time type="date"/>
+        </field>
+        <field name="reqOrderQty" title="${uiLabelMap.CommonQuantity}" required-field="true" position="2" >
             <text />
-        </field>
-        <field name="fromDate" title="${uiLabelMap.ProductDealStartDate}" required-field="true">
-            <date-time />
-        </field>
-        <field name="thruDate" title="${uiLabelMap.ProductDealEndDate}" position="2" required-field="true">
-            <date-time />
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
             <submit button-type="button" />
@@ -3396,14 +3396,14 @@
         <field name="statusId">
             <hidden />
         </field>
-        <field name="reqOrderQty" title="${uiLabelMap.ProductDealQuantity}" required-field="true">
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true">
+            <date-time type="date"/>
+        </field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" required-field="true" position="2" >
+            <date-time type="date"/>
+        </field>
+        <field name="reqOrderQty" title="${uiLabelMap.CommonQuantity}" required-field="true" position="2" >
             <text />
-        </field>
-        <field name="fromDate" title="${uiLabelMap.ProductDealStartDate}" required-field="true">
-            <date-time />
-        </field>
-        <field name="thruDate" title="${uiLabelMap.ProductDealEndDate}" position="2" required-field="true">
-            <date-time />
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
             <submit button-type="button" />

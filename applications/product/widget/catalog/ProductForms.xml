@@ -2208,16 +2208,16 @@ under the License.
         <field name="comments"><text size="30"/></field>
         
         <!-- three possibilities for the Party: person, partyGroup, neither... just print everything and if it's empty, no biggie -->
-        <field name="partyId" title="${uiLabelMap.PartyParty}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}">
             <display-entity entity-name="PartyNameView" description="${personalTitle} ${firstName} ${middleName} ${lastName} ${suffix} ${groupName}" also-hidden="true" cache="false">
                 <sub-hyperlink target-type="inter-app" link-style="${styles.link_default}" target="/partymgr/control/viewprofile" description="${partyId}">
                     <parameter param-name="party_id" from-field="partyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="roleTypeId" title="${uiLabelMap.PartyRole}"><display-entity entity-name="RoleType"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" red-when="after-now"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" red-when="before-now"></field>
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}"><display-entity entity-name="RoleType"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" red-when="after-now"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" red-when="before-now"><date-time type="date"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removePartyFromProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -2231,16 +2231,18 @@ under the License.
     
     <form name="AddProductRole" type="single" target="addPartyToProduct" title=""
         header-row-style="header-row" default-table-style="${styles.table_basic}">
-        <auto-fields-service service-name="addPartyToProduct"/>
         <field name="productId"><hidden/></field>
-        <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="roleTypeId">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}" required-field="true" position="2">
             <drop-down allow-empty="false">
                 <entity-options entity-name="RoleType" description="${description}" key-field-name="roleTypeId">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="comments"><textarea/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 

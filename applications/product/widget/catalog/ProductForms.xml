@@ -1918,7 +1918,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="updateProductFacility"/>
         <field name="productId"><hidden/></field>
-        <field name="facilityId">
+        <field name="facilityId" title="${uiLabelMap.Facility}">
             <display-entity entity-name="Facility" description="${facilityName} [${facilityId}]" also-hidden="true"/>
         </field>
         <field name="lastInventoryCount"><display/></field>
@@ -1931,15 +1931,17 @@ under the License.
     </form>
     <form name="AddProductFacility" target="createProductFacility" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
-        <auto-fields-service service-name="createProductFacility"/>
         <field name="productId"><hidden/></field>
-        <field name="facilityId">
+        <field name="facilityId" title="${uiLabelMap.Facility}">
             <drop-down>
                 <entity-options entity-name="Facility" description="${facilityName}">
                     <entity-order-by field-name="facilityName"/>
                 </entity-options>
             </drop-down>
         </field>
+        <field name="minimumStock" position="2"><text/></field>
+        <field name="reorderQuantity"><text/></field>
+        <field name="daysToShip" position="2"><text/></field>
         <field name="lastInventoryCount"><hidden/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
@@ -2200,6 +2202,7 @@ under the License.
         <field name="productId" map-name="parameters"><hidden/></field>
     </form>
     
+    <!-- regarding Parties involved -->
     <form name="UpdateProductRole" type="list" target="updatePartyToProduct" title="" list-name="productRoles"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="updatePartyToProduct"/>

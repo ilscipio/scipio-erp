@@ -555,14 +555,16 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
+
     <screen name="EditProductQuickAdmin">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleEditProductQuickAdmin"/>
-                <set field="tabButtonItem" value="EditProductQuickAdmin"/>
-                <set field="labelTitleProperty" value="ProductQuickAdmin"/>
+                <set field="titleProperty" value="PageTitleEditProductQuickAdmin" />
+                <set field="tabButtonItem" value="EditProductQuickAdmin" />
+                <set field="labelTitleProperty" value="ProductQuickAdmin" />
 
-                <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductQuickAdmin.groovy"/>
+                <script location="component://product/webapp/catalog/WEB-INF/actions/product/EditProductQuickAdmin.groovy" />
             </actions>
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
@@ -570,7 +572,7 @@ under the License.
                         <section>
                             <widgets>
                                 <platform-specific>
-                                    <html><html-template location="component://product/webapp/catalog/product/EditProductQuickAdmin.ftl"/></html>
+                                    <html><html-template location="component://product/webapp/catalog/product/EditProductQuickAdmin.ftl" /></html>
                                 </platform-specific>
                             </widgets>
                         </section>
@@ -578,9 +580,7 @@ under the License.
                 </decorator-screen>
             </widgets>
         </section>
-    </screen>
-
-    <screen name="EditProductFacilities">
+    </screen><screen name="EditProductFacilities">
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleEditProductFacilities"/>
@@ -598,11 +598,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductFacilities}">
-                            <include-form name="UpdateProductFacilities" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.ProductAddFacility}">
                             <include-form name="AddProductFacility" location="component://product/widget/catalog/ProductForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleEditProductFacilities}">
+                            <include-form name="UpdateProductFacilities" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

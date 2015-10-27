@@ -417,7 +417,7 @@ document.lookuporder.orderId.focus();
                  <input type="checkbox" name="orderIdList" value="${orderHeader.orderId}" onchange="javascript:toggleOrderIdList();"/>
               </@td>
               <@td>${(orderType.get("description",locale)!(orderType.orderTypeId!""))!""}</@td>
-              <@td><a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class="">${orderHeader.orderId}</a></@td>
+              <@td><a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>">${orderHeader.orderId}</a></@td>
               <@td>
                 <div>
                   <#if displayParty?has_content>

@@ -54,8 +54,8 @@ under the License.
           <form method="post" action="<@ofbizUrl>FindProductById</@ofbizUrl>">
             <@pul title="${uiLabelMap.ProductFindProductWithIdValue}">
                 <@pli><@field type="input" size="20" maxlength="20" name="idValue" value="" postfix=true/></@pli>
-                <@pli><a href="<@ofbizUrl>UpdateAllKeywords</@ofbizUrl>" class=""> ${uiLabelMap.ProductAutoCreateKeywordsForAllProducts}</a></@pli>
-                <@pli><a href="<@ofbizUrl>FastLoadCache</@ofbizUrl>" class=""> ${uiLabelMap.ProductFastLoadCatalogIntoCache}</a></@pli>
+                <@pli><a href="<@ofbizUrl>UpdateAllKeywords</@ofbizUrl>"> ${uiLabelMap.ProductAutoCreateKeywordsForAllProducts}</a></@pli>
+                <@pli><a href="<@ofbizUrl>FastLoadCache</@ofbizUrl>"> ${uiLabelMap.ProductFastLoadCatalogIntoCache}</a></@pli>
             </@pul>
           </form>
         </li>

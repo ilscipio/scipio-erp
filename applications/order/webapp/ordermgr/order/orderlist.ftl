@@ -185,7 +185,7 @@ under the License.
             <#assign productStore = orderHeader.getRelatedOne("ProductStore", true)! />
             <@tr>
               <@td>
-                <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class="">${orderHeader.orderId}</a>
+                <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>">${orderHeader.orderId}</a>
               </@td>
               <@td><#if orderHeader.orderDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(orderHeader.orderDate, "", locale, timeZone)!}</#if></@td>
               <#--<@td>${orderHeader.orderName!}</@td>-->

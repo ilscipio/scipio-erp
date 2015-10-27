@@ -83,9 +83,9 @@ function call_fieldlookup3(view_name) {
       <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
       <@table type="data-list" width="100%" border="0" cellspacing="0" cellpadding="4" class="+boxoutside"> <#-- orig: class="boxoutside" -->
         <@tr>
-            <@td class="">${uiLabelMap.ContentWebSite}</@td>
+            <@td>${uiLabelMap.ContentWebSite}</@td>
             <#list blogRoleIdList as roleTypeId>
-              <@td class="">${roleTypeId}</@td>
+              <@td>${roleTypeId}</@td>
             </#list>
         </@tr>
 

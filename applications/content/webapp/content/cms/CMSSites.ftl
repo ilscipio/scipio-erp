@@ -217,16 +217,16 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
       <input type="hidden" name="rootForumId" value="${rootForumId}"/>
       <@table type="fields" cellspacing="" width="100%" border="0" cellspacing="0" cellpadding="4" class="+boxoutside"> <#-- orig: class="boxoutside" --> <#-- orig: class="" -->
         <@tr>
-            <@td class="">User</@td>
+            <@td>User</@td>
             <#list blogRoleIdList as roleTypeId>
-              <@td class="">${roleTypeId}</@td>
+              <@td>${roleTypeId}</@td>
             </#list>
         </@tr>
 
       <#assign rowCount=0/>
         <#list siteList as siteRoleMap>
           <@tr>
-            <@td class="">${siteRoleMap.partyId}</@td>
+            <@td>${siteRoleMap.partyId}</@td>
             <#list blogRoleIdList as roleTypeId>
               <#assign cappedSiteRole= Static["org.ofbiz.entity.model.ModelUtil"].dbNameToVarName(roleTypeId) />
               <@td align="center">

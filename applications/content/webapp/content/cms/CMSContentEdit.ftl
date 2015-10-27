@@ -127,8 +127,8 @@ ${menuWrapper.renderMenuString()}
                            <#assign checked="checked='checked'"/>
                        </#if>
                        <@tr>
-                          <@td class="">[${feature.productFeatureId}] - ${feature.description}</@td>
-                          <@td class=""><input type="checkbox" name="action_o_${rowCount}" value="Y" ${checked}/></@td>
+                          <@td>[${feature.productFeatureId}] - ${feature.description}</@td>
+                          <@td><input type="checkbox" name="action_o_${rowCount}" value="Y" ${checked}/></@td>
                           <input type="hidden" name="fieldName0_o_${rowCount}" value="productFeatureId"/>
                           <input type="hidden" name="fieldValue0_o_${rowCount}" value="${feature.productFeatureId}"/>
                           <input type="hidden" name="fieldName1_o_${rowCount}" value="dataResourceId"/>

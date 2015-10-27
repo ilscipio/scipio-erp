@@ -19,7 +19,7 @@ under the License.
 <#assign sectionTitle>
     <@row>
         <@cell small=10>
-            <@heading class="">${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></@heading>
+            <@heading>${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></@heading>
         </@cell>
         <@cell small=2>
             <span>${uiLabelMap.CommonSelectAll}</span>&nbsp;

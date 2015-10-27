@@ -130,7 +130,7 @@ under the License.
                 <div>
                   ${contactMech.infoString}
                   <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>
-                     (<a href="<@ofbizUrl>confirmationmailedit?orderId=${orderId}&amp;partyId=${partyId}&amp;sendTo=${contactMech.infoString}</@ofbizUrl>" class="">${uiLabelMap.OrderSendConfirmationEmail}</a>)
+                     (<a href="<@ofbizUrl>confirmationmailedit?orderId=${orderId}&amp;partyId=${partyId}&amp;sendTo=${contactMech.infoString}</@ofbizUrl>">${uiLabelMap.OrderSendConfirmationEmail}</a>)
                   <#else>
                      <a href="mailto:${contactMech.infoString}" class="${styles.button_default!}">(${uiLabelMap.OrderSendEmail})</a>
                   </#if>

@@ -126,7 +126,7 @@ under the License.
                                             <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader", false)>
                                             <#if returnHeader.statusId != "RETURN_CANCELLED">
                                                 <font color="red">${uiLabelMap.OrderReturned}</font>
-                                                ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="">${returnItem.returnId}</a>
+                                                ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>">${returnItem.returnId}</a>
                                             </#if>
                                         </#list>
                                     </#if>
@@ -555,7 +555,7 @@ under the License.
                                                                 
                                                 [${orderItemShipGrpInvRes.quantityNotAvailable?string.number}&nbsp;${uiLabelMap.OrderBackOrdered}]
                                                                 
-                                                                <#--<a href="<@ofbizUrl>balanceInventoryItems?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}&amp;orderId=${orderId}&amp;priorityOrderId=${orderId}&amp;priorityOrderItemSeqId=${orderItemShipGrpInvRes.orderItemSeqId}</@ofbizUrl>" class="" style="font-size: xx-small;">Raise Priority</a> -->
+                                                                <#--<a href="<@ofbizUrl>balanceInventoryItems?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}&amp;orderId=${orderId}&amp;priorityOrderId=${orderId}&amp;priorityOrderItemSeqId=${orderItemShipGrpInvRes.orderItemSeqId}</@ofbizUrl>" style="font-size: xx-small;">Raise Priority</a> -->
                                         </#if>
                                         &nbsp;
                                     </@td>

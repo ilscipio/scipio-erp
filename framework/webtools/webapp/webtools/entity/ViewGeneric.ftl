@@ -272,12 +272,12 @@ function ShowTab(lname) {
                                         </@tr>
                                     </@thead>
                                     <@tr>
-                                      <@td class="">${uiLabelMap.WebtoolsPk}</@td>
+                                      <@td>${uiLabelMap.WebtoolsPk}</@td>
                                       <@td>${relation.valueRelatedPk}</@td>
                                     </@tr>
                                     <#list relation.relatedFieldsList as relatedField>
                                       <@tr groupLast=true>
-                                        <@td class="">${relatedField.name}</@td>
+                                        <@td>${relatedField.name}</@td>
                                         <@td>${relatedField.value}</@td>
                                       </@tr>
                                     </#list>

@@ -732,9 +732,6 @@ earlier in macro:
   <#local addClass = parseAddClassArg(class)>
   <#local class = parseClassArg(class, "my-macro-default")>
 where my-macro-default is what you'd have had as arg default in the macro def
-
-TODO/FIXME: review what should happen when have two class args, e.g. one from inlineArgs and one from args map,
-if should combine or inlineArgs always overrides.
 -->
 
 <#-- get combined classes string with additionals/boolean logic, use default as needed,
@@ -785,14 +782,6 @@ if should combine or inlineArgs always overrides.
     <#else>
       <#return "">
     </#if>
-  <#elseif class?is_string>
-    <#if class?starts_with("+")>
-      <#return defaultVal>
-    <#elseif class?has_content>
-      <#return class>
-    <#else>
-      <#return "">
-    </#if>
   <#elseif class?is_sequence>
     <#if class?has_content>
       <#if class?first == "+">
@@ -800,6 +789,14 @@ if should combine or inlineArgs always overrides.
       <#else>
         <#return joinStyleNamesList(class)>
       </#if>
+    <#else>
+      <#return "">
+    </#if>
+  <#elseif class?is_string> 
+    <#if class?starts_with("+")>
+      <#return defaultVal>
+    <#elseif class?has_content>
+      <#return class>
     <#else>
       <#return "">
     </#if>
@@ -813,6 +810,21 @@ if should combine or inlineArgs always overrides.
 <#function isClassArgUseDefault class>
   <#return (class?is_string && class?starts_with("+")) || (class?is_boolean && class == false)>
 </#function>-->
+
+<#-- this function tries to combine the classes from first and second. second has priority but only replaces
+     second if not appending or explicit remove. 
+     the result should still be passed through makeClassesArg afterward. -->
+<#function combineClassesArgs first second>
+  <#if second?is_boolean>
+    <#if second>
+      <#return first>
+    <#else>
+      <#return second>
+    </#if>
+  <#else>
+    <#-- TODO: complicated! -->
+  </#if>
+</#function>
 
 <#-- 
 *************

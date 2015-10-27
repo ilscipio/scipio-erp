@@ -6062,6 +6062,9 @@
         <value xml:lang="zh">本地化</value>
         <value xml:lang="zh_TW">當地語系化</value>
     </property>
+    <property key="CommonLocation">
+        <value xml:lang="en">Location</value>
+    </property>
     <property key="CommonLogin">
         <value xml:lang="ar">دخول</value>
         <value xml:lang="cs">Přihlásit</value>

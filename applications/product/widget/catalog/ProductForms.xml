@@ -1958,36 +1958,40 @@ under the License.
             </entity-one>
             <set field="showPosition1" value="${groovy:String prev=(String)previousItem.get(&quot;facilityId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(facilityId)));}" type="Boolean"/>
         </row-actions>
-        <auto-fields-service service-name="updateProductFacilityLocation" default-position="2"/>
-        <field name="productId" position="2"><hidden/></field>
-        <field name="facilityName" entry-name="facilityId" position="1" use-when="showPosition1">
+        <field name="productId"><hidden/></field>
+        <field name="facilityId"><hidden/></field>
+        <field name="facilityName" title="${uiLabelMap.Facility}" entry-name="facilityId" position="1" use-when="showPosition1">
             <display-entity entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]" also-hidden="false"/>
         </field>
-        <field name="facilityId" position="2"><hidden/></field>
-        <field name="locationSeqId" position="2">
+        <field name="locationSeqId" title="${uiLabelMap.CommonLocation}">
             <display description="${facilityLocation.areaId} ${facilityLocation.aisleId} ${facilityLocation.sectionId} ${facilityLocation.levelId} ${facilityLocation.positionId} [${locationSeqId}] (${locationType.description})"/>
         </field>
-        <field name="submitAction" position="2" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" position="2" title=" " widget-style="${styles.button_default}">
+        <field name="minimumStock"><text/></field>
+        <field name="moveQuantity"><text/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductFacilityLocation" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId"/><parameter param-name="facilityId"/><parameter param-name="locationSeqId"/>
             </hyperlink>
         </field>
     </form>
+    
     <form name="AddProductFacilityLocation" target="createProductFacilityLocation" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createProductFacilityLocation"/>
         <field name="productId"><hidden/></field>
-        <field name="facilityId">
+        <field name="facilityId" title="${uiLabelMap.Facility}">
             <drop-down>
                 <entity-options entity-name="Facility" description="${facilityName}">
                     <entity-order-by field-name="facilityName"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="locationSeqId">
+        <field name="locationSeqId" title="${uiLabelMap.CommonLocation}" position="2">
             <lookup target-form-name="LookupFacilityLocation"/>
         </field>
+        <field name="minimumStock"><text/></field>
+        <field name="moveQuantity" position="2"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
     <!-- ProductIDs -->

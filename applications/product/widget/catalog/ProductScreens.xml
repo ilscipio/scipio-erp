@@ -609,6 +609,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditProductFacilityLocations">
         <section>
             <actions>
@@ -628,11 +629,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductFacilityLocations}">
-                            <include-form name="UpdateProductFacilityLocations" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.CommonAdd} ${uiLabelMap.ProductFacilityLocation}">
                             <include-form name="AddProductFacilityLocation" location="component://product/widget/catalog/ProductForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleEditProductFacilityLocations}">
+                            <include-form name="UpdateProductFacilityLocations" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

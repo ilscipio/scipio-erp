@@ -875,10 +875,12 @@ Not associated with an HTML element as is @fieldset.
   }>
 </#if>
 <#if !nocontainer?is_boolean>
-  <#if isChildField && (catoFieldNoContainerChildren[type]?? || catoFieldNoContainerParent[parentFieldInfo.type!]??)>
+  <#if nocontainer?has_content>
+    <#local nocontainer = nocontainer?boolean>
+  <#elseif isChildField && (catoFieldNoContainerChildren[type]?? || catoFieldNoContainerParent[parentFieldInfo.type!]??)>
     <#local nocontainer = true>
   <#else> 
-    <#local nocontainer = nocontainer?boolean>
+    <#local nocontainer = false>
   </#if>
 </#if>
 

@@ -2273,7 +2273,7 @@
         <field name="productId">
             <hidden />
         </field>
-        <field name="geoId">
+        <field name="geoId" title="${uiLabelMap.CommonGeo}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName}">
                     <entity-order-by field-name="geoTypeId" />
@@ -2281,7 +2281,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="productGeoEnumId">
+        <field name="productGeoEnumId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" operator="equals" value="PROD_GEO" />
@@ -2290,12 +2290,13 @@
             </drop-down>
         </field>
         <field name="description">
-            <text size="20" />
+            <textarea />
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}">
             <submit button-type="button" />
         </field>
     </form>
+    
     <form name="ListProductGeos" type="list" list-name="productGeos" target="updateProductGeo" odd-row-style="alternate-row"
         default-table-style="${styles.table_basic}">
         <actions>
@@ -2307,10 +2308,10 @@
         <field name="productId">
             <hidden />
         </field>
-        <field name="geoId">
-            <display also-hidden="true" />
+        <field name="geoId" title="${uiLabelMap.CommonGeo}">
+            <display-entity entity-name="Geo" description="${geoName}"/>
         </field>
-        <field name="productGeoEnumId">
+        <field name="productGeoEnumId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Enumeration" description="${description}" key-field-name="enumId">
                     <entity-constraint name="enumTypeId" operator="equals" value="PROD_GEO" />
@@ -2319,7 +2320,7 @@
             </drop-down>
         </field>
         <field name="description">
-            <text size="20" />
+            <textarea/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteProductGeo" description="${uiLabelMap.CommonDelete}" also-hidden="false">

@@ -1191,6 +1191,7 @@ under the License.
             </widgets>
         </section>
     </screen>
+    
     <screen name="EditProductGeos">
         <section>
             <actions>
@@ -1201,11 +1202,11 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditProductGeos}">
-                            <include-form name="ListProductGeos" location="component://product/widget/catalog/ProductForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleAddProductGeos}">
                             <include-form name="AddProductGeo" location="component://product/widget/catalog/ProductForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.PageTitleEditProductGeos}">
+                            <include-form name="ListProductGeos" location="component://product/widget/catalog/ProductForms.xml"/>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

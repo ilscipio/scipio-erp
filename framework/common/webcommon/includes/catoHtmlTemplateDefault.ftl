@@ -604,7 +604,7 @@ levels manually, but most often should let @section menu handle them.
     <#local level = level + relLevel>
   </#if>
   <#if levelClassPrefix?is_boolean>
-    <#local levelClassPrefix = levelClassPrefix?string("heading-level-", "")>
+    <#local levelClassPrefix = levelClassPrefix?string(styles.heading_level_prefix!"", "")>
   </#if>
   <#if levelClassPrefix?has_content>
     <#local headingLevelClass = levelClassPrefix + level?string>

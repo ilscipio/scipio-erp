@@ -43,6 +43,7 @@
     "icon_calendar" : "fi-calendar",
     "icon_arrow" : "fi-arrow-right",
     "icon_list" : "fi-list",
+    "heading_level_prefix" : "heading-level-",  
     
   <#-- Menus 
        menu_xxx classes are looked up by the @menu and @menuitem macros as defaults for each menu type. --> 

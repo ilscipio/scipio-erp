@@ -645,8 +645,8 @@ levels manually, but most often should let @section menu handle them.
 
 <#-- Main markup for @heading (minimal logic)
      This may be overridden by themes to change markup without changing logic.
-     NOTE: wherever this is overridden, should include "otherArgs..." for compatibility (new args won't break old overrides; remove to identify) -->
-<#macro heading_markup elem="" classes="" id="" attribs={} excludeAttribs=[] containerElem="" containerClasses="" containerId="" otherArgs...>
+     NOTE: wherever this is overridden, should include "extraArgs..." for compatibility (new args won't break old overrides; remove to identify) -->
+<#macro heading_markup elem="" classes="" id="" attribs={} excludeAttribs=[] containerElem="" containerClasses="" containerId="" extraArgs...>
   <#if containerElem?has_content>
     <${containerElem}<#if containerClasses?has_content> class="${containerClasses}"</#if><#if containerId?has_content> id="${containerId}"</#if>>
   </#if>
@@ -3507,9 +3507,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#t>
   <#local classes = makeClassesArg(class, styles["menu_" + styleName]!"")>
   <#t>
-  <#if !inlineItems>
-    <${htmlWrap!}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>>
-  </#if>
+  <@menu_markup classes=classes id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItems=inlineItems htmlWrap=htmlWrap>
   <#if !(preItems?is_boolean && preItems == false)>
     <#if preItems?is_sequence>
       <#list preItems as item>
@@ -3546,13 +3544,23 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
       </#list>
     </#if>
   </#if>
-  <#if !inlineItems>
-    </${htmlWrap!}>
-  </#if>
+  </@menu_markup>
   <#t>
   <#global catoCurrentMenuInfo = prevMenuInfo>
   <#global catoCurrentMenuItemIndex = prevMenuItemIndex>
   <#global catoLastMenuInfo = menuInfo>
+</#macro>
+
+<#-- Markup for @menu container, with minimal logic.
+     NOTE: inlineItems is included in case needs different effect per-theme (and ugly to factor out) -->
+<#macro menu_markup classes="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false htmlWrap="ul" extraArgs...>
+  <#if !inlineItems>
+    <${htmlWrap!}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>
+  </#if>
+  <#nested>
+  <#if !inlineItems>
+    </${htmlWrap!}>
+  </#if>
 </#macro>
 
 <#-- 
@@ -3645,9 +3653,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     <#local classes = (classes + " active")?trim>
     <#local contentClasses = (contentClasses + " active")?trim>
   </#if>
-  <#if !inlineItem>
-    <${htmlWrap!}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
-  </#if>
+  <@menuitem_markup classes=classes id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=inlineItem htmlWrap=htmlWrap><#rt>
     <#if !nestedContent?is_boolean>
       <#-- use nestedContent -->
     <#elseif !nestedMenu?is_boolean>
@@ -3655,21 +3661,45 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     <#else>
       <#local nestedContent><#nested></#local>
     </#if>
-    <#if !wrapNested && nestedFirst>${nestedContent}</#if>
+    <#t><#if !wrapNested && nestedFirst>${nestedContent}</#if>
     <#if type == "link">
       <#if !href?is_string>
         <#local href = "javascript:void(0);">
       </#if>
       <#local href = interpretRequestUri(href)>
-      <a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs exclude=["class","id","style","href","onclick","target","title"]/></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></a>
+      <#t><@menuitem_link_markup href=href onclick=onClick classes=contentClasses id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","href","onclick","target","title"] target=target title=title><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_link_markup>
     <#elseif type == "text">
-      <span<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs exclude=["class","id","style","onclick"]/></#if><#if onClick?has_content> onclick="${onClick}"</#if>><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></span>
+      <#t><@menuitem_text_markup classes=contentClasses id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","onclick"] onClick=onClick><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_text_markup>
     <#elseif type == "submit">
-      <#if wrapNested && nestedFirst>${nestedContent}</#if><button type="submit"<#if contentClasses?has_content> class="${contentClasses}"</#if><#if contentId?has_content> id="${contentId}"</#if><#if contentStyle?has_content> style="${contentStyle}"</#if><#if contentAttribs?has_content><@elemAttribStr attribs=contentAttribs exclude=["class","id","style","value","onclick","disabled","type"]/></#if><#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#if text?has_content>${text}</#if></button><#if wrapNested && !nestedFirst> ${nestedContent}</#if>
+      <#t><#if wrapNested && nestedFirst>${nestedContent}</#if><@menuitem_submit_markup classes=contentClasses id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","value","onclick","disabled","type"] onClick=onClick disabled=disabled><#if text?has_content>${text}</#if></@menuitem_submit_markup><#if wrapNested && !nestedFirst> ${nestedContent}</#if>
     <#else>
-      <#if text?has_content>${text}</#if><#if wrapNested>${nestedContent}</#if>
+      <#t><#if text?has_content>${text}</#if><#if wrapNested>${nestedContent}</#if>
     </#if>
-    <#if !wrapNested && !nestedFirst>${nestedContent}</#if>
-  <#if !inlineItem></${htmlWrap!}></#if><#lt>
+    <#t><#if !wrapNested && !nestedFirst>${nestedContent}</#if>
+  </@menuitem_markup><#lt>
   <#global catoCurrentMenuItemIndex = catoCurrentMenuItemIndex + 1>
+</#macro>
+
+<#-- Markup for @menuitem (outer item wrapper only) -->
+<#macro menuitem_markup classes="" id="" style="" attribs={} excludeAttribs=[] inlineItem=false htmlWrap="li" extraArgs...>
+  <#if !inlineItem>
+    <${htmlWrap!}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
+  </#if>
+  <#nested><#t>
+  <#if !inlineItem></${htmlWrap!}></#if><#lt>
+</#macro>
+
+<#-- Markup for @menuitem type="link" -->
+<#macro menuitem_link_markup classes="" id="" style="" href="" onClick="" target="" title="" attribs={} excludeAttribs=[] extraArgs...>
+  <#t><a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#nested></a>
+</#macro>
+
+<#-- Markup for @menuitem type="text" -->
+<#macro menuitem_text_markup classes="" id="" style="" onClick="" attribs={} excludeAttribs=[] extraArgs...>
+  <#t><span<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if>><#nested></span>
+</#macro>
+
+<#-- Markup for @menuitem type="submit" -->
+<#macro menuitem_submit_markup classes="" id="" style="" text="" onClick="" disabled=false attribs={} excludeAttribs=[] extraArgs...>
+  <#t><button type="submit"<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#nested></button>
 </#macro>

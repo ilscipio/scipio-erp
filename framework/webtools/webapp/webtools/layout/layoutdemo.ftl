@@ -279,7 +279,7 @@
   <@menu type="subtab" items=menuItems sort=true sortDesc=true/>
 
   <#macro menuContent menuArgs>
-    <@menu class="+mymenu" args=menuArgs>
+    <@menu class="+my-menu-class" args=menuArgs>
       <@menuitem type="link" text="Menu Button 1" />
       <@menuitem type="link" text="Menu Button 2" />
     </@menu>

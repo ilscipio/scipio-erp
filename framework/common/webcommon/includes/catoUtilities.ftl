@@ -824,18 +824,58 @@ where my-macro-default is what you'd have had as arg default in the macro def
   <#return (class?is_string && class?starts_with("+")) || (class?is_boolean && class == false)>
 </#function>-->
 
-<#-- this function tries to combine the classes from first and second. second has priority but only replaces
-     second if not appending or explicit remove. 
-     the result should still be passed through makeClassesArg afterward. -->
-<#function combineClassesArgs first second>
-  <#if second?is_boolean>
-    <#if second>
-      <#return first>
-    <#else>
-      <#return second>
-    </#if>
+
+<#-- 
+*************
+* combineClassArgs functions
+************
+This function logically combines two template-level cato macro "class" arguments. 
+The second overrides the first, but only in overriding cases, else will combine.
+Each arg can be boolean or string, and string can be prepended with "+", all of which
+affect the combination logic.
+-->
+<#function combineClassArgs first second>
+  <#local firstOrig = first>
+  <#local secondOrig = second>
+
+  <#if second?is_string>
+    <#if second == "false">
+      <#local second = false>
+    <#elseif second == "true">
+      <#local second = true>
+    </#if> 
+  </#if>
+
+  <#if (second?is_boolean && second == false)>
+    <#-- second false means no class, period. -->
+    <#return secondOrig> 
+  <#elseif second?is_boolean || !second?has_content>
+    <#-- second true or empty means delegate to first -->
+    <#return firstOrig> 
+  </#if>
+
+  <#if first?is_string>
+    <#if first == "false">
+      <#local first = false>
+    <#elseif first == "true">
+      <#local first = true>
+    </#if> 
+  </#if>
+
+  <#if !second?starts_with("+")>
+    <#-- second with absolute class replaces all -->
+    <#return secondOrig>
   <#else>
-    <#-- TODO: complicated! -->
+    <#if (first?is_boolean && first == false)>
+      <#-- here, the first's attempt to remove class defaults cause the second's append to become a replacement -->
+      <#return second?substring(1)>
+    <#elseif first?is_boolean || !first?has_content>
+      <#-- if first true or empty, gives second -->
+      <#return secondOrig>
+    <#else>
+      <#-- whether first was absolute or appending, can simply append second here -->
+      <#return firstOrig + " " + second?substring(1)>
+    </#if>
   </#if>
 </#function>
 

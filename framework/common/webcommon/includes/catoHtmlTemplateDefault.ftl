@@ -273,6 +273,7 @@ levels manually, but most often should let @section menu handle them.
         it was created initially strictly to remove dependency of cato libs on ofbiz macro library,
         and to head toward separating macro logic and markup.
     TODO: refinement, clean up macro arguments and dissect further
+    FIXME?: menuClass does not obey class arg rules, not sure if should here      
           
     fromWidgets: hint of whether called by renderer or ftl macros
     hasContent: hint to say there will be content, workaround for styling -->
@@ -3450,6 +3451,9 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
                       defaults are based on:
                       styles["menu_" + type?replace("-","_")], or if missing from hash, falls back to
                       styles["menu_default"]
+                      NOTE: for this macro, the inline "class" args is now logically combined with the "class"
+                          arg from the "args" map using the logic in combineClassArgs function, with
+                          inline having priority.
     id              = menu id
     style           = legacy menu style (for <ul element)
     attribs         = hash of other menu attribs (for <ul element, especially those with dashes)
@@ -3474,9 +3478,10 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     htmlWrap        = wrapping HTML element (ul|div|span, default: ul)
 -->
 <#macro menu args={} inlineArgs...>
+  <#local args = toSimpleMap(args)> <#-- DEV NOTE: make sure always do this from now on here... -->
   <#local type = inlineArgs.type!args.type!"generic">
   <#local inlineItems = inlineArgs.inlineItems!args.inlineItems!false>
-  <#local class = inlineArgs.class!args.class!true>
+  <#local class = combineClassArgs(args.class!true, inlineArgs.class!true)>
   <#local id = inlineArgs.id!args.id!"">
   <#local style = inlineArgs.style!args.style!"">
   <#local attribs = inlineArgs.attribs!args.attribs!"">
@@ -3568,10 +3573,14 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
    * General Attributes *
     type            = menu item (content) type: [generic|link|text|submit], default generic (but discouraged; prefer specific)
     class           = menu item class (for <li> element)
+                      NOTE: for this macro, the inline "class" args is now logically combined with the "class"
+                          arg from the "args" map using the logic in combineClassArgs function, with inline given priority.
     id              = menu item id
     style           = legacy menu item style (for <li> element)
     attribs         = other menu item attributes (for <li> element, especially those with dashes in names)
     contentClass    = menu item content class (for <a>, <span> or <input> element)
+                      NOTE: for this macro, the inline "contentClass" args is now logically combined with the "contentClass"
+                          arg from the "args" map using the logic in combineClassArgs function, with inline given priority.
     contentId       = menu item content id
     contentStyle    = legacy menu item content style
     contentAttribs  = other menu item content attributes (for <a>, <span> or <input> element, especially those with dashes in names)
@@ -3594,12 +3603,13 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     inlineItem      = boolean, if true, generate only items, not menu container
 -->
 <#macro menuitem args={} inlineArgs...>
+  <#local args = toSimpleMap(args)> <#-- DEV NOTE: make sure always do this from now on here... -->
   <#local type = inlineArgs.type!args.type!"generic">
-  <#local class = inlineArgs.class!args.class!true>
+  <#local class = combineClassArgs(args.class!true, inlineArgs.class!true)>
   <#local id = inlineArgs.id!args.id!"">
   <#local style = inlineArgs.style!args.style!"">
   <#local attribs = inlineArgs.attribs!args.attribs!"">
-  <#local contentClass = inlineArgs.contentClass!args.contentClass!true>
+  <#local contentClass = combineClassArgs(args.contentClass!true, inlineArgs.contentClass!true)>
   <#local contentId = inlineArgs.contentId!args.contentId!"">
   <#local contentStyle = inlineArgs.contentStyle!args.contentStyle!"">
   <#local contentAttribs = inlineArgs.contentAttribs!args.contentAttribs!"">

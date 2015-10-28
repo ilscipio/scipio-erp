@@ -3513,7 +3513,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#global catoCurrentMenuInfo = menuInfo>
   <#global catoCurrentMenuItemIndex = 0>
   <#t>
-  <#local classes = makeClassesArg(class, styles["menu_" + styleName]!"")>
+  <#local classes = makeClassesArg(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
   <#t>
   <@menu_markup classes=classes id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItems=inlineItems htmlWrap=htmlWrap>
   <#if !(preItems?is_boolean && preItems == false)>
@@ -3635,14 +3635,14 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#local menuType = (catoCurrentMenuInfo.type)!"">
   <#local menuStyleName = (catoCurrentMenuInfo.styleName)!"">
   <#t>
-  <#local classes = makeClassesArg(class, styles["menu_" + menuStyleName + "_item"]!"")>
+  <#local classes = makeClassesArg(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>
   <#t>
   <#if type == "link">
-    <#local defaultContentClass = styles["menu_" + menuStyleName + "_itemlink"]!"">
+    <#local defaultContentClass = styles["menu_" + menuStyleName + "_item_link"]!styles["menu_default_item_link"]!"">
   <#elseif type == "text">
-    <#local defaultContentClass = "text-entry">
+    <#local defaultContentClass = styles["menu_" + menuStyleName + "_item_text"]!styles["menu_default_item_text"]!"">
   <#elseif type == "submit">
-    <#local defaultContentClass = styles["menu_" + menuStyleName + "_submit"]!"">
+    <#local defaultContentClass = styles["menu_" + menuStyleName + "_item_submit"]!styles["menu_default_item_submit"]!"">
   <#else>
     <#local defaultContentClass = "">
   </#if>

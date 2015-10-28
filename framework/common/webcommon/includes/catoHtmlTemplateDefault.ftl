@@ -2776,20 +2776,14 @@ Helps define table. Required wrapper for all table sub-elem macros.
     <#if inheritAltRows>
       <#local autoAltRows = true>
     <#else>
-      <#local autoAltRows = styles["table_" + styleName + "_autoaltrows"]!"">
-      <#if !autoAltRows?is_boolean>
-        <#local autoAltRows = styles["table_default_autoaltrows"]!"">
-        <#if !autoAltRows?is_boolean>
-          <#local autoAltRows = false>
-        </#if>
-      </#if>
+      <#local autoAltRows = styles["table_" + styleName + "_autoaltrows"]!styles["table_default_autoaltrows"]!false>
     </#if>
   </#if>
-  <#local defaultClass = styles["table_" + styleName]!"">
+  <#local defaultClass = styles["table_" + styleName]!styles["table_default"]!"">
   <#local classes = makeClassesArg(class, defaultClass)>
   <#if cellspacing?is_boolean>
     <#if cellspacing>
-      <#local cellspacing = styles["table_" + styleName + "_cellspacing"]!"">
+      <#local cellspacing = styles["table_" + styleName + "_cellspacing"]!styles["table_default_cellspacing"]!"">
     <#else>
       <#local cellspacing = "">
     </#if>
@@ -2995,13 +2989,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#local tableStyleName = (catoCurrentTableInfo.styleName)!tableType>
   <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
   <#if !type?has_content>
-    <#local type = styles["table_" + tableStyleName + "_rowtype"]!"">
-    <#if !type?has_content>
-      <#local type = styles["table_default_rowtype"]!"">
-      <#if !type?has_content>
-        <#local type = "generic">
-      </#if>
-    </#if>
+    <#local type = styles["table_" + tableStyleName + "_rowtype"]!styles["table_default_rowtype"]!"generic">
   </#if>
   <#local metaRow = (type == "meta")>
   <#local isRegAltRow = !metaRow && ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>

@@ -595,7 +595,8 @@ levels manually, but most often should let @section menu handle them.
     attribs              = hash of other legacy h1-h6 attributes (mainly for those with dash in name)
     [inlineAttribs...]   = other legacy h1-h6 attributes, inlined
 -->
-<#macro heading elemType=true level="" relLevel="" class=true id="" levelClassPrefix="heading-level-" consumeLevel="" containerElemType=false containerClass=true attribs={} inlineAttribs...>
+<#macro heading elemType=true level="" relLevel="" class=true id="" levelClassPrefix="heading-level-" consumeLevel="" 
+    containerElemType=false containerClass=true containerId="" attribs={} inlineAttribs...>
   <#if !level?has_content>
     <#local level = getCurrentHeadingLevel()>
   </#if>
@@ -636,15 +637,23 @@ levels manually, but most often should let @section menu handle them.
   <#elseif containerElemType == "raw" || !containerElemType?has_content>
     <#local cElem = "">
   <#else>
-    <#local cElem = containerElemType>
+    <#local cElem = containerElemType> 
   </#if>
-  <#if cElem?has_content>
-    <${cElem}<#if containerClasses?has_content> class="${containerClasses}"</#if><#if containerId?has_content> id="${containerId}"</#if>>
+  <@heading_markup elem=hElem classes=classes id=id attribs=concatMaps(attribs, inlineAttribs) excludeAttribs=["class", "id"] 
+      containerElem=cElem containerClasses=containerClasses containerId=containerId><#nested></@heading_markup>
+</#macro>
+
+<#-- Main markup for @heading (minimal logic)
+     This may be overridden by themes to change markup without changing logic.
+     NOTE: wherever this is overridden, should include "otherArgs..." for compatibility (new args won't break old overrides; remove to identify) -->
+<#macro heading_markup elem="" classes="" id="" attribs={} excludeAttribs=[] containerElem="" containerClasses="" containerId="" otherArgs...>
+  <#if containerElem?has_content>
+    <${containerElem}<#if containerClasses?has_content> class="${containerClasses}"</#if><#if containerId?has_content> id="${containerId}"</#if>>
   </#if>
-  <#if hElem?has_content><${hElem}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#rt>
-    <#lt><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if hElem?has_content></${hElem}></#if>
-  <#if cElem?has_content>
-    </${cElem}>
+  <#if elem?has_content><${elem}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#rt>
+    <#lt><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if><#nested><#if elem?has_content></${elem}></#if>
+  <#if containerElem?has_content>
+    </${containerElem}>
   </#if>
 </#macro>
 

@@ -21,13 +21,14 @@ under the License.
             <@htmlTemplate.nextPrev commonUrl=commonUrl listSize=arraySize viewSize=viewSize viewIndex=viewIndex highIndex=highIndex commonDisplaying=commonDisplaying/>
         </#if>
         <#if resultPartialList?has_content>
-          <@table type="data-list" autoAltRows=true cellspacing="0" scrollable=true> <#-- orig: class="basic-table responsive" -->
+          <@table type="data-list" autoAltRows=true cellspacing="0" scrollable=true fixedColumnsLeft=1 fixedColumnsRight=1> <#-- orig: class="basic-table responsive" -->
            <@thead>
             <@tr class="header-row-2">
                     <@th>&nbsp;</@th>
                 <#list fieldList as field>
                         <@th>${field.name}</@th>
                 </#list>
+                    <@th>&nbsp;</@th>
             </@tr>
             </@thead>
             <#if resultPartialList?has_content>
@@ -35,13 +36,15 @@ under the License.
                     <@tr>
                         <@td>
                             <a href="<@ofbizUrl>ViewGeneric?${record.findString}</@ofbizUrl>">${uiLabelMap.CommonView}</a>
-                        <#if hasDeletePermission == 'Y'>
-                           <a href="<@ofbizUrl>UpdateGeneric?${record.findString}&amp;UPDATE_MODE=DELETE</@ofbizUrl>" class="alert">${uiLabelMap.CommonDelete}</a>
-                        </#if>
                         </@td>
                         <#list fieldList as field>
                             <@td>${record.fields.get(field.name)!?string}</@td>
                         </#list>
+                        <@td>
+                        <#if hasDeletePermission == 'Y'>
+                           <a href="<@ofbizUrl>UpdateGeneric?${record.findString}&amp;UPDATE_MODE=DELETE</@ofbizUrl>" class="alert">${uiLabelMap.CommonDelete}</a>
+                        </#if>
+                        </@td>
                     </@tr>
                 </#list>
             </#if>

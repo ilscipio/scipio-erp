@@ -2726,10 +2726,19 @@ Helps define table. Required wrapper for all table sub-elem macros.
     useFootAltRoots = whether use alt row logic in foot or not
     cellspacing     = cellspacing, defaults specified in styles hash, set to "" to prevent setting.
     wrapIf/openOnly/closeOnly = advanced structure control, for esoteric cases
-    attribs               = hash of other legacy <table attributes (mainly for those with dash in name)
+    attribs         = hash of other legacy <table attributes (mainly for those with dash in name)
+    
+    * Responsive options *
+    scrollable      = will rely on the jquery plugin datatables.js (www.datatables.net) to generate responsive table. Can be combined with fixed column type
+    fixedColumnsLeft  = int value; number of columns that are fixed on the left-hand side
+    fixedColumnsRight = int value;number of columns that are fixed on the right hand side
     [inlineAttribs...]    = other legacy <table attributes and values, inlined
 -->
-<#macro table type="" class=true id="" cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro table type="" class=true id="" cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false fixedColumnsLeft=0 fixedColumnsRight=0 attribs={} inlineAttribs...>
+<#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
+<#local fieldIdNum = fieldIdNum + 1 />
+<#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
+<#if !id?has_content><#local id="table_"+fieldIdNum/></#if>
 <#if !type?has_content>
   <#local type = "generic">
 </#if>
@@ -2798,11 +2807,6 @@ Helps define table. Required wrapper for all table sub-elem macros.
         {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevRowAltFlag":prevRowAltFlag, 
          "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, "scrollable":scrollable})>
   </#if>
-  <#if scrollable>
-  <#-- TODO: change this to something more foundation-like.
-       this is a custom workaround to get scrolling, nothing else working. -->
-  <div class="${styles.table_responsive_wrap!}">
-  </#if>
   <table<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#rt>
     <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "cellspacing"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
 </#if>
@@ -2820,7 +2824,23 @@ Helps define table. Required wrapper for all table sub-elem macros.
   </#if>
   </table>
   <#if scrollable>
-  </div>
+  <script type="">
+    $(document).ready(function() {
+        var ${id!} = $('#${id}').DataTable( {
+            fixedHeader: true,
+            scrollX: true,
+            info: false,
+            paging: false,
+            searching : false
+            <#if fixedColumnsLeft&gt;0 || fixedColumnsRight&gt;0>,fixedColumns:   {
+            leftColumns: ${fixedColumnsLeft!0},
+            rightColumns: ${fixedColumnsRight!0}
+            }
+            </#if>
+            
+        } );
+    } );
+  </script>
   </#if>
   <#local dummy = setRequestVar("catoCurrentTableInfo", prevTableInfo)!>
   <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevSectionInfo)!>

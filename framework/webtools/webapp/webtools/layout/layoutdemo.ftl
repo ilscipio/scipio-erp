@@ -93,6 +93,8 @@
 <@heading level=4>h4.</@heading>
 <@heading level=5>h5.</@heading>
 <@heading level=6>h6.</@heading>
+<@heading level=2 containerElemType="div" containerClass="+my-heading-container-class" 
+    containerId="my-heading-container-1" class="+my-heading-class" id="my-heading">Another h2 with container.</@heading>
 
 <@heading relLevel=+1>Shapes</@heading>
 <a href="#" class="${styles.button!} ${styles.tiny!} ${styles.button_color_default}">Tiny Button</a>

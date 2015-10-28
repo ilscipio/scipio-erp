@@ -595,13 +595,16 @@ levels manually, but most often should let @section menu handle them.
     attribs              = hash of other legacy h1-h6 attributes (mainly for those with dash in name)
     [inlineAttribs...]   = other legacy h1-h6 attributes, inlined
 -->
-<#macro heading elemType=true level="" relLevel="" class=true id="" levelClassPrefix="heading-level-" consumeLevel="" 
+<#macro heading elemType=true level="" relLevel="" class=true id="" levelClassPrefix=true consumeLevel="" 
     containerElemType=false containerClass=true containerId="" attribs={} inlineAttribs...>
   <#if !level?has_content>
     <#local level = getCurrentHeadingLevel()>
   </#if>
   <#if relLevel?has_content>
     <#local level = level + relLevel>
+  </#if>
+  <#if levelClassPrefix?is_boolean>
+    <#local levelClassPrefix = levelClassPrefix?string("heading-level-", "")>
   </#if>
   <#if levelClassPrefix?has_content>
     <#local headingLevelClass = levelClassPrefix + level?string>
@@ -613,20 +616,17 @@ levels manually, but most often should let @section menu handle them.
   <#if (consumeLevel?is_boolean && consumeLevel == true)>
     <#local dummy = setCurrentHeadingLevel(level + 1)>
   </#if>
-  <#-- local adjustment to prevent invalid <hX> elem. true value always reflected in headingLevelClass. -->
   <#if (level < 1)>
     <#local level = 1>
-  <#elseif (level > 6)>
-    <#local level = 6>
   </#if>
   <#if elemType?is_boolean>
     <#if elemType>
-      <#local hElem = "h" + level?string>
+      <#local hElem = "h">
     <#else>
       <#local hElem = "">
     </#if>
   <#elseif elemType == "heading" || elemType == "h">
-    <#local hElem = "h" + level?string>
+    <#local hElem = "h">
   <#elseif elemType == "raw" || !elemType?has_content>
     <#local hElem = "">
   <#else>
@@ -639,14 +639,22 @@ levels manually, but most often should let @section menu handle them.
   <#else>
     <#local cElem = containerElemType> 
   </#if>
-  <@heading_markup elem=hElem classes=classes id=id attribs=concatMaps(attribs, inlineAttribs) excludeAttribs=["class", "id"] 
+  <@heading_markup level=level elem=hElem classes=classes id=id attribs=concatMaps(attribs, inlineAttribs) excludeAttribs=["class", "id"] 
       containerElem=cElem containerClasses=containerClasses containerId=containerId><#nested></@heading_markup>
 </#macro>
 
-<#-- Main markup for @heading (minimal logic)
+<#-- Main markup for @heading (minimal logic; a little needed)
      This may be overridden by themes to change markup without changing logic.
+     Here, elem will contain either the value "h" or a valid html element.
      NOTE: wherever this is overridden, should include "extraArgs..." for compatibility (new args won't break old overrides; remove to identify) -->
-<#macro heading_markup elem="" classes="" id="" attribs={} excludeAttribs=[] containerElem="" containerClasses="" containerId="" extraArgs...>
+<#macro heading_markup level=1 elem="" classes="" id="" attribs={} excludeAttribs=[] containerElem="" containerClasses="" containerId="" extraArgs...>
+  <#local elemLevel = level>
+  <#if (elemLevel > 6)>
+    <#local elemLevel = 6>
+  </#if>
+  <#if elem == "h">
+    <#local elem = "h" + elemLevel?string>
+  </#if>
   <#if containerElem?has_content>
     <${containerElem}<#if containerClasses?has_content> class="${containerClasses}"</#if><#if containerId?has_content> id="${containerId}"</#if>>
   </#if>

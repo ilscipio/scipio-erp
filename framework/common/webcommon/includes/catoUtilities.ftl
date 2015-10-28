@@ -830,52 +830,43 @@ where my-macro-default is what you'd have had as arg default in the macro def
 * combineClassArgs functions
 ************
 This function logically combines two template-level cato macro "class" arguments. 
-The second overrides the first, but only in overriding cases, else will combine.
-Each arg can be boolean or string, and string can be prepended with "+", all of which
-affect the combination logic.
+The second almost always overrides the first, except when second is appending a class
+with "+", in which case depends on the first.
+NOTE: even if the second arg is merely "true" (which usually means "use defaults" for cato macros),
+    this method will return true and dismiss the first argument. "true" is not treated as
+    pass-through here. this does not seem consistent,
+    but is chosen explicitly so that caller/macro decides what the "pass-through" value
+    is supposed to be. here, we assume "true" was passed explicitly to override the first.
+    we only treat "+".
+    in other words, can see this as another kludge for lack of null values in freemarker.
 -->
 <#function combineClassArgs first second>
-  <#local firstOrig = first>
-  <#local secondOrig = second>
-
-  <#if second?is_string>
-    <#if second == "false">
-      <#local second = false>
-    <#elseif second == "true">
-      <#local second = true>
-    </#if> 
-  </#if>
-
-  <#if (second?is_boolean && second == false)>
-    <#-- second false means no class, period. -->
-    <#return secondOrig> 
-  <#elseif second?is_boolean || !second?has_content>
-    <#-- second true or empty means delegate to first -->
-    <#return firstOrig> 
-  </#if>
-
-  <#if first?is_string>
-    <#if first == "false">
-      <#local first = false>
-    <#elseif first == "true">
-      <#local first = true>
-    </#if> 
-  </#if>
-
-  <#if !second?starts_with("+")>
-    <#-- second with absolute class replaces all -->
-    <#return secondOrig>
-  <#else>
-    <#if (first?is_boolean && first == false)>
-      <#-- here, the first's attempt to remove class defaults cause the second's append to become a replacement -->
-      <#return second?substring(1)>
-    <#elseif first?is_boolean || !first?has_content>
-      <#-- if first true or empty, gives second -->
-      <#return secondOrig>
-    <#else>
-      <#-- whether first was absolute or appending, can simply append second here -->
-      <#return firstOrig + " " + second?substring(1)>
+  <#if second?is_string && second?starts_with("+")>
+    <#if first?is_string>
+      <#if first == "false">
+        <#local first = false>
+      <#elseif first == "true">
+        <#local first = true>
+      </#if> 
     </#if>
+
+    <#if first?is_boolean>
+      <#if first>
+        <#-- if first true, return second -->  
+        <#return second>
+      <#else>
+        <#-- here, the first's attempt to remove class defaults with "false" cause the second's append to become a replacement -->
+        <#return second?substring(1)>
+      </#if>
+    <#elseif !first?has_content>
+      <#-- empty currently same as true -->
+      <#return second>
+    <#else>
+      <#-- first has content; whether was absolute or appending, can simply append second here -->
+      <#return first + " " + second?substring(1)>
+    </#if>
+  <#else>
+    <#return second>
   </#if>
 </#function>
 

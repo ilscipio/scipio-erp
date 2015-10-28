@@ -644,7 +644,7 @@ levels manually, but most often should let @section menu handle them.
       containerElem=cElem containerClasses=containerClasses containerId=containerId><#nested></@heading_markup>
 </#macro>
 
-<#-- Main markup for @heading (minimal logic; a little needed)
+<#-- Main markup for @heading (minimal logic; a little needed) - may be overridden
      This may be overridden by themes to change markup without changing logic.
      Here, elem will contain either the value "h" or a valid html element.
      NOTE: wherever this is overridden, should include "extraArgs..." for compatibility (new args won't break old overrides; remove to identify) -->
@@ -3481,7 +3481,11 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#local args = toSimpleMap(args)> <#-- DEV NOTE: make sure always do this from now on here... -->
   <#local type = inlineArgs.type!args.type!"generic">
   <#local inlineItems = inlineArgs.inlineItems!args.inlineItems!false>
-  <#local class = combineClassArgs(args.class!true, inlineArgs.class!true)>
+  <#if inlineArgs.class??>
+    <#local class = combineClassArgs(args.class!true, inlineArgs.class)>
+  <#else>
+    <#local class = args.class!true>
+  </#if>
   <#local id = inlineArgs.id!args.id!"">
   <#local style = inlineArgs.style!args.style!"">
   <#local attribs = inlineArgs.attribs!args.attribs!"">
@@ -3552,7 +3556,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#global catoLastMenuInfo = menuInfo>
 </#macro>
 
-<#-- Markup for @menu container, with minimal logic.
+<#-- Markup for @menu container, with minimal logic - may be overridden
      NOTE: inlineItems is included in case needs different effect per-theme (and ugly to factor out) -->
 <#macro menu_markup classes="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false htmlWrap="ul" extraArgs...>
   <#if !inlineItems>
@@ -3605,11 +3609,19 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
 <#macro menuitem args={} inlineArgs...>
   <#local args = toSimpleMap(args)> <#-- DEV NOTE: make sure always do this from now on here... -->
   <#local type = inlineArgs.type!args.type!"generic">
-  <#local class = combineClassArgs(args.class!true, inlineArgs.class!true)>
+  <#if inlineArgs.class??>
+    <#local class = combineClassArgs(args.class!true, inlineArgs.class)>
+  <#else>
+    <#local class = args.class!true>
+  </#if>
   <#local id = inlineArgs.id!args.id!"">
   <#local style = inlineArgs.style!args.style!"">
   <#local attribs = inlineArgs.attribs!args.attribs!"">
-  <#local contentClass = combineClassArgs(args.contentClass!true, inlineArgs.contentClass!true)>
+  <#if inlineArgs.contentClass??>
+    <#local contentClass = combineClassArgs(args.contentClass!true, inlineArgs.contentClass)>
+  <#else>
+    <#local contentClass = args.contentClass!true>
+  </#if>
   <#local contentId = inlineArgs.contentId!args.contentId!"">
   <#local contentStyle = inlineArgs.contentStyle!args.contentStyle!"">
   <#local contentAttribs = inlineArgs.contentAttribs!args.contentAttribs!"">
@@ -3686,7 +3698,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#global catoCurrentMenuItemIndex = catoCurrentMenuItemIndex + 1>
 </#macro>
 
-<#-- Markup for @menuitem (outer item wrapper only) -->
+<#-- Markup for @menuitem (outer item wrapper only) - may be overridden -->
 <#macro menuitem_markup classes="" id="" style="" attribs={} excludeAttribs=[] inlineItem=false htmlWrap="li" extraArgs...>
   <#if !inlineItem>
     <${htmlWrap!}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
@@ -3695,17 +3707,17 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#if !inlineItem></${htmlWrap!}></#if><#lt>
 </#macro>
 
-<#-- Markup for @menuitem type="link" -->
+<#-- Markup for @menuitem type="link" - may be overridden -->
 <#macro menuitem_link_markup classes="" id="" style="" href="" onClick="" target="" title="" attribs={} excludeAttribs=[] extraArgs...>
   <#t><a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#nested></a>
 </#macro>
 
-<#-- Markup for @menuitem type="text" -->
+<#-- Markup for @menuitem type="text" - may be overridden -->
 <#macro menuitem_text_markup classes="" id="" style="" onClick="" attribs={} excludeAttribs=[] extraArgs...>
   <#t><span<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if>><#nested></span>
 </#macro>
 
-<#-- Markup for @menuitem type="submit" -->
+<#-- Markup for @menuitem type="submit" - may be overridden -->
 <#macro menuitem_submit_markup classes="" id="" style="" text="" onClick="" disabled=false attribs={} excludeAttribs=[] extraArgs...>
   <#t><button type="submit"<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#nested></button>
 </#macro>

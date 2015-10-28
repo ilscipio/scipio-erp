@@ -42,7 +42,7 @@ under the License.
                         </#list>
                         <@td>
                         <#if hasDeletePermission == 'Y'>
-                           <a href="<@ofbizUrl>UpdateGeneric?${record.findString}&amp;UPDATE_MODE=DELETE</@ofbizUrl>" class="alert">${uiLabelMap.CommonDelete}</a>
+                           <a href="<@ofbizUrl>UpdateGeneric?${record.findString}&amp;UPDATE_MODE=DELETE</@ofbizUrl>">${uiLabelMap.CommonDelete}</a>
                         </#if>
                         </@td>
                     </@tr>

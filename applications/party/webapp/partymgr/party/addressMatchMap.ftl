@@ -83,5 +83,7 @@ under the License.
           </#list>
           </@tbody>
         </@table>
+      <#else>
+        <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
       </#if>
 </@section>

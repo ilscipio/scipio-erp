@@ -3649,17 +3649,17 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#local contentClasses = makeClassesArg(contentClass, defaultContentClass)>
   <#t>
   <#if disabled>
-    <#local classes = (classes + " disabled")?trim>
-    <#local contentClasses = (contentClasses + " disabled")?trim>
+    <#local classes = (classes + " " + (styles["menu_" + menuStyleName + "_itemdisabled"]!styles["menu_default_itemdisabled"]!""))?trim>
+    <#local contentClasses = (contentClasses + " " + (styles["menu_" + menuStyleName + "_item_contentdisabled"]!styles["menu_default_item_contentdisabled"]!""))?trim>
     <#local href = "javascript:void(0);">
   </#if>
   <#if selected>
-    <#local classes = (classes + " selected")?trim>
-    <#local contentClasses = (contentClasses + " selected")?trim>
+    <#local classes = (classes + " " + (styles["menu_" + menuStyleName + "_itemselected"]!styles["menu_default_itemselected"]!""))?trim>
+    <#local contentClasses = (contentClasses + " " + (styles["menu_" + menuStyleName + "_item_contentselected"]!styles["menu_default_item_contentselected"]!""))?trim>
   </#if>
   <#if active>
-    <#local classes = (classes + " active")?trim>
-    <#local contentClasses = (contentClasses + " active")?trim>
+    <#local classes = (classes + " " + (styles["menu_" + menuStyleName + "_itemactive"]!styles["menu_default_itemactive"]!""))?trim>
+    <#local contentClasses = (contentClasses + " " + (styles["menu_" + menuStyleName + "_item_contentactive"]!styles["menu_default_item_contentactive"]!""))?trim>
   </#if>
   <@menuitem_markup classes=classes id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=inlineItem htmlWrap=htmlWrap><#rt>
     <#if !nestedContent?is_boolean>

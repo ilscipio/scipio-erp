@@ -93,8 +93,11 @@
 <@heading level=4>h4.</@heading>
 <@heading level=5>h5.</@heading>
 <@heading level=6>h6.</@heading>
+<@heading level=7 class="+my-additional-heading-class">Heading level 7</@heading>
+<@heading level=8 class="my-replace-default-heading-class-level-8">Heading level 8 (custom class)</@heading>
+<@heading level=9>Heading level 9</@heading>
 <@heading level=2 containerElemType="div" containerClass="+my-heading-container-class" 
-    containerId="my-heading-container-1" class="+my-heading-class" id="my-heading">Another h2 with container.</@heading>
+    containerId="my-heading-container-1" class="+my-heading-class" id="my-heading">Heading level 2 with container</@heading>
 
 <@heading relLevel=+1>Shapes</@heading>
 <a href="#" class="${styles.button!} ${styles.tiny!} ${styles.button_color_default}">Tiny Button</a>
@@ -115,7 +118,7 @@
 <a href="#" class="${styles.button!} ${styles.button_color_default} ${styles.disabled}">Disabled Button</a>
 
 <@heading relLevel=+1>Button Groups</@heading>
-<@menu type="button">
+<@menu type="button" class="+my-button-menu-class" id="my-button-menu">
   <@menuitem type="link" text="Menu Button 1" />
   <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
   <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.color_green}">

@@ -121,6 +121,7 @@
     "row_alt" : "odd",
     "row_selected" : "selected",
     
+    "link_default" : "",
     "link_action" : "button tiny", 
     "link_id" : "button tiny", 
     "link_name" : "button tiny", 

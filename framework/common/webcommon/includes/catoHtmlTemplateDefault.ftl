@@ -767,7 +767,7 @@ Not associated with an HTML element as is @fieldset.
     <@field attr="" />
     
     * General Attributes *
-    type            = form element of type [input,textarea,datetime,select,checkbox,radio,display,generic],
+    type            = form element of type [input,textarea,datetime,select,checkbox,radio,display,password,generic],
                       default generic meaning input defined manually with #nested
                       (discouraged; prefer specific; but sometimes required and useful
                       for transition)
@@ -1122,6 +1122,7 @@ Not associated with an HTML element as is @fieldset.
                                     partialChars=""
                                     ignoreCase=""
                                     fullSearch=""
+                                    placeholder=placeholder
                                     tooltip=tooltip
                                     manualItems=manualItems
                                     manualItemsOnly=manualItemsOnly><#nested></@field_select_widget_impl>
@@ -1148,7 +1149,7 @@ Not associated with an HTML element as is @fieldset.
             <@field_file_widget_impl className=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
             <#break> 
           <#case "password">
-            <@field_password_widget_impl className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") />
+            <@field_password_widget_impl className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder/>
             <#break> 
           <#case "submit">
           <#case "submitarea">
@@ -1337,7 +1338,7 @@ Not associated with an HTML element as is @fieldset.
 
 <#-- migrated from @renderTextareaField form widget macro -->
 <#macro field_textarea_widget_impl name="" className="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
-    buttons="" language="" tooltip="" title="" fieldTitleBlank=false collapse=false>
+    buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false>
 
   <textarea name="${name}"<#t/>
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
@@ -1348,7 +1349,8 @@ Not associated with an HTML element as is @fieldset.
     <#if readonly?has_content> readonly="readonly"</#if><#rt/>
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>
     ><#t/>
-    <#if value?has_content>${value}</#if><#t/>
+    <#if value?has_content>${value}</#if>
+    <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
   </textarea><#lt/>
   
   <#--
@@ -1743,8 +1745,8 @@ Not associated with an HTML element as is @fieldset.
 </#macro>
 
 <#-- migrated from @renderPasswordField form widget macro -->
-<#macro field_password_widget_impl className="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" fieldTitleBlank=false>
-  <input type="password" <@fieldClassStr className alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/>
+<#macro field_password_widget_impl className="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false>
+  <input type="password" <@fieldClassStr className alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#if autocomplete?has_content> autocomplete="off"</#if> <#if placeholder?has_content> placeholder="${placeholder}"</#if>/>
 </#macro>
 
 <#-- migrated from @renderSubmitField form widget macro -->

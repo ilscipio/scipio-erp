@@ -874,6 +874,12 @@ or even multiple per fieldset.
      TODO: clean up macro arguments
      NOTE: "widget" here refers to the common meaning; not any specific ofbiz meaning -->
 
+<#-- TODO: the _widget_impl macros must further be split up into
+     _widget_markup macros, which explicitly contain as little markup as possible, and should also
+     try to avoid all of the macro argument ofbiz-isms.
+     the _widget_impl are called by the Ofbiz macro libs and may need to contain logic code, so they're
+     not suited to be markup macros, and their args are too ofbiz-ish. -->
+
 <#-- migrated from @renderTextField form widget macro -->
 <#macro field_input_widget_impl name="" className="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
     mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false>

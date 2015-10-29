@@ -327,6 +327,26 @@ Inline script wrapper.
 
 <#-- 
 *************
+* Code Block
+************
+Creates a very basic wrapper for code blocks
+    Usage example:  
+    <@code type="java">
+       //Some java content
+    </@code>
+                    
+   * General Attributes *
+    type            = (html|java|css|javascript|log) (default:html) 
+-->
+<#macro code type="html">
+    <pre><code data-language="${type!}"><#compress>
+    <#nested>
+    </#compress>
+    </code></pre>
+</#macro>
+
+<#-- 
+*************
 * Modal Macro
 ************
     Usage example:  
@@ -400,26 +420,6 @@ it's an unexpected result, error or one that requires user action. See other mac
   <div class="${styles.panel_head!}"><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
   <div class="${styles.panel_body!}"><p><#nested></p></div>
 </div>
-</#macro>
-
-<#-- 
-*************
-* Code Block
-************
-Creates a very basic wrapper for code blocks
-    Usage example:  
-    <@code type="java">
-       //Some java content
-    </@code>
-                    
-   * General Attributes *
-    type            = (html|java|css|javascript|log) (default:html) 
--->
-<#macro code type="html">
-    <pre><code data-language="${type!}"><#compress>
-    <#nested>
-    </#compress>
-    </code></pre>
 </#macro>
 
 <#-- 

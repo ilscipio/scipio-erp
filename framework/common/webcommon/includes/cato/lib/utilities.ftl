@@ -1289,7 +1289,7 @@ Checks the resourceNames in the given order.
 * printVars macro
 ************
 Iterates over all variable attributes & functions and prints in table; useful for determining current vars in context
-NOTE: since is in catoUtilities, keep generic and check platform.
+NOTE: since is in utilities.ftl, keep generic and check platform.
 
 Usage example:  
     <@printVars />           

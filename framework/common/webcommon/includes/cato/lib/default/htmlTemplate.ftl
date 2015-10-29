@@ -33,7 +33,7 @@
 *************************************
 * IMPORTS AND INCLUDES *
 *************************************
-* NOTE: Assumes catoUtilities.ftl included.
+* NOTE: Assumes utilities.ftl included.
 -->
 
 <#-- (currently none) -->

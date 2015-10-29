@@ -41,7 +41,7 @@ import javolution.util.FastMap;
 /**
  * Cato: Common generic Freemarker templating utility methods.
  * <p>
- * Java language analog of <code>component://common/webcommon/includes/catoUtilities.ftl</code>.
+ * Java language analog of <code>component://common/webcommon/includes/cato/lib/utilities.ftl</code>.
  * <p>
  * <em>NOTE</em>: This is for common, general-purpose code only (generic utilities). Code that implements
  * template macro markup (e.g. <code>htmlTemplate.ftl</code>) logic belongs in separate class.

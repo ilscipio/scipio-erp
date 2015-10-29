@@ -38,7 +38,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
   <#if !inlineEntries>
     <#if styleSet.contains("menu-main")>
       <#local remStyle = removeStyleNames(style, "menu-main")>
-        <li class="${styles.menu_main_wrap!}"><a href="${styles.menu_main_itemlink!"#"}" class="${styles.menu_main_item!}"
+        <li class="${styles.menu_main_wrap!}"><a href="#" class="${styles.menu_main_item_link!}"
             <#if styles.framework?has_content && styles.framework =="bootstrap"> data-toggle="dropdown"</#if>>${title!}<#if styles.framework?has_content && styles.framework =="bootstrap"> <i class="fa fa-fw fa-caret-down"></i></#if></a>
       <#local classes = joinStyleNames(styles.menu_main!, remStyle)>
     <#elseif styleSet.contains("menu-sidebar")>
@@ -113,7 +113,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
      because can't centralize these menus easily anywhere else. -->
 <#if menuCtxRole=="screenlet-nav-menu">
   <#if !style?has_content>
-    <#local style = "${styles.menu_section_itemlink!}">
+    <#local style = "${styles.menu_section_item_link!}">
   </#if>
 </#if>
 <#-- Cato: treat "none" keyword as requesting empty style, as workaround -->

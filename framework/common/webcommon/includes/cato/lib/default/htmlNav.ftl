@@ -1,6 +1,6 @@
 <#--
 * 
-* Navigation HTML templating macros/templates include, default Cato markup.
+* Navigation HTML template include, default Cato markup.
 *
 * Included by htmlTemplate.ftl.
 *

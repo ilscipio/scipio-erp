@@ -243,7 +243,7 @@
     "panel_head" : "",
     "panel_title" : "",
     "panel_body" : "",
-    "login_wrap" : "login-box",                  <#-- the login box is a special form of a panel in this case -->
+    "login_wrap" : "large-3 login-box",                  <#-- the login box is a special form of a panel in this case -->
     "login_header": "",
     "login_body" : "signup-panel right-solid",
 

@@ -182,12 +182,12 @@ under the License.
                             <label for="shipToCountryGeoId">${uiLabelMap.CommonCountry}*
                                 <span id="advice-required-shipToCountryGeo" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
                             </label>
-                            <select name="shipToCountryGeoId" id="shipToCountryGeoId">
+                            <@input type="select" name="shipToCountryGeoId" id="shipToCountryGeoId">
                               <#if shipToCountryGeoId??>
                                 <option value="${shipToCountryGeoId!}">${shipToCountryProvinceGeo?default(shipToCountryGeoId!)}</option>
                               </#if>
                               ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-                            </select>
+                            </@input>
                         </span>
                     </div>
                     <div id="shipToStates">
@@ -195,14 +195,14 @@ under the License.
                             <label for="shipToStateProvinceGeoId">${uiLabelMap.CommonState}*
                                 <span id="advice-required-shipToStateProvinceGeoId" style="display:none" class="errorMessage">(${uiLabelMap.CommonRequired})</span>
                             </label>
-                            <select id="shipToStateProvinceGeoId" name="shipToStateProvinceGeoId">
+                            <@input type="select" id="shipToStateProvinceGeoId" name="shipToStateProvinceGeoId">
                               <#if shipToStateProvinceGeoId?has_content>
                                 <option value='${shipToStateProvinceGeoId!}'>${shipToStateProvinceGeo?default(shipToStateProvinceGeoId!)}</option>
                               <#else>
                                 <option value="_NA_">${uiLabelMap.PartyNoState}</option>
                               </#if>
                               ${screens.render("component://common/widget/CommonScreens.xml#states")}
-                            </select>
+                            </@input>
                         </span>
                     </div>
                   </fieldset>
@@ -236,9 +236,9 @@ under the License.
                       <label for="shipMethod">${uiLabelMap.OrderSelectShippingMethod}*
                           <span id="advice-required-shipping_method" class="custom-advice" style="display:none"> (${uiLabelMap.CommonRequired})</span>
                       </label>
-                      <select id="shipMethod" name="shipMethod" class="required">
+                      <@input type="select" id="shipMethod" name="shipMethod" class="required">
                           <option value=""></option>
-                      </select>
+                      </@input>
                   </div>
               </fieldset>
               <fieldset>
@@ -367,12 +367,12 @@ under the License.
                         <div>
                           <span>
                                 <label for="cardType">${uiLabelMap.AccountingCardType}*<span id="advice-required-cardType" style="display: none;" class="errorMessage"> (${uiLabelMap.CommonRequired})</span></label>
-                                <select name="cardType" id="cardType">
+                                <@input type="select" name="cardType" id="cardType">
                                   <#if cardType?has_content>
                                     <option label="${cardType!}" value="${cardType!}">${cardType!}</option>
                                   </#if>
                                   ${screens.render("component://common/widget/CommonScreens.xml#cctypes")}
-                                </select>
+                                </@input>
                           </span>
                         </div>
                         <div>
@@ -392,23 +392,23 @@ under the License.
                             <label for="expMonth">${uiLabelMap.CommonMonth}:*
                                 <span id="advice-required-expMonth" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
                             </label>
-                            <select id="expMonth" name="expMonth" class="required">
+                            <@input type="select" id="expMonth" name="expMonth" class="required">
                               <#if expMonth?has_content>
                                 <option label="${expMonth!}" value="${expMonth!}">${expMonth!}</option>
                               </#if>
                               ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
-                            </select>
+                            </@input>
                           </span>
                           <span>
                             <label for="expYear">${uiLabelMap.CommonYear}:*
                                 <span id="advice-required-expYear" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
                             </label>
-                            <select id="expYear" name="expYear" class="required">
+                            <@input type="select" id="expYear" name="expYear" class="required">
                               <#if expYear?has_content>
                                 <option value="${expYear!}">${expYear!}</option>
                               </#if>
                               ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
-                            </select>
+                            </@input>
                           </span>
                         </div>
                     </fieldset>
@@ -443,24 +443,24 @@ under the License.
                               <label for="billToCountryGeoId">${uiLabelMap.CommonCountry}*
                                 <span id="advice-required-billToCountryGeoId" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
                               </label>
-                              <select name="billToCountryGeoId" id="billToCountryGeoId">
+                              <@input type="select" name="billToCountryGeoId" id="billToCountryGeoId">
                                 <#if billToCountryGeoId??>
                                   <option value='${billToCountryGeoId!}'>${billToCountryProvinceGeo?default(billToCountryGeoId!)}</option>
                                 </#if>
                                 ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-                              </select>
+                              </@input>
                           </div>
                           <div>
                               <label for="billToStateProvinceGeoId">${uiLabelMap.CommonState}*
                                 <span id="advice-required-billToStateProvinceGeoId" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
                               </label>
-                              <select id="billToStateProvinceGeoId" name="billToStateProvinceGeoId">
+                              <@input type="select" id="billToStateProvinceGeoId" name="billToStateProvinceGeoId">
                                 <#if billToStateProvinceGeoId?has_content>
                                   <option value='${billToStateProvinceGeoId!}'>${billToStateProvinceGeo?default(billToStateProvinceGeoId!)}</option>
                                 <#else>
                                   <option value="_NA_">${uiLabelMap.PartyNoState}</option>
                                 </#if>
-                              </select>
+                              </@input>
                           </div>
                         </div>
                     </fieldset>

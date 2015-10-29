@@ -42,24 +42,24 @@ under the License.
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
       <@field type="generic" label="${(productFeatureType.get('description',locale))!}">
-          <select name="pft_${productFeatureTypeId}">
+          <@input type="select" name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.get("description",locale)?default(productFeature.productFeatureId)}</option>
               </#list>
-            </select>
+            </@input>
       </@field>
     </#list>
     <@field type="generic" label="${uiLabelMap.ProductSupplier}">
-        <select name="SEARCH_SUPPLIER_ID">
+        <@input type="select" name="SEARCH_SUPPLIER_ID">
             <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
             <#list supplerPartyRoleAndPartyDetails as supplerPartyRoleAndPartyDetail>
               <option value="${supplerPartyRoleAndPartyDetail.partyId}"<#if (sessionAttributes.orderPartyId?? & sessionAttributes.orderPartyId = supplerPartyRoleAndPartyDetail.partyId)> selected="selected"</#if>>${supplerPartyRoleAndPartyDetail.groupName!} ${supplerPartyRoleAndPartyDetail.firstName!} ${supplerPartyRoleAndPartyDetail.lastName!} [${supplerPartyRoleAndPartyDetail.partyId}]</option>
             </#list>
-          </select>
+          </@input>
     </@field>
     <@field type="generic" label="${uiLabelMap.CommonSortedBy}">
-        <select name="sortOrder">
+        <@input type="select" name="sortOrder">
             <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
             <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
             <option value="SortProductField:internalName">${uiLabelMap.ProductInternalName}</option>
@@ -69,7 +69,7 @@ under the License.
             <option value="SortProductPrice:LIST_PRICE">${uiLabelMap.ProductListPrice}</option>
             <option value="SortProductPrice:DEFAULT_PRICE">${uiLabelMap.ProductDefaultPrice}</option>
             <option value="SortProductPrice:AVERAGE_COST">${uiLabelMap.ProductAverageCost}</option>
-          </select>
+          </@input>
           ${uiLabelMap.ProductLowToHigh}<input type="radio" name="sortAscending" value="Y" checked="checked" />
           ${uiLabelMap.ProductHighToLow}<input type="radio" name="sortAscending" value="N" />
     </@field>

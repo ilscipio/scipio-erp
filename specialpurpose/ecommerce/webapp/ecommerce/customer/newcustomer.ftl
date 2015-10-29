@@ -141,7 +141,7 @@ will generally always be reserved for the logo at the top of the page.
     <div>
       <label for="USER_TITLE">${uiLabelMap.CommonTitle}</label>
       <@fieldErrors fieldName="USER_TITLE"/>
-      <select name="USER_TITLE" id="USER_TITLE">
+      <@input type="select" name="USER_TITLE" id="USER_TITLE">
         <#if requestParameters.USER_TITLE?has_content >
           <option>${requestParameters.USER_TITLE}</option>
           <option value="${requestParameters.USER_TITLE}"> -- </option>
@@ -152,7 +152,7 @@ will generally always be reserved for the logo at the top of the page.
         <option>${uiLabelMap.CommonTitleMrs}</option>
         <option>${uiLabelMap.CommonTitleMs}</option>
         <option>${uiLabelMap.CommonTitleDr}</option>
-      </select>
+      </@input>
     </div>
 
     <div>
@@ -210,32 +210,32 @@ will generally always be reserved for the logo at the top of the page.
     <div>
         <label for="customerCountry">${uiLabelMap.CommonCountry}*</label>
         <@fieldErrors fieldName="CUSTOMER_COUNTRY"/>
-        <select name="CUSTOMER_COUNTRY" id="newuserform_countryGeoId">
+        <@input type="select" name="CUSTOMER_COUNTRY" id="newuserform_countryGeoId">
             ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
             <#assign defaultCountryGeoId = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("general.properties", "country.geo.id.default")>
             <option selected="selected" value="${defaultCountryGeoId}">
                 <#assign countryGeo = delegator.findOne("Geo",Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId",defaultCountryGeoId), false)>
                 ${countryGeo.get("geoName",locale)}
             </option>
-        </select>
+        </@input>
     </div>
     
     <div>
         <label for="customerState">${uiLabelMap.PartyState}*</label>
         <@fieldErrors fieldName="CUSTOMER_STATE"/>
-        <select name="CUSTOMER_STATE" id="newuserform_stateProvinceGeoId"></select>
+        <@input type="select" name="CUSTOMER_STATE" id="newuserform_stateProvinceGeoId"></@input>
     </div>
 
     <div>
       <label for="CUSTOMER_ADDRESS_ALLOW_SOL">${uiLabelMap.PartyAllowAddressSolicitation}</label>
       <@fieldErrors fieldName="CUSTOMER_ADDRESS_ALLOW_SOL"/>
-      <select name="CUSTOMER_ADDRESS_ALLOW_SOL" id="CUSTOMER_ADDRESS_ALLOW_SOL">
+      <@input type="select" name="CUSTOMER_ADDRESS_ALLOW_SOL" id="CUSTOMER_ADDRESS_ALLOW_SOL">
         <#if (((requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
         <#if (((requestParameters.CUSTOMER_ADDRESS_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
         <option></option>
         <option value="Y">${uiLabelMap.CommonY}</option>
         <option value="N">${uiLabelMap.CommonN}</option>
-      </select>
+      </@input>
     </div>
 
   </fieldset>
@@ -261,13 +261,13 @@ will generally always be reserved for the logo at the top of the page.
           <@td><input type="text" name="CUSTOMER_HOME_CONTACT" value="${requestParameters.CUSTOMER_HOME_CONTACT!}" /></@td>
           <@td><input type="text" name="CUSTOMER_HOME_EXT" size="6" value="${requestParameters.CUSTOMER_HOME_EXT!}"/></@td>
           <@td>
-            <select name="CUSTOMER_HOME_ALLOW_SOL">
+            <@input type="select" name="CUSTOMER_HOME_ALLOW_SOL">
               <#if (((requestParameters.CUSTOMER_HOME_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
               <#if (((requestParameters.CUSTOMER_HOME_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
               <option></option>
               <option value="Y">${uiLabelMap.CommonY}</option>
               <option value="N">${uiLabelMap.CommonN}</option>
-            </select>
+            </@input>
           </@td>
         </@tr>
         <@tr>
@@ -277,13 +277,13 @@ will generally always be reserved for the logo at the top of the page.
           <@td><input type="text" name="CUSTOMER_WORK_CONTACT" value="${requestParameters.CUSTOMER_WORK_CONTACT!}" /></@td>
           <@td><input type="text" name="CUSTOMER_WORK_EXT" size="6" value="${requestParameters.CUSTOMER_WORK_EXT!}" /></@td>
           <@td>
-            <select name="CUSTOMER_WORK_ALLOW_SOL">
+            <@input type="select" name="CUSTOMER_WORK_ALLOW_SOL">
               <#if (((requestParameters.CUSTOMER_WORK_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
               <#if (((requestParameters.CUSTOMER_WORK_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
               <option></option>
               <option value="Y">${uiLabelMap.CommonY}</option>
               <option value="N">${uiLabelMap.CommonN}</option>
-            </select>
+            </@input>
           </@td>
         </@tr>
         <@tr>
@@ -293,13 +293,13 @@ will generally always be reserved for the logo at the top of the page.
           <@td><input type="text" name="CUSTOMER_FAX_CONTACT" value="${requestParameters.CUSTOMER_FAX_CONTACT!}" /></@td>
           <@td></@td>
           <@td>
-            <select name="CUSTOMER_FAX_ALLOW_SOL">
+            <@input type="select" name="CUSTOMER_FAX_ALLOW_SOL">
               <#if (((requestParameters.CUSTOMER_FAX_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
               <#if (((requestParameters.CUSTOMER_FAX_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
               <option></option>
               <option value="Y">${uiLabelMap.CommonY}</option>
               <option value="N">${uiLabelMap.CommonN}</option>
-            </select>
+            </@input>
           </@td>
         </@tr>
         <@tr>
@@ -309,13 +309,13 @@ will generally always be reserved for the logo at the top of the page.
           <@td><input type="text" name="CUSTOMER_MOBILE_CONTACT" value="${requestParameters.CUSTOMER_MOBILE_CONTACT!}" /></@td>
           <@td></@td>
           <@td>
-            <select name="CUSTOMER_MOBILE_ALLOW_SOL">
+            <@input type="select" name="CUSTOMER_MOBILE_ALLOW_SOL">
               <#if (((requestParameters.CUSTOMER_MOBILE_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
               <#if (((requestParameters.CUSTOMER_MOBILE_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
               <option></option>
               <option value="Y">${uiLabelMap.CommonY}</option>
               <option value="N">${uiLabelMap.CommonN}</option>
-            </select>
+            </@input>
           </@td>
         </@tr>
       </@tbody>
@@ -331,13 +331,13 @@ will generally always be reserved for the logo at the top of the page.
     </div>
     <div>
       <label for="CUSTOMER_EMAIL_ALLOW_SOL">${uiLabelMap.PartyAllowSolicitation}</label>
-      <select name="CUSTOMER_EMAIL_ALLOW_SOL" id="CUSTOMER_EMAIL_ALLOW_SOL">
+      <@input type="select" name="CUSTOMER_EMAIL_ALLOW_SOL" id="CUSTOMER_EMAIL_ALLOW_SOL">
         <#if (((requestParameters.CUSTOMER_EMAIL_ALLOW_SOL)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
         <#if (((requestParameters.CUSTOMER_EMAIL_ALLOW_SOL)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
         <option></option>
         <option value="Y">${uiLabelMap.CommonY}</option>
         <option value="N">${uiLabelMap.CommonN}</option>
-      </select>
+      </@input>
     </div>
   </fieldset>
 

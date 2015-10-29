@@ -19,12 +19,12 @@ under the License.
 
 <#-- A simple macro that builds the contact list -->
 <#macro contactList publicEmailContactLists>
-  <select name="contactListId" class="selectBox" style="width:134px">
+  <@input type="select" name="contactListId" class="selectBox" style="width:134px">
     <#list publicEmailContactLists as publicEmailContactList>
       <#assign publicContactMechType = publicEmailContactList.contactList.getRelatedOne("ContactMechType", true)!>
         <option value="${publicEmailContactList.contactList.contactListId}">${publicEmailContactList.contactListType.description!} - ${publicEmailContactList.contactList.contactListName!}</option>
     </#list>
-  </select>
+  </@input>
 </#macro>
 
 <script type="text/javascript" language="JavaScript">
@@ -59,11 +59,11 @@ under the License.
           </div>
           <div>
             <label for="preferredContactMechId">${uiLabelMap.CommonEmail} *</label>
-            <select id="preferredContactMechId" name="preferredContactMechId" class="selectBox">
+            <@input type="select" id="preferredContactMechId" name="preferredContactMechId" class="selectBox">
               <#list partyAndContactMechList as partyAndContactMech>
                 <option value="${partyAndContactMech.contactMechId}"><#if partyAndContactMech.infoString?has_content>${partyAndContactMech.infoString}<#elseif partyAndContactMech.tnContactNumber?has_content>${partyAndContactMech.tnCountryCode!}-${partyAndContactMech.tnAreaCode!}-${partyAndContactMech.tnContactNumber}<#elseif partyAndContactMech.paAddress1?has_content>${partyAndContactMech.paAddress1}, ${partyAndContactMech.paAddress2!}, ${partyAndContactMech.paCity!}, ${partyAndContactMech.paStateProvinceGeoId!}, ${partyAndContactMech.paPostalCode!}, ${partyAndContactMech.paPostalCodeExt!} ${partyAndContactMech.paCountryGeoId!}</#if></option>
               </#list>
-            </select>
+            </@input>
           </div>
           <div>
             <input type="submit" value="${uiLabelMap.EcommerceSubscribe}"/>

@@ -77,7 +77,7 @@ under the License.
                   <input type="hidden" name="productPromoId" value="${(productPromoCond.productPromoId)!}"/>
                   <input type="hidden" name="productPromoRuleId" value="${(productPromoCond.productPromoRuleId)!}"/>
                   <input type="hidden" name="productPromoCondSeqId" value="${(productPromoCond.productPromoCondSeqId)!}"/>
-                  <select name="inputParamEnumId" size="1">
+                  <@input type="select" name="inputParamEnumId" size="1">
       <#if (productPromoCond.inputParamEnumId)??>
         <#assign inputParamEnum = productPromoCond.getRelatedOne("InputParamEnumeration", true)>
                     <option value="${productPromoCond.inputParamEnumId}"><#if inputParamEnum??>${(inputParamEnum.get("description",locale))!}<#else>[${(productPromoCond.inputParamEnumId)!}]</#if></option>
@@ -88,8 +88,8 @@ under the License.
       <#list inputParamEnums as inputParamEnum>
                     <option value="${(inputParamEnum.enumId)!}">${(inputParamEnum.get("description",locale))!}</option>
       </#list>
-                  </select>
-                  <select name="operatorEnumId" size="1">
+                  </@input>
+                  <@input type="select" name="operatorEnumId" size="1">
       <#if (productPromoCond.operatorEnumId)??>
         <#assign operatorEnum = productPromoCond.getRelatedOne("OperatorEnumeration", true)>
                     <option value="${(productPromoCond.operatorEnumId)!}"><#if operatorEnum??>${(operatorEnum.get("description",locale))!}<#else>[${(productPromoCond.operatorEnumId)!}]</#if></option>
@@ -100,7 +100,7 @@ under the License.
       <#list condOperEnums as condOperEnum>
                     <option value="${(condOperEnum.enumId)!}">${(condOperEnum.get("description",locale))!}</option>
       </#list>
-                  </select>
+                  </@input>
                   <label>${uiLabelMap.ProductConditionValue}:</label>
                   <input type="text" size="25" name="condValue" value="${(productPromoCond.condValue)!}" />
       <#assign otherValue = productPromoCond.otherValue!>
@@ -116,14 +116,14 @@ under the License.
         <#assign description = "">
       </#if>
                   <label>${uiLabelMap.OrderSelectShippingMethod}:</label>
-                  <select name = "carrierShipmentMethod">
+                  <@input type="select" name = "carrierShipmentMethod">
                     <option value = "${carrierShippingMethod!}">${carrierParty!}&nbsp;${description}</option>
                     <option value = "">&nbsp;</option>
       <#list carrierShipmentMethods as carrierShipmentMethod>
         <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType", true)>
                     <option value = "${carrierShipmentMethod.partyId!}@${carrierShipmentMethod.shipmentMethodTypeId!}">${carrierShipmentMethod.partyId!}&nbsp;${shipmentMethodType.get("description")!}</option>
       </#list>
-                  </select>
+                  </@input>
                   <input type="submit" value="${uiLabelMap.CommonUpdate}" />
                 </form>
                 <form name="deleteProductPromoCondition_${productPromoRule_index}_${productPromoCond_index}" method="post" action="<@ofbizUrl>deleteProductPromoCond</@ofbizUrl>">
@@ -165,15 +165,15 @@ under the License.
                     <input type="hidden" name="productPromoActionSeqId" value="_NA_" />
                     <input type="hidden" name="productPromoCondSeqId" value="${productPromoCond.productPromoCondSeqId}" />
                     <@htmlTemplate.lookupField formName="createProductPromoCategoryConditions" name="productCategoryId" id="productCategoryId_cond" fieldFormName="LookupProductCategory"/>
-                    <select name="productPromoApplEnumId">
+                    <@input type="select" name="productPromoApplEnumId">
       <#list productPromoApplEnums as productPromoApplEnum>
                       <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
       </#list>
-                    </select>
-                    <select name="includeSubCategories">
+                    </@input>
+                    <@input type="select" name="includeSubCategories">
                       <option value="N">${uiLabelMap.CommonN}</option>
                       <option value="Y">${uiLabelMap.CommonY}</option>
-                    </select>
+                    </@input>
                     ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_"/>*
                     <input type="submit" value="${uiLabelMap.ProductAddConditionCategory}" />
                   </form>
@@ -208,11 +208,11 @@ under the License.
                     <input type="hidden" name="productPromoActionSeqId" value="_NA_" />
                     <input type="hidden" name="productPromoCondSeqId" value="${productPromoCond.productPromoCondSeqId}" />
                     ${uiLabelMap.ProductProductId}: <input type="text" size="20" maxlength="20" name="productId" value=""/>
-                    <select name="productPromoApplEnumId">
+                    <@input type="select" name="productPromoApplEnumId">
       <#list productPromoApplEnums as productPromoApplEnum>
                       <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
       </#list>
-                    </select>
+                    </@input>
                     <input type="submit" value="${uiLabelMap.ProductAddConditionProducts}" />
                   </form>
                 </div>
@@ -232,27 +232,27 @@ under the License.
                   <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                   <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
                   <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
-                  <select name="inputParamEnumId" size="1">
+                  <@input type="select" name="inputParamEnumId" size="1">
     <#list inputParamEnums as inputParamEnum>
                     <option value="${(inputParamEnum.enumId)!}">${(inputParamEnum.get("description",locale))!}</option>
     </#list>
-                  </select>
-                  <select name="operatorEnumId" size="1">
+                  </@input>
+                  <@input type="select" name="operatorEnumId" size="1">
     <#list condOperEnums as condOperEnum>
                     <option value="${(condOperEnum.enumId)!}">${(condOperEnum.get("description",locale))!}</option>
     </#list>
-                  </select>
+                  </@input>
                   <label>${uiLabelMap.ProductConditionValue}:</label>
                   <input type="text" size="25" name="condValue" />
                   ${uiLabelMap.CommonOther}:<input type="text" size="10" name="otherValue" />
                   <label>${uiLabelMap.OrderSelectShippingMethod}:</label>
-                  <select name = "carrierShipmentMethod">
+                  <@input type="select" name = "carrierShipmentMethod">
                     <option value = "">--${uiLabelMap.OrderSelectShippingMethod}--</option>
     <#list carrierShipmentMethods as carrierShipmentMethod>
       <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType", true)>
                     <option value = "${carrierShipmentMethod.partyId!}@${carrierShipmentMethod.shipmentMethodTypeId!}">${carrierShipmentMethod.partyId!}&nbsp;${shipmentMethodType.get("description")!}</option>
     </#list>
-                  </select>
+                  </@input>
                   <input type="submit" value="${uiLabelMap.ProductCreateCondition}" />
                 </form>
               </@td>
@@ -276,7 +276,7 @@ under the License.
                     <input type="hidden" name="productPromoId" value="${(productPromoAction.productPromoId)!}" />
                     <input type="hidden" name="productPromoRuleId" value="${(productPromoAction.productPromoRuleId)!}" />
                     <input type="hidden" name="productPromoActionSeqId" value="${(productPromoAction.productPromoActionSeqId)!}" />
-                    <select name="productPromoActionEnumId" size="1">
+                    <@input type="select" name="productPromoActionEnumId" size="1">
       <#if (productPromoAction.productPromoActionEnumId)??>
         <#assign productPromoActionCurEnum = productPromoAction.getRelatedOne("ActionEnumeration", true)>
                       <option value="${(productPromoAction.productPromoActionEnumId)!}"><#if productPromoActionCurEnum??>${(productPromoActionCurEnum.get("description",locale))!}<#else>[${(productPromoAction.productPromoActionEnumId)!}]</#if></option>
@@ -287,7 +287,7 @@ under the License.
       <#list productPromoActionEnums as productPromoActionEnum>
                       <option value="${(productPromoActionEnum.enumId)!}">${(productPromoActionEnum.get("description",locale))!}</option>
       </#list>
-                    </select>
+                    </@input>
                     <input type="hidden" name="orderAdjustmentTypeId" value="${(productPromoAction.orderAdjustmentTypeId)!}" />
                     ${uiLabelMap.ProductQuantity}:&nbsp;<input type="text" size="5" name="quantity" value="${(productPromoAction.quantity)!}" />
                     ${uiLabelMap.ProductAmount}:&nbsp;<input type="text" size="5" name="amount" value="${(productPromoAction.amount)!}" />
@@ -295,7 +295,7 @@ under the License.
                     ${uiLabelMap.PartyParty}:&nbsp;<input type="text" size="10" name="partyId" value="${(productPromoAction.partyId)!}" /><br />
                     ${uiLabelMap.ProductServiceName}:&nbsp;<input type="text" size="20" name="serviceName" value="${(productPromoAction.serviceName)!}" />
                     ${uiLabelMap.UseCartQuantity}:&nbsp;
-                    <select name="useCartQuantity">
+                    <@input type="select" name="useCartQuantity">
       <#if (productPromoAction.useCartQuantity)??>
         <#assign productPromoActionCurEnum = productPromoAction.getRelatedOne("ActionEnumeration", true)>
                       <option value="${(productPromoAction.useCartQuantity)!}"><#if (productPromoAction.useCartQuantity.equals("Y"))>${uiLabelMap.CommonY}<#else>${uiLabelMap.CommonN}</#if></option>
@@ -305,7 +305,7 @@ under the License.
       </#if>
                       <option value="N">${uiLabelMap.CommonN}</option>
                       <option value="Y">${uiLabelMap.CommonY}</option>
-                    </select>
+                    </@input>
                     <input type="submit" value="${uiLabelMap.CommonUpdate}" />
                   </form>
                   <form name="deleteProductPromoAction_${productPromoRule_index}_${productPromoAction_index}" method="post" action="<@ofbizUrl>deleteProductPromoAction</@ofbizUrl>">
@@ -349,15 +349,15 @@ under the License.
                     <input type="hidden" name="productPromoActionSeqId" value="${productPromoAction.productPromoActionSeqId}" />
                     <input type="hidden" name="productPromoCondSeqId" value="_NA_" />
                     <@htmlTemplate.lookupField formName="createProductPromoCategoryActions" name="productCategoryId" id="productCategoryId_act" fieldFormName="LookupProductCategory"/>
-                    <select name="productPromoApplEnumId">
+                    <@input type="select" name="productPromoApplEnumId">
       <#list productPromoApplEnums as productPromoApplEnum>
                       <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
       </#list>
-                    </select>
-                    <select name="includeSubCategories">
+                    </@input>
+                    <@input type="select" name="includeSubCategories">
                       <option value="N">${uiLabelMap.CommonN}</option>
                       <option value="Y">${uiLabelMap.CommonY}</option>
-                    </select>
+                    </@input>
                     ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_"/>*
                     <input type="submit" value="${uiLabelMap.ProductAddActionCategory}" />
                   </form>
@@ -392,11 +392,11 @@ under the License.
                     <input type="hidden" name="productPromoActionSeqId" value="${productPromoAction.productPromoActionSeqId}" />
                     <input type="hidden" name="productPromoCondSeqId" value="_NA_" />
                     ${uiLabelMap.ProductProductId}: <input type="text" size="20" maxlength="20" name="productId" value=""/>
-                    <select name="productPromoApplEnumId">
+                    <@input type="select" name="productPromoApplEnumId">
       <#list productPromoApplEnums as productPromoApplEnum>
                       <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
       </#list>
-                    </select>
+                    </@input>
                     <input type="submit" value="${uiLabelMap.ProductAddActionProducts}" />
                   </form>
                 </div>
@@ -416,11 +416,11 @@ under the License.
                     <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
                     <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
                     <span><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
-                    <select name="productPromoActionEnumId" size="1">
+                    <@input type="select" name="productPromoActionEnumId" size="1">
     <#list productPromoActionEnums as productPromoActionEnum>
                       <option value="${(productPromoActionEnum.enumId)!}">${(productPromoActionEnum.get("description",locale))!}</option>
     </#list>
-                    </select>
+                    </@input>
                     <input type="hidden" name="orderAdjustmentTypeId" value="PROMOTION_ADJUSTMENT" />
                     ${uiLabelMap.ProductQuantity}:&nbsp;<input type="text" size="5" name="quantity" />
                     ${uiLabelMap.ProductAmount}:&nbsp;<input type="text" size="5" name="amount" />
@@ -428,10 +428,10 @@ under the License.
                     ${uiLabelMap.PartyParty}:&nbsp;<input type="text" size="10" name="partyId" /><br />
                     ${uiLabelMap.ProductServiceName}:&nbsp;<input type="text" size="20" name="serviceName" />
                     ${uiLabelMap.UseCartQuantity}:&nbsp;
-                    <select name="useCartQuantity">
+                    <@input type="select" name="useCartQuantity">
                       <option value="N">${uiLabelMap.CommonN}</option>
                       <option value="Y">${uiLabelMap.CommonY}</option>
-                    </select>
+                    </@input>
                     <input type="submit" value="${uiLabelMap.ProductCreateAction}" />
                   </form>
               </@td>
@@ -490,15 +490,15 @@ under the License.
         <input type="hidden" name="productPromoActionSeqId" value="_NA_" />
         <input type="hidden" name="productPromoCondSeqId" value="_NA_" />
         <@htmlTemplate.lookupField formName="createProductPromoCategoryPromotions" name="productCategoryId" id="productCategoryId_03" fieldFormName="LookupProductCategory"/>
-        <select name="productPromoApplEnumId">
+        <@input type="select" name="productPromoApplEnumId">
   <#list productPromoApplEnums as productPromoApplEnum>
           <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
   </#list>
-        </select>
-        <select name="includeSubCategories">
+        </@input>
+        <@input type="select" name="includeSubCategories">
           <option value="N">${uiLabelMap.CommonN}</option>
           <option value="Y">${uiLabelMap.CommonY}</option>
-        </select>
+        </@input>
         ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_"/>*
         <input type="submit" value="${uiLabelMap.CommonAdd}" />
       </form>
@@ -530,11 +530,11 @@ under the License.
         <input type="hidden" name="productPromoActionSeqId" value="_NA_" />
         <input type="hidden" name="productPromoCondSeqId" value="_NA_" />
         <span>${uiLabelMap.ProductProductId}</span>*<@htmlTemplate.lookupField formName="createpromoproductform" name="productId" id="productId" fieldFormName="LookupProduct"/>
-        <select name="productPromoApplEnumId">
+        <@input type="select" name="productPromoApplEnumId">
         <#list productPromoApplEnums as productPromoApplEnum>
           <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
         </#list>
-        </select>
+        </@input>
         <input type="submit" value="${uiLabelMap.CommonAdd}" />
       </form>
     </div>

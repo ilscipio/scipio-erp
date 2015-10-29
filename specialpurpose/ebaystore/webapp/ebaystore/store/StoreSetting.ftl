@@ -158,7 +158,7 @@ under the License.
             </@field>
             <#-- advance Theme -->
              <@field type="generic" label="${uiLabelMap.EbayStoreStoreAdvancedTheme}">
-                 <select id="storeAdvancedTheme" name="storeAdvancedTheme">
+                 <@input type="select" id="storeAdvancedTheme" name="storeAdvancedTheme">
                    <#if storeAdvanceThemeOptList?has_content>
                        <#list storeAdvanceThemeOptList as storeAdvanceThemeOpt>
                                     <option value="${storeAdvanceThemeOpt.storeThemeId!}"
@@ -166,23 +166,23 @@ under the License.
                                     ${storeAdvanceThemeOpt.storeThemeName!}</option>
                         </#list>
                    </#if>
-                </select>
+                </@input>
              </@field>
             <#if storeAdvancedThemeColorOptList?has_content>
             <@field type="generic" label="${uiLabelMap.EbayStoreStoreAdvancedThemeColor}">
-                <select name="storeAdvancedThemeColor">
+                <@input type="select" name="storeAdvancedThemeColor">
                         <#list storeAdvancedThemeColorOptList as storeAdvancedThemeColorOpt>
                                 <option value="${storeAdvancedThemeColorOpt.storeColorSchemeId!}"
                                 <#if ebayStore.storeColorSchemeId.equals(storeAdvancedThemeColorOpt.storeColorSchemeId!)>selected="selected"</#if>>
                                 ${storeAdvancedThemeColorOpt.storeColorName!}</option>
                         </#list>
-                </select>
+                </@input>
             </@field>
             </#if>
             <#-- Basic Theme -->
             <@field type="generic" label="${uiLabelMap.EbayStoreStoreBasicTheme}">
                 <#assign currentStoreThemeIdAndSchemeId = ebayStore.storeThemeId?string+"-"+ebayStore.storeColorSchemeId?string>
-                <select id="storeBasicTheme" name="storeBasicTheme" onchange="javascript:retrieveThemeColorSchemeByThemeId('<@ofbizUrl>retrieveThemeColorSchemeByThemeId</@ofbizUrl>',this.value,'${parameters.productStoreId!}');">
+                <@input type="select" id="storeBasicTheme" name="storeBasicTheme" onchange="javascript:retrieveThemeColorSchemeByThemeId('<@ofbizUrl>retrieveThemeColorSchemeByThemeId</@ofbizUrl>',this.value,'${parameters.productStoreId!}');">
                    <#if storeThemeOptList?has_content>
                        <#list storeThemeOptList as storeThemeOpt>
                                     <#assign storeThemeIdAndSchemeId = storeThemeOpt.storeThemeId+"-"+storeThemeOpt.storeColorSchemeId>
@@ -192,7 +192,7 @@ under the License.
                                     </option>
                         </#list>
                    </#if>
-                </select>
+                </@input>
                 <div id="loading"></div>
             </@field>
             <@field type="generic" label="">
@@ -234,18 +234,18 @@ under the License.
                     <@table type="fields" cellspacing="" width="450"> <#-- orig: class="" -->
                         <@tr>
                             <@td>
-                                <select id="storeNameFont" name="storeNameFont">
+                                <@input type="select" id="storeNameFont" name="storeNameFont">
                                     <#list storeFontTheme.storeFontTypeFontFaceList as storeFontTypeFontFace>
                                         <option <#if storeFontTypeFontFace.storeFontValue.equals(ebayStore.storeNameFontFace)>selected="selected"</#if> value="${storeFontTypeFontFace.storeFontName!}">${storeFontTypeFontFace.storeFontName!}</option>
                                     </#list>
-                                </select>
+                                </@input>
                             </@td>
                             <@td>
-                                <select id="storeNameFontSize" name="storeNameFontSize">
+                                <@input type="select" id="storeNameFontSize" name="storeNameFontSize">
                                     <#list storeFontTheme.storeFontTypeSizeFaceList as storeFontTypeSizeFace>
                                         <option <#if storeFontTypeSizeFace.storeFontSizeValue.equals(ebayStore.storeNameFontFaceSize)>selected="selected"</#if> value="${storeFontTypeSizeFace.storeFontSizeName!}">${storeFontTypeSizeFace.storeFontSizeName!}</option>
                                     </#list>
-                                </select>
+                                </@input>
                             </@td>
                             <@td>
                                 ${uiLabelMap.CommonNbr}<input id="storeNameFontColor" type="text" size="10" name="storeNameFontColor" value="${storeFontColor!}"/>
@@ -267,18 +267,18 @@ under the License.
                     <@table type="fields" cellspacing="" width="450"> <#-- orig: class="" -->
                         <@tr>
                             <@td>
-                                <select id="storeTitleFont" name="storeTitleFont">
+                                <@input type="select" id="storeTitleFont" name="storeTitleFont">
                                     <#list storeFontTheme.storeFontTypeFontTitleList as storeFontTypeFontTitle>
                                         <option <#if storeFontTypeFontTitle.storeFontValue.equals(ebayStore.storeTitleFontFace)>selected="selected"</#if> value="${storeFontTypeFontTitle.storeFontName!}">${storeFontTypeFontTitle.storeFontName!}</option>
                                     </#list>
-                                </select>
+                                </@input>
                             </@td>
                             <@td>
-                                <select id="storeTitleFontSize" name="storeTitleFontSize">
+                                <@input type="select" id="storeTitleFontSize" name="storeTitleFontSize">
                                     <#list storeFontTheme.storeFontSizeTitleList as storeFontSizeTitle>
                                         <option <#if storeFontSizeTitle.storeFontSizeValue.equals(ebayStore.storeTitleFontFaceSize)>selected="selected"</#if> value="${storeFontSizeTitle.storeFontSizeName!}">${storeFontSizeTitle.storeFontSizeName!}</option>
                                     </#list>
-                                </select>
+                                </@input>
                             </@td>
                             <@td>
                                 ${uiLabelMap.CommonNbr}<input id="storeTitleFontColor" type="text" size="10" name="storeTitleFontColor" value="${storeTitleColor!}"/>
@@ -300,18 +300,18 @@ under the License.
                     <@table type="fields" cellspacing="" width="450"> <#-- orig: class="" -->
                         <@tr>
                             <@td>
-                                <select id="storeDescFont" name="storeDescFont">
+                                <@input type="select" id="storeDescFont" name="storeDescFont">
                                     <#list storeFontTheme.storeFontTypeFontDescList as storeFontTypeFontDesc>
                                         <option <#if storeFontTypeFontDesc.storeFontValue.equals(ebayStore.storeDescFontFace!)>selected="selected"</#if> value="${storeFontTypeFontDesc.storeFontName!}">${storeFontTypeFontDesc.storeFontName!}</option>
                                     </#list>
-                                </select>
+                                </@input>
                             </@td>
                             <@td>
-                                <select id="storeDescFontSize" name="storeDescFontSize">
+                                <@input type="select" id="storeDescFontSize" name="storeDescFontSize">
                                     <#list storeFontTheme.storeDescSizeList as storeDescSize>
                                         <option <#if storeDescSize.storeFontSizeValue.equals(ebayStore.storeDescSizeCode)>selected="selected"</#if> value="${storeDescSize.storeFontSizeName!}">${storeDescSize.storeFontSizeName!}</option>
                                     </#list>
-                                </select>
+                                </@input>
                             </@td>
                             <@td>
                                 ${uiLabelMap.CommonNbr}<input id="storeDescFontColor" type="text" size="10" name="storeDescFontColor" value="${storeDescColor!}"/>
@@ -324,22 +324,22 @@ under the License.
         </@table>
 
             <@field type="generic" label="${uiLabelMap.EbayStoreStoreHeaderDisplay}">
-                <select id="storeCustomHeaderLayout" name="storeCustomHeaderLayout">
+                <@input type="select" id="storeCustomHeaderLayout" name="storeCustomHeaderLayout">
                         <#list ebayStore.storeCustomHeaderLayoutList as storeCustomHeaderLayout>
                                <option <#if storeCustomHeaderLayout.storeCustomHeaderLayoutValue.equals(ebayStore.storeCustomHeaderLayout)>selected="selected"</#if> value="${storeCustomHeaderLayout.storeCustomHeaderLayoutName!}">${storeCustomHeaderLayout.storeCustomHeaderLayoutValue!}</option>
                         </#list>
-                    </select>
+                    </@input>
             </@field>
             <@field type="generic" label="">
                 <textarea rows="8" cols="40" name="storeCustomHeader">
                     ${ebayStore.storeCustomHeader!}</textarea>
             </@field>
             <@field type="generic" label="${uiLabelMap.EbayStoreStoreHeaderStyle}">
-                <select id="storeHeaderStyle" name="storeHeaderStyle">
+                <@input type="select" id="storeHeaderStyle" name="storeHeaderStyle">
                         <#list ebayStore.storeHeaderStyleList as storeHeaderStyle>
                                <option <#if storeHeaderStyle.storeHeaderStyleValue.equals(ebayStore.storeHeaderStyle)>selected="selected"</#if> value="${storeHeaderStyle.storeHeaderStyleName!}">${storeHeaderStyle.storeHeaderStyleValue!}</option>
                         </#list>
-                    </select>
+                    </@input>
             </@field>
             <#--tr>
               <@td align="right" valign="middle">Home Page :</@td>
@@ -348,42 +348,42 @@ under the License.
               </@td>
             </tr-->
             <@field type="generic" label="${uiLabelMap.EbayStoreStoreItemListDesplay}">
-                <select id="storeItemLayout" name="storeItemLayout">
+                <@input type="select" id="storeItemLayout" name="storeItemLayout">
                         <#list ebayStore.storeItemLayoutList as storeItemLayout>
                                <option <#if storeItemLayout.storeItemLayoutValue.equals(ebayStore.storeItemLayoutSelected)>selected="selected"</#if> value="${storeItemLayout.storeItemLayoutName!}">${storeItemLayout.storeItemLayoutValue!}</option>
                         </#list>
-                    </select>
+                    </@input>
             </@field>
             <@field type="generic" label="${uiLabelMap.EbayStoreStoreItemSortOrder}">
-                <select id="storeItemSortOrder" name="storeItemSortOrder">
+                <@input type="select" id="storeItemSortOrder" name="storeItemSortOrder">
                         <#list ebayStore.storeItemSortOrderList as storeItemSortOrder>
                                <option <#if storeItemSortOrder.storeItemSortLayoutValue.equals(ebayStore.storeItemSortOrderSelected)>selected="selected"</#if> value="${storeItemSortOrder.storeItemSortLayoutName!}">${storeItemSortOrder.storeItemSortLayoutValue!}</option>
                         </#list>
-                    </select>
+                    </@input>
             </@field>
             <#--tr>
               <@td align="right" valign="middle">Custom Listing Header Display :</@td>
               <@td valign="middle">
-                    <select id="storeCustomListingHeaderDisplay" name="storeCustomListingHeaderDisplay">
+                    <@input type="select" id="storeCustomListingHeaderDisplay" name="storeCustomListingHeaderDisplay">
                         <#list ebayStore.storeCustomListingHeaderDisplayList as storeCustomListingHeaderDisplay>
                                <option <#if storeCustomListingHeaderDisplay.storeCustomHeaderLayoutValue.equals(ebayStore.storeCustomListingHeaderDisplayValue)>selected="selected"</#if> value="${storeCustomListingHeaderDisplay.storeCustomHeaderLayoutValue!}">${storeCustomListingHeaderDisplay.storeCustomHeaderLayoutValue!}</option>
                         </#list>
-                    </select>
+                    </@input>
               </@td>
             </tr-->
             <@field type="generic" label="${uiLabelMap.EbayStoreStoreMerchDisplay}">
-                <select id="storeMerchDisplay" name="storeMerchDisplay">
+                <@input type="select" id="storeMerchDisplay" name="storeMerchDisplay">
                         <#list ebayStore.storeMerchDisplayList as storeMerchDisplay>
                                <option <#if storeMerchDisplay.merchDisplayCodeValue.equals(ebayStore.storeMerchDisplay)>selected="selected"</#if> value="${storeMerchDisplay.merchDisplayCodeName!}">${storeMerchDisplay.merchDisplayCodeValue!}</option>
                         </#list>
-                    </select>
+                    </@input>
             </@field>
             <@field type="generic" label="${uiLabelMap.EbayStoreStoreSubscriptionLevel}">
-                <select id="storeMerchDisplay" name="storeSubscriptionDisplay">
+                <@input type="select" id="storeMerchDisplay" name="storeSubscriptionDisplay">
                         <#list ebayStore.storeSubscriptionLevelList as storeSubscriptionLevel>
                                <option <#if storeSubscriptionLevel.storeSubscriptionLevelCodeValue.equals(ebayStore.storeSubscriptionLevel)>selected="selected"</#if> value="${storeSubscriptionLevel.storeSubscriptionLevelCodeName!}">${storeSubscriptionLevel.storeSubscriptionLevelCodeValue!}</option>
                         </#list>
-                    </select>
+                    </@input>
             </@field>
             <@field type="generic" label="">
                 <input type="submit" value="${uiLabelMap.CommonSubmit}" name="submitButton" class="smallSubmit" />

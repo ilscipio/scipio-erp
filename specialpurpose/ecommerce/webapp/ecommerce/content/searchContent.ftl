@@ -51,12 +51,12 @@ under the License.
         <@td align="right" valign="middle">${(productFeatureType.get("description",locale))!}:
         </@td>
         <@td valign="middle">
-            <select class="selectBox" name="pft_${productFeatureTypeId}">
+            <@input type="select" class="selectBox" name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
               </#list>
-            </select>
+            </@input>
         </@td>
       </@tr>
     </#list>

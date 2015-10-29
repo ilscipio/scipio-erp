@@ -50,7 +50,7 @@ under the License.
         <input type="hidden" name="PAGING" value="Y"/>
         <input type="hidden" name="noConditionFind" value="Y"/>
           <@field type="generic" label="${uiLabelMap.ProductCatalog}">
-                  <select name="SEARCH_CATALOG_ID" id="searchCatalogId" onchange="javascript:selectChange(document.getElementById('advToKeywordSearchform'), document.getElementById('searchCatalogId'));" class="required">
+                  <@input type="select" name="SEARCH_CATALOG_ID" id="searchCatalogId" onchange="javascript:selectChange(document.getElementById('advToKeywordSearchform'), document.getElementById('searchCatalogId'));" class="required">
                     <#list prodCatalogList as prodCatalog>
                       <#assign displayDesc = prodCatalog.catalogName?default("${uiLabelMap.ProductNoDescription}") />
                       <#if (18 < displayDesc?length)>
@@ -58,12 +58,12 @@ under the License.
                       </#if>
                       <option value="${prodCatalog.prodCatalogId}" <#if searchCatalogId! == prodCatalog.prodCatalogId> selected="selected"</#if>>${displayDesc} [${prodCatalog.prodCatalogId}]</option>
                     </#list>
-                  </select>
+                  </@input>
                   <span id="catalogErrorMessage" style="display:none;" class="errorMessage">${uiLabelMap.CommonRequired}</span>
           </@field>
           <@field type="generic" label="${uiLabelMap.ProductCategory}">
                   <#if categoryIds?has_content>
-                    <select name="SEARCH_CATEGORY_ID" id="searchCategoryId">
+                    <@input type="select" name="SEARCH_CATEGORY_ID" id="searchCategoryId">
                       <option value="">- ${uiLabelMap.ProductAnyCategory} -</option>
                       <#list categoryIds as categoryId>
                         <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : categoryId}, true) />
@@ -73,7 +73,7 @@ under the License.
                         </#if>
                         <option value="${productCategory.productCategoryId}">${displayDesc} [${productCategory.productCategoryId}]</option>
                       </#list>
-                    </select>
+                    </@input>
                   <#else>
                     <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="productSearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
                   </#if>

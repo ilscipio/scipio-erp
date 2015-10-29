@@ -44,14 +44,14 @@ under the License.
     <#assign viewIndexMax = Static["java.lang.Math"].ceil((listSize)?double / viewSize?double)>
       <#if (viewIndexMax?int > 0)>
         <div class="product-prevnext">
-            <select name="pageSelect" onchange="callDocumentByPaginate(this[this.selectedIndex].value);">
+            <@input type="select" name="pageSelect" onchange="callDocumentByPaginate(this[this.selectedIndex].value);">
                 <option value="#">${uiLabelMap.CommonPage} ${viewIndex?int + 1} ${uiLabelMap.CommonOf} ${viewIndexMax}</option>
                 <#if (viewIndex?int > 1)>
                     <#list 1..viewIndexMax as curViewNum>
                          <option value="${productCategoryId}~${viewSize}~${curViewNum-1?int}">${uiLabelMap.CommonGotoPage} ${curViewNum}</option>
                     </#list>
                 </#if>
-            </select>
+            </@input>
             <#-- End Page Select Drop-Down -->
             <#if (viewIndex?int > 0)>
                 <a href="javascript: void(0);" onclick="callDocumentByPaginate('${productCategoryId}~${viewSize}~${viewIndex?int - 1}');" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |

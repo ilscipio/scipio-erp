@@ -116,11 +116,11 @@ under the License.
                     <input type="hidden" name="partyId" value="${partyId}"/>
                     <input type="hidden" name="fromPartyId" value="${partyId}"/>
                     <input type="hidden" name="fulfillContactMechId" value="${contactMech.contactMechId}"/>
-                    <select name="custRequestTypeId">
+                    <@input type="select" name="custRequestTypeId">
                       <#list custRequestTypes as type>
                         <option value="${type.custRequestTypeId}">${type.get("description", locale)}</option>
                       </#list>
-                    </select>
+                    </@input>
                     <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.PartyCreateNewCustRequest}"/>
                   </form>
                 </#if>

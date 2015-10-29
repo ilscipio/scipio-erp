@@ -343,12 +343,12 @@ under the License.
                         <@tr>
                         <@td>${uiLabelMap.Return}</@td>
                         <@td colspan="2">${uiLabelMap.OrderReturnReason}
-                                <select name="irm_${orderItem.orderItemSeqId}">
+                                <@input type="select" name="irm_${orderItem.orderItemSeqId}">
                                   <option value="">&nbsp;</option>
                                   <#list orderItemChangeReasons as reason>
                                     <option value="${reason.enumId}">${reason.get("description",locale)?default(reason.enumId)}</option>
                                   </#list>
-                                </select>
+                                </@input>
                         </@td>
                         <@td colspan="2">
                             ${uiLabelMap.CommonComments}
@@ -445,19 +445,19 @@ under the License.
                     <@tr>
                         <@td>${uiLabelMap.OrderAdjustment}</@td>
                         <@td colspan="2" class="align-text">
-                            <select name="orderAdjustmentTypeId">
+                            <@input type="select" name="orderAdjustmentTypeId">
                                 <#list orderAdjustmentTypes as type>
                                 <option value="${type.orderAdjustmentTypeId}">${type.get("description",locale)?default(type.orderAdjustmentTypeId)}</option>
                                 </#list>
-                            </select>
+                            </@input>
                         </@td>
                         <@td>
-                            <select name="shipGroupSeqId">
+                            <@input type="select" name="shipGroupSeqId">
                                 <option value="_NA_"></option>
                                 <#list shipGroups as shipGroup>
                                 <option value="${shipGroup.shipGroupSeqId}">${uiLabelMap.OrderShipGroup} ${shipGroup.shipGroupSeqId}</option>
                                 </#list>
-                            </select>
+                            </@input>
                         </@td>
                         <@td><input type="text" name="description" value="" size="30" maxlength="60" class="text-right"/></@td>
                         <@td><input type="text" name="amount" size="6" value="<@ofbizAmount amount=0.00/>" class="text-right"/></@td>

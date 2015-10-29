@@ -169,7 +169,7 @@ under the License.
                                     <input type="text" size="5" name="quantityAccepted_o_${rowCount}" id="quantityAccepted_o_${rowCount}" value="${quantityToReceive}"/>
                                 </@td>
                                 <@td>
-                                    <select name="inventoryItemTypeId_o_${rowCount}">
+                                    <@input type="select" name="inventoryItemTypeId_o_${rowCount}">
                                       <#list inventoryItemTypes as inventoryItemType>
                                       <option value="${inventoryItemType.inventoryItemTypeId}"
                                           <#if (facility.defaultInventoryItemTypeId?has_content) && (inventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
@@ -177,7 +177,7 @@ under the License.
                                           </#if>
                                       >${inventoryItemType.get("description",locale)?default(inventoryItemType.inventoryItemTypeId)}</option>
                                       </#list>
-                                    </select>
+                                    </@input>
                                 </@td>
                                 <@td align="right">
                                     <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;productId=${product.productId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>

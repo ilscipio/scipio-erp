@@ -66,7 +66,7 @@ under the License.
   <@tr>
     <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.AccountingSuffixCard}</b></@td>
     <@td width="74%">
-      <select name="suffixOnCard">
+      <@input type="select" name="suffixOnCard">
         <option value="">${uiLabelMap.CommonSelectOne}</option>
         <option<#if ((creditCard.suffixOnCard)?default("") == "Jr.")> selected="selected"</#if>>Jr.</option>
         <option<#if ((creditCard.suffixOnCard)?default("") == "Sr.")> selected="selected"</#if>>Sr.</option>
@@ -75,20 +75,20 @@ under the License.
         <option<#if ((creditCard.suffixOnCard)?default("") == "III")> selected="selected"</#if>>III</option>
         <option<#if ((creditCard.suffixOnCard)?default("") == "IV")> selected="selected"</#if>>IV</option>
         <option<#if ((creditCard.suffixOnCard)?default("") == "V")> selected="selected"</#if>>V</option>
-      </select>
+      </@input>
     </@td>
   </@tr>
 
   <@tr>
     <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.AccountingCardType}</b></@td>
     <@td width="74%">
-      <select name="cardType">
+      <@input type="select" name="cardType">
         <#if creditCard.cardType??>
           <option>${creditCard.cardType}</option>
           <option value="${creditCard.cardType}">---</option>
         </#if>
         ${screens.render("component://common/widget/CommonScreens.xml#cctypes")}
-      </select>
+      </@input>
     <#if showToolTip?has_content><span class="tooltip">${uiLabelMap.CommonRequired}</span><#else>*</#if></@td>
   </@tr>
   <@tr>
@@ -138,7 +138,7 @@ under the License.
           <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
         </#if>
       </#if>
-      <select name="expMonth">
+      <@input type="select" name="expMonth">
         <#if creditCard?has_content && expMonth?has_content>
           <#assign ccExprMonth = expMonth>
         <#else>
@@ -148,8 +148,8 @@ under the License.
           <option value="${ccExprMonth!}">${ccExprMonth!}</option>
         </#if>
         ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
-      </select>
-      <select name="expYear">
+      </@input>
+      <@input type="select" name="expYear">
         <#if creditCard?has_content && expYear?has_content>
           <#assign ccExprYear = expYear>
         <#else>
@@ -159,7 +159,7 @@ under the License.
           <option value="${ccExprYear!}">${ccExprYear!}</option>
         </#if>
         ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
-      </select>
+      </@input>
     <#if showToolTip?has_content><span class="tooltip">${uiLabelMap.CommonRequired}</span><#else>*</#if></@td>
   </@tr>
   <@tr>

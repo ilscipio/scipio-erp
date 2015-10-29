@@ -88,7 +88,7 @@ under the License.
             </@td>
             <@td valign="top">
                 <div>
-                    <select name="carrierPartyId">
+                    <@input type="select" name="carrierPartyId">
                         <#if shipmentRouteSegment.carrierPartyId?has_content>
                             <option value="${shipmentRouteSegment.carrierPartyId}">${(carrierPerson.firstName)!} ${(carrierPerson.middleName)!} ${(carrierPerson.lastName)!} ${(carrierPartyGroup.groupName)!} [${shipmentRouteSegment.carrierPartyId}]</option>
                             <option value="${shipmentRouteSegment.carrierPartyId}">---</option>
@@ -98,8 +98,8 @@ under the License.
                         <#list carrierPartyDatas as carrierPartyData>
                             <option value="${carrierPartyData.party.partyId}">${(carrierPartyData.person.firstName)!} ${(carrierPartyData.person.middleName)!} ${(carrierPartyData.person.lastName)!} ${(carrierPartyData.partyGroup.groupName)!} [${carrierPartyData.party.partyId}]</option>
                         </#list>
-                    </select>
-                    <select name="shipmentMethodTypeId">
+                    </@input>
+                    <@input type="select" name="shipmentMethodTypeId">
                         <#if shipmentMethodType?has_content>
                             <option value="${shipmentMethodType.shipmentMethodTypeId}">${shipmentMethodType.get("description",locale)}</option>
                             <option value="${shipmentMethodType.shipmentMethodTypeId}">---</option>
@@ -109,9 +109,9 @@ under the License.
                         <#list shipmentMethodTypes as shipmentMethodTypeOption>
                             <option value="${shipmentMethodTypeOption.shipmentMethodTypeId}">${shipmentMethodTypeOption.get("description",locale)}</option>
                         </#list>
-                    </select>
+                    </@input>
                     <br />
-                    <select name="originFacilityId">
+                    <@input type="select" name="originFacilityId">
                         <#if originFacility?has_content>
                             <option value="${originFacility.facilityId}">${originFacility.facilityName} [${originFacility.facilityId}]</option>
                             <option value="${originFacility.facilityId}">---</option>
@@ -121,8 +121,8 @@ under the License.
                         <#list facilities as facility>
                             <option value="${facility.facilityId}">${facility.facilityName} [${facility.facilityId}]</option>
                         </#list>
-                    </select>
-                    <select name="destFacilityId">
+                    </@input>
+                    <@input type="select" name="destFacilityId">
                         <#if destFacility?has_content>
                             <option value="${destFacility.facilityId}">${destFacility.facilityName} [${destFacility.facilityId}]</option>
                             <option value="${destFacility.facilityId}">---</option>
@@ -132,7 +132,7 @@ under the License.
                         <#list facilities as facility>
                             <option value="${facility.facilityId}">${facility.facilityName} [${facility.facilityId}]</option>
                         </#list>
-                    </select>
+                    </@input>
                     <br />
                     <div>
                         <input type="text" size="15" name="originContactMechId" value="${shipmentRouteSegment.originContactMechId!}"/>
@@ -188,12 +188,12 @@ under the License.
                             <a href="javascript:document.fedexShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="${styles.button_default!}">${uiLabelMap.ProductConfirmShipmentFedex}</a>
                             <br />
                             <#if shipmentMethodType?? && shipmentMethodType.shipmentMethodTypeId=="GROUND_HOME">
-                                <select name="homeDeliveryType">
+                                <@input type="select" name="homeDeliveryType">
                                     <option value="">${uiLabelMap.ProductShipmentNone}</option>
                                     <option ${(shipmentRouteSegment.homeDeliveryType?default("")=="DATECERTAIN")?string("selected=\"selected\"","")} value="DATECERTAIN">${uiLabelMap.ProductShipmentFedexHomeDateCertain}</option>
                                     <option ${(shipmentRouteSegment.homeDeliveryType?default("")=="EVENING")?string("selected=\"selected\"","")} value="EVENING">${uiLabelMap.ProductShipmentFedexHomeEvening}</option>
                                     <option ${(shipmentRouteSegment.homeDeliveryType?default("")=="APPOINTMENT")?string("selected=\"selected\"","")} value="APPOINTMENT">${uiLabelMap.ProductShipmentFedexHomeAppointment}</option>
-                                </select>
+                                </@input>
                                 <@htmlTemplate.renderDateTimeField name="homeDeliveryDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(shipmentRouteSegment.homeDeliveryDate.toString())!}" size="25" maxlength="30" id="homeDeliveryDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                             </#if>
                         <#else>
@@ -208,7 +208,7 @@ under the License.
                         </#if>
                     </#if>
                     <br />
-                    <select name="carrierServiceStatusId">
+                    <@input type="select" name="carrierServiceStatusId">
                         <#if carrierServiceStatusItem?has_content>
                             <option value="${carrierServiceStatusItem.statusId}">${carrierServiceStatusItem.description}</option>
                             <option value="${carrierServiceStatusItem.statusId}">---</option>
@@ -218,7 +218,7 @@ under the License.
                         <#list carrierServiceStatusValidChangeToDetails as carrierServiceStatusValidChangeToDetail>
                             <option value="${carrierServiceStatusValidChangeToDetail.statusIdTo}">${carrierServiceStatusValidChangeToDetail.transitionName} [${carrierServiceStatusValidChangeToDetail.description}]</option>
                         </#list>
-                    </select>
+                    </@input>
                     <br />
                     <input type="text" size="24" name="trackingIdNumber" value="${shipmentRouteSegment.trackingIdNumber!}"/>
                     <br />
@@ -230,7 +230,7 @@ under the License.
             </@td>
             <@td valign="top">
                 <input type="text" size="5" name="billingWeight" value="${shipmentRouteSegment.billingWeight!}"/>
-                <select name="billingWeightUomId">
+                <@input type="select" name="billingWeightUomId">
                     <#if billingWeightUom?has_content>
                         <option value="${billingWeightUom.uomId}">${billingWeightUom.get("description",locale)} [${billingWeightUom.abbreviation}]</option>
                         <option value="${billingWeightUom.uomId}">---</option>
@@ -240,9 +240,9 @@ under the License.
                     <#list weightUoms as weightUom>
                         <option value="${weightUom.uomId}">${weightUom.get("description",locale)} [${weightUom.abbreviation}]</option>
                     </#list>
-                </select>
+                </@input>
                 <br />
-                <select name="currencyUomId">
+                <@input type="select" name="currencyUomId">
                     <#if currencyUom?has_content>
                         <option value="${currencyUom.uomId}">${currencyUom.get("description",locale)} [${currencyUom.uomId}]</option>
                         <option value="${currencyUom.uomId}">---</option>
@@ -252,7 +252,7 @@ under the License.
                     <#list currencyUoms as altCurrencyUom>
                         <option value="${altCurrencyUom.uomId}">${altCurrencyUom.get("description",locale)} [${altCurrencyUom.uomId}]</option>
                     </#list>
-                </select>
+                </@input>
                 <br />
                 <input type="text" size="8" name="actualTransportCost" value="${shipmentRouteSegment.actualTransportCost!}"/>
                 <br />
@@ -332,11 +332,11 @@ under the License.
             <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRouteSegment.shipmentRouteSegmentId}"/>
             <@td>&nbsp;</@td>
             <@td>${uiLabelMap.ProductAddPackageInfo} :
-                <select name="shipmentPackageSeqId">
+                <@input type="select" name="shipmentPackageSeqId">
                     <#list shipmentPackages as shipmentPackage>
                         <option>${shipmentPackage.shipmentPackageSeqId}</option>
                     </#list>
-                </select>
+                </@input>
             </@td>
             <@td><span>Track#:</span><input type="text" size="22" name="trackingCode"/></@td>
             <@td><span>Box#:</span><input type="text" size="5" name="boxNumber"/></@td>
@@ -362,30 +362,30 @@ under the License.
                         <a href="javascript:document.createShipmentRouteSegmentForm.submit();" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a>
                 </@td>
                 <@td valign="top">
-                        <select name="carrierPartyId">
+                        <@input type="select" name="carrierPartyId">
                                 <option value="">&nbsp;</option>
                             <#list carrierPartyDatas as carrierPartyData>
                                 <option value="${carrierPartyData.party.partyId}">${(carrierPartyData.person.firstName)!} ${(carrierPartyData.person.middleName)!} ${(carrierPartyData.person.lastName)!} ${(carrierPartyData.partyGroup.groupName)!} [${carrierPartyData.party.partyId}]</option>
                             </#list>
-                        </select>
-                        <select name="shipmentMethodTypeId">
+                        </@input>
+                        <@input type="select" name="shipmentMethodTypeId">
                             <#list shipmentMethodTypes as shipmentMethodTypeOption>
                                 <option value="${shipmentMethodTypeOption.shipmentMethodTypeId}">${shipmentMethodTypeOption.get("description",locale)}</option>
                             </#list>
-                        </select>
+                        </@input>
                         <br />
-                        <select name="originFacilityId">
+                        <@input type="select" name="originFacilityId">
                                 <option value="">&nbsp;</option>
                             <#list facilities as facility>
                                 <option value="${facility.facilityId}">${facility.facilityName} [${facility.facilityId}]</option>
                             </#list>
-                        </select>
-                        <select name="destFacilityId">
+                        </@input>
+                        <@input type="select" name="destFacilityId">
                                 <option value="">&nbsp;</option>
                             <#list facilities as facility>
                                 <option value="${facility.facilityId}">${facility.facilityName} [${facility.facilityId}]</option>
                             </#list>
-                        </select>
+                        </@input>
                         <br />
                         <input type="text" size="15" name="originContactMechId" value=""/>
                         <input type="text" size="15" name="destContactMechId" value=""/>
@@ -394,12 +394,12 @@ under the License.
                         <input type="text" size="15" name="destTelecomNumberId" value=""/>
                 </@td>
                 <@td valign="top">
-                    <select name="carrierServiceStatusId">
+                    <@input type="select" name="carrierServiceStatusId">
                         <option value="">&nbsp;</option>
                         <#list carrierServiceStatusValidChangeToDetails! as carrierServiceStatusValidChangeToDetail>
                             <option value="${carrierServiceStatusValidChangeToDetail.statusIdTo}">${carrierServiceStatusValidChangeToDetail.transitionName} [${carrierServiceStatusValidChangeToDetail.description}]</option>
                         </#list>
-                    </select>
+                    </@input>
                     <br />
                     <input type="text" size="24" name="trackingIdNumber" value=""/>
                     <br />
@@ -411,19 +411,19 @@ under the License.
                 </@td>
                 <@td valign="top">
                     <input type="text" size="5" name="billingWeight" value="${(shipmentRouteSegment.billingWeight)!}"/>
-                    <select name="billingWeightUomId">
+                    <@input type="select" name="billingWeightUomId">
                         <option value="">&nbsp;</option>
                         <#list weightUoms as weightUom>
                             <option value="${weightUom.uomId}">${weightUom.get("description",locale)} [${weightUom.abbreviation}]</option>
                         </#list>
-                    </select>
+                    </@input>
                     <br />
-                    <select name="currencyUomId">
+                    <@input type="select" name="currencyUomId">
                         <option value="">&nbsp;</option>
                         <#list currencyUoms as altCurrencyUom>
                             <option value="${altCurrencyUom.uomId}">${altCurrencyUom.get("description",locale)} [${altCurrencyUom.uomId}]</option>
                         </#list>
-                    </select>
+                    </@input>
                     <br />
                     <input type="text" size="8" name="actualTransportCost"/>
                     <br />

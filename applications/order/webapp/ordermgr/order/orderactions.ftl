@@ -15,11 +15,11 @@
                        <input type="hidden" name="initialSelected" value="Y"/>
                        <input type="hidden" name="orderId" value="${orderId}"/>
                        <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
-                      <select name="facilityId">
+                      <@input type="select" name="facilityId">
                         <#list ownedFacilities as facility>
                           <option value="${facility.facilityId}">${facility.facilityName}</option>
                         </#list>
-                      </select>
+                      </@input>
                       <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.OrderQuickReceivePurchaseOrder}"/>
                      </form>
                   </@menuitem>
@@ -29,11 +29,11 @@
                       <input type="hidden" name="orderId" value="${orderId}"/>
                       <input type="hidden" name="purchaseOrderId" value="${orderId}"/>
                       <input type="hidden" name="partialReceive" value="Y"/>
-                      <select name="facilityId">
+                      <@input type="select" name="facilityId">
                         <#list ownedFacilities as facility>
                           <option value="${facility.facilityId}">${facility.facilityName}</option>
                         </#list>
-                      </select>
+                      </@input>
                       </form>
                       <a href="javascript:document.receivePurchaseOrderForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonReceive}</a>
                   </@menuitem>
@@ -42,11 +42,11 @@
                     <form name="receiveInventoryForm" action="/facility/control/ReceiveInventory" method="post">
                       <input type="hidden" name="initialSelected" value="Y"/>
                       <input type="hidden" name="purchaseOrderId" value="${orderId!}"/>
-                      <select name="facilityId">
+                      <@input type="select" name="facilityId">
                         <#list ownedFacilities as facility>
                           <option value="${facility.facilityId}">${facility.facilityName}</option>
                         </#list>
-                      </select>
+                      </@input>
                     </form>
                     <a href="javascript:document.receiveInventoryForm.submit()" class="${styles.button_default!}">${uiLabelMap.OrderQuickReceivePurchaseOrder}</a>
                   </@menuitem>
@@ -55,11 +55,11 @@
                       <input type="hidden" name="initialSelected" value="Y"/>
                       <input type="hidden" name="purchaseOrderId" value="${orderId!}"/>
                       <input type="hidden" name="partialReceive" value="Y"/>
-                      <select name="facilityId">
+                      <@input type="select" name="facilityId">
                         <#list ownedFacilities as facility>
                            <option value="${facility.facilityId}">${facility.facilityName}</option>
                          </#list>
-                       </select>
+                       </@input>
                     </form>
                     <a href="javascript:document.partialReceiveInventoryForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonReceive}</a>
                   </@menuitem>
@@ -69,11 +69,11 @@
                   <@menuitem type="generic">
                     <form action="<@ofbizUrl>completePurchaseOrder?externalLoginKey=${externalLoginKey}</@ofbizUrl>" method="post">
                      <input type="hidden" name="orderId" value="${orderId}"/>
-                    <select name="facilityId">
+                    <@input type="select" name="facilityId">
                       <#list ownedFacilities as facility>
                         <option value="${facility.facilityId}">${facility.facilityName}</option>
                       </#list>
-                    </select>
+                    </@input>
                     <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.OrderForceCompletePurchaseOrder}"/>
                     </form>
                   </@menuitem>

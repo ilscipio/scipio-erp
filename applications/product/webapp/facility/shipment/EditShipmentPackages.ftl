@@ -46,7 +46,7 @@ under the License.
                     <span>${uiLabelMap.ProductWeight}</span>
                     <input type="text" size="5" name="weight" value="${shipmentPackage.weight!}"/>
                     <span>${uiLabelMap.ProductWeightUnit}</span>
-                    <select name="weightUomId">
+                    <@input type="select" name="weightUomId">
                         <#if weightUom?has_content>
                             <option value="${weightUom.uomId}">${weightUom.get("description",locale)}</option>
                             <option value="${weightUom.uomId}">---</option>
@@ -56,16 +56,16 @@ under the License.
                         <#list weightUoms as weightUomOption>
                             <option value="${weightUomOption.uomId}">${weightUomOption.get("description",locale)} [${weightUomOption.abbreviation}]</option>
                         </#list>
-                    </select>
+                    </@input>
                 </@td>
                 <@td>
                     <span>${uiLabelMap.ProductShipmentBoxType}</span>
-                    <select name="shipmentBoxTypeId">
+                    <@input type="select" name="shipmentBoxTypeId">
                         <option value="">&nbsp;</option>
                         <#list boxTypes as boxType>
                             <option value="${boxType.shipmentBoxTypeId}" <#if shipmentPackage.shipmentBoxTypeId?? && shipmentPackage.shipmentBoxTypeId == boxType.shipmentBoxTypeId>selected="selected"</#if>>${boxType.get("description",locale)}</option>
                         </#list>
-                    </select>
+                    </@input>
                     <span>${uiLabelMap.ProductShipmentInsuredValuePackage}</span>
                     <input type="text" size="5" name="insuredValue" value="${shipmentPackage.insuredValue!}"/>
                 </@td>
@@ -102,11 +102,11 @@ under the License.
                 <@td>&nbsp;</@td>
                 <@td>
                         <span>${uiLabelMap.ProductAddFromItem}</span>
-                        <select name="shipmentItemSeqId">
+                        <@input type="select" name="shipmentItemSeqId">
                             <#list shipmentItems as shipmentItem>
                                 <option>${shipmentItem.shipmentItemSeqId}</option>
                             </#list>
-                        </select>
+                        </@input>
                 </@td>
                 <@td colspan="2">
                         <span>${uiLabelMap.ProductQuantity}</span>
@@ -148,11 +148,11 @@ under the License.
                 <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
                 <@td>&nbsp;</@td>
                 <@td><span>${uiLabelMap.ProductAddRouteSegmentInfo}</span>
-                    <select name="shipmentRouteSegmentId">
+                    <@input type="select" name="shipmentRouteSegmentId">
                         <#list shipmentRouteSegments as shipmentRouteSegment>
                             <option>${shipmentRouteSegment.shipmentRouteSegmentId}</option>
                         </#list>
-                    </select>
+                    </@input>
                 </@td>
                 <@td><span>Track ${uiLabelMap.CommonNbr}</span><input type="text" size="22" name="trackingCode"/></@td>
                 <@td><span>Box ${uiLabelMap.CommonNbr}</span><input type="text" size="5" name="boxNumber"/></@td>
@@ -172,11 +172,11 @@ under the License.
                 <@td>&nbsp;</@td>
                 <@td><span>${uiLabelMap.ProductWeight}</span> <input type="text" size="5" name="weight"/></@td>
                 <@td><span>${uiLabelMap.ProductWeightUnit}</span>
-                    <select name="weightUomId">
+                    <@input type="select" name="weightUomId">
                         <#list weightUoms as weightUomOption>
                             <option value="${weightUomOption.uomId}">${weightUomOption.get("description",locale)} [${weightUomOption.abbreviation}]</option>
                         </#list>
-                    </select>
+                    </@input>
                 </@td>
                 <@td><a href="javascript:document.createShipmentPackageForm.submit();" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a></@td>
                 <@td>&nbsp;</@td>

@@ -35,13 +35,13 @@ under the License.
 <#macro renderSurveyQuestionInput surveyQuestionAndAppl questionFieldName>
   <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
     <#assign selectedOption = (answer.booleanResponse)?default("Y")>
-    <select name="${questionFieldName}">
+    <@input type="select" name="${questionFieldName}">
       <#if surveyQuestionAndAppl.requiredField?default("N") != "Y">
         <option value=""></option>
       </#if>
       <option <#if "Y" == selectedOption>selected="selected"</#if>>Y</option>
       <option <#if "N" == selectedOption>selected="selected"</#if>>N</option>
-    </select>
+    </@input>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXTAREA">
     <textarea cols="40" rows="5" name="${questionFieldName}">${(answer.textResponse)!}</textarea>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_SHORT">
@@ -75,7 +75,7 @@ under the License.
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">
     <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", null, sequenceSort, false)!/>
     <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")/>
-    <select name="${questionFieldName}">
+    <@input type="select" name="${questionFieldName}">
       <#if surveyQuestionAndAppl.requiredField?default("N") != "Y">
         <option value=""></option>
       </#if>
@@ -86,9 +86,9 @@ under the License.
       <#else>
         <option value="">Nothing to choose</option>
       </#if>
-    </select>
+    </@input>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "ENUMERATION">
-    <select name="${questionFieldName}">
+    <@input type="select" name="${questionFieldName}">
     <#assign formatString = surveyQuestionAndAppl.get("formatString")!/>
     <#assign enums = surveyQuestionAndAppl.getRelated("Enumeration", null, null, false)/>
     <#list enums as enum>
@@ -103,9 +103,9 @@ under the License.
         </#if>
         <option value='${enum.enumId}' ${selected}>${description}</option>
     </#list>
-    </select>
+    </@input>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "GEO">
-    <select name="${questionFieldName}">
+    <@input type="select" name="${questionFieldName}">
     <#assign formatString = surveyQuestionAndAppl.get("formatString")!/>
     <#assign parentGeoId = surveyQuestionAndAppl.get("geoId")!/>
     <#assign geos = Static["org.ofbiz.common.geo.GeoWorker"].expandGeoGroup(parentGeoId, delegator)>
@@ -121,18 +121,18 @@ under the License.
         </#if>
         <option value='${geo.geoId}' ${selected}>${description}</option>
     </#list>
-    </select>
+    </@input>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "STATE_PROVINCE">
-    <select name="${questionFieldName}">
+    <@input type="select" name="${questionFieldName}">
     <#assign states = Static["org.ofbiz.common.CommonWorkers"].getStateList(delegator)>
     <#list states as state>
         <option value='${state.geoId}'>${state.geoName?default(state.geoId)}</option>
     </#list>
-    </select>
+    </@input>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "COUNTRY">
-    <select name="${questionFieldName}">
+    <@input type="select" name="${questionFieldName}">
       ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-    </select>
+    </@input>
   <#else>
     <div>Unsupported question type : ${surveyQuestionAndAppl.surveyQuestionTypeId}</div>
   </#if>

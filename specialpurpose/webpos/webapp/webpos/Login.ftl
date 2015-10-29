@@ -47,11 +47,11 @@ under the License.
           <@tr>
             <@td>${uiLabelMap.WebPosChooseTerminal}</@td>
             <@td>
-              <select name="posTerminalId" id="posTerminalId">
+              <@input type="select" name="posTerminalId" id="posTerminalId">
                 <#list posTerminals as posTerminal>
                   <option value="${posTerminal.posTerminalId}">${posTerminal.terminalName}</option>
                 </#list>
-              </select>
+              </@input>
             </@td>
           </@tr>
           <@tr>

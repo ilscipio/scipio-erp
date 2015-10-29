@@ -69,7 +69,7 @@ under the License.
           </#if>
         </@field>
         <@field type="generic" label="${uiLabelMap.CommonStatus}">
-            <select name="currentStatusId">
+            <@input type="select" name="currentStatusId">
               <#if task??>
                 <#assign currentStatus = task.geRelatedOne("CurrentStatusItem")!>
                 <option selected="selected" value="${currentStatus.currentStatusId}">${currentStatus.description}</option>
@@ -91,13 +91,13 @@ under the License.
                   <option value="${statusItem.statusId!}">[${uiLabelMap.WorkEffortEvent}]${statusItem.description}</option>
                 </#list>
               </#if>
-            </select>
+            </@input>
         </@field>
         <@field type="generic" label="${uiLabelMap.CommonPriority}">
             <#if task?has_content>
               <#assign priority = task.priority!>
             </#if>
-            <select name="priority" size="1">
+            <@input type="select" name="priority" size="1">
               <#if priority??>
                 <option selected="selected" value="${priority}">${priority}</option>
                 <option></option>
@@ -122,11 +122,11 @@ under the License.
                 <option value="8">${uiLabelMap.WorkEffortPriorityEight}</option>
                 <option value="9">${uiLabelMap.WorkEffortPriorityNine}</option>
               </#if>
-            </select>
+            </@input>
         </@field>
         <@field type="generic" label="${uiLabelMap.ProjectMgrWorkEffortScopeEnumId}">
             <#assign enumerations = delegator.findByAnd("Enumeration", Static["org.ofbiz.base.util.UtilMisc"].toMap("enumTypeId", "WORK_EFF_SCOPE"), null, false)>
-            <select name="scopeEnumId">
+            <@input type="select" name="scopeEnumId">
               <#if task??>
                 <#assign scopeEnumId = task.scopeEnumId!>
                 <#list enumerations as enumeration>
@@ -137,7 +137,7 @@ under the License.
                   <option value="${enumeration.enumId}">${enumeration.description}</option>
                 </#list>
               </#if>
-            </select>
+            </@input>
         </@field>
         <@field type="generic" label="${uiLabelMap.WorkEffortEstimatedStartDate}">
             <#if task??>

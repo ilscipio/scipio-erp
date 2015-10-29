@@ -52,13 +52,13 @@ under the License.
           <form method="post" action="<@ofbizUrl>updatePicklist</@ofbizUrl>" style="display: inline;">
             <input type="hidden" name="facilityId" value="${facilityId}"/>
             <input type="hidden" name="picklistId" value="${picklist.picklistId}"/>
-            <select name="statusId">
+            <@input type="select" name="statusId">
               <option value="${picklistInfo.statusItem.statusId}" selected>${picklistInfo.statusItem.get("description",locale)}</option>
               <option value="${picklistInfo.statusItem.statusId}">---</option>
               <#list picklistInfo.statusValidChangeToDetailList as statusValidChangeToDetail>
                 <option value="${statusValidChangeToDetail.get("statusIdTo", locale)}">${statusValidChangeToDetail.get("description", locale)} (${statusValidChangeToDetail.get("transitionName", locale)})</option>
               </#list>
-            </select>
+            </@input>
             <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit ${styles.button_default!}"/>
           </form>
           <span>${uiLabelMap.ProductCreatedModifiedBy}</span> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
@@ -86,11 +86,11 @@ under the License.
             <input type="hidden" name="facilityId" value="${facilityId}"/>
             <input type="hidden" name="picklistId" value="${picklist.picklistId}"/>
             <input type="hidden" name="roleTypeId" value="PICKER"/>
-            <select name="partyId">
+            <@input type="select" name="partyId">
               <#list partyRoleAndPartyDetailList as partyRoleAndPartyDetail>
                 <option value="${partyRoleAndPartyDetail.partyId}">${partyRoleAndPartyDetail.firstName!} ${partyRoleAndPartyDetail.middleName!} ${partyRoleAndPartyDetail.lastName!} ${partyRoleAndPartyDetail.groupName!} [${partyRoleAndPartyDetail.partyId}]</option>
               </#list>
-            </select>
+            </@input>
             <input type="submit" value="${uiLabelMap.CommonAdd}" class="smallSubmit ${styles.button_default!}"/>
           </form>
         </div>
@@ -127,12 +127,12 @@ under the License.
                 <span>${uiLabelMap.ProductLocation} ${uiLabelMap.CommonNbr}</span>
                 <input type"text" size="2" name="binLocationNumber" value="${picklistBinInfo.picklistBin.binLocationNumber}"/>
                 <span>${uiLabelMap.PageTitlePickList}</span>
-                <select name="picklistId">
+                <@input type="select" name="picklistId">
                   <#list picklistActiveList as picklistActive>
                     <#assign picklistActiveStatusItem = picklistActive.getRelatedOne("StatusItem", true)>
                     <option value="${picklistActive.picklistId}"<#if picklistActive.picklistId == picklist.picklistId> selected="selected"</#if>>${picklistActive.picklistId} [${uiLabelMap.CommonDate}:${picklistActive.picklistDate},${uiLabelMap.CommonStatus}:${picklistActiveStatusItem.get("description",locale)}]</option>
                   </#list>
-                </select>
+                </@input>
                 <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit ${styles.button_default!}"/>
               </form>
             </div>

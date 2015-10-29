@@ -61,7 +61,7 @@ under the License.
 <@tr>
   <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyState}</@td>
   <@td width="74%">
-    <select name="stateProvinceGeoId" class="selectBox" <#if requestParameters.useShipAddr??>disabled</#if>>
+    <@input type="select" name="stateProvinceGeoId" class="selectBox" <#if requestParameters.useShipAddr??>disabled</#if>>
       <#if (parameters.stateProvinceGeoId)??>
         <option>${parameters.stateProvinceGeoId}</option>
         <option value="${parameters.stateProvinceGeoId}">---</option>
@@ -69,7 +69,7 @@ under the License.
         <option value="">${uiLabelMap.PartyNoState}</option>
       </#if>
       ${screens.render("component://common/widget/CommonScreens.xml#states")}
-    </select>
+    </@input>
   *</@td>
 </@tr>
 <@tr>
@@ -81,24 +81,24 @@ under the License.
 <@tr>
   <@td width="26%" align="right" valign="middle">${uiLabelMap.CommonCountry}</@td>
   <@td width="74%">
-    <select name="countryGeoId" class="selectBox" <#if requestParameters.useShipAddr??>disabled</#if>>
+    <@input type="select" name="countryGeoId" class="selectBox" <#if requestParameters.useShipAddr??>disabled</#if>>
       <#if (parameters.countryGeoId)??>
         <option>${parameters.countryGeoId}</option>
         <option value="${parameters.countryGeoId}">---</option>
       </#if>
       ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-    </select>
+    </@input>
   *</@td>
 </@tr>
 <@tr>
   <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyAllowSolicitation}?</@td>
   <@td width="74%">
-    <select name="allowSolicitation" class='selectBox' <#if requestParameters.useShipAddr??>disabled</#if>>
+    <@input type="select" name="allowSolicitation" class='selectBox' <#if requestParameters.useShipAddr??>disabled</#if>>
       <#if (((parameters.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
       <#if (((parameters.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
       <option></option>
       <option value="Y">${uiLabelMap.CommonY}</option>
       <option value="N">${uiLabelMap.CommonN}</option>
-    </select>
+    </@input>
   </@td>
 </@tr>

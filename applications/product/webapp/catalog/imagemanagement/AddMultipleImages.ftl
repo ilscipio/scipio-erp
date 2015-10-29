@@ -25,12 +25,12 @@ under the License.
     <@tbody>
       <@tr>
         <@td>
-            <select name="imageResize">
+            <@input type="select" name="imageResize">
                 <#list productFeatures as productFeature>
                     <option value="${productFeature.abbrev!}">${productFeature.description!}</option>
                 </#list>
                 <option selected="" value="">Do not resize</option>
-            </select>
+            </@input>
         </@td>
       </@tr>
       <@tr>

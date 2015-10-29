@@ -68,7 +68,7 @@ under the License.
             </@field>
           <#else>
             <@field type="generic" label="${uiLabelMap.ProductProductStore}">
-                <select name="productStoreId" id="searchProductStoreId" onchange="javascript:selectChange(document.getElementById('advToKeywordSearchform'), document.getElementById('searchProductStoreId'));">
+                <@input type="select" name="productStoreId" id="searchProductStoreId" onchange="javascript:selectChange(document.getElementById('advToKeywordSearchform'), document.getElementById('searchProductStoreId'));">
                   <#if googleBaseConfigList?has_content>
                     <#list googleBaseConfigList as googleBaseConfig>
                       <#assign productStore = delegator.findOne("ProductStore", {"productStoreId" : googleBaseConfig.productStoreId}, true) />
@@ -79,11 +79,11 @@ under the License.
                        <option value="${productStore.productStoreId}" <#if productStoreId! == productStore.productStoreId> selected="selected"</#if>>${displayDesc} [${productStore.productStoreId}]</option>
                      </#list>
                   </#if>
-                </select>
+                </@input>
                 <span id="productStoreErrorMessage" style="display:none;" class="errorMessage">${uiLabelMap.CommonRequired}</span>
             </@field>
             <@field type="generic" label="${uiLabelMap.ProductCatalog}">
-                <select name="SEARCH_CATALOG_ID" id="searchCatalogId" onchange="javascript:selectChange(document.getElementById('advToKeywordSearchform'), document.getElementById('searchCatalogId'));" class="required">
+                <@input type="select" name="SEARCH_CATALOG_ID" id="searchCatalogId" onchange="javascript:selectChange(document.getElementById('advToKeywordSearchform'), document.getElementById('searchCatalogId'));" class="required">
                     <#list prodCatalogList as prodCatalog>
                       <#assign displayDesc = prodCatalog.catalogName?default("${uiLabelMap.ProductNoDescription}") />
                       <#if (18 < displayDesc?length)>
@@ -91,12 +91,12 @@ under the License.
                       </#if>
                       <option value="${prodCatalog.prodCatalogId}" <#if searchCatalogId! == prodCatalog.prodCatalogId> selected="selected"</#if>>${displayDesc} [${prodCatalog.prodCatalogId}]</option>
                     </#list>
-                  </select>
+                  </@input>
                   <span id="catalogErrorMessage" style="display:none;" class="errorMessage">${uiLabelMap.CommonRequired}</span>
             </@field>
             <@field type="generic" label="${uiLabelMap.ProductCategory}">
                 <#if categoryIds?has_content>
-                    <select name="SEARCH_CATEGORY_ID" id="searchCategoryId">
+                    <@input type="select" name="SEARCH_CATEGORY_ID" id="searchCategoryId">
                       <option value="">- ${uiLabelMap.ProductAnyCategory} -</option>
                       <#list categoryIds as categoryId>
                         <#assign productCategory = delegator.findOne("ProductCategory", {"productCategoryId" : categoryId}, true) />
@@ -106,7 +106,7 @@ under the License.
                         </#if>
                         <option value="${productCategory.productCategoryId}">${displayDesc} [${productCategory.productCategoryId}]</option>
                       </#list>
-                    </select>
+                    </@input>
                   <#else>
                     <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="advToKeywordSearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
                   </#if>
@@ -206,24 +206,24 @@ under the License.
             <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true) />
             <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId] />
             <@field type="generic" label="${(productFeatureType.get('description',locale))!}">
-                <select name="pft_${productFeatureTypeId}">
+                <@input type="select" name="pft_${productFeatureTypeId}">
                     <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
                     <#list productFeatures as productFeature>
                       <option value="${productFeature.productFeatureId}">${productFeature.description?default("${uiLabelMap.ProductNoDescription}")} [${productFeature.productFeatureId}]</option>
                     </#list>
-                  </select>
+                  </@input>
             </@field>
           </#list>
           <@field type="generic" label="${uiLabelMap.ProductSupplier}">
-              <select name="SEARCH_SUPPLIER_ID">
+              <@input type="select" name="SEARCH_SUPPLIER_ID">
                   <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
                   <#list supplerPartyRoleAndPartyDetails as supplerPartyRoleAndPartyDetail>
                     <option value="${supplerPartyRoleAndPartyDetail.partyId}">${supplerPartyRoleAndPartyDetail.groupName!} ${supplerPartyRoleAndPartyDetail.firstName!} ${supplerPartyRoleAndPartyDetail.lastName!} [${supplerPartyRoleAndPartyDetail.partyId}]</option>
                   </#list>
-                </select>
+                </@input>
           </@field>
           <@field type="generic" label="${uiLabelMap.CommonSortedBy}">
-              <select name="sortOrder">
+              <@input type="select" name="sortOrder">
                   <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
                   <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
                   <option value="SortProductField:internalName">${uiLabelMap.ProductInternalName}</option>
@@ -235,7 +235,7 @@ under the License.
                   <option value="SortProductPrice:AVERAGE_COST">${uiLabelMap.ProductAverageCost}</option>
                   <option value="SortProductPrice:MINIMUM_PRICE">${uiLabelMap.ProductMinimumPrice}</option>
                   <option value="SortProductPrice:MAXIMUM_PRICE">${uiLabelMap.ProductMaximumPrice}</option>
-                </select>
+                </@input>
                 ${uiLabelMap.ProductLowToHigh}<input type="radio" name="sortAscending" value="Y" checked="checked" />
                 ${uiLabelMap.ProductHighToLow}<input type="radio" name="sortAscending" value="N" />
           </@field>
@@ -243,12 +243,12 @@ under the License.
               <@htmlTemplate.lookupField value="${requestParameters.PRIORITIZE_CATEGORY_ID!}" formName="advToKeywordSearchform" name="PRIORITIZE_CATEGORY_ID" id="PRIORITIZE_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
           </@field>
           <@field type="generic" label="${uiLabelMap.ProductGoodIdentificationType}">
-              <select name="SEARCH_GOOD_IDENTIFICATION_TYPE">
+              <@input type="select" name="SEARCH_GOOD_IDENTIFICATION_TYPE">
                 <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
                 <#list goodIdentificationTypes as goodIdentificationType>
                   <option value="${goodIdentificationType.goodIdentificationTypeId}">${goodIdentificationType.get("description")!}</option>
                 </#list>
-              </select>
+              </@input>
           </@field>
           <@field type="generic" label="${uiLabelMap.ProductGoodIdentificationValue}">
               <input type="text" name="SEARCH_GOOD_IDENTIFICATION_VALUE" size="60" maxlength="60" value="${requestParameters.SEARCH_GOOD_IDENTIFICATION_VALUE!}" />

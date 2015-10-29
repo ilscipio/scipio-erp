@@ -86,11 +86,11 @@ under the License.
               </@td>
               <@td></@td>
               <@td>
-                <select name="returnTypeId_o_${rowCount}">
+                <@input type="select" name="returnTypeId_o_${rowCount}">
                   <#list returnTypes as type>
                   <option value="${type.returnTypeId}" <#if type.returnTypeId == "RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
                   </#list>
-                </select>
+                </@input>
               </@td>
               <@td></@td>
               <@td align="right">
@@ -137,27 +137,27 @@ under the License.
                 </#if>
               </@td>
               <@td>
-                <select name="returnReasonId_o_${rowCount}">
+                <@input type="select" name="returnReasonId_o_${rowCount}">
                   <#list returnReasons as reason>
                   <option value="${reason.returnReasonId}">${reason.get("description",locale)?default(reason.returnReasonId)}</option>
                   </#list>
-                </select>
+                </@input>
               </@td>
               <@td>
-                <select name="returnTypeId_o_${rowCount}">
+                <@input type="select" name="returnTypeId_o_${rowCount}">
                   <#list returnTypes as type>
                   <option value="${type.returnTypeId}" <#if type.returnTypeId=="RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
                   </#list>
-                </select>
+                </@input>
               </@td>
               <@td>
-                <select name="expectedItemStatus_o_${rowCount}">
+                <@input type="select" name="expectedItemStatus_o_${rowCount}">
                   <option value="INV_RETURNED">${uiLabelMap.OrderReturned}</option>
                   <option value="INV_RETURNED">---</option>
                   <#list itemStts as status>
                     <option value="${status.statusId}">${status.get("description",locale)}</option>
                   </#list>
-                </select>
+                </@input>
               </@td>
               <@td align="right">
                 <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');highlightRow(this,'returnItemId_tableRow_${rowCount}');"/>
@@ -209,11 +209,11 @@ under the License.
             <input type="text" size="8" name="amount_o_${rowCount}" <#if adj.amount?has_content>value="${adj.amount?string("##0.00")}"</#if>/>
           </@td>
           <@td>
-            <select name="returnTypeId_o_${rowCount}">
+            <@input type="select" name="returnTypeId_o_${rowCount}">
               <#list returnTypes as type>
               <option value="${type.returnTypeId}" <#if type.returnTypeId == "RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
               </#list>
-            </select>
+            </@input>
           </@td>
           <@td align="right">
             <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>
@@ -250,11 +250,11 @@ under the License.
                 <input type="text" size="8" name="amount_o_${rowCount}" value="${0.00?string("##0.00")}"/>
               </@td>
               <@td>
-                <select name="returnTypeId_o_${rowCount}">
+                <@input type="select" name="returnTypeId_o_${rowCount}">
                   <#list returnTypes as type>
                   <option value="${type.returnTypeId}" <#if type.returnTypeId == "RTN_REFUND">selected="selected"</#if>>${type.get("description",locale)?default(type.returnTypeId)}</option>
                   </#list>
-                </select>
+                </@input>
               </@td>
               <@td>
                 <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, '${selectAllFormName}');"/>

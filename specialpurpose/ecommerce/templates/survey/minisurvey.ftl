@@ -57,13 +57,13 @@ under the License.
         <@td align="center">
           <#if surveyQuestionAndAppl.surveyQuestionTypeId == "BOOLEAN">
             <#assign selectedOption = (answer.booleanResponse)?default("Y")>
-            <select class="selectBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
+            <@input type="select" class="selectBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
               <#if surveyQuestionAndAppl.requiredField?default("N") != "Y">
                 <option value=""></option>
               </#if>
               <option value="Y" <#if "Y" == selectedOption>selected="selected"</#if>>Y</option>
               <option value="N" <#if "N" == selectedOption>selected="selected"</#if>>N</option>
-            </select>
+            </@input>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXTAREA">
             <textarea class="textAreaBox" cols="40" rows="5" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">${(answer.textResponse)!}</textarea>
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "TEXT_SHORT">
@@ -91,7 +91,7 @@ under the License.
           <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">
             <#assign options = surveyQuestionAndAppl.getRelated("SurveyQuestionOption", null, sequenceSort, false)!>
             <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>
-            <select class="selectBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
+            <@input type="select" class="selectBox" name="answers_${surveyQuestionAndAppl.surveyQuestionId}">
               <#if surveyQuestionAndAppl.requiredField?default("N") != "Y">
                 <option value=""></option>
               </#if>
@@ -102,7 +102,7 @@ under the License.
               <#else>
                 <option value="">Nothing to choose</option>
               </#if>
-            </select>
+            </@input>
           <#else>
             <div>Unsupported question type : ${surveyQuestionAndAppl.surveyQuestionTypeId}</div>
           </#if>

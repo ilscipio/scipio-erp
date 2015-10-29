@@ -72,7 +72,7 @@ function insertImageName(type,nameValue) {
               </#if>
 
                 <@field type="generic" label="${uiLabelMap.ProductProductCategoryType}">
-                    <select name="productCategoryTypeId" size="1">
+                    <@input type="select" name="productCategoryTypeId" size="1">
                             <#assign selectedKey = "">
                             <#list productCategoryTypes as productCategoryTypeData>
                                 <#if requestParameters.productCategoryTypeId?has_content>
@@ -82,7 +82,7 @@ function insertImageName(type,nameValue) {
                                 </#if>
                                 <option <#if selectedKey == productCategoryTypeData.productCategoryTypeId!>selected="selected"</#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description",locale)}</option>
                             </#list>
-                        </select>
+                        </@input>
                 </@field>
                 <@field type="generic" label="${uiLabelMap.ProductProductCategoryName}">
                     <input type="text" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/>

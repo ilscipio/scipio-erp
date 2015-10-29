@@ -288,9 +288,9 @@ function getConfigDetails(event) {
           <#if variantTree?? && 0 < variantTree.size()>
             <#list featureSet as currentType>
               <div>
-                <select name="FT${currentType}" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
+                <@input type="select" name="FT${currentType}" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
                   <option>${featureTypes.get(currentType)}</option>
-                </select>
+                </@input>
               </div>
             </#list>
             <input type='hidden' name="product_id" value='${product.productId}' />
@@ -359,7 +359,7 @@ function getConfigDetails(event) {
           <input type="hidden" name="productId" value="${product.productId}" />
           <input type="hidden" name="product_id" value="${product.productId}" />
           <input type="hidden" name="configId" value="${configId!}" />
-          <select name="shoppingListId">
+          <@input type="select" name="shoppingListId">
             <#if shoppingLists?has_content>
               <#list shoppingLists as shoppingList>
                 <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
@@ -367,7 +367,7 @@ function getConfigDetails(event) {
             </#if>
             <option value="">---</option>
             <option value="">${uiLabelMap.OrderNewShoppingList}</option>
-          </select>
+          </@input>
           &nbsp;&nbsp;
           <input type="text" size="5" name="quantity" value="1" />
           <a href="javascript:document.addToShoppingList.submit();" class="${styles.button_default!}">[${uiLabelMap.OrderAddToShoppingList}]</a>
@@ -527,7 +527,7 @@ function getConfigDetails(event) {
                 </#list>
                 <#else>
                 <#-- And this is the select box implementation -->
-                <select name='${counter}'>
+                <@input type="select" name='${counter}'>
                 <#if !question.isMandatory()>
                   <option value=''>---</option>
                 </#if>
@@ -550,7 +550,7 @@ function getConfigDetails(event) {
                   </option>
                   <#assign optionCounter = optionCounter + 1>
                 </#list>
-                </select>
+                </@input>
                 </#if>
               <#else>
                 <#-- Multi choice question -->

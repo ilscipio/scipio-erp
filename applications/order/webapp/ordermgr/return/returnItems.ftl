@@ -43,7 +43,7 @@ under the License.
                   ${adjReturnType.get("description", locale)?default("${uiLabelMap.CommonNA}")}
                 </#if>
            <#else>
-               <select name="returnTypeId_o_${rowCount}">
+               <@input type="select" name="returnTypeId_o_${rowCount}">
                   <#if (adjReturnType?has_content)>
                     <option value="${adjReturnType.returnTypeId}">${adjReturnType.get("description",locale)!}</option>
                     <option value="${adjReturnType.returnTypeId}">--</option>
@@ -51,7 +51,7 @@ under the License.
                   <#list returnTypes as returnTypeItem>
                     <option value="${returnTypeItem.returnTypeId}">${returnTypeItem.get("description",locale)!}</option>
                   </#list>
-                </select>
+                </@input>
           </#if>
           </@td>
        <#if (adjEditable)>
@@ -197,7 +197,7 @@ under the License.
                     <#if readOnly>
                         ${returnReason.get("description",locale)?default("N/A")}
                     <#else>
-                        <select name="returnReasonId_o_${rowCount}">
+                        <@input type="select" name="returnReasonId_o_${rowCount}">
                             <#if (returnReason?has_content)>
                                 <option value="${returnReason.returnReasonId}">${returnReason.get("description",locale)!}</option>
                                 <option value="${returnReason.returnReasonId}">--</option>
@@ -205,7 +205,7 @@ under the License.
                             <#list returnReasons as returnReasonItem>
                                 <option value="${returnReasonItem.returnReasonId}">${returnReasonItem.get("description",locale)!}</option>
                             </#list>
-                        </select>
+                        </@input>
                     </#if>
                     </@td>
                 <@td>
@@ -216,7 +216,7 @@ under the License.
                       N/A
                       </#if>
                   <#else>
-                      <select name="expectedItemStatus_o_${rowCount}">
+                      <@input type="select" name="expectedItemStatus_o_${rowCount}">
                           <#if (status?has_content)>
                               <option value="${status.statusId}">${status.get("description",locale)!}</option>
                               <option value="${status.statusId}">--</option>
@@ -224,14 +224,14 @@ under the License.
                           <#list itemStatus as returnItemStatus>
                               <option value="${returnItemStatus.statusId}">${returnItemStatus.get("description",locale)!}</option>
                           </#list>
-                      </select>
+                      </@input>
                   </#if>
                   </@td>
                 <@td>
                     <#if (readOnly)>
                         ${returnType.get("description",locale)?default("N/A")}
                     <#else>
-                        <select name="returnTypeId_o_${rowCount}">
+                        <@input type="select" name="returnTypeId_o_${rowCount}">
                             <#if (returnType?has_content)>
                                 <option value="${returnType.returnTypeId}">${returnType.get("description",locale)!}</option>
                                 <option value="${returnType.returnTypeId}">--</option>
@@ -239,7 +239,7 @@ under the License.
                             <#list returnTypes as returnTypeItem>
                                 <option value="${returnTypeItem.returnTypeId}">${returnTypeItem.get("description",locale)!}</option>
                             </#list>
-                        </select>
+                        </@input>
                     </#if></@td>
                 <#if (readOnly)>
                   <@td>
@@ -345,11 +345,11 @@ under the License.
           <input type="hidden" name="returnId" value="${returnId}" />
             <#if partyOrders?has_content>
               <@field type="generic" label="${uiLabelMap.OrderOrderId}" tooltip="${uiLabelMap.OrderReturnLoadItems}">
-                  <select name="orderId">
+                  <@input type="select" name="orderId">
                     <#list partyOrders as order>
                       <option value="${order.orderId}">${order.orderId} - ${order.orderDate}</option>
                     </#list>
-                  </select>
+                  </@input>
               </@field>
             <#else>
               <@tr>

@@ -19,11 +19,11 @@ under the License.
 <div>
   <input type="hidden" id="partyIdentificationTypeId" name="partyIdentificationTypeId" value="">
   <label for="searchPartyBy"><b>&nbsp;${uiLabelMap.WebPosSearchBy}</b></label>
-  <select id="searchPartyBy" name="searchPartyBy">
+  <@input type="select" id="searchPartyBy" name="searchPartyBy">
     <option value="lastName" selected>${uiLabelMap.PartyLastName}</option>
     <option value="firstName">${uiLabelMap.PartyFirstName}</option>
     <option value="idValue">${uiLabelMap.PartyPartyIdentification}</option>
-  </select>
+  </@input>
   <br/>
   <input type="text" id="partyToSearch" name="partyToSearch" size="30" maxlength="100">
   <input type="submit" value="${uiLabelMap.CommonSearch}" id="partySearchConfirm"/>

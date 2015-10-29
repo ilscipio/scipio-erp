@@ -45,23 +45,23 @@ under the License.
     </div>
     <div>
       <label for="billToCountryGeoId">${uiLabelMap.CommonCountry}*</label>
-      <select name="countryGeoId" id="billToCountryGeoId" class="required">
+      <@input type="select" name="countryGeoId" id="billToCountryGeoId" class="required">
         <#if billToCountryGeoId??>
           <option value='${billToCountryGeoId!}'>${billToCountryProvinceGeo!(billToCountryGeoId!)}</option>
         </#if>
         ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-      </select>
+      </@input>
       <span id="advice-required-billToCountryGeoId" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span>
     </div>
     <div id="billToStates">
       <label for="billToStateProvinceGeoId">${uiLabelMap.PartyState}*<span id="advice-required-billToStateProvinceGeoId" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span></label>
-      <select name="stateProvinceGeoId" id="billToStateProvinceGeoId">
+      <@input type="select" name="stateProvinceGeoId" id="billToStateProvinceGeoId">
         <#if billToStateProvinceGeoId?has_content>
           <option value='${billToStateProvinceGeoId!}'>${billToStateProvinceGeo!(billToStateProvinceGeoId!)}</option>
         <#else>
           <option value="_NA_">${uiLabelMap.PartyNoState}</option>
         </#if>
-      </select>
+      </@input>
     </div>
     <#if billToTelecomNumber?has_content>
       <div>

@@ -27,12 +27,12 @@ under the License.
     <div class="product-prevnext">
       <#assign r = listSize / viewSize />
       <#assign viewIndexMax = Static["java.lang.Math"].ceil(r)>
-      <select name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
+      <@input type="select" name="pageSelect" class="selectBox" onchange="window.location=this[this.selectedIndex].value;">
         <option value="#">${uiLabelMap.CommonPage} ${viewIndex?int+1} ${uiLabelMap.CommonOf} ${viewIndexMax}</option>
         <#list 1..viewIndexMax as curViewNum>
           <option value="<@ofbizUrl>showforum?forumId=${parameters.forumId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${curViewNum?int-1}</@ofbizUrl>">${uiLabelMap.CommonGotoPage} ${curViewNum}</option>
         </#list>
-      </select>
+      </@input>
       <b>
         <#if (viewIndex?int >0)>
           <a href="<@ofbizUrl>showforum?forumId=${parameters.forumId}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex?int-1}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |

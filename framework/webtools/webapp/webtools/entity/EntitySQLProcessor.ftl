@@ -18,11 +18,11 @@ under the License.
 -->
     <form method="post" action="EntitySQLProcessor" name="EntitySQLCommand">
         <@field type="generic" label="${uiLabelMap.CommonGroup}">
-            <select name="group">
+            <@input type="select" name="group">
                 <#list groups as group>
                     <option value="${group}" <#if selGroup??><#if group = selGroup>selected="selected"</#if></#if>>${group}</option>
                 </#list>
-            </select>
+            </@input>
         </@field>
         <@field type="generic" label="${uiLabelMap.WebtoolsSqlCommand}">
             <textarea name="sqlCommand" cols="100" rows="5">${sqlCommand!}</textarea>

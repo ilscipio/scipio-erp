@@ -286,7 +286,7 @@ under the License.
                             <input type="text" size="7" name="wgt_${rowKey}" value="" />
                           </@td>
                           <@td align="center">
-                            <select name="pkg_${rowKey}">
+                            <@input type="select" name="pkg_${rowKey}">
                               <#if packingSession.getPackageSeqIds()?exists>
                                 <#list packingSession.getPackageSeqIds() as packageSeqId>
                                   <option value="${packageSeqId}">${uiLabelMap.ProductPackage} ${packageSeqId}</option>
@@ -300,7 +300,7 @@ under the License.
                                 <option value="4">${uiLabelMap.ProductPackage} 4</option>
                                 <option value="5">${uiLabelMap.ProductPackage} 5</option>
                               </#if>
-                            </select>
+                            </@input>
                           </@td>
                           <@td align="right">
                             <input type="text" size="7" name="numPackages_${rowKey}" value="1" />
@@ -363,13 +363,13 @@ under the License.
                                 <span>${uiLabelMap.ProductShipmentBoxType}</span>
                                 <br/>
                                 <#list packageSeqIds as packageSeqId>
-                                  <select name="boxType_${packageSeqId}">
+                                  <@input type="select" name="boxType_${packageSeqId}">
                                     <option value=""></option>
                                     <#list carrierShipmentBoxTypes as carrierShipmentBoxType>
                                       <#assign shipmentBoxType = carrierShipmentBoxType.getRelatedOne("ShipmentBoxType", false) />
                                       <option value="${shipmentBoxType.shipmentBoxTypeId}">${shipmentBoxType.description?default(shipmentBoxType.shipmentBoxTypeId)}</option>
                                     </#list>
-                                  </select>
+                                  </@input>
                                   <br/>
                                 </#list>
                               </@td>

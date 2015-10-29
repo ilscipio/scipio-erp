@@ -133,7 +133,7 @@ function runAction() {
   <form name="listPurchaseInvoices" id="listPurchaseInvoices"  method="post" action="javascript:void(0);">
     <div align="right">
       <!-- May add some more options in future like cancel selected invoices-->
-      <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
+      <@input type="select" name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
         <option value="">${uiLabelMap.AccountingSelectAction}</option>
         <option value="<@ofbizUrl>processMassCheckRun</@ofbizUrl>" id="processMassCheckRun">${uiLabelMap.AccountingIssueCheck}</option>
         <option value="<@ofbizUrl>PrintInvoices</@ofbizUrl>">${uiLabelMap.AccountingPrintInvoices}</option>
@@ -143,7 +143,7 @@ function runAction() {
         <option value="massInvoicesToPaid">${uiLabelMap.AccountingInvoiceStatusToPaid}</option>
         <option value="massInvoicesToWriteoff">${uiLabelMap.AccountingInvoiceStatusToWriteoff}</option>
         <option value="massInvoicesToCancel">${uiLabelMap.AccountingInvoiceStatusToCancelled}</option>
-      </select>
+      </@input>
       <input id="submitButton" type="button" onclick="javascript:runAction();" value="${uiLabelMap.CommonRun}" disabled="disabled" />
     </div>
     <input type="hidden" name="invoiceStatusChange" id="invoiceStatusChange" value="<@ofbizUrl>massChangeInvoiceStatus</@ofbizUrl>"/>
@@ -156,7 +156,7 @@ function runAction() {
     <input type="hidden" name="thruDueDate" value="${parameters.thruDueDate!}"/>
     <div id="issueChecks" style="display: none;" align="right">
       <span>${uiLabelMap.AccountingVendorPaymentMethod}</span>
-      <select name="paymentMethodId">
+      <@input type="select" name="paymentMethodId">
         <#if paymentMethods?has_content>
           <#list paymentMethods as paymentMethod>
             <#if paymentMethod.finAccountId?has_content>
@@ -169,7 +169,7 @@ function runAction() {
             </#if>
           </#list>
         </#if>
-      </select>
+      </@input>
       <span>${uiLabelMap.AccountingCheckNumber}</span>
       <input type="text" name="checkStartNumber"/>
     </div>

@@ -25,7 +25,7 @@ under the License.
       </@td>
       <@td align="right">
         <form name="choosequickaddform" method="post" action="<@ofbizUrl>quickadd</@ofbizUrl>">
-          <select name='category_id'>
+          <@input type="select" name='category_id'>
             <option value='${productCategory.productCategoryId}'>${productCategory.categoryName!}</option>
             <option value='${productCategory.productCategoryId}'>--</option>
             <#list quickAddCats as quickAddCatalogId>
@@ -34,7 +34,7 @@ under the License.
                 <option value='${quickAddCatalogId}'>${loopCategory.categoryName!}</option>
               </#if>
             </#list>
-          </select>
+          </@input>
           <div><a href="javascript:document.choosequickaddform.submit()" class="${styles.button_default!}">${uiLabelMap.ProductChooseQuickAddCategory}</a></div>
         </form>
       </@td>

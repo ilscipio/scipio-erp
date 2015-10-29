@@ -50,7 +50,7 @@ function makeExpDate() {
               <#if billingAccountList?has_content>
                 <@tr>
                   <@td class="${styles.grid_large!}3">
-                    <select name="billingAccountId">
+                    <@input type="select" name="billingAccountId">
                       <option value=""></option>
                         <#list billingAccountList as billingAccount>
                           <#assign availableAmount = billingAccount.accountBalance?double>
@@ -61,7 +61,7 @@ function makeExpDate() {
                           </#if> 
                           <option value="${billingAccount.billingAccountId}" <#if billingAccount.billingAccountId == selectedBillingAccountId?default("")>selected="selected"</#if>>${billingAccount.description?default("")} [${billingAccount.billingAccountId}] Available: <@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId/> Limit: <@ofbizCurrency amount=accountLimit isoCode=billingAccount.accountCurrencyUomId/></option>
                         </#list>
-                    </select>
+                    </@input>
                   </@td>
                   <@td>${uiLabelMap.FormFieldTitle_billingAccountId}
                   </@td>
@@ -230,14 +230,14 @@ function makeExpDate() {
             <@tr>
               <@td width="26%" class="text-right" valign="top">${uiLabelMap.CommonStateProvince}</@td>
               <@td width="74%">
-                <select name="stateProvinceGeoId" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>>
+                <@input type="select" name="stateProvinceGeoId" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>>
                   <#if postalFields.stateProvinceGeoId??>
                   <option>${postalFields.stateProvinceGeoId}</option>
                   <option value="${postalFields.stateProvinceGeoId}">---</option>
                   </#if>
                   <option value=""></option>
                   ${screens.render("component://common/widget/CommonScreens.xml#states")}
-                </select>
+                </@input>
               </@td>
             </@tr>
             <@tr>
@@ -249,13 +249,13 @@ function makeExpDate() {
             <@tr>
               <@td width="26%" class="text-right" valign="top">${uiLabelMap.CommonCountry}</@td>
               <@td width="74%">
-                <select name="countryGeoId" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>>
+                <@input type="select" name="countryGeoId" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>>
                   <#if postalFields.countryGeoId??>
                   <option>${postalFields.countryGeoId}</option>
                   <option value="${postalFields.countryGeoId}">---</option>
                   </#if>
                   ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-                </select>
+                </@input>
               *</@td>
             </@tr>
 
@@ -278,13 +278,13 @@ function makeExpDate() {
               <@tr>
                 <@td width="26%" class="text-right" valign="middle">${uiLabelMap.AccountingPrefixCard}</@td>
                 <@td width="74%">
-                  <select name="titleOnCard">
+                  <@input type="select" name="titleOnCard">
                     <option value="">${uiLabelMap.CommonSelectOne}</option>
                     <option<#if ((creditCard.titleOnCard)?default("") == "Mr.")> checked="checked"</#if>>${uiLabelMap.CommonTitleMr}</option>
                     <option<#if ((creditCard.titleOnCard)?default("") == "Mrs.")> checked="checked"</#if>>${uiLabelMap.CommonTitleMrs}</option>
                     <option<#if ((creditCard.titleOnCard)?default("") == "Ms.")> checked="checked"</#if>>${uiLabelMap.CommonTitleMs}</option>
                     <option<#if ((creditCard.titleOnCard)?default("") == "Dr.")> checked="checked"</#if>>${uiLabelMap.CommonTitleDr}</option>
-                   </select>
+                   </@input>
                 </@td>
               </@tr>
               <@tr>
@@ -308,7 +308,7 @@ function makeExpDate() {
               <@tr>
                 <@td width="26%" class="text-right" valign="middle">${uiLabelMap.AccountingSuffixCard}</@td>
                 <@td width="74%">
-                  <select name="suffixOnCard">
+                  <@input type="select" name="suffixOnCard">
                     <option value="">${uiLabelMap.CommonSelectOne}</option>
                     <option<#if ((creditCard.suffixOnCard)?default("") == "Jr.")> checked="checked"</#if>>Jr.</option>
                     <option<#if ((creditCard.suffixOnCard)?default("") == "Sr.")> checked="checked"</#if>>Sr.</option>
@@ -317,20 +317,20 @@ function makeExpDate() {
                     <option<#if ((creditCard.suffixOnCard)?default("") == "III")> checked="checked"</#if>>III</option>
                     <option<#if ((creditCard.suffixOnCard)?default("") == "IV")> checked="checked"</#if>>IV</option>
                     <option<#if ((creditCard.suffixOnCard)?default("") == "V")> checked="checked"</#if>>V</option>
-                  </select>
+                  </@input>
                 </@td>
               </@tr>
 
               <@tr>
                 <@td width="26%" class="text-right" valign="top">${uiLabelMap.AccountingCardType}</@td>
                 <@td width="74%">
-                  <select name="cardType">
+                  <@input type="select" name="cardType">
                     <#if creditCard.cartType??>
                     <option>${creditCard.cardType}</option>
                     <option value="${creditCard.cardType}">---</option>
                     </#if>
                     ${screens.render("component://common/widget/CommonScreens.xml#cctypes")}
-                  </select>
+                  </@input>
                 *</@td>
               </@tr>
               <@tr>
@@ -357,20 +357,20 @@ function makeExpDate() {
                       <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
                     </#if>
                   </#if>
-                  <select name="expMonth" onchange="javascript:makeExpDate();">
+                  <@input type="select" name="expMonth" onchange="javascript:makeExpDate();">
                     <#if creditCard?has_content && expMonth?has_content><#assign ccExprMonth = expMonth><#else><#assign ccExprMonth = requestParameters.expMonth!></#if>
                     <#if ccExprMonth?has_content>
                       <option value="${ccExprMonth!}">${ccExprMonth!}</option>
                     </#if>
                     ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
-                  </select>
-                  <select name="expYear" onchange="javascript:makeExpDate();">
+                  </@input>
+                  <@input type="select" name="expYear" onchange="javascript:makeExpDate();">
                     <#if creditCard?has_content && expYear?has_content><#assign ccExprYear = expYear><#else><#assign ccExprYear = requestParameters.expYear!></#if>
                     <#if ccExprYear?has_content>
                       <option value="${ccExprYear!}">${ccExprYear!}</option>
                     </#if>
                     ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
-                  </select>
+                  </@input>
                 *</@td>
               </@tr>
               <@tr>
@@ -416,12 +416,12 @@ function makeExpDate() {
               <@tr>
                 <@td width="26%" class="text-right" valign="top">${uiLabelMap.AccountingAccountType}</@td>
                 <@td width="74%">
-                  <select name="accountType">
+                  <@input type="select" name="accountType">
                     <option>${eftAccount.accountType!}</option>
                     <option></option>
                     <option>Checking</option>
                     <option>Savings</option>
-                  </select>
+                  </@input>
                 *</@td>
               </@tr>
               <@tr>

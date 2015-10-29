@@ -26,11 +26,11 @@ ${StringUtil.wrapString(topLine.textBegin!)}
       <input type="hidden" name="${field.name}" value="${field.value}"/>
     </#list>
   </#if>
-  <select name="${topLine.selectionName!}" onchange="javascript:document.${topLine.action}.submit();">
+  <@input type="select" name="${topLine.selectionName!}" onchange="javascript:document.${topLine.action}.submit();">
     <#list topLine.dropDownList as option>
       <option <#if option.key == topLine.selectedKey>selected="selected"</#if> value="${option.key!}">${option.value!}</option>
     </#list>
-  </select>
+  </@input>
 </form>
 <#else>
   ${topLine.dropDownList[0].value!}

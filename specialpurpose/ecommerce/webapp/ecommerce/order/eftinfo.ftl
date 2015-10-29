@@ -41,12 +41,12 @@ under the License.
 <@tr>
   <@td width="26%" align="right" valign="middle">${uiLabelMap.AccountingAccountType}</@td>
   <@td width="74%">
-    <select name="accountType" class='selectBox'>
+    <@input type="select" name="accountType" class='selectBox'>
       <option>${eftAccount.accountType!}</option>
       <option></option>
       <option>Checking</option>
       <option>Savings</option>
-    </select>*
+    </@input>*
   </@td>
 </@tr>
 <@tr>

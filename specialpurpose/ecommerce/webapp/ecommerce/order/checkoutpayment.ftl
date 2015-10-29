@@ -139,13 +139,13 @@ var issuerId = "";
               
               <div id="issuers">
               <div><label>${uiLabelMap.AccountingBank}</label></div>
-                <select name="issuer" id="issuer">
+                <@input type="select" name="issuer" id="issuer">
                 <#if issuerList?has_content>
                     <#list issuerList as issuer>
                         <option value="${issuer.getIssuerID()}">${issuer.getIssuerName()}</option>
                     </#list>
                 </#if>
-              </select>
+              </@input>
               </div>
               </#if>
               <#if !paymentMethodList?has_content>
@@ -211,14 +211,14 @@ var issuerId = "";
             <#if productStorePaymentMethodTypeIdMap.EXT_BILLACT??>
               <#if billingAccountList?has_content>
                 <div>
-                    <select name="billingAccountId" id="billingAccountId">
+                    <@input type="select" name="billingAccountId" id="billingAccountId">
                       <option value=""></option>
                         <#list billingAccountList as billingAccount>
                           <#assign availableAmount = billingAccount.accountBalance>
                           <#assign accountLimit = billingAccount.accountLimit>
                           <option value="${billingAccount.billingAccountId}" <#if billingAccount.billingAccountId == selectedBillingAccountId?default("")>selected="selected"</#if>>${billingAccount.description?default("")} [${billingAccount.billingAccountId}] ${uiLabelMap.EcommerceAvailable} <@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId/> ${uiLabelMap.EcommerceLimit} <@ofbizCurrency amount=accountLimit isoCode=billingAccount.accountCurrencyUomId/></option>
                         </#list>
-                    </select>
+                    </@input>
                     <label for="billingAccountId">${uiLabelMap.FormFieldTitle_billingAccountId}</label>
                 </div>
                 <div>

@@ -62,7 +62,7 @@ under the License.
               <@td>${surveyQuestionAndAppl.description!}</@td>
               <@td><input type="text" name="question" size="30" value="${surveyQuestionAndAppl.question!?html}" /></@td>
               <@td>
-                <select name="surveyPageId">
+                <@input type="select" name="surveyPageId">
                   <#if surveyQuestionAndAppl.surveyPageSeqId?has_content>
                     <option value="${surveyQuestionAndAppl.surveyPageSeqId}">${(currentSurveyPage.pageName)!} [${surveyQuestionAndAppl.surveyPageSeqId}]</option>
                     <option value="${surveyQuestionAndAppl.surveyPageSeqId}">----</option>
@@ -71,10 +71,10 @@ under the License.
                   <#list surveyPageList as surveyPage>
                     <option value="${surveyPage.surveyPageSeqId}">${surveyPage.pageName!} [${surveyPage.surveyPageSeqId}]</option>
                   </#list>
-                </select>
+                </@input>
               </@td>
               <@td>
-                <select name="surveyMultiRespId">
+                <@input type="select" name="surveyMultiRespId">
                   <#if surveyQuestionAndAppl.surveyMultiRespId?has_content>
                     <option value="${surveyQuestionAndAppl.surveyMultiRespId}">${(currentSurveyMultiResp.multiRespTitle)!} [${surveyQuestionAndAppl.surveyMultiRespId}]</option>
                     <option value="${surveyQuestionAndAppl.surveyMultiRespId}">----</option>
@@ -83,11 +83,11 @@ under the License.
                   <#list surveyMultiRespList as surveyMultiResp>
                     <option value="${surveyMultiResp.surveyMultiRespId}">${surveyMultiResp.multiRespTitle} [${surveyMultiResp.surveyMultiRespId}]</option>
                   </#list>
-                </select>
+                </@input>
               </@td>
               <#if currentSurveyMultiRespColumns?has_content>
               <@td>
-                <select name="surveyMultiRespColId">
+                <@input type="select" name="surveyMultiRespColId">
                   <#if surveyQuestionAndAppl.surveyMultiRespColId?has_content>
                     <#assign currentSurveyMultiRespColumn = surveyQuestionAndAppl.getRelatedOne("SurveyMultiRespColumn", false)/>
                     <option value="${currentSurveyMultiRespColumn.surveyMultiRespColId}">${(currentSurveyMultiRespColumn.columnTitle)!} [${currentSurveyMultiRespColumn.surveyMultiRespColId}]</option>
@@ -97,17 +97,17 @@ under the License.
                   <#list currentSurveyMultiRespColumns as currentSurveyMultiRespColumn>
                     <option value="${currentSurveyMultiRespColumn.surveyMultiRespColId}">${currentSurveyMultiRespColumn.columnTitle} [${currentSurveyMultiRespColumn.surveyMultiRespColId}]</option>
                   </#list>
-                </select>
+                </@input>
               </@td>
               <#else>
                 <@td><input type="text" name="surveyMultiRespColId" size="4" value="${surveyQuestionAndAppl.surveyMultiRespColId!}"/></@td>
               </#if>
               <@td>
-                <select name="requiredField">
+                <@input type="select" name="requiredField">
                   <option>${surveyQuestionAndAppl.requiredField?default("N")}</option>
                   <option value="${surveyQuestionAndAppl.requiredField?default("N")}">----</option>
                   <option>Y</option><option>N</option>
-                </select>
+                </@input>
               </@td>
               <@td><input type="text" name="sequenceNum" size="5" value="${surveyQuestionAndAppl.sequenceNum!}"/></@td>
               <@td><input type="text" name="withSurveyQuestionId" size="5" value="${surveyQuestionAndAppl.withSurveyQuestionId!}"/></@td>
@@ -161,27 +161,27 @@ under the License.
                 <@td>${questionType.get("description",locale)}</@td>
                 <@td>${question.question!}</@td>
               <@td>
-                <select name="surveyPageId">
+                <@input type="select" name="surveyPageId">
                   <option value=""></option>
                   <#list surveyPageList as surveyPage>
                     <option value="${surveyPage.surveyPageSeqId}">${surveyPage.pageName} [${surveyPage.surveyPageSeqId}]</option>
                   </#list>
-                </select>
+                </@input>
               </@td>
               <@td>
-                <select name="surveyMultiRespId">
+                <@input type="select" name="surveyMultiRespId">
                   <option value=""></option>
                   <#list surveyMultiRespList as surveyMultiResp>
                     <option value="${surveyMultiResp.surveyMultiRespId}">${surveyMultiResp.multiRespTitle} [${surveyMultiResp.surveyMultiRespId}]</option>
                   </#list>
-                </select>
+                </@input>
               </@td>
                 <@td><input type="text" name="surveyMultiRespColId" size="4"/></@td>
                 <@td>
-                  <select name="requiredField">
+                  <@input type="select" name="requiredField">
                     <option>N</option>
                     <option>Y</option>
-                  </select>
+                  </@input>
                 </@td>
                 <@td><input type="text" name="sequenceNum" size="5"/></@td>
                 <@td><input type="text" name="withSurveyQuestionId" size="5"/></@td>
@@ -196,11 +196,11 @@ under the License.
 <@section title="${uiLabelMap.ContentSurveyApplyQuestionFromCategory}">
       <form method="post" action="<@ofbizUrl>EditSurveyQuestions</@ofbizUrl>">
         <input type="hidden" name="surveyId" value="${requestParameters.surveyId}"/>
-        <select name="surveyQuestionCategoryId">
+        <@input type="select" name="surveyQuestionCategoryId">
           <#list questionCategories as category>
             <option value="${category.surveyQuestionCategoryId}">${category.description?default("??")} [${category.surveyQuestionCategoryId}]</option>
           </#list>
-        </select>
+        </@input>
         &nbsp;
         <input type="submit" value="${uiLabelMap.CommonApply}" class="smallSubmit ${styles.button_default!}"/>
       </form>

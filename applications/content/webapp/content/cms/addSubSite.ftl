@@ -37,11 +37,11 @@ function win_cancel() {
       <input type="text" size="40" name="description"/>
   </@field>
   <@field type="generic" label="Posted Msg Default Status:">
-      <select name="statusId">
+      <@input type="select" name="statusId">
         <option value="CTNT_IN_PROGRESS">Draft - not attached to any site</option>
         <option value="CTNT_FINAL_DRAFT">Final Draft - but must be approve (moderated)</option>
         <option value="CTNT_PUBLISHED">Publish immediately</option>
-      </select>
+      </@input>
   </@field>
   <@field type="submitarea"> 
       <input type="submit" name="submitBtn" value="Create"/>

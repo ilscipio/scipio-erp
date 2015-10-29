@@ -77,11 +77,11 @@ under the License.
           <input type="hidden" name="currencyUomId" value="${parameters.currencyUomId}" />
           <input type="hidden" name="minimumOrderQuantity" value="${parameters.minimumOrderQuantity}" />
           <input type="hidden" name="availableFromDate" value="${parameters.availableFromDate}" />
-          <select name="contentId" class="selectBox">
+          <@input type="select" name="contentId" class="selectBox">
             <#list ownerContentAndRoleList as ownerContentAndRole>
               <option value="${ownerContentAndRole.contentId}">${ownerContentAndRole.contentName}</option>
             </#list>
-          </select>
+          </@input>
           <a href="javascript:document.adddigitaluploadfile.submit()" class="${styles.button_default!}">${uiLabelMap.CommonAdd}</a>
         </form>
         </div>

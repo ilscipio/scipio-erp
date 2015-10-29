@@ -81,10 +81,10 @@ under the License.
                   <@tr>
                     <@td class="${styles.grid_large!}3" valign="top">${uiLabelMap.CommonStateProvince}</@td>
                     <@td class="${styles.grid_large!}9">
-                      <select name="stateProvinceGeoId">
+                      <@input type="select" name="stateProvinceGeoId">
                         <option value=""></option>
                         ${screens.render("component://common/widget/CommonScreens.xml#states")}
-                      </select>
+                      </@input>
                     </@td>
                   </@tr>
                   <@tr>
@@ -96,18 +96,18 @@ under the License.
                   <@tr>
                     <@td class="${styles.grid_large!}3" valign="top">${uiLabelMap.CommonCountry} *</@td>
                     <@td class="${styles.grid_large!}9">
-                      <select name="countryGeoId">
+                      <@input type="select" name="countryGeoId">
                         ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-                      </select> 
+                      </@input> 
                     </@td>
                   </@tr>
                   <@tr>
                     <@td class="${styles.grid_large!}3" valign="top">${uiLabelMap.OrderAllowSolicitation}</@td>
                     <@td class="${styles.grid_large!}9">
-                      <select name="allowSolicitation">
+                      <@input type="select" name="allowSolicitation">
                         <#assign selectedValue = parameters.allowSolicitation?default("")/>
                         <option></option><option ${(selectedValue=="Y")?string("selected=\"selected\"","")}>Y</option><option ${(selectedValue=="N")?string("selected=\"selected\"","")}>N</option>
-                      </select>
+                      </@input>
                     </@td>
                   </@tr>
                 </@table>

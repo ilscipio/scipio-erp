@@ -30,11 +30,11 @@ under the License.
         <@tr>
           <@td>${uiLabelMap.PartySelectContactType}:</@td>
           <@td>
-            <select name="preContactMechTypeId" class='selectBox'>
+            <@input type="select" name="preContactMechTypeId" class='selectBox'>
               <#list contactMechTypes as contactMechType>
                 <option value='${contactMechType.contactMechTypeId}'>${contactMechType.get("description",locale)}</option>
               </#list>
-            </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="button">${uiLabelMap.CommonCreate}</a>
+            </@input>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="button">${uiLabelMap.CommonCreate}</a>
           </@td>
         </@tr>
       </@table>
@@ -105,12 +105,12 @@ under the License.
                     <div>
                     <input type="hidden" name="contactMechId" value="${contactMechId}"/>
                     <input type="hidden" name="useValues" value="true"/>
-                      <select name='contactMechPurposeTypeId' class='selectBox'>
+                      <@input type="select" name='contactMechPurposeTypeId' class='selectBox'>
                         <option></option>
                         <#list purposeTypes as contactMechPurposeType>
                           <option value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.get("description",locale)}</option>
                         </#list>
-                      </select>
+                      </@input>
                       </div>
                   </form>
                 </@td>
@@ -166,8 +166,8 @@ under the License.
         <@td align="right" valign="top"> ${uiLabelMap.PartyState}</@td>
         <@td>&nbsp;</@td>
         <@td>       
-          <select name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
-          </select>
+          <@input type="select" name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
+          </@input>
         </@td>
       </@tr>      
       <@tr>
@@ -181,7 +181,7 @@ under the License.
         <@td align="right" valign="top">${uiLabelMap.CommonCountry}</@td>
         <@td>&nbsp;</@td>
         <@td>
-          <select name="countryGeoId" id="editcontactmechform_countryGeoId">
+          <@input type="select" name="countryGeoId" id="editcontactmechform_countryGeoId">
           ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
           <#if (postalAddress??) && (postalAddress.countryGeoId??)>
             <#assign defaultCountryGeoId = postalAddress.countryGeoId>
@@ -192,7 +192,7 @@ under the License.
           <#assign countryGeo = delegator.findOne("Geo",Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId",defaultCountryGeoId), false)>
             ${countryGeo.get("geoName",locale)}
           </option>
-          </select>
+          </@input>
         </@td>
       </@tr>
     <#elseif contactMechTypeId = "TELECOM_NUMBER">
@@ -232,13 +232,13 @@ under the License.
         <@td align="right" valign="top">${uiLabelMap.PartyAllowSolicitation}?</@td>
         <@td>&nbsp;</@td>
         <@td>
-          <select name="allowSolicitation" class='selectBox'>
+          <@input type="select" name="allowSolicitation" class='selectBox'>
             <#if (((partyContactMechData.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
             <#if (((partyContactMechData.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
             <option></option>
             <option value="Y">${uiLabelMap.CommonY}</option>
             <option value="N">${uiLabelMap.CommonN}</option>
-          </select>
+          </@input>
         </@td>
       </@tr>
       </div>

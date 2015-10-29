@@ -92,7 +92,7 @@ under the License.
                   <textarea name="noteInfo" rows="5" cols="70"></textarea>
               </@field>
               <@field type="generic" label="${uiLabelMap.OrderInternalNote}">
-                  <select name="internalNote" size="1"><option value=""></option><option value="Y" selected>${uiLabelMap.CommonYes}</option><option value="N">${uiLabelMap.CommonNo}</option></select>
+                  <@input type="select" name="internalNote" size="1"><option value=""></option><option value="Y" selected>${uiLabelMap.CommonYes}</option><option value="N">${uiLabelMap.CommonNo}</option></@input>
               </@field>
               <@field type="display">
                 <i>${uiLabelMap.OrderInternalNoteMessage}</i>

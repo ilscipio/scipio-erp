@@ -186,7 +186,7 @@ under the License.
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <@fieldErrors fieldName="shipToStateProvinceGeoId"/>
-                    <select name="shipToStateProvinceGeoId" id="shipToStateProvinceGeoId" class="selectBox">
+                    <@input type="select" name="shipToStateProvinceGeoId" id="shipToStateProvinceGeoId" class="selectBox">
                     <#if (parameters.shipToStateProvinceGeoId)??>
                        <option>${parameters.shipToStateProvinceGeoId}</option>
                        <option value="${parameters.shipToStateProvinceGeoId}">---</option>
@@ -194,7 +194,7 @@ under the License.
                        <option value="">${uiLabelMap.PartyNoState}</option>
                     </#if>
                        ${screens.render("component://common/widget/CommonScreens.xml#states")}
-                    </select>
+                    </@input>
                  *</@td>
               </@tr>
               <@tr>
@@ -210,13 +210,13 @@ under the License.
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <@fieldErrors fieldName="shipToCountryGeoId"/>
-                    <select name="shipToCountryGeoId" id="shipToCountryGeoId" class="selectBox">
+                    <@input type="select" name="shipToCountryGeoId" id="shipToCountryGeoId" class="selectBox">
                     <#if (parameters.shipToCountryGeoId)??>
                        <option>${parameters.shipToCountryGeoId}</option>
                        <option value="${parameters.shipToCountryGeoId}">---</option>
                     </#if>
                        ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-                    </select>
+                    </@input>
                  *</@td>
               </@tr>
             </@table>
@@ -279,7 +279,7 @@ under the License.
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <@fieldErrors fieldName="billToStateProvinceGeoId"/>
-                    <select name="billToStateProvinceGeoId" id="billToStateProvinceGeoId" class="selectBox">
+                    <@input type="select" name="billToStateProvinceGeoId" id="billToStateProvinceGeoId" class="selectBox">
                     <#if (parameters.billToStateProvinceGeoId)??>
                        <option>${parameters.billToStateProvinceGeoId}</option>
                        <option value="${parameters.billToStateProvinceGeoId}">---</option>
@@ -287,7 +287,7 @@ under the License.
                        <option value="">${uiLabelMap.PartyNoState}</option>
                     </#if>
                        ${screens.render("component://common/widget/CommonScreens.xml#states")}
-                    </select>
+                    </@input>
                  *</@td>
               </@tr>
               <@tr>
@@ -303,13 +303,13 @@ under the License.
                  <@td width="2%">&nbsp;</@td>
                  <@td width="72%">
                     <@fieldErrors fieldName="billToCountryGeoId"/>
-                    <select name="billToCountryGeoId" id="billToCountryGeoId" class="selectBox">
+                    <@input type="select" name="billToCountryGeoId" id="billToCountryGeoId" class="selectBox">
                     <#if (parameters.billToCountryGeoId)??>
                        <option>${parameters.billToCountryGeoId}</option>
                        <option value="${parameters.billToCountryGeoId}">---</option>
                     </#if>
                        ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-                    </select>
+                    </@input>
                  *</@td>
               </@tr>
             </@table>

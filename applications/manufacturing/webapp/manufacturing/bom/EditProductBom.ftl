@@ -44,7 +44,7 @@ function lookupBom() {
         <@cell columns=6>
             <a name="topform"></a>
             <@field type="generic" label="${uiLabelMap.ManufacturingBomType}">
-                <select name="productAssocTypeId" size="1">
+                <@input type="select" name="productAssocTypeId" size="1">
                 <#if productAssocTypeId?has_content>
                     <#assign curAssocType = delegator.findOne("ProductAssocType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId), false)>
                     <#if curAssocType??>
@@ -55,7 +55,7 @@ function lookupBom() {
                 <#list assocTypes as assocType>
                     <option value="${(assocType.productAssocTypeId)!}">${(assocType.get("description",locale))!}</option>
                 </#list>
-                </select>
+                </@input>
             </@field>
         </@cell>
         <@cell columns=6>
@@ -98,7 +98,7 @@ function lookupBom() {
 
     <#if !(productAssoc??)>
           <@field type="generic" label="${uiLabelMap.ManufacturingBomType}">
-              <select name="productAssocTypeId" size="1">
+              <@input type="select" name="productAssocTypeId" size="1">
                 <#if productAssocTypeId?has_content>
                     <#assign curAssocType = delegator.findOne("ProductAssocType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId), false)>
                     <#if curAssocType??>
@@ -109,7 +109,7 @@ function lookupBom() {
                 <#list assocTypes as assocType>
                     <option value="${(assocType.productAssocTypeId)!}">${(assocType.get("description",locale))!}</option>
                 </#list>
-                </select>
+                </@input>
           </@field>
           <@field type="generic" label="${uiLabelMap.ProductProductId}">
               <@htmlTemplate.lookupField value="${productId!}" formName="editProductAssocForm" name="productId" id="productId2" fieldFormName="LookupProduct"/>
@@ -160,7 +160,7 @@ function lookupBom() {
         <input type="text" name="scrapFactor" <#if useValues>value="${(productAssoc.scrapFactor)!}"<#else>value="${(request.getParameter("scrapFactor"))!}"</#if> size="10" maxlength="15"/>
     </@field>
     <@field type="generic" label="${uiLabelMap.ManufacturingFormula}">
-        <select name="estimateCalcMethod">
+        <@input type="select" name="estimateCalcMethod">
             <option value="">&nbsp;</option>
             <#assign selectedFormula = "">
             <#if useValues>
@@ -171,7 +171,7 @@ function lookupBom() {
             <#list formulae as formula>
                 <option value="${formula.customMethodId}" <#if selectedFormula = formula.customMethodId>selected="selected"</#if>>${formula.get("description",locale)!}</option>
             </#list>
-        </select>
+        </@input>
     </@field>
     <@field type="generic" label="${uiLabelMap.ManufacturingRoutingTask}">
           <#if useValues>

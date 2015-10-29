@@ -40,11 +40,11 @@ under the License.
     <@row>
       <@cell columns=9>
         <@field type="generic" label="${uiLabelMap.PartySelectContactType}">
-            <select name="preContactMechTypeId">
+            <@input type="select" name="preContactMechTypeId">
               <#list mechMap.contactMechTypes as contactMechType>
                 <option value='${contactMechType.contactMechTypeId}'>${contactMechType.get("description",locale)}</option>
               </#list>
-            </select>
+            </@input>
         </@field>
       </@cell>
       <@cell columns=3>
@@ -75,12 +75,12 @@ under the License.
         <#if paymentMethodId??><input type='hidden' name='paymentMethodId' value='${paymentMethodId}' /></#if>
 
         <@field type="generic" label="${uiLabelMap.PartyContactPurposes}">
-            <select name='contactMechPurposeTypeId' class="required">
+            <@input type="select" name='contactMechPurposeTypeId' class="required">
               <option></option>
               <#list mechMap.purposeTypes as contactMechPurposeType>
                 <option value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.get("description",locale)}</option>
                </#list>
-            </select>
+            </@input>
           *
         </@field>
     <#else>
@@ -119,12 +119,12 @@ under the License.
                   <form method="post" action='<@ofbizUrl>createFacilityContactMechPurpose?DONE_PAGE=${donePage}&amp;useValues=true</@ofbizUrl>' name='newpurposeform'>
                   <input type="hidden" name='facilityId' value='${facilityId}' />
                   <input type="hidden" name='contactMechId' value='${contactMechId!}' />
-                    <select name='contactMechPurposeTypeId'>
+                    <@input type="select" name='contactMechPurposeTypeId'>
                       <option></option>
                       <#list mechMap.purposeTypes as contactMechPurposeType>
                         <option value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.get("description",locale)}</option>
                       </#list>
-                    </select>
+                    </@input>
                     &nbsp;<a href='javascript:document.newpurposeform.submit()' class="${styles.button_default!}">${uiLabelMap.PartyAddPurpose}</a>
                   </form>
                 </@td>
@@ -158,15 +158,15 @@ under the License.
       *
     </@field>
     <@field type="generic" label="${uiLabelMap.PartyState}">
-        <select name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
-        </select>
+        <@input type="select" name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
+        </@input>
     </@field>
     <@field type="generic" label="${uiLabelMap.PartyZipCode}" required=true>
         <input type="text" class="required" size="12" maxlength="10" name="postalCode" value="${(mechMap.postalAddress.postalCode)?default(request.getParameter('postalCode')!)}" />
       *
     </@field>
     <@field type="generic" label="${uiLabelMap.CommonCountry}">
-        <select name="countryGeoId" id="editcontactmechform_countryGeoId">
+        <@input type="select" name="countryGeoId" id="editcontactmechform_countryGeoId">
           ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
           <#if (mechMap.postalAddress??) && (mechMap.postalAddress.countryGeoId??)>
             <#assign defaultCountryGeoId = mechMap.postalAddress.countryGeoId>
@@ -177,7 +177,7 @@ under the License.
             <#assign countryGeo = delegator.findOne("Geo",Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId",defaultCountryGeoId), false)>
             ${countryGeo.get("geoName",locale)}
           </option>
-        </select>
+        </@input>
     </@field>
   <#elseif "TELECOM_NUMBER" = mechMap.contactMechTypeId!>
     <@field type="generic" label="${uiLabelMap.PartyPhoneNumber}">

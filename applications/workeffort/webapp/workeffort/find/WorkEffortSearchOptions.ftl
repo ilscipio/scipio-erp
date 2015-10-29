@@ -31,12 +31,12 @@ under the License.
             <@htmlTemplate.lookupField value="${requestParameters.SEARCH_WORK_EFFORT_ID!}" formName="advToKeyWordSearchForm" name="SEARCH_WORK_EFFORT_ID" id="SEARCH_WORK_EFFORT_ID" fieldFormName="LookupWorkEffort"/>
         </@field>
         <@field type="generic" label="${uiLabelMap.FormFieldTitle_workEffortAssocTypeId}">
-              <select name="workEffortAssocTypeId">
+              <@input type="select" name="workEffortAssocTypeId">
                 <option value="">- ${uiLabelMap.WorkEffortAnyAssocType} -</option>
                   <#list workEffortAssocTypes as workEffortAssocType>
                       <option value="${workEffortAssocType.workEffortAssocTypeId}">${workEffortAssocType.description}</option>
                   </#list>
-              </select>
+              </@input>
                   ${uiLabelMap.WorkEffortIncludeAllSubWorkEfforts}?
                   ${uiLabelMap.CommonYes}<input type="radio" name="SEARCH_SUB_WORK_EFFORTS" value="Y" checked="checked"/>
                   ${uiLabelMap.CommonNo}<input type="radio" name="SEARCH_SUB_WORK_EFFORTS" value="N"/>
@@ -45,12 +45,12 @@ under the License.
             <@htmlTemplate.lookupField value="${requestParameters.partyId!}" formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
         </@field>
         <@field type="generic" label="${uiLabelMap.PartyRoleTypeId}">
-              <select name="partyRoleTypeId">
+              <@input type="select" name="partyRoleTypeId">
                 <option value="">- ${uiLabelMap.CommonAnyRoleType} -</option>
                 <#list roleTypes as roleType>
                    <option value="${roleType.roleTypeId}">${roleType.description}</option>
                  </#list>
-              </select>
+              </@input>
         </@field>
         <@field type="generic" label="${uiLabelMap.WorkEffortProductId1}">
             <@htmlTemplate.lookupField value="${requestParameters.productId_1!}" formName="advToKeyWordSearchForm" name="productId_1" id="productId_1" fieldFormName="LookupProduct"/>
@@ -67,10 +67,10 @@ under the License.
             </@field>
         </@field>
         <@field type="generic" label="${uiLabelMap.CommonSortedBy}">
-            <select name="sortOrder">
+            <@input type="select" name="sortOrder">
                 <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
                 <option value="SortWorkEffortField:workEffortName">${uiLabelMap.WorkEffortName}</option>
-              </select>
+              </@input>
               ${uiLabelMap.ProductLowToHigh}<input type="radio" name="sortAscending" value="Y" checked="checked"/>
               ${uiLabelMap.ProductHighToLow}<input type="radio" name="sortAscending" value="N"/>
         </@field>

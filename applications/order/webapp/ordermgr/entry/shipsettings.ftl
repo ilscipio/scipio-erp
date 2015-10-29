@@ -167,25 +167,25 @@ under the License.
               <@tr>
                 <@td class="${styles.grid_large!}3">${uiLabelMap.PartySupplier}</@td>
                 <@td class="${styles.grid_large!}6">
-                      <select name="${shipGroupIndex?default("0")}_supplierPartyId">
+                      <@input type="select" name="${shipGroupIndex?default("0")}_supplierPartyId">
                         <option value=""></option>
                         <#list suppliers as supplier>
                           <option value="${supplier.partyId}"<#if supplierPartyId??><#if supplier.partyId == supplierPartyId> selected="selected"</#if></#if>>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(supplier, true)}</option>
                         </#list>
-                      </select>
+                      </@input>
                  </@td>
                  <@td></@td>
               </@tr>
               <@tr>
                 <@td class="${styles.grid_large!}3">${uiLabelMap.ProductReserveInventoryFromFacility}</@td>
                 <@td class="${styles.grid_large!}6">
-                      <select name="${shipGroupIndex?default("0")}_shipGroupFacilityId">
+                      <@input type="select" name="${shipGroupIndex?default("0")}_shipGroupFacilityId">
                         <option value=""></option>
                         <#list productStoreFacilities as productStoreFacility>
                           <#assign facility = productStoreFacility.getRelatedOne("Facility", false)>
                           <option value="${productStoreFacility.facilityId}"<#if facilityId??><#if productStoreFacility.facilityId == facilityId> selected="selected"</#if></#if>>${facility.facilityName!} </option>
                         </#list>
-                      </select>
+                      </@input>
                 </@td>
                 <@td></@td>              
               </@tr>

@@ -37,7 +37,7 @@ under the License.
               <#if returnHeader??>
               ${returnHeader.currencyUomId!}
           <#else>
-             <select name="currencyUomId">
+             <@input type="select" name="currencyUomId">
                 <#if (orderHeader?has_content) && (orderHeader.currencyUom?has_content)>
                   <option value="${orderHeader.currencyUom}" selected>${orderHeader.getRelatedOne("Uom", false).getString("description",locale)}</option>
                   <option value="${orderHeader.currencyUom}">---</option>
@@ -50,7 +50,7 @@ under the License.
                     <option value="${currency.uomId}">${currency.get("description",locale)}</option>
                   </#list>
                 </#if>
-             </select>
+             </@input>
           </#if>
           </@field>
           <@field type="generic" label="${uiLabelMap.OrderEntryDate}">
@@ -63,7 +63,7 @@ under the License.
               <@htmlTemplate.lookupField value='${returnInfo.fromPartyId!}' formName="returnhead" name="fromPartyId" id="fromPartyId" fieldFormName="LookupPartyName"/>
           </@field>
           <@field type="generic" label="${uiLabelMap.OrderReturnToFacility}">
-              <select name='destinationFacilityId'>
+              <@input type="select" name='destinationFacilityId'>
                 <#if currentFacility??>
                   <option value="${currentFacility.facilityId}">${currentFacility.facilityName?default(currentFacility.facilityId)}</option>
                   <option value="${currentFacility.facilityId}">---</option>
@@ -75,7 +75,7 @@ under the License.
           </@field>
           <@field type="generic" label="${uiLabelMap.AccountingBillingAccount}">
               <#if billingAccountList?has_content>
-                <select name='billingAccountId'>
+                <@input type="select" name='billingAccountId'>
                   <#if currentAccount??>
                     <option value="${currentAccount.billingAccountId}">${currentAccount.billingAccountId}: ${currentAccount.description!}</option>
                     <option value="${currentAccount.billingAccountId}">---</option>
@@ -84,14 +84,14 @@ under the License.
                   <#list billingAccountList as ba>
                     <option value="${ba.billingAccountId}">${ba.billingAccountId}: ${ba.description!}</option>
                   </#list>
-                </select>
+                </@input>
               <#else>
                 <input type='text' size='20' name='billingAccountId' />
               </#if>
           </@field>
           <@field type="generic" label="${uiLabelMap.FormFieldTitle_paymentMethodId}">
               <#if creditCardList?? || eftAccountList??>
-                <select name='paymentMethodId'>
+                <@input type="select" name='paymentMethodId'>
                   <#if currentCreditCard??>
                     <option value="${currentCreditCard.paymentMethodId}">CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(currentCreditCard)}</option>
                   </#if>
@@ -110,7 +110,7 @@ under the License.
                       <option value="${eftAccount.paymentMethodId}">EFT:&nbsp;${eftAccount.nameOnAccount!}, ${eftAccount.accountNumber!}</option>
                     </#list>
                   </#if>
-                </select>
+                </@input>
               <#else>
                 <input type='text' size='20' name='paymentMethodId' value="${(returnHeader.paymentMethodId)!}"/>
               </#if>
@@ -119,7 +119,7 @@ under the License.
               </#if>
           </@field>
           <@field type="generic" label="${uiLabelMap.OrderReturnNeedsAutoReceive}">
-              <select name='needsInventoryReceive'>
+              <@input type="select" name='needsInventoryReceive'>
                 <#if needsInventoryReceive??>
                   <#if "Y" == needsInventoryReceive>
                     <option selected="selected" value="${needsInventoryReceive}">${uiLabelMap.CommonYes}</option>
@@ -130,11 +130,11 @@ under the License.
                 </#if>
                 <option value="Y">${uiLabelMap.CommonYes}</option>
                 <option value="N">${uiLabelMap.CommonNo}</option>
-              </select>
+              </@input>
           </@field>
         <#if returnHeader?has_content>
           <@field type="generic" label="${uiLabelMap.CommonReturnStatus}">
-              <select name="statusId">
+              <@input type="select" name="statusId">
                 <#if currentStatus??>
                   <option value="${currentStatus.statusId}">${currentStatus.get("description",locale)}</option>
                   <option value="${currentStatus.statusId}">---</option>
@@ -142,7 +142,7 @@ under the License.
                 <#list returnStatus as status>
                   <option value="${status.statusIdTo}">${status.get("transitionName",locale)}</option>
                 </#list>
-              </select>
+              </@input>
           </@field>
           <@field type="generic" label="${uiLabelMap.FormFieldTitle_createdBy}">
               ${returnHeader.createdBy?default("Unknown")}

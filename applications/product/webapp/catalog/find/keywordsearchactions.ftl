@@ -87,7 +87,7 @@ under the License.
           </@field>
           <#-- label for the following field used to be: ${uiLabelMap.ProductCategoryId} ??? -->
           <@field type="generic" label="${uiLabelMap.ProductFeatureApplicationType}">
-              <select name='productFeatureApplTypeId' size='1'>
+              <@input type="select" name='productFeatureApplTypeId' size='1'>
                 <#list applicationTypes as applicationType>
                    <#assign displayDesc = applicationType.get("description", locale)?default("No Description")>
                    <#if 18 < displayDesc?length>
@@ -95,7 +95,7 @@ under the License.
                    </#if>
                    <option value="${applicationType.productFeatureApplTypeId}">${displayDesc}</option>
                 </#list>
-              </select>
+              </@input>
           </@field>
           
           <@field type="submitarea"><input type="submit" value="${uiLabelMap.ProductAddFeature}" class="smallSubmit ${styles.button_default!}" /></@field>

@@ -109,11 +109,11 @@ function toggleBillingAccount(box) {
                        <@td>&nbsp;</@td>
                        <@td valign='middle'>
                          <div class='tabletext' valign='top'>
-                           <select name="agreementId">
+                           <@input type="select" name="agreementId">
                              <#list agreements as agreement>
                                <option value='${agreement.agreementId!}'>${agreement.agreementId} - ${agreement.description!}</option>
                              </#list>
-                           </select>
+                           </@input>
                          </div>
                        </@td>
                      </@tr>

@@ -20,12 +20,12 @@ under the License.
         <form action="<@ofbizUrl>updateCategoryContent</@ofbizUrl>" method="post" name="categoryForm">
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
                 <@field type="generic" label="${uiLabelMap.ProductProductCategoryType}">
-                    <select name="productCategoryTypeId" size="1">
+                    <@input type="select" name="productCategoryTypeId" size="1">
                         <option value="">&nbsp;</option>
                         <#list productCategoryTypes as productCategoryTypeData>
                             <option <#if productCategory?has_content><#if productCategory.productCategoryTypeId==productCategoryTypeData.productCategoryTypeId> selected="selected"</#if></#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description",locale)}</option>
                         </#list>
-                    </select>
+                    </@input>
                 </@field>
                 <@field type="generic" label="${uiLabelMap.ProductName}">
                     <input type="text" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/>

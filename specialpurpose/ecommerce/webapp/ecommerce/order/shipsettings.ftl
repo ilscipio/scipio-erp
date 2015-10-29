@@ -44,24 +44,24 @@ under the License.
       </div>
       <div>
         <label for="countryGeoId">${uiLabelMap.CommonCountry}*</label>
-        <select name="countryGeoId" id="countryGeoId">
+        <@input type="select" name="countryGeoId" id="countryGeoId">
           <#if countryGeoId??>
             <option value="${countryGeoId!}">${countryProvinceGeo!(countryGeoId!)}</option>
           </#if>
           ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-        </select>
+        </@input>
         <span id="advice-required-countryGeoId" style="display:none" class="errorMessage"> (${uiLabelMap.CommonRequired})</span>
       </div>
       <div>
         <label for="state">${uiLabelMap.CommonState}*</label>
-        <select id="stateProvinceGeoId" name="stateProvinceGeoId">
+        <@input type="select" id="stateProvinceGeoId" name="stateProvinceGeoId">
           <#if stateProvinceGeoId?has_content>
             <option value='${stateProvinceGeoId!}'>${stateProvinceGeo!(stateProvinceGeoId!)}</option>
           <#else>
             <option value="_NA_">${uiLabelMap.PartyNoState}</option>
           </#if>
           ${screens.render("component://common/widget/CommonScreens.xml#states")}
-        </select>
+        </@input>
         <span id="advice-required-stateProvinceGeoId" style="display:none" class="errorMessage">(${uiLabelMap.CommonRequired})</span>
       </div>
       <div class="buttons">

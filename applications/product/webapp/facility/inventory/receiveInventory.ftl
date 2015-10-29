@@ -113,7 +113,7 @@ under the License.
                   <input type="text" name="itemDescription" size="30" maxlength="60"/>
               </@field>
               <@field type="generic" label="${uiLabelMap.ProductInventoryItemType}">
-                  <select name="inventoryItemTypeId" size="1">
+                  <@input type="select" name="inventoryItemTypeId" size="1">
                     <#list inventoryItemTypes as nextInventoryItemType>
                       <option value="${nextInventoryItemType.inventoryItemTypeId}"
                         <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
@@ -121,7 +121,7 @@ under the License.
                         </#if>
                       >${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option>
                     </#list>
-                  </select>
+                  </@input>
               </@field>
 
               <hr />
@@ -130,7 +130,7 @@ under the License.
                   <@htmlTemplate.lookupField formName="selectAllForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
               </@field>
               <@field type="generic" label="${uiLabelMap.ProductSupplier}">
-                  <select name="partyId">
+                  <@input type="select" name="partyId">
                     <option value=""></option>
                     <#if supplierPartyIds?has_content>
                       <#list supplierPartyIds as supplierPartyId>
@@ -139,7 +139,7 @@ under the License.
                         </option>
                       </#list>
                     </#if>
-                  </select>
+                  </@input>
               </@field>
               <@field type="generic" label="${uiLabelMap.ProductDateReceived}">
                   <input type="text" name="datetimeReceived" size="24" value="${nowTimestamp}" />
@@ -155,7 +155,7 @@ under the License.
               <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId), null, false))!/>
               <@field type="generic" label="${uiLabelMap.ProductFacilityLocation}">
                   <#if facilityLocations?has_content>
-                    <select name="locationSeqId">
+                    <@input type="select" name="locationSeqId">
                       <#list facilityLocations as productFacilityLocation>
                         <#assign facility = productFacilityLocation.getRelatedOne("Facility", true)/>
                         <#assign facilityLocation = productFacilityLocation.getRelatedOne("FacilityLocation", false)!/>
@@ -163,7 +163,7 @@ under the License.
                         <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation??>${facilityLocation.areaId!}:${facilityLocation.aisleId!}:${facilityLocation.sectionId!}:${facilityLocation.levelId!}:${facilityLocation.positionId!}</#if><#if facilityLocationTypeEnum??>(${facilityLocationTypeEnum.get("description",locale)})</#if>[${productFacilityLocation.locationSeqId}]</option>
                       </#list>
                       <option value="">${uiLabelMap.ProductNoLocation}</option>
-                    </select>
+                    </@input>
                   <#else>
                     <#if parameters.facilityId??>
                       <#assign LookupFacilityLocationView="LookupFacilityLocation?facilityId=${facilityId}">
@@ -174,12 +174,12 @@ under the License.
                   </#if>
               </@field>
               <@field type="generic" label="${uiLabelMap.ProductRejectedReason}">
-                  <select name="rejectionId" size="1">
+                  <@input type="select" name="rejectionId" size="1">
                     <option></option>
                     <#list rejectReasons as nextRejection>
                       <option value="${nextRejection.rejectionId}">${nextRejection.get("description",locale)?default(nextRejection.rejectionId)}</option>
                     </#list>
-                  </select>
+                  </@input>
               </@field>
               <@field type="generic" label="${uiLabelMap.ProductQuantityRejected}">
                   <input type="text" name="quantityRejected" size="5" value="0" />
@@ -338,7 +338,7 @@ under the License.
                           <@td align="right">
                             <#assign facilityLocations = (orderItem.getRelated("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId), null, false))!/>
                             <#if facilityLocations?has_content>
-                              <select name="locationSeqId_o_${rowCount}">
+                              <@input type="select" name="locationSeqId_o_${rowCount}">
                                 <#list facilityLocations as productFacilityLocation>
                                   <#assign facility = productFacilityLocation.getRelatedOne("Facility", true)/>
                                   <#assign facilityLocation = productFacilityLocation.getRelatedOne("FacilityLocation", false)!/>
@@ -346,7 +346,7 @@ under the License.
                                   <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation??>${facilityLocation.areaId!}:${facilityLocation.aisleId!}:${facilityLocation.sectionId!}:${facilityLocation.levelId!}:${facilityLocation.positionId!}</#if><#if facilityLocationTypeEnum??>(${facilityLocationTypeEnum.get("description",locale)})</#if>[${productFacilityLocation.locationSeqId}]</option>
                                 </#list>
                                 <option value="">${uiLabelMap.ProductNoLocation}</option>
-                              </select>
+                              </@input>
                             <#else>
                               <#if parameters.facilityId??>
                                 <#assign LookupFacilityLocationView="LookupFacilityLocation?facilityId=${facilityId}">
@@ -364,7 +364,7 @@ under the License.
                         <@tr>
                           <@td width="45%">
                             ${uiLabelMap.ProductInventoryItemType} :&nbsp;
-                            <select name="inventoryItemTypeId_o_${rowCount}" size="1">
+                            <@input type="select" name="inventoryItemTypeId_o_${rowCount}" size="1">
                               <#list inventoryItemTypes as nextInventoryItemType>
                               <option value="${nextInventoryItemType.inventoryItemTypeId}"
                                <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
@@ -372,16 +372,16 @@ under the License.
                               </#if>
                               >${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option>
                               </#list>
-                            </select>
+                            </@input>
                           </@td>
                           <@td align="right">${uiLabelMap.ProductRejectionReason} :</@td>
                           <@td align="right">
-                            <select name="rejectionId_o_${rowCount}" size="1">
+                            <@input type="select" name="rejectionId_o_${rowCount}" size="1">
                               <option></option>
                               <#list rejectReasons as nextRejection>
                               <option value="${nextRejection.rejectionId}">${nextRejection.get("description",locale)?default(nextRejection.rejectionId)}</option>
                               </#list>
-                            </select>
+                            </@input>
                           </@td>
                           <@td align="right">${uiLabelMap.ProductQtyRejected} :</@td>
                           <@td align="right">

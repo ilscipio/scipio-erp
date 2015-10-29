@@ -206,7 +206,7 @@ under the License.
                     <a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${(product.internalName)!}</a>
                   </@td>
                   <@td>
-                    <select name="geo_${rowKey}">
+                    <@input type="select" name="geo_${rowKey}">
                       <#if product.originGeoId?has_content>
                         <#assign originGeoId = product.originGeoId>
                         <#assign geo = delegator.findOne("Geo", Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId", originGeoId), true)>
@@ -215,7 +215,7 @@ under the License.
                       </#if>
                       <option value=""></option>
                       ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-                    </select>
+                    </@input>
                   </@td>
                   <@td align="right">${orderItemQuantity!}</@td>
                   <@td align="right">${readyToVerify!}</@td>

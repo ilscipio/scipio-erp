@@ -1511,12 +1511,12 @@ Not associated with an HTML element as is @fieldset.
         <span class="postfix"><i class="${styles.icon} ${styles.icon_calendar!}"></i></span>
         </div>
         <div class="${styles.grid_small!}5 ${styles.grid_cell!} ${styles.grid_small!}offset-1">
-        <select<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
+        <@input type="select"<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
           <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
           <option value="sameDay"<#if defaultOptionFrom=="sameDay"> selected="selected"</#if>>${opSameDay}</option><#rt/>
           <option value="greaterThanFromDayStart"<#if defaultOptionFrom=="greaterThanFromDayStart"> selected="selected"</#if>>${opGreaterThanFromDayStart}</option><#rt/>
           <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${opGreaterThan}</option><#rt/>
-        </select><#rt/>
+        </@input><#rt/>
         </div>
       <#if dateType != "time">
         <script type="text/javascript">
@@ -1555,7 +1555,7 @@ Not associated with an HTML element as is @fieldset.
     ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false 
     collapse=false fieldTitleBlank=false>
 
-    <select name="${name!""}<#rt/>" <@fieldClassStr className alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
+    <@input type="select" name="${name!""}<#rt/>" <@fieldClassStr className alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>>
     <#if !manualItemsOnly>  
       <#if firstInList?has_content && currentValue?has_content && !multiple?has_content>
@@ -1574,7 +1574,7 @@ Not associated with an HTML element as is @fieldset.
       </#list>
     </#if>
       <#nested>
-    </select>
+    </@input>
   <#if otherFieldName?has_content>
     <noscript><input type='text' name='${otherFieldName}' /></noscript>
     <script type='text/javascript' language='JavaScript'><!--
@@ -1855,13 +1855,13 @@ Not associated with an HTML element as is @fieldset.
       <#if opEquals?has_content>
         <#local newName = "${name}"/>
         <@cell class="${class1!}">
-    <select <#if name?has_content>name="${name}_op"</#if>    class="selectBox"><#rt/>
+    <@input type="select" <#if name?has_content>name="${name}_op"</#if>    class="selectBox"><#rt/>
       <option value="equals"<#if defaultOption=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
       <option value="like"<#if defaultOption=="like"> selected="selected"</#if>>${opBeginsWith}</option><#rt/>
       <option value="contains"<#if defaultOption=="contains"> selected="selected"</#if>>${opContains}</option><#rt/>
       <option value="empty"<#rt/><#if defaultOption=="empty"> selected="selected"</#if>>${opIsEmpty}</option><#rt/>
       <option value="notEqual"<#if defaultOption=="notEqual"> selected="selected"</#if>>${opNotEqual}</option><#rt/>
-    </select>
+    </@input>
         </@cell>
   <#else>
     <input type="hidden" name=<#if name?has_content> "${name}_op"</#if>    value="${defaultOption}"/><#rt/>
@@ -1896,11 +1896,11 @@ Not associated with an HTML element as is @fieldset.
       <#if titleStyle?has_content>
         <span class="${titleStyle}"><#rt/>
       </#if>
-      <select<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
+      <@input type="select"<#if name?has_content> name="${name}_fld0_op"</#if> class="selectBox"><#rt/>
         <option value="equals"<#if defaultOptionFrom=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
         <option value="greaterThan"<#if defaultOptionFrom=="greaterThan"> selected="selected"</#if>>${opGreaterThan}</option><#rt/>
         <option value="greaterThanEqualTo"<#if defaultOptionFrom=="greaterThanEqualTo"> selected="selected"</#if>>${opGreaterThanEquals}</option><#rt/>
-      </select><#rt/>
+      </@input><#rt/>
       <#if titleStyle?has_content>
         </span><#rt/>
       </#if>
@@ -1914,10 +1914,10 @@ Not associated with an HTML element as is @fieldset.
       <#if titleStyle?has_content>
         <span class="${titleStyle}"><#rt/>
       </#if>
-      <select name=<#if name?has_content>"${name}_fld1_op"</#if> class="selectBox"><#rt/>
+      <@input type="select" name=<#if name?has_content>"${name}_fld1_op"</#if> class="selectBox"><#rt/>
         <option value="lessThan"<#if defaultOptionThru=="lessThan"> selected="selected"</#if>>${opLessThan?html}</option><#rt/>
         <option value="lessThanEqualTo"<#if defaultOptionThru=="lessThanEqualTo"> selected="selected"</#if>>${opLessThanEquals?html}</option><#rt/>
-      </select><#rt/>
+      </@input><#rt/>
       <#if titleStyle?has_content>
         </span>
       </#if>
@@ -2340,7 +2340,7 @@ A fieldset including the HTML element.
                         <label>${paginateViewSizeLabel}</span>
                     </div>
                     <div class="${styles.grid_large!}6 ${styles.grid_cell!}">
-                        <select name="pageSize" size="1" ${actionStr}><#rt/>    
+                        <@input type="select" name="pageSize" size="1" ${actionStr}><#rt/>    
                         <#local sufficientPs = false>
                         <#list availPageSizes as ps>
                            <#if !sufficientPs>
@@ -2350,7 +2350,7 @@ A fieldset including the HTML element.
                               </#if>
                             </#if>
                         </#list>
-                        </select>
+                        </@input>
                     </div>
                 </div>
                

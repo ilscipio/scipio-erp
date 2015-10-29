@@ -352,7 +352,7 @@ Inline script wrapper.
 ************
 Alert box for messages that should grab user attention.
 NOTE: Should avoid using this for regular, common inlined message results such as "no records found" unless
-it's an unexpected result, error or one that requires user action. See other macros.
+it's an unexpected result, error or one that requires user action. See other macros such as @resultMsg and @errorMsg.
 
     Usage example:  
     <@alert type="info">
@@ -400,46 +400,6 @@ it's an unexpected result, error or one that requires user action. See other mac
   <div class="${styles.panel_head!}"><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
   <div class="${styles.panel_body!}"><p><#nested></p></div>
 </div>
-</#macro>
-
-<#-- 
-*************
-* Query result message
-************
-Common query result message.
-Note: this is ONLY for expected, non-error messages, such as no records found in a query.
-Other messages such as for missing params/record IDs are usually errors.
-
-    Usage example:  
-    <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>            
-                    
-   * General Attributes *
-    class       = classes or additional classes for nested container
-                  (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
--->
-<#macro resultMsg class=true id="">
-  <#local classes = makeClassesArg(class, "result-msg")>
-  <p<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#nested></p>
-</#macro>
-
-<#-- 
-*************
-* Error result message
-************
-Common error result message.
-Abstracts/centralizes method used to display error, since of no consequence to most
-templates: currently @alert.
-
-    Usage example:  
-    <@errorMsg type="permission">${uiLabelMap.CommonNoPermission}.</@errorMsg>            
-                    
-   * General Attributes *
-    type           = [permission|security|error], default error
-    class          = classes or additional classes for nested container
-                     (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
--->
-<#macro errorMsg type="error" class=true id="">
-  <@alert type="error" class=class id=id><#nested></@alert>
 </#macro>
 
 <#-- 
@@ -1222,136 +1182,45 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </#if>
 </#macro>
 
+
 <#-- 
 *************
-* Progress Bar Macro
+* Query result message
 ************
+Common query result message.
+Note: this is ONLY for expected, non-error messages, such as no records found in a query.
+Other messages such as for missing params/record IDs are usually errors.
 
     Usage example:  
-    <@progress value=40/>             
-    
-   Can be animated using js, example: 
-   
-   $('#${id}_meter').css("width", "78%");
-    
-   Can also be animated automatically using progressOptions which activates use of CatoUploadProgress
-   script for this progress bar by linking it to a form submit.
+    <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>            
                     
    * General Attributes *
-    value          = Percentage done
-    id             = custom id; can also be specified as progressOptions.progBarId instead
-                     if omitted will not make a progress bar, but script still generated for progressOptions.progTextBoxId
-    type           = (warning|info|success) default: success
-    class          = Adds classes - please use "(small|medium|large)-block-grid-#"
-                     (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
-    showValue      = Display value inside bar
-    wrapClass      = classes on outer wrapper only
-    progressOptions = if present, attaches progress bar to an upload form with javascript-based progress and 
-                      attaches results to page using elem IDs and options in this map - 
-                      see CatoUploadProgress javascript class for options; mostly same
+    class       = classes or additional classes for nested container
+                  (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
-<#macro progress value=0 id="" type="" class=true showValue=false wrapperClass=true progressOptions={}>
-  <#local explicitId = id?has_content>
-  <#if !id?has_content>
-    <#local id = (progressOptions.progBarId)!"">
-  </#if>
-
-    <#switch type>
-      <#case "alert">
-        <#local color=styles.color_alert!/>
-      <#break>
-      <#case "info">
-        <#local color=styles.color_info!/>
-      <#break>
-      <#case "warning">
-        <#local color=styles.color_warning!/>
-      <#break>
-      <#default>
-        <#local color=styles.color_success!/>
-    </#switch>
-    <#local classes = makeClassesArg(class, "")>
-    <#local wrapperClasses = makeClassesArg(wrapperClass, "")>
-    <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if color?has_content> ${color!}</#if><#if wrapperClasses?has_content> ${wrapperClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
-      <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
-            <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
-      <#if styles.progress_wrap?has_content></div></#if>
-    </div>
-    
-  <#if progressOptions?has_content>
-    <#local opts = progressOptions>
-    <#if explicitId>
-      <#local opts = concatMaps(opts, {"progBarId":"${id}"})>
-    </#if>
-    <@progressScript options=opts htmlwrap=true />
-  </#if>
+<#macro resultMsg class=true id="">
+  <#local classes = makeClassesArg(class, "result-msg")>
+  <p<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#nested></p>
 </#macro>
 
 <#-- 
 *************
-* Progress Script Macro
+* Error result message
 ************
-Generates script data and markup needed to make an instance to initialize upload progress 
-javascript anim for a form, with progress bar and/or text.
+Common error result message.
+Abstracts/centralizes method used to display error, since of no consequence to most
+templates: currently @alert.
 
-Server-side upload event for the form must register a FileUploadProgressListener in session
-for getFileUploadProgressStatus AJAX calls.
-
-TODO: document better if needed
+    Usage example:  
+    <@errorMsg type="permission">${uiLabelMap.CommonNoPermission}.</@errorMsg>            
                     
    * General Attributes *
-    options = elem IDs and options passed to CatoUploadProgress javascript class
-              in addition, supports: 
-                submitHook - one of: "formSubmit" (default), "validate" (jquery validate), "none" (caller does manually) 
-                validateObjScript - if submitHook is "validate", add this script text to jquery validate({...}) object body.
+    type           = [permission|security|error], default error
+    class          = classes or additional classes for nested container
+                     (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
-<#macro progressScript options={} htmlwrap=false>
-  <#if options?has_content && options.formSel?has_content>
-    <#if htmlwrap>
-    <script type="text/javascript">
-    //<![CDATA[
-    </#if>
-    
-    <#-- This belongs here, but due to Ofbiz bug, moved to commonScripts.ftl
-    <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" />
-    -->
-    
-    (function() {
-        var uploadProgress = null;
-    
-        jQuery(document).ready(function() {
-          <#if options.successRedirectUrl??>
-            <#-- shouldn't have &amp; in script tag... but code may escape and should support... -->
-            <#local options = concatMaps(options, {"successRedirectUrl":options.successRedirectUrl?replace("&amp;", "&")})>
-          </#if>
-            uploadProgress = new CatoUploadProgress(<@objectAsScript lang="js" object=options />);
-            uploadProgress.reset();
-        });
-        
-      <#if (options.submitHook!) == "validate">
-        jQuery("${options.formSel}").validate({
-            submitHandler: function(form) {
-                var goodToGo = uploadProgress.initUpload();
-                if (goodToGo) {
-                    form.submit();
-                }
-            },
-            ${options.validateObjScript!""}
-        });
-      <#elseif (options.submitHook!) != "none" >
-        jQuery("${options.formSel}").submit(function(event) {
-            var goodToGo = uploadProgress.initUpload();
-            if (!goodToGo) {
-                event.preventDefault();
-            }
-        });
-      </#if>
-    })();
-    
-    <#if htmlwrap>
-    //]]>
-    </script>
-    </#if>
-  </#if>
+<#macro errorMsg type="error" class=true id="">
+  <@alert type="error" class=class id=id><#nested></@alert>
 </#macro>
 
 <#-- 
@@ -2446,6 +2315,138 @@ levels manually, but most often should let @section menu handle them.
 
 <#-- 
 *************
+* Progress Script Macro
+************
+Generates script data and markup needed to make an instance to initialize upload progress 
+javascript anim for a form, with progress bar and/or text.
+
+Server-side upload event for the form must register a FileUploadProgressListener in session
+for getFileUploadProgressStatus AJAX calls.
+
+TODO: document better if needed
+                    
+   * General Attributes *
+    options = elem IDs and options passed to CatoUploadProgress javascript class
+              in addition, supports: 
+                submitHook - one of: "formSubmit" (default), "validate" (jquery validate), "none" (caller does manually) 
+                validateObjScript - if submitHook is "validate", add this script text to jquery validate({...}) object body.
+-->
+<#macro progressScript options={} htmlwrap=false>
+  <#if options?has_content && options.formSel?has_content>
+    <#if htmlwrap>
+    <script type="text/javascript">
+    //<![CDATA[
+    </#if>
+    
+    <#-- This belongs here, but due to Ofbiz bug, moved to commonScripts.ftl
+    <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" />
+    -->
+    
+    (function() {
+        var uploadProgress = null;
+    
+        jQuery(document).ready(function() {
+          <#if options.successRedirectUrl??>
+            <#-- shouldn't have &amp; in script tag... but code may escape and should support... -->
+            <#local options = concatMaps(options, {"successRedirectUrl":options.successRedirectUrl?replace("&amp;", "&")})>
+          </#if>
+            uploadProgress = new CatoUploadProgress(<@objectAsScript lang="js" object=options />);
+            uploadProgress.reset();
+        });
+        
+      <#if (options.submitHook!) == "validate">
+        jQuery("${options.formSel}").validate({
+            submitHandler: function(form) {
+                var goodToGo = uploadProgress.initUpload();
+                if (goodToGo) {
+                    form.submit();
+                }
+            },
+            ${options.validateObjScript!""}
+        });
+      <#elseif (options.submitHook!) != "none" >
+        jQuery("${options.formSel}").submit(function(event) {
+            var goodToGo = uploadProgress.initUpload();
+            if (!goodToGo) {
+                event.preventDefault();
+            }
+        });
+      </#if>
+    })();
+    
+    <#if htmlwrap>
+    //]]>
+    </script>
+    </#if>
+  </#if>
+</#macro>
+
+<#-- 
+*************
+* Progress Bar Macro
+************
+
+    Usage example:  
+    <@progress value=40/>             
+    
+   Can be animated using js, example: 
+   
+   $('#${id}_meter').css("width", "78%");
+    
+   Can also be animated automatically using progressOptions which activates use of CatoUploadProgress
+   script for this progress bar by linking it to a form submit.
+                    
+   * General Attributes *
+    value          = Percentage done
+    id             = custom id; can also be specified as progressOptions.progBarId instead
+                     if omitted will not make a progress bar, but script still generated for progressOptions.progTextBoxId
+    type           = (warning|info|success) default: success
+    class          = Adds classes - please use "(small|medium|large)-block-grid-#"
+                     (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+    showValue      = Display value inside bar
+    wrapClass      = classes on outer wrapper only
+    progressOptions = if present, attaches progress bar to an upload form with javascript-based progress and 
+                      attaches results to page using elem IDs and options in this map - 
+                      see CatoUploadProgress javascript class for options; mostly same
+-->
+<#macro progress value=0 id="" type="" class=true showValue=false wrapperClass=true progressOptions={}>
+  <#local explicitId = id?has_content>
+  <#if !id?has_content>
+    <#local id = (progressOptions.progBarId)!"">
+  </#if>
+
+    <#switch type>
+      <#case "alert">
+        <#local color=styles.color_alert!/>
+      <#break>
+      <#case "info">
+        <#local color=styles.color_info!/>
+      <#break>
+      <#case "warning">
+        <#local color=styles.color_warning!/>
+      <#break>
+      <#default>
+        <#local color=styles.color_success!/>
+    </#switch>
+    <#local classes = makeClassesArg(class, "")>
+    <#local wrapperClasses = makeClassesArg(wrapperClass, "")>
+    <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if color?has_content> ${color!}</#if><#if wrapperClasses?has_content> ${wrapperClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
+      <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
+            <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
+      <#if styles.progress_wrap?has_content></div></#if>
+    </div>
+    
+  <#if progressOptions?has_content>
+    <#local opts = progressOptions>
+    <#if explicitId>
+      <#local opts = concatMaps(opts, {"progBarId":"${id}"})>
+    </#if>
+    <@progressScript options=opts htmlwrap=true />
+  </#if>
+</#macro>
+
+<#-- 
+*************
 * Form Macro
 ************
 HTML form.
@@ -2544,7 +2545,8 @@ A visible fieldset, including the HTML element.
 Fields helper that helps modify a set of @field definitions, or group of fields.
 Not associated with a visible element, as is @fieldset.
 Can be omitted.
-May sometimes need multiple of these per form (so @form insufficient for this purpose). 
+May sometimes need multiple of these per form (so @form insufficient for this purpose),
+or even multiple per fieldset. 
 
     Usage example: 
     <@fields>

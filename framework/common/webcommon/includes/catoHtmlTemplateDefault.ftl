@@ -1053,6 +1053,7 @@ Not associated with an HTML element as is @fieldset.
                                   id=id 
                                   readonly=readonly 
                                   value=value 
+                                  placeholder=placeholder
                                   tooltip=tooltip/>
             <#break>
           <#case "datetime">
@@ -1149,7 +1150,7 @@ Not associated with an HTML element as is @fieldset.
             <@field_file_widget_impl className=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
             <#break> 
           <#case "password">
-            <@field_password_widget_impl className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder/>
+            <@field_password_widget_impl className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip/>
             <#break> 
           <#case "submit">
           <#case "submitarea">
@@ -1311,13 +1312,18 @@ Not associated with an HTML element as is @fieldset.
 <#-- migrated from @renderTextField form widget macro -->
 <#macro field_input_widget_impl name="" className="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
     mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false>
+  <#if tooltip?has_content> 
+     <#local className = (className+ " has-tip tip-right")/>  
+  </#if>
   <#if mask?has_content && mask>
     <script type="text/javascript">
       jQuery(function($){jQuery("#${id}").mask("${mask!}");});
     </script>
   </#if>
   <input type="text" name="${name?default("")?html}"<#t/>
-    <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
+    <#if tooltip?has_content> 
+     data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"<#rt/>
+     </#if><#rt/>
     <@fieldClassStr className alert />
     <#if value?has_content> value="${value}"</#if><#rt/>
     <#if textSize?has_content> size="${textSize}"</#if><#rt/>
@@ -1328,6 +1334,7 @@ Not associated with an HTML element as is @fieldset.
     <#if event?has_content && action?has_content> ${event}="${action}"</#if><#rt/>
     <#if clientAutocomplete?has_content && clientAutocomplete=="false"> autocomplete="off"</#if><#rt/>
     <#if placeholder?has_content> placeholder="${placeholder}"</#if><#rt/>
+    <#if className?has_content> class="${className}"</#if><#rt/>
   /><#t/>
   <#if ajaxUrl?has_content>
     <#local defaultMinLength = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")>
@@ -1339,18 +1346,21 @@ Not associated with an HTML element as is @fieldset.
 <#-- migrated from @renderTextareaField form widget macro -->
 <#macro field_textarea_widget_impl name="" className="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
     buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false>
-
+  <#if tooltip?has_content> 
+     <#local className = (className+ " has-tip tip-right")/>  
+  </#if>
   <textarea name="${name}"<#t/>
-    <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
+    <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
     <@fieldClassStr className alert />
     <#if cols?has_content> cols="${cols}"</#if><#rt/>
     <#if rows?has_content> rows="${rows}"</#if><#rt/>
     <#if id?has_content> id="${id}"</#if><#rt/>
     <#if readonly?has_content> readonly="readonly"</#if><#rt/>
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>
+    <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
+    <#if className?has_content> class="${className}"</#if><#rt/>
     ><#t/>
     <#if value?has_content>${value}</#if>
-    <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
   </textarea><#lt/>
   
   <#--
@@ -1745,8 +1755,15 @@ Not associated with an HTML element as is @fieldset.
 </#macro>
 
 <#-- migrated from @renderPasswordField form widget macro -->
-<#macro field_password_widget_impl className="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false>
-  <input type="password" <@fieldClassStr className alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#if autocomplete?has_content> autocomplete="off"</#if> <#if placeholder?has_content> placeholder="${placeholder}"</#if>/>
+<#macro field_password_widget_impl className="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="">
+  <#if tooltip?has_content> 
+     <#local className = (className+ " has-tip tip-right")/>  
+  </#if> 
+  <input type="password" <@fieldClassStr className alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if>
+  <#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#if autocomplete?has_content> autocomplete="off"</#if> 
+  <#if placeholder?has_content> placeholder="${placeholder}"</#if>
+  <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
+  <#if className?has_content> class="${className}"</#if><#rt/>/>
 </#macro>
 
 <#-- migrated from @renderSubmitField form widget macro -->

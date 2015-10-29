@@ -27,60 +27,30 @@ under the License.
   <#assign focusName = true>
 </#if>
 
-<div class="${styles.grid_large!}3 ${styles.grid_large!}centered ${styles.grid_cell} login-box" id="login">
-<div id="login-box-title">
+<div class="${styles.grid_large!}3 ${styles.grid_large!}centered ${styles.grid_cell} ${styles.login_wrap!}" id="login">
+<div id="login-box-title" class="${styles.login_header!}">
     <h1>${logo} ${uiLabelMap.CommonLogin!}</h1>
 </div>
 
 <@section id="login-box-content">
   <#if uiLabelMap.WebtoolsForSomethingInteresting?has_content 
        && uiLabelMap.WebtoolsForSomethingInteresting != "WebtoolsForSomethingInteresting">
-  <@alert type="secondary">
+  <@alert type="info">
       ${uiLabelMap.WebtoolsForSomethingInteresting}
   </@alert>
   </#if>
-  <@row>
-    <@cell class="auth-plain">
-     <div class="signup-panel right-solid">
+
+     <div class="${styles.login_body!}">
       <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
-       <@row>
-        <@cell>
-          <@row collapse=true>
-            <@cell columns=3>
-              <span class="prefix"><i class="fi-torso-female"></i></span>
-            </@cell>
-            <@cell columns=9>
-              <input type="text" name="USERNAME" value="${username}" size="20" placeholder="${uiLabelMap.CommonUsername}" title="${uiLabelMap.CommonUsername}" data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" />
-            </@cell>
-          </@row>
-        </@cell>
-       </@row>
-      <@row>
-        <@cell>
-          <@row collapse=true>
-            <@cell columns=3>
-              <span class="prefix"><i class="fi-lock"></i></span>
-            </@cell>
-            <@cell columns=9>
-              <input type="password" name="PASSWORD" value="" size="20" placeholder="${uiLabelMap.CommonPassword}" title="${uiLabelMap.CommonPassword}" data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" />
-            </@cell>
-          </@row>
-        </@cell>
-       </@row>
+       <#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
+       <#assign labelPassword><i class="${styles.icon!} ${styles.icon_password!}"></i></#assign>
+       <#assign labelTenant><i class="${styles.icon!} ${styles.icon_tenant!}"></i></#assign>
+       <@field type="input" name="USERNAME" value="${username}" size="20" placeholder="${uiLabelMap.CommonUsername}" tooltip="${uiLabelMap.CommonUsername}" label="${labelUsername!}"/>
+       <@field type="password" name="PASSWORD" value="" size="20" placeholder="${uiLabelMap.CommonPassword}" tooltip="${uiLabelMap.CommonPassword}" label="${labelPassword!}"/>
+
           <#if ("Y" == useMultitenant) >
               <#if !requestAttributes.userTenantId??>
-              <@row>
-                <@cell>
-                  <@row collapse=true>
-                    <@cell columns=3>
-                      <span class="prefix">${uiLabelMap.CommonTenantId}</span>
-                    </@cell>
-                    <@cell columns=9>
-                      <input type="text" name="userTenantId" value="${parameters.userTenantId!}" size="20"/>
-                    </@cell>
-                  </@row>
-                </@cell>
-               </@row>
+              <@field type="input" name="userTenantId" value="${parameters.userTenantId!}" size="20" placeholder="${uiLabelMap.CommonTenantId}" tooltip="${uiLabelMap.CommonTenantId}" label="${labelTenant!}"/>
               <#else>
                   <input type="hidden" name="userTenantId" value="${requestAttributes.userTenantId!}"/>
               </#if>
@@ -99,8 +69,7 @@ under the License.
         </@row>
       </form>
     </div>
-  </@cell>
-  </@row>
+
 </@section>
 </div>
 <script language="JavaScript" type="text/javascript">

@@ -43,6 +43,9 @@
     "icon_calendar" : "fi-calendar",
     "icon_arrow" : "fi-arrow-right",
     "icon_list" : "fi-list",
+    "icon_user" : "fi-torso-female",
+    "icon_password" : "fi-lock",
+    "icon_tenant" : "fi-cloud",
     "heading_level_prefix" : "heading-level-",  
     
   <#-- Menus 
@@ -238,6 +241,9 @@
     "panel_head" : "",
     "panel_title" : "",
     "panel_body" : "",
+    "login_wrap" : "login-box",                  <#-- the login box is a special form of a panel in this case -->
+    "login_header": "",
+    "login_body" : "signup-panel right-solid",
 
   <#-- Alert Box -->
     "alert_wrap" : "alert-box",    <#-- Bootstrap: "alert" -->

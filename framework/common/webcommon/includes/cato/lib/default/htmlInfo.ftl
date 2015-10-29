@@ -85,9 +85,6 @@ it's an unexpected result, error or one that requires user action. See other mac
 </div>
 </#macro>
 
-
-
-
 <#-- 
 *************
 * Query result message

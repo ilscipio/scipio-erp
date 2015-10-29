@@ -65,7 +65,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
            not sure should keep that behavior or not, but might not consistent with foundation styles? -->
       <#local classes = joinStyleNames(styles.menu_default!, style)>
     </#if>
-        <ul<#if classes?has_content> id="${id!"test"}" class="${classes}"</#if>>
+        <ul<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if>>
   </#if>
    <#local dummy = pushRequestStack("renderMenuStack", {"style":style,"remStyle":remStyle,"id":id,"inlineEntires":inlineEntries})> <#-- pushing info to stack, so that this can be used by subsequently --> 
 </#macro>

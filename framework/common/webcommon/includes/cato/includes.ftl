@@ -20,7 +20,7 @@
 <#assign catoOrigMainNsNamesSet = Static["org.ofbiz.base.util.UtilMisc"].toSet(.main?keys)>
 
 <#-- these can be included early, for use in this file, since meant to be everything-agnostic -->
-<#include 'component://common/webcommon/includes/catoUtilities.ftl'>
+<#include 'component://common/webcommon/includes/cato/lib/utilities.ftl'>
 
 <#-- cache these template interprets so they only need to happen once in a request -->
 <#assign catoVariablesIncludeDirective = getRequestVar("catoVariablesIncludeDirective")!false>

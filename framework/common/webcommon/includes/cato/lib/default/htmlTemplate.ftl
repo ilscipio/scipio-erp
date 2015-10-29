@@ -5,6 +5,7 @@
 * A set of HTML templating macros, part of standard Cato Freemarker API.
 * Automatically included at all times, unless overridden by properties or themes.
 * Intended to be swappable.
+* Includes all other default Cato macros.
 *
 * NOTE: currently targeted toward Foundation CSS.
 *

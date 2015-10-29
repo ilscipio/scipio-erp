@@ -88,6 +88,40 @@ Opens an HTML document and header section.
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </#macro>
 
+<#-- 
+*************
+* Script
+************
+Inline script wrapper.
+
+    Usage example:  
+    <@script>
+        jQuery(document).ready(function() {
+            alert("Page loaded.");
+        });
+    </@script>         
+                    
+   * General Attributes *
+    type            = script type identifier
+    language        = language identifier
+    src             = source
+    forceInline     = if true, the script must be inlined in the markup where the macro is used
+                      and should never be delegated. in most cases this should be omitted.
+-->
+<#macro script type="text/javascript" language="" src="" ofbizContentSrc="" forceInline=false>
+<#if ofbizContentSrc?has_content>
+  <script type="${type}"<#if language?has_content> language="${language}"</#if> src="<@ofbizContentUrl>${ofbizContentSrc}</@ofbizContentUrl>"></script>
+<#elseif src?has_content>
+  <script type="${type}"<#if language?has_content> language="${language}"</#if> src="${src}"></script>
+<#else>
+  <script type="${type}"<#if language?has_content> language="${language}"</#if>>
+  //<![CDATA[
+    <#nested>
+  //]]>
+  </script>
+</#if>
+</#macro>
+
 <#--
 *************
 * Row Macro
@@ -314,40 +348,6 @@ Opens an HTML document and header section.
 
 <#-- 
 *************
-* Script
-************
-Inline script wrapper.
-
-    Usage example:  
-    <@script>
-        jQuery(document).ready(function() {
-            alert("Page loaded.");
-        });
-    </@script>         
-                    
-   * General Attributes *
-    type            = script type identifier
-    language        = language identifier
-    src             = source
-    forceInline     = if true, the script must be inlined in the markup where the macro is used
-                      and should never be delegated. in most cases this should be omitted.
--->
-<#macro script type="text/javascript" language="" src="" ofbizContentSrc="" forceInline=false>
-<#if ofbizContentSrc?has_content>
-  <script type="${type}"<#if language?has_content> language="${language}"</#if> src="<@ofbizContentUrl>${ofbizContentSrc}</@ofbizContentUrl>"></script>
-<#elseif src?has_content>
-  <script type="${type}"<#if language?has_content> language="${language}"</#if> src="${src}"></script>
-<#else>
-  <script type="${type}"<#if language?has_content> language="${language}"</#if>>
-  //<![CDATA[
-    <#nested>
-  //]]>
-  </script>
-</#if>
-</#macro>
-
-<#-- 
-*************
 * Alert box
 ************
 Alert box for messages that should grab user attention.
@@ -380,6 +380,26 @@ it's an unexpected result, error or one that requires user action. See other mac
            </div>
        </div>
    </div>
+</#macro>
+
+<#--
+*************
+* Panel box
+************
+    Usage example:  
+    <@panel type="">
+        <#nested>
+    </@panel>            
+                    
+   * General Attributes *
+    type           = (callout|) default:empty
+    title          = Title
+-->
+<#macro panel type="" title="">
+<div class="${styles.panel_wrap!} ${type}">
+  <div class="${styles.panel_head!}"><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
+  <div class="${styles.panel_body!}"><p><#nested></p></div>
+</div>
 </#macro>
 
 <#-- 
@@ -422,190 +442,6 @@ templates: currently @alert.
   <@alert type="error" class=class id=id><#nested></@alert>
 </#macro>
 
-<#--
-*************
-* panel box
-************
-    Usage example:  
-    <@panel type="">
-        <#nested>
-    </@panel>            
-                    
-   * General Attributes *
-    type           = (callout|) default:empty
-    title          = Title
--->
-<#macro panel type="" title="">
-<div class="${styles.panel_wrap!} ${type}">
-  <div class="${styles.panel_head!}"><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
-  <div class="${styles.panel_body!}"><p><#nested></p></div>
-</div>
-</#macro>
-
-<#-- 
-*************
-* Pricing table
-************
-Since this is very foundation specific, this function may be dropped in future installations.
-
-    Usage example:  
-    <@pul >
-        <@pli>Text or <a href="">Anchor</a></@pli>
-    </@pul>            
-                    
-   * General Attributes *
-    title           = fieldset-title
-    
--->
-
-<#macro pul title="">
-          <ul class="${styles.pricing_wrap!}">
-              <@pli type="title">${title!}</@pli>
-              <#nested>
-          </ul>
-</#macro>
-
-<#macro pli type="">
-    <#switch type>
-          <#case "price">
-              <li class="${styles.pricing_price!}"><#nested></li>
-          <#break>
-          <#case "description">
-              <li class="${styles.pricing_description!}"><#nested></li>
-          <#break>
-          <#case "title">
-              <li class="${styles.pricing_title!}"><#nested></li>
-          <#break>
-          <#case "button">
-              <li class="${styles.pricing_cta!}"><#nested></li>
-          <#break>        
-          <#default>
-              <li class="${styles.pricing_bullet!}"><#nested></li>
-          <#break>
-    </#switch>
-</#macro>
-
-<#-- 
-*************
-* Grid list
-************
-Since this is very foundation specific, this function may be dropped in future installations
-
-    Usage example:  
-    <@grid>
-        <li>Text or <a href="">Anchor</a></li>
-    </@grid>            
-                    
-   * General Attributes *
-    class           = Adds classes - please use "${styles.grid_block_prefix!}(small|medium|large)${styles.grid_block_postfix!}#"
-                      (FIXME: prepend with "+" to append only, i.e. never replace non-essential defaults)
-    columns         = Number of columns (default 5)
-    type            = (tiles|) default:empty
-    
--->
-<#macro grid type="" class=true columns=4>
-    <#if type=="tiles" || type="freetiles">
-        <#local freewallNum = getRequestVar("catoFreewallIdNum")!0>
-        <#local freewallNum = freewallNum + 1 />
-        <#local dummy = setRequestVar("catoFreewallIdNum", freewallNum)>
-        <#local id="freewall_id_${freewallNum!0}">
-        <#-- FIXME: the "class" arg is not even used... 
-        <#local classes = makeClassesArg(class, "...")>
-        -->
-        <div class="${styles.tile_container!}" id="${id!}">
-            <#nested>
-        </div>
-        <script type="text/javascript">
-        //<![CDATA[
-         $(function() {
-            $('#${id}').freetile({
-                selector: '.${styles.tile_wrap!}'
-            });
-            <#--
-            Alternative implementation of gridster.js
-            $('#${id}').gridster({
-                widget_selector: '.${styles.tile_wrap!}',
-                min_cols:${columns},
-                autogenerate_stylesheet:false
-            }).disable();
-            -->
-         });
-        //]]>
-        </script>
-    <#else>
-        <#-- FIXME: the "class" arg is not even used...
-        <#local classes = makeClassesArg(class, "...")>
-        -->
-        <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">
-            <#if (columns-2 > 0)>
-                <#local class="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}${columns-2} ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}${columns-1} ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}"/>
-            <#else>
-                <#local class="${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}"/>
-            </#if>
-          <ul class="${class!defaultClass!}">
-              <#nested>
-          </ul>
-    </#if>
-</#macro>
-
-<#-- 
-*************
-* Nav list
-************
-Since this is very foundation specific, this function may be dropped in future installations
-
-    Usage example:  
-    <@nav type="">
-        <li>Text or <a href="">Anchor</a></li>
-    </@nav>
-    
-    Or:
-    <@nav type="magellan">
-        <@mli arrival="MyTargetAnchor">Text or <a href="">Anchor</a></@mli>
-    </@nav>
-    
-    <h3 ${mtarget("id")}>Jump Destination</h3>           
-                    
-   * General Attributes *
-    type            = (inline|magellan|breadcrumbs) (default:inline)
-    class           = Adds classes - please use "(small|medium|large)-block-grid-#"    
--->
-<#macro nav type="inline">
-    <#switch type>
-        <#case "magellan">
-            <div data-magellan-expedition="fixed">
-              <dl class="sub-nav">
-                <#nested>
-              </dl>
-            </div>
-        <#break>
-        <#case "breadcrumbs">
-            <ul class="${styles.nav_breadcrumbs!}">
-                <#nested>
-            </ul>
-        <#break>
-        <#default>
-            <ul class="${styles.list_inline!} ${styles.nav_subnav!}">
-              <#nested>
-            </ul>
-        <#break>
-    </#switch>
-</#macro>
-
-<#macro mli arrival="">
-    <dd data-magellan-arrival="${arrival!}"><#nested></dd>
-</#macro>
-
-<#function mtarget id>
-  <#local returnValue="data-magellan-destination=\"${id}\""/>
-  <#return returnValue>
-</#function>
-
-<#function makeMagTargetAttribMap id>
-  <#return {"data-magellan-destination":id}>
-</#function>
-
-
 <#-- 
 *************
 * Code Block
@@ -630,7 +466,7 @@ Creates a very basic wrapper for code blocks
 *************
 * Table
 ************
-Helps define table. Required wrapper for all table sub-elem macros.
+Helps define an HTML table. Required wrapper for all @table sub-element macros.
 
     Usage example:  
     <@table type="data-list" id="my-table">
@@ -1044,6 +880,168 @@ Using @table macro is preferred.
     <#local classes = (classes + " " + styles.row_selected!)?trim>
   </#if>
   <#if classes?has_content> class="${classes}"</#if>
+</#macro>
+
+<#-- 
+*************
+* Grid list
+************
+Since this is very foundation specific, this function may be dropped in future installations
+
+    Usage example:  
+    <@grid>
+        <li>Text or <a href="">Anchor</a></li>
+    </@grid>            
+                    
+   * General Attributes *
+    class           = Adds classes - please use "${styles.grid_block_prefix!}(small|medium|large)${styles.grid_block_postfix!}#"
+                      (FIXME: prepend with "+" to append only, i.e. never replace non-essential defaults)
+    columns         = Number of columns (default 5)
+    type            = (tiles|) default:empty
+    
+-->
+<#macro grid type="" class=true columns=4>
+    <#if type=="tiles" || type="freetiles">
+        <#local freewallNum = getRequestVar("catoFreewallIdNum")!0>
+        <#local freewallNum = freewallNum + 1 />
+        <#local dummy = setRequestVar("catoFreewallIdNum", freewallNum)>
+        <#local id="freewall_id_${freewallNum!0}">
+        <#-- FIXME: the "class" arg is not even used... 
+        <#local classes = makeClassesArg(class, "...")>
+        -->
+        <div class="${styles.tile_container!}" id="${id!}">
+            <#nested>
+        </div>
+        <script type="text/javascript">
+        //<![CDATA[
+         $(function() {
+            $('#${id}').freetile({
+                selector: '.${styles.tile_wrap!}'
+            });
+            <#--
+            Alternative implementation of gridster.js
+            $('#${id}').gridster({
+                widget_selector: '.${styles.tile_wrap!}',
+                min_cols:${columns},
+                autogenerate_stylesheet:false
+            }).disable();
+            -->
+         });
+        //]]>
+        </script>
+    <#else>
+        <#-- FIXME: the "class" arg is not even used...
+        <#local classes = makeClassesArg(class, "...")>
+        -->
+        <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">
+            <#if (columns-2 > 0)>
+                <#local class="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}${columns-2} ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}${columns-1} ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}"/>
+            <#else>
+                <#local class="${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}"/>
+            </#if>
+          <ul class="${class!defaultClass!}">
+              <#nested>
+          </ul>
+    </#if>
+</#macro>
+
+<#-- 
+*************
+* Nav list
+************
+Since this is very foundation specific, this function may be dropped in future installations
+
+    Usage example:  
+    <@nav type="">
+        <li>Text or <a href="">Anchor</a></li>
+    </@nav>
+    
+    Or:
+    <@nav type="magellan">
+        <@mli arrival="MyTargetAnchor">Text or <a href="">Anchor</a></@mli>
+    </@nav>
+    
+    <h3 ${mtarget("id")}>Jump Destination</h3>           
+                    
+   * General Attributes *
+    type            = (inline|magellan|breadcrumbs) (default:inline)
+    class           = Adds classes - please use "(small|medium|large)-block-grid-#"    
+-->
+<#macro nav type="inline">
+    <#switch type>
+        <#case "magellan">
+            <div data-magellan-expedition="fixed">
+              <dl class="sub-nav">
+                <#nested>
+              </dl>
+            </div>
+        <#break>
+        <#case "breadcrumbs">
+            <ul class="${styles.nav_breadcrumbs!}">
+                <#nested>
+            </ul>
+        <#break>
+        <#default>
+            <ul class="${styles.list_inline!} ${styles.nav_subnav!}">
+              <#nested>
+            </ul>
+        <#break>
+    </#switch>
+</#macro>
+
+<#macro mli arrival="">
+    <dd data-magellan-arrival="${arrival!}"><#nested></dd>
+</#macro>
+
+<#function mtarget id>
+  <#local returnValue="data-magellan-destination=\"${id}\""/>
+  <#return returnValue>
+</#function>
+
+<#function makeMagTargetAttribMap id>
+  <#return {"data-magellan-destination":id}>
+</#function>
+
+<#-- 
+*************
+* Pricing table
+************
+Since this is very foundation specific, this function may be dropped in future installations.
+
+    Usage example:  
+    <@pul >
+        <@pli>Text or <a href="">Anchor</a></@pli>
+    </@pul>            
+                    
+   * General Attributes *
+    title           = fieldset-title
+    
+-->
+<#macro pul title="">
+          <ul class="${styles.pricing_wrap!}">
+              <@pli type="title">${title!}</@pli>
+              <#nested>
+          </ul>
+</#macro>
+
+<#macro pli type="">
+    <#switch type>
+          <#case "price">
+              <li class="${styles.pricing_price!}"><#nested></li>
+          <#break>
+          <#case "description">
+              <li class="${styles.pricing_description!}"><#nested></li>
+          <#break>
+          <#case "title">
+              <li class="${styles.pricing_title!}"><#nested></li>
+          <#break>
+          <#case "button">
+              <li class="${styles.pricing_cta!}"><#nested></li>
+          <#break>        
+          <#default>
+              <li class="${styles.pricing_bullet!}"><#nested></li>
+          <#break>
+    </#switch>
 </#macro>
 
 <#-- 
@@ -2444,7 +2442,6 @@ levels manually, but most often should let @section menu handle them.
     </div>
   </#if>
 </#macro>
-
 
 <#-- 
 *************

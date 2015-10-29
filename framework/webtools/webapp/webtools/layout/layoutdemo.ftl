@@ -84,6 +84,12 @@
   <@heading relLevel=2>Heading - Relative Level +2</@heading>
 </@section>
 
+<@section title="Broken-up section" openOnly=true />
+  <@section title="Broken-up nested section" openOnly=true />
+    [inside]
+  <@section closeOnly=true />
+<@section closeOnly=true />
+
 <@section>
 <@heading attribs=makeMagTargetAttribMap("buttons") id="buttons">Buttons</@heading>
 <@heading relLevel=+1>Heading</@heading>

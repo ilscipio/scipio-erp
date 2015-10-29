@@ -246,7 +246,10 @@ levels manually, but most often should let @section menu handle them.
     forceEmptyMenu      = if true, always add menu and must be empty
     hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
 -->
-<#macro section type="" id="" title="" class=true padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" menuContent="" menuClass="" menuLayout="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="">
+<#macro section type="" id="" title="" class=true padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" menuContent="" menuClass="" menuLayout="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="" openOnly=false closeOnly=false wrapIf=true>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+<#if open>
     <#if !type?has_content>
         <#local type = "generic">
     </#if>
@@ -259,10 +262,17 @@ levels manually, but most often should let @section menu handle them.
         <#local contentId = "">
         <#local menuId = "">
     </#if>
+<#else>
+    <#-- section_impl has its own stack, don't need to preserve these for now-->
+    <#local class = "">
+    <#local contentId = "">
+    <#local menuId = "">    
+</#if>
     <#-- note: addClass logic is only partially implemented (doesn't support booleans and "" means use default; otherwise may conflict with stock API?), but good enough for now -->
     <#-- note: autoHeadingLevel logic now implemented in renderScreenletBegin -->
     <@section_impl id=id collapsibleAreaId=contentId title=title classes=class padded=padded menuContent=menuContent fromWidgets=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
-        forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass addClasses=addClass>
+        forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass addClasses=addClass
+        openOnly=openOnly closeOnly=closeOnly wrapIf=wrapIf>
         <#nested />
     </@section_impl>
 </#macro>
@@ -496,15 +506,88 @@ levels manually, but most often should let @section menu handle them.
     </#if> 
   </#if>
 
-    <#local contentFlagClasses> section-level-${sLevel} heading-level-${hLevel}<#if hasTitle> has-title<#else> no-title</#if><#if hasMenu> has-menu<#else> no-menu</#if><#if hasContent> has-content<#else> no-content</#if></#local>
+    <#local contentFlagClasses>section-level-${sLevel} heading-level-${hLevel}<#if hasTitle> has-title<#else> no-title</#if><#if hasMenu> has-menu<#else> no-menu</#if><#if hasContent> has-content<#else> no-content</#if></#local>
+</#if> <#-- /#(if open) -->
 
-    <div class="section-screenlet${contentFlagClasses}<#if collapsed> toggleField</#if>">
-    <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title!}</p></#if>
-    <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>><#rt/>
-    <div class="<#if classes?has_content>${classes}<#else>${styles.grid_large!}12</#if><#if addClasses?has_content> ${addClasses}</#if> ${styles.grid_cell!} section-screenlet-container${contentFlagClasses}">
+    <#local classes = (classes + " " + addClasses)?trim>
 
-  <#if showMore>
+    <#-- TODO: in this whole section I have for now only passed the args to markup macros that were needed and 
+         were in acceptable form as cato args; they should probably receive more; but avoid ofbiz-isms -->
 
+    <#if open && !close>
+        <#-- save stack of all the args passed to markup macros that have open/close 
+            so they don't have to remember a stack themselves -->
+        <#local dummy = pushRequestStack("renderScreenletMarkupStack", {"classes":classes, "contentFlagClasses":contentFlagClasses, 
+            "id":id, "title":title, "collapsed":collapsed, "collapsibleAreaId":collapsibleAreaId,
+            "sLevel":sLevel, "hLevel":hLevel})>
+    <#elseif close && !open>
+        <#-- these _must_ override anything passed to this macro call (shouldn't be any) -->
+        <#local stackValues = popRequestStack("renderScreenletMarkupStack")!{}>
+        <#local classes = stackValues.classes>
+        <#local contentFlagClasses = stackValues.contentFlagClasses>
+        <#local id = stackValues.id>
+        <#local title = stackValues.title>
+        <#local collapsed = stackValues.collapsed>
+        <#local collapsibleAreaId = stackValues.collapsibleAreaId>
+        <#local sLevel = stackValues.sLevel>
+        <#local hLevel = stackValues.hLevel>    
+    </#if>
+
+    <@section_markup_outer open=open close=close sectionLevel=sLevel headingLevel=hLevel classes=classes contentFlagClasses=contentFlagClasses id=id title=title collapsed=collapsed>
+
+    <#if open>
+      <#if showMore>
+        <@section_markup_menutitle sectionLevel=sLevel headingLevel=hLevel menuLayout=menuLayout hasMenu=hasMenu menuMarkup=menuMarkup hasTitle=hasTitle titleMarkup=titleMarkup contentFlagClasses=contentFlagClasses />
+      </#if>
+    </#if> <#-- /#(if open) -->
+
+        <@section_markup_inner open=open close=close sectionLevel=sLevel headingLevel=hLevel classes="" contentFlagClasses=contentFlagClasses collapsibleAreaId=collapsibleAreaId>
+            
+            <#-- nested content -->
+            <#nested>
+
+        </@section_markup_inner>
+
+    </@section_markup_outer>
+
+<#if close>
+<#-- auto-heading-level logic begin -->
+    <#local stackValues = popRequestStack("renderScreenletStack")!{}>
+    
+    <#local autoHeadingLevel = stackValues.autoHeadingLevel>
+    <#local updatedHeadingLevel = stackValues.updatedHeadingLevel>
+    <#local prevHeadingLevel = stackValues.prevHeadingLevel>
+    
+<#-- level logic begin -->
+    <#local sLevel = stackValues.prevSectionLevel>
+    <#local dummy = setCurrentSectionLevel(sLevel)>
+<#-- level logic end -->
+
+    <#if autoHeadingLevel && updatedHeadingLevel>
+        <#local dummy = setCurrentHeadingLevel(prevHeadingLevel)>
+    </#if>
+    
+<#-- auto-heading-level logic end -->
+</#if> <#-- /#(if close) -->
+</#macro>
+
+<#-- @section outer container markup - may be overridden -->
+<#macro section_markup_outer open=true close=true sectionLevel=1 headingLevel=1 classes="" contentFlagClasses="" id="" title="" collapsed=false extraArgs...>
+  <#if open>
+    <div class="section-screenlet<#if contentFlagClasses?has_content> ${contentFlagClasses}</#if><#if collapsed> toggleField</#if>">
+        <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
+        <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
+            <div class="section-screenlet-container<#if classes?has_content> ${classes}<#else> ${styles.grid_large!}12</#if><#if addClasses?has_content> ${addClasses}</#if> ${styles.grid_cell!}<#if contentFlagClasses?has_content> ${contentFlagClasses}</#if>">
+  </#if>
+    <#nested>
+  <#if close>
+            </div>
+        </div>
+    </div>
+  </#if>
+</#macro>
+
+<#macro section_markup_menutitle sectionLevel=1 headingLevel=1 menuLayout="" hasMenu=false menuMarkup="" hasTitle=false titleMarkup="" contentFlagClasses="" extraArgs...>
     <#-- Currently supports only one menu. could have one for each layout (with current macro
          args as post-title), but tons of macro args needed and complicates. -->
     <#if menuLayout == "pre-title">
@@ -535,37 +618,19 @@ levels manually, but most often should let @section menu handle them.
         ${menuMarkup}
       </#if>
     </#if>
-  </#if>
-
-    <#-- note: may need to keep this div free of foundation grid classes (for margins collapse?) -->
-    <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if> class="section-screenlet-content${contentFlagClasses}"><#rt>
-</#if> <#-- /#(if open) -->
-
-<#-- nested content -->
-    <#nested>
-
-<#if close>
-<#-- auto-heading-level logic begin -->
-    <#local stackValues = popRequestStack("renderScreenletStack")!{}>
-    
-    <#local autoHeadingLevel = stackValues.autoHeadingLevel>
-    <#local updatedHeadingLevel = stackValues.updatedHeadingLevel>
-    <#local prevHeadingLevel = stackValues.prevHeadingLevel>
-    
-<#-- level logic begin -->
-    <#local sLevel = stackValues.prevSectionLevel>
-    <#local dummy = setCurrentSectionLevel(sLevel)>
-<#-- level logic end -->
-
-    <#if autoHeadingLevel && updatedHeadingLevel>
-        <#local dummy = setCurrentHeadingLevel(prevHeadingLevel)>
-    </#if>
-    
-<#-- auto-heading-level logic end -->
-    <#lt></div></div></div></div>
-</#if> <#-- /#(if close) -->
 </#macro>
 
+<#-- @section inner container markup - may be overridden -->
+<#macro section_markup_inner open=true close=true sectionLevel=1 headingLevel=1 classes="" contentFlagClasses="" collapsibleAreaId="" extraArgs...>
+  <#if open>
+    <#-- note: may need to keep this div free of foundation grid classes (for margins collapse?) -->
+    <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if> class="section-screenlet-content<#if classes?has_content> ${classes}</#if><#if contentFlagClasses?has_content> ${contentFlagClasses}</#if>">
+  </#if>
+    <#nested>
+  <#if close>
+    </div>
+  </#if>
+</#macro>
 
 
 <#-- 
@@ -670,10 +735,10 @@ levels manually, but most often should let @section menu handle them.
 *************
 * Fields Macro
 ************ 
-Fields container that helps modify a set of @field definitions, or group of fields.
+Fields helper that helps modify a set of @field definitions, or group of fields.
+Not associated with a visible element, as is @fieldset.
 Can be omitted.
 May sometimes need multiple of these per form (so @form insufficient for this purpose). 
-Not associated with an HTML element as is @fieldset.
 
     Usage example: 
     <@fields>
@@ -1937,7 +2002,7 @@ Not associated with an HTML element as is @fieldset.
 *************
 * Fieldset Macro
 ************
-A fieldset including the HTML element.
+A visible fieldset, including the HTML element.
 
     Usage example:  
     <@fieldset title="">

@@ -3,7 +3,7 @@
 * Master HTML templating macros/templates include, default Cato markup.
 *
 * A set of HTML templating macros, part of standard Cato Freemarker API.
-* Automatically included at all times.
+* Automatically included at all times, unless overridden by properties or themes.
 * Intended to be swappable.
 *
 * NOTE: currently targeted toward Foundation CSS.

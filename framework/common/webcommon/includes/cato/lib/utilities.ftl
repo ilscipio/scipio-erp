@@ -18,6 +18,8 @@
 * DEV NOTE: freemarker functions (and java calls) don't support named arguments so in some cases 
 *     macros are easier/better to use even in this file (but macro calls don't inline well in other macro/function calls, 
 *     so give and take).
+* DEV NOTE: It's important that these macros remain generic and the include for these utilities is
+*     completely static so that any macro or function here can easily be interchanged with java-based transforms.
 *
 -->
 

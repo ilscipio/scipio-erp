@@ -13,25 +13,16 @@
 *
 * IMPL NOTE: Macros should avoid using "request" directly (use setRequestVar/getRequestVar/other).
 *
-* DEV NOTE: although intended as swappable, the way to reuse/extend this file needs clarified.
-*     currently contains much logic code and includes all the widget macros (see FIXMEs). can #include this file
-*     and override macros, but widget macro includes makes that very heavy, and still logic reuse problems.
-*
 * DEV NOTE: some macros use attribs and inlineAttribs args to specify extra HTML attribs.
 *     even though it would be convenient, we can't allow a "attribString" arg because no way
 *     for macro to get attribs out of it if it needs them, cause problems.
 *     FIXME: not all macros currently properly check attribMap for duplicate attribs
 *       of args and inlineAttribs (priority should be: args - inlineAttribs - attribMap).
-*
-* TODO?: there could be a template helpers file to help separate template macro-related logic from markup (less copy-paste).
-*     Do not put functions closely related to these macros in utilities.ftl.
-*     For now, try to keep markup generalized and parametrizable via htmlVariables.ftl as much as possible.
-*
 -->
 
 <#-- 
 *************************************
-* IMPORTS AND INCLUDES *
+* EXTERNAL IMPORTS AND INCLUDES *
 *************************************
 * NOTE: Assumes utilities.ftl included.
 -->
@@ -57,7 +48,7 @@
 
 <#-- 
 *************************************
-* API TEMPLATE MACROS *
+* API TEMPLATE MACROS AND INCLUDES *
 *************************************
 * Intended for use in production templates.
 -->

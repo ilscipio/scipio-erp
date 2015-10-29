@@ -54,6 +54,9 @@
 * Code this file is responsible for defining. Intended for use in production templates.
 -->
 
+<#-- DEV NOTE: I think there may be circular dependencies between these includes. Should try to avoid,
+    but may not be possible in some cases. -->
+
 <#include "htmlScript.ftl">
 
 <#--

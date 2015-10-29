@@ -21,17 +21,15 @@ under the License.
 <#if agreement??>
 <@section title="${uiLabelMap.PageTitleCopyAgreement}">
     <form action="<@ofbizUrl>copyAgreement</@ofbizUrl>" method="post">
-        <input type="hidden" name="agreementId" value="${agreementId}"/>
-        <div>
-            <span>${uiLabelMap.AccountingCopyAgreement}</span>
-            ${uiLabelMap.AccountingAgreementTerms}&nbsp;<input type="checkbox" name="copyAgreementTerms" value="Y" checked="checked" />
-            ${uiLabelMap.ProductProducts}&nbsp;<input type="checkbox" name="copyAgreementProducts" value="Y" checked="checked" />
-            ${uiLabelMap.Party}&nbsp;<input type="checkbox" name="copyAgreementParties" value="Y" checked="checked" />
-            ${uiLabelMap.ProductFacilities}&nbsp;<input type="checkbox" name="copyAgreementFacilities" value="Y" checked="checked" />
-        </div>
-        <div class="button-bar">
-            <input type="submit" value="${uiLabelMap.CommonCopy}"/>
-        </div>
+        <input type="hidden" name="agreementId" value="${agreementId}"/>    
+        <@field type="checkbox" label="${uiLabelMap.AccountingAgreementTerms}" name="copyAgreementTerms" value="Y" checked="checked" />
+        <@field type="checkbox" label="${uiLabelMap.ProductProducts}" name="copyAgreementProducts" value="Y" checked="checked" />
+        <@field type="checkbox" label="${uiLabelMap.Party}" name="copyAgreementParties" value="Y" checked="checked" />
+        <@field type="checkbox" label="${uiLabelMap.ProductFacilities}" name="copyAgreementFacilities" value="Y" checked="checked" />
+        
+        <@field type="submitarea">
+            <input type="submit" value='${uiLabelMap.CommonCopy}'/>
+        </@field>
     </form>
 </@section>
 </#if>

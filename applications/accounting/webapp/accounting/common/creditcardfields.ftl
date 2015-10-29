@@ -36,13 +36,13 @@ under the License.
   <@tr>
     <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.AccountingPrefixCard}</b></@td>
     <@td width="74%">
-      <select name="titleOnCard">
+      <@input type="select" name="titleOnCard">
         <option value="">${uiLabelMap.CommonSelectOne}</option>
         <option<#if ((creditCard.titleOnCard)?default("") == "${uiLabelMap.CommonTitleMr}")> selected="selected"</#if>>${uiLabelMap.CommonTitleMr}</option>
         <option<#if ((creditCard.titleOnCard)?default("") == "Mrs.")> selected="selected"</#if>>${uiLabelMap.CommonTitleMrs}</option>
         <option<#if ((creditCard.titleOnCard)?default("") == "Ms.")> selected="selected"</#if>>${uiLabelMap.CommonTitleMs}</option>
         <option<#if ((creditCard.titleOnCard)?default("") == "Dr.")> selected="selected"</#if>>${uiLabelMap.CommonTitleDr}</option>
-      </select>
+      </@input>
     </@td>
   </@tr>
   <@tr>

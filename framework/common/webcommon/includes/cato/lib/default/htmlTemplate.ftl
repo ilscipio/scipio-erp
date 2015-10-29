@@ -25,7 +25,7 @@
 *
 * TODO?: there could be a template helpers file to help separate template macro-related logic from markup (less copy-paste).
 *     Do not put functions closely related to these macros in utilities.ftl.
-*     For now, try to keep markup generalized and parametrizable via variablesHtml.ftl as much as possible.
+*     For now, try to keep markup generalized and parametrizable via htmlVariables.ftl as much as possible.
 *
 -->
 

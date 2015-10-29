@@ -44,7 +44,7 @@ import javolution.util.FastMap;
  * Java language analog of <code>component://common/webcommon/includes/catoUtilities.ftl</code>.
  * <p>
  * <em>NOTE</em>: This is for common, general-purpose code only (generic utilities). Code that implements
- * template macro markup (e.g. <code>templateHtml.ftl</code>) logic belongs in separate class.
+ * template macro markup (e.g. <code>htmlTemplate.ftl</code>) logic belongs in separate class.
  */
 public final class CommonFtlUtil {
 

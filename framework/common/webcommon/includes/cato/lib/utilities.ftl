@@ -8,7 +8,7 @@
 *
 * NOTE: In general, macros expect to be called using named arguments (not supported for functions),
 *     except where otherwise noted.
-* NOTE: Default markup-producing macros are found in templateHtml.ftl.
+* NOTE: Default markup-producing macros are found in htmlTemplate.ftl.
 *     Utilities found in utilities.ftl should not contain their logic in general (TODO?: there could be a template helpers file to isolate logic from markup).
 *  
 * IMPL NOTE: Macros should avoid using "request" directly (use setRequestVar/getRequestVar/other).

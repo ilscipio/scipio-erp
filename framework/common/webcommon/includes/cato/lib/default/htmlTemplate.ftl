@@ -908,63 +908,6 @@ Since this is very foundation specific, this function may be dropped in future i
 
 <#-- 
 *************
-* Nav list
-************
-Since this is very foundation specific, this function may be dropped in future installations
-
-    Usage example:  
-    <@nav type="">
-        <li>Text or <a href="">Anchor</a></li>
-    </@nav>
-    
-    Or:
-    <@nav type="magellan">
-        <@mli arrival="MyTargetAnchor">Text or <a href="">Anchor</a></@mli>
-    </@nav>
-    
-    <h3 ${mtarget("id")}>Jump Destination</h3>           
-                    
-   * General Attributes *
-    type            = (inline|magellan|breadcrumbs) (default:inline)
-    class           = Adds classes - please use "(small|medium|large)-block-grid-#"    
--->
-<#macro nav type="inline">
-    <#switch type>
-        <#case "magellan">
-            <div data-magellan-expedition="fixed">
-              <dl class="sub-nav">
-                <#nested>
-              </dl>
-            </div>
-        <#break>
-        <#case "breadcrumbs">
-            <ul class="${styles.nav_breadcrumbs!}">
-                <#nested>
-            </ul>
-        <#break>
-        <#default>
-            <ul class="${styles.list_inline!} ${styles.nav_subnav!}">
-              <#nested>
-            </ul>
-        <#break>
-    </#switch>
-</#macro>
-
-<#macro mli arrival="">
-    <dd data-magellan-arrival="${arrival!}"><#nested></dd>
-</#macro>
-
-<#function mtarget id>
-  <#local returnValue="data-magellan-destination=\"${id}\""/>
-  <#return returnValue>
-</#function>
-
-<#function makeMagTargetAttribMap id>
-  <#return {"data-magellan-destination":id}>
-</#function>
-
-<#-- 
-*************
 * Pricing table
 ************
 Since this is very foundation specific, this function may be dropped in future installations.
@@ -1181,6 +1124,63 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
         </#if>
     </#if>
 </#macro>
+
+<#-- 
+*************
+* Nav list
+************
+Since this is very foundation specific, this function may be dropped in future installations
+
+    Usage example:  
+    <@nav type="">
+        <li>Text or <a href="">Anchor</a></li>
+    </@nav>
+    
+    Or:
+    <@nav type="magellan">
+        <@mli arrival="MyTargetAnchor">Text or <a href="">Anchor</a></@mli>
+    </@nav>
+    
+    <h3 ${mtarget("id")}>Jump Destination</h3>           
+                    
+   * General Attributes *
+    type            = (inline|magellan|breadcrumbs) (default:inline)
+    class           = Adds classes - please use "(small|medium|large)-block-grid-#"    
+-->
+<#macro nav type="inline">
+    <#switch type>
+        <#case "magellan">
+            <div data-magellan-expedition="fixed">
+              <dl class="sub-nav">
+                <#nested>
+              </dl>
+            </div>
+        <#break>
+        <#case "breadcrumbs">
+            <ul class="${styles.nav_breadcrumbs!}">
+                <#nested>
+            </ul>
+        <#break>
+        <#default>
+            <ul class="${styles.list_inline!} ${styles.nav_subnav!}">
+              <#nested>
+            </ul>
+        <#break>
+    </#switch>
+</#macro>
+
+<#macro mli arrival="">
+    <dd data-magellan-arrival="${arrival!}"><#nested></dd>
+</#macro>
+
+<#function mtarget id>
+  <#local returnValue="data-magellan-destination=\"${id}\""/>
+  <#return returnValue>
+</#function>
+
+<#function makeMagTargetAttribMap id>
+  <#return {"data-magellan-destination":id}>
+</#function>
 
 <#-- 
 *************

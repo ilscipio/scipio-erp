@@ -1123,7 +1123,6 @@ Not associated with an HTML element as is @fieldset.
                                     partialChars=""
                                     ignoreCase=""
                                     fullSearch=""
-                                    placeholder=placeholder
                                     tooltip=tooltip
                                     manualItems=manualItems
                                     manualItemsOnly=manualItemsOnly><#nested></@field_select_widget_impl>

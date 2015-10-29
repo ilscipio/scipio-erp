@@ -1,11 +1,12 @@
 <#--
 * 
-* Master HTML template macros/templates include for default cato markup.
+* Master HTML templating macros/templates include, default Cato markup.
+*
 * A set of HTML templating macros, part of standard Cato Freemarker API.
 * Automatically included at all times.
 * Intended to be swappable.
 *
-* Default Cato markup (NOTE: currently targeted toward Foundation CSS).
+* NOTE: currently targeted toward Foundation CSS.
 *
 * NOTE: In general, macros expect to be called using named arguments (not supported for functions),
 *     except where otherwise noted.

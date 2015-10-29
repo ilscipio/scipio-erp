@@ -1182,47 +1182,6 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </#if>
 </#macro>
 
-
-<#-- 
-*************
-* Query result message
-************
-Common query result message.
-Note: this is ONLY for expected, non-error messages, such as no records found in a query.
-Other messages such as for missing params/record IDs are usually errors.
-
-    Usage example:  
-    <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>            
-                    
-   * General Attributes *
-    class       = classes or additional classes for nested container
-                  (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
--->
-<#macro resultMsg class=true id="">
-  <#local classes = makeClassesArg(class, "result-msg")>
-  <p<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#nested></p>
-</#macro>
-
-<#-- 
-*************
-* Error result message
-************
-Common error result message.
-Abstracts/centralizes method used to display error, since of no consequence to most
-templates: currently @alert.
-
-    Usage example:  
-    <@errorMsg type="permission">${uiLabelMap.CommonNoPermission}.</@errorMsg>            
-                    
-   * General Attributes *
-    type           = [permission|security|error], default error
-    class          = classes or additional classes for nested container
-                     (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
--->
-<#macro errorMsg type="error" class=true id="">
-  <@alert type="error" class=class id=id><#nested></@alert>
-</#macro>
-
 <#-- 
 *************
 * Menu
@@ -3804,3 +3763,44 @@ or even multiple per fieldset.
     ${text}<#lt/>
   </#if>
 </#macro>
+
+<#-- 
+*************
+* Query result message
+************
+Common query result message.
+Note: this is ONLY for expected, non-error messages, such as no records found in a query.
+Other messages such as for missing params/record IDs are usually errors.
+
+    Usage example:  
+    <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>            
+                    
+   * General Attributes *
+    class       = classes or additional classes for nested container
+                  (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+-->
+<#macro resultMsg class=true id="">
+  <#local classes = makeClassesArg(class, "result-msg")>
+  <p<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#nested></p>
+</#macro>
+
+<#-- 
+*************
+* Error result message
+************
+Common error result message.
+Abstracts/centralizes method used to display error, since of no consequence to most
+templates: currently @alert.
+
+    Usage example:  
+    <@errorMsg type="permission">${uiLabelMap.CommonNoPermission}.</@errorMsg>            
+                    
+   * General Attributes *
+    type           = [permission|security|error], default error
+    class          = classes or additional classes for nested container
+                     (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+-->
+<#macro errorMsg type="error" class=true id="">
+  <@alert type="error" class=class id=id><#nested></@alert>
+</#macro>
+

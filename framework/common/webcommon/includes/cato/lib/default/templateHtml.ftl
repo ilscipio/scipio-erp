@@ -858,12 +858,13 @@ Helps define table cells.
 
 <#-- 
 *************
-* Data row class string
+* Table row class string
 ************
 Helps build common data/table row class string (odd, even, etc.). Common pattern.
-Using @table macro is preferred.
+In general, use @table, @tr macros instead.
+
     Usage example:  
-    <tr<@dataRowClassStr class="myClass" alt=false/>>
+    <tr<@tableRowClassStr class="myClass" alt=false/>>
                     
    * General Attributes *
     class           = css classes 
@@ -871,7 +872,7 @@ Using @table macro is preferred.
     alt             = boolean, if true is alternate row (odd), if false regular (even)
     selected        = boolean, if true marked as selected
 -->
-<#macro dataRowClassStr class=true alt="" selected="">
+<#macro tableRowClassStr class=true alt="" selected="">
   <#local classes = makeClassesArg(class, "")>
   <#if alt?is_boolean>
     <#local classes = (classes + " " + alt?string(styles.row_alt!, styles.row_reg!))?trim>

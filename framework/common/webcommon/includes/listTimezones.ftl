@@ -30,7 +30,7 @@ under the License.
     <#assign availableTimeZones = Static["org.ofbiz.base.util.UtilDateTime"].availableTimeZones()/>
     <#list availableTimeZones as availableTz>
       <#assign altRow = !altRow>
-      <tr<@dataRowClassStr alt=altRow />>
+      <tr<@tableRowClassStr alt=altRow />>
         <td>
           <a href="<@ofbizUrl>setSessionTimeZone</@ofbizUrl>?tzId=${availableTz.getID()}">${availableTz.getDisplayName(availableTz.useDaylightTime(), displayStyle, locale)} (${availableTz.getID()})</a>
         </td>

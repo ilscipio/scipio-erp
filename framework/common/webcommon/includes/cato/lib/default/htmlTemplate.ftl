@@ -25,7 +25,7 @@
 *************************************
 * EXTERNAL IMPORTS AND INCLUDES *
 *************************************
-* NOTE: Assumes utilities.ftl included.
+* NOTE: Assumes utilities.ftl and htmlVariables.ftl included.
 -->
 
 <#-- (currently none) -->
@@ -51,7 +51,7 @@
 *************************************
 * API TEMPLATE MACROS AND INCLUDES *
 *************************************
-* Intended for use in production templates.
+* Code this file is responsible for defining. Intended for use in production templates.
 -->
 
 <#include "htmlScript.ftl">

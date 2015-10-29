@@ -4,6 +4,8 @@
 *
 * Included by htmlTemplate.ftl.
 *
+* NOTE: May have implicit dependencies on other parts of Cato API.
+*
 -->
 
 <#--

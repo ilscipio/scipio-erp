@@ -342,6 +342,20 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
   <#return addParamsToStr(addParamDelimToUrl(url, paramDelim), paramMap, paramDelim, includeEmpty)>
 </#function> 
 
+<#-- 
+*************
+* escapeUrlParamDelims function
+************
+Escapes the URL's parameter delimiters if they are not already escaped.
+-->
+<#function escapeUrlParamDelims url paramDelim="&amp;">
+    <#if url?contains(paramDelim)>
+        <#return url>
+    <#else>
+        <#return url?replace('&', paramDelim)>
+    </#if>
+</#function>
+
 
 <#-- 
 *************

@@ -1656,14 +1656,6 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   </#if>
 </#macro>
 
-<#function escapeUrlParamDelims url>
-    <#if url?contains('&amp;')>
-        <#return url>
-    <#else>
-        <#return url?replace('&', '&amp;')>
-    </#if>
-</#function>
-
 <#-- DEV NOTE: see @section_impl for details on pattern
      migrated from @renderNextPrev form widget macro
      new params: paginate, forcePost, viewIndexFirst, listItemsOnly, paginateToggle*

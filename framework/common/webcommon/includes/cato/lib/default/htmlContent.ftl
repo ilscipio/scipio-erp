@@ -1,0 +1,718 @@
+<#--
+* 
+* Content element HTML template include, default Cato markup.
+*
+* Included by htmlTemplate.ftl.
+*
+* NOTE: May have implicit dependencies on other parts of Cato API.
+*
+-->
+
+<#-- 
+*************
+* Heading
+************
+    Usage example:  
+    <@heading>My Title</@heading>         
+                                 
+   * General Attributes *
+    elemType       = [heading|h|p|span|div|raw], default heading (note: do not specify h1-h6 here - use level)
+                     boolean true means use default, false same as raw (none)
+    level          = specific level (1-6). If not specified, current heading level returned by
+                     getCurrentHeadingLevel() function is used. 
+                     note: does not consume a level.
+    relLevel       = for level, uses level of current heading returned by getCurrentHeadingLevel()
+                     plus this number of levels. default: 0 (current level)
+    class          = heading elem classes (simple)
+                     (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+    levelClassPrefix = default "heading-level-", prefix for class that will be appended level number
+    id             = heading id
+    consumeLevel   = boolean, default currently always false (DEV NOTE: could be made to depend on calculated level).
+                     if true, the global heading level is set to (calculated level for this heading) + 1.
+                     note this is better handled through use of the @section macro. mostly useful for h1.
+    containerElemType = [div|] default empty. if present, adds container around title or this elem type
+    containerClass    = container elem classes (simple)       
+    containerId       = container id  
+    attribs              = hash of other legacy h1-h6 attributes (mainly for those with dash in name)
+    [inlineAttribs...]   = other legacy h1-h6 attributes, inlined
+-->
+<#macro heading elemType=true level="" relLevel="" class=true id="" levelClassPrefix=true consumeLevel="" 
+    containerElemType=false containerClass=true containerId="" attribs={} inlineAttribs...>
+  <#if !level?has_content>
+    <#local level = getCurrentHeadingLevel()>
+  </#if>
+  <#if relLevel?has_content>
+    <#local level = level + relLevel>
+  </#if>
+  <#if levelClassPrefix?is_boolean>
+    <#local levelClassPrefix = levelClassPrefix?string(styles.heading_level_prefix!"", "")>
+  </#if>
+  <#if levelClassPrefix?has_content>
+    <#local headingLevelClass = levelClassPrefix + level?string>
+  <#else>
+    <#local headingLevelClass = "">
+  </#if>
+  <#local classes = makeClassesArg(class, headingLevelClass)>
+  <#local containerClasses = makeClassesArg(containerClass, headingLevelClass)>
+  <#if (consumeLevel?is_boolean && consumeLevel == true)>
+    <#local dummy = setCurrentHeadingLevel(level + 1)>
+  </#if>
+  <#if (level < 1)>
+    <#local level = 1>
+  </#if>
+  <#if elemType?is_boolean>
+    <#if elemType>
+      <#local hElem = "h">
+    <#else>
+      <#local hElem = "">
+    </#if>
+  <#elseif elemType == "heading" || elemType == "h">
+    <#local hElem = "h">
+  <#elseif elemType == "raw" || !elemType?has_content>
+    <#local hElem = "">
+  <#else>
+    <#local hElem = elemType>
+  </#if>
+  <#if containerElemType?is_boolean>
+    <#local cElem = "">
+  <#elseif containerElemType == "raw" || !containerElemType?has_content>
+    <#local cElem = "">
+  <#else>
+    <#local cElem = containerElemType> 
+  </#if>
+  <@heading_markup level=level elem=hElem classes=classes id=id attribs=concatMaps(attribs, inlineAttribs) excludeAttribs=["class", "id"] 
+      containerElem=cElem containerClasses=containerClasses containerId=containerId><#nested></@heading_markup>
+</#macro>
+
+<#-- Main markup for @heading (minimal logic; a little needed) - may be overridden
+     This may be overridden by themes to change markup without changing logic.
+     Here, elem will contain either the value "h" or a valid html element.
+     NOTE: wherever this is overridden, should include "extraArgs..." for compatibility (new args won't break old overrides; remove to identify) -->
+<#macro heading_markup level=1 elem="" classes="" id="" attribs={} excludeAttribs=[] containerElem="" containerClasses="" containerId="" extraArgs...>
+  <#local elemLevel = level>
+  <#if (elemLevel > 6)>
+    <#local elemLevel = 6>
+  </#if>
+  <#if elem == "h">
+    <#local elem = "h" + elemLevel?string>
+  </#if>
+  <#if containerElem?has_content>
+    <${containerElem}<#if containerClasses?has_content> class="${containerClasses}"</#if><#if containerId?has_content> id="${containerId}"</#if>>
+  </#if>
+  <#if elem?has_content><${elem}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#rt>
+    <#lt><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if><#nested><#if elem?has_content></${elem}></#if>
+  <#if containerElem?has_content>
+    </${containerElem}>
+  </#if>
+</#macro>
+
+<#-- 
+*************
+* Code Block
+************
+Creates a very basic wrapper for code blocks
+    Usage example:  
+    <@code type="java">
+       //Some java content
+    </@code>
+                    
+   * General Attributes *
+    type            = (html|java|css|javascript|log) (default:html) 
+-->
+<#macro code type="html">
+    <pre><code data-language="${type!}"><#compress>
+    <#nested>
+    </#compress>
+    </code></pre>
+</#macro>
+
+<#-- 
+*************
+* Table
+************
+Helps define an HTML table. Required wrapper for all @table sub-element macros.
+
+    Usage example:  
+    <@table type="data-list" id="my-table">
+      <@thead>
+        <@tr>
+          <@th width="15%">col 1</@th>
+          <@th width="85%">col 2</@th>
+        </@tr>
+      </@thead>
+      <@tbody>
+        <@tr class="my-row-class" valign="middle">
+          <@td>data value 1</@td>
+          <@td>data value 2</@td>
+        </@tr>
+      </@tbody>
+    </@table>
+                    
+   * General Attributes *
+    type            = [generic|(theme-specific)], default generic
+                      * STANDARD TYPES *
+                      These types must always be recognized by all styles themes:
+                      generic: generic html table (free-form, complex); no features enabled by default.
+                               similar to defining an html <table> manually, but more powerful.
+                      * DEFAULT STYLES TYPES *
+                      WARN: these are WIP types, may not be enough (important part is to label things for easy search)
+                      The following are currently recognized by the default cato styles (NOTE: targeted for backend):
+                      data-list: record-containing table, one data record per row (but row cells may be complex and may have tfoot)
+                                 similar to a form widget "list" or "multi" table; intended to resemble these, to unify them.
+                      data-complex: record-containing table, but with complex structure (more than one row per record, separators, etc.)
+                                    there is no form widget equivalent of these and usually need some custom alt-row work.
+                      summary: usually table with one or a few set rows of summary totals
+                               e.g. order grand totals. 
+                               TODO? review need for this type (should be converted?)
+                      fields: label-value pairs for display, side-by-side, usually no header, roughly
+                              this is especially for legacy Ofbiz code. it is somewhat still valid for display-only fields.
+                              legacy Ofbiz code tables may be assigned this for input forms formatted with tables, but they
+                              ultimately belong as @field and @row/@cell.
+                              TODO: many of these in current templates involving forms and inputs should be converted to @row/@cell (WIP)
+    class           = manual classes to add, as string, default depends on table type
+                      if specified as string, replaces defaults (class=false prevents class), unless prefixed with "+"
+                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                      defaults are looked up in the styles hash using:
+                      styles["table_" + type?replace("-","_")]
+                      where type is the table type above. if the given hash entry does not exist, the default is instead determined by:
+                      styles["table_default"]
+    id              = table id
+    autoAltRows     = defaults specified in styles hash, but otherwise false
+    firstRowAlt     = default false
+    inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
+    useFootAltRoots = whether use alt row logic in foot or not
+    cellspacing     = cellspacing, defaults specified in styles hash, set to "" to prevent setting.
+    wrapIf/openOnly/closeOnly = advanced structure control, for esoteric cases
+    attribs         = hash of other legacy <table attributes (mainly for those with dash in name)
+    
+    * Responsive options *
+    scrollable      = will rely on the jquery plugin datatables.js (www.datatables.net) to generate responsive table. Can be combined with fixed column type
+    fixedColumnsLeft  = int value; number of columns that are fixed on the left-hand side
+    fixedColumnsRight = int value;number of columns that are fixed on the right hand side
+    [inlineAttribs...]    = other legacy <table attributes and values, inlined
+-->
+<#macro table type="" class=true id="" cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false fixedColumnsLeft=0 fixedColumnsRight=0 attribs={} inlineAttribs...>
+<#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
+<#local fieldIdNum = fieldIdNum + 1 />
+<#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
+<#if !id?has_content><#local id="table_"+fieldIdNum/></#if>
+<#if !type?has_content>
+  <#local type = "generic">
+</#if>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+<#if open>
+  <#-- save previous globals, for nesting -->
+  <#local prevTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
+  <#local prevSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
+  <#local prevRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag")!""> <#-- used to keep track of state (always boolean) -->
+  <#local prevCurrentRowAlt = getRequestVar("catoCurrentTableCurrentRowAlt")!""> <#-- the actual alt value of current row (may be empty) -->
+  <#local prevLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt")!""> <#-- the actual alt value of "last" row (may be empty) -->
+  <#local styleName = type?replace("-","_")>
+  <#if (!styleName?has_content) || (!(styles["table_" + styleName]!false)?is_string)>
+    <#local styleName = "default">
+  </#if>
+  <#if !autoAltRows?is_boolean>
+    <#if inheritAltRows>
+      <#local autoAltRows = true>
+    <#else>
+      <#local autoAltRows = styles["table_" + styleName + "_autoaltrows"]!styles["table_default_autoaltrows"]!false>
+    </#if>
+  </#if>
+  <#local defaultClass = styles["table_" + styleName]!styles["table_default"]!"">
+  <#local classes = makeClassesArg(class, defaultClass)>
+  <#if cellspacing?is_boolean>
+    <#if cellspacing>
+      <#local cellspacing = styles["table_" + styleName + "_cellspacing"]!styles["table_default_cellspacing"]!"">
+    <#else>
+      <#local cellspacing = "">
+    </#if>
+  </#if>
+  <#local catoCurrentTableInfo = {"type": type, "styleName": styleName, "autoAltRows": autoAltRows,
+    "inheritAltRows": inheritAltRows, "parentRowAlt": prevCurrentRowAlt, "useFootAltRows": useFootAltRows}>
+  <#local dummy = setRequestVar("catoCurrentTableInfo", catoCurrentTableInfo)!>
+  <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
+  <#-- note: catoCurrentTableRowAltFlag should always be boolean
+       note: catoCurrentTableCurrentRowAlt probably doesn't need to be set here, but playing it safe -->
+  <#if firstRowAlt?is_boolean>
+    <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", firstRowAlt)!>
+    <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", firstRowAlt)!>
+  <#elseif inheritAltRows>
+    <#if prevCurrentRowAlt?is_boolean>
+      <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", prevCurrentRowAlt)!>
+    <#else>
+      <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", false)!>
+    </#if>
+    <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", prevCurrentRowAlt)!>
+  <#else>
+    <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", false)!>
+    <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", false)!>
+  </#if>
+  <#-- note: this var may be empty string (none) -->
+  <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", prevCurrentRowAlt)!>
+  <#local style = "">
+  <#-- need to save values on a stack if open-only! -->
+  <#if !close>
+    <#local dummy = pushRequestStack("catoCurrentTableStack", 
+        {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevRowAltFlag":prevRowAltFlag, 
+         "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, "scrollable":scrollable})>
+  </#if>
+  <table<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#rt>
+    <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "cellspacing"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+</#if>
+    <#nested>
+<#if close>
+  <#-- need to get values back from stack if close-only! -->
+  <#if !open>
+    <#local stackValues = popRequestStack("catoCurrentTableStack")!{}>
+    <#local prevTableInfo = stackValues.prevTableInfo>
+    <#local prevSectionInfo = stackValues.prevSectionInfo>
+    <#local prevRowAltFlag = stackValues.prevRowAltFlag>
+    <#local prevCurrentRowAlt = stackValues.prevCurrentRowAlt>
+    <#local prevLastRowAlt = stackValues.prevLastRowAlt>
+    <#local scrollable = stackValues.scrollable>
+  </#if>
+  </table>
+  <#if scrollable>
+  <script type="">
+    $(document).ready(function() {
+        var ${id!} = $('#${id}').DataTable( {
+            fixedHeader: true,
+            scrollX: true,
+            info: false,
+            paging: false,
+            searching : false
+            <#if fixedColumnsLeft&gt;0 || fixedColumnsRight&gt;0>,fixedColumns:   {
+            leftColumns: ${fixedColumnsLeft!0},
+            rightColumns: ${fixedColumnsRight!0}
+            }
+            </#if>
+            
+        } );
+    } );
+  </script>
+  </#if>
+  <#local dummy = setRequestVar("catoCurrentTableInfo", prevTableInfo)!>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevSectionInfo)!>
+  <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", prevRowAltFlag)!>
+  <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", prevCurrentRowAlt)!>
+  <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", prevLastRowAlt)!>
+</#if>
+</#macro>
+
+<#macro thead class=true id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+<#if open>
+  <#local classes = makeClassesArg(class, "")>
+  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
+  <#local catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
+  <#-- need to save values on a stack if open-only! -->
+  <#if !close>
+    <#local dummy = pushRequestStack("catoCurrentTableHeadStack", 
+        {"prevTableSectionInfo":prevTableSectionInfo})>
+  </#if>
+  <thead<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+</#if>
+    <#nested>
+<#if close>
+  <#-- need to get values back from stack if close-only! -->
+  <#if !open>
+    <#local stackValues = popRequestStack("catoCurrentTableHeadStack")!{}>
+    <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
+  </#if>
+  </thead>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
+</#if>
+</#macro>
+
+<#macro tbody class=true id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+<#if open>
+  <#local classes = makeClassesArg(class, "")>
+  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
+  <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
+  <#-- need to save values on a stack if open-only! -->
+  <#if !close>
+    <#local dummy = pushRequestStack("catoCurrentTableBodyStack", 
+        {"prevTableSectionInfo":prevTableSectionInfo})>
+  </#if>
+  <tbody<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+</#if>
+    <#nested>
+<#if close>
+  <#-- need to get values back from stack if close-only! -->
+  <#if !open>
+    <#local stackValues = popRequestStack("catoCurrentTableBodyStack")!{}>
+    <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
+  </#if>
+  </tbody>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
+</#if>
+</#macro>
+
+<#macro tfoot class=true id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+<#if open>
+  <#local classes = makeClassesArg(class, "")>
+  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
+  <#local catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
+  <#-- need to save values on a stack if open-only! -->
+  <#if !close>
+    <#local dummy = pushRequestStack("catoCurrentTableFootStack", 
+        {"prevTableSectionInfo":prevTableSectionInfo})>
+  </#if>
+  <tfoot<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+</#if>
+    <#nested>
+<#if close>
+  <#-- need to get values back from stack if close-only! -->
+  <#if !open>
+    <#local stackValues = popRequestStack("catoCurrentTableFootStack")!{}>
+    <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
+  </#if>
+  </tfoot>
+  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
+</#if>
+</#macro>
+
+<#-- 
+*************
+* Table row
+************
+Helps define table rows. takes care of alt row styles. must have a parent @table wrapper. 
+                     
+   * General Attributes *
+    type            = [generic|content|meta|util], default depends on table type and styles hash; 
+                          in complete absence of styles hash, default is "generic";
+                          in default cato styles, default is "generic" for "generic" tables, and "content" for all other table types.
+                      generic: free-form row with no assumptions on content.
+                      content: normal data or content row. exact meaning depends on table type.
+                               note that for "data-complex" this definition is currently relaxed.
+                      meta: indicates this is a special info/status row (e.g. "No Records Found" message), not an actual content row.
+                            meta rows are treated differently by default as are thead and tfoot rows.
+                            exact meaning depends on table type.
+                      util: indicates this is a special utility-only row meant to hold no real data, 
+                            such as: spacer rows (<@tr type="util"><@td colspan=3><hr /></@td></@tr>)
+                            TODO: this isn't handled yet but SHOULD be used in templates anyhow.
+    class           = css classes
+                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+    id              = row id
+    useAlt          = boolean, if specified, can manually enable/disable whether alternate row code runs per-row
+    alt             = boolean, if specified, override the automatic auto-alt styling to specific value true or false (manual mode)
+                      note: at current time, alt on non-body rows (except foot rows if enabled in @table) does not affect
+                            next row's alt (unless groupLast used explicit on next) logic
+    groupLast       = boolean, if specified, considers row logically grouped with last row;
+                      sets alt to exact same as last row
+    groupParent     = boolean, nested tables only, if specified, considers row logically grouped with parent row;
+                      sets alt to exact same as parent row
+    selected        = boolean, if specified and true marked as selected
+    wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (should omit nested for openOnly/closeOnly)
+    attribs               = hash of other legacy <tr attributes (mainly for those with dash in name)
+    [inlineAttribs...]    = other legacy <tr attributes and values, inlined
+-->
+<#macro tr type="" class=true id="" useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+<#local catoCurrentTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
+<#local catoCurrentTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
+<#local catoCurrentTableRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag")!false>
+<#local catoCurrentTableLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt")!"">
+<#if open>
+  <#local tableType = (catoCurrentTableInfo.type)!"generic">
+  <#local tableStyleName = (catoCurrentTableInfo.styleName)!tableType>
+  <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
+  <#if !type?has_content>
+    <#local type = styles["table_" + tableStyleName + "_rowtype"]!styles["table_default_rowtype"]!"generic">
+  </#if>
+  <#local metaRow = (type == "meta")>
+  <#local isRegAltRow = !metaRow && ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>
+  <#if !(useAlt?is_boolean && useAlt == false)>
+    <#if !alt?is_boolean>
+      <#if groupLast?is_boolean && groupLast == true>
+        <#local alt = catoCurrentTableLastRowAlt!""> <#-- may be empty string (none) -->
+      <#elseif groupParent?is_boolean && groupParent == true>
+        <#local alt = (catoCurrentTableInfo.parentRowAlt)!"">
+      <#elseif (isRegAltRow && ((catoCurrentTableInfo.autoAltRows)!false)==true)>
+        <#if ((catoCurrentTableInfo.inheritAltRows)!false)==true>
+          <#local alt = (catoCurrentTableInfo.parentRowAlt)!"">
+        <#else>
+          <#local alt = catoCurrentTableRowAltFlag!false> <#-- always boolean -->
+        </#if>
+      <#elseif useAlt?is_boolean && useAlt == true>
+        <#-- forced -->
+        <#local alt = catoCurrentTableRowAltFlag!false>
+      </#if>
+    </#if>
+  </#if>
+  <#-- save the "effective" or "real" current row alt -->
+  <#local catoCurrentTableCurrentRowAlt = alt>
+  <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", catoCurrentTableCurrentRowAlt)!>
+  <#-- need to save values on a stack if open-only! -->
+  <#if !close>
+    <#local dummy = pushRequestStack("catoCurrentTableRowStack", 
+        {"type":type, "useAlt":useAlt, "alt":alt, "isRegAltRow":isRegAltRow})>
+  </#if>
+  <#local classes = makeClassesArg(class, "")>
+  <#if alt?is_boolean>
+    <#local classes = (classes + " " + alt?string(styles.row_alt!, styles.row_reg!))?trim>
+  </#if>
+  <#if selected?is_boolean && selected == true>
+    <#local classes = (classes + " " + styles.row_selected!)?trim>
+  </#if>
+  <tr<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+</#if>    
+    <#nested>
+<#if close>
+  <#-- need to get values back from stack if close-only! -->
+  <#if !open>
+    <#local stackValues = popRequestStack("catoCurrentTableRowStack")!{}>
+    <#local type = stackValues.type>
+    <#local useAlt = stackValues.useAlt>
+    <#local alt = stackValues.alt>
+    <#local isRegAltRow = stackValues.isRegAltRow>
+  </#if>
+  </tr>
+  <#if !(useAlt?is_boolean && useAlt == false)>
+    <#-- note: isRegAltRow check here could be removed but maybe better to keep? only auto-toggle for regular rows... -->
+    <#if alt?is_boolean && isRegAltRow> <#-- not needed:  && ((catoCurrentTableInfo.inheritAltRows)!)==false -->
+      <#local catoCurrentTableRowAltFlag = !alt>
+      <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", catoCurrentTableRowAltFlag)!>
+    </#if>
+  </#if>
+  <#-- note: may be empty string, that's ok, will record if last was disabled so groupLast always makes sense -->
+  <#local catoCurrentTableLastRowAlt = alt>
+  <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", catoCurrentTableLastRowAlt)!>
+</#if>
+</#macro>
+
+<#-- 
+*************
+* Table cell
+************
+Helps define table cells.
+                    
+   * General Attributes *
+    class           = css classes 
+                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+    id              = cell id
+    wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (should omit nested for openOnly/closeOnly)
+    attribs               = hash of other legacy <th and <td attributes (mainly for those with dash in name)
+    [inlineAttribs...]    = other legacy <th and <td attributes and values
+-->
+<#macro th class=true id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+  <#local classes = makeClassesArg(class, "")>
+  <#if open><th<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></th></#if>
+</#macro>
+
+<#macro td class=true id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#local open = wrapIf && !closeOnly>
+<#local close = wrapIf && !openOnly>
+  <#local classes = makeClassesArg(class, "")>
+  <#if open><td<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></td></#if>
+</#macro>
+
+<#-- 
+*************
+* Table row class string
+************
+Helps build common data/table row class string (odd, even, etc.). Common pattern.
+In general, use @table, @tr macros instead.
+
+    Usage example:  
+    <tr<@tableRowClassStr class="myClass" alt=false/>>
+                    
+   * General Attributes *
+    class           = css classes 
+                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+    alt             = boolean, if true is alternate row (odd), if false regular (even)
+    selected        = boolean, if true marked as selected
+-->
+<#macro tableRowClassStr class=true alt="" selected="">
+  <#local classes = makeClassesArg(class, "")>
+  <#if alt?is_boolean>
+    <#local classes = (classes + " " + alt?string(styles.row_alt!, styles.row_reg!))?trim>
+  </#if>
+  <#if selected?is_boolean && selected == true>
+    <#local classes = (classes + " " + styles.row_selected!)?trim>
+  </#if>
+  <#if classes?has_content> class="${classes}"</#if>
+</#macro>
+
+<#-- 
+*************
+* Pricing table
+************
+Since this is very foundation specific, this function may be dropped in future installations.
+
+    Usage example:  
+    <@pul >
+        <@pli>Text or <a href="">Anchor</a></@pli>
+    </@pul>            
+                    
+   * General Attributes *
+    title           = fieldset-title
+    
+-->
+<#macro pul title="">
+          <ul class="${styles.pricing_wrap!}">
+              <@pli type="title">${title!}</@pli>
+              <#nested>
+          </ul>
+</#macro>
+
+<#macro pli type="">
+    <#switch type>
+          <#case "price">
+              <li class="${styles.pricing_price!}"><#nested></li>
+          <#break>
+          <#case "description">
+              <li class="${styles.pricing_description!}"><#nested></li>
+          <#break>
+          <#case "title">
+              <li class="${styles.pricing_title!}"><#nested></li>
+          <#break>
+          <#case "button">
+              <li class="${styles.pricing_cta!}"><#nested></li>
+          <#break>        
+          <#default>
+              <li class="${styles.pricing_bullet!}"><#nested></li>
+          <#break>
+    </#switch>
+</#macro>
+
+<#-- 
+*************
+* Chart Macro
+************
+Foundation Pizza: http://zurb.com/playground/pizza-amore-charts-and-graphs (customization through _base.scss)
+Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
+
+    Usage example:  
+    <@chart type="bar" >
+        <@chartdata value="36" title="Peperoni"/> 
+    </@chart>              
+                    
+   * General Attributes *
+    type           = (pie|bar|line) (default:pie)
+    library        = (foundation|chart) (default:foundation)
+    title          = Data Title  (default:empty)
+-->
+<#macro chart type="pie" library="foundation" title="">
+    <#global chartLibrary = library!"foundation"/>
+    <#local nestedContent><#nested><#t></#local>
+    <#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
+    <#local fieldIdNum = fieldIdNum + 1 />
+    <#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
+    <#if chartLibrary=="foundation">
+        <@row>
+        <@cell columns=3>    
+        <ul data-${type!}-id="chart_${renderSeqNumber!}_${fieldIdNum!}" class="${styles.chart_legend!}">
+            <#nested/>
+            <#--<#if !nestedContent?has_content><@chartdata value="0" title=""/></#if>-->
+        </ul>
+        </@cell>
+        <@cell columns=9><div id="chart_${renderSeqNumber!}_${fieldIdNum!}" style="height:300px;"></div></@cell>
+        </@row>
+    <#else>
+        <#global chartId = "chart_${renderSeqNumber!}_${fieldIdNum!}"/>
+        <#global chartType = type/>
+        <canvas id="${chartId!}" class="${styles.grid_large!}12 chart-data" height="300" style="height:300px;"></canvas>
+        <script type="text/javascript">
+        //<![CDATA[
+            $(function(){
+                var chartDataEl = $('.chart-data:first-of-type');
+                var chartData = chartDataEl.sassToJs({pseudoEl:":before", cssProperty: "content"});
+                var options ={
+                    animation: false,
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scaleLineColor: chartData.scaleLineColor,
+                    scaleFontFamily: chartData.scaleFontFamily,
+                    scaleFontSize: chartData.scaleFontSize,
+                    scaleFontColor: chartData.scaleFontColor,
+                    scaleShowLabels: chartData.scaleShowLabels,
+                    scaleShowLabels: chartData.scaleShowLabels,
+                    scaleShowLine : chartData.scaleShowLine,
+                    angleShowLineOut : chartData.angleShowLineOut,
+                    scaleBeginAtZero : chartData.scaleBeginAtZero,
+                    showTooltips: chartData.showTooltips,
+                    tooltipFillColor: chartData.tooltipFillColor,
+                    tooltipFontFamily: chartData.tolltipFontFamily,
+                    tooltipFontSize: chartData.tooltipFontSize,
+                    tooltipFontStyle: chartData.tooltipFontStyle,
+                    tooltipFontColor: chartData.tooltipFontColor,
+                    tooltipTitleFontFamily: chartData.tooltipTitleFontFamily,
+                    tooltipTitleFontSize: chartData.tooltipTitleFontSize,
+                    tooltipTitleFontStyle: chartData.tooltipTitleFontStyle,
+                    tooltipTitleFontColor: chartData.tooltipTitleFontColor,
+                    tooltipYPadding: chartData.tooltipYPadding,
+                    tooltipXPadding: chartData.tooltipXPadding,
+                    tooltipCaretSize: chartData.tooltipCaretSize,
+                    tooltipCornerRadius: chartData.tooltipCornerRadius,
+                    datasetFill : chartData.datasetFill,
+                    tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %>",
+                    multiTooltipTemplate: "<%= value %>",
+                    pointDot : chartData.pointDot,
+                    pointHitDetectionRadius : chartData.pointHitDetectionRadius,
+                    pointDotRadius : chartData.pointDotRadius,
+                    pointDotStrokeWidth : chartData.pointDotStrokeWidth,
+                    <#if type=="line">
+                    bezierCurve : chartData.bezierCurve,
+                    bezierCurveTension : chartData.bezierCurveTension,
+                    legendTemplate : "<ul class=\"legend <%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li style=\"color:<%=datasets[i].strokeColor%> !important \"><span style=\"color:#efefef !important \"><%=datasets[i].value%>  <%if(datasets[i].label){%><%=datasets[i].label%><%}%></span></li><%}%></ul>",
+                    dataLabels: chartData.dataLabels
+                    <#elseif type=="pie">
+                    legendTemplate : "<ul class=\"legend <%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li style=\"color:<%=segments[i].fillColor%> !important \"><span style=\"color:#efefef !important \"><%=segments[i].value%>  <%if(segments[i].label){%><%=segments[i].label%><%}%></span></li><%}%></ul>"
+                    <#else>
+                    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+                    </#if>
+                    };
+                var ctx_${renderSeqNumber!}_${fieldIdNum!} = $('#${chartId!}').get(0).getContext("2d");
+                <#if type=="pie">
+                var data = [];
+                <#else>
+                var data = {
+                        labels :[],
+                        datasets: [
+                            {
+                              fillColor: chartData.fillColor,
+                              strokeColor: chartData.strokeColor,
+                              pointColor: chartData.pointColor,
+                              pointStrokeColor: chartData.pointStrokeColor,
+                              pointHighlightFill: chartData.pointHighlightFill,
+                              pointHighlightStroke: chartData.pointHighlightStroke,
+                              label: "",
+                              data: []
+                            }
+                            ]
+                    };
+                </#if>
+                var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${fieldIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
+                <#nested/>
+            });
+        //]]>
+        </script>
+    </#if>
+</#macro>
+
+<#macro chartdata title value value2="">
+    <#if !chartLibrary?has_content> <#local chartLibrary = "foundation"/></#if>
+    <#if chartLibrary=="foundation">
+        <li <#if value2?has_content>data-y="${value!}" data-x="${value2!}"<#else>data-value="${value!}"</#if>>${title!}</li>
+    <#else>
+        <#if chartType="line" || chartType="bar">
+            ${chartId!}.addData([<#if value?has_content>${value!}</#if>]<#if title?has_content>,"${title!}"</#if>);
+        <#else>
+            ${chartId!}.addData({value:${value!},color:chartData.color,highlight: chartData.highlight<#if title?has_content>,label:"${title!}"</#if>});
+        </#if>
+    </#if>
+</#macro>

@@ -1,5 +1,7 @@
 <#--
 * 
+* Generic Cato FTL Utilities.
+*
 * A set of standalone utility functions and macros, largely devoid of markup and unrelated to templating macros and with minimal dependencies, 
 * part of standard Cato Freemarker API.
 * Generally CSS-framework-agnostic. 

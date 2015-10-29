@@ -20,120 +20,55 @@ under the License.
     <#-- reference number -->
     <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_CAPTURE" || 
          txType?default("") == "PRDS_PAY_RELEASE" || txType?default("") == "PRDS_PAY_REFUND">
-      ${setRequestAttribute("validTx", "true")}
-      <#assign validTx = true>
-      <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.AccountingReferenceNumber}</b></@td>
-        <@td width="74%">
-          <input type="text" size="30" maxlength="60" name="referenceNum" />
-          <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@td>
-      </@tr>
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.FormFieldTitle_orderPaymentPreferenceId}</b></@td>
-        <@td width="74%">
-          <input type="text" size="20" maxlength="20" name="orderPaymentPreferenceId" />
-          <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@td>
-      </@tr>
+      	${setRequestAttribute("validTx", "true")}
+      	<#assign validTx = true>
+      	<hr />
+		<@field type="input" size="30" maxlength="60" name="referenceNum" label="${uiLabelMap.AccountingReferenceNumber}" required=true tooltip="${uiLabelMap.CommonRequired}"/>
+        <@field type="text" size="20" maxlength="20" name="orderPaymentPreferenceId" label="${uiLabelMap.FormFieldTitle_orderPaymentPreferenceId}" required=true tooltip="${uiLabelMap.CommonRequired}" />      
     </#if>
     <#-- manual credit card information -->
-    <#if txType?default("") == "PRDS_PAY_RELEASE">
-      <@tr><@td>
+    <#if txType?default("") == "PRDS_PAY_RELEASE">      
       ${setRequestAttribute("validTx", "true")}
       <script language="JavaScript" type="text/javascript">
       <!-- //
         document.manualTxForm.action = "<@ofbizUrl>processReleaseTransaction</@ofbizUrl>";
       // -->
-      </script>
-      </@td></@tr>
+      </script>      
     </#if>
-    <#if txType?default("") == "PRDS_PAY_REFUND">
-      <@tr><@td>
+    <#if txType?default("") == "PRDS_PAY_REFUND">      
       ${setRequestAttribute("validTx", "true")}
       <script language="JavaScript" type="text/javascript">
       <!-- //
         document.manualTxForm.action = "<@ofbizUrl>processRefundTransaction</@ofbizUrl>";
       // -->
-      </script>
-      </@td></@tr>
+      </script>    
     </#if>
-    <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_AUTH">
-      <@tr><@td>
-      ${setRequestAttribute("validTx", "true")}
-      <script language="JavaScript" type="text/javascript">
-      <!-- //
-        document.manualTxForm.action = "<@ofbizUrl>processManualCcTx</@ofbizUrl>";
-      // -->
-      </script>
-      </@td></@tr>
-      <@tr type="util"><@td colspan="2"><hr/></@td></@tr>
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.PartyFirstName}</b></@td>
-        <@td width="74%">
-          <input type="text" size="30" maxlength="60" name="firstName" value="${(person.firstName)!}" />
-          <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@td>
-      </@tr>
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.PartyLastName}</b></@td>
-        <@td width="74%">
-          <input type="text" size="30" maxlength="60" name="lastName" value="${(person.lastName)!}" />
-          <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@td>
-      </@tr>
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.PartyEmailAddress}</b></@td>
-        <@td width="74%">
-          <input type="text" size="30" maxlength="60" name="infoString" value="" />
-          <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@td>
-      </@tr>
-      <@tr type="util"><@td colspan="2"><hr/></@td></@tr>
-      <#assign showToolTip = "true">
-      ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
-      <@tr type="util"><@td colspan="2"><hr/></@td></@tr>
-      <#-- first / last name -->
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.PartyFirstName}</b></@td>
-        <@td width="74%">
-          <input type="text" size="30" maxlength="30" name="firstName" value="${(person.firstName)!}" <#if requestParameters.useShipAddr??>disabled</#if> />
-          <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@td>
-      </@tr>
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.PartyLastName}</b></@td>
-        <@td width="74%">
-          <input type="text" size="30" maxlength="30" name="lastName" value="${(person.lastName)!}" <#if requestParameters.useShipAddr??>disabled</#if> />
-          <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@td>
-      </@tr>
-      <#-- credit card address -->
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.AccountingBillToAddress1}</b></@td>
-        <@td width="74%">
-          <input type="text" size="30" maxlength="30" name="address1" value="${(postalFields.address1)!}" <#if requestParameters.useShipAddr??>disabled</#if> />
-          <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@td>
-      </@tr>
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.AccountingBillToAddress2}</b></@td>
-        <@td width="74%">
-          <input type="text" size="30" maxlength="30" name="address2" value="${(postalFields.address2)!}" <#if requestParameters.useShipAddr??>disabled</#if> />
-        </@td>
-      </@tr>
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonCity}</b></@td>
-        <@td width="74%">
-          <input type="text" size="30" maxlength="30" name="city" value="${(postalFields.city)!}" <#if requestParameters.useShipAddr??>disabled</#if> />
-          <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@td>
-      </@tr>
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonStateProvince}</b></@td>
-        <@td width="74%">
-          <select name="stateProvinceGeoId" <#if requestParameters.useShipAddr??>disabled</#if>>
+    <#if txType?default("") == "PRDS_PAY_CREDIT" || txType?default("") == "PRDS_PAY_AUTH">     
+		${setRequestAttribute("validTx", "true")}
+  		<script language="JavaScript" type="text/javascript">
+		<!-- //
+    		document.manualTxForm.action = "<@ofbizUrl>processManualCcTx</@ofbizUrl>";
+  		// -->
+  		</script>     
+  		<hr/>      
+		<@field type="input" size="30" maxlength="60" name="firstName" value="${(person.firstName)!}" label="${uiLabelMap.PartyFirstName}" tooltip="${uiLabelMap.CommonRequired}" required=true />        
+		<@field type="input" size="30" maxlength="60" name="lastName" value="${(person.lastName)!}" label="${uiLabelMap.PartyLastName}" tooltip="${uiLabelMap.CommonRequired}" required=true />   
+        <@field type="input" size="30" maxlength="60" name="infoString" value="" label="${uiLabelMap.PartyEmailAddress}" tooltip="${uiLabelMap.CommonRequired}" required=true />       
+		<hr/>
+      	${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}      
+      	<hr/>      
+      	<#-- first / last name -->
+      	
+      	<#assign disabled = false />
+      	<#if requestParameters.useShipAddr??><#assign disabled = true /></#if>
+        <@field type="input" size="30" maxlength="30" name="firstName" value="${(person.firstName)!}" disabled=disabled label="${uiLabelMap.PartyFirstName}" required=true tooltip="${uiLabelMap.CommonRequired}"/>
+        <@field type="input" size="30" maxlength="30" name="lastName" value="${(person.lastName)!}" disabled=disabled label="${uiLabelMap.PartyLastName}" required=true tooltip="${uiLabelMap.CommonRequired}"/>         
+      
+		<#-- credit card address -->     
+        <@field type="input" size="30" maxlength="30" name="address1" value="${(postalFields.address1)!}" label="${uiLabelMap.AccountingBillToAddress1}" disabled=disabled required=true tooltip="${uiLabelMap.CommonRequired}" />
+		<@field type="input" size="30" maxlength="30" name="address2" value="${(postalFields.address2)!}" label="${uiLabelMap.AccountingBillToAddress2}" disabled=disabled required=true tooltip="${uiLabelMap.CommonRequired}" />
+        <@field type="input" size="30" maxlength="30" name="city" value="${(postalFields.city)!}" label="${uiLabelMap.CommonCity}" disabled=disabled required=true tooltip="${uiLabelMap.CommonRequired}" />
+        <@field type="select" name="stateProvinceGeoId" label="${uiLabelMap.CommonStateProvince}" disabled=disabled required=true>
             <#if (postalFields.stateProvinceGeoId)??>
               <option>${postalFields.stateProvinceGeoId}</option>
               <option value="${postalFields.stateProvinceGeoId}">---</option>
@@ -141,27 +76,13 @@ under the License.
               <option value="">${uiLabelMap.CommonNone} ${uiLabelMap.CommonState}</option>
             </#if>
             ${screens.render("component://common/widget/CommonScreens.xml#states")}
-          </select>
-        </@td>
-      </@tr>
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonZipPostalCode}</b></@td>
-        <@td width="74%">
-          <input type="text" size="12" maxlength="10" name="postalCode" value="${(postalFields.postalCode)!}" <#if requestParameters.useShipAddr??>disabled</#if> />
-          <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@td>
-      </@tr>
-      <@tr>
-        <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonCountry}</b></@td>
-        <@td width="74%">
-          <select name="countryGeoId" <#if requestParameters.useShipAddr??>disabled</#if>>
+        </@field>
+		<@field type="input" size="12" maxlength="10" name="postalCode" value="${(postalFields.postalCode)!}" label="${uiLabelMap.CommonZipPostalCode}" disabled=disabled required=true tooltip="${uiLabelMap.CommonRequired}"/>
+        <@field type="select" name="countryGeoId" disabled=disabled label="${uiLabelMap.CommonCountry}" required=true tooltip="${uiLabelMap.CommonRequired}">
             <#if (postalFields.countryGeoId)??>
               <option>${postalFields.countryGeoId}</option>
               <option value="${postalFields.countryGeoId}">---</option>
             </#if>
             ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-          </select>
-          <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@td>
-      </@tr>
+        </@field>        
     </#if>

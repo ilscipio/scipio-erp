@@ -86,18 +86,18 @@ under the License.
                   <@td><@ofbizCurrency amount=returnableItems.get(orderItem).get("returnablePrice") isoCode=orderHeader.currencyUom/>
                   </@td>
                   <@td>
-                    <@input type="select" name="returnReasonId_o_${rowCount}" class="selectBox">
+                    <select name="returnReasonId_o_${rowCount}" class="selectBox">
                       <#list returnReasons as reason>
                         <option value="${reason.returnReasonId}">${reason.get("description",locale)?default(reason.returnReasonId)}</option>
                       </#list>
-                    </@input>
+                    </select>
                   </@td>
                   <@td>
-                    <@input type="select" name="returnTypeId_o_${rowCount}" class="selectBox">
+                    <select name="returnTypeId_o_${rowCount}" class="selectBox">
                       <#list returnTypes as type>
                         <option value="${type.returnTypeId}">${type.get("description",locale)?default(type.returnTypeId)}</option>
                       </#list>
-                    </@input>
+                    </select>
                   </@td>
                   <@td align="right">
                     <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');"/>

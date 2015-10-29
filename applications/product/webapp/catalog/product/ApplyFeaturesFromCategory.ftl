@@ -71,11 +71,11 @@ under the License.
         <@td>${productFeature.description!}</@td>
         <@td><#if curProductFeatureType??>${curProductFeatureType.description!}<#else> [${productFeature.productFeatureTypeId}]</#if></@td>
         <@td>
-          <@input type="select" name="productFeatureApplTypeId_o_${rowCount}" size="1">
+          <select name="productFeatureApplTypeId_o_${rowCount}" size="1">
             <#list productFeatureApplTypes as productFeatureApplType>
               <option value="${productFeatureApplType.productFeatureApplTypeId}" <#if (selectedFeatureApplTypeId?has_content) && (productFeatureApplType.productFeatureApplTypeId == selectedFeatureApplTypeId)>selected="selected"</#if>>${productFeatureApplType.get("description", locale)}</option>
             </#list>
-          </@input>
+          </select>
         </@td>
         <@td>
             <@htmlTemplate.renderDateTimeField name="fromDate_o_${rowCount}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_o_${rowCount}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>

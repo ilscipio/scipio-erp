@@ -54,19 +54,19 @@ under the License.
       <@tr valign="middle">
         <@td>${(productFeatureType.get("description",locale))!}</@td>
         <@td>
-            <@input type="select" name="pft_${productFeatureTypeId}">
+            <select name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default(productFeature.productFeatureId)}</option>
               </#list>
-            </@input>
+            </select>
         </@td>
       </@tr>
     </#list>
     <@tr valign="middle">
       <@td>${uiLabelMap.ProductSortedBy}</@td>
       <@td>
-          <@input type="select" name="sortOrder" class="selectBox">
+          <select name="sortOrder" class="selectBox">
             <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
             <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
             <option value="SortProductField:totalQuantityOrdered">${uiLabelMap.ProductPopularityByOrders}</option>
@@ -79,7 +79,7 @@ under the License.
                 <option value="SortProductFeature:${productFeatureType.productFeatureTypeId}">${productFeatureType.description?default(productFeatureType.productFeatureTypeId)}</option>
               </#list>
             </#if>
-          </@input>
+          </select>
           <br />
           ${uiLabelMap.EcommerceLowToHigh} <input type="radio" name="sortAscending" value="Y" checked="checked"/>
           ${uiLabelMap.EcommerceHighToLow} <input type="radio" name="sortAscending" value="N"/>

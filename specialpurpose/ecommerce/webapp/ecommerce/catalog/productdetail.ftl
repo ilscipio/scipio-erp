@@ -562,13 +562,13 @@ $(function(){
                 <#list featureLists as featureList>
                     <#list featureList as feature>
                         <#if feature_index == 0>
-                            <div>${feature.description}: <@input type="select" id="FT${feature.productFeatureTypeId}" name="FT${feature.productFeatureTypeId}" onchange="javascript:checkRadioButton();">
+                            <div>${feature.description}: <select id="FT${feature.productFeatureTypeId}" name="FT${feature.productFeatureTypeId}" onchange="javascript:checkRadioButton();">
                             <option value="select" selected="selected">${uiLabelMap.EcommerceSelectOption}</option>
                         <#else>
                             <option value="${feature.productFeatureId}">${feature.description} <#if feature.price??>(+ <@ofbizCurrency amount=feature.price?string isoCode=feature.currencyUomId />)</#if></option>
                         </#if>
                     </#list>
-                    </@input>
+                    </select>
                     </div>
                 </#list>
                   <input type="hidden" name="add_product_id" value="${product.productId}" />
@@ -589,9 +589,9 @@ $(function(){
                <#if variantTree?? && (variantTree.size() > 0)>
                 <#list featureSet as currentType>
                   <div>
-                    <@input type="select" name="FT${currentType}" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
+                    <select name="FT${currentType}" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
                       <option>${featureTypes.get(currentType)}</option>
-                    </@input>
+                    </select>
                   </div>
                 </#list>
                 <span id="product_uom"></span>
@@ -610,12 +610,12 @@ $(function(){
               <input type="hidden" name="add_product_id" value="${product.productId}" />
               <#if mainProducts?has_content>
                 <input type="hidden" name="product_id" value=""/>
-                <@input type="select" name="productVariantId" onchange="javascript:displayProductVirtualVariantId(this.value);">
+                <select name="productVariantId" onchange="javascript:displayProductVirtualVariantId(this.value);">
                     <option value="">Select Unit Of Measure</option>
                     <#list mainProducts as mainProduct>
                         <option value="${mainProduct.productId}">${mainProduct.uomDesc} : ${mainProduct.piecesIncluded}</option>
                     </#list>
-                </@input><br/>
+                </select><br/>
                 <div>
                   <strong><span id="product_id_display"> </span></strong>
                   <strong><div id="variant_price_display"> </div></strong>
@@ -695,7 +695,7 @@ $(function(){
               <input type="hidden" name="product_id" value="${product.productId}" />
               <input type="hidden" name="productStoreId" value="${productStoreId}" />
               <input type="hidden" name="reservStart" value= "" />
-              <@input type="select" name="shoppingListId">
+              <select name="shoppingListId">
                 <#if shoppingLists?has_content>
                   <#list shoppingLists as shoppingList>
                     <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
@@ -703,7 +703,7 @@ $(function(){
                 </#if>
                 <option value="">---</option>
                 <option value="">${uiLabelMap.OrderNewShoppingList}</option>
-              </@input>
+              </select>
               &nbsp;&nbsp;
               <#--assign nowDate = Static["org.ofbiz.base.util.UtilDateTime"].nowDateString("yyyy-MM-dd")-->
               <#if product.productTypeId! == "ASSET_USAGE">

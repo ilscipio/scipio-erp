@@ -51,14 +51,14 @@ your template file:
   <@tr>
     <@td>${uiLabelMap.TemporalExpressionOccurrence}</@td>
     <@td>
-      <@input type="select" name="integer2">
+      <select name="integer2">
         <#list 1..5 as i>
           <option value="${i}"<#if i == occurrence> selected="selected"</#if>>${i}</option>
         </#list>
         <#list -1..-5 as i>
           <option value="${i}"<#if i == occurrence> selected="selected"</#if>>${i}</option>
         </#list>
-      </@input>
+      </select>
     </@td>
   </@tr>
   <@tr>
@@ -110,21 +110,21 @@ your template file:
   <@tr>
     <@td>${uiLabelMap.TemporalExpressionFreqType}</@td>
     <@td>
-      <@input type="select" name="integer1">
+      <select name="integer1">
         <#list frequencyTypeList as freqTypeItem>
           <option value="${freqTypeItem.value}"<#if freqTypeItem.value == freqType> selected="selected"</#if>>${freqTypeItem.description}</option>
         </#list>
-      </@input>
+      </select>
     </@td>
   </@tr>
   <@tr>
     <@td>${uiLabelMap.TemporalExpressionFreqCount}</@td>
     <@td>
-      <@input type="select" name="integer2">
+      <select name="integer2">
         <#list 1..50 as i>
           <option value="${i}"<#if i == freqValue> selected="selected"</#if>>${i}</option>
         </#list>
-      </@input>
+      </select>
     </@td>
   </@tr>
 </#macro>
@@ -163,11 +163,11 @@ your template file:
   <@tr>
     <@td>${uiLabelMap.TemporalExpressionFreqType}</@td>
     <@td>
-      <@input type="select" name="integer1">
+      <select name="integer1">
         <option value="13"<#if freqType == 13> selected="selected"</#if>>${uiLabelMap.CommonSecond}</option>
         <option value="12"<#if freqType == 12> selected="selected"</#if>>${uiLabelMap.CommonMinute}</option>
         <option value="11"<#if freqType == 11> selected="selected"</#if>>${uiLabelMap.CommonHour}</option>
-      </@input>
+      </select>
     </@td>
   </@tr>
   <@tr>

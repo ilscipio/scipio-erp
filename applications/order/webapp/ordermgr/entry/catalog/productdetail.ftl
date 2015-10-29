@@ -446,13 +446,13 @@ ${virtualJavaScript!}
             <#list featureLists as featureList>
                 <#list featureList as feature>
                     <#if feature_index == 0>
-                        <div>${feature.description}: <@input type="select" id="FT${feature.productFeatureTypeId}" name="FT${feature.productFeatureTypeId}" onchange="javascript:checkRadioButton();">
+                        <div>${feature.description}: <select id="FT${feature.productFeatureTypeId}" name="FT${feature.productFeatureTypeId}" onchange="javascript:checkRadioButton();">
                         <option value="select" selected="selected"> select option </option>
                     <#else>
                         <option value="${feature.productFeatureId}">${feature.description} <#if feature.price??>(+ <@ofbizCurrency amount=feature.price?string isoCode=feature.currencyUomId/>)</#if></option>
                     </#if>
                 </#list>
-                </@input>
+                </select>
                 </div>
             </#list>
               <input type="hidden" name="product_id" value="${product.productId}"/>
@@ -474,9 +474,9 @@ ${virtualJavaScript!}
            <#if variantTree?? && (variantTree.size() > 0)>
             <#list featureSet as currentType>
               <div>
-                <@input type="select" name="FT${currentType}" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
+                <select name="FT${currentType}" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
                   <option>${featureTypes.get(currentType)}</option>
-                </@input>
+                </select>
               </div>
             </#list>
             <span id="product_uom"></span>
@@ -564,7 +564,7 @@ ${virtualJavaScript!}
           <input type="hidden" name="product_id" value="${product.productId}"/>
           <input type="hidden" name="productStoreId" value="${productStoreId!}"/>
           <input type="hidden" name="reservStart" value= ""/>
-          <@input type="select" name="shoppingListId">
+          <select name="shoppingListId">
             <#if shoppingLists?has_content>
               <#list shoppingLists as shoppingList>
                 <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
@@ -572,7 +572,7 @@ ${virtualJavaScript!}
             </#if>
             <option value="">---</option>
             <option value="">${uiLabelMap.OrderNewShoppingList}</option>
-          </@input>
+          </select>
           &nbsp;&nbsp;
           <#if product.productTypeId! == "ASSET_USAGE" || product.productTypeId! == "ASSET_USAGE_OUT_IN">
               <@table type="fields"><@tr><@td>&nbsp;</@td><@td align="right">${uiLabelMap.CommonStartDate} (yyyy-mm-dd)</@td><@td><input type="text" size="10" name="reservStartStr" /></@td><@td>Number of&nbsp;days</@td><@td><input type="text" size="4" name="reservLength" /></@td><@td>&nbsp;</@td><@td align="right">Number of&nbsp;persons</@td><@td><input type="text" size="4" name="reservPersons" value="1" /></@td><@td align="right">Qty&nbsp;</@td><@td><input type="text" size="5" name="quantity" value="1" /></@td></@tr></@table>

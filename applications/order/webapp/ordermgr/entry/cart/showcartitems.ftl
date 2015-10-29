@@ -44,7 +44,7 @@ under the License.
           <@th colspan="2">
               <b>${uiLabelMap.ProductProduct}</b>
               <#if (shoppingCart.getOrderType() == 'SALES_ORDER') && (productStore.showCheckoutGiftOptions)?default('Y') != 'N'>
-                  <@input type="select" name="GWALL" onchange="javascript:gwAll(this);">
+                  <select name="GWALL" onchange="javascript:gwAll(this);">
                     <option value="">${uiLabelMap.OrderGiftWrapAllItems}</option>
                     <option value="NO^">${uiLabelMap.OrderNoGiftWrap}</option>
                     <#if allgiftWraps?has_content>
@@ -52,7 +52,7 @@ under the License.
                         <option value="${option.productFeatureId?default("")}">${option.description?default("")} : <@ofbizCurrency amount=option.defaultAmount?default(0) isoCode=currencyUomId/></option>
                       </#list>
                     </#if>
-                  </@input>
+                  </select>
               </#if>
           </@th>
           <@th align="center"><b>${uiLabelMap.OrderQuantity}</b></@th>
@@ -166,7 +166,7 @@ under the License.
                 <@tr>
                   <@td>
                       ${uiLabelMap.OrderOrderItemType}:
-                      <@input type="select" name="itemType_${cartLineIndex}">
+                      <select name="itemType_${cartLineIndex}">
                         <#if currentOrderItemType?has_content>
                         <option value="${currentOrderItemType.orderItemTypeId}">${currentOrderItemType.get("description",locale)}</option>
                         <option value="${currentOrderItemType.orderItemTypeId}">---</option>
@@ -175,7 +175,7 @@ under the License.
                         <#list purchaseOrderItemTypeList as orderItemType>
                         <option value="${orderItemType.orderItemTypeId}">${orderItemType.get("description",locale)}</option>
                         </#list>
-                      </@input>
+                      </select>
                   </@td>
                 </@tr>
             </#if>
@@ -240,16 +240,16 @@ under the License.
               <#assign giftWrapOption = lineOptionalFeatures.GIFT_WRAP!>
               <#assign selectedOption = cartLine.getAdditionalProductFeatureAndAppl("GIFT_WRAP")!>
               <#if giftWrapOption?has_content>
-                <@input type="select" name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:document.cartform.submit()">
+                <select name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:document.cartform.submit()">
                   <option value="NO^">${uiLabelMap.OrderNoGiftWrap}</option>
                   <#list giftWrapOption as option>
                     <option value="${option.productFeatureId}" <#if ((selectedOption.productFeatureId)?? && selectedOption.productFeatureId == option.productFeatureId)>selected="selected"</#if>>${option.description} : <@ofbizCurrency amount=option.amount?default(0) isoCode=currencyUomId/></option>
                   </#list>
-                </@input>
+                </select>
               <#elseif showNoGiftWrapOptions>
-                <@input type="select" name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:document.cartform.submit()">
+                <select name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:document.cartform.submit()">
                   <option value="">${uiLabelMap.OrderNoGiftWrap}</option>
-                </@input>
+                </select>
               <#else>
                 &nbsp;
               </#if>

@@ -52,11 +52,11 @@ under the License.
         <input type="text" size="40" name="description" value="${calendarData.description!}" />
     </@field>
     <@field type="generic" label="${uiLabelMap.ManufacturingCalendarWeekId}">
-        <@input type="select" name="calendarWeekId">
+        <select name="calendarWeekId">
           <#list calendarWeeks as calendarWeek>
           <option value="${calendarWeek.calendarWeekId}" <#if calendarData?has_content && calendarData.calendarWeekId?default("") == calendarWeek.calendarWeekId>SELECTED</#if>>${(calendarWeek.get("description",locale))!}</option>
           </#list>
-        </@input>
+        </select>
     </@field>
     <@field type="submitarea">
         <input type="submit" value="${uiLabelMap.CommonUpdate}" />

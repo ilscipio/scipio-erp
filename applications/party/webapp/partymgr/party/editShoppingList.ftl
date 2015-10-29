@@ -32,7 +32,7 @@ under the License.
         <@fields type="default-nolabels">
         <input type="hidden" name="partyId" value="${partyId!}" />
         <@field type="generic">
-            <@input type="select" name="shoppingListId">
+            <select name="shoppingListId">
               <#if shoppingList?has_content>
                 <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
                 <option value="${shoppingList.shoppingListId}">--</option>
@@ -40,7 +40,7 @@ under the License.
               <#list allShoppingLists as list>
                 <option value="${list.shoppingListId}">${list.listName}</option>
               </#list>
-            </@input>
+            </select>
         </@field>
         <@field type="submitarea">
             <a href="javascript:document.selectShoppingList.submit();" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
@@ -78,7 +78,7 @@ under the License.
             <input type="text" size="70" name="description" value="${shoppingList.description!}" <#if shoppingList.listName?default("") == "auto-save">disabled="disabled"</#if> />
         </@field>
         <@field type="generic" label="${uiLabelMap.PartyListType}">
-            <@input type="select" name="shoppingListTypeId" <#if shoppingList.listName?default("") == "auto-save">disabled</#if>>
+            <select name="shoppingListTypeId" <#if shoppingList.listName?default("") == "auto-save">disabled</#if>>
               <#if shoppingListType??>
                 <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>
                 <option value="${shoppingListType.shoppingListTypeId}">--</option>
@@ -86,18 +86,18 @@ under the License.
               <#list shoppingListTypes as shoppingListType>
                 <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>
               </#list>
-            </@input>
+            </select>
         </@field>
         <@field type="generic" label="${uiLabelMap.PartyPublic}?">
-            <@input type="select" name="isPublic" <#if shoppingList.listName?default("") == "auto-save">disabled</#if>>
+            <select name="isPublic" <#if shoppingList.listName?default("") == "auto-save">disabled</#if>>
               <option>${shoppingList.isPublic}</option>
               <option value="${shoppingList.isPublic}">--</option>
               <option>${uiLabelMap.CommonYes}</option>
               <option>${uiLabelMap.CommonNo}</option>
-            </@input>
+            </select>
         </@field>
         <@field type="generic" label="${uiLabelMap.PartyParentList}">
-            <@input type="select" name="parentShoppingListId" <#if shoppingList.listName?default("") == "auto-save">disabled</#if>>
+            <select name="parentShoppingListId" <#if shoppingList.listName?default("") == "auto-save">disabled</#if>>
               <#if parentShoppingList??>
                 <option value="${parentShoppingList.shoppingListId}">${parentShoppingList.listName?default(parentShoppingList.shoppingListId)}</option>
               </#if>
@@ -105,7 +105,7 @@ under the License.
               <#list allShoppingLists as newParShoppingList>
                 <option value="${newParShoppingList.shoppingListId}">${newParShoppingList.listName?default(newParShoppingList.shoppingListId)}</option>
               </#list>
-            </@input>
+            </select>
             <#if parentShoppingList??>
               <a href="<@ofbizUrl>editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName?default(parentShoppingList.shoppingListId)})</a>
             </#if>

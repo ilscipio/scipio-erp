@@ -45,34 +45,34 @@ under the License.
         <input type="hidden" name="productStoreId" value="${productStoreId!}" />
              <@field type="generic" label="${uiLabelMap.FormFieldTitle_ebayCategory}">
                  <input type="hidden" name="selectResult" value="${selectResult!}"/>
-                    <@input type="select" name="ebayCategory" onchange="changeEbayCategory(this.value)">
+                    <select name="ebayCategory" onchange="changeEbayCategory(this.value)">
                         <option value=""> </option>
                         <#if categories??>
                             <#list categories as category>
                                 <option value="${category.CategoryCode}" <#if categoryCode?? && categoryCode == category.CategoryCode>selected="selected"</#if>>${category.CategoryName}</option>
                             </#list>
                         </#if>
-                    </@input>
+                    </select>
              </@field>
             <#if hideExportOptions?has_content && hideExportOptions == "N">
             <@field type="generic" label="${uiLabelMap.CommonCountry}">
-                <@input type="select" name="country">
+                <select name="country">
                         <#if countries??>
                             <#list countries as country>
                                 <option value="${country.geoCode}" <#if countryCode?? && countryCode == country.geoCode>selected="selected"</#if>>${country.get("geoName",locale)}</option>
                             </#list>
                         </#if>
-                    </@input>
+                    </select>
             </@field>
             <@field type="generic" label="${uiLabelMap.FormFieldTitle_location}">
                 <input type="text" name="location" size="50" maxlength="50" value="${parameters.location!}" />
             </@field>
             <@field type="generic" label="${uiLabelMap.FormFieldTitle_listingDuration}">
-                <@input type="select" name="listingDuration">
+                <select name="listingDuration">
                         <option value="Days_1">1 ${uiLabelMap.CommonDay}</option>
                         <option value="Days_3">3 ${uiLabelMap.CommonDays}</option>
                         <option value="Days_7">7 ${uiLabelMap.CommonDays}</option>
-                    </@input>
+                    </select>
             </@field>
             <@field type="generic" label="${uiLabelMap.FormFieldTitle_startPrice}">
                 <input type="text" name="startPrice" size="12" maxlength="12" value="${parameters.startPrice!}" />
@@ -81,7 +81,7 @@ under the License.
                 <input type="text" name="quantity" size="12" maxlength="12" value="<#if parameters.quantity??>${parameters.quantity!}<#else>1</#if>" />
             </@field>
             <@field type="generic" label="${uiLabelMap.CommonWebsite}">
-                <@input type="select" name="webSiteId" onchange="javascript:changeWebSite(document.getElementById('ProductsExportToEbay'));">
+                <select name="webSiteId" onchange="javascript:changeWebSite(document.getElementById('ProductsExportToEbay'));">
                     <#list webSiteList as webSite>
                       <#assign displayDesc = webSite.siteName?default("${uiLabelMap.ProductNoDescription}")>
                       <#if (18 < displayDesc?length)>
@@ -89,7 +89,7 @@ under the License.
                       </#if>
                       <option value="${webSite.webSiteId}" <#if selectedWebSiteId! == webSite.webSiteId> selected="selected"</#if>>${displayDesc} [${webSite.webSiteId}]</option>
                     </#list>
-                  </@input>
+                  </select>
             </@field>
             <@field type="generic" label="${uiLabelMap.FormFieldTitle_webSiteUrl}">
                 <input type="text" name="webSiteUrl" size="100" value="${webSiteUrl!}"/>

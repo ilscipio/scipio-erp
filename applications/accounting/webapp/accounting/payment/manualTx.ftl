@@ -33,9 +33,9 @@ under the License.
             <div>${paymentMethodType.get("description",locale)}</div>
             <input type="hidden" name="paymentMethodTypeId" value="${paymentMethodType.paymentMethodTypeId}" />
           <#else>
-            <@input type="select" name="paymentMethodTypeId">
+            <select name="paymentMethodTypeId">
               <option value="CREDIT_CARD">${uiLabelMap.AccountingCreditCard}</option>
-            </@input>
+            </select>
           </#if>
       </@field>
       <@field type="generic" label="${uiLabelMap.ProductProductStore}">
@@ -43,11 +43,11 @@ under the License.
             <div><#if currentStore.storeName??>${currentStore.storeName}<#else>${currentStore.productStoreId}</#if></div>
             <input type="hidden" name="productStoreId" value="${currentStore.productStoreId}" />
           <#else>
-            <@input type="select" name="productStoreId">
+            <select name="productStoreId">
               <#list productStores as productStore>
                 <option value="${productStore.productStoreId}"><#if productStore.storeName??>${productStore.storeName}<#else>${productStore.productStoreId}</#if></option>
               </#list>
-            </@input>
+            </select>
           </#if>
       </@field>
       <@field type="generic" label="${uiLabelMap.AccountingTransactionType}">
@@ -55,13 +55,13 @@ under the License.
             <div>${currentTx.get("description",locale)}</div>
             <input type="hidden" name="transactionType" value="${currentTx.enumId}" />
           <#else>
-            <@input type="select" name="transactionType" onchange="javascript:document.manualTxForm.submit();">
+            <select name="transactionType" onchange="javascript:document.manualTxForm.submit();">
             <#-- the select one option is so the list will fire on any seletion -->
               <option value="Select one">${uiLabelMap.CommonSelectOne}</option>
               <#list paymentSettings as setting>
                 <option value="${setting.enumId}">${setting.get("description",locale)}</option>
               </#list>
-            </@input>
+            </select>
           </#if>
       </@field>
 

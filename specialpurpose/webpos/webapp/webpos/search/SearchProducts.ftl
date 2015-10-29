@@ -22,11 +22,11 @@ under the License.
     <input type="hidden" id="add_product_id" name="add_product_id" value="${parameters.add_product_id!}" />
     <input type="hidden" id="goodIdentificationTypeId" name="goodIdentificationTypeId" value="" />
     <label for="searchBy"><b>&nbsp;${uiLabelMap.WebPosSearchBy}</b></label>
-    <@input type="select" id="searchBy" name="searchBy">
+    <select id="searchBy" name="searchBy">
       <option value="productName" selected="selected">${uiLabelMap.ProductProductName}</option>
       <option value="productDescription">${uiLabelMap.ProductProductDescription}</option>
       <option value="idValue">${uiLabelMap.ProductGoodIdentification}</option>
-    </@input>
+    </select>
     <input type="text" id="productToSearch" name="productToSearch" size="28" maxlength="100"/>
     <div id="products" class="autocomplete" style="display:none"></div>
     <br />

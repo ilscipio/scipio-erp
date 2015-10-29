@@ -54,7 +54,7 @@ under the License.
 </#if>
 
     <@field type="generic" label="${uiLabelMap.ProductType}">
-        <@input type="select" name="locationTypeEnumId">
+        <select name="locationTypeEnumId">
                 <#if (facilityLocation.locationTypeEnumId)?has_content>
                     <#assign locationTypeEnum = facilityLocation.getRelatedOne("TypeEnumeration", true)!>
                     <option value="${facilityLocation.locationTypeEnumId}">${(locationTypeEnum.get("description",locale))?default(facilityLocation.locationTypeEnumId)}</option>
@@ -63,7 +63,7 @@ under the License.
                 <#list locationTypeEnums as locationTypeEnum>
                     <option value="${locationTypeEnum.enumId}">${locationTypeEnum.get("description",locale)}</option>
                 </#list>
-            </@input>
+            </select>
     </@field>
     <@field type="generic" label="${uiLabelMap.CommonArea}">
         <input type="text" name="areaId" value="${(facilityLocation.areaId)!}" size="19" maxlength="20" />

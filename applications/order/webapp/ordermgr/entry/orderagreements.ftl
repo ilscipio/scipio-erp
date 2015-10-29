@@ -35,22 +35,22 @@ under the License.
     <@table type="fields"> <#-- orig: class="basic-table" -->
       <#if agreements??>     
       <@field type="generic" label="${uiLabelMap.OrderSelectAgreement}">
-            <@input type="select" name="agreementId">
+            <select name="agreementId">
             <option value="">${uiLabelMap.CommonNone}</option>
             <#list agreements as agreement>
             <option value='${agreement.agreementId}'>${agreement.agreementId} - ${agreement.description!}</option>
             </#list>
-            </@input>
+            </select>
       </@field>
       </#if>
       <#if agreementRoles??>
         <@field type="generic" label="${uiLabelMap.OrderSelectAgreementRoles}">
-              <@input type="select" name="agreementId">
+              <select name="agreementId">
               <option value="">${uiLabelMap.CommonNone}</option>
               <#list agreementRoles as agreementRole>
                   <option value='${agreementRole.agreementId!}'>${agreementRole.agreementId!} - ${agreementRole.roleTypeId!}</option>
               </#list>
-              </@input>
+              </select>
         </@field>
       </#if>
 
@@ -72,22 +72,22 @@ under the License.
 
       <#assign label><#if agreements??>${uiLabelMap.OrderSelectCurrencyOr}<#else>${uiLabelMap.OrderSelectCurrency}</#if></#assign>
       <@field type="generic" label=label>
-            <@input type="select" name="currencyUomId">
+            <select name="currencyUomId">
               <option value=""></option>
               <#list currencies as currency>
               <option value="${currency.uomId}" <#if currencyUomId?default('') == currency.uomId>selected="selected"</#if> >${currency.uomId}</option>
               </#list>
-            </@input>
+            </select>
       </@field>
 
       <@field type="generic" label="${uiLabelMap.ProductChooseCatalog}">
           <#if catalogCol?has_content>
-          <@input type="select" name='CURRENT_CATALOG_ID'>
+          <select name='CURRENT_CATALOG_ID'>
             <#list catalogCol! as catalogId>
               <#assign thisCatalogName = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogName(request, catalogId)>
               <option value="${catalogId}" <#if currentCatalogId?default('') == catalogId>selected="selected"</#if> >${thisCatalogName}</option>
             </#list>
-          </@input>
+          </select>
           <#else>
              <input type="hidden" name='CURRENT_CATALOG_ID' value=""/> 
           </#if>

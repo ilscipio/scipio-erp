@@ -83,10 +83,10 @@ function enableSubmitButton() {
       ${setRequestAttribute("partyIds", salesRepPartyList)}
     </#if>
     <div align="right">
-      <@input type="select" name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
+      <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
         <option value="">${uiLabelMap.AccountingSelectAction}</options>
         <option value="processCommissionRun">${uiLabelMap.AccountingCommissionRun}</option>
-      </@input>
+      </select>
       <input id="submitButton" type="button" onclick="javascript:runAction();" value="${uiLabelMap.CommonRun}" disabled="disabled" />
     </div>
     <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->

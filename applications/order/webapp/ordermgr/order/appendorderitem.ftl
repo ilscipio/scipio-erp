@@ -43,12 +43,12 @@ under the License.
               <#if catalogCol?has_content && (catalogCol?size > 1)>
                 <@tr>
                   <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.ProductChooseCatalog}</@td>
-                  <@td><@input type="select" name='prodCatalogId'>
+                  <@td><select name='prodCatalogId'>
                     <#list catalogCol as catalogId>
                       <#assign thisCatalogName = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogName(request, catalogId)>
                       <option value='${catalogId}'>${thisCatalogName}</option>
                     </#list>
-                  </@input>
+                  </select>
                   </@td>
                 </@tr>
               </#if>
@@ -76,11 +76,11 @@ under the License.
               <#if (shipGroups?size > 1)>
                 <@tr>
                   <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderShipGroup}</@td>
-                  <@td><@input type="select" name="shipGroupSeqId">
+                  <@td><select name="shipGroupSeqId">
                       <#list shipGroups as shipGroup>
                          <option value="${shipGroup.shipGroupSeqId}">${shipGroup.shipGroupSeqId}</option>
                       </#list>
-                      </@input>
+                      </select>
                   </@td>
                 </@tr>
               </#if>
@@ -93,24 +93,24 @@ under the License.
                 <@tr>
                   <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderReturnReason}</@td>
                   <@td>
-                    <@input type="select" name="reasonEnumId">
+                    <select name="reasonEnumId">
                         <option value="">&nbsp;</option>
                         <#list orderItemChangeReasons as reason>
                         <option value="${reason.enumId}">${reason.get("description",locale)?default(reason.enumId)}</option>
                         </#list>
-                    </@input>
+                    </select>
                   </@td>
                 </@tr>
                 <#if orderHeader.orderTypeId == "PURCHASE_ORDER" && purchaseOrderItemTypeList?has_content>
                 <@tr>
                   <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderOrderItemType}</@td>
                   <@td>
-                    <@input type="select" name="orderItemTypeId">
+                    <select name="orderItemTypeId">
                       <option value="">&nbsp;</option>
                       <#list purchaseOrderItemTypeList as orderItemType>
                         <option value="${orderItemType.orderItemTypeId}">${orderItemType.description}</option>
                       </#list>
-                    </@input>
+                    </select>
                   </@td>
                 </@tr>
                 </#if>

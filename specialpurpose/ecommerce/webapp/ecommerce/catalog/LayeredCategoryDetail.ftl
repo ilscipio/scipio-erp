@@ -22,12 +22,12 @@ under the License.
       <#if (viewIndexMax?int > 0)>
         <div class="product-prevnext">
             <#-- Start Page Select Drop-Down -->
-            <@input type="select" name="pageSelect" onchange="window.location=this[this.selectedIndex].value;">
+            <select name="pageSelect" onchange="window.location=this[this.selectedIndex].value;">
                 <option value="#">${uiLabelMap.CommonPage} ${viewIndex?int + 1} ${uiLabelMap.CommonOf} ${viewIndexMax + 1}</option>
                 <#list 0..viewIndexMax as curViewNum>
                      <option value="<@ofbizUrl>category/~category_id=${productCategoryId}/~searchCategoryId=${currentSearchCategory.productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}/~clearSearch=N</@ofbizUrl>">${uiLabelMap.CommonGotoPage} ${curViewNum + 1}</option>
                 </#list>
-            </@input>
+            </select>
             <#-- End Page Select Drop-Down -->
             <#if (0 < viewIndex?int)>
                 <a href="<@ofbizUrl>category/~category_id=${productCategoryId}/~searchCategoryId=${currentSearchCategory.productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |

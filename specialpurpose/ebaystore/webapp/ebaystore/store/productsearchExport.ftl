@@ -290,7 +290,7 @@ under the License.
                                             <@td>
                                               <div>
                                                   <div id="loading"></div>
-                                                  <@input type="select" id="ebayCategory" name="ebayCategory"  onchange="retrieveEbayCategoryByParent('<@ofbizUrl>retrieveEbayCategoryByParent</@ofbizUrl>',this.value,'${productStoreId}','ebayCategory')">
+                                                  <select id="ebayCategory" name="ebayCategory"  onchange="retrieveEbayCategoryByParent('<@ofbizUrl>retrieveEbayCategoryByParent</@ofbizUrl>',this.value,'${productStoreId}','ebayCategory')">
                                                         <option value="">Please select</option>
                                                         <#if categories??>
                                                             <#if primaryCate?has_content>
@@ -313,7 +313,7 @@ under the License.
                                                                 </#list>
                                                             </#if>
                                                         </#if>
-                                                  </@input>
+                                                  </select>
                                                   <a class="${styles.button_default!}" href="javascript:retrieveEbayCategoryByParent('<@ofbizUrl>retrieveEbayCategoryByParent</@ofbizUrl>','CH_<#if primaryCate?has_content>${primaryCate.getCategoryID()!}</#if>','${productStoreId}','ebayCategory')">${uiLabelMap.EbayChangeCategory}</a> <a class="${styles.button_default!}" href="javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>setSelectedCategory</@ofbizUrl>?isProductId=${isProductId!}';document.getElementById('ProductsExportToEbay').submit();">${uiLabelMap.EbaySet}</a>
                                               </div>
                                               <input type="hidden" name="primaryCateId" value="${primaryCateId!}"/>
@@ -326,7 +326,7 @@ under the License.
                                             <@td>
                                               <div>
                                                   <div id="loading"></div>
-                                                  <@input type="select" id="ebayStore1Category" name="ebayStore1Category" onchange="retrieveEbayCategoryByParent('<@ofbizUrl>retrieveEbayStoreCategoryByParent</@ofbizUrl>',this.value,'${productStoreId}','ebayStore1Category')">
+                                                  <select id="ebayStore1Category" name="ebayStore1Category" onchange="retrieveEbayCategoryByParent('<@ofbizUrl>retrieveEbayStoreCategoryByParent</@ofbizUrl>',this.value,'${productStoreId}','ebayStore1Category')">
                                                         <option value="">Please select</option>
                                                         <option value="">------</option>
                                                         <#if storeCategories??>
@@ -350,7 +350,7 @@ under the License.
                                                                 </#list>
                                                             </#if>
                                                         </#if>
-                                                  </@input>
+                                                  </select>
                                               </div>
                                               <input type="hidden" name="storeCate1Id" value="${storeCate1Id!}"/>
                                             </@td>
@@ -360,7 +360,7 @@ under the License.
                                             <@td>
                                               <div>
                                                   <div id="loading"></div>
-                                                  <@input type="select" id="ebayStore2Category" name="ebayStore2Category" onchange="retrieveEbayCategoryByParent('<@ofbizUrl>retrieveEbayStoreCategoryByParent</@ofbizUrl>',this.value,'${productStoreId}','ebayStore2Category')">
+                                                  <select id="ebayStore2Category" name="ebayStore2Category" onchange="retrieveEbayCategoryByParent('<@ofbizUrl>retrieveEbayStoreCategoryByParent</@ofbizUrl>',this.value,'${productStoreId}','ebayStore2Category')">
                                                         <option value="">Please select</option>
                                                         <#if storeCategories??>
                                                             <#if storeFront?has_content>
@@ -383,7 +383,7 @@ under the License.
                                                                 </#list>
                                                             </#if>
                                                         </#if>
-                                                  </@input>
+                                                  </select>
                                               </div>
                                               <input type="hidden" name="storeCate2Id" value="${storeCate2Id!}"/>
                                             </@td>
@@ -470,12 +470,12 @@ under the License.
                                                         <@td>${nameSpecific!}</@td>
                                                         <input type="hidden" name="nameValueListType_o_${i}" value="${nameSpecific!}"/>
                                                         <@td>
-                                                            <@input type="select" id="categorySpecifics" name="categorySpecifics_o_${i}">
+                                                            <select id="categorySpecifics" name="categorySpecifics_o_${i}">
                                                                <option  value=""></option>
                                                                <#list itemSpecifics as itemSpecific>
                                                                    <option  value="${itemSpecific!}">${itemSpecific!}</option>
                                                                </#list>
-                                                            </@input>
+                                                            </select>
                                                         </@td>
                                                     </@tr>
                                                     <#assign i = i + 1/>
@@ -527,11 +527,11 @@ under the License.
                                                         <@td>Select Theme</@td>
                                                         <@td>
                                                              <#if adItemTemplates?has_content>
-                                                                <@input type="select" id="themeGroup" disabled onchange="javascript:retrieveTemplateByTemGroupId(this.value,'${productStoreId!}','${primaryCate.getCategoryID()!}');" name="themeGroup">
+                                                                <select id="themeGroup" disabled onchange="javascript:retrieveTemplateByTemGroupId(this.value,'${productStoreId!}','${primaryCate.getCategoryID()!}');" name="themeGroup">
                                                                 <#list adItemTemplates as adItemTemplate>
                                                                     <option value="${adItemTemplate.TemplateGroupId!}">${adItemTemplate.TemplateGroupName!}</option>
                                                                 </#list>
-                                                                </@input>
+                                                                </select>
                                                             </#if>
                                                         </@td>
                                                     </@tr>
@@ -539,9 +539,9 @@ under the License.
                                                         <@td>Select Design</@td>
                                                         <@td>
                                                              <#if adItemTemplates?has_content>
-                                                                <@input type="select" id="theme" disabled onchange="javascript:previewPic(this.value);" name="theme">
+                                                                <select id="theme" disabled onchange="javascript:previewPic(this.value);" name="theme">
                                                                     <option value="">-</option>
-                                                                </@input>
+                                                                </select>
                                                             </#if>
                                                         </@td>
                                                     </@tr>
@@ -613,7 +613,7 @@ under the License.
                                                         <@td>
                                                             <#assign durations = listingType.durations!>
                                                             <#if durations?has_content>
-                                                            <@input type="select" name="duration_${id}">
+                                                            <select name="duration_${id}">
                                                                     <#list durations as duration>
                                                                         <#if duration.indexOf("_")!= -1>
                                                                             <#assign dura = duration.substring(duration.indexOf("_")+1)>
@@ -622,7 +622,7 @@ under the License.
                                                                         </#if>
                                                                         <option value="${duration!}">${dura!} ${uiLabelMap.CommonDays}</option>
                                                                     </#list>
-                                                            </@input>
+                                                            </select>
                                                             </#if>
                                                         </@td>
                                                     </@tr>
@@ -760,7 +760,7 @@ under the License.
                                         <@tr>
                                           <@td></@td>
                                           <@td width="100%">
-                                          <@input type="select" name="ShippingService" id="ShippingService" style="width:107px;">
+                                          <select name="ShippingService" id="ShippingService" style="width:107px;">
                                           <#--for eBayMotors site, we add a 'None' Shipping Service-->
                                           <#if siteCode?has_content && siteCode_Ebay_Motors?has_content>
                                               <#if siteCode == siteCode_Ebay_Motors>
@@ -773,7 +773,7 @@ under the License.
                                               <option value="${shippingService!}">${shippingService!}</option>
                                           </#list>   
                                           </#if>
-                                          </@input>
+                                          </select>
                                           </@td>
                                           <@td><img height="1" src="http://pics.ebaystatic.com/aw/pics/tbx/s.gif" width="10" alt="" /></@td>
                                         </@tr>

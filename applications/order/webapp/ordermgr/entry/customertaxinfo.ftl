@@ -25,12 +25,12 @@ under the License.
     </#list>
     <div>
         <span>${uiLabelMap.PartyTaxAddInfo}:</span>
-        <@input type="select" name="taxAuthPartyGeoIds">
+        <select name="taxAuthPartyGeoIds">
           <option></option>
           <#list taxAuthorityAndDetailList as taxAuthorityAndDetail>
             <option value="${taxAuthorityAndDetail.taxAuthPartyId}::${taxAuthorityAndDetail.taxAuthGeoId}">[${taxAuthorityAndDetail.geoCode}] ${taxAuthorityAndDetail.geoName} (${taxAuthorityAndDetail.groupName!})</option>
           </#list>
-        </@input>
+        </select>
         <span>${uiLabelMap.CommonId}: </span><input type="text" name="partyTaxId" size="12" maxlength="40"/>
 
         <#if productStore.showTaxIsExempt?default("Y") == "Y">

@@ -49,41 +49,41 @@ under the License.
     <tr>
       <td class="label">${uiLabelMap.CommonDay}</td>
       <td>
-        <@input type="select" name="days">
+        <select name="days">
           <#list 0..7 as days>
             <option value="${days}">${days}</option>
           </#list>
-        </@input>
+        </select>
       </td>
     </tr>
     <tr>
       <td class="label">${uiLabelMap.CommonHour}</td>
       <td>
-        <@input type="select" name="hours">
+        <select name="hours">
           <#list 0..23 as hours>
             <option value="${hours}">${hours}</option>
           </#list>
-        </@input>
+        </select>
       </td>
     </tr>
     <tr>
       <td class="label">${uiLabelMap.CommonMinute}</td>
       <td>
-        <@input type="select" name="minutes">
+        <select name="minutes">
           <#list 0..59 as minutes>
             <option value="${minutes}">${minutes}</option>
           </#list>
-        </@input>
+        </select>
       </td>
     </tr>
     <tr>
       <td class="label">${uiLabelMap.CommonSecond}</td>
       <td>
-        <@input type="select" name="seconds">
+        <select name="seconds">
           <#list 0..59 as seconds>
             <option value="${seconds}">${seconds}</option>
           </#list>
-        </@input>
+        </select>
       </td>
     </tr>
     <tr>

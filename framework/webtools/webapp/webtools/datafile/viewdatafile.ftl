@@ -30,13 +30,13 @@ under the License.
             <@td>${uiLabelMap.WebtoolsDataDefinitionName}</@td>
             <@td>
               <#if definitionNames?has_content>
-                <@input type="select" name="DEFINITION_NAME">
+                <select name="DEFINITION_NAME">
                   <option value=""></option>
                   <#list definitionNames as oneDefinitionName>
                     boolean isSelected = definitionName?? && definitionName.equals(oneDefinitionName);
                     <option value="${oneDefinitionName}" <#if parameters.DEFINITION_NAME?? && parameters.DEFINITION_NAME == oneDefinitionName> selected="selected" </#if>>${oneDefinitionName}</option>
                   </#list>
-                </@input>
+                </select>
               <#else>
                 <input name="DEFINITION_NAME" type="text" size="30" value="${definitionName!}" />
               </#if>

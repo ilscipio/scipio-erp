@@ -107,7 +107,7 @@
                 <@tr>
                     <@td>${uiLabelMap.ContentDataType}</@td>
                     <@td>
-                        <@input type="select" name="dataResourceTypeId">
+                        <select name="dataResourceTypeId">
                             <option value="NONE">${uiLabelMap.ContentResourceNone}</option>
                             <option value="SHORT_TEXT">${uiLabelMap.ContentResourceShortText}</option>
                             <option value="ELECTRONIC_TEXT">${uiLabelMap.ContentResourceLongText}</option>
@@ -116,7 +116,7 @@
                             <option value="VIDEO_OBJECT">${uiLabelMap.ContentResourceVideo}</option>
                             <option value="AUDIO_OBJECT">${uiLabelMap.ContentResourceAudio}</option>
                             <option value="OTHER_OBJECT">${uiLabelMap.ContentResourceOther}</option>
-                        </@input>
+                        </select>
                     </@td>
                 </@tr>
                 <@tr>
@@ -221,7 +221,7 @@
           <@tr>
             <@td>${uiLabelMap.CommonPurpose}</@td>
             <@td>
-                <@input type="select" name="contentPurposeTypeId">
+                <select name="contentPurposeTypeId">
                     <#if (currentPurpose?has_content)>
                         <#assign purpose = currentPurpose.getRelatedOne("ContentPurposeType", false)/>
                         <option value="${purpose.contentPurposeTypeId}">${purpose.description?default(purpose.contentPurposeTypeId)}</option>
@@ -233,7 +233,7 @@
                     <#list purposeTypes as type>
                         <option value="${type.contentPurposeTypeId}">${type.description}</option>
                     </#list>
-                </@input>
+                </select>
             </@td>
           </@tr>
           <@tr>
@@ -245,7 +245,7 @@
           <@tr>
             <@td>${uiLabelMap.ContentDataType}</@td>
             <@td>
-                <@input type="select" name="dataTemplateTypeId">
+                <select name="dataTemplateTypeId">
                     <#if (dataResource?has_content)>
                         <#if (dataResource.dataTemplateTypeId?has_content)>
                             <#assign thisType = dataResource.getRelatedOne("DataTemplateType", false)!/>
@@ -256,13 +256,13 @@
                     <#list templateTypes as type>
                         <option value="${type.dataTemplateTypeId}">${type.description}</option>
                     </#list>
-                </@input>
+                </select>
             </@td>
           </@tr>
           <@tr>
             <@td>${uiLabelMap.ContentDecorator}</@td>
             <@td>
-                <@input type="select" name="decoratorContentId">
+                <select name="decoratorContentId">
                     <#if (content?has_content)>
                         <#if (content.decoratorContentId?has_content)>
                             <#assign thisDec = content.getRelatedOne("DecoratorContent", false)/>
@@ -274,13 +274,13 @@
                     <#list decorators as decorator>
                         <option value="${decorator.contentId}">${decorator.contentName}</option>
                     </#list>
-                </@input>
+                </select>
             </@td>
           </@tr>
           <@tr>
             <@td>${uiLabelMap.ContentTemplate}</@td>
             <@td>
-                <@input type="select" name="templateDataResourceId">
+                <select name="templateDataResourceId">
                     <#if (content?has_content)>
                         <#if (content.templateDataResourceId?has_content && content.templateDataResourceId != "NONE")>
                             <#assign template = content.getRelatedOne("TemplateDataResource", false)/>
@@ -292,13 +292,13 @@
                     <#list templates as template>
                         <option value="${template.dataResourceId}">${template.dataResourceName}</option>
                     </#list>
-                </@input>
+                </select>
             </@td>
           </@tr>
           <@tr>
             <@td>${uiLabelMap.CommonStatus}</@td>
             <@td>
-                <@input type="select" name="statusId">
+                <select name="statusId">
                     <#if (content?has_content)>
                         <#if (content.statusId?has_content)>
                             <#assign statusItem = content.getRelatedOne("StatusItem", false)/>
@@ -309,13 +309,13 @@
                     <#list statuses as status>
                         <option value="${status.statusId}">${status.description}</option>
                     </#list>
-                </@input>
+                </select>
             </@td>
           </@tr>
           <@tr>
             <@td>${uiLabelMap.FormFieldTitle_isPublic}</@td>
             <@td>
-                <@input type="select" name="isPublic">
+                <select name="isPublic">
                     <#if (dataResource?has_content)>
                         <#if (dataResource.isPublic?has_content)>
                             <option>${dataResource.isPublic}</option>
@@ -326,7 +326,7 @@
                     </#if>
                     <option>Y</option>
                     <option>N</option>
-                </@input>
+                </select>
             </@td>
           </@tr>
           <@tr>

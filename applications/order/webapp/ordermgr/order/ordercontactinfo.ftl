@@ -23,7 +23,7 @@ under the License.
       <input type="hidden" name="orderId" value="${orderId!}" />
       <input type="hidden" name="contactMechPurposeTypeId" value="${contactMechPurpose.contactMechPurposeTypeId!}" />
       <input type="hidden" name="oldContactMechId" value="${contactMech.contactMechId!}" />
-      <@input type="select" name="contactMechId">
+      <select name="contactMechId">
         <#if contactMech.contactMechTypeId == "POSTAL_ADDRESS">
           <option value="${contactMechAddress.contactMechId}">${(contactMechAddress.address1)?default("")} - ${contactMechAddress.city?default("")}</option>
           <option value="${contactMechAddress.contactMechId}"></option>
@@ -60,7 +60,7 @@ under the License.
              </#list>
           </#list>
         </#if>
-      </@input>
+      </select>
       <input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit ${styles.button_default!}" />
     </form>
   </#if>

@@ -43,55 +43,55 @@ your template file:
 </#macro>
 
 <#macro MonthField fieldName="" fieldValue=-1 fieldClass="">
-  <@input type="select" name="${fieldName}"<#if fieldClass?has_content> class="${fieldClass}"</#if>>
+  <select name="${fieldName}"<#if fieldClass?has_content> class="${fieldClass}"</#if>>
     <#list monthValueList as monthValue>
       <option value="${monthValue.value}"<#if monthValue.value == fieldValue> selected="selected"</#if>>${monthValue.description}</option>
     </#list>
-  </@input>
+  </select>
   <#if fieldClass == "required">
     <span class="tooltip">${uiLabelMap.CommonRequired}</span>
   </#if>
 </#macro>
 
 <#macro HourOfDayField fieldName="" fieldValue=-1 fieldClass="">
-  <@input type="select" name="${fieldName}"<#if fieldClass?has_content> class="${fieldClass}"</#if>>
+  <select name="${fieldName}"<#if fieldClass?has_content> class="${fieldClass}"</#if>>
     <#list 0..23 as i>
       <option value="${i}"<#if i == fieldValue> selected="selected"</#if>>${i}</option>
     </#list>
-  </@input>
+  </select>
   <#if fieldClass == "required">
     <span class="tooltip">${uiLabelMap.CommonRequired}</span>
   </#if>
 </#macro>
 
 <#macro MinuteField fieldName="" fieldValue=-1 fieldClass="">
-  <@input type="select" name="${fieldName}"<#if fieldClass?has_content> class="${fieldClass}"</#if>>
+  <select name="${fieldName}"<#if fieldClass?has_content> class="${fieldClass}"</#if>>
     <#list 0..59 as i>
       <option value="${i}"<#if i == fieldValue> selected="selected"</#if>>${i}</option>
     </#list>
-  </@input>
+  </select>
   <#if fieldClass == "required">
     <span class="tooltip">${uiLabelMap.CommonRequired}</span>
   </#if>
 </#macro>
 
 <#macro DayOfWeekField fieldName="" fieldValue=-1 fieldClass="">
-  <@input type="select" name="${fieldName}"<#if fieldClass?has_content> class="${fieldClass}"</#if>>
+  <select name="${fieldName}"<#if fieldClass?has_content> class="${fieldClass}"</#if>>
     <#list dayValueList as dayValue>
       <option value="${dayValue.value}"<#if dayValue.value == fieldValue> selected="selected"</#if>>${dayValue.description}</option>
     </#list>
-  </@input>
+  </select>
   <#if fieldClass == "required">
     <span class="tooltip">${uiLabelMap.CommonRequired}</span>
   </#if>
 </#macro>
 
 <#macro DayOfMonthField fieldName="" fieldValue=-1 fieldClass="">
-  <@input type="select" name="${fieldName}"<#if fieldClass?has_content> class="${fieldClass}"</#if>>
+  <select name="${fieldName}"<#if fieldClass?has_content> class="${fieldClass}"</#if>>
     <#list 1..31 as i>
       <option value="${i}"<#if i == fieldValue> selected="selected"</#if>>${i}</option>
     </#list>
-  </@input>
+  </select>
   <#if fieldClass == "required">
     <span class="tooltip">${uiLabelMap.CommonRequired}</span>
   </#if>

@@ -130,7 +130,7 @@ function setServiceName(selection) {
                     <span id="showPaymentRunningTotal"></span>
                 </div>
                 <div class="align-float">
-                    <@input type="select" name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
+                    <select name="serviceName" id="serviceName" onchange="javascript:setServiceName(this);">
                         <option value="">${uiLabelMap.AccountingSelectAction}</options>
                         <option value="<@ofbizUrl>createPaymentBatch</@ofbizUrl>" id="processBatchPayment">${uiLabelMap.AccountingCreateBatch}</option>
                         <option value="massPaymentsToNotPaid">${uiLabelMap.AccountingPaymentStatusToNotPaid}</option>
@@ -138,7 +138,7 @@ function setServiceName(selection) {
                         <option value="massPaymentsToConfirmed">${uiLabelMap.AccountingPaymentTabStatusToConfirmed}</option>
                         <option value="massPaymentsToCancelled">${uiLabelMap.AccountingPaymentTabStatusToCancelled}</option>
                         <option value="massPaymentsToVoid">${uiLabelMap.AccountingPaymentTabStatusToVoid}</option>
-                    </@input>
+                    </select>
                     <input id="submitButton" type="button" onclick="javascript:jQuery('#paymentBatchForm').submit();" value="${uiLabelMap.CommonRun}" disabled="disabled" />
                     <input type="hidden" name='organizationPartyId' value="${organizationPartyId!}" />
                     <input type="hidden" name='paymentGroupTypeId' value="BATCH_PAYMENT" />
@@ -160,13 +160,13 @@ function setServiceName(selection) {
                     <input type="text" size='25' id="paymentGroupName" name='paymentGroupName' />
                     <#if finAccounts?has_content>
                         <label for="finAccountId">${uiLabelMap.AccountingBankAccount}</label>
-                        <@input type="select" name="finAccountId" id="finAccountId">
+                        <select name="finAccountId" id="finAccountId">
                             <#list finAccounts as finAccount>
                               <#if ("FNACT_MANFROZEN" != finAccount.statusId) && ("FNACT_CANCELLED" != finAccount.statusId)>
                                 <option value="${finAccount.get("finAccountId")}">${finAccount.get("finAccountName")} [${finAccount.get("finAccountId")}]</option>
                               </#if>
                             </#list>
-                        </@input>
+                        </select>
                     </#if>
                 </div>
                 <@table type="data-list" autoAltRows=true class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->

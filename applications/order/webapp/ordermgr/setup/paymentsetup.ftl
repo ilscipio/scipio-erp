@@ -99,11 +99,11 @@ under the License.
                       <b>${webSitePayment.siteName}</b> (This cannot be changed without re-creating the setting.)
                     </div>
                   <#else>
-                    <@input type="select" name="webSiteId">
+                    <select name="webSiteId">
                       <#list webSites as nextWebSite>
                         <option value='${nextWebSite.webSiteId}'>${nextWebSite.siteName}</option>
                       </#list>
-                    </@input>
+                    </select>
                   </#if>
               </@field>
               <@field type="generic" label="Payment Method Type">
@@ -113,11 +113,11 @@ under the License.
                       <b>${webSitePayment.description}</b> (This cannot be changed without re-creating the setting.)
                     </div>
                   <#else>
-                    <@input type="select" name="paymentMethodTypeId">
+                    <select name="paymentMethodTypeId">
                       <#list paymentMethodTypes as nextPayType>
                         <option value='${nextPayType.paymentMethodTypeId}'>${nextPayType.description}</option>
                       </#list>
-                    </@input>
+                    </select>
                   </#if>
               </@field>
 

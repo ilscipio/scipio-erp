@@ -72,14 +72,14 @@ under the License.
                     <input type="text" name="city" value="${parameters.city!}"/>
                 </@field>
                 <@field type="generic" label="${uiLabelMap.CommonStateProvince}">
-                    <@input type="select" name="stateProvinceGeoId">
+                    <select name="stateProvinceGeoId">
                         <#if currentStateGeo?has_content>
                             <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName?default(currentStateGeo.geoId)}</option>
                             <option value="${currentStateGeo.geoId}">---</option>
                         </#if>
                             <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
                             ${screens.render("component://common/widget/CommonScreens.xml#states")}
-                        </@input>
+                        </select>
                 </@field>
                 <@field type="generic" label="${uiLabelMap.PartyPostalCode}">
                     <input type="text" name="postalCode" value="${parameters.postalCode!}"/>

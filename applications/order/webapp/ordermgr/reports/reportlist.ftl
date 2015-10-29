@@ -32,7 +32,7 @@ these reports and helping to improve them.</p>
   </@field>
 <#--
   <@field type="generic" label="Report">
-      <@input type="select" name="groupName" tabindex="14"  CLASS="stateSelectBox">
+      <select name="groupName" tabindex="14"  CLASS="stateSelectBox">
         <option value="orderStatus"></option>
         <option value="orderStatus">Orders by Order Status</option>
         <option value="ship">Orders by Ship Method</option>
@@ -40,7 +40,7 @@ these reports and helping to improve them.</p>
         <option value="adjustment">Order Items by Adjustment</option>
         <option value="itemStatus">Order Items by Status</option>
         <option value="product">Order Items by Product</option>
-      </@input>
+      </select>
   </@field>
 -->
   <@field type="submitarea">
@@ -57,7 +57,7 @@ these reports and helping to improve them.</p>
   </@field>
 <#--
   <@field type="generic" label="Report">
-      <@input type="select" name="groupName" tabindex="14"  class="stateSelectBox">
+      <select name="groupName" tabindex="14"  class="stateSelectBox">
         <option value="orderStatus"></option>
         <option value="orderStatus">Orders by Order Status</option>
         <option value="ship">Orders by Ship Method</option>
@@ -65,7 +65,7 @@ these reports and helping to improve them.</p>
         <option value="adjustment">Order Items by Adjustment</option>
         <option value="itemStatus">Order Items by Status</option>
         <option value="product">Order Items by Product</option>
-      </@input>
+      </select>
   </@field>
 -->
   <@field type="submitarea">

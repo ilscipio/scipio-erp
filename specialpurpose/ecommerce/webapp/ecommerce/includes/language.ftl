@@ -19,7 +19,7 @@ under the License.
 
 <@section id="choose-language" title="${uiLabelMap.CommonLanguageTitle}" class="+screenlet">
     <form method="post" name="chooseLanguage" action="<@ofbizUrl>setSessionLocale</@ofbizUrl>">
-      <@input type="select" name="newLocale" class="selectBox" style="width:95%" onchange="submit()">
+      <select name="newLocale" class="selectBox" style="width:95%" onchange="submit()">
         <#assign availableLocales = Static["org.ofbiz.base.util.UtilMisc"].availableLocales()/>
         <#list availableLocales as availableLocale>
           <#assign langAttr = availableLocale.toString()?replace("_", "-")>
@@ -29,6 +29,6 @@ under the License.
           </#if>
           <option lang="${langAttr}" dir="${langDir}" value="${availableLocale.toString()}"<#if locale.toString() = availableLocale.toString()> selected="selected"</#if>>${availableLocale.getDisplayName(availableLocale)}</option>
         </#list>
-      </@input>
+      </select>
     </form>
 </@section>

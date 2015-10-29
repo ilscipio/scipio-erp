@@ -108,11 +108,11 @@ under the License.
         <@tr>
           <@td>&nbsp;</@td>
           <@td>
-            <@input type="select" name="additionalRoleTypeId" id="additionalRoleTypeId" size="5" multiple="multiple">
+            <select name="additionalRoleTypeId" id="additionalRoleTypeId" size="5" multiple="multiple">
               <#list roles as role>
               <option value="${role.roleTypeId}">${role.get("description",locale)}</option>
               </#list>
-            </@input>
+            </select>
           </@td>
           <@td>&nbsp;</@td>
           <@td>

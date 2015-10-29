@@ -147,10 +147,10 @@ under the License.
             <@htmlTemplate.renderDateTimeField name="validDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="validDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
         </@field>
         <@field type="generic" label="${uiLabelMap.ProductIncludeSubCategories}">
-            <@input type="select" name="recurse">
+            <select name="recurse">
                 <option value="N">${uiLabelMap.CommonN}</option>
                 <option value="Y">${uiLabelMap.CommonY}</option>
-            </@input>
+            </select>
         </@field>
         <@field type="submitarea">
             <input type="submit" value="${uiLabelMap.CommonCopy}" />

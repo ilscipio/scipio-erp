@@ -68,14 +68,14 @@ under the License.
                                             ${uiLabelMap.OrderOrderTermType}
                                         </@td>
                                         <@td width="74%">
-                                            <@input type="select" name="termTypeId">
+                                            <select name="termTypeId">
                                                 <option value=""></option>
                                                 <#list termTypes! as termType>
                                                     <option value="${termType.termTypeId}"
                                                         <#if termTypeId?default('') == termType.termTypeId>selected="selected"</#if>
                                                     >${termType.get('description', locale)}</option>
                                                 </#list>
-                                            </@input>
+                                            </select>
                                         </@td>
                                     </@tr>
                                     <@tr>

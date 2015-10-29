@@ -25,7 +25,7 @@ under the License.
     <div>
     <span>
       <label for="personalTitle">${uiLabelMap.CommonTitle}</label>
-      <@input type="select" name="personalTitle">
+      <select name="personalTitle">
           <#if requestParameters.personalTitle?has_content >
             <option>${parameters.personalTitle}</option>
             <option value="${parameters.personalTitle}"> -- </option>
@@ -36,7 +36,7 @@ under the License.
           <option>${uiLabelMap.CommonTitleMrs}</option>
           <option>${uiLabelMap.CommonTitleMs}</option>
           <option>${uiLabelMap.CommonTitleDr}</option>
-      </@input>
+      </select>
     </span>
     <span>
       <label for="firstName">${uiLabelMap.PartyFirstName}</label>
@@ -75,13 +75,13 @@ under the License.
     <@td><input type="text" name="homeContactNumber" value="${parameters.homeContactNumber!}" /></@td>
     <@td><input type="text" name="homeExt" value="${parameters.homeExt!}" /></@td>
     <@td>
-      <@input type="select" name="homeSol">
+      <select name="homeSol">
         <#if (((parameters.homeSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
         <#if (((parameters.homeSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
         <option></option>
         <option value="Y">${uiLabelMap.CommonY}</option>
         <option value="N">${uiLabelMap.CommonN}</option>
-      </@input>
+      </select>
     </@td>
   </@tr>
   <@tr>
@@ -92,13 +92,13 @@ under the License.
     <@td><input type="text" name="workContactNumber" value="${parameters.workContactNumber!}" /></@td>
     <@td><input type="text" name="workExt" value="${parameters.workExt!}" /></@td>
     <@td>
-      <@input type="select" name="workSol">
+      <select name="workSol">
         <#if (((parameters.workSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
         <#if (((parameters.workSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
         <option></option>
         <option value="Y">${uiLabelMap.CommonY}</option>
         <option value="N">${uiLabelMap.CommonN}</option>
-      </@input>
+      </select>
     </@td>
   </@tr>
 </@table>
@@ -111,13 +111,13 @@ under the License.
     </span>
     <span>
       <label for="emailSol">${uiLabelMap.PartyAllowSolicitation}</label>
-      <@input type="select" name="emailSol" class="selectBox">
+      <select name="emailSol" class="selectBox">
         <#if (((parameters.emailSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
         <#if (((parameters.emailSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
         <option></option>
         <option value="Y">${uiLabelMap.CommonY}</option>
         <option value="N">${uiLabelMap.CommonN}</option>
-      </@input>
+      </select>
     </span>
    </div>
   <div class="buttons">

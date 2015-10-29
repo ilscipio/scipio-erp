@@ -39,7 +39,7 @@ under the License.
         </@tr>
         <@tr align="left">
                 <@td>
-                        <@input type="select" name="ReturnsAccepted">
+                        <select name="ReturnsAccepted">
                         <#if returnPolicyDetails?has_content>
                         <#assign retAccpTypeArray = returnPolicyDetails.getReturnsAccepted()!>
                         for(int j = 0; j < retAccpTypeArray.length; j++){
@@ -51,7 +51,7 @@ under the License.
                             ${retAccpType.getDescription()!}</option>
                         </#list>
                         </#if>
-                        </@input>
+                        </select>
                 </@td>
         </@tr>
         <@tr>
@@ -62,7 +62,7 @@ under the License.
         </@tr>
         <@tr align="left">
             <@td>
-                <@input type="select"  name="ReturnsWithin">
+                <select  name="ReturnsWithin">
                  <#if returnPolicyDetails?has_content>
                  <#assign retWithinArray = returnPolicyDetails.getReturnsWithin()!>
                  <#list retWithinArray as retWithin>
@@ -72,7 +72,7 @@ under the License.
                     ${retWithin.getDescription()!}</option>
                 </#list>
                 </#if>
-                </@input>
+                </select>
             </@td>
         </@tr>
         <@tr>
@@ -85,7 +85,7 @@ under the License.
         </@tr>
         <@tr align="left">
             <@td>
-                <@input type="select"  name="Refund">
+                <select  name="Refund">
                  <#if returnPolicyDetails?has_content>
                  <#assign refundArray = returnPolicyDetails.getRefund()!>
                  <#list refundArray as refundAr>
@@ -95,7 +95,7 @@ under the License.
                     ${refundArray[j].getDescription()!}</option>
                  </#list>
                  </#if>
-                </@input>
+                </select>
             </@td>
         </@tr>
         <@tr>
@@ -107,7 +107,7 @@ under the License.
         </@tr>
         <@tr align="left">
             <@td>
-                <@input type="select" name="ShippingCostPaidBy">
+                <select name="ShippingCostPaidBy">
                 <#if returnPolicyDetails?has_content>
                 <#assign paidByArray = returnPolicyDetails.getShippingCostPaidBy()!>
                 <#list paidByArray as paidBy>
@@ -117,7 +117,7 @@ under the License.
                     ${paidBy.getDescription()!}</option>
                 </#list>
                 </#if>
-                </@input>
+                </select>
             </@td>
         </@tr>
         <@tr>

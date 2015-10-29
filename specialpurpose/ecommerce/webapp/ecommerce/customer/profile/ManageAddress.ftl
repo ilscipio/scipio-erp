@@ -58,24 +58,24 @@ under the License.
             <label for="countryGeoId">${uiLabelMap.CommonCountry}*
               <span id="advice-required-countryGeoId" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span>
             </label>
-             <@input type="select" name="countryGeoId" id="countryGeoId" class="required">
+             <select name="countryGeoId" id="countryGeoId" class="required">
                <#if countryGeoId??>
                  <option value="${countryGeoId}">${countryGeoId}</option>
                </#if>
                ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-             </@input>
+             </select>
           </div>
           <div id="states">
             <label for="stateProvinceGeoId">${uiLabelMap.PartyState}*
               <span id="advice-required-stateProvinceGeoId" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span>
             </label>
-              <@input type="select" name="stateProvinceGeoId" id="stateProvinceGeoId">
+              <select name="stateProvinceGeoId" id="stateProvinceGeoId">
               <#if stateProvinceGeoId?has_content>
                 <option value="${stateProvinceGeoId}">${stateProvinceGeoId}</option>
               <#else>
                 <option value="_NA_">${uiLabelMap.PartyNoState}</option>
               </#if>
-              </@input>
+              </select>
           </div>
           <div class="inline">
             <label for="setBillingPurpose">${uiLabelMap.EcommerceMyDefaultBillingAddress}</label>

@@ -24,12 +24,12 @@ under the License.
         </@field>
         
         <@field type="generic" label="Hazmat">
-            <@input type="select" name="productFeatureIdOne">
+            <select name="productFeatureIdOne">
                 <option value="">- ${uiLabelMap.CommonNone} -</option>
                 <#list hazmatFeatures as hazmatFeature>
                     <option value="${hazmatFeature.productFeatureId}">${hazmatFeature.description}</option>
                 </#list>
-            </@input>
+            </select>
         </@field>  
         
         <@field type="submitarea">

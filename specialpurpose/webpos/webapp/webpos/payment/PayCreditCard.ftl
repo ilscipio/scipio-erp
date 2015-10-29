@@ -72,7 +72,7 @@ under the License.
       <@td width="25%" align="left">
         <#assign expMonth = "">
         <#assign expYear = "">
-        <@input type="select" id="expMonth" name="expMonth">
+        <select id="expMonth" name="expMonth">
           <option value="01" <#if expMonth?default('') == '01'> selected="selected"</#if>>${uiLabelMap.CommonJanuary}</option>
           <option value="02" <#if expMonth?default('') == '02'> selected="selected"</#if>>${uiLabelMap.CommonFebruary}</option>
           <option value="03" <#if expMonth?default('') == '03'> selected="selected"</#if>>${uiLabelMap.CommonMarch}</option>
@@ -85,14 +85,14 @@ under the License.
           <option value="10" <#if expMonth?default('') == '10'> selected="selected"</#if>>${uiLabelMap.CommonOctober}</option>
           <option value="11" <#if expMonth?default('') == '11'> selected="selected"</#if>>${uiLabelMap.CommonNovember}</option>
           <option value="12" <#if expMonth?default('') == '12'> selected="selected"</#if>>${uiLabelMap.CommonDecember}</option>
-        </@input>
-        <@input type="select" id="expYear" name="expYear">
+        </select>
+        <select id="expYear" name="expYear">
         <#assign ccExprYear = requestParameters.expYear!>
         <#if ccExprYear?has_content>
           <option value="${ccExprYear!}">${ccExprYear!}</option>
         </#if>
         ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
-        </@input>
+        </select>
       </@td>
     </@tr>
     <@tr>
@@ -100,9 +100,9 @@ under the License.
         ${uiLabelMap.WebPosPayCreditCardType}
       </@td>
       <@td width="25%" align="left">
-        <@input type="select" id="cardType" name="cardType">
+        <select id="cardType" name="cardType">
           ${screens.render("component://common/widget/CommonScreens.xml#cctypes")}
-        </@input>
+        </select>
       </@td>
       <@td width="25%" align="right">
         ${uiLabelMap.WebPosPayCreditCardSecurityCode}

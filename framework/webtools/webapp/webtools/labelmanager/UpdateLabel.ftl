@@ -54,12 +54,12 @@ under the License.
                         ${parameters.sourceFileName}
                         <input type="hidden" name="fileName" value="${parameters.sourceFileName}" />
                     <#else>
-                        <@input type="select" name="fileName">
+                        <select name="fileName">
                             <#list filesFound as fileInfo>
                               <#assign fileName = fileInfo.file.getName()/>
                               <option <#if parameters.fileName?? && parameters.fileName == fileName>selected="selected"</#if> value="${fileName}">${fileName}</option>
                             </#list>
-                        </@input>
+                        </select>
                     </#if>
                 </@td>
             </@tr>

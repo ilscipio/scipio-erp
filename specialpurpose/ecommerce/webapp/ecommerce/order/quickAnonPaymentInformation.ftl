@@ -126,7 +126,7 @@ function getPaymentInformation() {
               <@tr>
                  <@td width="26%" align="right" valign="top"><div class="tableheadtext">${uiLabelMap.OrderSelectPaymentMethod}</div></@td>
                  <@td colspan="2">
-                   <@input type="select" name="paymentMethodTypeOptionList" class="selectBox"  onchange="javascript:getPaymentInformation();">
+                   <select name="paymentMethodTypeOptionList" class="selectBox"  onchange="javascript:getPaymentInformation();">
                        <option value="none">Select One</option>
                      <#if productStorePaymentMethodTypeIdMap.CREDIT_CARD??>
                        <option value="CREDIT_CARD" <#if (parameters.paymentMethodTypeId?default("") == "CREDIT_CARD")> selected="selected"</#if>>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</option>
@@ -137,7 +137,7 @@ function getPaymentInformation() {
                      <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
                        <option value="EXT_OFFLINE" <#if (parameters.paymentMethodTypeId?default("") == "EXT_OFFLINE")> selected="selected"</#if>>${uiLabelMap.OrderPaymentOfflineCheckMoney}</option>
                      </#if>
-                   </@input>
+                   </select>
                  </@td>
               </@tr>
               <@tr><@td nowrap="nowrap" colspan="3"><div id="paymentInfoSection"></div></@td></@tr>

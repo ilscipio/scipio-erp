@@ -120,7 +120,7 @@ under the License.
                         <span>${uiLabelMap.PartyHeight}<input type="text" name="packageHeight" value="${(packedLine.getPackageHeight())!}" size="5"/></span>
                       </@td>
                       <@td>
-                        <@input type="select" name="shipmentBoxTypeId">
+                        <select name="shipmentBoxTypeId">
                           <#if shipmentBoxTypes?has_content>
                             <#assign shipmentBoxTypeId = "${(packedLine.getShipmentBoxTypeId())!}"/>
                             <#list shipmentBoxTypes as shipmentBoxType>
@@ -133,7 +133,7 @@ under the License.
                               <option value="${shipmentBoxType.shipmentBoxTypeId}">${shipmentBoxType.description}</option>
                             </#list>
                           </#if>
-                        </@input>
+                        </select>
                       </@td>
                       <@td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></@td>
                       <@td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.action='<@ofbizUrl>deletePackedLine</@ofbizUrl>';document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a></@td>
@@ -183,14 +183,14 @@ under the License.
                   <@td>
                     <span>${uiLabelMap.ProductPackageInputBox}:</span>
                     <br />
-                    <@input type="select" name="shipmentBoxTypeId">
+                    <select name="shipmentBoxTypeId">
                       <#if shipmentBoxTypes?has_content>
                         <option value=""></option>
                         <#list shipmentBoxTypes as shipmentBoxType>
                           <option value="${shipmentBoxType.shipmentBoxTypeId}">${shipmentBoxType.description}</option>
                         </#list>
                       </#if>
-                    </@input>
+                    </select>
                   </@td>
                   <@td align="right"><a href="javascript:document.weightPackageForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductNextPackage}</a></@td>
                 </@tr>

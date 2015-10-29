@@ -133,7 +133,7 @@ under the License.
       <@tr>
         <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonStateProvince}</b></@td>
         <@td width="74%">
-          <@input type="select" name="stateProvinceGeoId" <#if requestParameters.useShipAddr??>disabled</#if>>
+          <select name="stateProvinceGeoId" <#if requestParameters.useShipAddr??>disabled</#if>>
             <#if (postalFields.stateProvinceGeoId)??>
               <option>${postalFields.stateProvinceGeoId}</option>
               <option value="${postalFields.stateProvinceGeoId}">---</option>
@@ -141,7 +141,7 @@ under the License.
               <option value="">${uiLabelMap.CommonNone} ${uiLabelMap.CommonState}</option>
             </#if>
             ${screens.render("component://common/widget/CommonScreens.xml#states")}
-          </@input>
+          </select>
         </@td>
       </@tr>
       <@tr>
@@ -154,13 +154,13 @@ under the License.
       <@tr>
         <@td width="26%" align="right" valign="middle"><b>${uiLabelMap.CommonCountry}</b></@td>
         <@td width="74%">
-          <@input type="select" name="countryGeoId" <#if requestParameters.useShipAddr??>disabled</#if>>
+          <select name="countryGeoId" <#if requestParameters.useShipAddr??>disabled</#if>>
             <#if (postalFields.countryGeoId)??>
               <option>${postalFields.countryGeoId}</option>
               <option value="${postalFields.countryGeoId}">---</option>
             </#if>
             ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-          </@input>
+          </select>
           <span class="tooltip">${uiLabelMap.CommonRequired}</span>
         </@td>
       </@tr>

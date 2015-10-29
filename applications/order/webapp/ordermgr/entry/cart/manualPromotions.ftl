@@ -21,18 +21,18 @@ under the License.
     <@section title="${uiLabelMap.OrderManualPromotions}">
         <form method="post" action="<@ofbizUrl>doManualPromotions</@ofbizUrl>" name="domanualpromotions">
           <!-- to enter more than two manual promotions, just add a new select box with name="productPromoId_n" -->
-          <@input type="select" name="productPromoId_1">
+          <select name="productPromoId_1">
             <option value=""></option>
             <#list allProductPromos as productPromo>
               <option value="${productPromo.productPromoId}">${productPromo.promoName!}</option>
             </#list>
-          </@input>
-          <@input type="select" name="productPromoId_2">
+          </select>
+          <select name="productPromoId_2">
             <option value=""></option>
             <#list allProductPromos as productPromo>
               <option value="${productPromo.productPromoId}">${productPromo.promoName!}</option>
             </#list>
-          </@input>
+          </select>
           <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.OrderDoPromotions}" />
         </form>
     </@section>

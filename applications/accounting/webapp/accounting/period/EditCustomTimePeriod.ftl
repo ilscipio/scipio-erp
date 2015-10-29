@@ -66,7 +66,7 @@ under the License.
           <@tr>
             <@td>${currentCustomTimePeriod.customTimePeriodId}</@td>
             <@td>
-              <@input type="select" name="parentPeriodId">
+              <select name="parentPeriodId">
                 <option value=''>&nbsp;</option>
                 <#list allCustomTimePeriods as allCustomTimePeriod>
                   <#assign allPeriodType = allCustomTimePeriod.getRelatedOne("PeriodType", true)>
@@ -83,7 +83,7 @@ under the License.
                     [${allCustomTimePeriod.customTimePeriodId}]
                   </option>
                 </#list>
-              </@input>
+              </select>
               <#if (currentCustomTimePeriod.parentPeriodId)??>
                 <a href='<@ofbizUrl>EditCustomTimePeriod?currentCustomTimePeriodId=${currentCustomTimePeriod.parentPeriodId}&amp;findOrganizationPartyId=${findOrganizationPartyId!}</@ofbizUrl>'>
                 ${uiLabelMap.CommonSetAsCurrent}</a>
@@ -91,7 +91,7 @@ under the License.
             </@td>
             <@td><input type="text" size='12' name="currentCustomTimePeriod" value="${currentCustomTimePeriod.organizationPartyId!}" /></@td>
             <@td>
-              <@input type="select" name="periodTypeId">
+              <select name="periodTypeId">
                 <#list periodTypes as periodType>
                   <#assign isDefault = false>
                   <#if (currentCustomTimePeriod.periodTypeId)??>
@@ -103,7 +103,7 @@ under the License.
                     ${periodType.description} [${periodType.periodTypeId}]
                   </option>
                 </#list>
-              </@input>
+              </select>
             </@td>
             <@td><input type="text" size='4' name="periodNum" value="${currentCustomTimePeriod.periodNum!}" /></@td>
             <@td><input type="text" size='10' name="periodName" value="${currentCustomTimePeriod.periodName!}" /></@td>
@@ -161,7 +161,7 @@ under the License.
               <input type="hidden" name="customTimePeriodId" value="${customTimePeriod.customTimePeriodId!}" />
             <@td>${customTimePeriod.customTimePeriodId}</@td>
             <@td>
-              <@input type="select" name="parentPeriodId">
+              <select name="parentPeriodId">
                 <option value=''>&nbsp;</option>
                 <#list allCustomTimePeriods as allCustomTimePeriod>
                   <#assign allPeriodType = allCustomTimePeriod.getRelatedOne("PeriodType", true)>
@@ -178,11 +178,11 @@ under the License.
                     [${allCustomTimePeriod.customTimePeriodId}]
                   </option>
                 </#list>
-              </@input>
+              </select>
             </@td>
             <@td><input type="text" size='12' name="organizationPartyId" value="${customTimePeriod.organizationPartyId!}" /></@td>
             <@td>
-              <@input type="select" name="periodTypeId">
+              <select name="periodTypeId">
                 <#list periodTypes as periodType>
                   <#assign isDefault = false>
                   <#if (customTimePeriod.periodTypeId)??>
@@ -192,7 +192,7 @@ under the License.
                   </#if>
                   <option value='${periodType.periodTypeId}'<#if isDefault> selected="selected"</#if>>${periodType.description} [${periodType.periodTypeId}]</option>
                 </#list>
-              </@input>
+              </select>
             </@td>
             <@td><input type="text" size='4' name="periodNum" value="${customTimePeriod.periodNum!}" /></@td>
             <@td><input type="text" size='10' name="periodName" value="${customTimePeriod.periodName!}" /></@td>
@@ -235,7 +235,7 @@ under the License.
         <input type="hidden" name="useValues" value="true" />
         <div>
           <span>${uiLabelMap.CommonParent}</span>
-          <@input type="select" name="parentPeriodId">
+          <select name="parentPeriodId">
             <option value=''>&nbsp;</option>
             <#list allCustomTimePeriods as allCustomTimePeriod>
                 <#assign allPeriodType = allCustomTimePeriod.getRelatedOne("PeriodType", true)>
@@ -253,13 +253,13 @@ under the License.
                 [${allCustomTimePeriod.customTimePeriodId}]
               </option>
             </#list>
-          </@input>
+          </select>
         </div>
         <div>
           <span>${uiLabelMap.AccountingOrgPartyId}</span>
           <input type="text" size='20' name='organizationPartyId' />
           <span>${uiLabelMap.AccountingPeriodType}</span>
-          <@input type="select" name="periodTypeId">
+          <select name="periodTypeId">
             <#list periodTypes as periodType>
               <#assign isDefault = false>
               <#if newPeriodTypeId??>
@@ -269,7 +269,7 @@ under the License.
               </#if>
               <option value="${periodType.periodTypeId}" <#if isDefault>selected="selected"</#if>>${periodType.description} [${periodType.periodTypeId}]</option>
             </#list>
-          </@input>
+          </select>
           <span>${uiLabelMap.AccountingPeriodNumber}</span>
           <input type="text" size='4' name='periodNum' />
           <span>${uiLabelMap.AccountingPeriodName}</span>

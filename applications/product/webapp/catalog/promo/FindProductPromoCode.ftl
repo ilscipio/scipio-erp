@@ -21,15 +21,15 @@ under the License.
             <form method="post" action="<@ofbizUrl>createBulkProductPromoCode</@ofbizUrl>" enctype="multipart/form-data">
                 <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                 <span>${uiLabelMap.ProductPromoUserEntered}:</span>
-                    <@input type="select" name="userEntered">
+                    <select name="userEntered">
                         <option value="Y">${uiLabelMap.CommonY}</option>
                         <option value="N">${uiLabelMap.CommonN}</option>
-                    </@input>
+                    </select>
                 <span>${uiLabelMap.ProductPromotionReqEmailOrParty}:</span>
-                    <@input type="select" name="requireEmailOrParty">
+                    <select name="requireEmailOrParty">
                         <option value="N">${uiLabelMap.CommonN}</option>
                         <option value="Y">${uiLabelMap.CommonY}</option>
-                    </@input>
+                    </select>
                 <span>${uiLabelMap.ProductPromotionUseLimits}:
                 ${uiLabelMap.ProductPromotionPerCode}</span><input type="text" size="5" name="useLimitPerCode" />
                 <span>${uiLabelMap.ProductPromotionPerCustomer}</span><input type="text" size="5" name="useLimitPerCustomer" />
@@ -46,23 +46,23 @@ under the License.
                 <span>${uiLabelMap.CommonQuantity}:</span><input type="text" size="5" name="quantity" />
                 <span>${uiLabelMap.ProductPromoCodeLength}:</span><input type="text" size="12" name="codeLength" />
                 <span>${uiLabelMap.ProductPromoCodeLayout}:</span>
-                    <@input type="select" name="promoCodeLayout">
+                    <select name="promoCodeLayout">
                         <option value="smart">${uiLabelMap.ProductPromoLayoutSmart}</option>
                         <option value="normal">${uiLabelMap.ProductPromoLayoutNormal}</option>
                         <option value="sequence">${uiLabelMap.ProductPromoLayoutSeqNum}</option>
-                    </@input>
+                    </select>
                 <span class="tooltip">${uiLabelMap.ProductPromoCodeLayoutTooltip}</span>
                 <br />
                 <span>${uiLabelMap.ProductPromoUserEntered}:</span>
-                    <@input type="select" name="userEntered">
+                    <select name="userEntered">
                         <option value="Y">${uiLabelMap.CommonY}</option>
                         <option value="N">${uiLabelMap.CommonN}</option>
-                    </@input>
+                    </select>
                 <span>${uiLabelMap.ProductPromotionReqEmailOrParty}:</span>
-                    <@input type="select" name="requireEmailOrParty">
+                    <select name="requireEmailOrParty">
                         <option value="N">${uiLabelMap.CommonN}</option>
                         <option value="Y">${uiLabelMap.CommonY}</option>
-                    </@input>
+                    </select>
                 <span>${uiLabelMap.ProductPromotionUseLimits}:
                 ${uiLabelMap.ProductPromotionPerCode}</span><input type="text" size="5" name="useLimitPerCode" />
                 <span>${uiLabelMap.ProductPromotionPerCustomer}</span><input type="text" size="5" name="useLimitPerCustomer" />

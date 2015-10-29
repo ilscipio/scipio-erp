@@ -81,24 +81,24 @@ under the License.
           <div>
             <label for="shipToCountryGeoId">${uiLabelMap.CommonCountry}* <span id="advice-required-shipToCountryGeoId" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span></label>
             <div>
-              <@input type="select" name="shipToCountryGeoId" id="shipToCountryGeoId">
+              <select name="shipToCountryGeoId" id="shipToCountryGeoId">
                 <#if shipToCountryGeoId??>
                   <option value="${shipToCountryGeoId!}">${shipToCountryProvinceGeo!(shipToCountryGeoId!)}</option>
                 </#if>
                 ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-              </@input>
+              </select>
             </div>
           </div>
           <div id='shipToStates'>
             <label for="shipToStateProvinceGeoId">${uiLabelMap.CommonState}*<span id="advice-required-shipToStateProvinceGeoId" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span></label>
             <div>
-              <@input type="select" id="shipToStateProvinceGeoId" name="shipToStateProvinceGeoId">
+              <select id="shipToStateProvinceGeoId" name="shipToStateProvinceGeoId">
                 <#if shipToStateProvinceGeoId?has_content>
                   <option value='${shipToStateProvinceGeoId!}'>${shipToStateProvinceGeo!(shipToStateProvinceGeoId!)}</option>
                 <#else>
                   <option value="_NA_">${uiLabelMap.PartyNoState}</option>
                 </#if>
-              </@input>
+              </select>
             </div>
           </div>
           <div>
@@ -137,23 +137,23 @@ under the License.
             </div>
             <div>
               <label for="billToCountryGeoId">${uiLabelMap.CommonCountry}* <span id="advice-required-billToCountryGeoId" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span></label>
-              <@input type="select" name="billToCountryGeoId" id="billToCountryGeoId" class='required selectBox'>
+              <select name="billToCountryGeoId" id="billToCountryGeoId" class='required selectBox'>
               <#if billToCountryGeoId??>
                 <option value='${billToCountryGeoId!}'>${billToCountryProvinceGeo!(billToCountryGeoId!)}</option>
               </#if>
                 ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-              </@input>
+              </select>
             </div>
             <div id='billToStates'>
               <label for="billToStateProvinceGeoId">${uiLabelMap.CommonState}*<span id="advice-required-billToStateProvinceGeoId" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span></label>
               <div>
-                <@input type="select" id="billToStateProvinceGeoId" name="billToStateProvinceGeoId">
+                <select id="billToStateProvinceGeoId" name="billToStateProvinceGeoId">
                 <#if billToStateProvinceGeoId?has_content>
                   <option value='${billToStateProvinceGeoId!}'>${billToStateProvinceGeo!(billToStateProvinceGeoId!)}</option>
                 <#else>
                   <option value="_NA_">${uiLabelMap.PartyNoState}</option>
                 </#if>
-                </@input>
+                </select>
               </div>
             </div>
             <div>

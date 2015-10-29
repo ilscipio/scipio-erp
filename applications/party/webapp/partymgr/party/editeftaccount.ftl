@@ -59,12 +59,12 @@ under the License.
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
         </@field>
         <@field type="generic" label="${uiLabelMap.AccountingAccountType}">
-            <@input type="select" name="accountType" class="required">
+            <select name="accountType" class="required">
               <option>${eftAccountData.accountType!}</option>
               <option></option>
               <option>${uiLabelMap.CommonChecking}</option>
               <option>${uiLabelMap.CommonSavings}</option>
-            </@input>
+            </select>
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
         </@field>
         <@field type="generic" label="${uiLabelMap.AccountingAccountNumber}">

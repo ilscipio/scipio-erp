@@ -172,13 +172,13 @@ function setAlternateGwp(field) {
               <@th scope="row">${uiLabelMap.OrderProduct}</@th>
               <#if asslGiftWraps?has_content && (productStore.showCheckoutGiftOptions!) != "N">
                 <@th scope="row">
-                  <@input type="select" class="selectBox" name="GWALL" onchange="javascript:gwAll(this);">
+                  <select class="selectBox" name="GWALL" onchange="javascript:gwAll(this);">
                     <option value="">${uiLabelMap.EcommerceGiftWrapAllItems}</option>
                     <option value="NO^">${uiLabelMap.EcommerceNoGiftWrap}</option>
                     <#list allgiftWraps as option>
                       <option value="${option.productFeatureId}">${option.description} : ${option.defaultAmount?default(0)}</option>
                     </#list>
-                  </@input>
+                  </select>
                 </@th>
               <#else>
                 <@th scope="row">&nbsp;</@th>
@@ -287,13 +287,13 @@ function setAlternateGwp(field) {
                 <#if (cartLine.getIsPromo() && cartLine.getAlternativeOptionProductIds()?has_content)>
                   <#-- Show alternate gifts if there are any... -->
                   <div class="tableheadtext">${uiLabelMap.OrderChooseFollowingForGift}:</div>
-                  <@input type="select" name="dummyAlternateGwpSelect${cartLineIndex}" onchange="setAlternateGwp(this);" class="selectBox">
+                  <select name="dummyAlternateGwpSelect${cartLineIndex}" onchange="setAlternateGwp(this);" class="selectBox">
                   <option value="">- ${uiLabelMap.OrderChooseAnotherGift} -</option>
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                     <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductWorker"].getGwpAlternativeOptionName(dispatcher, delegator, alternativeOptionProductId, requestAttributes.locale) />
                     <option value="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@ofbizUrl>">${alternativeOptionName?default(alternativeOptionProductId)}</option>
                   </#list>
-                  </@input>
+                  </select>
                   <#-- this is the old way, it lists out the options and is not as nice as the drop-down
                   <ul>
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
@@ -311,16 +311,16 @@ function setAlternateGwp(field) {
               <#assign giftWrapOption = lineOptionalFeatures.GIFT_WRAP! />
               <#assign selectedOption = cartLine.getAdditionalProductFeatureAndAppl("GIFT_WRAP")! />
               <#if giftWrapOption?has_content>
-                <@input type="select" class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:document.cartform.submit()">
+                <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:document.cartform.submit()">
                   <option value="NO^">${uiLabelMap.EcommerceNoGiftWrap}</option>
                   <#list giftWrapOption as option>
                     <option value="${option.productFeatureId}" <#if ((selectedOption.productFeatureId)?? && selectedOption.productFeatureId == option.productFeatureId)>selected="selected"</#if>>${option.description} : ${option.amount?default(0)}</option>
                   </#list>
-                </@input>
+                </select>
               <#elseif showNoGiftWrapOptions>
-                <@input type="select" class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:document.cartform.submit()">
+                <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onchange="javascript:document.cartform.submit()">
                   <option value="">${uiLabelMap.EcommerceNoGiftWrap}</option>
-                </@input>
+                </select>
               <#else>
                 &nbsp;
               </#if>
@@ -418,7 +418,7 @@ function setAlternateGwp(field) {
         <@tr>
           <@td>
               <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
-              <@input type="select" name="shoppingListId" class="selectBox">
+              <select name="shoppingListId" class="selectBox">
                 <#if shoppingLists?has_content>
                   <#list shoppingLists as shoppingList>
                     <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
@@ -426,7 +426,7 @@ function setAlternateGwp(field) {
                 </#if>
                 <option value="">---</option>
                 <option value="">${uiLabelMap.OrderNewShoppingList}</option>
-              </@input>
+              </select>
               &nbsp;&nbsp;
               <a href="javascript:addToList();" class="button">${uiLabelMap.EcommerceAddSelectedtoList}</a>&nbsp;&nbsp;
               <#else>

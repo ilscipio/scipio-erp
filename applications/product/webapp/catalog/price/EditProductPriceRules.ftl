@@ -84,7 +84,7 @@ under the License.
                             <form method="post" action="<@ofbizUrl>updateProductPriceCond</@ofbizUrl>">
                                 <input type="hidden" name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}"/>
                                 <input type="hidden" name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}"/>
-                                <@input type="select" name="inputParamEnumId" size="1">
+                                <select name="inputParamEnumId" size="1">
                                     <#if productPriceCond.inputParamEnumId?has_content>
                                       <#assign inputParamEnum = productPriceCond.getRelatedOne("InputParamEnumeration", true)!>
                                       <option value="${productPriceCond.inputParamEnumId}"><#if inputParamEnum??>${inputParamEnum.get("description",locale)}<#else>[${productPriceCond.inputParamEnumId}]</#if></option>
@@ -95,8 +95,8 @@ under the License.
                                     <#list inputParamEnums as inputParamEnum>
                                       <option value="${inputParamEnum.enumId}">${inputParamEnum.get("description",locale)}<#--[${inputParamEnum.enumId}]--></option>
                                     </#list>
-                                </@input>
-                                <@input type="select" name="operatorEnumId" size="1">
+                                </select>
+                                <select name="operatorEnumId" size="1">
                                     <#if productPriceCond.operatorEnumId?has_content>
                                       <#assign operatorEnum = productPriceCond.getRelatedOne("OperatorEnumeration", true)!>
                                       <option value="${productPriceCond.operatorEnumId}"><#if operatorEnum??>${operatorEnum.get("description",locale)}<#else>[${productPriceCond.operatorEnumId}]</#if></option>
@@ -107,7 +107,7 @@ under the License.
                                     <#list condOperEnums as condOperEnum>
                                       <option value="${condOperEnum.enumId}">${condOperEnum.get("description",locale)}<#--[${condOperEnum.enumId}]--></option>
                                     </#list>
-                                </@input>
+                                </select>
                                 <input type="text" size="20" name="condValue" value="${productPriceCond.condValue!}" />
                                 <input type="submit" value="${uiLabelMap.CommonUpdate}" />
                             </form>
@@ -127,16 +127,16 @@ under the License.
                         <form method="post" action="<@ofbizUrl>createProductPriceCond</@ofbizUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                             <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
-                            <@input type="select" name="inputParamEnumId" size="1">
+                            <select name="inputParamEnumId" size="1">
                                 <#list inputParamEnums as inputParamEnum>
                                   <option value="${inputParamEnum.enumId}">${inputParamEnum.get("description",locale)}<#--[${inputParamEnum.enumId}]--></option>
                                 </#list>
-                            </@input>
-                            <@input type="select" name="operatorEnumId" size="1">
+                            </select>
+                            <select name="operatorEnumId" size="1">
                                 <#list condOperEnums as condOperEnum>
                                   <option value="${condOperEnum.enumId}">${condOperEnum.get("description",locale)}<#--[${condOperEnum.enumId}]--></option>
                                 </#list>
-                            </@input>
+                            </select>
                             <input type="text" size="20" name="condValue" />
                             <input type="submit" value="${uiLabelMap.CommonCreate}" />
                         </form>
@@ -162,7 +162,7 @@ under the License.
                             <form method="post" action="<@ofbizUrl>updateProductPriceAction</@ofbizUrl>">
                                 <input type="hidden" name="productPriceRuleId" value="${productPriceAction.productPriceRuleId}" />
                                 <input type="hidden" name="productPriceActionSeqId" value="${productPriceAction.productPriceActionSeqId}" />
-                                <@input type="select" name="productPriceActionTypeId" size="1">
+                                <select name="productPriceActionTypeId" size="1">
                                     <#if productPriceAction.productPriceActionTypeId?has_content>
                                       <#assign productPriceActionType = productPriceAction.getRelatedOne("ProductPriceActionType", true)>
                                       <option value="${productPriceAction.productPriceActionTypeId}"><#if productPriceActionType??>${productPriceActionType.get("description",locale)}<#else>[${productPriceAction.productPriceActionTypeId}]</#if></option>
@@ -173,7 +173,7 @@ under the License.
                                     <#list productPriceActionTypes as productPriceActionType>
                                       <option value="${productPriceActionType.productPriceActionTypeId}">${productPriceActionType.get("description",locale)}<#--[${productPriceActionType.productPriceActionTypeId}]--></option>
                                     </#list>
-                                </@input>
+                                </select>
                                 <input type="text" size="8" name="amount" value="${productPriceAction.amount!}" />
                                 <input type="submit" value="${uiLabelMap.CommonUpdate}" />
                             </form>
@@ -193,11 +193,11 @@ under the License.
                         <form method="post" action="<@ofbizUrl>createProductPriceAction</@ofbizUrl>">
                             <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
                             <span><b>${uiLabelMap.CommonNew}</b>&nbsp;</span>
-                            <@input type="select" name="productPriceActionTypeId" size="1">
+                            <select name="productPriceActionTypeId" size="1">
                                 <#list productPriceActionTypes as productPriceActionType>
                                   <option value="${productPriceActionType.productPriceActionTypeId}">${productPriceActionType.get("description",locale)}<#--[${productPriceActionType.productPriceActionTypeId}]--></option>
                                 </#list>
-                            </@input>
+                            </select>
                             <input type="text" size="8" name="amount" />
                             <input type="submit" value="${uiLabelMap.CommonCreate}" />
                         </form>

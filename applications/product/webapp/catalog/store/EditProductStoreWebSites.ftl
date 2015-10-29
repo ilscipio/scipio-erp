@@ -56,11 +56,11 @@ under the License.
         <form name="addWebSite" action="<@ofbizUrl>storeUpdateWebSite</@ofbizUrl>" method="post">
             <input type="hidden" name="viewProductStoreId" value="${productStoreId}" />
             <input type="hidden" name="productStoreId" value="${productStoreId}" />
-            <@input type="select" name="webSiteId">
+            <select name="webSiteId">
               <#list webSites as webSite>
                 <option value="${webSite.webSiteId}">${webSite.siteName!} [${webSite.webSiteId}]</option>
               </#list>
-            </@input>
+            </select>
             <input type="submit" class="${styles.button_default!}" value="${uiLabelMap.CommonUpdate}" />
         </form>
 </@section>

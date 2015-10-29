@@ -66,13 +66,13 @@ under the License.
                       <@td>${shipGroupItemQuantity}</@td>
                       <@td><input type="text" name="quantity_o_${rowCount}" value="${shipGroupItemQuantity}"/></@td>
                       <@td>
-                        <@input type="select" name="toGroupIndex_o_${rowCount}">
+                        <select name="toGroupIndex_o_${rowCount}">
                           <option value="${shipGroupIndex}">---</option>
                           <#list 0..(shoppingCart.getShipGroupSize() - 1) as groupIdx>
                             <#assign groupNumber = groupIdx + 1>
                             <option value="${groupIdx}">${uiLabelMap.CommonGroup} ${uiLabelMap.CommonNbr} ${groupNumber}</option>
                           </#list>
-                        </@input>
+                        </select>
                       </@td>
                     </@tr>
                     <#assign rowCount = rowCount + 1>

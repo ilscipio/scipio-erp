@@ -41,7 +41,7 @@ under the License.
         <#if "CUSTOMER_RETURN" == returnHeaderTypeId>
           <@field type="generic" label="${uiLabelMap.FormFieldTitle_paymentMethodId}">
               <#if creditCardList?? || eftAccountList??>
-                <@input type="select" name='paymentMethodId'>
+                <select name='paymentMethodId'>
                   <option value=""></option>
                   <#if creditCardList?has_content>
                     <#list creditCardList as creditCardPm>
@@ -54,7 +54,7 @@ under the License.
                       <option value="${eftAccount.paymentMethodId}">EFT:&nbsp;${eftAccount.nameOnAccount!}, ${eftAccount.accountNumber!}</option>
                     </#list>
                   </#if>
-                </@input>
+                </select>
               <#else>
                 <input type='text' size='20' name='paymentMethodId' />
               </#if>

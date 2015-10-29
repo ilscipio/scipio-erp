@@ -58,14 +58,14 @@ under the License.
   <#if (viewIndexMax?int > 0)>
     <div class="product-prevnext">
         <#-- Start Page Select Drop-Down -->
-        <@input type="select" name="pageSelect" onchange="callDocumentByPaginate(this[this.selectedIndex].value);">
+        <select name="pageSelect" onchange="callDocumentByPaginate(this[this.selectedIndex].value);">
             <option value="#">${uiLabelMap.CommonPage} ${viewIndex?int} ${uiLabelMap.CommonOf} ${viewIndexMax}</option>
             <#if (viewIndex?int > 1)>
                 <#list 0..viewIndexMax as curViewNum>
                      <option value="${shoppingListId!}~${viewSize}~${curViewNum?int + 1}">${uiLabelMap.CommonGotoPage} ${curViewNum + 1}</option>
                 </#list>
             </#if>
-        </@input>
+        </select>
         <#-- End Page Select Drop-Down -->
         
         <#if (viewIndex?int > 1)>
@@ -89,7 +89,7 @@ under the License.
     <div class="screenlet-body">
         <#if shoppingLists?has_content>
           <form name="selectShoppingList" method="post" action="<@ofbizUrl>editShoppingList</@ofbizUrl>">
-            <@input type="select" name="shoppingListId" class="selectBox">
+            <select name="shoppingListId" class="selectBox">
               <#if shoppingList?has_content>
                 <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
                 <option value="${shoppingList.shoppingListId}">--</option>
@@ -97,7 +97,7 @@ under the License.
               <#list shoppingLists as list>
                 <option value="${list.shoppingListId}">${list.listName}</option>
               </#list>
-            </@input>
+            </select>
             &nbsp;&nbsp;
             <a href="javascript:document.selectShoppingList.submit();" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
           </form>
@@ -142,7 +142,7 @@ under the License.
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.OrderListType}</div></@td>
                 <@td>
-                  <@input type="select" name="shoppingListTypeId" class="selectBox">
+                  <select name="shoppingListTypeId" class="selectBox">
                       <#if shoppingListType??>
                       <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>
                       <option value="${shoppingListType.shoppingListTypeId}">--</option>
@@ -150,37 +150,37 @@ under the License.
                     <#list shoppingListTypes as shoppingListType>
                       <option value="${shoppingListType.shoppingListTypeId}">${shoppingListType.get("description",locale)?default(shoppingListType.shoppingListTypeId)}</option>
                     </#list>
-                  </@input>
+                  </select>
                 </@td>
               </@tr>
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.EcommercePublic}?</div></@td>
                 <@td>
-                  <@input type="select" name="isPublic" class="selectBox">
+                  <select name="isPublic" class="selectBox">
                     <#if (((shoppingList.isPublic)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
                     <#if (((shoppingList.isPublic)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
                     <option></option>
                     <option value="Y">${uiLabelMap.CommonY}</option>
                     <option value="N">${uiLabelMap.CommonN}</option>
-                  </@input>
+                  </select>
                 </@td>
               </@tr>
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.EcommerceActive}?</div></@td>
                 <@td>
-                  <@input type="select" name="isActive" class="selectBox">
+                  <select name="isActive" class="selectBox">
                     <#if (((shoppingList.isActive)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
                     <#if (((shoppingList.isActive)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
                     <option></option>
                     <option value="Y">${uiLabelMap.CommonY}</option>
                     <option value="N">${uiLabelMap.CommonN}</option>
-                  </@input>
+                  </select>
                 </@td>
               </@tr>
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.EcommerceParentList}</div></@td>
                 <@td>
-                  <@input type="select" name="parentShoppingListId" class="selectBox">
+                  <select name="parentShoppingListId" class="selectBox">
                       <#if parentShoppingList??>
                       <option value="${parentShoppingList.shoppingListId}">${parentShoppingList.listName?default(parentShoppingList.shoppingListId)}</option>
                     </#if>
@@ -188,7 +188,7 @@ under the License.
                     <#list allShoppingLists as newParShoppingList>
                       <option value="${newParShoppingList.shoppingListId}">${newParShoppingList.listName?default(newParShoppingList.shoppingListId)}</option>
                     </#list>
-                  </@input>
+                  </select>
                   <#if parentShoppingList??>
                     <a href="<@ofbizUrl>editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName?default(parentShoppingList.shoppingListId)})</a>
                   </#if>
@@ -229,22 +229,22 @@ under the License.
                   <#if recurrenceInfo?has_content>
                     <#assign recurrenceRule = recurrenceInfo.getRelatedOne("RecurrenceRule", false)!>
                   </#if>
-                  <@input type="select" name="intervalNumber" class="selectBox">
+                  <select name="intervalNumber" class="selectBox">
                     <option value="">${uiLabelMap.EcommerceSelectInterval}</option>
                     <option value="1" <#if (recurrenceRule.intervalNumber)?default(0) == 1>selected="selected"</#if>>${uiLabelMap.EcommerceEveryDay}</option>
                     <option value="2" <#if (recurrenceRule.intervalNumber)?default(0) == 2>selected="selected"</#if>>${uiLabelMap.EcommerceEveryOther}</option>
                     <option value="3" <#if (recurrenceRule.intervalNumber)?default(0) == 3>selected="selected"</#if>>${uiLabelMap.EcommerceEvery3rd}</option>
                     <option value="6" <#if (recurrenceRule.intervalNumber)?default(0) == 6>selected="selected"</#if>>${uiLabelMap.EcommerceEvery6th}</option>
                     <option value="9" <#if (recurrenceRule.intervalNumber)?default(0) == 9>selected="selected"</#if>>${uiLabelMap.EcommerceEvery9th}</option>
-                  </@input>
+                  </select>
                   &nbsp;
-                  <@input type="select" name="frequency" class="selectBox">
+                  <select name="frequency" class="selectBox">
                     <option value="">${uiLabelMap.EcommerceSelectFrequency}</option>
                     <option value="4" <#if (recurrenceRule.frequency)?default("") == "DAILY">selected="selected"</#if>>${uiLabelMap.CommonDay}</option>
                     <option value="5" <#if (recurrenceRule.frequency)?default("") == "WEEKLY">selected="selected"</#if>>${uiLabelMap.CommonWeek}</option>
                     <option value="6" <#if (recurrenceRule.frequency)?default("") == "MONTHLY">selected="selected"</#if>>${uiLabelMap.CommonMonth}</option>
                     <option value="7" <#if (recurrenceRule.frequency)?default("") == "YEARLY">selected="selected"</#if>>${uiLabelMap.CommonYear}</option>
-                  </@input>
+                  </select>
                 </@td>
                 <@td>&nbsp;</@td>
                 <@td><div class="tableheadtext">${uiLabelMap.CommonStartDate}</div></@td>
@@ -262,7 +262,7 @@ under the License.
               <@tr>
                 <@td><div class="tableheadtext">${uiLabelMap.OrderShipTo}</div></@td>
                 <@td>
-                  <@input type="select" name="contactMechId" class="selectBox" onchange="javascript:document.reorderinfo.submit()">
+                  <select name="contactMechId" class="selectBox" onchange="javascript:document.reorderinfo.submit()">
                     <option value="">${uiLabelMap.OrderSelectAShippingAddress}</option>
                     <#if shippingContactMechList?has_content>
                       <#list shippingContactMechList as shippingContactMech>
@@ -272,12 +272,12 @@ under the License.
                     <#else>
                       <option value="">${uiLabelMap.OrderNoAddressesAvailable}</option>
                     </#if>
-                  </@input>
+                  </select>
                 </@td>
                 <@td>&nbsp;</@td>
                 <@td><div class="tableheadtext">${uiLabelMap.OrderShipVia}</div></@td>
                 <@td>
-                  <@input type="select" name="shippingMethodString" class="selectBox">
+                  <select name="shippingMethodString" class="selectBox">
                     <option value="">${uiLabelMap.OrderSelectShippingMethod}</option>
                     <#if carrierShipMethods?has_content>
                       <#list carrierShipMethods as shipMeth>
@@ -301,12 +301,12 @@ under the License.
                     <#else>
                       <option value="">${uiLabelMap.OrderSelectAddressFirst}</option>
                     </#if>
-                  </@input>
+                  </select>
                 </@td>
                 <@td>&nbsp;</@td>
                 <@td><div class="tableheadtext">${uiLabelMap.OrderPayBy}</div></@td>
                 <@td>
-                  <@input type="select" name="paymentMethodId" class="selectBox">
+                  <select name="paymentMethodId" class="selectBox">
                     <option value="">${uiLabelMap.OrderSelectPaymentMethod}</option>
                     <#list paymentMethodList as paymentMethod>
                       <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
@@ -317,7 +317,7 @@ under the License.
                         <option value="${paymentMethod.paymentMethodId}">EFT:&nbsp;${eftAccount.bankName!}: ${eftAccount.accountNumber!}</option>
                       </#if>
                     </#list>
-                  </@input>
+                  </select>
                 </@td>
                 <@td>&nbsp;</@td>
               </@tr>
@@ -501,7 +501,7 @@ under the License.
                           <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}"/>
                           <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}"/>
                           <input type="hidden" name="quantity" value="${shoppingListItem.quantity}"/>
-                          <@input type="select" name="add_product_id" class="selectBox">
+                          <select name="add_product_id" class="selectBox">
                               <#list productVariantAssocs as productVariantAssoc>
                                 <#assign variantProduct = productVariantAssoc.getRelatedOne("AssocProduct", true)>
                                 <#if variantProduct??>
@@ -509,7 +509,7 @@ under the License.
                                   <option value="${variantProduct.productId}">${variantproductContentWrapper.get("PRODUCT_NAME", "html")?default("No Name")} [${variantProduct.productId}]</option>
                                 </#if>
                               </#list>
-                          </@input>
+                          </select>
                           <br />
                           <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${replaceItemAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="${styles.button_default!}">${uiLabelMap.EcommerceReplaceWithVariation}</a>
                           <br />

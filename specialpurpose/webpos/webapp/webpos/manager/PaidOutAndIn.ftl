@@ -33,18 +33,18 @@ under the License.
       <@td width="50%" align="right">${uiLabelMap.WebPosManagerPaidOutAndIndReason}</@td>
       <@td width="50%" align="left">
         <div id="reasonIn" style="display:none">
-          <@input type="select" id="reasIn" name="reasonIn">
+          <select id="reasIn" name="reasonIn">
             <#list paidReasonIn as reason>
               <option value="${reason.enumId}">${reason.get("description", locale)?default(reason.enumId)}</option>
             </#list>
-          </@input>
+          </select>
         </div>
         <div id="reasonOut" style="display:none">
-          <@input type="select" id="reasOut" name="reasonOut">
+          <select id="reasOut" name="reasonOut">
             <#list paidReasonOut as reason>
               <option value="${reason.enumId}">${reason.get("description", locale)?default(reason.enumId)}</option>
             </#list>
-          </@input>
+          </select>
         </div>
       </@td>
     </@tr>

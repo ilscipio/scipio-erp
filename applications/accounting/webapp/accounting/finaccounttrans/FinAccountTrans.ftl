@@ -103,12 +103,12 @@ function getFinAccountTransRunningTotalAndBalances() {
           <@cell class="+text-right">
           <#if grandTotal??>
             <#if glReconciliations?has_content>
-              <@input type="select" name="glReconciliationId">
+              <select name="glReconciliationId">
                 <option value="">--${uiLabelMap.CommonSelect}--</option>
                 <#list glReconciliations as glReconciliation>
                   <option value="${glReconciliation.glReconciliationId}">${glReconciliation.glReconciliationName!}[[${glReconciliation.glReconciliationId}] [${glReconciliation.reconciledDate!}] [${glReconciliation.reconciledBalance!}]]</option>
                 </#list>
-              </@input>
+              </select>
               <input id="submitButton" type="submit" onclick="javascript:document.selectAllForm.submit();" value="${uiLabelMap.AccountingAssignToReconciliation}" disabled="disabled" />
             <#else>
               <span class="tooltip">${uiLabelMap.AccountingNoGlReconciliatio??} <a href="<@ofbizUrl>EditFinAccountReconciliations?finAccountId=${parameters.finAccountId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClickHere}</a></span>

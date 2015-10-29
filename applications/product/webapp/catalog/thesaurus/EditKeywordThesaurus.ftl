@@ -21,11 +21,11 @@ under the License.
             <div>
                 <span>${uiLabelMap.ProductKeyword}</span><input type="text" name="enteredKeyword" size="10"/>
                 <span>${uiLabelMap.ProductAlternate}</span><input type="text" name="alternateKeyword" size="10"/>
-                <span>${uiLabelMap.ProductRelationship}</span><@input type="select" name="relationshipEnumId">
+                <span>${uiLabelMap.ProductRelationship}</span><select name="relationshipEnumId">
                 <#list relationshipEnums as relationshipEnum>
                 <option value="${relationshipEnum.enumId}">${relationshipEnum.get("description",locale)}</option>
                 </#list>
-                </@input>
+                </select>
                 <input type="submit" value="${uiLabelMap.CommonAdd}"/>
             </div>
         </form>
@@ -62,7 +62,7 @@ under the License.
                       <form method="post" action="<@ofbizUrl>createKeywordThesaurus</@ofbizUrl>">
                         <input type="hidden" name="enteredKeyword" value="${keyword.enteredKeyword}" />
                         <span>${uiLabelMap.ProductAlternate}</span><input type="text" name="alternateKeyword" size="10" />
-                        <span>${uiLabelMap.ProductRelationship}</span><@input type="select" name="relationshipEnumId"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.get("description",locale)}</option></#list></@input>
+                        <span>${uiLabelMap.ProductRelationship}</span><select name="relationshipEnumId"><#list relationshipEnums as relationshipEnum><option value="${relationshipEnum.enumId}">${relationshipEnum.get("description",locale)}</option></#list></select>
                         <input type="submit" value="${uiLabelMap.CommonAdd}" />
                       </form>
                       </div>

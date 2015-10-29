@@ -91,7 +91,7 @@ under the License.
             <hr />
   
             <@field type="generic" label="${uiLabelMap.ProductTransferStatus}">
-                <@input type="select" name="statusId">
+                <select name="statusId">
                     <#if (inventoryTransfer.statusId)??>
                         <#assign curStatusItem = inventoryTransfer.getRelatedOne("StatusItem", true)>
                         <option value="${(inventoryTransfer.statusId)!}">${(curStatusItem.get("description",locale))!}</option>
@@ -99,7 +99,7 @@ under the License.
                     <#list statusItems as statusItem>
                     <option value="${(statusItem.statusId)!}">${(statusItem.get("description",locale))!}</option>
                     </#list>
-                </@input>
+                </select>
             </@field>
         <@field type="generic" label="${uiLabelMap.ProductTransferSendDate}">
             <input type="text" name="sendDate" value="${(inventoryTransfer.sendDate)!}" size="22" />
@@ -107,11 +107,11 @@ under the License.
         </@field>
         <#if !(inventoryTransfer??)>
             <@field type="generic" label="${uiLabelMap.ProductToFacilityContainer}">
-                <@input type="select" name="facilityIdTo">
+                <select name="facilityIdTo">
                     <#list facilities as nextFacility>
                     <option value="${(nextFacility.facilityId)!}">${(nextFacility.facilityName)!} [${(nextFacility.facilityId)!}]</option>
                     </#list>
-                </@input>
+                </select>
                 <span class="tooltip">${uiLabelMap.ProductSelectFacility}</span>
                 <br />
                 <input type="text" name="containerIdTo" value="${(inventoryTransfer.containerIdTo)!}" size="20" maxlength="20" />

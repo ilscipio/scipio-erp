@@ -34,7 +34,7 @@ under the License.
     <@section>
       <form name="ArtifactInfoByName" method="post" action="<@ofbizUrl>ArtifactInfo</@ofbizUrl>" class="basic-form">
         Search Names/Locations: <input type="text" name="name" value="${parameters.name!}" size="40"/>
-        <@input type="select" name="type">
+        <select name="type">
           <option></option>
           <option>entity</option>
           <option>service</option>
@@ -42,7 +42,7 @@ under the License.
           <option>screen</option>
           <option>request</option>
           <option>view</option>
-        </@input>
+        </select>
         <input type="hidden" name="findType" value="search"/>
         <input type="submit" name="submitButton" value="Find"/>
       </form>
@@ -52,14 +52,14 @@ under the License.
         <div>Name: <input type="text" name="name" value="${parameters.name!}" size="40"/></div>
         <div>Location: <input type="text" name="location" value="${parameters.location!}" size="60"/></div>
         <div>Type:
-          <@input type="select" name="type">
+          <select name="type">
             <option>entity</option>
             <option>service</option>
             <option>form</option>
             <option>screen</option>
             <option>request</option>
             <option>view</option>
-          </@input>
+          </select>
           <input type="submit" name="submitButton" value="Lookup"/>
         </div>
       </form>

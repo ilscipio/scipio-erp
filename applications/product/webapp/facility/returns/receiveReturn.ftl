@@ -136,7 +136,7 @@ under the License.
                           <@td align="right">
                             <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId), null, false))!>
                             <#if facilityLocations?has_content>
-                              <@input type="select" name="locationSeqId_o_${rowCount}">
+                              <select name="locationSeqId_o_${rowCount}">
                                 <#list facilityLocations as productFacilityLocation>
                                   <#assign facility = productFacilityLocation.getRelatedOne("Facility", true)>
                                   <#assign facilityLocation = productFacilityLocation.getRelatedOne("FacilityLocation", false)!>
@@ -144,7 +144,7 @@ under the License.
                                   <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation??>${facilityLocation.areaId!}:${facilityLocation.aisleId!}:${facilityLocation.sectionId!}:${facilityLocation.levelId!}:${facilityLocation.positionId!}</#if><#if facilityLocationTypeEnum??>(${facilityLocationTypeEnum.get("description",locale)})</#if>[${productFacilityLocation.locationSeqId}]</option>
                                 </#list>
                                 <option value="">${uiLabelMap.ProductNoLocation}</option>
-                              </@input>
+                              </select>
                             <#else>
                               <span>
                                 <#if parameters.facilityId??>
@@ -164,7 +164,7 @@ under the License.
                         </@tr>
                         <@tr>
                            <@td width='10%'>
-                              <@input type="select" name="inventoryItemTypeId_o_${rowCount}" size="1" id="inventoryItemTypeId_o_${rowCount}" onchange="javascript:setInventoryItemStatus(this,${rowCount});">
+                              <select name="inventoryItemTypeId_o_${rowCount}" size="1" id="inventoryItemTypeId_o_${rowCount}" onchange="javascript:setInventoryItemStatus(this,${rowCount});">
                                  <#list inventoryItemTypes as nextInventoryItemType>
                                     <option value='${nextInventoryItemType.inventoryItemTypeId}'
                                  <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
@@ -172,24 +172,24 @@ under the License.
                                   </#if>
                                  >${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option>
                                  </#list>
-                              </@input>
+                              </select>
                           </@td>
                           <@td width="35%">
                             <span>${uiLabelMap.ProductInitialInventoryItemStatus}:</span>&nbsp;&nbsp;
-                            <@input type="select" name="statusId_o_${rowCount}" size='1' id = "statusId_o_${rowCount}">
+                            <select name="statusId_o_${rowCount}" size='1' id = "statusId_o_${rowCount}">
                               <option value="INV_RETURNED">${uiLabelMap.ProductReturned}</option>
                               <option value="INV_AVAILABLE">${uiLabelMap.ProductAvailable}</option>
                               <option value="INV_NS_DEFECTIVE" <#if returnItem.returnReasonId?default("") == "RTN_DEFECTIVE_ITEM">Selected</#if>>${uiLabelMap.ProductDefective}</option>
-                            </@input>
+                            </select>
                           </@td>
                           <#if serializedInv?has_content>
                             <@td align="right">${uiLabelMap.ProductExistingInventoryItem}</@td>
                             <@td align="right">
-                              <@input type="select" name="inventoryItemId_o_${rowCount}">
+                              <select name="inventoryItemId_o_${rowCount}">
                                 <#list serializedInv as inventoryItem>
                                   <option>${inventoryItem.inventoryItemId}</option>
                                 </#list>
-                              </@input>
+                              </select>
                             </@td>
                           <#else>
                             <@td colspan="2">&nbsp;</@td>

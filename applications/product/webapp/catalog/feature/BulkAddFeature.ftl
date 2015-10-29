@@ -35,11 +35,11 @@ under the License.
         <#list 0..featureNum-1 as feature>
           <@tr id="productFeatureTypeId_tableRow_${feature_index}" valign="middle">
               <@td><input type="text" size='15' name="description_o_${feature_index}" /></@td>
-              <@td><@input type="select" name='productFeatureTypeId_o_${feature_index}' size="1">
+              <@td><select name='productFeatureTypeId_o_${feature_index}' size="1">
                   <#list productFeatureTypes as productFeatureType>
                   <option value='${productFeatureType.productFeatureTypeId}'>${productFeatureType.get("description",locale)!}</option>
                   </#list>
-                  </@input>
+                  </select>
                   <input name='productFeatureCategoryId_o_${feature_index}' type="hidden" value="${productFeatureCategoryId}" />
               </@td>
               <@td><input type="text" size='5' name="defaultSequenceNum_o_${feature_index}"" /></@td>

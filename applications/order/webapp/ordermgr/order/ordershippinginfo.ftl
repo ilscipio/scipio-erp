@@ -171,12 +171,12 @@ under the License.
                           <@td>
                              <div class="label">${uiLabelMap.OrderAddToshipGroup} : </div>
                              <div>
-                                 <@input type="select" name="shipGroupSeqId" class="selectBox" onChange="showShipByDate(this, 'shipByDate${index}')">
+                                 <select name="shipGroupSeqId" class="selectBox" onChange="showShipByDate(this, 'shipByDate${index}')">
                       <#list shipGroups as shipGroup>
                                      <option value="${shipGroup.shipGroupSeqId}">[${shipGroup.shipGroupSeqId}]<#if shipGroup.shipByDate?has_content>, ${shipGroup.shipByDate?date}</#if></option>
                       </#list>
                                      <option value="new">${uiLabelMap.CommonNew}</option>
-                                 </@input>
+                                 </select>
                              </div>
                          </@td>
                      </@tr>
@@ -233,7 +233,7 @@ under the License.
                     </@td>
                     <@td valign="top" width="80%">
                             <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED">
-                            <@input type="select" name="contactMechId">
+                            <select name="contactMechId">
                                 <option selected="selected" value="${shipGroup.contactMechId!}">${(shipGroupAddress.address1)?default("")} - ${shipGroupAddress.city?default("")}</option>
                                 <#if shippingContactMechList?has_content>
                                 <option disabled="disabled" value=""></option>
@@ -244,7 +244,7 @@ under the License.
                                 </#if>
                                 </#list>
                                 </#if>
-                            </@input>
+                            </select>
                             <#else>
                             ${(shipGroupAddress.address1)?default("")}
                             </#if>
@@ -263,7 +263,7 @@ under the License.
                             i.e shipmentMethodTypeId & carrierPartyId & roleTypeId. Values are separated by
                             "@" symbol.
                             -->
-                            <@input type="select" name="shipmentMethod">
+                            <select name="shipmentMethod">
                                 <#if shipGroup.shipmentMethodTypeId?has_content>
                                   <option value="${shipGroup.shipmentMethodTypeId}@${shipGroup.carrierPartyId!}@${shipGroup.carrierRoleTypeId!}"><#if shipGroup.carrierPartyId?? && shipGroup.carrierPartyId != "_NA_">${shipGroup.carrierPartyId!}</#if>&nbsp;${shipmentMethodType.get("description",locale)!}</option>
                                 </#if>
@@ -273,7 +273,7 @@ under the License.
                                     <option value="${shipmentMethodTypeAndParty!}"><#if productStoreShipmentMethod.partyId != "_NA_">${productStoreShipmentMethod.partyId!}</#if>&nbsp;${productStoreShipmentMethod.get("description",locale)?default("")}</option>
                                   </#if>
                                 </#list>
-                            </@input>
+                            </select>
                             <#else>
                                 <#if (shipGroup.carrierPartyId)?default("_NA_") != "_NA_">
                                     ${shipGroup.carrierPartyId!}
@@ -332,24 +332,24 @@ under the License.
           <div class="form-row">
             <label for="countryGeoId">${uiLabelMap.CommonCountry}* </label>
             <div class="form-field">
-              <@input type="select" name="shipToCountryGeoId" id="countryGeoId" class="required">
+              <select name="shipToCountryGeoId" id="countryGeoId" class="required">
                 <#if countryGeoId??>
                   <option value="${countryGeoId}">${countryGeoId}</option>
                 </#if>
                 ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-              </@input>
+              </select>
             </div>
           </div>
           <div class="form-row">
             <label for="stateProvinceGeoId">${uiLabelMap.PartyState}* </label>
             <div class="form-field">
-              <@input type="select" name="shipToStateProvinceGeoId" id="stateProvinceGeoId">
+              <select name="shipToStateProvinceGeoId" id="stateProvinceGeoId">
                 <#if stateProvinceGeoId?has_content>
                   <option value="${stateProvinceGeoId}">${stateProvinceGeoId}</option>
                 <#else>
                   <option value="_NA_">${uiLabelMap.PartyNoState}</option>
                 </#if>
-              </@input>
+              </select>
             </div>
           </div>
           <div class="form-row">
@@ -644,11 +644,11 @@ under the License.
                        <input type="hidden" name="externalLoginKey" value="${externalLoginKey}"/>
                        <input type="hidden" name="estimatedShipDate" value="${shipGroup.estimatedShipDate!}"/>
                        <input type="hidden" name="estimatedArrivalDate" value="${shipGroup.estimatedDeliveryDate!}"/>
-                       <@input type="select" name="destinationFacilityId">
+                       <select name="destinationFacilityId">
                          <#list facilities as facility>
                            <option value="${facility.facilityId}">${facility.facilityName}</option>
                          </#list>
-                       </@input>
+                       </select>
                        <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.OrderNewShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]"/>
                     </form>
                     </div>

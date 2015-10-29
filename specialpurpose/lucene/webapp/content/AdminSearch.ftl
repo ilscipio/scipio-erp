@@ -24,10 +24,10 @@ under the License.
 </@field>
 
 <@field type="generic" label="${uiLabelMap.CommonSelect} ${uiLabelMap.ContentCategory}">
-    <@input type="select" name="lcSiteId">
+    <select name="lcSiteId">
       <option value=""></option>
       <@listSiteIds contentId="WebStoreCONTENT" indentIndex=0/>
-    </@input>
+    </select>
 </@field>
 
 
@@ -49,12 +49,12 @@ under the License.
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
       <@field type="generic" label="${(productFeatureType.description)!}">
-          <@input type="select" name="pft_${productFeatureTypeId}">
+          <select name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
               </#list>
-            </@input>
+            </select>
       </@field>
     </#list>
     <#if searchConstraintStrings?has_content>

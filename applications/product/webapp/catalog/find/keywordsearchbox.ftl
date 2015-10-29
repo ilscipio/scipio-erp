@@ -71,7 +71,7 @@ under the License.
     <input type="hidden" name="viewSize" value="20" />
     <input type="hidden" name="viewIndex" value="1" />
     <@htmlTemplate.lookupField value="${requestParameters.productId!}" formName="productjumpform" name="productId" id="productJumpFormProductId" fieldFormName="LookupProduct"/>
-    <@input type="select" name="DUMMYPAGE" id="dummyPage" onchange="submitProductJump()">
+    <select name="DUMMYPAGE" id="dummyPage" onchange="submitProductJump()">
         <option value="<@ofbizUrl>EditProduct</@ofbizUrl>">-${uiLabelMap.ProductProductJump}-</option>
         <option value="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>">${uiLabelMap.ProductQuickAdmin}</option>
         <option value="<@ofbizUrl>EditProduct</@ofbizUrl>">${uiLabelMap.ProductProduct}</option>
@@ -100,6 +100,6 @@ under the License.
         <option value="<@ofbizUrl>EditProductConfigs</@ofbizUrl>">${uiLabelMap.ProductConfigs}</option>
         <option value="<@ofbizUrl>viewProductOrder</@ofbizUrl>">${uiLabelMap.OrderOrders}</option>
         <option value="<@ofbizUrl>EditProductCommunicationEvents</@ofbizUrl>">${uiLabelMap.PartyCommunications}</option>
-    </@input>
+    </select>
   </fieldset>
 </form>

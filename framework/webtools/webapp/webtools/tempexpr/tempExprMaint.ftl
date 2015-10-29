@@ -181,11 +181,11 @@ under the License.
     <input type="hidden" name="tempExprId" value="${temporalExpression.tempExprId}"/>
     <input type="hidden" name="fromTempExprId" value="${temporalExpression.tempExprId}"/>
     <input type="hidden" name="exprAssocType" value="${exprAssocType}"/>
-    <@input type="select" name="toTempExprId">
+    <select name="toTempExprId">
       <#list candidateIdList as candidate>
         <option value="${candidate}">${candidate}</option>
       </#list>
-    </@input>
+    </select>
     <input type="submit" name="submitBtn" value="${uiLabelMap.CommonSave}"/>
   </form>
 </#macro>

@@ -72,7 +72,7 @@ under the License.
             <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
           </#if>
         </#if>
-        <@input type="select" name="expMonth" class="selectBox" onchange="javascript:makeExpDate();">
+        <select name="expMonth" class="selectBox" onchange="javascript:makeExpDate();">
           <#if giftCardData?has_content && expMonth?has_content>
             <#assign ccExprMonth = expMonth>
           <#else>
@@ -82,8 +82,8 @@ under the License.
             <option value="${ccExprMonth!}">${ccExprMonth!}</option>
           </#if>
           ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
-        </@input>
-        <@input type="select" name="expYear" class="selectBox" onchange="javascript:makeExpDate();">
+        </select>
+        <select name="expYear" class="selectBox" onchange="javascript:makeExpDate();">
           <#if giftCard?has_content && expYear?has_content>
             <#assign ccExprYear = expYear>
           <#else>
@@ -93,7 +93,7 @@ under the License.
             <option value="${ccExprYear!}">${ccExprYear!}</option>
           </#if>
           ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
-        </@input>
+        </select>
       </@td>
     </@tr>
     <@tr>

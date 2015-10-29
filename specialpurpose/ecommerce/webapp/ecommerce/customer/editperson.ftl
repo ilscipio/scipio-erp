@@ -32,7 +32,7 @@ under the License.
   <@tr>
     <@td align="right">${uiLabelMap.CommonTitle}</@td>
     <@td>
-      <@input type="select" name="personalTitle" class="selectBox">
+      <select name="personalTitle" class="selectBox">
         <#if personData.personalTitle?has_content >
           <option>${personData.personalTitle}</option>
           <option value="${personData.personalTitle}"> -- </option>
@@ -43,7 +43,7 @@ under the License.
         <option>${uiLabelMap.CommonTitleMrs}</option>
         <option>${uiLabelMap.CommonTitleMs}</option>
         <option>${uiLabelMap.CommonTitleDr}</option>
-      </@input>
+      </select>
     </@td>
   </@tr>
   <@tr>
@@ -79,7 +79,7 @@ under the License.
     <@tr>
       <@td align="right">${uiLabelMap.PartyGender}</@td>
       <@td>
-        <@input type="select" name="gender" class='selectBox'>
+        <select name="gender" class='selectBox'>
           <#if personData.gender?has_content >
             <option value="${personData.gender}">
                 <#if personData.gender == "M" >${uiLabelMap.CommonMale}</#if>
@@ -91,7 +91,7 @@ under the License.
           </#if>
           <option value="M">${uiLabelMap.CommonMale}</option>
           <option value="F">${uiLabelMap.CommonFemale}</option>
-        </@input>
+        </select>
       </@td>
     </@tr>
     <@tr>
@@ -123,7 +123,7 @@ under the License.
     <@tr>
       <@td align="right">${uiLabelMap.PartyMaritalStatus}</@td>
       <@td>
-        <@input type="select" name="maritalStatus" class='selectBox'>
+        <select name="maritalStatus" class='selectBox'>
           <#if personData.maritalStatus?has_content>
              <option value="${personData.maritalStatus}">
                <#if personData.maritalStatus == "S">${uiLabelMap.PartySingle}</#if>
@@ -137,7 +137,7 @@ under the License.
           <option value="S">${uiLabelMap.PartySingle}</option>
           <option value="M">${uiLabelMap.PartyMarried}</option>
           <option value="D">${uiLabelMap.PartyDivorced}</option>
-        </@input>
+        </select>
       </@td>
     </@tr>
     <@tr>

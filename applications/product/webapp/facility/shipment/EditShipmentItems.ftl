@@ -99,12 +99,12 @@ under the License.
                     <input type="hidden" name="shipmentItemSeqId" value="${shipmentItem.shipmentItemSeqId}"/>
                     <@td>&nbsp;</@td>
                     <@td colspan="2"><span>${uiLabelMap.ProductAddToPackage}</span>
-                        <@input type="select" name="shipmentPackageSeqId">
+                        <select name="shipmentPackageSeqId">
                             <#list shipmentPackages as shipmentPackage>
                                 <option>${shipmentPackage.shipmentPackageSeqId}</option>
                             </#list>
                             <option value="New">${uiLabelMap.CommonNew}</option><!-- Warning: the "New" value cannot be translated because it is used in secas -->
-                        </@input>
+                        </select>
                     </@td>
                     <@td>
                             <input type="text" name="quantity" size="5" value="${totalQuantityToPackage}"/>

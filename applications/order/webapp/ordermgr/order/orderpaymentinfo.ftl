@@ -543,7 +543,7 @@ under the License.
       </@td>
       <@td>&nbsp;</@td>
       <@td colspan="2">
-         <@input type="select" name="paymentMethodId">
+         <select name="paymentMethodId">
            <#list paymentMethodValueMaps as paymentMethodValueMap>
              <#assign paymentMethod = paymentMethodValueMap.paymentMethod/>
              <option value="${paymentMethod.get("paymentMethodId")!}">
@@ -563,7 +563,7 @@ under the License.
                  </#if>
                </option>
            </#list>
-         </@input>
+         </select>
       </@td>
    </@tr>
    <#assign openAmount = orderReadHelper.getOrderOpenAmount()>

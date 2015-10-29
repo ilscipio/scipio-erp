@@ -67,13 +67,13 @@ under the License.
                   -&nbsp;<input type="text" name="homeContactNumber" value="${requestParameters.homeContactNumber!}" size="15" maxlength="15"/>*
                   &nbsp;ext&nbsp;<input type="text" name="homeExt" value="${requestParameters.homeExt!}" size="6" maxlength="10"/>
                   <br/>
-                  <@input type="select" name="homeSol">
+                  <select name="homeSol">
                     <#if (((requestParameters.homeSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
                     <#if (((requestParameters.homeSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
                     <option></option>
                     <option value="Y">${uiLabelMap.CommonY}</option>
                     <option value="N">${uiLabelMap.CommonN}</option>
-                  </@input>
+                  </select>
                 </@td>
               </@tr>
               <@tr>
@@ -84,13 +84,13 @@ under the License.
                   -&nbsp;<input type="text" name="workContactNumber" value="${requestParameters.CUSTOMER_WORK_CONTACT!}" size="15" maxlength="15"/>
                   &nbsp;ext&nbsp;<input type="text" name="workExt" value="${requestParameters.CUSTOMER_WORK_EXT!}" size="6" maxlength="10"/>
                   <br/>
-                  <@input type="select" name="workSol">
+                  <select name="workSol">
                     <#if (((requestParameters.workSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
                     <#if (((requestParameters.workSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
                     <option></option>
                     <option value="Y">${uiLabelMap.CommonY}</option>
                     <option value="N">${uiLabelMap.CommonN}</option>
-                  </@input>
+                  </select>
                 </@td>
               </@tr>
               <@tr>
@@ -101,13 +101,13 @@ under the License.
                 <@td width="74%">
                   <input type="text" name="emailAddress" value="" size="60" maxlength="255" />
                   <br/>
-                  <@input type="select" name="emailSol">
+                  <select name="emailSol">
                     <#if (((requestParameters.emailSol)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
                     <#if (((requestParameters.emailSol)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
                     <option></option>
                     <option value="Y">${uiLabelMap.CommonY}</option>
                     <option value="N">${uiLabelMap.CommonN}</option>
-                  </@input>
+                  </select>
                 </@td>
               </@tr>
               <@tr>

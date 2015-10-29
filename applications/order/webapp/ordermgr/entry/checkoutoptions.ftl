@@ -91,11 +91,11 @@ function submitForm(form, mode, value) {
                   <@tr>
                     <@td colspan="2">
                       <span>${uiLabelMap.OrderShipToParty}:</span>
-                      <@input type="select" name="shipToCustomerPartyId" onchange="javascript:submitForm(document.checkoutInfoForm, 'SC', null);">
+                      <select name="shipToCustomerPartyId" onchange="javascript:submitForm(document.checkoutInfoForm, 'SC', null);">
                           <#list cartParties as cartParty>
                           <option value="${cartParty}">${cartParty}</option>
                           </#list>
-                      </@input>
+                      </select>
                     </@td>
                   </@tr>
                   <@tr>
@@ -415,14 +415,14 @@ function submitForm(form, mode, value) {
                     <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
                     <@tr>
                       <@td width="1%">
-                        <@input type="select" name="billingAccountId">
+                        <select name="billingAccountId">
                           <option value=""></option>
                             <#list billingAccountList as billingAccount>
                               <#assign availableAmount = billingAccount.accountBalance?double>
                               <#assign accountLimit = billingAccount.accountLimit?double>
                               <option value="${billingAccount.billingAccountId}" <#if billingAccount.billingAccountId == selectedBillingAccountId?default("")>selected="selected"</#if>>${billingAccount.description?default("")} [${billingAccount.billingAccountId}] Available: <@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId/> Limit: <@ofbizCurrency amount=accountLimit isoCode=billingAccount.accountCurrencyUomId/></option>
                             </#list>
-                        </@input>
+                        </select>
                       </@td>
                       <@td width="50%">${uiLabelMap.FormFieldTitle_billingAccountId}
                       </@td>

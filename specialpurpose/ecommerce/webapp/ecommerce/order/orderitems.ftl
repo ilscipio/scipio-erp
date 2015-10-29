@@ -223,12 +223,12 @@ under the License.
       <#if maySelectItems?default("N") == "Y" && (orderHeader.statusId != "ORDER_SENT" && orderItem.statusId != "ITEM_COMPLETED" && orderItem.statusId != "ITEM_CANCELLED" && pickedQty == 0)>
         <@tr>
           <@td colspan="7">${uiLabelMap.OrderReturnReason}
-            <@input type="select" name="irm_${orderItem.orderItemSeqId}" class="selectBox">
+            <select name="irm_${orderItem.orderItemSeqId}" class="selectBox">
               <option value=""></option>
               <#list orderItemChangeReasons as reason>
                 <option value="${reason.enumId}">${reason.get("description",locale)?default(reason.enumId)}</option>
               </#list>
-            </@input>
+            </select>
             ${uiLabelMap.CommonComments}
             <input class="inputBox" type="text" name="icm_${orderItem.orderItemSeqId}" value="" size="30" maxlength="60"/>
           </@td>

@@ -332,7 +332,7 @@ document.lookuporder.orderId.focus();
         <input type="hidden" name="screenLocation" value="component://order/widget/ordermgr/OrderPrintScreens.xml#OrderPDF"/>
         
         <#--
-        <@input type="select" name="serviceName" onchange="javascript:setServiceName(this);">
+        <select name="serviceName" onchange="javascript:setServiceName(this);">
            <option value="javascript:void(0);">&nbsp;</option>
            <option value="<@ofbizUrl>massApproveOrders?hideFields=${requestParameters.hideFields!"N"}${paramList}</@ofbizUrl>">${uiLabelMap.OrderApproveOrder}</option>
            <option value="<@ofbizUrl>massHoldOrders?hideFields=${requestParameters.hideFields!"N"}${paramList}</@ofbizUrl>">${uiLabelMap.OrderHold}</option>
@@ -344,14 +344,14 @@ document.lookuporder.orderId.focus();
            <option value="<@ofbizUrl>massQuickShipOrders?hideFields=${requestParameters.hideFields!"N"}${paramList}</@ofbizUrl>">${uiLabelMap.OrderQuickShipEntireOrder}</option>
            <option value="<@ofbizUrl>massPrintOrders?hideFields=${requestParameters.hideFields!'N'}${paramList}</@ofbizUrl>">${uiLabelMap.CommonPrint}</option>
            <option value="<@ofbizUrl>massCreateFileForOrders?hideFields=${requestParameters.hideFields!'N'}${paramList}</@ofbizUrl>">${uiLabelMap.ContentCreateFile}</option>
-        </@input>-->
+        </select>-->
         <#--
-        <@input type="select" name="printerName">
+        <select name="printerName">
            <option value="javascript:void(0);">&nbsp;</option>
            <#list printers as printer>
            <option value="${printer}">${printer}</option>
            </#list>
-        </@input>
+        </select>
         <a href="javascript:runAction();" class="${styles.button_default!}">${uiLabelMap.OrderRunAction}</a>
         -->
       <#macro massOrderChangeButton id="1">  

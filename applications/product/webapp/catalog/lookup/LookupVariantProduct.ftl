@@ -27,7 +27,7 @@ under the License.
         <input type="hidden" name="productId" value="${product.productId}" />
         <#list searchFeatures as searchFeature>
             <@field type="generic" label="<b>${searchFeature.featureType}</b>">
-                <@input type="select" name="${searchFeature.featureType}">
+                <select name="${searchFeature.featureType}">
                     <#assign features = searchFeature.features>
                     <option value=""></option>
                     <#list features as feature>
@@ -37,7 +37,7 @@ under the License.
                             <option value="${feature.productFeatureId}">${feature.get("description",locale)}</option>
                         </#if>
                     </#list>
-                </@input>
+                </select>
             </@field>
         </#list>
         <@field type="submitarea">

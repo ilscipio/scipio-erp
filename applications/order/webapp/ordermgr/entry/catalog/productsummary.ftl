@@ -122,12 +122,12 @@ ${virtualJavaScript!}
               <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}form.submit()" class="${styles.button_default!}">${uiLabelMap.OrderAddToCart}</a>
             <#if mainProducts?has_content>
                 <input type="hidden" name="product_id" value=""/>
-                <@input type="select" name="productVariantId" onchange="javascript:displayProductVirtualId(this.value, '${product.productId}', this.form);">
+                <select name="productVariantId" onchange="javascript:displayProductVirtualId(this.value, '${product.productId}', this.form);">
                     <option value="">Select Unit Of Measure</option>
                     <#list mainProducts as mainProduct>
                         <option value="${mainProduct.productId}">${mainProduct.uomDesc} : ${mainProduct.piecesIncluded}</option>
                     </#list>
-                </@input>
+                </select>
                 <div style="display: inline-block;">
                     <strong><span id="product_id_display"> </span></strong>
                     <strong><span id="variant_price_display"> </span></strong>

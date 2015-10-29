@@ -69,7 +69,7 @@ under the License.
             <@htmlTemplate.renderDateTimeField name="thruDate_o_${productFeatureAndAppl_index}" event="" action="" className=class  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(productFeatureAndAppl.thruDate)!}" size="25" maxlength="30" id="thruDate_o_${productFeatureAndAppl_index}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
             <input type="text" size="6" name="amount_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.amount)!}" />
             <input type="text" size="5" name="sequenceNum_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.sequenceNum)!}" />
-            <@input type="select" name="productFeatureApplTypeId_o_${productFeatureAndAppl_index}" size="1">
+            <select name="productFeatureApplTypeId_o_${productFeatureAndAppl_index}" size="1">
             <#if (productFeatureAndAppl.productFeatureApplTypeId)??>
               <option value="${(productFeatureAndAppl.productFeatureApplTypeId)!}"><#if curProductFeatureApplType??> ${(curProductFeatureApplType.get("description",locale))!} <#else> [${productFeatureAndAppl.productFeatureApplTypeId}]</#if></option>
               <option value="${productFeatureAndAppl.productFeatureApplTypeId}"> </option>
@@ -77,7 +77,7 @@ under the License.
             <#list productFeatureApplTypes as productFeatureApplType>
               <option value="${(productFeatureApplType.productFeatureApplTypeId)!}">${(productFeatureApplType.get("description",locale))!} </option>
             </#list>
-            </@input>
+            </select>
           </@td>
           <@td align="right">
             <input type="checkbox" name="_rowSubmit_o_${productFeatureAndAppl_index}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'productFeatureId_tableRow_${productFeatureAndAppl_index}');" />

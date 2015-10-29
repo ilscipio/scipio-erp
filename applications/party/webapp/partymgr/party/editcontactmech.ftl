@@ -23,11 +23,11 @@ under the License.
       <form method="post" action="<@ofbizUrl>editcontactmech</@ofbizUrl>" name="createcontactmechform">
         <input type="hidden" name="partyId" value="${partyId}" />
         <@field type="generic" label="${uiLabelMap.PartySelectContactType}">
-            <@input type="select" name="preContactMechTypeId">
+            <select name="preContactMechTypeId">
               <#list mechMap.contactMechTypes as contactMechType>
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
-            </@input>
+            </select>
         </@field>
         <@field type="submitarea">
             <a href="javascript:document.createcontactmechform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a>
@@ -103,12 +103,12 @@ under the License.
                     <input type="hidden" name="DONE_PAGE" value="${donePage}" />
                     <input type="hidden" name="useValues" value="true" />
                     <input type="hidden" name="contactMechId" value="${contactMechId!}" />
-                    <@input type="select" name="contactMechPurposeTypeId">
+                    <select name="contactMechPurposeTypeId">
                       <option></option>
                       <#list mechMap.purposeTypes as contactMechPurposeType>
                         <option value="${contactMechPurposeType.contactMechPurposeTypeId}">${contactMechPurposeType.get("description",locale)}</option>
                       </#list>
-                    </@input>
+                    </select>
                   </form>
                 </@td>
                 <@td><a href="javascript:document.newpurposeform.submit()" class="${styles.button_default!}">${uiLabelMap.PartyAddPurpose}</a></@td>
@@ -140,14 +140,14 @@ under the License.
         <input type="text" size="50" maxlength="100" name="city" value="${(mechMap.postalAddress.city)?default(request.getParameter('city')!)}" />
     </@field>
     <@field type="generic" label="${uiLabelMap.PartyState}">
-        <@input type="select" name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
-        </@input>
+        <select name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
+        </select>
     </@field>
     <@field type="generic" label="${uiLabelMap.PartyZipCode} *">
         <input type="text" size="30" maxlength="60" name="postalCode" value="${(mechMap.postalAddress.postalCode)?default(request.getParameter('postalCode')!)}" />
     </@field>
     <@field type="generic" label="${uiLabelMap.CommonCountry}">
-        <@input type="select" name="countryGeoId" id="editcontactmechform_countryGeoId">
+        <select name="countryGeoId" id="editcontactmechform_countryGeoId">
           ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
           <#if (mechMap.postalAddress??) && (mechMap.postalAddress.countryGeoId??)>
             <#assign defaultCountryGeoId = mechMap.postalAddress.countryGeoId>
@@ -158,7 +158,7 @@ under the License.
             <#assign countryGeo = delegator.findOne("Geo",Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId",defaultCountryGeoId), false)>
             ${countryGeo.get("geoName",locale)}
           </option>
-        </@input>
+        </select>
     </@field>
     <#assign isUsps = Static["org.ofbiz.party.contact.ContactMechWorker"].isUspsAddress(mechMap.postalAddress)>
     <@field type="display" label="${uiLabelMap.PartyIsUsps}">
@@ -184,13 +184,13 @@ under the License.
     </@field>
   </#if>
   <@field type="generic" label="${uiLabelMap.PartyContactAllowSolicitation}?">
-      <@input type="select" name="allowSolicitation">
+      <select name="allowSolicitation">
         <#if (((mechMap.partyContactMech.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
         <#if (((mechMap.partyContactMech.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
         <option></option>
         <option value="Y">${uiLabelMap.CommonY}</option>
         <option value="N">${uiLabelMap.CommonN}</option>
-      </@input>
+      </select>
   </@field>
   </form>
   </div>

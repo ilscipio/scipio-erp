@@ -17,10 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if product?? && mainProducts??>
-    <@input type="select" name="parentProductId" onchange="javascript:displayProductVirtualVariantId(this.value);">
+    <select name="parentProductId" onchange="javascript:displayProductVirtualVariantId(this.value);">
         <option value="">Select Unit Of Measure</option>
         <#list mainProducts as mainProduct>
             <option value="${mainProduct.productId}">${mainProduct.uomDesc} : ${mainProduct.piecesIncluded}</option>
         </#list>
-    </@input>
+    </select>
 </#if>

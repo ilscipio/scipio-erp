@@ -1504,54 +1504,91 @@
     <!-- ProductConfig -->
     <form name="AddProductConfig" type="single" target="createProductConfig" title="" header-row-style="header-row"
         default-table-style="${styles.table_basic}">
-        <auto-fields-service service-name="createProductConfig" map-name="" />
         <field name="productId">
             <hidden value="${productId}" />
         </field>
-        <field name="configTypeId">
-            <drop-down allow-empty="false">
-                <option key="STANDARD" description="${uiLabelMap.ProductStandard}" />
-                <option key="QUESTION" description="${uiLabelMap.ProductQuestion}" />
-            </drop-down>
-        </field>
-        <field name="configItemId" title="${uiLabelMap.ProductConfigItem}">
+        <field name="configItemId" title="${uiLabelMap.CommonItem}">
             <drop-down>
                 <entity-options entity-name="ProductConfigItem" description="${configItemName} [${configItemId}] (${description})"> <!-- [${productTypeId}] -->
                     <entity-order-by field-name="configItemName" />
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
-            <submit button-type="button" />
-        </field>
-    </form>
-    <form name="UpdateProductConfig" type="list" target="updateProductConfig" title="" list-name="productConfigs"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic}" paginate-target="ViewProductManufacturing">
-        <auto-fields-service service-name="updateProductConfig" map-name="productConfig" />
-        <field name="productId">
-            <hidden />
-        </field>
-        <!-- TODO: get descriptions from IDs <display description="${roleType.description}"/> -->
-        <field name="sequenceNum">
-            <display />
-        </field>
-        <field name="configItemId" title="${uiLabelMap.ProductConfigItem}">
-            <display-entity entity-name="ProductConfigItem" key-field-name="configItemId" description="${configItemName} : (${description})">
-                <sub-hyperlink target="EditProductConfigItem" description="[ ${configItemId} ]">
-                    <parameter param-name="configItemId" />
-                </sub-hyperlink>
-            </display-entity>
-        </field>
-        <field name="configTypeId">
+        <field name="configTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="false">
                 <option key="STANDARD" description="${uiLabelMap.ProductStandard}" />
                 <option key="QUESTION" description="${uiLabelMap.ProductQuestion}" />
             </drop-down>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}">
-            <display />
+            <date-time type="date"/>
         </field>
-
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2">
+            <date-time type="date"/>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}">
+            <text/>
+        </field>
+        <field name="isMandatory" title="${uiLabelMap.CommonMandatory}" position="2">
+            <drop-down>
+                <option key="Y" description="${uiLabelMap.CommonYes}"/>
+                <option key="N" description="${uiLabelMap.CommonNo}"/>
+            </drop-down>
+        </field>
+        <field name="defaultConfigOptionId"><text/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSeqNum}" position="2">
+            <text/>
+        </field>
+        <field name="longDescription" title="${uiLabelMap.CommonLongDescription}">
+            <textarea/>
+        </field>
+        
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
+            <submit button-type="button" />
+        </field>
+    </form>
+    
+    <form name="UpdateProductConfig" type="list" target="updateProductConfig" title="" list-name="productConfigs"
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic}" paginate-target="ViewProductManufacturing">
+        <field name="productId">
+            <hidden />
+        </field>
+        <field name="configItemId" title="${uiLabelMap.CommonItem}">
+            <display-entity entity-name="ProductConfigItem" key-field-name="configItemId" description="${configItemName} : (${description})">
+                <sub-hyperlink target="EditProductConfigItem" description="[ ${configItemId} ]">
+                    <parameter param-name="configItemId" />
+                </sub-hyperlink>
+            </display-entity>
+        </field>
+        <field name="configTypeId"  title="${uiLabelMap.ProductType}">
+            <drop-down allow-empty="false">
+                <option key="STANDARD" description="${uiLabelMap.ProductStandard}" />
+                <option key="QUESTION" description="${uiLabelMap.ProductQuestion}" />
+            </drop-down>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}">
+            <display type="date" />
+        </field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}">
+            <date-time type="date"/>
+        </field>
+        <field name="isMandatory" title="${uiLabelMap.CommonMandatory}" >
+            <drop-down>
+                <option key="Y" description="${uiLabelMap.CommonYes}"/>
+                <option key="N" description="${uiLabelMap.CommonNo}"/>
+            </drop-down>
+        </field>
+        <field name="defaultConfigOptionId"><text/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSeqNum}">
+            <text/>
+        </field>
+        <field name="description" title="${uiLabelMap.CommonDescription}">
+            <text/>
+        </field>
+        <field name="longDescription" title="${uiLabelMap.CommonLongDescription}">
+            <textarea/>
+        </field>
+        
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
             <submit button-type="button" />
         </field>
@@ -1643,14 +1680,14 @@
                 </entity-options>
             </drop-down>
         </field>
-
+        
         <field name="fromDate" title="${uiLabelMap.CommonFrom}">
             <date-time />
         </field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2">
             <date-time />
         </field>
-
+        
         <field name="comments" title="${uiLabelMap.CommonComments}">
             <text maxlength="30" size="30" />
         </field>

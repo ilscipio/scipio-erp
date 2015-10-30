@@ -729,6 +729,7 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="PageTitleError" />
+                <set field="noTitle" value="true" global="true" /><!-- Hack to remove the header element -->
                 <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl"/>
             </actions>
             <widgets>

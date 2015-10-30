@@ -36,7 +36,9 @@ under the License.
   <#if !eventMessageList?has_content>
     <#assign eventMessageList = requestAttributes._EVENT_MESSAGE_LIST_!>
   </#if>
-  
+
+
+  <#if isError?has_content && !isError> <#-- Do not display the error messages when on error page -->
   <#-- display the error messages -->
   <#if (errorMessage?has_content || errorMessageList?has_content)>
         <div id="main-${styles.alert_wrap!}">
@@ -45,15 +47,18 @@ under the License.
       <#if errorMessage?has_content>
                         ${StringUtil.wrapString(errorMessage)}
       </#if>
-      <#if errorMessageList?has_content>
+      <#noescape>
+        <#if errorMessageList?has_content>
                         <ol>
-        <#list errorMessageList as errorMsg>
+            <#list errorMessageList as errorMsg>
                           <li>${StringUtil.wrapString(errorMsg)}</li>
-        </#list>
+            </#list>
                         </ol>
-      </#if>
+        </#if>
+      </#noescape>
             </@alert>
     </div>
+  </#if>
   </#if>
   <#-- display the event messages -->
   <#if (eventMessage?has_content || eventMessageList?has_content)>

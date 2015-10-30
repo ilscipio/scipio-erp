@@ -48,6 +48,7 @@
     "icon_user" : "fi-torso-female",
     "icon_password" : "fi-lock",
     "icon_tenant" : "fi-cloud",
+    "icon_error" : "fi-alert",
     "heading_level_prefix" : "heading-level-",  
     
   <#-- Menus 

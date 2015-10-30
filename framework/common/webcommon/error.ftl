@@ -16,11 +16,24 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign errorMessage=requestAttributes._ERROR_MESSAGE_!/>
-<#assign infoMessage=requestAttributes.message!/>
-<#if errorMessage?has_content>
-    <@alert type="error">${errorMessage!}</@alert>
-</#if>
-<#if infoMessage?has_content>
-    <@alert type="info">${infoMessage!}</@alert>
-</#if>
+<#assign errorMessage = requestAttributes._ERROR_MESSAGE_!>
+<#if requestAttributes.errorMessageList?has_content><#assign errorMessageList=requestAttributes.errorMessageList></#if>
+
+<div class="${styles.grid_large!}centered ${styles.grid_cell}" id="error">
+<@section>
+    <h1><i class="${styles.icon!} ${styles.icon_error!}" style="font-size: 4rem;"></i>  ${label('PageTitleError')!}</h1>
+
+        ${label('CommonFollowingErrorsOccurred')}
+        <#if errorMessage?has_content>
+                        ${StringUtil.wrapString(errorMessage)}
+        </#if>
+        <#if errorMessageList?has_content>
+                        <ol>
+            <#list errorMessageList as errorMsg>
+                          <li>${StringUtil.wrapString(errorMsg)}</li>
+            </#list>
+                        </ol>
+        </#if>
+
+</@section>
+</div>

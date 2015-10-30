@@ -30,6 +30,11 @@ under the License.
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_TMPLT_LOC" resourceValue="component://metro-theme/includes/appbar.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_OPEN_TMPLT" resourceValue="component://metro-theme/includes/appbarOpen.ftl" sequenceId="01"/>
     <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_NAV_CLOSE_TMPLT" resourceValue="component://metro-theme/includes/appbarClose.ftl" sequenceId="01"/>
+
+    <!-- Cato: The following includes can be used to override specific default pages
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_LOGIN_TMPLT_LOC" resourceValue="component://metro-theme/includes/login.ftl" sequenceId="01"/> // Custom Login Page
+    <VisualThemeResource visualThemeId="METRO" resourceTypeEnumId="VT_ERROR_TMPLT_LOC" resourceValue="component://metro-theme/includes/error.ftl" sequenceId="01"/> // Custom Error Page
+     -->
     
     <!-- GENERAL -->
     <!-- Styles -->

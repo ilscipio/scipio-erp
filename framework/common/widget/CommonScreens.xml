@@ -167,6 +167,8 @@ under the License.
                         <set field="appbarOpenTemplateLocation" from-field="layoutSettings.VT_NAV_OPEN_TMPLT[0]" />
                         <set field="appbarCloseTemplateLocation" from-field="layoutSettings.VT_NAV_CLOSE_TMPLT[0]" />
                         <set field="messagesTemplateLocation" from-field="layoutSettings.VT_MSG_TMPLT_LOC[0]" />
+                        <set field="loginTemplateLocation" from-field="layoutSettings.VT_LOGIN_TMPLT_LOC[0]" default-value="component://common/webcommon/login.ftl" global="true"/>
+                        <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl" global="true"/>
                         <set field="layoutSettings.suppressTab" value="ofbizsetup" /><!-- diseable ofbiz setup by default -->
                         <set field="headerTitle" value="${title}" default-value="${uiLabelMap[page.titleProperty]}"/>
                     </actions>
@@ -711,13 +713,12 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleLogin" />
                 <set field="noTitle" value="true" global="true" /><!-- Hack to remove the header element -->
-                <set field="loginTemplateLocation" from-field="layoutSettings.VT_LOGIN_TMPLT_LOC[0]" default-value="component://common/webcommon/login.ftl"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
-                            <html><html-template location="component://common/webcommon/login.ftl"/></html>
+                            <html><html-template location="${loginTemplateLocation}"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>
@@ -730,7 +731,6 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleError" />
                 <set field="noTitle" value="true" global="true" /><!-- Hack to remove the header element -->
-                <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

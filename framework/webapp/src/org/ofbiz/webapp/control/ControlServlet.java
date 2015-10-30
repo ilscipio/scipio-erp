@@ -245,7 +245,7 @@ public class ControlServlet extends HttpServlet {
 
                 // NOTE DEJ20070727 after having trouble with all of these, try to get the page out and as a last resort just send something back
                 try {
-                    rd.include(request, response);
+                    rd.forward(request, response); //CATO: Changed from include to forward so that the response can be handled appropriately
                 } catch (Throwable t) {
                     Debug.logWarning("Error while trying to send error page using rd.include (will try response.getOutputStream or response.getWriter): " + t.toString(), module);
 

@@ -23,7 +23,7 @@ under the License.
     <include location="component://common/webcommon/WEB-INF/handlers-controller.xml"/>
     <description>Common ControlServlet Configuration File</description>
 
-    <errorpage>/error/error.jsp</errorpage>
+    <errorpage>/control/error</errorpage> <!-- /error/error.jsp -->
 
     <preprocessor>
         <!-- Events to run on every request before security (chains exempt) -->
@@ -59,6 +59,9 @@ under the License.
         <response name="success" type="view" value="main"/>
         <response name="requirePasswordChange" type="view" value="requirePasswordChange"/>
         <response name="error" type="view" value="login"/>
+    </request-map>
+    <request-map uri="error">
+        <response name="success" type="view" value="error"/>
     </request-map>
     <request-map uri="logout">
         <security https="true" auth="true"/>
@@ -258,7 +261,7 @@ under the License.
     <!--========================== AJAX events =====================-->
 
     <!-- View Mappings -->
-    <view-map name="error" page="/error/error.jsp"/>
+    <view-map name="error" type="screen" page="component://common/widget/CommonScreens.xml#error"/>
     <view-map name="main" type="none"/>
     <view-map name="login" type="screen" page="component://common/widget/CommonScreens.xml#login"/>
     <view-map name="ajaxLogin" type="screen" page="component://common/widget/CommonScreens.xml#ajaxNotLoggedIn"/>

@@ -14859,6 +14859,10 @@
         <value xml:lang="zh">登录</value>
         <value xml:lang="zh_TW">登入</value>
     </property>
+    <property key="PageTitleError"> 
+        <value xml:lang="de">Error</value>
+        <value xml:lang="en">Error</value>
+    </property>
     <property key="PageTitleLookupGeo">
         <value xml:lang="ar">إستعراض الإحداثيات</value>
         <value xml:lang="cs">Vyhledání polohy</value>

@@ -711,12 +711,31 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleLogin" />
                 <set field="noTitle" value="true" global="true" /><!-- Hack to remove the header element -->
+                <set field="loginTemplateLocation" from-field="layoutSettings.VT_LOGIN_TMPLT_LOC[0]" default-value="component://common/webcommon/login.ftl"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html><html-template location="component://common/webcommon/login.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    
+     <screen name="error">
+        <section>
+            <actions>
+                <set field="titleProperty" value="PageTitleError" />
+                <set field="errorTemplateLocation" from-field="layoutSettings.VT_ERROR_TMPLT_LOC[0]" default-value="component://common/webcommon/error.ftl"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="${errorTemplateLocation}"/></html>
                         </platform-specific>
                     </decorator-section>
                 </decorator-screen>

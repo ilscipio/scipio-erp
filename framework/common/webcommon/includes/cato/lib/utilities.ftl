@@ -1031,6 +1031,27 @@ Now implemented as java transform.
 
 <#-- 
 *************
+* globalPutAll function
+************
+Puts all key-value pairs from given map into FTL globals.
+Now implemented as java transform.
+
+   * Parameters *
+    map         = the source map
+    mode        = optional mode flags
+                  "e": exclude listed keys
+                  "i": include only listed keys
+                  "d": include only directives (?is_directive)
+    inExKeys    = optional list or wrapped set of keys to include or exclude           
+
+<#function globalPutAll map mode="" inExKeys=[]>
+- implemented as java transform -
+</#function>
+-->
+
+
+<#-- 
+*************
 * elemAttribStr macro
 ************
 Prints a string of element attributes. (HTML, FO, XML)

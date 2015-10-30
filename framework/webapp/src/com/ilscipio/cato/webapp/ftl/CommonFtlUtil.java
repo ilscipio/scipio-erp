@@ -22,6 +22,7 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 
 import freemarker.core.Environment;
+import freemarker.core.Macro;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.SimpleMapModel;
 import freemarker.ext.util.WrapperTemplateModel;
@@ -29,6 +30,7 @@ import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateCollectionModel;
+import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
@@ -36,6 +38,7 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateModelIterator;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
+import freemarker.template.TemplateTransformModel;
 import javolution.util.FastMap;
 
 /**
@@ -825,5 +828,12 @@ public final class CommonFtlUtil {
         else {
             throw new TemplateModelException("object is not a recognized map type");
         }
+    }
+    
+    /**
+     * Same as Freemarker's ?is_directive.
+     */
+    public static boolean isDirective(Object object) {
+        return (object instanceof TemplateTransformModel || object instanceof Macro || object instanceof TemplateDirectiveModel);
     }
 }

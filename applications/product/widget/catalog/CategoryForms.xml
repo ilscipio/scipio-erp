@@ -226,8 +226,8 @@ under the License.
         <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
             <display-entity entity-name="RoleType"></display-entity>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
         <field name="comment" title="${uiLabelMap.CommonComment}"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -261,13 +261,19 @@ under the License.
         <field name="contentId" title="${uiLabelMap.ProductContentId}">
             <lookup target-form-name="LookupContent"/>
         </field>
-        <field name="prodCatContentTypeId">
+        <field name="prodCatContentTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down>
                 <entity-options entity-name="ProductCategoryContentType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="purchaseFromDate"><date-time type="date"/></field>
+        <field name="purchaseThruDate" position="2"><date-time type="date"/></field>
+        <field name="useCountLimit"><text/></field>
+        <field name="useDaysLimit" position="2"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -302,8 +308,8 @@ under the License.
         <field name="prodCatContentTypeId" title="${uiLabelMap.ProductType}">
             <display-entity entity-name="ProductCategoryContentType" also-hidden="false" description="${description}"/>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <!--
         jacopoc: I've disabled the ability to update a content record because it was not working
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="timestamp"/></field>
@@ -338,15 +344,17 @@ under the License.
 
         <field use-when="content==null" name="contentId"><ignored/></field>
         <field use-when="content!=null" name="contentId" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="categoryContentData"><display/></field>
-        <field name="fromDate" use-when="contentId==null" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time/></field>
-        <field name="fromDate" use-when="contentId!=null" title="${uiLabelMap.CommonFrom}" ><display/></field>
-
-        <field name="prodCatContentTypeId"><display-entity entity-name="ProductCategoryContentType" also-hidden="true"/></field>
-        <field name="description" map-name="content"><text size="40"/></field>
+        <field name="prodCatContentTypeId" title="${uiLabelMap.CommonType}" position="2"><display-entity entity-name="ProductCategoryContentType" also-hidden="true"/></field>
+        <field name="fromDate" use-when="contentId==null" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time type="date"/></field>
+        <field name="fromDate" use-when="contentId!=null" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
+        
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
+        <field name="description" map-name="content"><textarea/></field>
         <field name="localeString" map-name="content"><text size="40"/></field>
         <field name="text" map-name="textDataMap"><textarea cols="80" rows="10"/></field>
         <field name="textDataResourceId" map-name="textDataMap"><hidden/></field>
         <field name="useCountLimit"><hidden/></field>
+        <field name="useDaysLimit"><hidden/></field>
         <field name="purchaseThruDate"><hidden/></field>
         <field name="purchaseFromDate"><hidden/></field>
         <field name="productCategoryId"><hidden/></field>
@@ -364,15 +372,15 @@ under the License.
     </form>
 
     <!-- ProductCategoryLink Forms-->
-    <form name="ListProductCategoryLinks" type="list" list-name="productCategoryLinks" target="updateProductCategoryAction" separate-columns="true"
+    <form name="ListProductCategoryLinks" type="list" list-name="productCategoryLinks" target="updateProductCategoryLink" separate-columns="true"
         title="" odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <actions>
-            <entity-condition entity-name="ProductCategoryAction">
+            <entity-condition entity-name="ProductCategoryLink">
                 <condition-expr field-name="productCategoryId" from-field="productCategoryId"/>
                 <order-by field-name="sequenceNum"/>
             </entity-condition>
         </actions>
-        <auto-fields-service service-name="updateProductCategoryAction"/>
+        <auto-fields-service service-name="updateProductCategoryLink"/>
 
         <field name="productCategoryId"><hidden/></field>
         <field name="linkSeqId"><display/></field>
@@ -397,10 +405,10 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
 
-    <form name="AddProductCategoryAction" type="single" target="createProductCategoryAction" title="" default-map-name="productCategoryAction"
+    <form name="AddProductCategoryLink" type="single" target="createProductCategoryLink" title="" default-map-name="productCategoryAction"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="productCategoryLink != null" target="updateProductCategoryAction"/>
-        <auto-fields-service service-name="createProductCategoryAction"/>
+        <auto-fields-service service-name="createProductCategoryLink"/>
         <field name="productCategoryId"><hidden/></field>
         <field name="linkSeqId" use-when="productCategoryLink==null"><ignored/></field>
         <field name="linkSeqId" use-when="productCategoryLink!=null"><display/></field>

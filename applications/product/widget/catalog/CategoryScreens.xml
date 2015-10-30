@@ -164,14 +164,14 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ProductUpdateCategoryContentAssoc}">
-                            <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/>
-                        </screenlet>
                         <screenlet title="${uiLabelMap.ProductAddProductCategoryContentFromDate}">
                             <include-form name="PrepareAddCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.ProductAddContentCategory}">
                             <include-form name="AddCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/>
+                        </screenlet>
+                        <screenlet title="${uiLabelMap.ProductUpdateCategoryContentAssoc}">
+                            <include-form name="UpdateCategoryContentAssoc" location="component://product/widget/catalog/CategoryForms.xml"/>
                         </screenlet>
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/category/EditCategoryContent.ftl"/></html>
@@ -505,7 +505,7 @@ under the License.
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleCreateProductCategoryLink}">
                             <label>&gt;&gt;&gt;&gt;&gt;This function is depreciated and replaced by the function under the tab &quot;Content&quot; with the content type "Related URL"</label>
-                            <include-form name="AddProductCategoryLink" location="component://product/widget/catalog/CategoryForms.xml"/>
+                            
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

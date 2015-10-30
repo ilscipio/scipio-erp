@@ -32,8 +32,8 @@ under the License.
               <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductFeatureGroup}</@th>
-                    <@th>${uiLabelMap.CommonFromDateTime}</@th>
-                    <@th align="center">${uiLabelMap.CommonThruDateTime}</@th>
+                    <@th>${uiLabelMap.CommonFrom}</@th>
+                    <@th align="center">${uiLabelMap.CommonThru}</@th>
                     <@th>&nbsp;</@th>
                 </@tr>
                 </@thead>
@@ -43,10 +43,10 @@ under the License.
                 <#assign line = line + 1>
                 <#assign productFeatureGroup = (productFeatureCatGrpAppl.getRelatedOne("ProductFeatureGroup", false))?default(null)>
                 <@tr valign="middle">
-                    <@td><a href="<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${(productFeatureCatGrpAppl.productFeatureGroupId)!}</@ofbizUrl>" class="${styles.button_default!}"><#if productFeatureGroup??>${(productFeatureGroup.description)!}</#if> [${(productFeatureCatGrpAppl.productFeatureGroupId)!}]</a></@td>
+                    <@td><a href="<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${(productFeatureCatGrpAppl.productFeatureGroupId)!}</@ofbizUrl>" class="${styles.link_default!}"><#if productFeatureGroup??>${(productFeatureGroup.description)!}</#if> [${(productFeatureCatGrpAppl.productFeatureGroupId)!}]</a></@td>
                     <#assign hasntStarted = false>
                     <#if (productFeatureCatGrpAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productFeatureCatGrpAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
-                    <@td><div<#if hasntStarted> style="color: red;</#if>>${(productFeatureCatGrpAppl.fromDate)!}</div></@td>
+                    <@td><div<#if hasntStarted> style="color: red;</#if>>${(productFeatureCatGrpAppl.fromDate?date?string.short)!}</div></@td>
                     <@td align="center">
                         <form method="post" action="<@ofbizUrl>updateProductFeatureCatGrpAppl</@ofbizUrl>" name="lineFormGrp${line}">
                             <#assign hasExpired = false>
@@ -74,7 +74,8 @@ under the License.
             <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
         </#if>
     </@section>
-  <#if productFeatureGroups?has_content>    
+    
+  <#if productFeatureGroups?has_content>
     <@section title="${uiLabelMap.ProductApplyFeatureGroupFromCategory}">
         <form method="post" action="<@ofbizUrl>createProductFeatureCatGrpAppl</@ofbizUrl>" name="addNewGroupForm">
           <@fields type="default-nolabels">
@@ -96,15 +97,16 @@ under the License.
         </form> 
     </@section>
   </#if>
+  
     <@section title="${uiLabelMap.ProductApplyFeatureGroupFromCategory}">
         <#if productFeatureCategoryAppls?has_content>
             <#-- Feature Categories -->
             <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
               <@thead>
                 <@tr class="header-row">
-                    <@th>${uiLabelMap.ProductFeatureCategory}</@th>
-                    <@th>${uiLabelMap.CommonFromDateTime}</@th>
-                    <@th align="center">${uiLabelMap.CommonThruDateTime}</@th>
+                    <@th>${uiLabelMap.ProductFeature}</@th>
+                    <@th>${uiLabelMap.CommonFrom}</@th>
+                    <@th align="center">${uiLabelMap.CommonThru}</@th>
                     <@th>&nbsp;</@th>
                 </@tr>
                </@thead> 
@@ -113,11 +115,11 @@ under the License.
                 <#assign line = line + 1>
                 <#assign productFeatureCategory = (productFeatureCategoryAppl.getRelatedOne("ProductFeatureCategory", false))?default(null)>
                 <@tr valign="middle">
-                    <@td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureCategoryAppl.productFeatureCategoryId)!}</@ofbizUrl>" class="${styles.button_default!}"><#if productFeatureCategory??>${(productFeatureCategory.description)!}</#if> [${(productFeatureCategoryAppl.productFeatureCategoryId)!}]</a></@td>
+                    <@td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureCategoryAppl.productFeatureCategoryId)!}</@ofbizUrl>" class="${styles.link_default!}"><#if productFeatureCategory??>${(productFeatureCategory.description)!}</#if> [${(productFeatureCategoryAppl.productFeatureCategoryId)!}]</a></@td>
                     <#assign hasntStarted = false>
                     <#if (productFeatureCategoryAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productFeatureCategoryAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
                     <#assign colorStyle><#if hasntStarted> style="color: red;"</#if></#assign>
-                    <@td style=colorStyle>${(productFeatureCategoryAppl.fromDate)!}</@td>
+                    <@td style=colorStyle>${(productFeatureCategoryAppl.fromDate?date?string.short)!}</@td>
                     <@td align="center">
                         <form method="post" action="<@ofbizUrl>updateProductFeatureCategoryAppl</@ofbizUrl>" name="lineForm${line}">
                             <#assign hasExpired = false>
@@ -144,25 +146,5 @@ under the License.
         <#else>
             <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
         </#if>
-    </@section>
-    <@section title="${uiLabelMap.ProductApplyFeatureGroupToCategory}">
-        <form method="post" action="<@ofbizUrl>createProductFeatureCategoryAppl</@ofbizUrl>" name="addNewCategoryForm">
-          <@fields type="default-nolabels">
-            <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-            <@field type="generic">
-                <select name="productFeatureCategoryId">
-                <#list productFeatureCategories as productFeatureCategory>
-                    <option value="${(productFeatureCategory.productFeatureCategoryId)!}">${(productFeatureCategory.description)!} [${(productFeatureCategory.productFeatureCategoryId)!}]</option>
-                </#list>
-                </select>
-            </@field>
-            <@field type="generic">
-                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-            </@field>
-            <@field type="submitarea">
-                <input type="submit" value="${uiLabelMap.CommonAdd}" />
-            </@field>
-          </@fields>
-        </form>
     </@section>
 </#if>

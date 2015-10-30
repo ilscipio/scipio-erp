@@ -1460,7 +1460,7 @@ under the License.
     <screen name="ViewProductGroupOrder">
         <section>
             <actions>
-                <set field="titleProperty" value="PageTitleViewProductGroupOrder"/>
+                <set field="titleProperty" value="ProductGroupOrder"/>
                 <set field="tabButtonItem" value="ViewProductGroupOrder"/>
                 <set field="labelTitleProperty" value="ProductGroupOrder"/>
                 <set field="productId" from-field="parameters.productId"/>

@@ -272,7 +272,6 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditCategoryProducts"/>
                 <set field="tabButtonItem" value="EditCategoryProducts"/>
                 <set field="labelTitleProperty" value="ProductProducts"/>
-
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
 
                 <script location="component://product/webapp/catalog/WEB-INF/actions/category/EditCategoryProducts.groovy"/>
@@ -280,9 +279,28 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
+                        
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/category/AddCategoryProduct.ftl"/></html>
+                        </platform-specific>
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/category/EditCategoryProducts.ftl"/></html>
                         </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/category/MoveCategoryProduct.ftl"/></html>
+                        </platform-specific>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/catalog/category/ExpireCategoryProduct.ftl"/></html>
+                                </platform-specific>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <platform-specific>
+                                    <html><html-template location="component://product/webapp/catalog/category/RemoveCategoryProduct.ftl"/></html>
+                                </platform-specific>
+                            </container>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

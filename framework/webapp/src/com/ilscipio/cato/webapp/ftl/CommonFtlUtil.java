@@ -374,26 +374,41 @@ public final class CommonFtlUtil {
      * 
      * @param name the multi-context unique global var name
      * @param value the value, either raw or <code>TemplateModel</code>
+     * @param unwrap if true, always try to unwrap value before storing, where possible; if false,
+     *               never try to unwrap; if null, implementation decides; generally should be set to null 
      * @param request the servlet request, or null if not available
      * @param context the screen context, or null if not available
      * @param env the Freemarker environment, or null if not available
      * @throws TemplateModelException
      * @see #getRequestVar
      */
-    public static void setRequestVar(String name, Object value, HttpServletRequest request, 
+    public static void setRequestVar(String name, Object value, Boolean unwrap, HttpServletRequest request, 
             Map<String, Object> context, Environment env) throws TemplateModelException {
         if (request != null) {
-            // WARNING: unwrapping inconsistent with pushRequestStack, but wanted here for compatibility and debugging
-            //request.setAttribute(name, value);
-            request.setAttribute(name, FtlTransformUtil.unwrapPermissive(value));
+            if (unwrap == Boolean.FALSE) {
+                request.setAttribute(name, value);
+            }
+            else {
+                // WARNING: for general case unwrap == null (default), unwrapping inconsistent with pushRequestStack, 
+                // but wanted here for compatibility and debugging
+                // Caller can specify false for places where optimization needed or other reasons.
+                request.setAttribute(name, FtlTransformUtil.unwrapPermissive(value));
+            }
             //Debug.logInfo("setRequestVar: request attrib (name: " + name + ")", module);
         }
         else {
             Map<String, Object> globalContext = FtlTransformUtil.getGlobalContext(context, env);
             if (globalContext != null) {
-                // WARNING: unwrapping inconsistent with pushRequestStack, but wanted here for compatibility and debugging
+                if (unwrap == Boolean.FALSE) {
+                    globalContext.put(name, value);
+                }
+                else {
+                    // WARNING: for general case unwrap == null (default), unwrapping inconsistent with pushRequestStack,
+                    // but wanted here for compatibility and debugging
+                    // Caller can specify false for places where optimization needed or other reasons.
+                    globalContext.put(name, FtlTransformUtil.unwrapPermissive(value));
+                }
                 //globalContext.put(name, value);
-                globalContext.put(name, FtlTransformUtil.unwrapPermissive(value));
                 //Debug.logInfo("setRequestVar: globalContext var (name: " + name + ")", module);
             }
             else if (env != null) {
@@ -407,19 +422,33 @@ public final class CommonFtlUtil {
         }
     }    
     
+    public static void setRequestVar(String name, Object value, Boolean unwrap, Environment env) throws TemplateModelException {
+        HttpServletRequest request = FtlTransformUtil.getRequest(env);
+        Map<String, Object> context = null;
+        if (request == null) { // optimization: don't need to look this up if has request (true in most cases now)
+            context = FtlTransformUtil.getContext(env);
+        }
+        setRequestVar(name, value, unwrap, request, context, env);
+    }
+    
     public static void setRequestVar(String name, Object value, Environment env) throws TemplateModelException {
         HttpServletRequest request = FtlTransformUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) { // optimization: don't need to look this up if has request (true in most cases now)
             context = FtlTransformUtil.getContext(env);
         }
-        setRequestVar(name, value, request, context, env);
+        setRequestVar(name, value, null, request, context, env);
+    }    
+    
+    public static void setRequestVar(String name, Object value, Boolean unwrap, HttpServletRequest request, 
+            Map<String, Object> context) throws TemplateModelException {
+        setRequestVar(name, value, unwrap, request, context, null);
     }
     
     public static void setRequestVar(String name, Object value, HttpServletRequest request, 
             Map<String, Object> context) throws TemplateModelException {
-        setRequestVar(name, value, request, context, null);
-    }
+        setRequestVar(name, value, null, request, context, null);
+    }    
     
     /**
      * Method for getting request-scope variables, with fallback to globals.

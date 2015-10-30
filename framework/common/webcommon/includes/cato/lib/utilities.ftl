@@ -1001,8 +1001,12 @@ Now implemented as java transform.
     name        = global request var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
     val         = value
+    mode        = optional, string; mode characters
+                  "u": always unwrap the TemplateModel before storing (where possible)
+                  "w": always keep TemplateModel as-is (wrapped) when storing
+                  "u" and "w" are usually unnecessary and should be avoided in most template and macro code.
     
-<#function setRequestVar name val>
+<#function setRequestVar name val mode="">
 - implemented as java transform -
 </#function>
 -->

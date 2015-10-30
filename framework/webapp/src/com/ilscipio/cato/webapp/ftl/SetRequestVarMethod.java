@@ -45,17 +45,31 @@ public class SetRequestVarMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        if (args == null || args.size() != 2) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 2)");
+        if (args == null || args.size() < 2 || args.size() > 3) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 2-3)");
         }
         TemplateModel nameModel = (TemplateModel) args.get(0);
         if (!(nameModel instanceof TemplateScalarModel)) {
             throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
         }
         TemplateModel valueModel = (TemplateModel) args.get(1);
+        
+        Boolean unwrap = null;
+        if (args.size() >= 3) {
+            TemplateModel modeModel = (TemplateModel) args.get(2);
+            if (modeModel != null) {
+                String mode = ((TemplateScalarModel) modeModel).getAsString();
+                if ("u".equals(mode)) {
+                    unwrap = Boolean.TRUE;
+                }
+                else if ("w".equals(mode)) {
+                    unwrap = Boolean.FALSE;
+                }
+            }
+        }
 
         Environment env = FtlTransformUtil.getCurrentEnvironment();
-        CommonFtlUtil.setRequestVar(((TemplateScalarModel) nameModel).getAsString(), valueModel, env);
+        CommonFtlUtil.setRequestVar(((TemplateScalarModel) nameModel).getAsString(), valueModel, unwrap, env);
 
         return new SimpleScalar("");
     }

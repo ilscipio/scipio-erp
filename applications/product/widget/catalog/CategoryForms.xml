@@ -223,7 +223,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="roleTypeId" title="${uiLabelMap.CommonType}">
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
             <display-entity entity-name="RoleType"></display-entity>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>

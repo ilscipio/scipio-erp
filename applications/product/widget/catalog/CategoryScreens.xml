@@ -68,6 +68,12 @@ under the License.
                         <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/category/EditCategory.ftl"/></html>
                         </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/category/UploadCategoryImage.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/category/DuplicateCategory.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

@@ -97,8 +97,9 @@ under the License.
         <auto-fields-service service-name="createProductConfigOption"/>
 
         <field use-when="configOption!=null" name="configOptionId"><hidden/></field>
-        <field name="configItemId"><hidden value="${configItemId}"/></field>
-
+        <field name="configItemId" ><hidden value="${configItemId}"/></field>
+        <field name="configOptionName" title="${uiLabelMap.CommonName}"><text/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><textarea/></field>
         <field use-when="configOption!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -110,8 +111,8 @@ under the License.
 
         <field name="configItemId"><hidden value="${configItemId}"/></field>
         <field name="configOptionId"><hidden value="${configOptionId}"/></field>
-        <field use-when="productConfigProduct!=null" name="productId"><display/></field>
-        <field use-when="productConfigProduct==null" name="productId">
+        <field use-when="productConfigProduct!=null" name="productId" title="${uiLabelMap.CommonProduct}"><display/></field>
+        <field use-when="productConfigProduct==null" name="productId" title="${uiLabelMap.CommonProduct}">
             <lookup target-form-name="LookupProduct"/>
         </field>
         <field use-when="productConfigProduct!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -213,12 +214,12 @@ under the License.
             </entity-condition>
         </actions>
         <auto-fields-entity entity-name="ProductConfigAndProduct" default-field-type="hidden"/>
-        <field name="productId" widget-style="${styles.link_default}" >
+        <field name="productId" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_default}" >
             <hyperlink target="EditProductConfigs" description="${productId}">
                 <parameter param-name="productId"/>
             </hyperlink>
         </field>
-        <field name="productName" title="${uiLabelMap.ProductName}"><display description="${productName}"/></field>
+        <field name="productName" title="${uiLabelMap.CommonName}"><display description="${productName}"/></field>
         <field name="piecesIncluded" title="${uiLabelMap.ProductPiecesIncluded}"><display description="${piecesIncluded}"/></field>
     </form>
 
@@ -253,7 +254,7 @@ under the License.
         <auto-fields-service service-name="createProductConfigProduct" default-field-type="display"/>
         <field name="configItemId" ><hidden/></field>
         <field name="configOptionId" ><hidden/></field>
-        <field name="productId" widget-style="${styles.link_default}">
+        <field name="productId" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_default}">
             <hyperlink target="EditProduct" description="${product.productId} - ${product.productName}">
                 <parameter param-name="productId" from-field="product.productId"/>
             </hyperlink>

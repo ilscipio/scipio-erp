@@ -114,9 +114,6 @@ under the License.
     <screen name="configOptions">
         <section>
             <widgets>
-                <screenlet title="${uiLabelMap.ProductConfigOptionList}">
-                    <include-form name="ProductConfigOptionList" location="component://product/widget/catalog/ConfigForms.xml"/>
-                </screenlet>
                 <section>
                     <condition><not><if-empty field="configOptionId"/></not></condition>
                     <widgets>
@@ -133,6 +130,9 @@ under the License.
                         </screenlet>
                     </fail-widgets>
                 </section>
+                <screenlet title="${uiLabelMap.ProductConfigOptionList}">
+                    <include-form name="ProductConfigOptionList" location="component://product/widget/catalog/ConfigForms.xml"/>
+                </screenlet>
             </widgets>
         </section>
     </screen>

@@ -247,7 +247,7 @@ public class ControlServlet extends HttpServlet {
                 try {
                     rd.forward(request, response); //CATO: Changed from include to forward so that the response can be handled appropriately
                 } catch (Throwable t) {
-                    Debug.logWarning("Error while trying to send error page using rd.include (will try response.getOutputStream or response.getWriter): " + t.toString(), module);
+                    Debug.logWarning("Error while trying to send error page using rd.forward (will try response.getOutputStream or response.getWriter): " + t.toString(), module);
 
                     String errorMessage = "ERROR rendering error page [" + errorPage + "], but here is the error text: " + request.getAttribute("_ERROR_MESSAGE_");
                     try {

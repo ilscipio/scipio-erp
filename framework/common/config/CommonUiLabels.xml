@@ -6131,6 +6131,20 @@
         <value xml:lang="zh_CN">注销</value>
         <value xml:lang="zh_TW">登出</value>
     </property>
+    <property key="CommonLongDescription">
+        <value xml:lang="de">Ausführliche Beschreibung</value>
+        <value xml:lang="en">Long Description</value>
+        <value xml:lang="es">Descripción larga</value>
+        <value xml:lang="fr">Description longue</value>
+        <value xml:lang="it">Descrizione estesa</value>
+        <value xml:lang="ja">詳細</value>
+        <value xml:lang="ro">Descriere Lunga</value>
+        <value xml:lang="ru">Длинное описание</value>
+        <value xml:lang="th">คำอธิบาย</value>
+        <value xml:lang="vi">Miêu tả chi tiết</value>
+        <value xml:lang="zh">详细描述</value>
+        <value xml:lang="zh_TW">詳細描述</value>
+    </property>
     <property key="CommonLongitude">
         <value xml:lang="ar">خط الطول</value>
         <value xml:lang="cs">Zeměpisná délka: </value>
@@ -6363,6 +6377,14 @@
         <value xml:lang="zh">管理员</value>
         <value xml:lang="zh_CN">经理</value>
         <value xml:lang="zh_TW">管理者</value>
+    </property>
+    <property key="CommonMandatory">
+        <value xml:lang="en">Mandatory</value>
+        <value xml:lang="fr">Obligatoire</value>
+        <value xml:lang="ja">必須</value>
+        <value xml:lang="vi">Bắt buộc</value>
+        <value xml:lang="zh">必须</value>
+        <value xml:lang="zh_TW">必須</value>
     </property>
     <property key="CommonMany">
         <value xml:lang="ar">الكثير</value>

@@ -85,12 +85,13 @@
      Easier with a loop for now but this assumes all are meant to be public (not true)...
      If not done they are not accessible from #import-ed libraries and other places.
      This is also done so that the behavior is the same as the java-based ofbiz transforms such as @ofbizUrl,
-     which are in global namespace. -->
+     which are in global namespace.
 <#list .main?keys as name>
   <#if .main[name]?is_directive && !catoOrigMainNsNamesSet.contains(name)>
     <@"<#global '${name}'=.main['${name}']>"?interpret />
   </#if>
-</#list>
+</#list> -->
+<#assign dummy = globalsPutAll(.main, "ed", catoOrigMainNsNamesSet)>
 
 <#-- compatibility mode: define styles hash entries as individual style_ vars
 <#list mapKeys(styles) as name>

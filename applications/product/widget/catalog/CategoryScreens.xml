@@ -248,14 +248,20 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ProductAddCategoryParent}">
-                            <include-form location="component://product/widget/catalog/CategoryForms.xml" name="AddCategoryParent"/>
-                        </screenlet>
+                        <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <screenlet title="${uiLabelMap.ProductAddCategoryParent}">
+                                    <include-form location="component://product/widget/catalog/CategoryForms.xml" name="AddCategoryParent"/>
+                                </screenlet>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <screenlet title="${uiLabelMap.ProductAddCategoryChild}">
+                                    <include-form location="component://product/widget/catalog/CategoryForms.xml" name="AddCategoryChild"/>
+                                </screenlet>
+                            </container>
+                        </container>
                         <screenlet title="${uiLabelMap.ProductCategoryRollupParentCategories}">
                             <include-form location="component://product/widget/catalog/CategoryForms.xml" name="UpdateCategoryParent"/>
-                        </screenlet>
-                        <screenlet title="${uiLabelMap.ProductAddCategoryChild}">
-                            <include-form location="component://product/widget/catalog/CategoryForms.xml" name="AddCategoryChild"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.ProductCategoryRollupChildCategories}">
                             <include-form location="component://product/widget/catalog/CategoryForms.xml" name="UpdateCategoryChild"/>

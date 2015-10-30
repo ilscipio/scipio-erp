@@ -75,6 +75,10 @@
 
 <#-- Do the platform-dependent lib includes. -->
 <@catoVariablesIncludeDirective />
+<#-- make the styles var persist for anything that might need it (usually not FTL, for now always reincluded above) 
+     NOTE: is FTL-wrapped; any code reading back must use FtlTransformUtil.unwrapXxx -->
+<#assign dummy = setRequestVar("catoTmplVarStyles", styles!{}, "w")> 
+
 <@catoTemplateIncludeDirective />
 
 <#-- FIXME? For now we must copy/dump all cato macro and function defs from main namespace into the global namespace manually.

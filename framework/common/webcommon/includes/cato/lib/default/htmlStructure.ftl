@@ -291,8 +291,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#if !type?has_content>
         <#local type = "generic">
     </#if>
-    <#local addClass = parseAddClassArg(class)>
-    <#local class = parseClassArg(class, "")>
+    <#local classes = makeClassesArg(class, "")>
     <#if id?has_content>
         <#local contentId = id + "_content">
         <#local menuId = id + "_menu">
@@ -308,8 +307,8 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 </#if>
     <#-- note: addClass logic is only partially implemented (doesn't support booleans and "" means use default; otherwise may conflict with stock API?), but good enough for now -->
     <#-- note: autoHeadingLevel logic now implemented in renderScreenletBegin -->
-    <@section_impl id=id collapsibleAreaId=contentId title=title classes=class padded=padded menuContent=menuContent fromWidgets=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
-        forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass addClasses=addClass
+    <@section_impl id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuContent=menuContent fromWidgets=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
+        forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass 
         openOnly=openOnly closeOnly=closeOnly wrapIf=wrapIf>
         <#nested />
     </@section_impl>
@@ -327,7 +326,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     hasContent: hint to say there will be content, workaround for styling -->
 <#macro section_impl id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuContent="" showMore=true collapsed=false 
     javaScriptEnabled=true fromWidgets=true menuClass="" menuId="" menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="" titleContainerStyle="" titleConsumeLevel=true 
-    autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" addClasses="" openOnly=false closeOnly=false wrapIf=true>
+    autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" openOnly=false closeOnly=false wrapIf=true>
 
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
@@ -547,8 +546,6 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#local contentFlagClasses>section-level-${sLevel} heading-level-${hLevel}<#if hasTitle> has-title<#else> no-title</#if><#if hasMenu> has-menu<#else> no-menu</#if><#if hasContent> has-content<#else> no-content</#if></#local>
 </#if> <#-- /#(if open) -->
 
-    <#local classes = (classes + " " + addClasses)?trim>
-
     <#-- TODO: in this whole section I have for now only passed the args to markup macros that were needed and 
          were in acceptable form as cato args; they should probably receive more; but avoid ofbiz-isms -->
 
@@ -615,7 +612,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <div class="section-screenlet<#if contentFlagClasses?has_content> ${contentFlagClasses}</#if><#if collapsed> toggleField</#if>">
         <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
         <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
-            <div class="section-screenlet-container<#if classes?has_content> ${classes}<#else> ${styles.grid_large!}12</#if><#if addClasses?has_content> ${addClasses}</#if> ${styles.grid_cell!}<#if contentFlagClasses?has_content> ${contentFlagClasses}</#if>">
+            <div class="section-screenlet-container<#if classes?has_content> ${classes}<#else> ${styles.grid_large!}12</#if> ${styles.grid_cell!}<#if contentFlagClasses?has_content> ${contentFlagClasses}</#if>">
   </#if>
     <#nested>
   <#if close>

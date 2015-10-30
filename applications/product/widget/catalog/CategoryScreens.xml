@@ -372,6 +372,9 @@ under the License.
                 <decorator-screen name="CommonCategoryDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/category/ApplyFeatureToCategory.ftl"/></html>
+                        </platform-specific>
+                        <platform-specific>
                             <html><html-template location="component://product/webapp/catalog/category/EditCategoryFeatureCats.ftl"/></html>
                         </platform-specific>
                     </decorator-section>

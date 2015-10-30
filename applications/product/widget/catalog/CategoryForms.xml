@@ -140,8 +140,8 @@ under the License.
         <field name="prodCatalogCategoryTypeId" title="${uiLabelMap.CommonType}">
             <display-entity entity-name="ProdCatalogCategoryType"></display-entity>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">

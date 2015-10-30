@@ -446,11 +446,9 @@ under the License.
             <widgets>
                 <decorator-screen name="GenericTransactionDecorator" location="component://accounting/widget/TransactionScreens.xml">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingManualTransaction}">
-                            <platform-specific>
-                                <html><html-template location="component://accounting/webapp/accounting/payment/manualTx.ftl"/></html>
-                            </platform-specific>
-                        </screenlet>
+	                    <platform-specific>
+	                        <html><html-template location="component://accounting/webapp/accounting/payment/manualTx.ftl"/></html>
+	                    </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

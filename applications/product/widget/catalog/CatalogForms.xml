@@ -12,7 +12,7 @@
         <field name="prodCatalogId" title="${uiLabelMap.CommonId}">
             <text-find />
         </field>
-        <field name="catalogName" title="${uiLabelMap.CommonName}">
+        <field name="catalogName" title="${uiLabelMap.CommonName}" position="2">
             <text-find />
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">

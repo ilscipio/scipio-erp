@@ -20,7 +20,23 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-    <form name="FindProductConfigItems" type="list" list-name="listIt"
+    
+    <form name="FindProductConfigItems" type="single" target="FindProductConfigItems"
+        default-map-name="productconfigitems" header-row-style="header-row" default-table-style="${styles.table_basic}">
+        <field name="configItemId" title="${uiLabelMap.CommonId}"><text-find/></field>
+        <field name="configItemName" title="${uiLabelMap.CommonName}" position="2"><text-find/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
+        <field name="configItemTypeId" title="${uiLabelMap.CommonType}" position="2">
+            <drop-down>
+                <option key="SINGLE" description="${uiLabelMap.ProductSingleChoice}"/>
+                <option key="MULTIPLE" description="${uiLabelMap.ProductMultiChoice}"/>
+            </drop-down>
+        </field>
+        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    
+    <form name="ListProductConfigItems" type="list" list-name="listIt"
         default-table-style="${styles.table_basic}" odd-row-style="alternate-row" paginate-target="FindProductConfigItems"
         target="" header-row-style="header-row-2" paginate="true">
         <actions>
@@ -32,9 +48,9 @@ under the License.
             </service>
         </actions>
         <row-actions>
-            <set field="typeDescription" value="${bsh: return &quot;SINGLE&quot;.equals(configItemTypeId) ? uiLabelMap.get(&quot;ProductSingleChoice&quot;) : uiLabelMap.get(&quot;ProductMultiChoice&quot;)}"/>
+            <set field="typeDescription" value="${groovy: return &quot;SINGLE&quot;.equals(configItemTypeId) ? uiLabelMap.get(&quot;ProductSingleChoice&quot;) : uiLabelMap.get(&quot;ProductMultiChoice&quot;)}"/>
         </row-actions>
-        <field name="configItemId" title="${uiLabelMap.ProductConfigItem}" widget-style="${styles.link_default}">
+        <field name="configItemId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}">
             <hyperlink target="EditProductConfigItem" description="${configItemId}">
                 <parameter param-name="configItemId"/>
             </hyperlink>
@@ -45,38 +61,27 @@ under the License.
         </field>
         <field name="description"><display/></field>
     </form>
-    <form name="FindProductConfigItemsFrom" type="single" target="FindProductConfigItems"
-        default-map-name="productconfigitems" header-row-style="header-row" default-table-style="${styles.table_basic}">
-        <auto-fields-entity entity-name="ProductConfigItem" default-field-type="find"/>
-        <field name="configItemId" title="${uiLabelMap.ProductConfigItem}"/>
-        <field name="configItemTypeId"><hidden/></field>
-        <field name="configItemName"/>
-        <field name="description"/>
-        <field name="longDescription"><hidden/></field>
-        <field name="imageUrl"><hidden/></field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
-    </form>
+    
     <form name="EditProductConfigItem" type="single" target="updateProductConfigItem" title="" default-map-name="configItem"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
-
         <alt-target use-when="configItem==null" target="createProductConfigItem"/>
-
-        <auto-fields-service service-name="updateProductConfigItem"/>
         <field name="longDescription" title="${uiLabelMap.ProductLongDescription}"><ignored/></field>
         <field name="imageUrl"><ignored/></field>
-        <field use-when="configItem!=null" name="configItemId" title="${uiLabelMap.ProductConfigItem}" tooltip="${uiLabelMap.ProductNotModificationRecreatingProductConfigItems}"><display/></field>
-        <field use-when="configItem==null&amp;&amp;configItemId!=null" name="configItemId" title="${uiLabelMap.ProductConfigItem}" tooltip="${uiLabelMap.ProductCouldNotFindProductConfigItemWithId} [${configItemId}]"><display description="" also-hidden="false"/></field>
-        <field use-when="configItem==null&amp;&amp;configItemId==null" name="configItemId" title="${uiLabelMap.ProductConfigItem}"><ignored/></field>
-        <field name="configItemTypeId" title="${uiLabelMap.ProductConfigItem} ${uiLabelMap.CommonType}">
+        <field use-when="configItem!=null" name="configItemId" title="${uiLabelMap.CommonId}" tooltip="${uiLabelMap.ProductNotModificationRecreatingProductConfigItems}"><display/></field>
+        <field use-when="configItem==null&amp;&amp;configItemId!=null" name="configItemId" title="${uiLabelMap.CommonId}" tooltip="${uiLabelMap.ProductCouldNotFindProductConfigItemWithId} [${configItemId}]"><display description="" also-hidden="false"/></field>
+        <field use-when="configItem==null&amp;&amp;configItemId==null" name="configItemId" title="${uiLabelMap.CommonId}"><ignored/></field>
+        <field name="configItemTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="false">
                 <option key="SINGLE" description="${uiLabelMap.ProductSingleChoice}"/>
                 <option key="MULTIPLE" description="${uiLabelMap.ProductMultiChoice}"/>
             </drop-down>
         </field>
+        <field name="configItemName" title="${uiLabelMap.CommonName}"><text/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}" position="2"><textarea/></field>
 
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
     <form name="EditConfigOption" type="list" target="updateProductConfigOption" title="" list-name="configOptionList" list-entry-name="configOption"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
 
@@ -85,6 +90,7 @@ under the License.
         <field name="configItemId"><hidden/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
     <form name="CreateConfigOption" type="single" target="createProductConfigOption" title="" default-map-name="configOption"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="configOption!=null" target="updateProductConfigOption"/>
@@ -96,6 +102,7 @@ under the License.
         <field use-when="configOption!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
     <form name="CreateProductConfigProduct" type="single" target="createProductConfigProduct" title="" default-map-name="productConfigProduct"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="productConfigProduct!=null" target="updateProductConfigProduct"/>

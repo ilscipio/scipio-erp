@@ -881,11 +881,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#-- INDIVIDUAL FIELD IMPLEMENTATIONS
      TODO: the parameters on these should be refined to be less ofbiz-like and more cato-like; but must
         be flexible enough to 100% allow calls from ofbiz widget lib macros.
-     TODO: the _widget macros must further be split up into
-        _widget_markup macros, which explicitly contain as little markup as possible, and should also
-        try to avoid all of the macro argument ofbiz-isms.
-        the _widget are called by the Ofbiz macro libs and may need to contain logic code, so they're
-        not suited to be markup macros, and their args are too ofbiz-ish. -->
+     TODO: _markup_widget macros should be cleaned up and logic moved to _widget macros -->
 
 <#-- migrated from @renderTextField form widget macro -->
 <#macro field_input_widget name="" classes="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
@@ -976,29 +972,29 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#-- Merges a yyyy-MM-dd into a full timestamp
      TODO: move this out to js file -->
 <#assign mergeStdDateTimeJs>
-                var mergeStdDateTime = function(oldDate, newDate) {
-                    var result;
-                    if (oldDate.match(/^\d\d\d\d-\d\d-\d\d\s/)) {
-                       if (newDate.length >= oldDate.length) {
-                           result = newDate;
-                       }
-                       else {
-                           <#-- preserve everything after days -->
-                           result = newDate + oldDate.substr(newDate.length);
-                       }
-                    }
-                    else {
-                       var zeroPat = "0000-00-00 00:00:00.000";
-                       if (newDate.length >= zeroPat.length) {
-                           result = newDate;
-                       }
-                       else {
-                           <#-- append zeroes -->
-                           result = newDate + zeroPat.substr(newDate.length);
-                       }
-                    }
-                    return result;
-                };
+    var mergeStdDateTime = function(oldDate, newDate) {
+        var result;
+        if (oldDate.match(/^\d\d\d\d-\d\d-\d\d\s/)) {
+           if (newDate.length >= oldDate.length) {
+               result = newDate;
+           }
+           else {
+               <#-- preserve everything after days -->
+               result = newDate + oldDate.substr(newDate.length);
+           }
+        }
+        else {
+           var zeroPat = "0000-00-00 00:00:00.000";
+           if (newDate.length >= zeroPat.length) {
+               result = newDate;
+           }
+           else {
+               <#-- append zeroes -->
+               result = newDate + zeroPat.substr(newDate.length);
+           }
+        }
+        return result;
+    };
 </#assign>
 
 <#-- migrated from @renderDateTimeField form widget macro -->
@@ -1509,44 +1505,42 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     hideIgnoreCase="" ignCase="" ignoreCase="" title="" fieldTitleBlank=false>
 
   <@row collapse=collapse!false>
-  <#if opEquals?has_content>
-            <#local class1="${styles.grid_small!}3 ${styles.grid_large!}3"/>
-            <#local class2="${styles.grid_small!}6 ${styles.grid_large!}6"/>
-            <#local class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>
-            
-        <#else>
-            <#local class1=""/>
-            <#local class2="${styles.grid_small!}9 ${styles.grid_large!}9"/>
-            <#local class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>
-      </#if>      
-      <#if opEquals?has_content>
-        <#local newName = "${name}"/>
-        <@cell class="${class1!}">
-    <select <#if name?has_content>name="${name}_op"</#if>    class="selectBox"><#rt/>
-      <option value="equals"<#if defaultOption=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
-      <option value="like"<#if defaultOption=="like"> selected="selected"</#if>>${opBeginsWith}</option><#rt/>
-      <option value="contains"<#if defaultOption=="contains"> selected="selected"</#if>>${opContains}</option><#rt/>
-      <option value="empty"<#rt/><#if defaultOption=="empty"> selected="selected"</#if>>${opIsEmpty}</option><#rt/>
-      <option value="notEqual"<#if defaultOption=="notEqual"> selected="selected"</#if>>${opNotEqual}</option><#rt/>
-    </select>
-        </@cell>
-  <#else>
-    <input type="hidden" name=<#if name?has_content> "${name}_op"</#if>    value="${defaultOption}"/><#rt/>
-  </#if>
+    <#if opEquals?has_content>
+      <#local class1="${styles.grid_small!}3 ${styles.grid_large!}3"/>
+      <#local class2="${styles.grid_small!}6 ${styles.grid_large!}6"/>
+      <#local class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>  
+    <#else>
+      <#local class1=""/>
+      <#local class2="${styles.grid_small!}9 ${styles.grid_large!}9"/>
+      <#local class3="${styles.grid_small!}3 ${styles.grid_large!}3"/>
+    </#if>      
+    <#if opEquals?has_content>
+      <#local newName = "${name}"/>
+      <@cell class="${class1!}">
+        <select<#if name?has_content> name="${name}_op"</#if> class="selectBox"><#rt/>
+            <option value="equals"<#if defaultOption=="equals"> selected="selected"</#if>>${opEquals}</option><#rt/>
+            <option value="like"<#if defaultOption=="like"> selected="selected"</#if>>${opBeginsWith}</option><#rt/>
+            <option value="contains"<#if defaultOption=="contains"> selected="selected"</#if>>${opContains}</option><#rt/>
+            <option value="empty"<#rt/><#if defaultOption=="empty"> selected="selected"</#if>>${opIsEmpty}</option><#rt/>
+            <option value="notEqual"<#if defaultOption=="notEqual"> selected="selected"</#if>>${opNotEqual}</option><#rt/>
+        </select>
+      </@cell>
+    <#else>
+      <input type="hidden"<#if name?has_content> name="${name}_op"</#if> value="${defaultOption}"/><#rt/>
+    </#if>
       <@cell class="${class2!}">
-    <input type="text"<@fieldClassStr classes=classes alert=alert />name="${name}"<#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
-       
+        <input type="text"<@fieldClassStr classes=classes alert=alert />name="${name}"<#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
       </@cell>
       <@cell class="${class3!}"> 
-    <#if hideIgnoreCase>
-      <input type="hidden" name="${name}_ic" value=<#if ignCase>"Y"<#else> ""</#if>/><#rt/>
-    <#else>
-            <div class="">
-                <label for="${name}_ic"><input type="checkbox" id="${name}_ic" name="${name}_ic" value="Y" <#if ignCase> checked="checked"</#if> />
-                ${ignoreCase!}</label>
-                <#rt/>
-            </div>
-    </#if>
+        <#if hideIgnoreCase>
+          <input type="hidden" name="${name}_ic" value=<#if ignCase>"Y"<#else> ""</#if>/><#rt/>
+        <#else>
+          <div>
+            <label for="${name}_ic"><input type="checkbox" id="${name}_ic" name="${name}_ic" value="Y"<#if ignCase> checked="checked"</#if>/>
+            ${ignoreCase!}</label>
+            <#rt/>
+          </div>
+        </#if>
       </@cell>
   </@row>
 </#macro>

@@ -329,6 +329,56 @@ or even multiple per fieldset.
 
 <#-- 
 *************
+* mapCatoFieldTypeToStyleName function
+************ 
+Maps a cato field type to a style name representing the type.
+
+Should be coordinated with mapWidgetFieldTypeToStyleName to produce common field type style names.
+-->
+<#function mapCatoFieldTypeToStyleName fieldType>
+  <#return fieldType>
+</#function>
+
+<#-- 
+*************
+* mapWidgetFieldTypeToStyleName function
+************ 
+Maps an Ofbiz field type to a style name representing the type.
+
+Should be coordinated with mapCatoFieldTypeToStyleName to produce common field type style names.
+-->
+<#function mapWidgetFieldTypeToStyleName fieldType>
+  <#if !widgetFieldTypeToStyleNameMap??>
+    <#-- FIXME: these need to match cato types to unify css classes; they don't quite -->
+    <#global widgetFieldTypeToStyleNameMap = {
+        "display": "display",
+        "hyperlink": "hyperlink",
+        "text": "input",
+        "textarea": "textarea",
+        "date-time": "datetime",
+        "drop-down": "select",
+        "check": "checkbox",
+        "radio": "radio",
+        "submit": "submit",
+        "reset": "reset",
+        "hidden": "hidden",
+        "ignored": "ignored",
+        "text-find": "textfind",
+        "date-find": "datefind",
+        "range-find": "rangefind",
+        "lookup": "lookup",
+        "file": "file",
+        "password": "password",
+        "image": "image",
+        "display-entity": "displayentity",
+        "container": "container"
+    }>
+  </#if>
+  <#return widgetFieldTypeToStyleNameMap[fieldType]!"other">
+</#function>
+
+<#-- 
+*************
 * Field Macro
 ************ 
     Usage example:  
@@ -790,40 +840,6 @@ or even multiple per fieldset.
 <#-- pop field info when done -->
 <#local dummy = popRequestStack("catoCurrentFieldInfo")>
 </#macro>
-
-<#function mapCatoFieldTypeToStyleName fieldType>
-  <#return fieldType>
-</#function>
-
-<#function mapWidgetFieldTypeToStyleName fieldType>
-  <#if !widgetFieldTypeToStyleNameMap??>
-    <#-- FIXME: these need to match cato types to unify css classes; they don't quite -->
-    <#global widgetFieldTypeToStyleNameMap = {
-        "display": "display",
-        "hyperlink": "hyperlink",
-        "text": "input",
-        "textarea": "textarea",
-        "date-time": "datetime",
-        "drop-down": "select",
-        "check": "checkbox",
-        "radio": "radio",
-        "submit": "submit",
-        "reset": "reset",
-        "hidden": "hidden",
-        "ignored": "ignored",
-        "text-find": "textfind",
-        "date-find": "datefind",
-        "range-find": "rangefind",
-        "lookup": "lookup",
-        "file": "file",
-        "password": "password",
-        "image": "image",
-        "display-entity": "displayentity",
-        "container": "container"
-    }>
-  </#if>
-  <#return widgetFieldTypeToStyleNameMap[fieldType]!"other">
-</#function>
 
 <#-- migrated from @renderClass form widget macro -->
 <#macro fieldClassStr className alert="false">

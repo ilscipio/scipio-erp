@@ -193,24 +193,25 @@ A visible fieldset, including the HTML element.
 -->
 <#macro fieldset id="" title="" class=true collapsed=false>
     <#local classes = makeClassesArg(class, "")>
-    <@fieldset_core style=classes id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="">
+    <@fieldset_core classes=classes id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="">
         <#nested />
     </@fieldset_core>
 </#macro>
 
 <#-- DEV NOTE: see @section_core for details on pattern 
      migrated from @renderFieldGroupOpen/Close form widget macro -->
-<#macro fieldset_core style="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false openOnly=false closeOnly=false wrapIf=true>
+<#macro fieldset_core classes="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false openOnly=false closeOnly=false wrapIf=true>
   <#local open = wrapIf && !closeOnly>
   <#local close = wrapIf && !openOnly>
-  <@fieldset_markup open=open close=close style=style id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible><#nested></@fieldset_markup>
+  <@fieldset_markup open=open close=close classes=classes id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible><#nested></@fieldset_markup>
 </#macro>
 
-<#macro fieldset_markup open=true close=true style="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false>
+<#macro fieldset_markup open=true close=true classes="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false>
 <#if open>
 <div class="${styles.grid_row!}">
-  <div class="fieldgroup ${styles.grid_large!}12 ${styles.grid_cell!}<#if style?has_content> ${style}</#if><#if collapsible || collapsed> toggleField<#if collapsed> ${styles.collapsed!}</#if></#if>"<#if id?has_content> id="${id}"</#if>>
-    <fieldset<#if style?has_content> class="${style!}"</#if>>
+  <#-- FIXME: classes should not go on two elems -->
+  <div class="fieldgroup ${styles.grid_large!}12 ${styles.grid_cell!}<#if classes?has_content> ${classes}</#if><#if collapsible || collapsed> toggleField<#if collapsed> ${styles.collapsed!}</#if></#if>"<#if id?has_content> id="${id}"</#if>>
+    <fieldset<#if classes?has_content> class="${classes!}"</#if>>
       <#--<#if collapsible>
         <ul>
           <li class="<#if collapsed>${styles.collapsed!}">
@@ -232,7 +233,7 @@ A visible fieldset, including the HTML element.
     <#nested>
 <#if close>
     </fieldset>
-    </div>
+  </div>
 </div>
 </#if>
 </#macro>

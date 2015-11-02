@@ -79,7 +79,7 @@ under the License.
         </@field>
 		<@field type="input" size="12" maxlength="10" name="postalCode" value="${(postalFields.postalCode)!}" label="${uiLabelMap.CommonZipPostalCode}" disabled=disabled required=true tooltip="${uiLabelMap.CommonRequired}"/>
         <@field type="select" name="countryGeoId" disabled=disabled label="${uiLabelMap.CommonCountry}" required=true tooltip="${uiLabelMap.CommonRequired}">
-            <#if (postalFields.countryGeoId)??>
+            <#if postalFields.countryGeoId?has_content>
               <option>${postalFields.countryGeoId}</option>
               <option value="${postalFields.countryGeoId}">---</option>
             </#if>

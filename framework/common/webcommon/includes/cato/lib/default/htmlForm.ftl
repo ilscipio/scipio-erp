@@ -890,7 +890,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#macro field_input_markup_widget name="" className="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
     mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false>
   <#if tooltip?has_content> 
-     <#local className = (className+ " has-tip tip-right")/>  
+     <#local className = (className + " has-tip tip-right")/>  
   </#if>
   <#if mask?has_content && mask>
     <script type="text/javascript">
@@ -911,7 +911,6 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#if event?has_content && action?has_content> ${event}="${action}"</#if><#rt/>
     <#if clientAutocomplete?has_content && clientAutocomplete=="false"> autocomplete="off"</#if><#rt/>
     <#if placeholder?has_content> placeholder="${placeholder}"</#if><#rt/>
-    <#if className?has_content> class="${className}"</#if><#rt/>
   /><#t/>
   <#if ajaxUrl?has_content>
     <#local defaultMinLength = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")>
@@ -941,7 +940,6 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#if readonly?has_content> readonly="readonly"</#if><#rt/>
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>
     <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
-    <#if className?has_content> class="${className}"</#if><#rt/>
     ><#t/>
     <#if value?has_content>${value}</#if>
   </textarea><#lt/>

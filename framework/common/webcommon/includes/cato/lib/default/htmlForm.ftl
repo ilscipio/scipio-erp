@@ -890,6 +890,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank><#nested></@field_input_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_input_markup_widget name="" classes="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
     mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false>
   <#if tooltip?has_content> 
@@ -929,6 +930,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse><#nested></@field_textarea_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_textarea_markup_widget name="" classes="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
     buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false>
   <#if tooltip?has_content> 
@@ -980,6 +982,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     alert=alert mask=mask event=event action=action step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank><#nested></@field_datetime_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_datetime_markup_widget name="" classes="" title="" value="" size="" maxlength="" id="" dateType="" shortDateInput=false 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
@@ -1065,6 +1068,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty><#nested></@field_datefind_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_datefind_markup_widget classes="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" 
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleStyle="" defaultOptionFrom="" defaultOptionThru="" 
     opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="">
@@ -1127,6 +1131,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     collapse=collapse fieldTitleBlank=fieldTitleBlank><#nested></@field_select_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_select_markup_widget name="" classes="" alert="" id="" multiple="" formName="" otherFieldName="" size="" firstInList="" 
     currentValue="" explicitDescription="" allowEmpty="" options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" noCurrentSelectedKey="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
@@ -1188,6 +1193,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     lastViewName=lastViewName title=title fieldTitleBlank=fieldTitleBlank><#nested></@field_lookup_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_lookup_markup_widget name="" formName="" fieldFormName="" classes="" alert="false" value="" size="" 
     maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" 
     targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" 
@@ -1318,6 +1324,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <@field_checkbox_markup_widget id=id checked=checked currentValue=currentValue name=name action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank><#nested></@field_checkbox_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_checkbox_markup_widget id="" checked=false currentValue="N" name="" action="" tooltip="" fieldTitleBlank=false>
     <div class="switch small">
     <input type="checkbox" id="<#if id?has_content>${id}<#else>${name!}</#if>"<#rt/>
@@ -1334,6 +1341,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <@field_radio_markup_widget items=items classes=classes alert=alert currentValue=currentValue noCurrentSelectedKey=noCurrentSelectedKey name=name event=event action=action tooltip=tooltip><#nested></@field_radio_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_radio_markup_widget items="" classes="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="">
   <#list items as item>
     <span<@fieldClassStr classes=classes alert=alert />><#rt/>
@@ -1351,6 +1359,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <@field_file_markup_widget classes=classes alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank><#nested></@field_file_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_file_markup_widget classes="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false>
   <input type="file"<@fieldClassStr classes=classes alert=alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
 </#macro>
@@ -1360,6 +1369,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <@field_password_markup_widget classes=classes alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete title=title placeholder=placeholder fieldTitleBlank=fieldTitleBlank tooltip=tooltip><#nested></@field_password_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_password_markup_widget classes="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="">
   <#if tooltip?has_content> 
      <#local classes = (classes+ " has-tip tip-right")/>  
@@ -1378,6 +1388,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     containerId=containerId ajaxUrl=ajaxUrl title=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressOptions=progressOptions><#nested></@field_submit_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_submit_markup_widget buttonType="" classes="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
     containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions={}>
   <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
@@ -1427,6 +1438,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank><#nested></@field_display_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_display_markup_widget type="" imageLocation="" idName="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
     inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false>
   <#if type?has_content && type=="image">
@@ -1463,6 +1475,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     hideIgnoreCase=hideIgnoreCase ignCase=ignCase ignoreCase=ignoreCase title=title fieldTitleBlank=fieldTitleBlank><#nested></@field_textfind_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_textfind_markup_widget name="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
     opIsEmpty="" opNotEqual="" classes="" alert="" size="" maxlength="" autocomplete="" titleStyle="" 
     hideIgnoreCase="" ignCase="" ignoreCase="" title="" fieldTitleBlank=false>
@@ -1513,6 +1526,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <@field_rangefind_markup_widget classes=classes alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom opEquals=opEquals opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals value2=value2 defaultOptionThru=defaultOptionThru><#nested></@field_rangefind_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_rangefind_markup_widget classes="" alert="" name="" value="" size="" maxlength="" autocomplete="" titleStyle="" defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" value2="" defaultOptionThru="">
   <#local class1="${styles.grid_small!}9 ${styles.grid_large!}9"/>
   <#local class2="${styles.grid_small!}3 ${styles.grid_large!}3"/>
@@ -1558,6 +1572,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <@field_generic_markup_widget text=text><#nested></@field_generic_markup_widget>
 </#macro>
 
+<#-- field markup - may be overridden -->
 <#macro field_generic_markup_widget text="">
   <#if text??>
     ${text}<#lt/>

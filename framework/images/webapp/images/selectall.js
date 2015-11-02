@@ -1038,3 +1038,34 @@ function submitPaginationPostForm(obj, url) {
     form.submit();
     return false;
 }
+
+/**
+ * Cato: Transforms a partial date into a normalized date-time value (timestamp), optionally
+ * completing the unspecified parts with a filler date.
+ * NOTE: Normalized means the value can be submitted by form to service and entity update code.
+ * TODO?: this is currently somewhat hardcoded; should follow sys timestamp format and/or use Date js class?
+ * TODO: this currently only supports date as YYYY-mm-DD or prefix of a full timestamp value. should support more.
+ */
+function convertToDateTimeNorm(date, fillerDate) {
+    var result;
+    if (fillerDate && fillerDate.match(/^\d\d\d\d-\d\d-\d\d\s/)) {
+       if (date.length >= fillerDate.length) {
+           result = date;
+       }
+       else {
+           // preserve everything after days
+           result = date + fillerDate.substr(date.length);
+       }
+    }
+    else {
+       var zeroPat = "0000-00-00 00:00:00.000";
+       if (date.length >= zeroPat.length) {
+           result = date;
+       }
+       else {
+           // append zeroes
+           result = date + zeroPat.substr(date.length);
+       }
+    }
+    return result;
+}

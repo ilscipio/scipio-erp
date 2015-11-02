@@ -969,34 +969,6 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   -->
 </#macro>
 
-<#-- Merges a yyyy-MM-dd into a full timestamp
-     TODO: move this out to js file -->
-<#assign mergeStdDateTimeJs>
-    var mergeStdDateTime = function(oldDate, newDate) {
-        var result;
-        if (oldDate.match(/^\d\d\d\d-\d\d-\d\d\s/)) {
-           if (newDate.length >= oldDate.length) {
-               result = newDate;
-           }
-           else {
-               <#-- preserve everything after days -->
-               result = newDate + oldDate.substr(newDate.length);
-           }
-        }
-        else {
-           var zeroPat = "0000-00-00 00:00:00.000";
-           if (newDate.length >= zeroPat.length) {
-               result = newDate;
-           }
-           else {
-               <#-- append zeroes -->
-               result = newDate + zeroPat.substr(newDate.length);
-           }
-        }
-        return result;
-    };
-</#assign>
-
 <#-- migrated from @renderDateTimeField form widget macro -->
 <#macro field_datetime_widget name="" classes="" title="" value="" size="" maxlength="" id="" dateType="" shortDateInput=false 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
@@ -1062,17 +1034,13 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                     jQuery("#${id}").val(dateI18nToNorm(this.value));
                 });
                 
-              <#if useTsFormat>
-                ${mergeStdDateTimeJs}
-              </#if>
-                
                 var oldDate = "";
                 var onFDatePopup = function(ev) {
                     oldDate = dateI18nToNorm(jQuery("#${id}_i18n").val());
                 };
                 var onFDateChange = function(ev) {
                   <#if useTsFormat>
-                    jQuery("#${id}_i18n").val(dateNormToI18n(mergeStdDateTime(oldDate, dateI18nToNorm(jQuery("#${id}_i18n").val()))));
+                    jQuery("#${id}_i18n").val(dateNormToI18n(convertToDateTimeNorm(dateI18nToNorm(jQuery("#${id}_i18n").val()), oldDate)));
                   </#if>
                 };
                 
@@ -1124,18 +1092,13 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
       <#if dateType != "time">
         <script type="text/javascript">
             $(function() {
-            
-              <#if useTsFormat>
-                ${mergeStdDateTimeJs}
-              </#if>
-                
                 var oldDate = "";
                 var onFDatePopup = function(ev) {
                     oldDate = jQuery("#${name?html}_fld0_value").val();
                 };
                 var onFDateChange = function(ev) {
                   <#if useTsFormat>
-                    jQuery("#${name?html}_fld0_value").val(mergeStdDateTime(oldDate, jQuery("#${name?html}_fld0_value").val()));
+                    jQuery("#${name?html}_fld0_value").val(convertToDateTimeNorm(jQuery("#${name?html}_fld0_value").val(), oldDate));
                   </#if>
                 };
             

@@ -322,18 +322,19 @@ not "current" context (too intrusive in current renderer design). still relies o
   <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#if> ${styles.grid_cell!}<#if markLast> ${styles.grid_end!}</#if>">
     <div class="${styles.grid_row!} form-field-entry ${fieldEntryTypeClass}">
     
+  <#-- DEV NOTE: field spans were intentionally made to total to 11 instead of 12 as temporary workaround for small-vs-large-sizing-within-columns adaptation problems -->
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}</#if> ${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}">
+      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}">
         <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label" for="<#if id?has_content>${id}<#else>${name!}</#if>">${renderFieldTitleCurrentTitle!}</#if><#if collapse></span><#else></label></#if>
       </div>
-    </#if>
+  </#if>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-    <#if !isActionField>
+  <#if !isActionField>
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8 ${styles.grid_large!}9</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}">
-    <#else>
+  <#else>
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}12 ${styles.grid_large!}12</#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}">
-    </#if>
+  </#if>
     
 </#macro>
 

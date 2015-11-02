@@ -371,9 +371,9 @@ public final class CommonFtlUtil {
     }
     
     /**
-     * Clears the whole request vars map.
+     * Removes the whole request vars map.
      */
-    public static void clearRequestVars(HttpServletRequest request, 
+    public static void removeRequestVars(HttpServletRequest request, 
             Map<String, Object> context, Environment env) throws TemplateModelException {
         if (request != null) {
             request.removeAttribute(REQUEST_VAR_MAP_NAME);
@@ -386,6 +386,35 @@ public final class CommonFtlUtil {
             env.setGlobalVariable(REQUEST_VAR_MAP_NAME, null);
         }
     }
+    
+    /**
+     * Wipes all request vars and sets a new holder map.
+     * <p>
+     * Attempts to set the same map for as many contexts present as possible, for compatibility.
+     * <p>
+     * <em>NOTE:</em> in some cases this call is not necessary, but it's a good idea anyway
+     * because it will set the same map for request and context (but not ftl - FIXME?),
+     * which might prevent problems in odd rendering cases.
+     * This should be called at beginning of rendering at a point where as many of the parameters 
+     * are non-null as possible (but env will probably usually be null).
+     */
+    public static void resetRequestVars(HttpServletRequest request, 
+            Map<String, Object> context, Environment env) throws TemplateModelException {
+        Map<String, Object> requestVarMap = new HashMap<String, Object>();
+        if (request != null) {
+            request.setAttribute(REQUEST_VAR_MAP_NAME, requestVarMap);
+        }
+        Map<String, Object> globalContext = FtlTransformUtil.getGlobalContext(context, env);
+        if (globalContext != null) {
+            globalContext.put(REQUEST_VAR_MAP_NAME, requestVarMap);
+        }
+        if (env != null) {
+            // FIXME?: this doesn't share the map with the above. currently makes no real difference
+            // because resetRequestVars usually called with env null, and fallback to ftl globals should be rare anyway.
+            // possible could change SimpleHash into SimpleMapModel (around requestVarMap)...
+            env.setGlobalVariable(REQUEST_VAR_MAP_NAME, new SimpleHash(env.getObjectWrapper()));
+        }
+    }    
     
     @SuppressWarnings("unchecked")
     private static Map<String, Object> getRequestVarMapFromAttribs(HttpServletRequest request) {

@@ -18,4 +18,5 @@ final module = "PrepareNewScreenRender.groovy"
 
 Debug.logInfo("Cato: Preparing new templating API render; clearing request-scope templating vars", module);
 
-CommonFtlUtil.clearRequestVars(context.request, context, FreeMarkerWorker.getCurrentEnvironment());
+// note: env param will usually be null here, but just in case...
+CommonFtlUtil.resetRequestVars(context.request, context, FreeMarkerWorker.getCurrentEnvironment());

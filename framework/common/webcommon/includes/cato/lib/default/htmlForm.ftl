@@ -631,7 +631,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         <#switch type>
           <#case "input">
             <@field_input_widget name=name 
-                                  className=class 
+                                  classes=class 
                                   alert=alert 
                                   value=value 
                                   textSize=size 
@@ -650,7 +650,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
             <#break>
           <#case "textarea">
             <@field_textarea_widget name=name 
-                                  className=class 
+                                  classes=class 
                                   alert=alert 
                                   cols=cols 
                                   rows=rows 
@@ -663,7 +663,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
           <#case "datetime">
             <#if dateType == "date"><#local shortDateInput=true/><#else><#local shortDateInput=false/></#if>
             <@field_datetime_widget name=name 
-                                  className=class 
+                                  classes=class 
                                   alert=alert 
                                   title=label 
                                   value=value 
@@ -697,7 +697,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
             <#local manualItemsOnly = true>
             
             <@field_select_widget name=name
-                                    className=class 
+                                    classes=class 
                                     alert=alert 
                                     id=id 
                                     multiple=multiple
@@ -732,7 +732,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                                     manualItemsOnly=manualItemsOnly><#nested></@field_select_widget>
             <#break>
           <#case "lookup">
-            <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName className=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
+            <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName classes=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
           <#break>
           <#case "checkbox">
                 <@field_checkbox_widget id=id currentValue=value checked=checked name=name action=action />
@@ -741,19 +741,19 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                 <#if radioSingle>
                     <#-- single radio button item mode -->
                     <#local items=[{"key":value, "description":label!""}]/>
-                    <@field_radio_widget items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
+                    <@field_radio_widget items=items classes=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
                 <#else>
                     <#-- multi radio button item mode -->
-                    <div<@fieldClassStr class=class alert=alert />>
-                      <@field_radio_widget items=items className="" alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
+                    <div<@fieldClassStr classes=class alert=alert />>
+                      <@field_radio_widget items=items classes="" alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
                     </div>
                 </#if>
             <#break>
           <#case "file">
-            <@field_file_widget className=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
+            <@field_file_widget classes=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
             <#break> 
           <#case "password">
-            <@field_password_widget className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip/>
+            <@field_password_widget classes=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip/>
             <#break> 
           <#case "submit">
           <#case "submitarea">
@@ -770,7 +770,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                 </#if>
                 <#local buttonType = catoSubmitFieldButtonTypeMap[submitType]!"button">
                 <#local inputType = catoSubmitFieldInputTypeMap[submitType]!"">
-                <@field_submit_widget buttonType=buttonType className=class alert=alert formName=formName name=name event="" action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false onClick=onClick href=href inputType=inputType disabled=disabled />
+                <@field_submit_widget buttonType=buttonType classes=class alert=alert formName=formName name=name event="" action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false onClick=onClick href=href inputType=inputType disabled=disabled />
               <#else>
                 <#nested>
               </#if>
@@ -828,8 +828,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- migrated from @renderClass form widget macro -->
-<#macro fieldClassStr class alert=false>
-  <#if class?has_content || alert?string == "true"> class="${class!}<#if alert?string == "true"> alert</#if>"</#if><#t>
+<#macro fieldClassStr classes alert=false>
+  <#if classes?has_content || alert?string == "true"> class="${classes!}<#if alert?string == "true"> alert</#if>"</#if><#t>
 </#macro>
 
 <#-- migrated from @renderSubmitFieldAreaProgress form widget macro -->
@@ -881,16 +881,16 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         not suited to be markup macros, and their args are too ofbiz-ish. -->
 
 <#-- migrated from @renderTextField form widget macro -->
-<#macro field_input_widget name="" className="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
+<#macro field_input_widget name="" classes="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
     mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false>
-  <@field_input_markup_widget name=name className=className alert=alert value=value textSize=textSize maxlength=maxlength id=id event=event action=action disabled=disabled ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled 
+  <@field_input_markup_widget name=name classes=classes alert=alert value=value textSize=textSize maxlength=maxlength id=id event=event action=action disabled=disabled ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled 
     mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank><#nested></@field_input_markup_widget>
 </#macro>
 
-<#macro field_input_markup_widget name="" className="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
+<#macro field_input_markup_widget name="" classes="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
     mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false>
   <#if tooltip?has_content> 
-     <#local className = (className + " has-tip tip-right")/>  
+     <#local classes = (classes + " has-tip tip-right")/>  
   </#if>
   <#if mask?has_content && mask>
     <script type="text/javascript">
@@ -901,7 +901,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#if tooltip?has_content> 
      data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"<#rt/>
      </#if><#rt/>
-    <@fieldClassStr class=className alert=alert />
+    <@fieldClassStr classes=classes alert=alert />
     <#if value?has_content> value="${value}"</#if><#rt/>
     <#if textSize?has_content> size="${textSize}"</#if><#rt/>
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>
@@ -920,20 +920,20 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- migrated from @renderTextareaField form widget macro -->
-<#macro field_textarea_widget name="" className="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
+<#macro field_textarea_widget name="" classes="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
     buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false>
-  <@field_textarea_markup_widget name=name className=className alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable 
+  <@field_textarea_markup_widget name=name classes=classes alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable 
     buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse><#nested></@field_textarea_markup_widget>
 </#macro>
 
-<#macro field_textarea_markup_widget name="" className="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
+<#macro field_textarea_markup_widget name="" classes="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
     buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false>
   <#if tooltip?has_content> 
-     <#local className = (className+ " has-tip tip-right")/>  
+     <#local classes = (classes+ " has-tip tip-right")/>  
   </#if>
   <textarea name="${name}"<#t/>
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
-    <@fieldClassStr class=className alert=alert />
+    <@fieldClassStr classes=classes alert=alert />
     <#if cols?has_content> cols="${cols}"</#if><#rt/>
     <#if rows?has_content> rows="${rows}"</#if><#rt/>
     <#if id?has_content> id="${id}"</#if><#rt/>
@@ -995,17 +995,17 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#assign>
 
 <#-- migrated from @renderDateTimeField form widget macro -->
-<#macro field_datetime_widget name="" className="" title="" value="" size="" maxlength="" id="" dateType="" shortDateInput=false 
+<#macro field_datetime_widget name="" classes="" title="" value="" size="" maxlength="" id="" dateType="" shortDateInput=false 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
     alert=false mask="" event="" action="" step="" timeValues="" tooltip="" collapse=false fieldTitleBlank=false>
-  <@field_datetime_markup_widget name=name className=className title=title value=value size=size maxlength=maxlength id=id dateType=dateType shortDateInput=shortDateInput 
+  <@field_datetime_markup_widget name=name classes=classes title=title value=value size=size maxlength=maxlength id=id dateType=dateType shortDateInput=shortDateInput 
     timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString 
     hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName 
     alert=alert mask=mask event=event action=action step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank><#nested></@field_datetime_markup_widget>
 </#macro>
 
-<#macro field_datetime_markup_widget name="" className="" title="" value="" size="" maxlength="" id="" dateType="" shortDateInput=false 
+<#macro field_datetime_markup_widget name="" classes="" title="" value="" size="" maxlength="" id="" dateType="" shortDateInput=false 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
     alert=false mask="" event="" action="" step="" timeValues="" tooltip="" collapse=false fieldTitleBlank=false>
@@ -1019,7 +1019,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
         <div class="${styles.grid_small!}11 ${styles.grid_cell!}">
           <#if dateType == "time">
-            <input type="text" name="${name}"<@fieldClassStr class=className alert=alert /><#rt/>
+            <input type="text" name="${name}"<@fieldClassStr classes=classes alert=alert /><#rt/>
             <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
             <#if title?has_content> title="${title}"</#if>
             <#if value?has_content> value="${value}"</#if>
@@ -1027,7 +1027,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
             <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
             <#if id?has_content> id="${id}"</#if> class="${styles.grid_small!}3 ${styles.grid_cell!}"/><#rt/>
           <#else>
-            <input type="text" name="${name}_i18n"<@fieldClassStr class=className alert=alert /><#rt/>
+            <input type="text" name="${name}_i18n"<@fieldClassStr classes=classes alert=alert /><#rt/>
             <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
             <#if title?has_content> title="${title}"</#if>
             <#if value?has_content> value="${value}"</#if>
@@ -1086,15 +1086,15 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- migrated from @renderDateFindField form widget macro -->
-<#macro field_datefind_widget className="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" 
+<#macro field_datefind_widget classes="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" 
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleStyle="" defaultOptionFrom="" defaultOptionThru="" 
     opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="">
-  <@field_datefind_markup_widget className=className alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType 
+  <@field_datefind_markup_widget classes=classes alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType 
     formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru 
     opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty><#nested></@field_datefind_markup_widget>
 </#macro>
 
-<#macro field_datefind_markup_widget className="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" 
+<#macro field_datefind_markup_widget classes="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" 
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleStyle="" defaultOptionFrom="" defaultOptionThru="" 
     opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="">
 
@@ -1105,7 +1105,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
         <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
-        <input class="${styles.grid_small!}3 ${styles.grid_cell!}" id="${name?html}_fld0_value" type="text"<@fieldClassStr class=className alert=alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
+        <input class="${styles.grid_small!}3 ${styles.grid_cell!}" id="${name?html}_fld0_value" type="text"<@fieldClassStr classes=classes alert=alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
         </div>
         <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
         <span class="postfix"><i class="${styles.icon} ${styles.icon_calendar!}"></i></span>
@@ -1149,25 +1149,25 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- migrated from @renderDropDownField form widget macro -->
-<#macro field_select_widget name="" className="" alert="" id="" multiple="" formName="" otherFieldName="" size="" firstInList="" 
+<#macro field_select_widget name="" classes="" alert="" id="" multiple="" formName="" otherFieldName="" size="" firstInList="" 
     currentValue="" explicitDescription="" allowEmpty="" options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" noCurrentSelectedKey="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
     ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false 
     collapse=false fieldTitleBlank=false>
-  <@field_select_markup_widget name=name className=className alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size firstInList=firstInList 
+  <@field_select_markup_widget name=name classes=classes alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size firstInList=firstInList 
     currentValue=currentValue explicitDescription=explicitDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize 
     dDFCurrent=dDFCurrent noCurrentSelectedKey=noCurrentSelectedKey ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars 
     ignoreCase=ignoreCase fullSearch=fullSearch event=event action=action ajaxEnabled=ajaxEnabled tooltip=tooltip manualItems=manualItems manualItemsOnly=manualItemsOnly 
     collapse=collapse fieldTitleBlank=fieldTitleBlank><#nested></@field_select_markup_widget>
 </#macro>
 
-<#macro field_select_markup_widget name="" className="" alert="" id="" multiple="" formName="" otherFieldName="" size="" firstInList="" 
+<#macro field_select_markup_widget name="" classes="" alert="" id="" multiple="" formName="" otherFieldName="" size="" firstInList="" 
     currentValue="" explicitDescription="" allowEmpty="" options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" noCurrentSelectedKey="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
     ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false 
     collapse=false fieldTitleBlank=false>
 
-    <select name="${name!""}<#rt/>"<@fieldClassStr class=className alert=alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
+    <select name="${name!""}<#rt/>"<@fieldClassStr classes=classes alert=alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>>
     <#if !manualItemsOnly>  
       <#if firstInList?has_content && currentValue?has_content && !multiple?has_content>
@@ -1210,19 +1210,19 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- migrated from @renderLookupField form widget macro -->
-<#macro field_lookup_widget name="" formName="" fieldFormName="" className="" alert="false" value="" size="" 
+<#macro field_lookup_widget name="" formName="" fieldFormName="" classes="" alert="false" value="" size="" 
     maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" 
     targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" 
     height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" 
     lastViewName="main" title="" fieldTitleBlank=false>
-  <@field_lookup_markup_widget name=name formName=formName fieldFormName=fieldFormName className=className alert=alert value=value size=size 
+  <@field_lookup_markup_widget name=name formName=formName fieldFormName=fieldFormName classes=classes alert=alert value=value size=size 
     maxlength=maxlength id=id event=event action=action readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName 
     targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width 
     height=height position=position fadeBackground=fadeBackground clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed 
     lastViewName=lastViewName title=title fieldTitleBlank=fieldTitleBlank><#nested></@field_lookup_markup_widget>
 </#macro>
 
-<#macro field_lookup_markup_widget name="" formName="" fieldFormName="" className="" alert="false" value="" size="" 
+<#macro field_lookup_markup_widget name="" formName="" fieldFormName="" classes="" alert="false" value="" size="" 
     maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" 
     targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" 
     height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" 
@@ -1255,7 +1255,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#if size?has_content && size=="0">
       <input type="hidden" <#if name?has_content> name="${name}"/></#if>
     <#else>
-      <input type="text"<@fieldClassStr class=className alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if>
+      <input type="text"<@fieldClassStr classes=classes alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if>
         <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#rt/>
         <#if readonly?has_content && readonly> readonly="readonly"</#if><#rt/><#if event?has_content && action?has_content> ${event}="${action}"</#if><#rt/>
         <#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/></#if>
@@ -1364,13 +1364,13 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- migrated from @renderRadioField form widget macro -->
-<#macro field_radio_widget items="" className="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="">
-  <@field_radio_markup_widget items=items className=className alert=alert currentValue=currentValue noCurrentSelectedKey=noCurrentSelectedKey name=name event=event action=action tooltip=tooltip><#nested></@field_radio_markup_widget>
+<#macro field_radio_widget items="" classes="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="">
+  <@field_radio_markup_widget items=items classes=classes alert=alert currentValue=currentValue noCurrentSelectedKey=noCurrentSelectedKey name=name event=event action=action tooltip=tooltip><#nested></@field_radio_markup_widget>
 </#macro>
 
-<#macro field_radio_markup_widget items="" className="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="">
+<#macro field_radio_markup_widget items="" classes="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="">
   <#list items as item>
-    <span<@fieldClassStr class=className alert=alert />><#rt/>
+    <span<@fieldClassStr classes=classes alert=alert />><#rt/>
       <input type="radio"<#if currentValue?has_content><#if currentValue==item.key> checked="checked"</#if>
         <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
         <#elseif noCurrentSelectedKey?has_content && noCurrentSelectedKey == item.key> checked="checked"</#if> 
@@ -1381,43 +1381,43 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- migrated from @renderFileField form widget macro -->
-<#macro field_file_widget className="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false>
-  <@field_file_markup_widget className=className alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank><#nested></@field_file_markup_widget>
+<#macro field_file_widget classes="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false>
+  <@field_file_markup_widget classes=classes alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank><#nested></@field_file_markup_widget>
 </#macro>
 
-<#macro field_file_markup_widget className="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false>
-  <input type="file"<@fieldClassStr class=className alert=alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+<#macro field_file_markup_widget classes="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false>
+  <input type="file"<@fieldClassStr classes=classes alert=alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
 </#macro>
 
 <#-- migrated from @renderPasswordField form widget macro -->
-<#macro field_password_widget className="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="">
-  <@field_password_markup_widget className=className alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete title=title placeholder=placeholder fieldTitleBlank=fieldTitleBlank tooltip=tooltip><#nested></@field_password_markup_widget>
+<#macro field_password_widget classes="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="">
+  <@field_password_markup_widget classes=classes alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete title=title placeholder=placeholder fieldTitleBlank=fieldTitleBlank tooltip=tooltip><#nested></@field_password_markup_widget>
 </#macro>
 
-<#macro field_password_markup_widget className="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="">
+<#macro field_password_markup_widget classes="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="">
   <#if tooltip?has_content> 
-     <#local className = (className+ " has-tip tip-right")/>  
+     <#local classes = (classes+ " has-tip tip-right")/>  
   </#if> 
-  <input type="password"<@fieldClassStr class=className alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if>
+  <input type="password"<@fieldClassStr classes=classes alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if>
   <#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#if autocomplete?has_content> autocomplete="off"</#if> 
   <#if placeholder?has_content> placeholder="${placeholder}"</#if>
   <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
-  <#if className?has_content> class="${className}"</#if><#rt/>/>
+  <#if classes?has_content> class="${classes}"</#if><#rt/>/>
 </#macro>
 
 <#-- migrated from @renderSubmitField form widget macro -->
-<#macro field_submit_widget buttonType="" className="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
+<#macro field_submit_widget buttonType="" classes="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
     containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions={}>
-  <@field_submit_markup_widget buttonType=buttonType className=className alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation 
+  <@field_submit_markup_widget buttonType=buttonType classes=classes alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation 
     containerId=containerId ajaxUrl=ajaxUrl title=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressOptions=progressOptions><#nested></@field_submit_markup_widget>
 </#macro>
 
-<#macro field_submit_markup_widget buttonType="" className="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
+<#macro field_submit_markup_widget buttonType="" classes="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
     containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions={}>
   <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
   <#if buttonType!="image">
-    <#if !className?has_content || className=="smallSubmit">
-      <#local className = "${styles.button_default!}">
+    <#if !classes?has_content || classes=="smallSubmit">
+      <#local classes = "${styles.button_default!}">
     </#if>
   </#if>
 
@@ -1427,15 +1427,15 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#else>
   <#local buttonMarkup>
   <#if buttonType=="text-link">
-    <a<@fieldClassStr class=className alert=alert />href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if>><#if title?has_content>${title}</#if></a>
+    <a<@fieldClassStr classes=classes alert=alert />href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if>><#if title?has_content>${title}</#if></a>
   <#elseif buttonType=="image">
-    <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassStr class=className alert=alert /><#if name?has_content> name="${name}"</#if>
+    <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassStr classes=classes alert=alert /><#if name?has_content> name="${name}"</#if>
     <#if title?has_content> alt="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
     <#if disabled> disabled="disabled"<#else>
       <#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
     </#if>/>
   <#else>
-    <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassStr class=className alert=alert />
+    <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassStr classes=classes alert=alert />
     <#if name?has_content> name="${name}"</#if><#if title?has_content> value="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
     <#if disabled> disabled="disabled"<#else>
       <#if onClick?has_content> onclick="${onClick}"<#else>
@@ -1468,7 +1468,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#else>
     <#--
     <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true" || title?has_content>
-      <span<#if idName?has_content> id="cc_${idName}"</#if><#if title?has_content> title="${title}"</#if><@fieldClassStr class=class alert=alert />><#t/>
+      <span<#if idName?has_content> id="cc_${idName}"</#if><#if title?has_content> title="${title}"</#if><@fieldClassStr classes=class alert=alert />><#t/>
     </#if>
     -->
     <#if description?has_content>
@@ -1490,15 +1490,15 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 
 <#-- migrated from @renderRangeFindField form widget macro -->
 <#macro field_textfind_widget name="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
-    opIsEmpty="" opNotEqual="" className="" alert="" size="" maxlength="" autocomplete="" titleStyle="" 
+    opIsEmpty="" opNotEqual="" classes="" alert="" size="" maxlength="" autocomplete="" titleStyle="" 
     hideIgnoreCase="" ignCase="" ignoreCase="" title="" fieldTitleBlank=false>
   <@field_textfind_markup_widget name=name value=value defaultOption=defaultOption opEquals=opEquals opBeginsWith=opBeginsWith opContains=opContains 
-    opIsEmpty=opIsEmpty opNotEqual=opNotEqual className=className alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleStyle=titleStyle 
+    opIsEmpty=opIsEmpty opNotEqual=opNotEqual classes=classes alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleStyle=titleStyle 
     hideIgnoreCase=hideIgnoreCase ignCase=ignCase ignoreCase=ignoreCase title=title fieldTitleBlank=fieldTitleBlank><#nested></@field_textfind_markup_widget>
 </#macro>
 
 <#macro field_textfind_markup_widget name="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
-    opIsEmpty="" opNotEqual="" className="" alert="" size="" maxlength="" autocomplete="" titleStyle="" 
+    opIsEmpty="" opNotEqual="" classes="" alert="" size="" maxlength="" autocomplete="" titleStyle="" 
     hideIgnoreCase="" ignCase="" ignoreCase="" title="" fieldTitleBlank=false>
 
   <@row collapse=collapse!false>
@@ -1527,7 +1527,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <input type="hidden" name=<#if name?has_content> "${name}_op"</#if>    value="${defaultOption}"/><#rt/>
   </#if>
       <@cell class="${class2!}">
-    <input type="text"<@fieldClassStr class=className alert=alert />name="${name}"<#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+    <input type="text"<@fieldClassStr classes=classes alert=alert />name="${name}"<#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
        
       </@cell>
       <@cell class="${class3!}"> 
@@ -1545,16 +1545,16 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- migrated from @renderRangeFindField form widget macro -->
-<#macro field_rangefind_widget className="" alert="" name="" value="" size="" maxlength="" autocomplete="" titleStyle="" defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" value2="" defaultOptionThru="">
-  <@field_rangefind_markup_widget className=className alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom opEquals=opEquals opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals value2=value2 defaultOptionThru=defaultOptionThru><#nested></@field_rangefind_markup_widget>
+<#macro field_rangefind_widget classes="" alert="" name="" value="" size="" maxlength="" autocomplete="" titleStyle="" defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" value2="" defaultOptionThru="">
+  <@field_rangefind_markup_widget classes=classes alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom opEquals=opEquals opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals value2=value2 defaultOptionThru=defaultOptionThru><#nested></@field_rangefind_markup_widget>
 </#macro>
 
-<#macro field_rangefind_markup_widget className="" alert="" name="" value="" size="" maxlength="" autocomplete="" titleStyle="" defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" value2="" defaultOptionThru="">
+<#macro field_rangefind_markup_widget classes="" alert="" name="" value="" size="" maxlength="" autocomplete="" titleStyle="" defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" value2="" defaultOptionThru="">
   <#local class1="${styles.grid_small!}9 ${styles.grid_large!}9"/>
   <#local class2="${styles.grid_small!}3 ${styles.grid_large!}3"/>
   <@row collapse=collapse!false>
     <@cell class=class1>
-      <input type="text"<@fieldClassStr class=className alert=alert /><#if name?has_content>name="${name}_fld0_value"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+      <input type="text"<@fieldClassStr classes=classes alert=alert /><#if name?has_content>name="${name}_fld0_value"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
     </@cell>
     <@cell class=class2>
       <#if titleStyle?has_content>
@@ -1572,7 +1572,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   </@row><#rt/>
   <@row>
     <@cell class=class1>
-      <input type="text"<@fieldClassStr class=className alert=alert /><#if name?has_content>name="${name}_fld1_value"</#if><#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+      <input type="text"<@fieldClassStr classes=classes alert=alert /><#if name?has_content>name="${name}_fld1_value"</#if><#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
     </@cell>
     <@cell class=class2>
       <#if titleStyle?has_content>

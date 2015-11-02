@@ -199,37 +199,37 @@ under the License.
         <actions>
             <set field="statusId" value="FINACT_TRNS_CREATED"/>
         </actions>
-        <auto-fields-service service-name="createFinAccountTrans"/>
+		<auto-fields-service service-name="createFinAccountTrans" default-position="1"/>
         <field name="finAccountId"><hidden/></field>
         <field name="finAccountTransId"><hidden/></field>
-        <field name="finAccountTransTypeId" title="${uiLabelMap.CommonType}">
+        <field name="finAccountTransTypeId" title="${uiLabelMap.CommonType}" position="1">
             <drop-down no-current-selected-key="ADJUSTMENT">
                 <entity-options description="${description}" entity-name="FinAccountTransType">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field name="partyId" title="${uiLabelMap.CommonParty}" position="2"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="transactionDate"> <date-time/> </field>
-        <field name="entryDate" position="2"><date-time/></field>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}"><lookup target-form-name="LookupPayment"/></field>
-        <field name="orderId" title="${uiLabelMap.CommonOrder}"><lookup target-form-name="LookupOrderHeader"/></field>
-        <field name="orderItemSeqId" position="2"><text/></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" position="1"><lookup target-form-name="LookupPartyName"/></field>        
+        <field name="transactionDate" position="1"> <date-time/> </field>
+        <field name="entryDate" position="1"><date-time/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" position="1"><lookup target-form-name="LookupPayment"/></field>        
+        <field name="orderId" title="${uiLabelMap.CommonOrder}" position="1"><lookup target-form-name="LookupOrderHeader"/></field>        
+        <field name="orderItemSeqId" position="1"><text/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="1">
             <drop-down>
                 <entity-options entity-name="StatusItem" description="${description}">
                     <entity-constraint name="statusTypeId" value="FINACT_TRNS_STATUS"/>
                 </entity-options>
             </drop-down>
-        </field>
-        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccount}" position="2">
+        </field>        
+        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccount}" position="1">
             <drop-down>
                 <entity-options entity-name="GlAccountOrganizationAndClass" description="${accountCode} - ${accountName} [${glAccountId}]" key-field-name="glAccountId">
                     <entity-constraint name="organizationPartyId" operator="equals" env-name="defaultOrganizationPartyId"/>
                     <entity-order-by field-name="glAccountId"/>
                 </entity-options>
             </drop-down>
-        </field>
+        </field>        
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 
@@ -489,7 +489,7 @@ under the License.
         <field name="glReconciliationName" position="2"><text/></field>
         <field name="organizationPartyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
         
-        <field name="statusId" title="${uiLabelMap.CommonStatus}">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="GLREC_STATUS"/>

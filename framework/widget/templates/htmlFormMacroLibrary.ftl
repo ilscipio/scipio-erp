@@ -24,38 +24,38 @@ not "current" context (too intrusive in current renderer design). still relies o
 -->
 <#macro renderField text>
   <#-- delegate to cato libs -->
-  <@field_generic_widget_impl text=text />
+  <@field_generic_widget text=text />
 </#macro>
 
 <#macro renderDisplayField type imageLocation idName description title class alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt=""collapse=false fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_display_widget_impl type=type imageLocation=imageLocation idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt fieldTitleBlank=fieldTitleBlank />
+  <@field_display_widget type=type imageLocation=imageLocation idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt fieldTitleBlank=fieldTitleBlank />
 </#macro>
 <#macro renderHyperlinkField></#macro>
 
 <#macro renderTextField name className alert value textSize maxlength id event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_input_widget_impl name=name className=className alert=alert value=value textSize=textSize maxlength=maxlength id=id event=event action=action disabled=disabled ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank />
+  <@field_input_widget name=name className=className alert=alert value=value textSize=textSize maxlength=maxlength id=id event=event action=action disabled=disabled ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#macro renderTextareaField name className alert cols rows id readonly value visualEditorEnable=true buttons="" language="" tooltip="" title="" fieldType="" fieldTitleBlank=false collapse=false fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_textarea_widget_impl name=name className=className alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable buttons=buttons language=language tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse fieldTitleBlank=fieldTitleBlank />
+  <@field_textarea_widget name=name className=className alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable buttons=buttons language=language tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName alert=false mask="" event="" action="" step="" timeValues="" tooltip=""collapse=false fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_datetime_widget_impl name=name className=className title=title value=value size=size maxlength=maxlength id=id dateType=dateType shortDateInput=shortDateInput timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName alert=alert mask=mask event=event action=action step=step timeValues=timeValues tooltip=tooltip fieldTitleBlank=fieldTitleBlank />
+  <@field_datetime_widget name=name className=className title=title value=value size=size maxlength=maxlength id=id dateType=dateType shortDateInput=shortDateInput timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName alert=alert mask=mask event=event action=action step=step timeValues=timeValues tooltip=tooltip fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#macro renderDropDownField name className alert id multiple formName otherFieldName size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false collapse=false fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_select_widget_impl name=name className=className alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size firstInList=firstInList currentValue=currentValue explicitDescription=explicitDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize dDFCurrent=dDFCurrent noCurrentSelectedKey=noCurrentSelectedKey ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars ignoreCase=ignoreCase fullSearch=fullSearch event=event action=action ajaxEnabled=ajaxEnabled tooltip=tooltip manualItems=manualItems manualItemsOnly=manualItemsOnly collapse=collapse fieldTitleBlank=fieldTitleBlank />
+  <@field_select_widget name=name className=className alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size firstInList=firstInList currentValue=currentValue explicitDescription=explicitDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize dDFCurrent=dDFCurrent noCurrentSelectedKey=noCurrentSelectedKey ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars ignoreCase=ignoreCase fullSearch=fullSearch event=event action=action ajaxEnabled=ajaxEnabled tooltip=tooltip manualItems=manualItems manualItemsOnly=manualItemsOnly collapse=collapse fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#macro renderCheckBox id="" checked=false currentValue="N" name="" action="" tooltip="" fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_checkbox_widget_impl id=id checked=checked currentValue=currentValue name=name action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank />
+  <@field_checkbox_widget id=id checked=checked currentValue=currentValue name=name action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="" fieldType="" fieldTitleBlank=false>
@@ -75,7 +75,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action tooltip="">
   <#-- delegate to cato libs -->
-  <@field_radio_widget_impl items=items className=className alert=alert currentValue=currentValue noCurrentSelectedKey=noCurrentSelectedKey name=name event=event action=action tooltip=tooltip />
+  <@field_radio_widget items=items className=className alert=alert currentValue=currentValue noCurrentSelectedKey=noCurrentSelectedKey name=name event=event action=action tooltip=tooltip />
 </#macro>
 
 <#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false>
@@ -112,7 +112,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     </#if>
 
   <#-- delegate to cato libs -->
-  <@field_submit_widget_impl buttonType=buttonType className=className alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation containerId=containerId ajaxUrl=ajaxUrl title=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressOptions=progressOptions/>
+  <@field_submit_widget buttonType=buttonType className=className alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation containerId=containerId ajaxUrl=ajaxUrl title=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressOptions=progressOptions/>
 </#macro>
 
 <#macro renderResetField className alert name title="" fieldType="" fieldTitleBlank=false>
@@ -349,17 +349,17 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase title="" fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_textfind_widget_impl name=name value=value defaultOption=defaultOption opEquals=opEquals opBeginsWith=opBeginsWith opContains=opContains opIsEmpty=opIsEmpty opNotEqual=opNotEqual className=className alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleStyle=titleStyle hideIgnoreCase=hideIgnoreCase ignCase=ignCase ignoreCase=ignoreCase title=title fieldTitleBlank=fieldTitleBlank />
+  <@field_textfind_widget name=name value=value defaultOption=defaultOption opEquals=opEquals opBeginsWith=opBeginsWith opContains=opContains opIsEmpty=opIsEmpty opNotEqual=opNotEqual className=className alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleStyle=titleStyle hideIgnoreCase=hideIgnoreCase ignCase=ignCase ignoreCase=ignoreCase title=title fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#macro renderDateFindField className alert name localizedInputTitle value value2 size maxlength dateType formName defaultDateTimeString imgSrc localizedIconTitle titleStyle defaultOptionFrom defaultOptionThru opEquals opSameDay opGreaterThanFromDayStart opGreaterThan opGreaterThan opLessThan opUpToDay opUpThruDay opIsEmpty>
   <#-- delegate to cato libs -->
-  <@field_datefind_widget_impl className=className alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty />
+  <@field_datefind_widget className=className alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty />
 </#macro>
 
 <#macro renderRangeFindField className alert name value size maxlength autocomplete titleStyle defaultOptionFrom opEquals opGreaterThan opGreaterThanEquals opLessThan opLessThanEquals value2 defaultOptionThru>
   <#-- delegate to cato libs -->
-  <@field_rangefind_widget_impl className=className alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom opEquals=opEquals opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals value2=value2 defaultOptionThru=defaultOptionThru />
+  <@field_rangefind_widget className=className alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom opEquals=opEquals opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals value2=value2 defaultOptionThru=defaultOptionThru />
 </#macro>
 
 <#--
@@ -397,24 +397,24 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 -->
 <#macro renderLookupField name formName fieldFormName className="" alert="false" value="" size="" maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" lastViewName="main"  title="" fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_lookup_widget_impl name=name formName=formName fieldFormName=fieldFormName className=className alert=alert value=value size=size maxlength=maxlength id=id event=event action=action readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width height=height position=position fadeBackground=fadeBackground clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed lastViewName=lastViewName  title=title fieldTitleBlank=fieldTitleBlank />
+  <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName className=className alert=alert value=value size=size maxlength=maxlength id=id event=event action=action readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width height=height position=position fadeBackground=fadeBackground clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed lastViewName=lastViewName  title=title fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#-- Cato: new params: paginate, forcePost, viewIndexFirst, listItemsOnly, paginateToggle*
      paginate is a display hint, does not seem to mean guarantee data wasn't paginated -->
 <#macro renderNextPrev paginateStyle paginateFirstStyle viewIndex highIndex listSize viewSize ajaxEnabled javaScriptEnabled ajaxFirstUrl firstUrl paginateFirstLabel paginatePreviousStyle ajaxPreviousUrl previousUrl paginatePreviousLabel pageLabel ajaxSelectUrl selectUrl ajaxSelectSizeUrl selectSizeUrl commonDisplaying paginateNextStyle ajaxNextUrl nextUrl paginateNextLabel paginateLastStyle ajaxLastUrl lastUrl paginateLastLabel paginateViewSizeLabel paginate=true forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false ajaxPaginateOnUrl="" paginateOnUrl="" paginateOnStyle="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffStyle="" paginateOffLabel="">
     <#-- delegate to cato libs -->
-    <@paginate_impl paginateStyle=paginateStyle paginateFirstStyle=paginateFirstStyle viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxEnabled=ajaxEnabled javaScriptEnabled=javaScriptEnabled ajaxFirstUrl=ajaxFirstUrl firstUrl=firstUrl paginateFirstLabel=paginateFirstLabel paginatePreviousStyle=paginatePreviousStyle ajaxPreviousUrl=ajaxPreviousUrl previousUrl=previousUrl paginatePreviousLabel=paginatePreviousLabel pageLabel=pageLabel ajaxSelectUrl=ajaxSelectUrl selectUrl=selectUrl ajaxSelectSizeUrl=ajaxSelectSizeUrl selectSizeUrl=selectSizeUrl commonDisplaying=commonDisplaying paginateNextStyle=paginateNextStyle ajaxNextUrl=ajaxNextUrl nextUrl=nextUrl 
+    <@paginate_core paginateStyle=paginateStyle paginateFirstStyle=paginateFirstStyle viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxEnabled=ajaxEnabled javaScriptEnabled=javaScriptEnabled ajaxFirstUrl=ajaxFirstUrl firstUrl=firstUrl paginateFirstLabel=paginateFirstLabel paginatePreviousStyle=paginatePreviousStyle ajaxPreviousUrl=ajaxPreviousUrl previousUrl=previousUrl paginatePreviousLabel=paginatePreviousLabel pageLabel=pageLabel ajaxSelectUrl=ajaxSelectUrl selectUrl=selectUrl ajaxSelectSizeUrl=ajaxSelectSizeUrl selectSizeUrl=selectSizeUrl commonDisplaying=commonDisplaying paginateNextStyle=paginateNextStyle ajaxNextUrl=ajaxNextUrl nextUrl=nextUrl 
         paginateNextLabel=paginateNextLabel paginateLastStyle=paginateLastStyle ajaxLastUrl=ajaxLastUrl lastUrl=lastUrl paginateLastLabel=paginateLastLabel paginateViewSizeLabel=paginateViewSizeLabel paginate=paginate forcePost=forcePost viewIndexFirst=viewIndexFirst listItemsOnly=listItemsOnly paginateToggle=paginateToggle ajaxPaginateOnUrl=ajaxPaginateOnUrl paginateOnUrl=paginateOnUrl paginateOnStyle=paginateOnStyle paginateOnLabel=paginateOnLabel ajaxPaginateOffUrl=ajaxPaginateOffUrl paginateOffUrl=paginateOffUrl paginateOffStyle=paginateOffStyle paginateOffLabel=paginateOffLabel />
 </#macro>
 
 <#macro renderFileField className alert name value size maxlength autocomplete id="" title="" fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_file_widget_impl className=className alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank />
+  <@field_file_widget className=className alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank />
 </#macro>
 <#macro renderPasswordField className alert name value size maxlength id autocomplete title="" fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_password_widget_impl className=className alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete title=title fieldTitleBlank=fieldTitleBlank />
+  <@field_password_widget className=className alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete title=title fieldTitleBlank=fieldTitleBlank />
 </#macro>
 <#macro renderImageField value description alternate style event action title="" fieldType="" fieldTitleBlank=false>
   <img<#if value?has_content> src="${value}"</#if><#if description?has_content> title="${description}"</#if> alt="<#if alternate?has_content>${alternate}"</#if><#if style?has_content> class="${style}"</#if><#if event?has_content> ${event?html}="${action}" </#if>/>
@@ -434,11 +434,11 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 
 <#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId expandToolTip collapseToolTip collapsible>
     <#-- delegate to cato libs -->
-    <@fieldset_impl openOnly=true style=style id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible />
+    <@fieldset_core openOnly=true style=style id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible />
 </#macro>
 
 <#macro renderFieldGroupClose style id title>
-    <@fieldset_impl closeOnly=true style=style id=id title=title />
+    <@fieldset_core closeOnly=true style=style id=id title=title />
 </#macro>
 
 <#macro renderHyperlinkTitle name title showSelectAll="N">

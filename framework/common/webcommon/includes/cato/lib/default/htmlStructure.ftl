@@ -300,23 +300,23 @@ IMPL NOTE: This has dependencies on some non-structural macros.
         <#local menuId = "">
     </#if>
 <#else>
-    <#-- section_impl has its own stack, don't need to preserve these for now-->
+    <#-- section_core has its own stack, don't need to preserve these for now-->
     <#local class = "">
     <#local contentId = "">
     <#local menuId = "">    
 </#if>
     <#-- note: addClass logic is only partially implemented (doesn't support booleans and "" means use default; otherwise may conflict with stock API?), but good enough for now -->
     <#-- note: autoHeadingLevel logic now implemented in renderScreenletBegin -->
-    <@section_impl id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuContent=menuContent fromWidgets=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
+    <@section_core id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuContent=menuContent fromWidgets=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
         forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass 
         openOnly=openOnly closeOnly=closeOnly wrapIf=wrapIf>
         <#nested />
-    </@section_impl>
+    </@section_core>
 </#macro>
 
 <#-- 
     migrated from @renderScreenletBegin/End screen widget macro
-    DEV NOTE: section_impl and similar macros ARE NOT a final implementation pattern. 
+    DEV NOTE: section_core and similar macros ARE NOT a final implementation pattern. 
         it was created initially strictly to remove dependency of cato libs on ofbiz macro library,
         and to head toward separating macro logic and markup.
     TODO: refinement, clean up macro arguments and dissect further
@@ -324,7 +324,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
           
     fromWidgets: hint of whether called by renderer or ftl macros
     hasContent: hint to say there will be content, workaround for styling -->
-<#macro section_impl id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuContent="" showMore=true collapsed=false 
+<#macro section_core id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuContent="" showMore=true collapsed=false 
     javaScriptEnabled=true fromWidgets=true menuClass="" menuId="" menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="" titleContainerStyle="" titleConsumeLevel=true 
     autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" openOnly=false closeOnly=false wrapIf=true>
 

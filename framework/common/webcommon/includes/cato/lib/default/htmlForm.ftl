@@ -193,14 +193,14 @@ A visible fieldset, including the HTML element.
 -->
 <#macro fieldset id="" title="" class=true collapsed=false>
     <#local classes = makeClassesArg(class, "")>
-    <@fieldset_impl style=classes id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="">
+    <@fieldset_core style=classes id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="">
         <#nested />
-    </@fieldset_impl>
+    </@fieldset_core>
 </#macro>
 
-<#-- DEV NOTE: see @section_impl for details on pattern 
+<#-- DEV NOTE: see @section_core for details on pattern 
      migrated from @renderFieldGroupOpen/Close form widget macro -->
-<#macro fieldset_impl style="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false openOnly=false closeOnly=false wrapIf=true>
+<#macro fieldset_core style="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false openOnly=false closeOnly=false wrapIf=true>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
 <#if open>
@@ -594,7 +594,7 @@ or even multiple per fieldset.
     <@cell class=("${classes!}"+" field-entry-widget "+fieldEntryTypeClass)?trim nocells=(nocells || nocontainer)>
         <#switch type>
           <#case "input">
-            <@field_input_widget_impl name=name 
+            <@field_input_widget name=name 
                                   className=class 
                                   alert=alert 
                                   value=value 
@@ -613,7 +613,7 @@ or even multiple per fieldset.
                                   tooltip=tooltip/>
             <#break>
           <#case "textarea">
-            <@field_textarea_widget_impl name=name 
+            <@field_textarea_widget name=name 
                                   className=class 
                                   alert=alert 
                                   cols=cols 
@@ -626,7 +626,7 @@ or even multiple per fieldset.
             <#break>
           <#case "datetime">
             <#if dateType == "date"><#local shortDateInput=true/><#else><#local shortDateInput=false/></#if>
-            <@field_datetime_widget_impl name=name 
+            <@field_datetime_widget name=name 
                                   className=class 
                                   alert=alert 
                                   title=label 
@@ -660,7 +660,7 @@ or even multiple per fieldset.
             <#local manualItems = true>
             <#local manualItemsOnly = true>
             
-            <@field_select_widget_impl name=name
+            <@field_select_widget name=name
                                     className=class 
                                     alert=alert 
                                     id=id 
@@ -693,31 +693,31 @@ or even multiple per fieldset.
                                     fullSearch=""
                                     tooltip=tooltip
                                     manualItems=manualItems
-                                    manualItemsOnly=manualItemsOnly><#nested></@field_select_widget_impl>
+                                    manualItemsOnly=manualItemsOnly><#nested></@field_select_widget>
             <#break>
           <#case "lookup">
-            <@field_lookup_widget_impl name=name formName=formName fieldFormName=fieldFormName className=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
+            <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName className=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
           <#break>
           <#case "checkbox">
-                <@field_checkbox_widget_impl id=id currentValue=value checked=checked name=name action=action />
+                <@field_checkbox_widget id=id currentValue=value checked=checked name=name action=action />
             <#break>
           <#case "radio">
                 <#if radioSingle>
                     <#-- single radio button item mode -->
                     <#local items=[{"key":value, "description":label!""}]/>
-                    <@field_radio_widget_impl items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
+                    <@field_radio_widget items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
                 <#else>
                     <#-- multi radio button item mode -->
                     <div<@fieldClassStr class alert />>
-                      <@field_radio_widget_impl items=items className="" alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
+                      <@field_radio_widget items=items className="" alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
                     </div>
                 </#if>
             <#break>
           <#case "file">
-            <@field_file_widget_impl className=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
+            <@field_file_widget className=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
             <#break> 
           <#case "password">
-            <@field_password_widget_impl className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip/>
+            <@field_password_widget className=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip/>
             <#break> 
           <#case "submit">
           <#case "submitarea">
@@ -734,7 +734,7 @@ or even multiple per fieldset.
                 </#if>
                 <#local buttonType = catoSubmitFieldButtonTypeMap[submitType]!"button">
                 <#local inputType = catoSubmitFieldInputTypeMap[submitType]!"">
-                <@field_submit_widget_impl buttonType=buttonType className=class alert=alert formName=formName name=name event="" action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false onClick=onClick href=href inputType=inputType disabled=disabled />
+                <@field_submit_widget buttonType=buttonType className=class alert=alert formName=formName name=name event="" action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false onClick=onClick href=href inputType=inputType disabled=disabled />
               <#else>
                 <#nested>
               </#if>
@@ -746,7 +746,7 @@ or even multiple per fieldset.
             </#if>
             <#break> 
           <#case "display">
-            <#-- TODO? may need formatting here based on valueType... not done by field_display_widget_impl... done in java OOTB... 
+            <#-- TODO? may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 
                  can also partially detect type of value with ?is_, but is not enough... -->
             <#if !valueType?has_content || (valueType=="generic")>
               <#local displayType = "text">
@@ -763,7 +763,7 @@ or even multiple per fieldset.
               <#local imageLocation = "">
               <#local desc = value>
             </#if>
-                <@field_display_widget_impl type=displayType imageLocation=imageLocation idName="" description=desc title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt=description/>
+                <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt=description/>
                 <#-- FIXME: tooltip too crappy -->
               <#if tooltip?has_content>
                 <span class="tooltip">${tooltip}</span>
@@ -771,7 +771,7 @@ or even multiple per fieldset.
             <#break> 
           <#default> <#-- "generic", empty or unrecognized -->
             <#if value?has_content>
-                <@field_generic_widget_impl text=value/>
+                <@field_generic_widget text=value/>
             <#else>
                 <#nested />
             </#if>
@@ -870,20 +870,16 @@ or even multiple per fieldset.
 
 
 <#-- INDIVIDUAL FIELD IMPLEMENTATIONS
-     DEV NOTE: see @section_impl for details on current _impl pattern used below (transitory)
-     These are not final implementation pattern and transitory to eliminate macro lib dependencies,
-     and to head toward separating macro logic and markup.
-     TODO: clean up macro arguments
-     NOTE: "widget" here refers to the common meaning; not any specific ofbiz meaning -->
-
-<#-- TODO: the _widget_impl macros must further be split up into
-     _widget_markup macros, which explicitly contain as little markup as possible, and should also
-     try to avoid all of the macro argument ofbiz-isms.
-     the _widget_impl are called by the Ofbiz macro libs and may need to contain logic code, so they're
-     not suited to be markup macros, and their args are too ofbiz-ish. -->
+     TODO: the parameters on these should be refined to be less ofbiz-like and more cato-like; but must
+        be flexible enough to 100% allow calls from ofbiz widget lib macros.
+     TODO: the _widget macros must further be split up into
+        _widget_markup macros, which explicitly contain as little markup as possible, and should also
+        try to avoid all of the macro argument ofbiz-isms.
+        the _widget are called by the Ofbiz macro libs and may need to contain logic code, so they're
+        not suited to be markup macros, and their args are too ofbiz-ish. -->
 
 <#-- migrated from @renderTextField form widget macro -->
-<#macro field_input_widget_impl name="" className="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
+<#macro field_input_widget name="" className="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
     mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false>
   <#if tooltip?has_content> 
      <#local className = (className+ " has-tip tip-right")/>  
@@ -917,7 +913,7 @@ or even multiple per fieldset.
 </#macro>
 
 <#-- migrated from @renderTextareaField form widget macro -->
-<#macro field_textarea_widget_impl name="" className="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
+<#macro field_textarea_widget name="" className="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
     buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false>
   <#if tooltip?has_content> 
      <#local className = (className+ " has-tip tip-right")/>  
@@ -987,7 +983,7 @@ or even multiple per fieldset.
 </#assign>
 
 <#-- migrated from @renderDateTimeField form widget macro -->
-<#macro field_datetime_widget_impl name="" className="" title="" value="" size="" maxlength="" id="" dateType="" shortDateInput=false 
+<#macro field_datetime_widget name="" className="" title="" value="" size="" maxlength="" id="" dateType="" shortDateInput=false 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
     alert=false mask="" event="" action="" step="" timeValues="" tooltip=""collapse=false fieldTitleBlank=false>
@@ -1068,7 +1064,7 @@ or even multiple per fieldset.
 </#macro>
 
 <#-- migrated from @renderDateFindField form widget macro -->
-<#macro field_datefind_widget_impl className="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" 
+<#macro field_datefind_widget className="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" 
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleStyle="" defaultOptionFrom="" defaultOptionThru="" 
     opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="">
 
@@ -1123,7 +1119,7 @@ or even multiple per fieldset.
 </#macro>
 
 <#-- migrated from @renderDropDownField form widget macro -->
-<#macro field_select_widget_impl name="" className="" alert="" id="" multiple="" formName="" otherFieldName="" size="" firstInList="" 
+<#macro field_select_widget name="" className="" alert="" id="" multiple="" formName="" otherFieldName="" size="" firstInList="" 
     currentValue="" explicitDescription="" allowEmpty="" options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" noCurrentSelectedKey="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
     ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false 
@@ -1172,7 +1168,7 @@ or even multiple per fieldset.
 </#macro>
 
 <#-- migrated from @renderLookupField form widget macro -->
-<#macro field_lookup_widget_impl name="" formName="" fieldFormName="" className="" alert="false" value="" size="" 
+<#macro field_lookup_widget name="" formName="" fieldFormName="" className="" alert="false" value="" size="" 
     maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" 
     targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" 
     height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" 
@@ -1298,7 +1294,7 @@ or even multiple per fieldset.
 </#macro>
 
 <#-- migrated from @renderCheckBox form widget macro -->
-<#macro field_checkbox_widget_impl id="" checked=false currentValue="N" name="" action="" tooltip="" fieldTitleBlank=false>
+<#macro field_checkbox_widget id="" checked=false currentValue="N" name="" action="" tooltip="" fieldTitleBlank=false>
     <div class="switch small">
     <input type="checkbox" id="<#if id?has_content>${id}<#else>${name!}</#if>"<#rt/>
       <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
@@ -1310,7 +1306,7 @@ or even multiple per fieldset.
 </#macro>
 
 <#-- migrated from @renderRadioField form widget macro -->
-<#macro field_radio_widget_impl items="" className="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="">
+<#macro field_radio_widget items="" className="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="">
   <#list items as item>
     <span <@fieldClassStr className alert />><#rt/>
       <input type="radio"<#if currentValue?has_content><#if currentValue==item.key> checked="checked"</#if>
@@ -1323,12 +1319,12 @@ or even multiple per fieldset.
 </#macro>
 
 <#-- migrated from @renderFileField form widget macro -->
-<#macro field_file_widget_impl className="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false>
+<#macro field_file_widget className="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false>
   <input type="file" <@fieldClassStr className alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
 </#macro>
 
 <#-- migrated from @renderPasswordField form widget macro -->
-<#macro field_password_widget_impl className="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="">
+<#macro field_password_widget className="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="">
   <#if tooltip?has_content> 
      <#local className = (className+ " has-tip tip-right")/>  
   </#if> 
@@ -1340,7 +1336,7 @@ or even multiple per fieldset.
 </#macro>
 
 <#-- migrated from @renderSubmitField form widget macro -->
-<#macro field_submit_widget_impl buttonType="" className="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
+<#macro field_submit_widget buttonType="" className="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
     containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions={}>
   <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
   <#if buttonType!="image">
@@ -1383,7 +1379,7 @@ or even multiple per fieldset.
 </#macro>
 
 <#-- migrated from @renderDisplayField form widget macro -->
-<#macro field_display_widget_impl type="" imageLocation="" idName="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
+<#macro field_display_widget type="" imageLocation="" idName="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
     inPlaceEditorParams="" imageAlt=""collapse=false fieldTitleBlank=false>
   <#if type?has_content && type=="image">
     <img src="${imageLocation}" alt="${imageAlt}"><#lt/>
@@ -1411,7 +1407,7 @@ or even multiple per fieldset.
 </#macro>
 
 <#-- migrated from @renderRangeFindField form widget macro -->
-<#macro field_textfind_widget_impl name="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
+<#macro field_textfind_widget name="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
     opIsEmpty="" opNotEqual="" className="" alert="" size="" maxlength="" autocomplete="" titleStyle="" 
     hideIgnoreCase="" ignCase="" ignoreCase="" title="" fieldTitleBlank=false>
 
@@ -1459,7 +1455,7 @@ or even multiple per fieldset.
 </#macro>
 
 <#-- migrated from @renderRangeFindField form widget macro -->
-<#macro field_rangefind_widget_impl className="" alert="" name="" value="" size="" maxlength="" autocomplete="" titleStyle="" defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" value2="" defaultOptionThru="">
+<#macro field_rangefind_widget className="" alert="" name="" value="" size="" maxlength="" autocomplete="" titleStyle="" defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" value2="" defaultOptionThru="">
   <#local class1="${styles.grid_small!}9 ${styles.grid_large!}9"/>
   <#local class2="${styles.grid_small!}3 ${styles.grid_large!}3"/>
   <@row collapse=collapse!false>
@@ -1500,7 +1496,7 @@ or even multiple per fieldset.
 </#macro>
 
 <#-- migrated from @renderField form widget macro -->
-<#macro field_generic_widget_impl text="">
+<#macro field_generic_widget text="">
   <#if text??>
     ${text}<#lt/>
   </#if>

@@ -297,6 +297,39 @@
     "fields_generic_labelarea" : false,
     "fields_generic_labelareaexceptions" : "", 
 
+  <#-- Field type style name maps
+       These map cato and ofbiz field types to style names to represent the fields in CSS, so they can be unified.
+       For any entries not specified, "default" entry is consulted.
+       The boolean true means use the cato or ofbiz type name as style name.
+       Note these names are not full CSS style names, but prefixes or suffixes. -->
+    "field_type_stylenames_cato" : {
+        "default": true
+    },
+    "field_type_stylenames_ofbiz" : {
+        "display": "display",
+        "hyperlink": "hyperlink",
+        "text": "input",
+        "textarea": "textarea",
+        "date-time": "datetime",
+        "drop-down": "select",
+        "check": "checkbox",
+        "radio": "radio",
+        "submit": "submit",
+        "reset": "reset",
+        "hidden": "hidden",
+        "ignored": "ignored",
+        "text-find": "textfind",
+        "date-find": "datefind",
+        "range-find": "rangefind",
+        "lookup": "lookup",
+        "file": "file",
+        "password": "password",
+        "image": "image",
+        "display-entity": "displayentity",
+        "container": "container",
+        "default": "other"
+    },
+
   <#-- Always declare last -->
     "dummy" : ""
 }>

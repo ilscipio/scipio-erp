@@ -336,7 +336,11 @@ Maps a cato field type to a style name representing the type.
 Should be coordinated with mapWidgetFieldTypeToStyleName to produce common field type style names.
 -->
 <#function mapCatoFieldTypeToStyleName fieldType>
-  <#return fieldType>
+  <#local res = (styles.field_type_stylenames_cato[fieldType])!(styles.field_type_stylenames_cato["default"])!"">
+  <#if res?is_boolean>
+    <#return res?string(fieldType, "")>
+  </#if>
+  <#return res>
 </#function>
 
 <#-- 
@@ -348,33 +352,11 @@ Maps an Ofbiz field type to a style name representing the type.
 Should be coordinated with mapCatoFieldTypeToStyleName to produce common field type style names.
 -->
 <#function mapWidgetFieldTypeToStyleName fieldType>
-  <#if !widgetFieldTypeToStyleNameMap??>
-    <#-- FIXME: these need to match cato types to unify css classes; they don't quite -->
-    <#global widgetFieldTypeToStyleNameMap = {
-        "display": "display",
-        "hyperlink": "hyperlink",
-        "text": "input",
-        "textarea": "textarea",
-        "date-time": "datetime",
-        "drop-down": "select",
-        "check": "checkbox",
-        "radio": "radio",
-        "submit": "submit",
-        "reset": "reset",
-        "hidden": "hidden",
-        "ignored": "ignored",
-        "text-find": "textfind",
-        "date-find": "datefind",
-        "range-find": "rangefind",
-        "lookup": "lookup",
-        "file": "file",
-        "password": "password",
-        "image": "image",
-        "display-entity": "displayentity",
-        "container": "container"
-    }>
+  <#local res = (styles.field_type_stylenames_ofbiz[fieldType])!(styles.field_type_stylenames_ofbiz["default"])!"">
+  <#if res?is_boolean>
+    <#return res?string(fieldType, "")>
   </#if>
-  <#return widgetFieldTypeToStyleNameMap[fieldType]!"other">
+  <#return res>
 </#function>
 
 <#-- 

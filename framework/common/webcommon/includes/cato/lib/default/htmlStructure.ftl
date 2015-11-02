@@ -23,7 +23,10 @@
     alt             = boolean, if true alternate row (odd), if false regular (even)
     selected        = boolean, if true row is marked selected
 -->
-<#macro row class=true id="" collapse=false norows=false alt="" selected="">
+<#macro row class=true id="" collapse=false norows=false alt="" selected="" openOnly=false closeOnly=false wrapIf=true>
+  <#local open = wrapIf && !closeOnly>
+  <#local close = wrapIf && !openOnly>
+  <#if open>
     <#if !norows>
       <#local classes = makeClassesArg(class, "")>
       <#local altClass = "">
@@ -35,10 +38,13 @@
       </#if>
     <div class="${styles.grid_row!}<#if classes?has_content> ${classes}</#if><#if collapse> collapse</#if><#if altClass?has_content> ${altClass}</#if>"<#if id?has_content> id="${id}"</#if>><#rt/>
     </#if>
+  </#if>
         <#nested />
-    <#if !norows>    
+  <#if close>
+    <#if !norows>    <#-- FIXME? wont remember nocells when closeOnly -->
     </div>
-    </#if>    
+    </#if>   
+  </#if> 
 </#macro>
 
 <#-- 
@@ -83,7 +89,10 @@
     largeOffset     = specific offset for large columns
     last            = boolean, usually optional, if true indicate last cell in row 
 -->
-<#macro cell columns=-1 small=-1 medium=-1 large=-1 offset=-1 smallOffset=-1 mediumOffset=-1 largeOffset=-1 class=true id="" collapse=false nocells=false last=false>
+<#macro cell columns=-1 small=-1 medium=-1 large=-1 offset=-1 smallOffset=-1 mediumOffset=-1 largeOffset=-1 class=true id="" collapse=false nocells=false last=false openOnly=false closeOnly=false wrapIf=true>
+  <#local open = wrapIf && !closeOnly>
+  <#local close = wrapIf && !openOnly>
+  <#if open>
     <#local addClass = parseAddClassArg(class)>
     <#local class = parseClassArg(class, "")>  
      
@@ -109,8 +118,11 @@
         <#local specOffsetClassesStr><#if (smallOffset > 0)> ${styles.grid_small_offset!}${smallOffset}</#if><#if (mediumOffset > 0)> ${styles.grid_medium_offset!}${mediumOffset}</#if><#if (largeOffset > 0)> ${styles.grid_large_offset!}${largeOffset}<#elseif (largeOffset != 0) && (offset > 0)> ${styles.grid_large_offset!}${offset}</#if></#local>
         <div class="${colSizeClasses}${specOffsetClassesStr} ${styles.grid_cell!}<#if last> ${styles.grid_end!}</#if><#if addClass?has_content> ${addClass}</#if>" <#if id?has_content> id="${id}"</#if>><#rt/>
     </#if>
+  </#if>
         <#nested />
-    <#if !nocells></div></#if>
+  <#if close>
+    <#if !nocells></div></#if> <#-- FIXME? wont remember nocells when closeOnly -->
+  </#if>
 </#macro>
 
 
@@ -176,7 +188,6 @@ Since this is very foundation specific, this function may be dropped in future i
           </ul>
     </#if>
 </#macro>
-
 
 <#-- 
 *************

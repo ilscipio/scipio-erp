@@ -163,14 +163,20 @@ HTML form.
     attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
     inlineAttribs       = other attributes for HTML <form> element
 -->
-<#macro form type="input" name="" id="" class=true attribs={} inlineAttribs...>
+<#macro form type="input" name="" id="" class=true attribs={} openOnly=false closeOnly=false wrapIf=true inlineAttribs...>
+  <#local open = wrapIf && !closeOnly>
+  <#local close = wrapIf && !openOnly>
+  <#if open>
     <#local formInfo = {"type":type, "name":name, "id":id}>
     <#local dummy = pushRequestStack("catoCurrentFormInfo", formInfo)>
     <#local classes = makeClassesArg(class, "")>
     <form<#if classes?has_content> class="${classes}</#if><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "name", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+  </#if>
       <#nested>
+  <#if close>
     </form>
     <#local dummy = popRequestStack("catoCurrentFormInfo")>
+  </#if>
 </#macro>
 
 <#-- 
@@ -191,9 +197,9 @@ A visible fieldset, including the HTML element.
     title           = fieldset-title
     collapsed       = show/hide the fieldset
 -->
-<#macro fieldset id="" title="" class=true collapsed=false>
+<#macro fieldset id="" title="" class=true collapsed=false openOnly=false closeOnly=false wrapIf=true>
     <#local classes = makeClassesArg(class, "")>
-    <@fieldset_core classes=classes id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="">
+    <@fieldset_core classes=classes id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="" openOnly=openOnly closeOnly=closeOnly wrapIf=wrapIf>
         <#nested />
     </@fieldset_core>
 </#macro>

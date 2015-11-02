@@ -435,11 +435,11 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 
 <#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId expandToolTip collapseToolTip collapsible>
     <#-- delegate to cato libs -->
-    <@fieldset_core openOnly=true style=style id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible />
+    <@fieldset_core openOnly=true classes=style id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible />
 </#macro>
 
 <#macro renderFieldGroupClose style id title>
-    <@fieldset_core closeOnly=true style=style id=id title=title />
+    <@fieldset_core closeOnly=true classes=style id=id title=title />
 </#macro>
 
 <#macro renderHyperlinkTitle name title showSelectAll="N">

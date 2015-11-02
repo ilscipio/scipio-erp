@@ -744,7 +744,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                     <@field_radio_widget items=items className=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
                 <#else>
                     <#-- multi radio button item mode -->
-                    <div<@fieldClassStr class alert />>
+                    <div<@fieldClassStr class=class alert=alert />>
                       <@field_radio_widget items=items className="" alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
                     </div>
                 </#if>
@@ -828,8 +828,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- migrated from @renderClass form widget macro -->
-<#macro fieldClassStr className alert="false">
-  <#if className?has_content || alert?string == "true"> class="${className!}<#if alert?string == "true"> alert</#if>" </#if>
+<#macro fieldClassStr class alert=false>
+  <#if class?has_content || alert?string == "true"> class="${class!}<#if alert?string == "true"> alert</#if>"</#if><#t>
 </#macro>
 
 <#-- migrated from @renderSubmitFieldAreaProgress form widget macro -->
@@ -901,7 +901,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#if tooltip?has_content> 
      data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"<#rt/>
      </#if><#rt/>
-    <@fieldClassStr className alert />
+    <@fieldClassStr class=className alert=alert />
     <#if value?has_content> value="${value}"</#if><#rt/>
     <#if textSize?has_content> size="${textSize}"</#if><#rt/>
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>
@@ -933,7 +933,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   </#if>
   <textarea name="${name}"<#t/>
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
-    <@fieldClassStr className alert />
+    <@fieldClassStr class=className alert=alert />
     <#if cols?has_content> cols="${cols}"</#if><#rt/>
     <#if rows?has_content> rows="${rows}"</#if><#rt/>
     <#if id?has_content> id="${id}"</#if><#rt/>
@@ -1019,7 +1019,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
         <div class="${styles.grid_small!}11 ${styles.grid_cell!}">
           <#if dateType == "time">
-            <input type="text" name="${name}" <@fieldClassStr className alert /><#rt/>
+            <input type="text" name="${name}"<@fieldClassStr class=className alert=alert /><#rt/>
             <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
             <#if title?has_content> title="${title}"</#if>
             <#if value?has_content> value="${value}"</#if>
@@ -1027,7 +1027,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
             <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
             <#if id?has_content> id="${id}"</#if> class="${styles.grid_small!}3 ${styles.grid_cell!}"/><#rt/>
           <#else>
-            <input type="text" name="${name}_i18n" <@fieldClassStr className alert /><#rt/>
+            <input type="text" name="${name}_i18n"<@fieldClassStr class=className alert=alert /><#rt/>
             <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
             <#if title?has_content> title="${title}"</#if>
             <#if value?has_content> value="${value}"</#if>
@@ -1105,7 +1105,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
         <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
-        <input class="${styles.grid_small!}3 ${styles.grid_cell!}" id="${name?html}_fld0_value" type="text" <@fieldClassStr className alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
+        <input class="${styles.grid_small!}3 ${styles.grid_cell!}" id="${name?html}_fld0_value" type="text"<@fieldClassStr class=className alert=alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
         </div>
         <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
         <span class="postfix"><i class="${styles.icon} ${styles.icon_calendar!}"></i></span>
@@ -1167,7 +1167,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false 
     collapse=false fieldTitleBlank=false>
 
-    <select name="${name!""}<#rt/>" <@fieldClassStr className alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
+    <select name="${name!""}<#rt/>"<@fieldClassStr class=className alert=alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>>
     <#if !manualItemsOnly>  
       <#if firstInList?has_content && currentValue?has_content && !multiple?has_content>
@@ -1255,7 +1255,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#if size?has_content && size=="0">
       <input type="hidden" <#if name?has_content> name="${name}"/></#if>
     <#else>
-      <input type="text" <@fieldClassStr className alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if>
+      <input type="text"<@fieldClassStr class=className alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if>
         <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#rt/>
         <#if readonly?has_content && readonly> readonly="readonly"</#if><#rt/><#if event?has_content && action?has_content> ${event}="${action}"</#if><#rt/>
         <#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/></#if>
@@ -1370,7 +1370,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 
 <#macro field_radio_markup_widget items="" className="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="">
   <#list items as item>
-    <span <@fieldClassStr className alert />><#rt/>
+    <span<@fieldClassStr class=className alert=alert />><#rt/>
       <input type="radio"<#if currentValue?has_content><#if currentValue==item.key> checked="checked"</#if>
         <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
         <#elseif noCurrentSelectedKey?has_content && noCurrentSelectedKey == item.key> checked="checked"</#if> 
@@ -1386,7 +1386,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#macro field_file_markup_widget className="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false>
-  <input type="file" <@fieldClassStr className alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+  <input type="file"<@fieldClassStr class=className alert=alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
 </#macro>
 
 <#-- migrated from @renderPasswordField form widget macro -->
@@ -1398,7 +1398,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#if tooltip?has_content> 
      <#local className = (className+ " has-tip tip-right")/>  
   </#if> 
-  <input type="password" <@fieldClassStr className alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if>
+  <input type="password"<@fieldClassStr class=className alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if>
   <#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#if autocomplete?has_content> autocomplete="off"</#if> 
   <#if placeholder?has_content> placeholder="${placeholder}"</#if>
   <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
@@ -1427,15 +1427,15 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#else>
   <#local buttonMarkup>
   <#if buttonType=="text-link">
-    <a <@fieldClassStr className alert /> href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if>><#if title?has_content>${title}</#if></a>
+    <a<@fieldClassStr class=className alert=alert />href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if>><#if title?has_content>${title}</#if></a>
   <#elseif buttonType=="image">
-    <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}" <@fieldClassStr className alert /> <#if name?has_content> name="${name}"</#if>
+    <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassStr class=className alert=alert /><#if name?has_content> name="${name}"</#if>
     <#if title?has_content> alt="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
     <#if disabled> disabled="disabled"<#else>
       <#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
     </#if>/>
   <#else>
-    <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>" <@fieldClassStr className alert />
+    <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassStr class=className alert=alert />
     <#if name?has_content> name="${name}"</#if><#if title?has_content> value="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
     <#if disabled> disabled="disabled"<#else>
       <#if onClick?has_content> onclick="${onClick}"<#else>
@@ -1468,7 +1468,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#else>
     <#--
     <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true" || title?has_content>
-      <span<#if idName?has_content> id="cc_${idName}"</#if><#if title?has_content> title="${title}"</#if> <@fieldClassStr class alert />><#t/>
+      <span<#if idName?has_content> id="cc_${idName}"</#if><#if title?has_content> title="${title}"</#if><@fieldClassStr class=class alert=alert />><#t/>
     </#if>
     -->
     <#if description?has_content>
@@ -1527,7 +1527,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <input type="hidden" name=<#if name?has_content> "${name}_op"</#if>    value="${defaultOption}"/><#rt/>
   </#if>
       <@cell class="${class2!}">
-    <input type="text" <@fieldClassStr className alert /> name="${name}"<#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+    <input type="text"<@fieldClassStr class=className alert=alert />name="${name}"<#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
        
       </@cell>
       <@cell class="${class3!}"> 
@@ -1554,7 +1554,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#local class2="${styles.grid_small!}3 ${styles.grid_large!}3"/>
   <@row collapse=collapse!false>
     <@cell class=class1>
-      <input type="text" <@fieldClassStr className alert /><#if name?has_content> name="${name}_fld0_value"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+      <input type="text"<@fieldClassStr class=className alert=alert /><#if name?has_content>name="${name}_fld0_value"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
     </@cell>
     <@cell class=class2>
       <#if titleStyle?has_content>
@@ -1572,7 +1572,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   </@row><#rt/>
   <@row>
     <@cell class=class1>
-      <input type="text" <@fieldClassStr className alert /><#if name?has_content> name="${name}_fld1_value"</#if><#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+      <input type="text"<@fieldClassStr class=className alert=alert /><#if name?has_content>name="${name}_fld1_value"</#if><#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
     </@cell>
     <@cell class=class2>
       <#if titleStyle?has_content>

@@ -789,6 +789,10 @@ In general, adding a class to boolean "true" (or empty string) transforms result
 Adding to boolean "false" transforms string into a replacing string ("=", same as no prefix).
 The exception is addClassArgRequiredReplacing which always transforms into replacing string ("=", same as no prefix).
 -->
+
+<#-- Adds a required class, that must appear in class string.
+    Note: Does not influence the default value logic perceived by addClassArgDefault (user intention preserved). 
+        It does this by prefixing result with "+" string where necessary. -->
 <#function addClassArgRequired class newClass>
   <#if !newClass?has_content>
     <#return class>
@@ -810,8 +814,10 @@ The exception is addClassArgRequiredReplacing which always transforms into repla
   </#if>
 </#function>
 
-<#-- special case of addClassArgRequired where the required arg will become a replacing string ("=" prefix),
-     though will not squash previous values. note this destroys information about what macro user requested... -->
+<#-- Special case of addClassArgRequired where the required class will become a replacing string ("=" prefix),
+     though will not squash previous values. 
+     Note: this destroys information about what macro user requested and affects the default value logic
+        perceived by addClassArgDefault. -->
 <#function addClassArgRequiredReplacing class newClass>
   <#if !newClass?has_content>
     <#return class>
@@ -829,11 +835,12 @@ The exception is addClassArgRequiredReplacing which always transforms into repla
   </#if>
 </#function>
 
+<#-- Adds a class only if the class arg does not contain default-replacing classes. 
+    It adds default if class is true, empty or starts with "+". -->
 <#function addClassArgDefault class newClass>
   <#if !newClass?has_content>
     <#return class>
   </#if>
-  <#-- only add default if class is true, empty or starts with "+" -->
   <#if class?is_boolean>
     <#if class>
       <#return "+" + newClass>

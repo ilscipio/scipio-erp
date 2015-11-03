@@ -113,14 +113,11 @@
     <#local largeOffset = largeOffset?number>
     
     <#local specColsClasses><#if (small > 0)> ${styles.grid_small!}${small}</#if><#if (medium > 0)> ${styles.grid_medium!}${medium}</#if><#if (large > 0)> ${styles.grid_large!}${large}<#elseif (large != 0) && (columns > 0)> ${styles.grid_large!}${columns}</#if></#local>
-    <#if class?has_content>
-        <#local colSizeClasses = (class + specColsClasses)?trim>
-    <#else>
-        <#local colSizeClasses = specColsClasses?trim>
-    </#if>
+    <#local colSizeClasses = (class + specColsClasses)?trim>
     <#if !colSizeClasses?has_content>
         <#local colSizeClasses = "${styles.grid_large!}12">
     </#if>
+
     <#local specOffsetClassesStr><#if (smallOffset > 0)> ${styles.grid_small_offset!}${smallOffset}</#if><#if (mediumOffset > 0)> ${styles.grid_medium_offset!}${mediumOffset}</#if><#if (largeOffset > 0)> ${styles.grid_large_offset!}${largeOffset}<#elseif (largeOffset != 0) && (offset > 0)> ${styles.grid_large_offset!}${offset}</#if></#local>
     <#local classes = (colSizeClasses + specOffsetClassesStr + " " + addClass)?trim>
   <#else>

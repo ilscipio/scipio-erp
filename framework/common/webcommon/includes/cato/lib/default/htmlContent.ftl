@@ -52,8 +52,8 @@
   <#else>
     <#local headingLevelClass = "">
   </#if>
-  <#local classes = makeClassesArg(class, headingLevelClass)>
-  <#local containerClasses = makeClassesArg(containerClass, headingLevelClass)>
+  <#local classes = compileClassArg(class, headingLevelClass)>
+  <#local containerClasses = compileClassArg(containerClass, headingLevelClass)>
   <#if (consumeLevel?is_boolean && consumeLevel == true)>
     <#local dummy = setCurrentHeadingLevel(level + 1)>
   </#if>
@@ -220,7 +220,7 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     </#if>
   </#if>
   <#local defaultClass = styles["table_" + styleName]!styles["table_default"]!"">
-  <#local classes = makeClassesArg(class, defaultClass)>
+  <#local classes = compileClassArg(class, defaultClass)>
   <#if cellspacing?is_boolean>
     <#if cellspacing>
       <#local cellspacing = styles["table_" + styleName + "_cellspacing"]!styles["table_default_cellspacing"]!"">
@@ -305,7 +305,7 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
 <#if open>
-  <#local classes = makeClassesArg(class, "")>
+  <#local classes = compileClassArg(class, "")>
   <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
   <#local catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
   <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
@@ -332,7 +332,7 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
 <#if open>
-  <#local classes = makeClassesArg(class, "")>
+  <#local classes = compileClassArg(class, "")>
   <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
   <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
   <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
@@ -359,7 +359,7 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
 <#if open>
-  <#local classes = makeClassesArg(class, "")>
+  <#local classes = compileClassArg(class, "")>
   <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
   <#local catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
   <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
@@ -459,7 +459,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     <#local dummy = pushRequestStack("catoCurrentTableRowStack", 
         {"type":type, "useAlt":useAlt, "alt":alt, "isRegAltRow":isRegAltRow})>
   </#if>
-  <#local classes = makeClassesArg(class, "")>
+  <#local classes = compileClassArg(class, "")>
   <#if alt?is_boolean>
     <#local classes = (classes + " " + alt?string(styles.row_alt!, styles.row_reg!))?trim>
   </#if>
@@ -509,14 +509,14 @@ Helps define table cells.
 <#macro th class=true id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
-  <#local classes = makeClassesArg(class, "")>
+  <#local classes = compileClassArg(class, "")>
   <#if open><th<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
 <#macro td class=true id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
-  <#local classes = makeClassesArg(class, "")>
+  <#local classes = compileClassArg(class, "")>
   <#if open><td<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></td></#if>
 </#macro>
 
@@ -537,7 +537,7 @@ In general, use @table, @tr macros instead.
     selected        = boolean, if true marked as selected
 -->
 <#macro tableRowClassStr class=true alt="" selected="">
-  <#local classes = makeClassesArg(class, "")>
+  <#local classes = compileClassArg(class, "")>
   <#if alt?is_boolean>
     <#local classes = (classes + " " + alt?string(styles.row_alt!, styles.row_reg!))?trim>
   </#if>

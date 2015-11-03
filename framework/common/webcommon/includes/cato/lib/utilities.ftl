@@ -738,7 +738,6 @@ so currently these functions cause the class arg to accept following values:
     class names given will replace macro defaults, i.e. non-essential classes. 
     macro may still add its own required classes.
     this is the same as boolean false but with replacement classes provided.
-- sequence support: TODO, doesn't work right yet
   
 this should be intuitive.
 
@@ -747,114 +746,31 @@ so class=false makes little sense but we dont really need to handle that.
 NOTE: not all macros support all the cases but the syntax is supported everywhere now anyway
 so doesnt matter to templates.
 
-makeClassesArg should usually be used, as late as possible in macro; defaultVal
-can be complex to determine:
-  <#local classes = makeClassesArg(class, "my-calculated-default")>
-in some case need to split logical class and addClass like this, which can be done
-earlier in macro:
-  <#local addClass = parseAddClassArg(class)>
-  <#local class = parseClassArg(class, "my-macro-default")>
-where my-macro-default is what you'd have had as arg default in the macro def
+compileClassArg should usually be used as late as possible in macro:
+  <#local classes = compileClassArg(class)>
+a defaultVal can be set which is the same as doing:
+  <#local class = addClassArgDefault("default-class")>
+  <#local classes = compileClassArg(class)>
 -->
 
 <#-- get combined classes string with additionals/boolean logic, use default as needed,
      explicit class overrides (non-essential) default -->
-<#function makeClassesArg class defaultVal="">
-  <#-- TODO:
+<#function compileClassArg class defaultVal="">
   <#if defaultVal?has_content>
     <#local class = addClassArgDefault(class, defaultVal)>
   </#if>
-  -->
+
   <#if class?is_boolean>
-    <#return class?string(defaultVal, "")>
-  <#elseif class?is_sequence>
-    <#if class?has_content>
-      <#if class?first == "+">
-        <#return joinStyleNames(defaultVal, joinStyleNamesList(class)?substring(1)?trim)>
-      <#elseif class?first == "=">
-        <#return joinStyleNamesList(class)?substring(1)?trim>
-      <#else>
-        <#return joinStyleNamesList(class)>
-      </#if>
-    <#else>
-      <#return defaultVal>
-    </#if>
+    <#return ""> <#-- handled by addClassArgDefault -->
   <#-- check string last because ?is_string doesn't always behave as expected -->
   <#elseif class?is_string>
-    <#local class = class?trim> <#-- for convenience, trim the class here, though may hide minor errors -->
-    <#if class?starts_with("+")>
-      <#return (defaultVal + " " + class?substring(1))?trim>
-    <#elseif class?has_content>
-      <#if class == "true">
-        <#return defaultVal>
-      <#elseif class == "false">
-        <#return "">
-      <#elseif class?starts_with("=")>
-        <#return class?substring(1)>
-      <#else>
-        <#return class>
-      </#if>
-    <#else>
-      <#return defaultVal>
-    </#if>
-  <#else>
-    <#-- invalid -->
-    <#return class>
-  </#if>
-</#function>
-
-<#-- extract additional classes from orig class string 
-  TODO: try to remove this -->
-<#function parseAddClassArg class>
-  <#if class?is_string && class?starts_with("+")>
-    <#return class?substring(1)>
-  <#elseif class?is_sequence && class?has_content && class?first == "+">
-    <#return joinStyleNamesList(class)?substring(1)?trim>
-  <#else>
-    <#return "">
-  </#if>
-</#function>
-
-<#-- get class string (minus additionals) from orig class string 
-  TODO: try to remove this -->
-<#function parseClassArg class defaultVal>
-  <#if class?is_boolean>
-    <#if class>
-      <#return defaultVal>
-    <#else>
+    <#if class == "true" || class == "false">
       <#return "">
-    </#if>
-  <#elseif class?is_sequence>
-    <#if class?has_content>
-      <#if class?first == "+">
-        <#return defaultVal>
-      <#elseif class?first == "=">
-        <#return joinStyleNamesList(class)?substring(1)?trim>
-      <#else>
-        <#return joinStyleNamesList(class)>
-      </#if>
+    <#elseif class?starts_with("+") || class?starts_with("=")>
+      <#return class?substring(1)?trim>
     <#else>
-      <#return defaultVal>
+      <#return class>
     </#if>
-  <#elseif class?is_string> 
-    <#if class?starts_with("+")>
-      <#return defaultVal>
-    <#elseif class?has_content>
-      <#if class == "true">
-        <#return defaultVal>
-      <#elseif class == "false">
-        <#return "">
-      <#elseif class?starts_with("=")>
-        <#return class?substring(1)> <#-- same as false but with a value -->
-      <#else>
-        <#return class>
-      </#if>
-    <#else>
-      <#return defaultVal>
-    </#if>
-  <#else>
-    <#-- invalid -->
-    <#return class>
   </#if>
 </#function>
 
@@ -862,15 +778,16 @@ where my-macro-default is what you'd have had as arg default in the macro def
 *************
 * addClassArg functions
 ************
-These functions take a template-level/logical cato macro "class" arg and adds to it the given class. 
+These functions take a template-level/logical cato macro "class" arg and add to it the given class. 
 
 Depending on the previous value in class, non-essential (default) values may simply be discarded, but
 essentials (required) will always be added in some way, transforming the class value.
 
 The newClass parameter is a simple string literal and is not interpreted.
 
-NOTE: Adding a class to boolean "true" (or empty string) transforms resulting string into an appending string ("+" prefix).
-    Adding to boolean "false" transforms string into a replacing string ("=", same as no prefix).
+In general, adding a class to boolean "true" (or empty string) transforms resulting string into an appending string ("+" prefix).
+Adding to boolean "false" transforms string into a replacing string ("=", same as no prefix).
+The exception is addClassArgRequiredReplacing which always transforms into replacing string ("=", same as no prefix).
 -->
 <#function addClassArgRequired class newClass>
   <#if !newClass?has_content>
@@ -882,12 +799,30 @@ NOTE: Adding a class to boolean "true" (or empty string) transforms resulting st
     <#else>
       <#return "=" + newClass>
     </#if>
-  <#-- TODO?: ?is_sequence -->
   <#elseif class?is_string>
     <#if (!class?has_content) || class == "true">
       <#return "+" + newClass>
     <#elseif class == "false">
       <#return "=" + newClass>
+    <#else>
+      <#return class + " " + newClass>
+    </#if>
+  </#if>
+</#function>
+
+<#-- special case of addClassArgRequired where the required arg will become a replacing string ("=" prefix),
+     though will not squash previous values -->
+<#function addClassArgRequiredReplacing class newClass>
+  <#if !newClass?has_content>
+    <#return class>
+  </#if>
+  <#if class?is_boolean>
+    <#return "=" + newClass>
+  <#elseif class?is_string>
+    <#if (!class?has_content) || class == "true" || class == "false">
+      <#return "=" + newClass>
+    <#elseif class?starts_with("+")>
+      <#return "=" + class?substring(1) + " " + newClass>
     <#else>
       <#return class + " " + newClass>
     </#if>
@@ -905,7 +840,6 @@ NOTE: Adding a class to boolean "true" (or empty string) transforms resulting st
     <#else>
       <#return class>
     </#if>
-  <#-- TODO?: ?is_sequence -->
   <#elseif class?is_string>
     <#if (!class?has_content) || class == "true">
       <#return "+" + newClass>
@@ -972,14 +906,14 @@ NOTE: even if the second arg is merely "true" (which usually means "use defaults
 * translateStyleStrClassesArg function
 ************
 Translates a class arg from a string-only representation to a FTL value which can be passed as
-macro args processed by makeClassesArg.
+macro args processed by compileClassArg.
 
 usually those macro args take true or false by default.
 
 Needed for string repr of booleans and because empty string "" may have different meanings
 depending on context. also translates booleans.
 
-see makeClassesArg, results of getElemSpecFromStyleStr.
+see compileClassArg, results of getElemSpecFromStyleStr.
 -->
 <#function translateStyleStrClassesArg val>
   <#if val?has_content>
@@ -1000,7 +934,7 @@ macro args expected to be booleans.
 
 usually those macro args take "" by default, to mean default.
 
-see makeClassesArg, results of getElemSpecFromStyleStr.
+see compileClassArg, results of getElemSpecFromStyleStr.
 -->
 <#function translateStyleStrBoolArg val>
   <#if val?has_content>

@@ -159,7 +159,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#global catoCurrentMenuInfo = menuInfo>
   <#global catoCurrentMenuItemIndex = 0>
   <#t>
-  <#local classes = makeClassesArg(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
+  <#local classes = compileClassArg(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
   <#t>
   <@menu_markup classes=classes id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItems=inlineItems htmlWrap=htmlWrap>
   <#if !(preItems?is_boolean && preItems == false)>
@@ -294,7 +294,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#local menuType = (catoCurrentMenuInfo.type)!"">
   <#local menuStyleName = (catoCurrentMenuInfo.styleName)!"">
   <#t>
-  <#local classes = makeClassesArg(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>
+  <#local classes = compileClassArg(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>
   <#t>
   <#if type == "link">
     <#local defaultContentClass = styles["menu_" + menuStyleName + "_item_link"]!styles["menu_default_item_link"]!"">
@@ -305,7 +305,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#else>
     <#local defaultContentClass = "">
   </#if>
-  <#local contentClasses = makeClassesArg(contentClass, defaultContentClass)>
+  <#local contentClasses = compileClassArg(contentClass, defaultContentClass)>
   <#t>
   <#if disabled>
     <#local classes = (classes + " " + (styles["menu_" + menuStyleName + "_itemdisabled"]!styles["menu_default_itemdisabled"]!""))?trim>
@@ -418,7 +418,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     forcePost=false paramStr="" viewIndexFirst=0 showCount=true countMsg=""
     paginateToggle=false paginateToggleString="" paginateToggleOnValue="Y" paginateToggleOffValue="N">
 
-    <#local classes = makeClassesArg(class, "nav-pager")>
+    <#local classes = compileClassArg(class, "nav-pager")>
     
     <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
     <#if (!viewSize?is_number)>

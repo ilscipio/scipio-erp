@@ -48,7 +48,7 @@ it's an unexpected result, error or one that requires user action. See other mac
                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
 <#macro alert type="info" class=true id="">
-<#local classes = makeClassesArg(class, "${styles.grid_large!}12")>
+<#local classes = compileClassArg(class, "${styles.grid_large!}12")>
 <#local typeClass = "alert_type_${type!}"/>
 <#if type="error"><#local type = "alert"></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
@@ -101,7 +101,7 @@ Other messages such as for missing params/record IDs are usually errors.
                   (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
 <#macro resultMsg class=true id="">
-  <#local classes = makeClassesArg(class, "result-msg")>
+  <#local classes = compileClassArg(class, "result-msg")>
   <p<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#nested></p>
 </#macro>
 

@@ -27,15 +27,13 @@
   <#local open = wrapIf && !closeOnly && !norows>
   <#local close = wrapIf && !openOnly && !norows>
   <#if open>
-      <#local classes = makeClassesArg(class, "")>
-      <#local altClass = "">
       <#if alt?is_boolean>
-        <#local altClass = alt?string(styles.row_alt!, styles.row_reg!)>
+        <#local class = addClassArgRequired(class, alt?string(styles.row_alt!, styles.row_reg!))>
       </#if>
       <#if selected?is_boolean && selected == true>
-        <#local altClass = (altClass + " " + styles.row_selected!)?trim>
+        <#local class = addClassArgRequired(class, styles.row_selected!)>
       </#if>
-      <#local classes = (classes + " " + altClass)?trim>
+      <#local classes = compileClassArg(class)>
   <#else>
     <#-- WARN: has no memory when closeOnly... -->
     <#local classes = "">
@@ -100,9 +98,6 @@
   <#local open = wrapIf && !closeOnly && !nocells>
   <#local close = wrapIf && !openOnly && !nocells>
   <#if open>
-    <#local addClass = parseAddClassArg(class)>
-    <#local class = parseClassArg(class, "")>  
-     
     <#local columns = columns?number>
     <#local small = small?number>
     <#local medium = medium?number>
@@ -113,13 +108,12 @@
     <#local largeOffset = largeOffset?number>
     
     <#local specColsClasses><#if (small > 0)> ${styles.grid_small!}${small}</#if><#if (medium > 0)> ${styles.grid_medium!}${medium}</#if><#if (large > 0)> ${styles.grid_large!}${large}<#elseif (large != 0) && (columns > 0)> ${styles.grid_large!}${columns}</#if></#local>
-    <#local colSizeClasses = (class + specColsClasses)?trim>
-    <#if !colSizeClasses?has_content>
-        <#local colSizeClasses = "${styles.grid_large!}12">
-    </#if>
+    <#local class = addClassArgRequiredReplacing(class, specColsClasses)>
+    <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
 
     <#local specOffsetClassesStr><#if (smallOffset > 0)> ${styles.grid_small_offset!}${smallOffset}</#if><#if (mediumOffset > 0)> ${styles.grid_medium_offset!}${mediumOffset}</#if><#if (largeOffset > 0)> ${styles.grid_large_offset!}${largeOffset}<#elseif (largeOffset != 0) && (offset > 0)> ${styles.grid_large_offset!}${offset}</#if></#local>
-    <#local classes = (colSizeClasses + specOffsetClassesStr + " " + addClass)?trim>
+    <#local class = addClassArgRequired(class, specOffsetClassesStr)>
+    <#local classes = compileClassArg(class)>
   <#else>
     <#-- WARN: has no memory when closeOnly... -->
     <#local classes = "">
@@ -163,7 +157,7 @@ Since this is very foundation specific, this function may be dropped in future i
         <#local dummy = setRequestVar("catoFreewallIdNum", freewallNum)>
         <#local id="freewall_id_${freewallNum!0}">
         <#-- FIXME: the "class" arg is not even used... 
-        <#local classes = makeClassesArg(class, "...")>
+        <#local classes = compileClassArg(class, "...")>
         -->
         <div class="${styles.tile_container!}" id="${id!}">
             <#nested>
@@ -187,7 +181,7 @@ Since this is very foundation specific, this function may be dropped in future i
         </script>
     <#else>
         <#-- FIXME: the "class" arg is not even used...
-        <#local classes = makeClassesArg(class, "...")>
+        <#local classes = compileClassArg(class, "...")>
         -->
         <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">
             <#if (columns-2 > 0)>
@@ -226,7 +220,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
     image           = Set a background image-url (icon won't be shown if not empty)
 -->
 <#macro tile type="normal" title="" class=true id="" link="" color=0 icon="" image="">
-    <#local classes = makeClassesArg(class, "")>
+    <#local classes = compileClassArg(class, "")>
     <#local nested><#nested></#local>
     <div class="${styles.tile_wrap!} ${styles.tile_wrap!}-${type!}<#if classes?has_content> ${classes}</#if> ${styles.tile_color!}${color!}"<#if id?has_content> id="${id!}"</#if> data-sizex="${calcTileSize("x",type!)}" data-sizey="${calcTileSize("y",type!)}">
         <#if image?has_content><div class="${styles.tile_image!}" style="background-image: url(${image!})"></div></#if>
@@ -315,7 +309,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#if !type?has_content>
         <#local type = "generic">
     </#if>
-    <#local classes = makeClassesArg(class, "")>
+    <#local classes = compileClassArg(class, "")>
     <#if id?has_content>
         <#local contentId = id + "_content">
         <#local menuId = id + "_menu">

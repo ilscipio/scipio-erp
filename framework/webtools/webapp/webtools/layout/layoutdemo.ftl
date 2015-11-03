@@ -430,7 +430,7 @@
     <#local class = addClassArgDefault(class, "macro-default-class-1")>
     <#local class = addClassArgRequired(class, "macro-required-class-2")>
     <#local class = addClassArgDefault(class, "macro-default-class-2")>
-    <#local classes = makeClassesArg(class)>
+    <#local classes = compileClassArg(class)>
     <li class="${classes}"><#if origClass?is_string>"${origClass?string}"<#else>${origClass?string}</#if> -> "${classes}"</li>
   </#macro>
 
@@ -447,4 +447,32 @@
     <@myClassTest class="=caller-override-class" /> 
   </ul>
 </@section>
+
+<@section title="More grid tests">
+  <@row>
+    <@cell offset=6 columns=6>
+      offset=6 columns=6
+    </@cell>
+  </@row>
+
+  <@row>
+    <@cell class="+myclass" smallOffset=3 small=9 largeOffset=7 large=5>
+      smallOffset=3 small=9 largeOffset=7 large=5
+    </@cell>
+  </@row>
+
+  <@row>
+    <@cell class="${styles.grid_large}8" largeOffset=3 small=9 last=true>
+      class="${styles.grid_large}8" largeOffset=3 small=9 last=true
+    </@cell>
+  </@row>
+
+  <@row class="+myrowclass" alt=true>
+    <@cell class="+myclass">
+      default
+    </@cell>
+  </@row>
+
+</@section>
+
 

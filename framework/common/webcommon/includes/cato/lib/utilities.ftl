@@ -811,7 +811,7 @@ The exception is addClassArgRequiredReplacing which always transforms into repla
 </#function>
 
 <#-- special case of addClassArgRequired where the required arg will become a replacing string ("=" prefix),
-     though will not squash previous values -->
+     though will not squash previous values. note this destroys information about what macro user requested... -->
 <#function addClassArgRequiredReplacing class newClass>
   <#if !newClass?has_content>
     <#return class>

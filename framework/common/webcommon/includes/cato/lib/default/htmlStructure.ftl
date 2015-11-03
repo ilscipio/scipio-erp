@@ -220,7 +220,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
     image           = Set a background image-url (icon won't be shown if not empty)
 -->
 <#macro tile type="normal" title="" class=true id="" link="" color=0 icon="" image="">
-    <#local classes = compileClassArg(class, "")>
+    <#local classes = compileClassArg(class)>
     <#local nested><#nested></#local>
     <div class="${styles.tile_wrap!} ${styles.tile_wrap!}-${type!}<#if classes?has_content> ${classes}</#if> ${styles.tile_color!}${color!}"<#if id?has_content> id="${id!}"</#if> data-sizex="${calcTileSize("x",type!)}" data-sizey="${calcTileSize("y",type!)}">
         <#if image?has_content><div class="${styles.tile_image!}" style="background-image: url(${image!})"></div></#if>
@@ -309,7 +309,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#if !type?has_content>
         <#local type = "generic">
     </#if>
-    <#local classes = compileClassArg(class, "")>
+    <#local classes = compileClassArg(class)>
     <#if id?has_content>
         <#local contentId = id + "_content">
         <#local menuId = id + "_menu">

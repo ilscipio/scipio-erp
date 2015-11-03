@@ -123,8 +123,8 @@ TODO: document better if needed
       <#default>
         <#local color=styles.color_success!/>
     </#switch>
-    <#local classes = compileClassArg(class, "")>
-    <#local containerClasses = compileClassArg(containerClass, "")>
+    <#local classes = compileClassArg(class)>
+    <#local containerClasses = compileClassArg(containerClass)>
     <@progress_markup value=value id=id classes=classes showValue=showValue containerClasses=containerClasses />
     
   <#if progressOptions?has_content>
@@ -173,7 +173,7 @@ HTML form.
   <#if open>
     <#local formInfo = {"type":type, "name":name, "id":id}>
     <#local dummy = pushRequestStack("catoCurrentFormInfo", formInfo)>
-    <#local classes = compileClassArg(class, "")>
+    <#local classes = compileClassArg(class)>
     <form<#if classes?has_content> class="${classes}</#if><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "name", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
   </#if>
       <#nested>
@@ -204,7 +204,7 @@ A visible fieldset, including the HTML element.
     collapsed       = show/hide the fieldset
 -->
 <#macro fieldset id="" title="" class=true containerClass=true collapsed=false openOnly=false closeOnly=false wrapIf=true>
-    <#local classes = compileClassArg(class, "")>
+    <#local classes = compileClassArg(class)>
     <#-- FIXME?: We have a problem now... it's the _markup that should decide the default grid values... -->
     <#local containerClasses = compileClassArg(containerClass, "${styles.grid_large!}12")>
     <@fieldset_core classes=classes containerClasses=containerClasses id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="" openOnly=openOnly closeOnly=closeOnly wrapIf=wrapIf>
@@ -558,7 +558,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#local classes = "${styles.grid_small!}${12-columnspostfix} ${styles.grid_large!}${12-columnspostfix}"/>
 </#if>
 
-<#local class = compileClassArg(class, "")>
+<#local class = compileClassArg(class)>
 <#if required && (!containsStyleName(class, "required"))>
     <#local class = (class + " required")?trim>
 </#if>

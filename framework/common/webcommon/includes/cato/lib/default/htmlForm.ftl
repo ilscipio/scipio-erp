@@ -1408,29 +1408,29 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 
   <#-- Cato: to omit button (show progress only), we use empty title hack " " similar to what ofbiz does with hyperlinks with no label -->
   <#if (buttonType=="text-link" || buttonType!="image") && !(title?trim?has_content)>
-  <#local buttonMarkup = "">
+    <#local buttonMarkup = "">
   <#else>
-  <#local buttonMarkup>
-  <#if buttonType=="text-link">
-    <a<@fieldClassStr classes=classes alert=alert />href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if>><#if title?has_content>${title}</#if></a>
-  <#elseif buttonType=="image">
-    <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassStr classes=classes alert=alert /><#if name?has_content> name="${name}"</#if>
-    <#if title?has_content> alt="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
-    <#if disabled> disabled="disabled"<#else>
-      <#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
-    </#if>/>
-  <#else>
-    <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassStr classes=classes alert=alert />
-    <#if name?has_content> name="${name}"</#if><#if title?has_content> value="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
-    <#if disabled> disabled="disabled"<#else>
-      <#if onClick?has_content> onclick="${onClick}"<#else>
-        <#if containerId?has_content> onclick="<#if confirmation?has_content>if (confirm('${confirmation?js_string}')) </#if>ajaxSubmitFormUpdateAreas('${containerId}', '${ajaxUrl}')"<#else>
-        <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if>
-        </#if>
+    <#local buttonMarkup>
+      <#if buttonType=="text-link">
+        <a<@fieldClassStr classes=classes alert=alert />href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if>><#if title?has_content>${title}</#if></a>
+      <#elseif buttonType=="image">
+        <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassStr classes=classes alert=alert /><#if name?has_content> name="${name}"</#if>
+        <#if title?has_content> alt="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
+        <#if disabled> disabled="disabled"<#else>
+          <#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
+        </#if>/>
+      <#else>
+        <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassStr classes=classes alert=alert />
+        <#if name?has_content> name="${name}"</#if><#if title?has_content> value="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
+        <#if disabled> disabled="disabled"<#else>
+          <#if onClick?has_content> onclick="${onClick}"<#else>
+            <#if containerId?has_content> onclick="<#if confirmation?has_content>if (confirm('${confirmation?js_string}')) </#if>ajaxSubmitFormUpdateAreas('${containerId}', '${ajaxUrl}')"<#else>
+            <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if>
+            </#if>
+          </#if>
+        </#if>/>
       </#if>
-    </#if>/>
-  </#if>
-  </#local>
+    </#local>
   </#if>
   <#if progressOptions?has_content>
       <@fieldSubmitAreaProgress progressOptions=progressOptions nestedContent=buttonMarkup />

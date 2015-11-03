@@ -733,6 +733,10 @@ so currently these functions do the following:
   never replace
 - class now also supports being a list of strings that will be joined;
   first in list may be "+" to append-only
+- 2015-11-03: now also supports prepending with "=". 
+  in makeClassesArg, "=" is the same as specifying a value directly. 
+  the "=" is actually a marker for the boolean value "false", so classes can be combined
+  without losing the original "false" flag passed.
   
 this should be intuitive
 
@@ -760,6 +764,8 @@ where my-macro-default is what you'd have had as arg default in the macro def
     <#if class?has_content>
       <#if class?first == "+">
         <#return joinStyleNames(defaultVal, joinStyleNamesList(class)?substring(1)?trim)>
+      <#elseif class?first == "=">
+        <#return joinStyleNamesList(class)?substring(1)?trim>
       <#else>
         <#return joinStyleNamesList(class)>
       </#if>
@@ -771,6 +777,8 @@ where my-macro-default is what you'd have had as arg default in the macro def
     <#local class = class?trim> <#-- for convenience, trim the class here, though may hide minor errors -->
     <#if class?starts_with("+")>
       <#return (defaultVal + " " + class?substring(1))?trim>
+    <#elseif class?starts_with("=")>
+      <#return class?substring(1)> <#-- same as false but with an added class -->
     <#elseif class?has_content>
       <#if class == "true">
         <#return defaultVal>
@@ -811,6 +819,8 @@ where my-macro-default is what you'd have had as arg default in the macro def
     <#if class?has_content>
       <#if class?first == "+">
         <#return defaultVal>
+      <#elseif class?first == "=">
+        <#return joinStyleNamesList(class)?substring(1)?trim>
       <#else>
         <#return joinStyleNamesList(class)>
       </#if>
@@ -820,6 +830,8 @@ where my-macro-default is what you'd have had as arg default in the macro def
   <#elseif class?is_string> 
     <#if class?starts_with("+")>
       <#return defaultVal>
+    <#elseif class?starts_with("=")>
+      <#return class?substring(1)> <#-- same as false but with a value -->
     <#elseif class?has_content>
       <#if class == "true">
         <#return defaultVal>
@@ -845,11 +857,26 @@ where my-macro-default is what you'd have had as arg default in the macro def
 
 <#-- 
 *************
+* addClassArg function
+************
+This function takes template-level/logical cato macro "class" arg and adds to it the given class. 
+
+TODO
+-->
+
+
+
+<#-- 
+*************
 * combineClassArgs functions
 ************
 This function logically combines two template-level cato macro "class" arguments. 
 The second almost always overrides the first, except when second is appending a class
 with "+", in which case depends on the first.
+
+Essentially it extends the intended use of the class arg to mean "+" also allows appending
+of previous values (in addition of being an appending value itself).
+
 NOTE: even if the second arg is merely "true" (which usually means "use defaults" for cato macros),
     this method will return true and dismiss the first argument. "true" is not treated as
     pass-through here. this does not seem consistent,
@@ -881,6 +908,7 @@ NOTE: even if the second arg is merely "true" (which usually means "use defaults
       <#return second>
     <#else>
       <#-- first has content; whether was absolute or appending, can simply append second here -->
+      <#-- note: I think this handles the ?starts_with("=") case... -->
       <#return first + " " + second?substring(1)>
     </#if>
   <#else>

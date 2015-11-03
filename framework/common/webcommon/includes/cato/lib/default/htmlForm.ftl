@@ -123,9 +123,10 @@ TODO: document better if needed
       <#default>
         <#local color=styles.color_success!/>
     </#switch>
+
     <#local classes = compileClassArg(class)>
     <#local containerClasses = compileClassArg(containerClass)>
-    <@progress_markup value=value id=id classes=classes showValue=showValue containerClasses=containerClasses />
+    <@progress_markup value=value id=id classes=classes showValue=showValue containerClasses=containerClasses color=color />
     
   <#if progressOptions?has_content>
     <#local opts = progressOptions>
@@ -136,7 +137,7 @@ TODO: document better if needed
   </#if>
 </#macro>
 
-<#macro progress_markup value=0 id="" classes="" showValue=false containerClasses="">
+<#macro progress_markup value=0 id="" classes="" showValue=false containerClasses="" color="">
     <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if color?has_content> ${color!}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
       <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
             <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>

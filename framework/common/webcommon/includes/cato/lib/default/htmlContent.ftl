@@ -459,13 +459,13 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     <#local dummy = pushRequestStack("catoCurrentTableRowStack", 
         {"type":type, "useAlt":useAlt, "alt":alt, "isRegAltRow":isRegAltRow})>
   </#if>
-  <#local classes = compileClassArg(class)>
   <#if alt?is_boolean>
-    <#local classes = (classes + " " + alt?string(styles.row_alt!, styles.row_reg!))?trim>
+    <#local class = addClassArgRequired(class, alt?string(styles.row_alt!, styles.row_reg!))>
   </#if>
   <#if selected?is_boolean && selected == true>
-    <#local classes = (classes + " " + styles.row_selected!)?trim>
+    <#local class = addClassArgRequired(class, styles.row_selected!)>
   </#if>
+  <#local classes = compileClassArg(class)>
   <tr<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
 </#if>    
     <#nested>
@@ -537,13 +537,13 @@ In general, use @table, @tr macros instead.
     selected        = boolean, if true marked as selected
 -->
 <#macro tableRowClassStr class=true alt="" selected="">
-  <#local classes = compileClassArg(class)>
   <#if alt?is_boolean>
-    <#local classes = (classes + " " + alt?string(styles.row_alt!, styles.row_reg!))?trim>
+    <#local class = addClassArgRequired(class, alt?string(styles.row_alt!, styles.row_reg!))>
   </#if>
   <#if selected?is_boolean && selected == true>
-    <#local classes = (classes + " " + styles.row_selected!)?trim>
+    <#local class = addClassArgRequired(class, styles.row_selected!)>
   </#if>
+  <#local classes = compileClassArg(class)>
   <#if classes?has_content> class="${classes}"</#if>
 </#macro>
 

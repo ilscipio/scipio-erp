@@ -559,10 +559,10 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#local classes = "${styles.grid_small!}${12-columnspostfix} ${styles.grid_large!}${12-columnspostfix}"/>
 </#if>
 
-<#local class = compileClassArg(class)>
-<#if required && (!containsStyleName(class, "required"))>
-    <#local class = (class + " required")?trim>
+<#if required && (!containsStyleName(class, styles.required!""))>
+    <#local class = addClassArgRequired(class, styles.required!"")>
 </#if>
+<#local class = compileClassArg(class)> <#-- FIXME?: is this still too early in function? -->
 
 <#if !catoFieldNoContainerChildren??>
   <#global catoFieldNoContainerChildren = {

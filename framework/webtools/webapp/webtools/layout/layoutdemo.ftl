@@ -278,7 +278,7 @@
     {"type":"link", "text":"Menu Tab 1", "href":"ofbizUrl://WebtoolsLayoutDemo"},
     {"type":"link", "text":"Menu Tab 4", "contentClass":"+${styles.color_green}", "onClick":"javascript:alert('Clicked menu item!');"},
     {"type":"text", "text":"Menu Tab 3 (text entry)", "nestedContent":"<!-- hidden nested menu item comment -->"}
-    {"type":"submit", "text":"Menu Tab 5 (submit)", "disabled":true}
+    {"type":"submit", "text":"Menu Tab 5 (submit)", "disabled":true, "class":"+mymenuitemclass", "contentClass":"+mymenuitemcontentclass"}
     {"type":"link", "text":"Menu Tab 6", "selected":true}
     {"type":"link", "text":"Menu Tab 7", "active":true}
   ]>
@@ -286,7 +286,7 @@
 
   <#macro menuContent menuArgs>
     <@menu class="+my-menu-class" args=menuArgs>
-      <@menuitem type="link" text="Menu Button 1" />
+      <@menuitem type="link" text="Menu Button 1" class="+mymenuitemclass"/>
       <@menuitem type="link" text="Menu Button 2" />
     </@menu>
   </#macro>

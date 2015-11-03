@@ -147,33 +147,22 @@ under the License.
               			</#if>
               			<#if finAccountTrans.paymentId?has_content>
                 			<@td align="center">
-                  				<a id="toggleGlTransactions_${finAccountTrans.finAccountTransId}" href="javascript:void(0)" class="${styles.button_default!}">${uiLabelMap.FormFieldTitle_glTransactions}</a>
-                  				<#include "ShowGlTransactions.ftl"/>
-                  				<script type="text/javascript">
-		                       		jQuery(document).ready( function() {
-		                            	jQuery("#displayGlTransactions_${finAccountTrans.finAccountTransId}").dialog({autoOpen: false, modal: true,
-		                                    buttons: {
-		                                    '${uiLabelMap.CommonClose}': function() {
-		                                        jQuery(this).dialog('close');
-		                                        }
-		                                    }
-		                                });
-		                       			jQuery("#toggleGlTransactions_${finAccountTrans.finAccountTransId}").click(function(){jQuery("#displayGlTransactions_${finAccountTrans.finAccountTransId}").dialog("open")});
-		                       		});
-                  				</script>
+                				<#-- FIXME: the content doesn't fit in the modal window. Perhaps it should be wider depending on the content -->
+                				<@modal id="toggleGlTransactions_${finAccountTrans.finAccountTransId}" label="${uiLabelMap.FormFieldTitle_glTransactions}">
+                  					<#include "ShowGlTransactions.ftl"/>
+                  				</@modal>
                 			</@td>
               			</#if>
             		</@tr>
          		</#list>
         	</@table>
       	</#if>
-    <!-- 
-     </div> 
-    <div class="right"> 
-    -->
+    
       	<span>${uiLabelMap.AccountingTotalCapital} </span><@ofbizCurrency amount=transactionTotalAmount.grandTotal isoCode=defaultOrganizationPartyCurrencyUomId/>
       	<#if isReconciled == false>
-        	<input type="submit" value="${uiLabelMap.AccountingReconcile}"/>
+      		<@field type="submitarea">
+        		<input type="submit" value="${uiLabelMap.AccountingReconcile}"/>
+        	</@field>
       	</#if>
   	</@section>
 </form>

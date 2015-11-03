@@ -580,7 +580,7 @@
         <include-elements menu-name="FinAccountMainTabBar" recursive="includes-only" />
     </menu>
 
-    <menu name="FinAccountReconciliationsTabBar" menu-container-style="button-bar button-style-2">
+    <menu name="FinAccountReconciliationsTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="Find" title="${uiLabelMap.AccountingFindFinAccountReconciliations}">
             <condition>
                 <and>
@@ -593,11 +593,11 @@
                     <if-compare field="tabButtonItem2" operator="not-equals" value="Find" />
                 </and>
             </condition>
-            <link target="FindFinAccountReconciliations">
+            <link target="FindFinAccountReconciliations" style="${styles.button_default}">
                 <parameter param-name="finAccountId" />
             </link>
         </menu-item>
-        <menu-item name="NewFinAccountReconciliations" title="${uiLabelMap.CommonNew}">
+        <menu-item name="NewFinAccountReconciliations" title="${uiLabelMap.CommonNew}" >
             <condition>
                 <and>
                     <and>
@@ -612,7 +612,7 @@
                     </or>
                 </and>
             </condition>
-            <link target="EditFinAccountReconciliations">
+            <link target="EditFinAccountReconciliations" style="${styles.button_default}">
                 <parameter param-name="finAccountId" />
             </link>
         </menu-item>

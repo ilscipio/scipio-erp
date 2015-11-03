@@ -193,31 +193,34 @@ A visible fieldset, including the HTML element.
    * General Attributes *
     class           = css classes 
                       (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+    containerClass  = class for wrapper 
+                      (includes width in columns, or append only with "+")
     id              = set id
     title           = fieldset-title
     collapsed       = show/hide the fieldset
 -->
-<#macro fieldset id="" title="" class=true collapsed=false openOnly=false closeOnly=false wrapIf=true>
+<#macro fieldset id="" title="" class=true containerClass=true collapsed=false openOnly=false closeOnly=false wrapIf=true>
     <#local classes = makeClassesArg(class, "")>
-    <@fieldset_core classes=classes id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="" openOnly=openOnly closeOnly=closeOnly wrapIf=wrapIf>
+    <#-- FIXME?: We have a problem now... it's the _markup that should decide the default grid values... -->
+    <#local containerClasses = makeClassesArg(containerClass, "${styles.grid_large!}12")>
+    <@fieldset_core classes=classes containerClasses=containerClasses id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="" openOnly=openOnly closeOnly=closeOnly wrapIf=wrapIf>
         <#nested />
     </@fieldset_core>
 </#macro>
 
 <#-- DEV NOTE: see @section_core for details on pattern 
      migrated from @renderFieldGroupOpen/Close form widget macro -->
-<#macro fieldset_core classes="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false openOnly=false closeOnly=false wrapIf=true>
+<#macro fieldset_core classes="" containerClasses="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false openOnly=false closeOnly=false wrapIf=true>
   <#local open = wrapIf && !closeOnly>
   <#local close = wrapIf && !openOnly>
-  <@fieldset_markup open=open close=close classes=classes id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible><#nested></@fieldset_markup>
+  <@fieldset_markup open=open close=close classes=classes containerClasses=containerClasses id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible><#nested></@fieldset_markup>
 </#macro>
 
-<#macro fieldset_markup open=true close=true classes="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false>
+<#macro fieldset_markup open=true close=true classes="" containerClasses="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false>
 <#if open>
 <div class="${styles.grid_row!}">
-  <#-- FIXME: classes should not go on two elems -->
-  <div class="fieldgroup ${styles.grid_large!}12 ${styles.grid_cell!}<#if classes?has_content> ${classes}</#if><#if collapsible || collapsed> toggleField<#if collapsed> ${styles.collapsed!}</#if></#if>"<#if id?has_content> id="${id}"</#if>>
-    <fieldset<#if classes?has_content> class="${classes!}"</#if>>
+  <div class="fieldgroup ${styles.grid_cell!}<#if containerClasses?has_content> ${containerClasses}</#if><#if collapsible || collapsed> toggleField<#if collapsed> ${styles.collapsed!}</#if></#if>"<#if id?has_content> id="${id}_wrapper"</#if>>
+    <fieldset<#if classes?has_content> class="${classes!}"</#if><#if id?has_content> id="${id}"</#if>>
       <#--<#if collapsible>
         <ul>
           <li class="<#if collapsed>${styles.collapsed!}">

@@ -329,11 +329,11 @@
         In a cell
       </@cell>
     </@row>
-    <@row class=["+", "test-additional-row-class-1", "test-additional-row-class-2"]>
-      <@cell class=["${styles.grid_large}9"]>
+    <@row class="+test-additional-row-class-1 test-additional-row-class-2">
+      <@cell class="${styles.grid_large}9">
         In a cell
       </@cell>
-      <@cell large=3 class=["+", "test-additional-cell-class"]>
+      <@cell large=3 class="+test-additional-cell-class">
         In a cell
       </@cell>
     </@row>

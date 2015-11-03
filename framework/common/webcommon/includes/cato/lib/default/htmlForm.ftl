@@ -104,7 +104,7 @@ TODO: document better if needed
                       attaches results to page using elem IDs and options in this map - 
                       see CatoUploadProgress javascript class for options; mostly same
 -->
-<#macro progress value=0 id="" type="" class=true showValue=false wrapperClass=true progressOptions={}>
+<#macro progress value=0 id="" type="" class=true showValue=false containerClass=true progressOptions={}>
   <#local explicitId = id?has_content>
   <#if !id?has_content>
     <#local id = (progressOptions.progBarId)!"">
@@ -124,12 +124,8 @@ TODO: document better if needed
         <#local color=styles.color_success!/>
     </#switch>
     <#local classes = makeClassesArg(class, "")>
-    <#local wrapperClasses = makeClassesArg(wrapperClass, "")>
-    <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if color?has_content> ${color!}</#if><#if wrapperClasses?has_content> ${wrapperClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
-      <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
-            <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
-      <#if styles.progress_wrap?has_content></div></#if>
-    </div>
+    <#local containerClasses = makeClassesArg(containerClass, "")>
+    <@progress_markup value=value id=id classes=classes showValue=showValue containerClasses=containerClasses />
     
   <#if progressOptions?has_content>
     <#local opts = progressOptions>
@@ -138,6 +134,14 @@ TODO: document better if needed
     </#if>
     <@progressScript options=opts htmlwrap=true />
   </#if>
+</#macro>
+
+<#macro progress_markup value=0 id="" classes="" showValue=false containerClasses="">
+    <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if color?has_content> ${color!}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
+      <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
+            <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
+      <#if styles.progress_wrap?has_content></div></#if>
+    </div>
 </#macro>
 
 <#-- 
@@ -863,7 +867,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
       <#-- with progress bar, optional text -->
       <#local subclasses = progressOptions.progTextBoxId?has_content?string("${styles.grid_small!}6 ${styles.grid_large!}6", "${styles.grid_small!}9 ${styles.grid_large!}10 ${styles.grid_end!}")>
       <@cell class=subclasses>
-        <@progress id=progressOptions.progBarId type="info" wrapperClass="+${styles.hidden!}" progressOptions=progressOptions/>
+        <@progress id=progressOptions.progBarId type="info" containerClass="+${styles.hidden!}" progressOptions=progressOptions/>
       </@cell>
       <#if progressOptions.progTextBoxId?has_content>
         <#local subclasses = "${styles.grid_small!}3 ${styles.grid_large!}4 ${styles.grid_end!}">

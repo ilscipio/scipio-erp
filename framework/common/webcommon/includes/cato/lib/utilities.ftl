@@ -722,23 +722,25 @@ defaults. The essentials can't be omitted. the non-essentials in some cases
 you want to replace with value and other times you want to keep them but only
 add extra classes. having multiple args for each elem class arg gets heavy.
 
-so currently these functions do the following:
-- accept boolean value for class. true means use non-essential defaults,
-  false means don't use non-essential defaults
-  should put class=true as macro default on macros.
-  NOW ALSO accepts string repr of booleans.
-- 2015-10-27: empty string now means use defaults, same as class=true.
-  This is more consistent with other arguments in general 
-- if class starts with "+", you only append additional classes to the defaults,
-  never replace
-- class now also supports being a list of strings that will be joined;
-  first in list may be "+" to append-only
-- 2015-11-03: now also supports prepending with "=". 
-  in makeClassesArg, "=" is the same as specifying a value directly. 
-  the "=" is actually a marker for the boolean value "false", so classes can be combined
-  without losing the original "false" flag passed.
+so currently these functions cause the class arg to accept following values:
+
+- boolean true or string "true": 
+    means allow macro to add non-essential default classes.
+- boolean false or string "false": 
+    means prevent macro from adding non-essential default classes.
+- "" (empty string): 
+    same as boolean true (as of 2015-10-27).
+- string with "+" prefix: 
+    the class names after the "+" will be appended to any classes added
+    by the macro, and will never replace macro defaults.
+    this means the same as boolean true but with extra classes provided.
+- string with "=" prefix or non-empty string: 
+    class names given will replace macro defaults, i.e. non-essential classes. 
+    macro may still add its own required classes.
+    this is the same as boolean false but with replacement classes provided.
+- sequence support: TODO, doesn't work right yet
   
-this should be intuitive
+this should be intuitive.
 
 in one or two cases the non-essential defaults are "conditionally essential" 
 so class=false makes little sense but we dont really need to handle that.
@@ -757,7 +759,12 @@ where my-macro-default is what you'd have had as arg default in the macro def
 
 <#-- get combined classes string with additionals/boolean logic, use default as needed,
      explicit class overrides (non-essential) default -->
-<#function makeClassesArg class defaultVal>
+<#function makeClassesArg class defaultVal="">
+  <#-- TODO:
+  <#if defaultVal?has_content>
+    <#local class = addClassArgDefault(class, defaultVal)>
+  </#if>
+  -->
   <#if class?is_boolean>
     <#return class?string(defaultVal, "")>
   <#elseif class?is_sequence>
@@ -777,13 +784,13 @@ where my-macro-default is what you'd have had as arg default in the macro def
     <#local class = class?trim> <#-- for convenience, trim the class here, though may hide minor errors -->
     <#if class?starts_with("+")>
       <#return (defaultVal + " " + class?substring(1))?trim>
-    <#elseif class?starts_with("=")>
-      <#return class?substring(1)> <#-- same as false but with an added class -->
     <#elseif class?has_content>
       <#if class == "true">
         <#return defaultVal>
       <#elseif class == "false">
         <#return "">
+      <#elseif class?starts_with("=")>
+        <#return class?substring(1)>
       <#else>
         <#return class>
       </#if>
@@ -796,7 +803,8 @@ where my-macro-default is what you'd have had as arg default in the macro def
   </#if>
 </#function>
 
-<#-- extract additional classes from orig class string -->
+<#-- extract additional classes from orig class string 
+  TODO: try to remove this -->
 <#function parseAddClassArg class>
   <#if class?is_string && class?starts_with("+")>
     <#return class?substring(1)>
@@ -807,7 +815,8 @@ where my-macro-default is what you'd have had as arg default in the macro def
   </#if>
 </#function>
 
-<#-- get class string (minus additionals) from orig class string -->
+<#-- get class string (minus additionals) from orig class string 
+  TODO: try to remove this -->
 <#function parseClassArg class defaultVal>
   <#if class?is_boolean>
     <#if class>
@@ -830,13 +839,13 @@ where my-macro-default is what you'd have had as arg default in the macro def
   <#elseif class?is_string> 
     <#if class?starts_with("+")>
       <#return defaultVal>
-    <#elseif class?starts_with("=")>
-      <#return class?substring(1)> <#-- same as false but with a value -->
     <#elseif class?has_content>
       <#if class == "true">
         <#return defaultVal>
       <#elseif class == "false">
         <#return "">
+      <#elseif class?starts_with("=")>
+        <#return class?substring(1)> <#-- same as false but with a value -->
       <#else>
         <#return class>
       </#if>
@@ -849,22 +858,64 @@ where my-macro-default is what you'd have had as arg default in the macro def
   </#if>
 </#function>
 
-<#-- incomplete
-<#function isClassArgUseDefault class>
-  <#return (class?is_string && class?starts_with("+")) || (class?is_boolean && class == false)>
-</#function>-->
-
-
 <#-- 
 *************
-* addClassArg function
+* addClassArg functions
 ************
-This function takes template-level/logical cato macro "class" arg and adds to it the given class. 
+These functions take a template-level/logical cato macro "class" arg and adds to it the given class. 
 
-TODO
+Depending on the previous value in class, non-essential (default) values may simply be discarded, but
+essentials (required) will always be added in some way, transforming the class value.
+
+The newClass parameter is a simple string literal and is not interpreted.
+
+NOTE: Adding a class to boolean "true" (or empty string) transforms resulting string into an appending string ("+" prefix).
+    Adding to boolean "false" transforms string into a replacing string ("=", same as no prefix).
 -->
+<#function addClassArgRequired class newClass>
+  <#if !newClass?has_content>
+    <#return class>
+  </#if>
+  <#if class?is_boolean>
+    <#if class>
+      <#return "+" + newClass>
+    <#else>
+      <#return "=" + newClass>
+    </#if>
+  <#-- TODO?: ?is_sequence -->
+  <#elseif class?is_string>
+    <#if (!class?has_content) || class == "true">
+      <#return "+" + newClass>
+    <#elseif class == "false">
+      <#return "=" + newClass>
+    <#else>
+      <#return class + " " + newClass>
+    </#if>
+  </#if>
+</#function>
 
-
+<#function addClassArgDefault class newClass>
+  <#if !newClass?has_content>
+    <#return class>
+  </#if>
+  <#-- only add default if class is true, empty or starts with "+" -->
+  <#if class?is_boolean>
+    <#if class>
+      <#return "+" + newClass>
+    <#else>
+      <#return class>
+    </#if>
+  <#-- TODO?: ?is_sequence -->
+  <#elseif class?is_string>
+    <#if (!class?has_content) || class == "true">
+      <#return "+" + newClass>
+    <#elseif class?starts_with("+")>
+      <#return class + " " + newClass>
+    <#else>
+      <#return class>
+    </#if>
+  </#if>
+</#function>
 
 <#-- 
 *************

@@ -24,10 +24,9 @@
     selected        = boolean, if true row is marked selected
 -->
 <#macro row class=true id="" collapse=false norows=false alt="" selected="" openOnly=false closeOnly=false wrapIf=true>
-  <#local open = wrapIf && !closeOnly>
-  <#local close = wrapIf && !openOnly>
+  <#local open = wrapIf && !closeOnly && !norows>
+  <#local close = wrapIf && !openOnly && !norows>
   <#if open>
-    <#if !norows>
       <#local classes = makeClassesArg(class, "")>
       <#local altClass = "">
       <#if alt?is_boolean>
@@ -36,14 +35,22 @@
       <#if selected?is_boolean && selected == true>
         <#local altClass = (altClass + " " + styles.row_selected!)?trim>
       </#if>
-    <div class="${styles.grid_row!}<#if classes?has_content> ${classes}</#if><#if collapse> collapse</#if><#if altClass?has_content> ${altClass}</#if>"<#if id?has_content> id="${id}"</#if>><#rt/>
-    </#if>
+      <#local classes = (classes + " " + altClass)?trim>
+  <#else>
+    <#-- WARN: has no memory when closeOnly... -->
+    <#local classes = "">
   </#if>
-        <#nested />
+  <@row_markup open=open close=close classes=classes collapse=collapse id=id><#nested /></@row_markup>
+</#macro>
+
+<#-- TODO?: review if any of the class logic might belong in markup macro instead -->
+<#macro row_markup open=true close=true classes="" collapse=false id="">
+  <#if open>
+    <div class="${styles.grid_row!}<#if classes?has_content> ${classes}</#if><#if collapse> collapse</#if>"<#if id?has_content> id="${id}"</#if>><#rt/>
+  </#if>
+      <#nested />
   <#if close>
-    <#if !norows>    <#-- FIXME? wont remember nocells when closeOnly -->
     </div>
-    </#if>   
   </#if> 
 </#macro>
 
@@ -90,8 +97,8 @@
     last            = boolean, usually optional, if true indicate last cell in row 
 -->
 <#macro cell columns=-1 small=-1 medium=-1 large=-1 offset=-1 smallOffset=-1 mediumOffset=-1 largeOffset=-1 class=true id="" collapse=false nocells=false last=false openOnly=false closeOnly=false wrapIf=true>
-  <#local open = wrapIf && !closeOnly>
-  <#local close = wrapIf && !openOnly>
+  <#local open = wrapIf && !closeOnly && !nocells>
+  <#local close = wrapIf && !openOnly && !nocells>
   <#if open>
     <#local addClass = parseAddClassArg(class)>
     <#local class = parseClassArg(class, "")>  
@@ -105,26 +112,34 @@
     <#local mediumOffset = mediumOffset?number>
     <#local largeOffset = largeOffset?number>
     
-    <#if !nocells>
-        <#local specColsClasses><#if (small > 0)> ${styles.grid_small!}${small}</#if><#if (medium > 0)> ${styles.grid_medium!}${medium}</#if><#if (large > 0)> ${styles.grid_large!}${large}<#elseif (large != 0) && (columns > 0)> ${styles.grid_large!}${columns}</#if></#local>
-        <#if class?has_content>
-            <#local colSizeClasses = (class + specColsClasses)?trim>
-        <#else>
-            <#local colSizeClasses = specColsClasses?trim>
-        </#if>
-        <#if !colSizeClasses?has_content>
-            <#local colSizeClasses = "${styles.grid_large!}12">
-        </#if>
-        <#local specOffsetClassesStr><#if (smallOffset > 0)> ${styles.grid_small_offset!}${smallOffset}</#if><#if (mediumOffset > 0)> ${styles.grid_medium_offset!}${mediumOffset}</#if><#if (largeOffset > 0)> ${styles.grid_large_offset!}${largeOffset}<#elseif (largeOffset != 0) && (offset > 0)> ${styles.grid_large_offset!}${offset}</#if></#local>
-        <div class="${colSizeClasses}${specOffsetClassesStr} ${styles.grid_cell!}<#if last> ${styles.grid_end!}</#if><#if addClass?has_content> ${addClass}</#if>" <#if id?has_content> id="${id}"</#if>><#rt/>
+    <#local specColsClasses><#if (small > 0)> ${styles.grid_small!}${small}</#if><#if (medium > 0)> ${styles.grid_medium!}${medium}</#if><#if (large > 0)> ${styles.grid_large!}${large}<#elseif (large != 0) && (columns > 0)> ${styles.grid_large!}${columns}</#if></#local>
+    <#if class?has_content>
+        <#local colSizeClasses = (class + specColsClasses)?trim>
+    <#else>
+        <#local colSizeClasses = specColsClasses?trim>
     </#if>
+    <#if !colSizeClasses?has_content>
+        <#local colSizeClasses = "${styles.grid_large!}12">
+    </#if>
+    <#local specOffsetClassesStr><#if (smallOffset > 0)> ${styles.grid_small_offset!}${smallOffset}</#if><#if (mediumOffset > 0)> ${styles.grid_medium_offset!}${mediumOffset}</#if><#if (largeOffset > 0)> ${styles.grid_large_offset!}${largeOffset}<#elseif (largeOffset != 0) && (offset > 0)> ${styles.grid_large_offset!}${offset}</#if></#local>
+    <#local classes = (colSizeClasses + specOffsetClassesStr + " " + addClass)?trim>
+  <#else>
+    <#-- WARN: has no memory when closeOnly... -->
+    <#local classes = "">
   </#if>
-        <#nested />
-  <#if close>
-    <#if !nocells></div></#if> <#-- FIXME? wont remember nocells when closeOnly -->
-  </#if>
+  <@cell_markup open=open close=close classes=classes id=id last=last><#nested></@cell_markup>
 </#macro>
 
+<#-- TODO?: review if any of the class logic might belong in markup macro instead -->
+<#macro cell_markup open=true close=true classes="" id="" last=false>
+  <#if open>
+    <div class="<#if classes?has_content>${classes} </#if>${styles.grid_cell!}<#if last> ${styles.grid_end!}</#if>"<#if id?has_content> id="${id}"</#if>><#rt/>
+  </#if>
+      <#nested>
+  <#if close>
+    </div>
+  </#if>
+</#macro>
 
 <#-- 
 *************

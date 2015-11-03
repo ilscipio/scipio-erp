@@ -29,22 +29,22 @@ under the License.
         <field name="invoiceId" title="${uiLabelMap.CommonId}"><text-find ignore-case="true"/></field>
         <field name="invoiceDate" title="${uiLabelMap.CommonDate}" position="2"><date-find type="date"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
-        <field position="1" name="invoiceTypeId" title="${uiLabelMap.CommonType}">
+        <field position="2" name="invoiceTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="InvoiceType"/>
             </drop-down>
         </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="1">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="INVOICE_STATUS"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field position="1" name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
-        <field position="2" name="partyIdTo" parameter-name="partyId" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
-        <field name="referenceNumber"><text-find/></field>
+        <field position="2" name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="1" name="partyIdTo" parameter-name="partyId" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>        
+        <field position="2" name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
+        <field position="2" name="referenceNumber" ><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
@@ -141,7 +141,7 @@ under the License.
         <field name="currencyUomId"><hidden/></field>
     </form>
 
-<form name="invoiceItems" list-name="invItemAndOrdItems" target="" title="" type="list" separate-columns="true" paginate-target="invoiceOverview"
+	<form name="invoiceItems" list-name="invItemAndOrdItems" target="" title="" type="list" separate-columns="true" paginate-target="invoiceOverview"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <row-actions>
             <set field="quantity" value="${groovy: quantity ?: 1}" type="BigDecimal"/>
@@ -294,14 +294,14 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="invoice==null"><hidden value="INVOICE_IN_PROCESS"/></field>
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="invoice==null"><hidden value="INVOICE_IN_PROCESS"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2" use-when="invoice!=null"><display-entity entity-name="StatusItem"/></field>
         <field position="1" name="description"><text size="100"/></field>
-        <field position="1" name="partyIdFrom" use-when="invoiceType.getString(&quot;parentTypeId&quot;).equals(&quot;SALES_INVOICE&quot;)"><display description="${invoice.partyIdFrom}"/></field>
-        <field position="1" name="partyIdFrom" use-when="invoiceType.getString(&quot;parentTypeId&quot;).equals(&quot;PURCHASE_INVOICE&quot;)"><lookup target-form-name="LookupPartyName"/></field>
-        <field position="2" name="partyIdTo" entry-name="partyId" parameter-name="partyId" use-when="invoiceType.getString(&quot;parentTypeId&quot;).equals(&quot;PURCHASE_INVOICE&quot;)"><display description="${invoice.partyId}"/></field>
-        <field position="2" name="partyIdTo" entry-name="partyId" parameter-name="partyId" use-when="invoiceType.getString(&quot;parentTypeId&quot;).equals(&quot;SALES_INVOICE&quot;)"><lookup target-form-name="LookupPartyName"/></field>
-        <field position="1" name="roleTypeId" use-when="invoice!=null&amp;&amp;invoice.getString(&quot;invoiceTypeId&quot;).equals(&quot;SALES_INVOICE&quot;)">
+        <field position="2" name="partyIdFrom" use-when="invoiceType.getString(&quot;parentTypeId&quot;).equals(&quot;SALES_INVOICE&quot;)"><display description="${invoice.partyIdFrom}"/></field>
+        <field position="2" name="partyIdFrom" use-when="invoiceType.getString(&quot;parentTypeId&quot;).equals(&quot;PURCHASE_INVOICE&quot;)"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="1" name="partyIdTo" entry-name="partyId" parameter-name="partyId" use-when="invoiceType.getString(&quot;parentTypeId&quot;).equals(&quot;PURCHASE_INVOICE&quot;)"><display description="${invoice.partyId}"/></field>
+        <field position="1" name="partyIdTo" entry-name="partyId" parameter-name="partyId" use-when="invoiceType.getString(&quot;parentTypeId&quot;).equals(&quot;SALES_INVOICE&quot;)"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="roleTypeId" use-when="invoice!=null&amp;&amp;invoice.getString(&quot;invoiceTypeId&quot;).equals(&quot;SALES_INVOICE&quot;)">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="RoleType">
                     <entity-constraint name="parentTypeId" operator="equals" value="CUSTOMER"/>
@@ -312,7 +312,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="1" name="roleTypeId" use-when="invoice!=null&amp;&amp;invoice.getString(&quot;invoiceTypeId&quot;).equals(&quot;PURCHASE_INVOICE&quot;)">
+        <field position="2" name="roleTypeId" use-when="invoice!=null&amp;&amp;invoice.getString(&quot;invoiceTypeId&quot;).equals(&quot;PURCHASE_INVOICE&quot;)">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="RoleType">
                     <entity-constraint name="parentTypeId" operator="equals" value="VENDOR"/>
@@ -324,7 +324,7 @@ under the License.
             </drop-down>
         </field>
         <field position="1" name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
-        <field position="1" name="currencyUomId">
+        <field position="2" name="currencyUomId">
             <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
                 <entity-options key-field-name="uomId" description="${description} - ${abbreviation}" entity-name="Uom">
                     <entity-constraint name="uomTypeId" operator="equals" value="CURRENCY_MEASURE"/>
@@ -332,9 +332,9 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="2" name="recurrenceInfoId"><text size="10"/></field>
-        <field position="1" name="invoiceMessage"><text size="100"/></field>
-        <field position="1" name="referenceNumber"><text/></field>
+        <field position="1" name="recurrenceInfoId"><text size="10"/></field>
+        <field position="2" name="invoiceMessage"><text size="100"/></field>
+        <field position="2" name="referenceNumber"><text/></field>
         <!--field position="2" name="invoiceAmount" use-when="invoiceId!=null"><display/></field-->
         <field position="1" name="updateAction" widget-style="smallSubmit" use-when="invoice!=null&amp;&amp;invoice.getString(&quot;statusId&quot;).equals(&quot;INVOICE_IN_PROCESS&quot;)">
             <submit button-type="button"/>
@@ -391,7 +391,7 @@ under the License.
                 <list-options list-name="invoiceItemTypes" key-name="invoiceItemTypeId" description="${description}"/>
             </drop-down>
         </field>
-        <field position="1" name="description"><text size="80"/></field>
+        <field position="2" name="description"><text size="80"/></field>
         <field position="1" name="overrideGlAccountId">
             <drop-down allow-empty="true">
                 <list-options list-name="glAccountOrganizationAndClassList" key-name="glAccountId" description="${glAccountId} ${accountName}"/>

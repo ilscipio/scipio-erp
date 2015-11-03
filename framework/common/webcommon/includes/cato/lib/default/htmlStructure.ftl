@@ -295,7 +295,8 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     forceEmptyMenu      = if true, always add menu and must be empty
     hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
 -->
-<#macro section type="" id="" title="" class=true padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" menuContent="" menuClass="" menuLayout="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="" openOnly=false closeOnly=false wrapIf=true>
+<#macro section type="" id="" title="" class=true padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" 
+    menuContent="" menuClass="" menuLayout="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="" openOnly=false closeOnly=false wrapIf=true>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
 <#if open>
@@ -316,17 +317,16 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#local contentId = "">
     <#local menuId = "">    
 </#if>
-    <#-- note: addClass logic is only partially implemented (doesn't support booleans and "" means use default; otherwise may conflict with stock API?), but good enough for now -->
-    <#-- note: autoHeadingLevel logic now implemented in renderScreenletBegin -->
     <@section_core id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuContent=menuContent fromWidgets=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
         forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass 
-        openOnly=openOnly closeOnly=closeOnly wrapIf=wrapIf>
-        <#nested />
-    </@section_core>
+        openOnly=openOnly closeOnly=closeOnly wrapIf=wrapIf><#nested /></@section_core>
 </#macro>
 
-<#-- 
+<#-- Core implementation of @section. 
+    More options than @section, but raw and less friendly interface; not meant for template use, but can be called from other macro implementations.
+     
     migrated from @renderScreenletBegin/End screen widget macro
+    
     DEV NOTE: section_core and similar macros ARE NOT a final implementation pattern. 
         it was created initially strictly to remove dependency of cato libs on ofbiz macro library,
         and to head toward separating macro logic and markup.

@@ -61,6 +61,7 @@ under the License.
   <@section title=sectionTitle>   
     <@row>
         <@cell class="${styles.grid_large!}6">
+          <@fields type="generic"> <#-- no label areas, arranged manually in table (FIXME) -->
             <@table type="fields">   <#-- orig: class="basic-table" -->
                <#if cart.getOrderType() != "PURCHASE_ORDER">
 
@@ -167,6 +168,7 @@ under the License.
                     </@tr>
                 </#if>
               </@table>
+            </@fields>
           </@cell>
       </@row>
    </@section>

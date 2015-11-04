@@ -33,6 +33,10 @@
       <#if selected?is_boolean && selected == true>
         <#local class = addClassArgRequired(class, styles.row_selected!)>
       </#if>
+      <#local class = addClassArgRequired(class, styles.grid_row!)>
+      <#if collapse>
+        <#local class = addClassArgRequired(class, styles.collapse!)>
+      </#if>
       <#local classes = compileClassArg(class)>
   <#else>
     <#-- WARN: has no memory when closeOnly... -->
@@ -42,10 +46,11 @@
 </#macro>
 
 <#-- TODO?: review if any of the class logic might belong in markup macro instead 
-    Edit: trying to mitigate defaults-outside-markup problem with styles hash, at least -->
+    EDIT: trying to mitigate defaults-outside-markup problem with styles hash, at least
+    NOTE: classes outside of _markup arg is not final; just making consistent for now -->
 <#macro row_markup open=true close=true classes="" collapse=false id="">
   <#if open>
-    <div class="${styles.grid_row!}<#if classes?has_content> ${classes}</#if><#if collapse> collapse</#if>"<#if id?has_content> id="${id}"</#if>><#rt/>
+    <div<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#rt/>
   </#if>
       <#nested />
   <#if close>
@@ -115,6 +120,10 @@
 
     <#local specOffsetClassesStr><#if (smallOffset > 0)> ${styles.grid_small_offset!}${smallOffset}</#if><#if (mediumOffset > 0)> ${styles.grid_medium_offset!}${mediumOffset}</#if><#if (largeOffset > 0)> ${styles.grid_large_offset!}${largeOffset}<#elseif (largeOffset != 0) && (offset > 0)> ${styles.grid_large_offset!}${offset}</#if></#local>
     <#local class = addClassArgRequired(class, specOffsetClassesStr)>
+    <#local class = addClassArgRequired(class, styles.grid_cell!)>
+    <#if last>
+      <#local class = addClassArgRequired(class, styles.grid_end!)>
+    </#if>
     <#local classes = compileClassArg(class)>
   <#else>
     <#-- WARN: has no memory when closeOnly... -->
@@ -125,7 +134,7 @@
 
 <#macro cell_markup open=true close=true classes="" id="" last=false>
   <#if open>
-    <div class="<#if classes?has_content>${classes} </#if>${styles.grid_cell!}<#if last> ${styles.grid_end!}</#if>"<#if id?has_content> id="${id}"</#if>><#rt>
+    <div<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#rt>
   </#if>
       <#nested><#t>
   <#if close>

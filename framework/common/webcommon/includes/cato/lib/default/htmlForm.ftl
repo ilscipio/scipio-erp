@@ -583,7 +583,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#if>
 
 <#local fieldEntryTypeClass = "field-entry-type-" + mapCatoFieldTypeToStyleName(type)>
-<@row collapse=collapse!false norows=(norows || nocontainer) class=("+form-field-entry "+fieldEntryTypeClass)>
+<@row collapse=collapse!false norows=(norows || nocontainer) class=joinStyleNames("+form-field-entry", fieldEntryTypeClass)>
 
     <#-- TODO: right now most of the fieldsInfo parameters are not fully exploited.
          assumes labelType=="gridarea" (unless "none" which influences labelArea) and 
@@ -627,18 +627,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         
         <#if !radioSingle>
             <@cell class=joinStyleNames(subclasses, "field-entry-title", fieldEntryTypeClass) nocells=(nocells || nocontainer)>
-              <#if label?has_content>
-                <#if type=="checkbox" || collapse==false>
-                    <label class="form-field-label"<#if id?has_content> for="${id}"</#if>>${label}</label>
-                <#else>
-                    <span class="${styles.prefix!} form-field-label">${label}</span>
-                </#if>  
-                <#-- TODO: probably remove asterix later; need for dev -->
-                <#if required>*</#if>
-              </#if> 
-              <#if labelDetail?has_content>
-                ${labelDetail}
-              </#if>    
+                <@field_markup_labelarea label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required />
             </@cell>
         </#if>
     </#if>
@@ -840,6 +829,19 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </@row>
 <#-- pop field info when done -->
 <#local dummy = popRequestStack("catoCurrentFieldInfo")>
+</#macro>
+
+<#macro field_markup_labelarea label="" labelDetail="" fieldType="" fieldId="" collapse=false required=false>
+  <#if label?has_content>
+    <#if fieldType=="checkbox" || collapse==false>
+        <label class="form-field-label"<#if fieldId?has_content> for="${fieldId}"</#if>>${label}<#if required> *</#if></label>
+    <#else>
+        <span class="${styles.prefix!} form-field-label">${label}<#if required> *</#if></span>
+    </#if>  
+  </#if> 
+  <#if labelDetail?has_content>
+    ${labelDetail}
+  </#if>  
 </#macro>
 
 <#-- migrated from @renderClass form widget macro -->

@@ -613,7 +613,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     <#local fieldIdNum = fieldIdNum + 1 />
     <#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
     <#if chartLibrary=="foundation">
-        <@row>
+      <@row>
         <@cell columns=3>    
         <ul data-${type!}-id="chart_${renderSeqNumber!}_${fieldIdNum!}" class="${styles.chart_legend!}">
             <#nested/>
@@ -621,7 +621,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
         </ul>
         </@cell>
         <@cell columns=9><div id="chart_${renderSeqNumber!}_${fieldIdNum!}" style="height:300px;"></div></@cell>
-        </@row>
+      </@row>
     <#else>
         <#global chartId = "chart_${renderSeqNumber!}_${fieldIdNum!}"/>
         <#global chartType = type/>

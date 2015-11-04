@@ -48,7 +48,7 @@
 <#-- TODO?: review if any of the class logic might belong in markup macro instead 
     EDIT: trying to mitigate defaults-outside-markup problem with styles hash, at least
     NOTE: classes outside of _markup arg is not final; just making consistent for now -->
-<#macro row_markup open=true close=true classes="" collapse=false id="">
+<#macro row_markup open=true close=true classes="" collapse=false id="" extraArgs...>
   <#if open>
     <div<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#rt/>
   </#if>
@@ -132,7 +132,7 @@
   <@cell_markup open=open close=close classes=classes id=id last=last><#nested></@cell_markup>
 </#macro>
 
-<#macro cell_markup open=true close=true classes="" id="" last=false>
+<#macro cell_markup open=true close=true classes="" id="" last=false extraArgs...>
   <#if open>
     <div<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#rt>
   </#if>

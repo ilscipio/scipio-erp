@@ -626,7 +626,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         </#if>
         
         <#if !radioSingle>
-            <@cell class=(subclasses+" field-entry-title "+fieldEntryTypeClass)?trim nocells=(nocells || nocontainer)>
+            <@cell class=joinStyleNames(subclasses, "field-entry-title", fieldEntryTypeClass) nocells=(nocells || nocontainer)>
               <#if label?has_content>
                 <#if type=="checkbox" || collapse==false>
                     <label class="form-field-label"<#if id?has_content> for="${id}"</#if>>${label}</label>
@@ -642,7 +642,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
             </@cell>
         </#if>
     </#if>
-    <@cell class=("${classes!}"+" field-entry-widget "+fieldEntryTypeClass)?trim nocells=(nocells || nocontainer)>
+    <@cell class=joinStyleNames(classes, "field-entry-widget", fieldEntryTypeClass) nocells=(nocells || nocontainer)>
         <#switch type>
           <#case "input">
             <@field_input_widget name=name 

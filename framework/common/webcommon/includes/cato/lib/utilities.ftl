@@ -267,15 +267,13 @@ Usage example:
     a string of combined style names
 -->
 <#function joinStyleNames styleNames...>
-  <#return joinStyleNamesList(styleNames)>
+  <#return styleNames?join(" ")?trim>
 </#function> 
 
 <#function joinStyleNamesList styleNames>
-  <#local res = "">
-  <#list styleNames as name>
-    <#local res = (res + " " + name)?trim>
-  </#list>
-  <#return res>
+  <#-- this is imperfect but fast and works fine in most cases, except cases where empty strings in middle, like
+    ["asdf", "", "asdf"], adds extra spaces there, but rare -->
+  <#return styleNames?join(" ")?trim>
 </#function> 
 
 <#-- 

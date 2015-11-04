@@ -386,7 +386,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <@field attr="" />
     
     * General Attributes *
-    type            = form element of type [input,textarea,datetime,select,checkbox,radio,display,password,generic],
+    type            = [input|textarea|datetime|select|checkbox|radio|display|password|generic], form element type
                       default generic meaning input defined manually with #nested
                       (discouraged; prefer specific; but sometimes required and useful
                       for transition)
@@ -487,7 +487,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#if !valueType?has_content>
   <#local valueType = "generic">
 </#if>
-<#-- treat these as synonyms for now -->
+<#-- treat tooltip and description as synonyms for now -->
 <#if tooltip?has_content>
   <#if !description?has_content>
     <#local description = tooltip>
@@ -542,14 +542,12 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#local fieldIdNum = fieldIdNum + 1 />
 <#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
 
-<#local radioSingle = (type=="radio" && !items?has_content)>
-
 <#if !id?has_content>
     <#-- FIXME? renderSeqNumber usually empty... where come from? should be as request attribute also? -->
     <#local id = "field_id_${renderSeqNumber!}_${fieldIdNum!0}">
 </#if>
 
-<#-- NOTE: here, "classes" is for @cell container; "class" is for input elem (not same as other macros)! 
+<#-- NOTE: here, "classes" is for @cell container; "class" is for input elem (not same as other macros; FIXME?)! 
      can't allow specify @cell container classes as-is because can't calculate from it, would need columns param as int -->
 <#local classes = "${styles.grid_large!}12"/>
 <#local columnspostfix = 0/>
@@ -564,9 +562,19 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#if>
 <#local class = compileClassArg(class)> <#-- FIXME?: is this still too early in function? -->
 
+<#local radioSingle = (type=="radio" && !items?has_content)>
+<#-- special case: for radioSingle, the label is passed to its macro instead...
+    note this doesn't automatically prevent the container label area (otherwise inconsistent with everything else) -->
+<#local inlineLabel = "">
+<#if radioSingle>
+  <#local inlineLabel = label>
+  <#local label = "">
+</#if>
+
 <#if !catoFieldNoContainerChildren??>
   <#global catoFieldNoContainerChildren = {
-   <#-- "submit":true --> <#-- only if parent is submitarea -->
+   <#-- "submit":true -->   <#-- only if parent is submitarea -->
+    "radio":true    <#-- child radio will pretty much always imply radioSingle -->
   }>
   <#global catoFieldNoContainerParent = {
     "submitarea":true
@@ -582,54 +590,53 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   </#if>
 </#if>
 
+<#-- label area logic
+    TODO: right now most of the fieldsInfo parameters are not fully exploited.
+        assumes labelType=="gridarea" (unless "none" which influences labelArea) and 
+        labelLayout="left" (unless "none" which influences labelArea). -->
+<#if labelArea?is_boolean>
+  <#local labelAreaDefault = labelArea>
+<#elseif labelType == "none" || labelLayout == "none">
+  <#local labelAreaDefault = false>
+<#elseif isChildField>
+  <#-- based on current usage, a child field should never really have a label area by default (requires explicit)... -->
+  <#local labelAreaDefault = false>
+<#else>
+  <#local labelAreaDefault = (fieldsInfo.labelArea)!false>
+  <#if (fieldsInfo.labelAreaExceptions)?has_content>
+    <#if fieldsInfo.labelAreaExceptions?seq_contains(type)>
+      <#local labelAreaDefault = !labelAreaDefault>
+    </#if>
+  </#if>
+</#if>
+
+<#if labelType?has_content>
+  <#local effLabelType = labelType>
+<#else>
+  <#local effLabelType = (fieldsInfo.labelType)!"">
+</#if>
+<#if labelLayout?has_content>
+  <#local effLabelLayout = labelLayout>
+<#else>
+  <#local effLabelLayout = (fieldsInfo.labelLayout)!"">
+</#if>
+
+<#local useLabelArea = (labelArea?is_boolean && labelArea == true) || 
+         (!(labelArea?is_boolean && labelArea == false) && (label?has_content || labelDetail?has_content || labelAreaDefault))>
+
+<#-- main markup begin -->
 <#local fieldEntryTypeClass = "field-entry-type-" + mapCatoFieldTypeToStyleName(type)>
 <@row collapse=collapse!false norows=(norows || nocontainer) class=joinStyleNames("+form-field-entry", fieldEntryTypeClass)>
-
-    <#-- TODO: right now most of the fieldsInfo parameters are not fully exploited.
-         assumes labelType=="gridarea" (unless "none" which influences labelArea) and 
-         labelLayout="left" (unless "none" which influences labelArea). -->
-    <#if labelArea?is_boolean>
-      <#local labelAreaDefault = labelArea>
-    <#elseif labelType == "none" || labelLayout == "none">
-      <#local labelAreaDefault = false>
-    <#elseif isChildField>
-      <#-- based on current usage, a child field should never really have a label area by default (requires explicit)... -->
-      <#local labelAreaDefault = false>
-    <#else>
-      <#local labelAreaDefault = (fieldsInfo.labelArea)!false>
-      <#if (fieldsInfo.labelAreaExceptions)?has_content>
-        <#if fieldsInfo.labelAreaExceptions?seq_contains(type)>
-          <#local labelAreaDefault = !labelAreaDefault>
-        </#if>
-      </#if>
-    </#if>
-
-    <#if labelType?has_content>
-      <#local effLabelType = labelType>
-    <#else>
-      <#local effLabelType = (fieldsInfo.labelType)!"">
-    </#if>
-    <#if labelLayout?has_content>
-      <#local effLabelLayout = labelLayout>
-    <#else>
-      <#local effLabelLayout = (fieldsInfo.labelLayout)!"">
-    </#if>
-
-    <#if (labelArea?is_boolean && labelArea == true) || 
-         (!(labelArea?is_boolean && labelArea == false) && (label?has_content || labelDetail?has_content || labelAreaDefault))>
+    <#if useLabelArea>
         <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
         <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
-        
         <#if columns?has_content>
             <#local subclasses="${styles.grid_small!}${12-columns+1} ${styles.grid_large!}${12-columns}"/>
             <#local classes="${styles.grid_small!}${columns-columnspostfix-1} ${styles.grid_large!}${columns-columnspostfix}"/>
         </#if>
-        
-        <#if !radioSingle>
-            <@cell class=joinStyleNames(subclasses, "field-entry-title", fieldEntryTypeClass) nocells=(nocells || nocontainer)>
-                <@field_markup_labelarea label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required />
-            </@cell>
-        </#if>
+        <@cell class=joinStyleNames(subclasses, "field-entry-title", fieldEntryTypeClass) nocells=(nocells || nocontainer)>
+            <@field_markup_labelarea label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required />
+        </@cell>
     </#if>
     <@cell class=joinStyleNames(classes, "field-entry-widget", fieldEntryTypeClass) nocells=(nocells || nocontainer)>
         <#switch type>
@@ -744,7 +751,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
           <#case "radio">
                 <#if radioSingle>
                     <#-- single radio button item mode -->
-                    <#local items=[{"key":value, "description":label!""}]/>
+                    <#local items=[{"key":value, "description":inlineLabel!""}]/>
                     <@field_radio_widget items=items classes=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
                 <#else>
                     <#-- multi radio button item mode -->

@@ -743,12 +743,10 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                 <#if radioSingle>
                     <#-- single radio button item mode -->
                     <#local items=[{"key":value, "description":inlineLabel!""}]/>
-                    <@field_radio_widget items=items classes=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
+                    <@field_radio_widget multiMode=false items=items classes=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
                 <#else>
                     <#-- multi radio button item mode -->
-                    <div<@fieldClassStr classes=class alert=alert />>
-                      <@field_radio_widget items=items classes="" alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
-                    </div>
+                    <@field_radio_widget multiMode=true items=items classes=class alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
                 </#if>
             <#break>
           <#case "file">
@@ -801,21 +799,15 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
               <#local imageLocation = "">
               <#local desc = value>
             </#if>
-                <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" imageAlt=description/>
-                <#-- FIXME: tooltip too crappy -->
-              <#if tooltip?has_content>
-                <span class="tooltip">${tooltip}</span>
-              </#if>
+                <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc 
+                    title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" 
+                    imageAlt=description tooltip=tooltip />
             <#break> 
           <#default> <#-- "generic", empty or unrecognized -->
             <#if value?has_content>
-                <@field_generic_widget text=value/>
+                <@field_generic_widget text=value tooltip=tooltip/>
             <#else>
-                <#nested />
-            </#if>
-            <#-- FIXME: tooltip too crappy -->
-            <#if tooltip?has_content>
-              <span class="tooltip">${tooltip}</span>
+                <@field_generic_widget tooltip=tooltip><#nested /></@field_generic_widget>
             </#if>
         </#switch>
     </@field_markup_container>
@@ -1365,12 +1357,17 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- migrated from @renderRadioField form widget macro -->
-<#macro field_radio_widget items="" classes="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="">
-  <@field_radio_markup_widget items=items classes=classes alert=alert currentValue=currentValue noCurrentSelectedKey=noCurrentSelectedKey name=name event=event action=action tooltip=tooltip><#nested></@field_radio_markup_widget>
+<#macro field_radio_widget items="" classes="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="" multiMode=true>
+  <@field_radio_markup_widget items=items classes=classes alert=alert currentValue=currentValue noCurrentSelectedKey=noCurrentSelectedKey name=name 
+    event=event action=action tooltip=tooltip multiMode=multiMode><#nested></@field_radio_markup_widget>
 </#macro>
 
 <#-- field markup - may be overridden -->
-<#macro field_radio_markup_widget items="" classes="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="" extraArgs...>
+<#macro field_radio_markup_widget items="" classes="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="" multiMode=true extraArgs...>
+  <#if multiMode>
+    <div<@fieldClassStr classes=classes alert=alert />>
+    <#local classes = ""> <#-- in multi mode, classes only on parent for now (?) -->
+  </#if>
   <#list items as item>
     <span<@fieldClassStr classes=classes alert=alert />><#rt/>
       <input type="radio"<#if currentValue?has_content><#if currentValue==item.key> checked="checked"</#if>
@@ -1380,6 +1377,9 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
       ${item.description}
     </span>
   </#list>
+  <#if multiMode>
+    </div>
+  </#if>  
 </#macro>
 
 <#-- migrated from @renderFileField form widget macro -->
@@ -1457,41 +1457,6 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#else>
       ${buttonMarkup}
   </#if>
-</#macro>
-
-<#-- migrated from @renderDisplayField form widget macro -->
-<#macro field_display_widget type="" imageLocation="" idName="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
-    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false>
-  <@field_display_markup_widget type=type imageLocation=imageLocation idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl 
-    inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank><#nested></@field_display_markup_widget>
-</#macro>
-
-<#-- field markup - may be overridden -->
-<#macro field_display_markup_widget type="" imageLocation="" idName="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
-    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false extraArgs...>
-  <#if type?has_content && type=="image">
-    <img src="${imageLocation}" alt="${imageAlt}"><#lt/>
-  <#else>
-    <#--
-    <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true" || title?has_content>
-      <span<#if idName?has_content> id="cc_${idName}"</#if><#if title?has_content> title="${title}"</#if><@fieldClassStr classes=class alert=alert />><#t/>
-    </#if>
-    -->
-    <#if description?has_content>
-      ${description?replace("\n", "<br />")}<#t/>
-    <#else>
-      &nbsp;<#t/>
-    </#if>
-    <#--
-    <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true">
-      </span><#lt/>
-    </#if>
-    <#if inPlaceEditorUrl?has_content && idName?has_content>
-      <script language="JavaScript" type="text/javascript"><#lt/>
-        ajaxInPlaceEditDisplayField('cc_${idName}', '${inPlaceEditorUrl}', ${inPlaceEditorParams});<#lt/>
-      </script><#lt/>
-    </#if>-->
-    </#if>
 </#macro>
 
 <#-- migrated from @renderRangeFindField form widget macro -->
@@ -1595,14 +1560,59 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   </@row>
 </#macro>
 
-<#-- migrated from @renderField form widget macro -->
-<#macro field_generic_widget text="">
-  <@field_generic_markup_widget text=text><#nested></@field_generic_markup_widget>
+<#-- migrated from @renderDisplayField form widget macro -->
+<#macro field_display_widget type="" imageLocation="" idName="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
+    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="">
+  <@field_display_markup_widget type=type imageLocation=imageLocation idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl 
+    inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank tooltip=tooltip><#nested></@field_display_markup_widget>
 </#macro>
 
 <#-- field markup - may be overridden -->
-<#macro field_generic_markup_widget text="" extraArgs...>
-  <#if text??>
-    ${text}<#lt/>
+<#macro field_display_markup_widget type="" imageLocation="" idName="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
+    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" extraArgs...>
+  <#if type?has_content && type=="image">
+    <img src="${imageLocation}" alt="${imageAlt}"><#lt/>
+  <#else>
+    <#--
+    <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true" || title?has_content>
+      <span<#if idName?has_content> id="cc_${idName}"</#if><#if title?has_content> title="${title}"</#if><@fieldClassStr classes=class alert=alert />><#t/>
+    </#if>
+    -->
+    <#if description?has_content>
+      ${description?replace("\n", "<br />")}<#t/>
+    <#else>
+      &nbsp;<#t/>
+    </#if>
+    <#--
+    <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true">
+      </span><#lt/>
+    </#if>
+    <#if inPlaceEditorUrl?has_content && idName?has_content>
+      <script language="JavaScript" type="text/javascript"><#lt/>
+        ajaxInPlaceEditDisplayField('cc_${idName}', '${inPlaceEditorUrl}', ${inPlaceEditorParams});<#lt/>
+      </script><#lt/>
+    </#if>-->
+  </#if>
+  <#-- TODO: better tooltips -->
+  <#if tooltip?has_content>
+    <span class="tooltip">${tooltip}</span>
+  </#if>
+</#macro>
+
+<#-- migrated from @renderField form widget macro -->
+<#macro field_generic_widget text="" tooltip="">
+  <@field_generic_markup_widget text=text tooltip=tooltip><#nested></@field_generic_markup_widget>
+</#macro>
+
+<#-- field markup - may be overridden -->
+<#macro field_generic_markup_widget text="" tooltip="" extraArgs...>
+  <#if text?has_content>
+    ${text}<#t>
+  <#else>
+    <#nested><#t>
+  </#if>
+  <#-- TODO: better tooltips -->
+  <#if tooltip?has_content>
+    <span class="tooltip">${tooltip}</span>
   </#if>
 </#macro>

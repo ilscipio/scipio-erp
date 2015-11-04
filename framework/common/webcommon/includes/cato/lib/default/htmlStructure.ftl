@@ -108,8 +108,9 @@
     <#local largeOffset = largeOffset?number>
     
     <#local specColsClasses><#if (small > 0)> ${styles.grid_small!}${small}</#if><#if (medium > 0)> ${styles.grid_medium!}${medium}</#if><#if (large > 0)> ${styles.grid_large!}${large}<#elseif (large != 0) && (columns > 0)> ${styles.grid_large!}${columns}</#if></#local>
+    <#-- special case: use Replacing so that if spec col classes present, will turn into replacing class string that will prevent next default -->
     <#local class = addClassArgRequiredReplacing(class, specColsClasses)>
-    <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
+    <#local class = addClassArgDefault(class, "${styles.grid_cell_default!}")>
 
     <#local specOffsetClassesStr><#if (smallOffset > 0)> ${styles.grid_small_offset!}${smallOffset}</#if><#if (mediumOffset > 0)> ${styles.grid_medium_offset!}${mediumOffset}</#if><#if (largeOffset > 0)> ${styles.grid_large_offset!}${largeOffset}<#elseif (largeOffset != 0) && (offset > 0)> ${styles.grid_large_offset!}${offset}</#if></#local>
     <#local class = addClassArgRequired(class, specOffsetClassesStr)>
@@ -124,11 +125,11 @@
 <#-- TODO?: review if any of the class logic might belong in markup macro instead -->
 <#macro cell_markup open=true close=true classes="" id="" last=false>
   <#if open>
-    <div class="<#if classes?has_content>${classes} </#if>${styles.grid_cell!}<#if last> ${styles.grid_end!}</#if>"<#if id?has_content> id="${id}"</#if>><#rt/>
+    <div class="<#if classes?has_content>${classes} </#if>${styles.grid_cell!}<#if last> ${styles.grid_end!}</#if>"<#if id?has_content> id="${id}"</#if>><#rt>
   </#if>
-      <#nested>
+      <#nested><#t>
   <#if close>
-    </div>
+    </div><#lt>
   </#if>
 </#macro>
 

@@ -212,7 +212,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 <#macro renderFormatHeaderRowCellOpen style positionSpan>
   <#global renderFormatHeaderRowCellOpened = true>
-  <th<#if positionSpan?has_content && positionSpan gt 1> colspan="${positionSpan}"</#if><#if style?has_content> class="${style}"</#if>>
+  <th<#if positionSpan?has_content && (positionSpan > 1)> colspan="${positionSpan}"</#if><#if style?has_content> class="${style}"</#if>>
 </#macro>
 <#macro renderFormatHeaderRowCellClose>
   </th>
@@ -237,13 +237,13 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#local oddRowStyle = (styles.row_alt! + " " + remOddRowStyles)?trim>
     <#local evenRowStyle = (styles.row_reg! + " " + removeStyleNames(evenRowStyle, "even-row"))?trim>
   </#if>
-  <tr<#if itemIndex?has_content><#if itemIndex%2==0><#if evenRowStyle?has_content> class="${evenRowStyle}<#if altRowStyles?has_content> ${altRowStyles}</#if>"<#elseif altRowStyles?has_content> class="${altRowStyles}"</#if><#else><#if oddRowStyle?has_content> class="${oddRowStyle}<#if altRowStyles?has_content> ${altRowStyles}</#if>"<#elseif altRowStyles?has_content> class="${altRowStyles}"</#if></#if></#if>>
+  <tr<#if itemIndex?has_content><#if (itemIndex%2 == 0)><#if evenRowStyle?has_content> class="${evenRowStyle}<#if altRowStyles?has_content> ${altRowStyles}</#if>"<#elseif altRowStyles?has_content> class="${altRowStyles}"</#if><#else><#if oddRowStyle?has_content> class="${oddRowStyle}<#if altRowStyles?has_content> ${altRowStyles}</#if>"<#elseif altRowStyles?has_content> class="${altRowStyles}"</#if></#if></#if>>
 </#macro>
 <#macro renderFormatItemRowClose formName>
   </tr>
 </#macro>
 <#macro renderFormatItemRowCellOpen fieldName style positionSpan>
-  <td<#if positionSpan?has_content && positionSpan gt 1> colspan="${positionSpan}"</#if><#if style?has_content> class="${style}"</#if>>
+  <td<#if positionSpan?has_content && (positionSpan > 1)> colspan="${positionSpan}"</#if><#if style?has_content> class="${style}"</#if>>
 </#macro>
 <#macro renderFormatItemRowCellClose fieldName>
   </td>

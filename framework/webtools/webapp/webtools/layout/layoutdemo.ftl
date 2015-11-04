@@ -16,30 +16,30 @@
 
 <@section>
     <@heading attribs=makeMagTargetAttribMap("grid") id="grid">Grid</@heading>
-    <@row class="${styles.grid_display!}">
+    <@row class="+${styles.grid_display!}">
         <@cell columns=2>2</@cell>
         <@cell columns=4>4</@cell>
         <@cell columns=6>6</@cell>
     </@row>
-    <@row class="${styles.grid_display!}">
+    <@row class="+${styles.grid_display!}">
         <@cell columns=3>3</@cell>
         <@cell columns=6>6</@cell>
         <@cell columns=3>3</@cell>
     </@row>
-    <@row class="${styles.grid_display!}">
+    <@row class="+${styles.grid_display!}">
         <@cell columns=2>2</@cell>
         <@cell columns=8>8</@cell>
         <@cell columns=2>2</@cell>
     </@row>   
-    <@row class="${styles.grid_display!}">
+    <@row class="+${styles.grid_display!}">
         <@cell columns=3>3</@cell>
         <@cell columns=9>9</@cell>
     </@row>   
-    <@row class="${styles.grid_display!}">
+    <@row class="+${styles.grid_display!}">
         <@cell columns=4>4</@cell>
         <@cell columns=8>8</@cell>
     </@row>       
-    <@row class="${styles.grid_display!}">
+    <@row class="+${styles.grid_display!}">
         <@cell columns=6>6</@cell>
         <@cell columns=6>6</@cell>
     </@row>
@@ -449,25 +449,25 @@
 </@section>
 
 <@section title="More grid tests">
-  <@row>
+  <@row class="+${styles.grid_display!}">
     <@cell offset=6 columns=6>
       offset=6 columns=6
     </@cell>
   </@row>
 
-  <@row>
+  <@row class="+${styles.grid_display!}">
     <@cell class="+myclass" smallOffset=3 small=9 largeOffset=7 large=5>
       smallOffset=3 small=9 largeOffset=7 large=5
     </@cell>
   </@row>
 
-  <@row>
+  <@row class="+${styles.grid_display!}">
     <@cell class="${styles.grid_large}8" largeOffset=3 small=9 last=true>
       class="${styles.grid_large}8" largeOffset=3 small=9 last=true
     </@cell>
   </@row>
 
-  <@row class="+myrowclass" alt=true>
+  <@row class="+${styles.grid_display!} myrowclass" alt=true>
     <@cell class="+myclass">
       default
     </@cell>

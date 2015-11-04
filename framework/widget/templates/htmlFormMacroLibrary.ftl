@@ -278,7 +278,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#return (fieldType=="submit" || fieldType=="reset" || (fieldType=="hyperlink" && fieldTitleBlank))>
 </#function>
 
-<#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false>
+<#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="">
   <#global renderFormatFieldRowTitleCellOpened = true>
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false fieldType="" fieldTitleBlank=false>
@@ -286,7 +286,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen collapse=false positionSpan="" style="" positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false>
+<#macro renderFormatFieldRowWidgetCellOpen collapse=false positionSpan="" style="" positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="">
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#-- calculate position grid usage size for this field entry (recalc positionSpan ourselves) -->
   <#--positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} -->
@@ -326,7 +326,7 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3 ${styles.grid_large!}2</#if> ${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}">
-        <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label" for="<#if id?has_content>${id}<#else>${name!}</#if>">${renderFieldTitleCurrentTitle!}</#if><#if collapse></span><#else></label></#if>
+        <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label" for="<#if id?has_content>${id}<#else>${name!}</#if>">${renderFieldTitleCurrentTitle!} <@renderAsterisksCommon requiredField=requiredField requiredStyle=requiredStyle /></#if><#if collapse></span><#else></label></#if>
       </div>
   </#if>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
@@ -461,8 +461,14 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <#if className?has_content || alert?string == "true"> class="${className!}<#if alert?string == "true"> alert</#if>" </#if>
 </#macro>
 
+<#-- Cato: new macro to isolate this code -->
+<#macro renderAsterisksCommon requiredField requiredStyle>
+  <#if requiredField?string == "true"><#if !requiredStyle?has_content><span class="form-field-input-asterisk">*</span></#if></#if>
+</#macro>
+
 <#macro renderAsterisks requiredField requiredStyle>
-  <#if requiredField=="true"><#if !requiredStyle?has_content><span class="form-field-input-asterisk">*</span></#if></#if>
+  <#-- Cato: don't run this here anymore; see widget cell open
+  <@renderAsterisksCommon requiredField=requiredField requiredStyle=requiredStyle /> -->
 </#macro>
 
 <#macro makeHiddenFormLinkForm actionUrl name parameters targetWindow>

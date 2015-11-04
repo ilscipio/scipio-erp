@@ -44,6 +44,7 @@ $(function(){
 	Pizza.init(); //Create charts
 });
 
+/* no longer needed; macros can decide where since patch
 jQuery(document).ready(function() {
 	var asteriks = jQuery('.form-field-input-asterisk');
 	asteriks.each(function() {
@@ -51,6 +52,7 @@ jQuery(document).ready(function() {
 		label.append(' <span class="form-field-label-asterisk">*</span>');
 	});
 });
+*/
 
 /**
  * Cato upload progress handler. Instance represents one upload form.

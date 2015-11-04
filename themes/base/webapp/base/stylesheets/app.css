@@ -9889,40 +9889,42 @@ div.section-screenlet-container.no-title.no-menu {
   padding-right: 1em;
 }
 
-/* line 318, ../scss/_base.scss */
+/* no longer needed for now
+.form-field-label-asterisk {
+}
 .form-field-input-asterisk {
   display: none;
 }
-
+*/
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 325, ../scss/_base.scss */
+  /* line 327, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 330, ../scss/_base.scss */
+  /* line 332, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 332, ../scss/_base.scss */
+  /* line 334, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }
 }
-/* line 338, ../scss/_base.scss */
+/* line 340, ../scss/_base.scss */
 div.scrollable-table-container {
   overflow-x: scroll;
   margin-bottom: 1.25rem;
 }
 
-/* line 343, ../scss/_base.scss */
+/* line 345, ../scss/_base.scss */
 div.scrollable-table-container > table {
   margin-bottom: 0;
 }
 
-/* line 348, ../scss/_base.scss */
+/* line 350, ../scss/_base.scss */
 .field-entry-widget.field-entry-type-display:last-child {
   margin-bottom: 1rem;
 }

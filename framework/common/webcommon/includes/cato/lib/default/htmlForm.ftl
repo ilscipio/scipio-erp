@@ -137,10 +137,10 @@ TODO: document better if needed
   </#if>
 </#macro>
 
-<#macro progress_markup value=0 id="" classes="" showValue=false containerClasses="" color="">
+<#macro progress_markup value=0 id="" classes="" showValue=false containerClasses="" color="" extraArgs...>
     <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if color?has_content> ${color!}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
       <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
-            <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
+        <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
       <#if styles.progress_wrap?has_content></div></#if>
     </div>
 </#macro>
@@ -221,7 +221,7 @@ A visible fieldset, including the HTML element.
   <@fieldset_markup open=open close=close classes=classes containerClasses=containerClasses id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible><#nested></@fieldset_markup>
 </#macro>
 
-<#macro fieldset_markup open=true close=true classes="" containerClasses="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false>
+<#macro fieldset_markup open=true close=true classes="" containerClasses="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false extraArgs...>
 <#if open>
 <div class="${styles.grid_row!}">
   <div class="fieldgroup ${styles.grid_cell!}<#if containerClasses?has_content> ${containerClasses}</#if><#if collapsible || collapsed> toggleField<#if collapsed> ${styles.collapsed!}</#if></#if>"<#if id?has_content> id="${id}_wrapper"</#if>>
@@ -625,20 +625,11 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
          (!(labelArea?is_boolean && labelArea == false) && (label?has_content || labelDetail?has_content || labelAreaDefault))>
 
 <#-- main markup begin -->
-<#local fieldEntryTypeClass = "field-entry-type-" + mapCatoFieldTypeToStyleName(type)>
-<@row collapse=collapse!false norows=(norows || nocontainer) class=joinStyleNames("+form-field-entry", fieldEntryTypeClass)>
+    <#local labelContent = "">
     <#if useLabelArea>
-        <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
-        <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
-        <#if columns?has_content>
-            <#local subclasses="${styles.grid_small!}${12-columns+1} ${styles.grid_large!}${12-columns}"/>
-            <#local classes="${styles.grid_small!}${columns-columnspostfix-1} ${styles.grid_large!}${columns-columnspostfix}"/>
-        </#if>
-        <@cell class=joinStyleNames(subclasses, "field-entry-title", fieldEntryTypeClass) nocells=(nocells || nocontainer)>
-            <@field_markup_labelarea label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required />
-        </@cell>
+        <#local labelContent><@field_markup_labelarea label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
     </#if>
-    <@cell class=joinStyleNames(classes, "field-entry-widget", fieldEntryTypeClass) nocells=(nocells || nocontainer)>
+    <@field_markup_container type=type classes=classes columns=columns postfix=postfix postfixSize=postfixSize columnspostfix=columnspostfix useLabelArea=useLabelArea labelContent=labelContent collapse=collapse norows=norows nocells=nocells nocontainer=nocontainer>
         <#switch type>
           <#case "input">
             <@field_input_widget name=name 
@@ -827,18 +818,38 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
               <span class="tooltip">${tooltip}</span>
             </#if>
         </#switch>
-     </@cell>
-     <#if postfix && !nocells>
-         <@cell class="${styles.grid_small!}${postfixSize} ${styles.grid_large!}${postfixSize}">
-                <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
-         </@cell>
-     </#if>
-</@row>
+    </@field_markup_container>
 <#-- pop field info when done -->
 <#local dummy = popRequestStack("catoCurrentFieldInfo")>
 </#macro>
 
-<#macro field_markup_labelarea label="" labelDetail="" fieldType="" fieldId="" collapse=false required=false>
+<#-- TODO: this still needs clarification, more args? -->
+<#macro field_markup_container type="" classes="" columns="" postfix=false postfixSize=0 columnspostfix=0 useLabelArea=true labelContent="" collapse=false norows=false nocells=false nocontainer=false extraArgs...>
+  <#local fieldEntryTypeClass = "field-entry-type-" + mapCatoFieldTypeToStyleName(type)>
+  <@row collapse=collapse!false norows=(norows || nocontainer) class=joinStyleNames("+form-field-entry", fieldEntryTypeClass)>
+    <#if useLabelArea>
+        <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
+        <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
+        <#if columns?has_content>
+            <#local subclasses="${styles.grid_small!}${12-columns+1} ${styles.grid_large!}${12-columns}"/>
+            <#local classes="${styles.grid_small!}${columns-columnspostfix-1} ${styles.grid_large!}${columns-columnspostfix}"/>
+        </#if>
+        <@cell class=joinStyleNames(subclasses, "field-entry-title", fieldEntryTypeClass) nocells=(nocells || nocontainer)>
+            ${labelContent}
+        </@cell>
+    </#if>
+    <@cell class=joinStyleNames(classes, "field-entry-widget", fieldEntryTypeClass) nocells=(nocells || nocontainer)>
+        <#nested>
+    </@cell>
+    <#if postfix && !nocells && !nocontainer>
+        <@cell class="${styles.grid_small!}${postfixSize} ${styles.grid_large!}${postfixSize}">
+            <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
+        </@cell>
+    </#if>
+  </@row>
+</#macro>
+
+<#macro field_markup_labelarea label="" labelDetail="" fieldType="" fieldId="" collapse=false required=false extraArgs...>
   <#if label?has_content>
     <#if fieldType=="checkbox" || collapse==false>
         <label class="form-field-label"<#if fieldId?has_content> for="${fieldId}"</#if>>${label}<#if required> *</#if></label>
@@ -909,7 +920,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 
 <#-- field markup - may be overridden -->
 <#macro field_input_markup_widget name="" classes="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
-    mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false>
+    mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false extraArgs...>
   <#if tooltip?has_content> 
      <#local classes = (classes + " has-tip tip-right")/>  
   </#if>
@@ -949,7 +960,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 
 <#-- field markup - may be overridden -->
 <#macro field_textarea_markup_widget name="" classes="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
-    buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false>
+    buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false extraArgs...>
   <#if tooltip?has_content> 
      <#local classes = (classes+ " has-tip tip-right")/>  
   </#if>
@@ -1003,7 +1014,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#macro field_datetime_markup_widget name="" classes="" title="" value="" size="" maxlength="" id="" dateType="" shortDateInput=false 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
-    alert=false mask="" event="" action="" step="" timeValues="" tooltip="" collapse=false fieldTitleBlank=false>
+    alert=false mask="" event="" action="" step="" timeValues="" tooltip="" collapse=false fieldTitleBlank=false extraArgs...>
   
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
   <#-- Note: ofbiz never handled dateType=="date" here because it pass shortDateInput=true in renderer instead-->
@@ -1088,7 +1099,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#-- field markup - may be overridden -->
 <#macro field_datefind_markup_widget classes="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" 
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleStyle="" defaultOptionFrom="" defaultOptionThru="" 
-    opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="">
+    opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" extraArgs...>
 
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
   <#-- note: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
@@ -1153,7 +1164,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     currentValue="" explicitDescription="" allowEmpty="" options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" noCurrentSelectedKey="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
     ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false 
-    collapse=false fieldTitleBlank=false>
+    collapse=false fieldTitleBlank=false extraArgs...>
 
     <select name="${name!""}<#rt/>"<@fieldClassStr classes=classes alert=alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>>
@@ -1215,7 +1226,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" 
     targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" 
     height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" 
-    lastViewName="main" title="" fieldTitleBlank=false>
+    lastViewName="main" title="" fieldTitleBlank=false extraArgs...>
 
   <#if Static["org.ofbiz.widget.model.ModelWidget"].widgetBoundaryCommentsEnabled(context)>
   </#if>
@@ -1342,7 +1353,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- field markup - may be overridden -->
-<#macro field_checkbox_markup_widget id="" checked=false currentValue="N" name="" action="" tooltip="" fieldTitleBlank=false>
+<#macro field_checkbox_markup_widget id="" checked=false currentValue="N" name="" action="" tooltip="" fieldTitleBlank=false extraArgs...>
     <div class="switch small">
     <input type="checkbox" id="<#if id?has_content>${id}<#else>${name!}</#if>"<#rt/>
       <#if tooltip?has_content> data-tooltip aria-haspopup="true" class="has-tip tip-right" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
@@ -1359,7 +1370,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- field markup - may be overridden -->
-<#macro field_radio_markup_widget items="" classes="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="">
+<#macro field_radio_markup_widget items="" classes="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="" extraArgs...>
   <#list items as item>
     <span<@fieldClassStr classes=classes alert=alert />><#rt/>
       <input type="radio"<#if currentValue?has_content><#if currentValue==item.key> checked="checked"</#if>
@@ -1377,7 +1388,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- field markup - may be overridden -->
-<#macro field_file_markup_widget classes="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false>
+<#macro field_file_markup_widget classes="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false extraArgs...>
   <input type="file"<@fieldClassStr classes=classes alert=alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
 </#macro>
 
@@ -1387,7 +1398,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- field markup - may be overridden -->
-<#macro field_password_markup_widget classes="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="">
+<#macro field_password_markup_widget classes="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="" extraArgs...>
   <#if tooltip?has_content> 
      <#local classes = (classes+ " has-tip tip-right")/>  
   </#if> 
@@ -1407,7 +1418,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 
 <#-- field markup - may be overridden -->
 <#macro field_submit_markup_widget buttonType="" classes="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
-    containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions={}>
+    containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions={} extraArgs...>
   <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
   <#if buttonType!="image">
     <#if !classes?has_content || classes=="smallSubmit">
@@ -1457,7 +1468,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 
 <#-- field markup - may be overridden -->
 <#macro field_display_markup_widget type="" imageLocation="" idName="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
-    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false>
+    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false extraArgs...>
   <#if type?has_content && type=="image">
     <img src="${imageLocation}" alt="${imageAlt}"><#lt/>
   <#else>
@@ -1495,7 +1506,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#-- field markup - may be overridden -->
 <#macro field_textfind_markup_widget name="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
     opIsEmpty="" opNotEqual="" classes="" alert="" size="" maxlength="" autocomplete="" titleStyle="" 
-    hideIgnoreCase="" ignCase="" ignoreCase="" title="" fieldTitleBlank=false>
+    hideIgnoreCase="" ignCase="" ignoreCase="" title="" fieldTitleBlank=false extraArgs...>
 
   <@row collapse=collapse!false>
     <#if opEquals?has_content>
@@ -1544,7 +1555,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- field markup - may be overridden -->
-<#macro field_rangefind_markup_widget classes="" alert="" name="" value="" size="" maxlength="" autocomplete="" titleStyle="" defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" value2="" defaultOptionThru="">
+<#macro field_rangefind_markup_widget classes="" alert="" name="" value="" size="" maxlength="" autocomplete="" titleStyle="" defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" value2="" defaultOptionThru="" extraArgs...>
   <#local class1="${styles.grid_small!}9 ${styles.grid_large!}9"/>
   <#local class2="${styles.grid_small!}3 ${styles.grid_large!}3"/>
   <@row collapse=collapse!false>
@@ -1590,7 +1601,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- field markup - may be overridden -->
-<#macro field_generic_markup_widget text="">
+<#macro field_generic_markup_widget text="" extraArgs...>
   <#if text??>
     ${text}<#lt/>
   </#if>

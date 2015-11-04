@@ -41,7 +41,8 @@
   <@row_markup open=open close=close classes=classes collapse=collapse id=id><#nested /></@row_markup>
 </#macro>
 
-<#-- TODO?: review if any of the class logic might belong in markup macro instead -->
+<#-- TODO?: review if any of the class logic might belong in markup macro instead 
+    Edit: trying to mitigate defaults-outside-markup problem with styles hash, at least -->
 <#macro row_markup open=true close=true classes="" collapse=false id="">
   <#if open>
     <div class="${styles.grid_row!}<#if classes?has_content> ${classes}</#if><#if collapse> collapse</#if>"<#if id?has_content> id="${id}"</#if>><#rt/>
@@ -122,7 +123,6 @@
   <@cell_markup open=open close=close classes=classes id=id last=last><#nested></@cell_markup>
 </#macro>
 
-<#-- TODO?: review if any of the class logic might belong in markup macro instead -->
 <#macro cell_markup open=true close=true classes="" id="" last=false>
   <#if open>
     <div class="<#if classes?has_content>${classes} </#if>${styles.grid_cell!}<#if last> ${styles.grid_end!}</#if>"<#if id?has_content> id="${id}"</#if>><#rt>
@@ -152,15 +152,14 @@ Since this is very foundation specific, this function may be dropped in future i
     
 -->
 <#macro grid type="" class=true columns=4>
-    <#if type=="tiles" || type="freetiles">
+    <#if type == "tiles" || type == "freetiles">
         <#local freewallNum = getRequestVar("catoFreewallIdNum")!0>
         <#local freewallNum = freewallNum + 1 />
         <#local dummy = setRequestVar("catoFreewallIdNum", freewallNum)>
-        <#local id="freewall_id_${freewallNum!0}">
-        <#-- FIXME: the "class" arg is not even used... 
-        <#local classes = compileClassArg(class, "...")>
-        -->
-        <div class="${styles.tile_container!}" id="${id!}">
+        <#local id = "freewall_id_${freewallNum!0}">
+        <#local class = addClassArgRequired(class, styles.tile_container!)>
+        <#local classes = compileClassArg(class)>
+        <div<#if classes?has_content> class="${classes}"</#if> id="${id}">
             <#nested>
         </div>
         <script type="text/javascript">
@@ -181,18 +180,18 @@ Since this is very foundation specific, this function may be dropped in future i
         //]]>
         </script>
     <#else>
-        <#-- FIXME: the "class" arg is not even used...
-        <#local classes = compileClassArg(class, "...")>
-        -->
-        <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">
-            <#if (columns-2 > 0)>
-                <#local class="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}${columns-2} ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}${columns-1} ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}"/>
-            <#else>
-                <#local class="${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}"/>
-            </#if>
-          <ul class="${class!defaultClass!}">
-              <#nested>
-          </ul>
+        <#-- this never takes effect
+        <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">-->
+          
+        <#if ((columns-2) > 0)>
+            <#local class = addClassArgDefault(class, "${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}${columns-2} ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}${columns-1} ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
+        <#else>
+            <#local class = addClassArgDefault(class, "${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
+        </#if>
+        <#local classes = compileClassArg(class)>
+        <ul<#if classes?has_content> class="${classes}"</#if>>
+            <#nested>
+        </ul>
     </#if>
 </#macro>
 
@@ -221,9 +220,12 @@ It is loosely based on http://metroui.org.ua/tiles.html
     image           = Set a background image-url (icon won't be shown if not empty)
 -->
 <#macro tile type="normal" title="" class=true id="" link="" color=0 icon="" image="">
+    <#local class = addClassArgRequired(class, styles.tile_wrap!)>
+    <#local class = addClassArgRequired(class, "${styles.tile_wrap!}-${type!}")>
+    <#local class = addClassArgRequired(class, "${styles.tile_color!}${color!}")>
     <#local classes = compileClassArg(class)>
     <#local nested><#nested></#local>
-    <div class="${styles.tile_wrap!} ${styles.tile_wrap!}-${type!}<#if classes?has_content> ${classes}</#if> ${styles.tile_color!}${color!}"<#if id?has_content> id="${id!}"</#if> data-sizex="${calcTileSize("x",type!)}" data-sizey="${calcTileSize("y",type!)}">
+    <div<#if classes?has_content> class="${classes}" </#if><#if id?has_content>id="${id}" </#if>data-sizex="${calcTileSize("x",type!)}" data-sizey="${calcTileSize("y",type!)}">
         <#if image?has_content><div class="${styles.tile_image!}" style="background-image: url(${image!})"></div></#if>
         <div class="${styles.tile_content!}">
             <#if link?has_content><a href="${link!}"></#if>
@@ -595,10 +597,8 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     </#if> <#-- /#(if open) -->
 
         <@section_markup_inner open=open close=close sectionLevel=sLevel headingLevel=hLevel classes="" contentFlagClasses=contentFlagClasses collapsibleAreaId=collapsibleAreaId>
-            
             <#-- nested content -->
             <#nested>
-
         </@section_markup_inner>
 
     </@section_markup_outer>

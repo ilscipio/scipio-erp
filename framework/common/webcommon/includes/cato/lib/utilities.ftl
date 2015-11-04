@@ -772,6 +772,22 @@ a defaultVal can be set which is the same as doing:
   </#if>
 </#function>
 
+<#function toClassArgAppending newClass>
+  <#if newClass?has_content>
+    <#return "+" + newClass>
+  <#else>
+    <#return true>
+  </#if>
+</#function>
+
+<#function toClassArgReplacing newClass>
+  <#if newClass?has_content>
+    <#return newClass>
+  <#else>
+    <#return false>
+  </#if>
+</#function>
+
 <#-- 
 *************
 * addClassArg functions

@@ -607,20 +607,16 @@ IMPL NOTE: This has dependencies on some non-structural macros.
         <#local hLevel = stackValues.hLevel>    
     </#if>
 
-    <@section_markup_outer open=open close=close sectionLevel=sLevel headingLevel=hLevel classes=classes contentFlagClasses=contentFlagClasses id=id title=title collapsed=collapsed>
-
+    <#local menuTitleMarkup = "">
     <#if open>
       <#if showMore>
-        <@section_markup_menutitle sectionLevel=sLevel headingLevel=hLevel menuLayout=menuLayout hasMenu=hasMenu menuMarkup=menuMarkup hasTitle=hasTitle titleMarkup=titleMarkup contentFlagClasses=contentFlagClasses />
+        <#local menuTitleMarkup><@section_markup_menutitle sectionLevel=sLevel headingLevel=hLevel menuLayout=menuLayout hasMenu=hasMenu menuMarkup=menuMarkup hasTitle=hasTitle titleMarkup=titleMarkup contentFlagClasses=contentFlagClasses /></#local>
       </#if>
-    </#if> <#-- /#(if open) -->
+    </#if> 
 
-        <@section_markup_inner open=open close=close sectionLevel=sLevel headingLevel=hLevel classes="" contentFlagClasses=contentFlagClasses collapsibleAreaId=collapsibleAreaId>
-            <#-- nested content -->
-            <#nested>
-        </@section_markup_inner>
-
-    </@section_markup_outer>
+    <@section_markup_container open=open close=close sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup classes=classes innerClasses="" contentFlagClasses=contentFlagClasses id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId>
+        <#nested>
+    </@section_markup_container>
 
 <#if close>
 <#-- auto-heading-level logic begin -->
@@ -643,16 +639,20 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 </#if> <#-- /#(if close) -->
 </#macro>
 
-<#-- @section outer container markup - may be overridden -->
-<#macro section_markup_outer open=true close=true sectionLevel=1 headingLevel=1 classes="" contentFlagClasses="" id="" title="" collapsed=false extraArgs...>
+<#-- @section container markup - may be overridden -->
+<#macro section_markup_container open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" classes="" innerClasses="" contentFlagClasses="" id="" title="" collapsed=false collapsibleAreaId="" extraArgs...>
   <#if open>
     <div class="section-screenlet<#if contentFlagClasses?has_content> ${contentFlagClasses}</#if><#if collapsed> toggleField</#if>">
         <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
         <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
             <div class="section-screenlet-container<#if classes?has_content> ${classes}<#else> ${styles.grid_large!}12</#if> ${styles.grid_cell!}<#if contentFlagClasses?has_content> ${contentFlagClasses}</#if>">
+                ${menuTitleContent}
+                <#-- note: may need to keep this div free of foundation grid classes (for margins collapse?) -->
+                <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if> class="section-screenlet-content<#if innerClasses?has_content> ${innerClasses}</#if><#if contentFlagClasses?has_content> ${contentFlagClasses}</#if>">
   </#if>
     <#nested>
   <#if close>
+                </div>
             </div>
         </div>
     </div>
@@ -691,18 +691,3 @@ IMPL NOTE: This has dependencies on some non-structural macros.
       </#if>
     </#if>
 </#macro>
-
-<#-- @section inner container markup - may be overridden -->
-<#macro section_markup_inner open=true close=true sectionLevel=1 headingLevel=1 classes="" contentFlagClasses="" collapsibleAreaId="" extraArgs...>
-  <#if open>
-    <#-- note: may need to keep this div free of foundation grid classes (for margins collapse?) -->
-    <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if> class="section-screenlet-content<#if classes?has_content> ${classes}</#if><#if contentFlagClasses?has_content> ${contentFlagClasses}</#if>">
-  </#if>
-    <#nested>
-  <#if close>
-    </div>
-  </#if>
-</#macro>
-
-
-

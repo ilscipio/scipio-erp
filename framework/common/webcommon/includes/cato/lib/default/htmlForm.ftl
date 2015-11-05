@@ -483,7 +483,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 -->
 <#macro field type="" label="" labelDetail="" name="" value="" valueType="" currentValue="" defaultValue="" class="" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
-        cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false nocontainer=""
+        cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false container=""
         fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 
         labelType="" labelLayout="" labelArea="" description=""
         submitType="input" text="" href="" src="" confirmMsg="">
@@ -586,13 +586,13 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     "submitarea":true
   }>
 </#if>
-<#if !nocontainer?is_boolean>
-  <#if nocontainer?has_content>
-    <#local nocontainer = nocontainer?boolean>
+<#if !container?is_boolean>
+  <#if container?has_content>
+    <#local container = container?boolean>
   <#elseif isChildField && (catoFieldNoContainerChildren[type]?? || catoFieldNoContainerParent[parentFieldInfo.type!]??)>
-    <#local nocontainer = true>
+    <#local container = false>
   <#else> 
-    <#local nocontainer = false>
+    <#local container = true>
   </#if>
 </#if>
 
@@ -635,7 +635,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#if useLabelArea>
         <#local labelContent><@field_markup_labelarea label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
     </#if>
-    <@field_markup_container type=type classes=classes columns=columns postfix=postfix postfixSize=postfixSize columnspostfix=columnspostfix useLabelArea=useLabelArea labelContent=labelContent collapse=collapse norows=norows nocells=nocells nocontainer=nocontainer>
+    <@field_markup_container type=type classes=classes columns=columns postfix=postfix postfixSize=postfixSize columnspostfix=columnspostfix useLabelArea=useLabelArea labelContent=labelContent collapse=collapse norows=norows nocells=nocells container=container>
         <#switch type>
           <#case "input">
             <@field_input_widget name=name 
@@ -666,7 +666,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                                   readonly=readonly 
                                   value=value 
                                   placeholder=placeholder
-                                  tooltip=tooltip/>
+                                  tooltip=tooltip><#nested></@field_textarea_widget>
             <#break>
           <#case "datetime">
             <#if dateType == "date"><#local shortDateInput=true/><#else><#local shortDateInput=false/></#if>
@@ -822,9 +822,9 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- TODO: this still needs clarification, more args? -->
-<#macro field_markup_container type="" classes="" columns="" postfix=false postfixSize=0 columnspostfix=0 useLabelArea=true labelContent="" collapse=false norows=false nocells=false nocontainer=false extraArgs...>
+<#macro field_markup_container type="" classes="" columns="" postfix=false postfixSize=0 columnspostfix=0 useLabelArea=true labelContent="" collapse=false norows=false nocells=false container=true extraArgs...>
   <#local fieldEntryTypeClass = "field-entry-type-" + mapCatoFieldTypeToStyleName(type)>
-  <@row collapse=collapse!false norows=(norows || nocontainer) class=joinStyleNames("+form-field-entry", fieldEntryTypeClass)>
+  <@row collapse=collapse!false norows=(norows || !container) class=joinStyleNames("+form-field-entry", fieldEntryTypeClass)>
     <#if useLabelArea>
         <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
         <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
@@ -832,14 +832,14 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
             <#local subclasses="${styles.grid_small!}${12-columns+1} ${styles.grid_large!}${12-columns}"/>
             <#local classes="${styles.grid_small!}${columns-columnspostfix-1} ${styles.grid_large!}${columns-columnspostfix}"/>
         </#if>
-        <@cell class=joinStyleNames(subclasses, "field-entry-title", fieldEntryTypeClass) nocells=(nocells || nocontainer)>
+        <@cell class=joinStyleNames(subclasses, "field-entry-title", fieldEntryTypeClass) nocells=(nocells || !container)>
             ${labelContent}
         </@cell>
     </#if>
-    <@cell class=joinStyleNames(classes, "field-entry-widget", fieldEntryTypeClass) nocells=(nocells || nocontainer)>
+    <@cell class=joinStyleNames(classes, "field-entry-widget", fieldEntryTypeClass) nocells=(nocells || !container)>
         <#nested>
     </@cell>
-    <#if postfix && !nocells && !nocontainer>
+    <#if postfix && !nocells && container>
         <@cell class="${styles.grid_small!}${postfixSize} ${styles.grid_large!}${postfixSize}">
             <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
         </@cell>
@@ -968,11 +968,11 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#if cols?has_content> cols="${cols}"</#if><#rt/>
     <#if rows?has_content> rows="${rows}"</#if><#rt/>
     <#if id?has_content> id="${id}"</#if><#rt/>
-    <#if readonly?has_content> readonly="readonly"</#if><#rt/>
+    <#if (readonly?is_string && readonly?has_content) || (readonly?is_boolean && readonly == true)> readonly="readonly"</#if><#rt/>
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>
     <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
     ><#t/>
-    <#if value?has_content>${value}</#if>
+    <#if value?has_content>${value}<#else><#nested></#if><#t>
   </textarea><#lt/>
   
   <#--

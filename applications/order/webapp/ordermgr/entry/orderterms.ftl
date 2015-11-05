@@ -62,61 +62,31 @@ under the License.
                         <#else>
                             <form method="post" action="<@ofbizUrl>addOrderTerm</@ofbizUrl>" name="termform">
                                 <input type="hidden" name="termIndex" value="${termIndex!}" />
-                                <@table type="fields"> <#-- orig: class="basic-table" -->
-                                    <@tr>
-                                        <@td class="${styles.grid_large!}3">
-                                            ${uiLabelMap.OrderOrderTermType}
-                                        </@td>
-                                        <@td width="74%">
-                                            <select name="termTypeId">
-                                                <option value=""></option>
-                                                <#list termTypes! as termType>
-                                                    <option value="${termType.termTypeId}"
-                                                        <#if termTypeId?default('') == termType.termTypeId>selected="selected"</#if>
-                                                    >${termType.get('description', locale)}</option>
-                                                </#list>
-                                            </select>
-                                        </@td>
-                                    </@tr>
-                                    <@tr>
-                                        <@td class="${styles.grid_large!}3">
-                                            ${uiLabelMap.OrderOrderTermValue}
-                                        </@td>
-                                    <@td width="74%">
+                                    <@field type="generic" label="${uiLabelMap.OrderOrderTermType}">
+                                        <select name="termTypeId">
+                                            <option value=""></option>
+                                            <#list termTypes! as termType>
+                                                <option value="${termType.termTypeId}"
+                                                    <#if termTypeId?default('') == termType.termTypeId>selected="selected"</#if>
+                                                >${termType.get('description', locale)}</option>
+                                            </#list>
+                                        </select>
+                                    </@field>
+                                    <@field type="generic" label="${uiLabelMap.OrderOrderTermValue}">
                                         <input type="text" size="30" maxlength="60" name="termValue" value="${termValue!}" />
-                                    </@td>
-                                    </@tr>
-                                    <@tr>
-                                        <@td class="${styles.grid_large!}3">
-                                            ${uiLabelMap.OrderOrderTermDays}
-                                        </@td>
-                                        <@td width="74%">
-                                            <input type="text" size="30" maxlength="60" name="termDays" value="${termDays!}" />
-                                        </@td>
-                                    </@tr>
-                                    <@tr>
-                                        <@td class="${styles.grid_large!}3">
-                                            ${uiLabelMap.OrderOrderTextValue}
-                                        </@td>
-                                        <@td width="74%">
-                                            <input type="text" size="30" maxlength="60" name="textValue" value="${textValue?if_exists}" />
-                                        </@td>
-                                    </@tr>
-                                    <@tr>
-                                        <@td class="${styles.grid_large!}3">
-                                          ${uiLabelMap.CommonDescription}
-                                        </@td>
-                                        <@td width="74%">
-                                            <input type="text" size="30" maxlength="255" name="description" value="${description?if_exists}" />
-                                        </@td>
-                                    </@tr>
-                                    <@tr>
-                                        <@td width="26%" align="right" valign="top">&nbsp;</@td>
-                                        <@td width="74%">
-                                            <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonAdd}" />
-                                        </@td>
-                                    </@tr>
-                                </@table>
+                                    </@field>
+                                    <@field type="generic" label="${uiLabelMap.OrderOrderTermDays}">
+                                        <input type="text" size="30" maxlength="60" name="termDays" value="${termDays!}" />
+                                    </@field>
+                                    <@field type="generic" label="${uiLabelMap.OrderOrderTextValue}">
+                                        <input type="text" size="30" maxlength="60" name="textValue" value="${textValue?if_exists}" />
+                                    </@field>
+                                    <@field type="generic" label="${uiLabelMap.CommonDescription}">
+                                        <input type="text" size="30" maxlength="255" name="description" value="${description?if_exists}" />
+                                    </@field>
+                                    <@field type="submitarea">
+                                        <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonAdd}" />
+                                    </@field>
                             </form>
                         </#if>
             </@cell>

@@ -453,7 +453,10 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     checked         = determines if checked (true/false)
     
     * radio (multi mode) *
-    items           = if specified, multiple-items radio generated; list of {"key": value, "description": label, "event": html-dom-event-attrib, "action": event-js} hashes
+    items           = if specified, multiple-items radio generated; 
+                      list of {"key": value, "description": label, "event": html-dom-event-attrib, "action": event-js} hashes
+    inlineItems     = if true (default), radio items are many per line; if false, one per line
+                      note this takes effect whether single-item or multiple-item radio.
     currentValue    = current value, determines checked
     defaultValue    = default value, determines checked
     
@@ -486,7 +489,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false container=""
         fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 
         labelType="" labelLayout="" labelArea="" description=""
-        submitType="input" text="" href="" src="" confirmMsg="">
+        submitType="input" text="" href="" src="" confirmMsg="" inlineItems="">
 <#if !type?has_content>
   <#local type = "generic">
 </#if>
@@ -749,10 +752,10 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                 <#if radioSingle>
                     <#-- single radio button item mode -->
                     <#local items=[{"key":value, "description":inlineLabel!""}]/>
-                    <@field_radio_widget multiMode=false items=items classes=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
+                    <@field_radio_widget multiMode=false items=items inlineItems=inlineItems classes=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
                 <#else>
                     <#-- multi radio button item mode -->
-                    <@field_radio_widget multiMode=true items=items classes=class alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
+                    <@field_radio_widget multiMode=true items=items inlineItems=inlineItems classes=class alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
                 </#if>
             <#break>
           <#case "file">
@@ -1363,16 +1366,31 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- migrated from @renderRadioField form widget macro -->
-<#macro field_radio_widget items="" classes="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="" multiMode=true>
+<#macro field_radio_widget items="" classes="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="" multiMode=true inlineItems="">
+  <#if !inlineItems?is_boolean>
+    <#if inlineItems?has_content>
+      <#-- do conversion to boolean so markup doesn't have to; but don't impose a default -->
+      <#local inlineItems = inlineItems?boolean>
+    </#if>
+  </#if>
   <@field_radio_markup_widget items=items classes=classes alert=alert currentValue=currentValue noCurrentSelectedKey=noCurrentSelectedKey name=name 
-    event=event action=action tooltip=tooltip multiMode=multiMode><#nested></@field_radio_markup_widget>
+    event=event action=action tooltip=tooltip multiMode=multiMode inlineItems=inlineItems><#nested></@field_radio_markup_widget>
 </#macro>
 
 <#-- field markup - may be overridden -->
-<#macro field_radio_markup_widget items="" classes="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="" multiMode=true extraArgs...>
+<#macro field_radio_markup_widget items="" classes="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="" multiMode=true inlineItems="" extraArgs...>
+  <#if !inlineItems?is_boolean>
+    <#local inlineItems = true>
+  </#if>
+
   <#if multiMode>
     <div<@fieldClassStr classes=classes alert=alert />>
     <#local classes = ""> <#-- in multi mode, classes only on parent for now (?) -->
+  </#if>
+  <#if inlineItems>
+    <#local classes = joinStyleNames(classes, "radio-item-inline")>
+  <#else>
+    <#local classes = joinStyleNames(classes, "radio-item-noninline")>
   </#if>
   <#list items as item>
     <span<@fieldClassStr classes=classes alert=alert />><#rt/>
@@ -1381,6 +1399,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         <#elseif noCurrentSelectedKey?has_content && noCurrentSelectedKey == item.key> checked="checked"</#if> 
         name="${name!""?html}" value="${item.key!""?html}"<#if item.event?has_content> ${item.event}="${item.action!}"<#elseif event?has_content> ${event}="${action!}"</#if>/><#rt/>
       ${item.description}
+      <br class="radio-item-separator" /> <#-- controlled via css with display:none; TODO? maybe there's a better way -->
     </span>
   </#list>
   <#if multiMode>

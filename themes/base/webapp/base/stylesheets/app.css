@@ -9929,6 +9929,11 @@ div.scrollable-table-container > table {
   margin-bottom: 1rem;
 }
 
+/* line 354, ../scss/_base.scss */
+.radio-item-inline .radio-item-separator {
+  display: none;
+}
+
 /* line 1, ../scss/_ui_autocomplete.scss */
 .ui-helper-hidden-accessible {
   display: none;

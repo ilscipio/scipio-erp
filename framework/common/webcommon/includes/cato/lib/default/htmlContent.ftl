@@ -24,7 +24,9 @@
     relLevel       = for level, uses level of current heading returned by getCurrentHeadingLevel()
                      plus this number of levels. default: 0 (current level)
     class          = heading elem classes (simple)
-                     (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                     supports prefixes:
+                       "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                       "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     levelClassPrefix = default "heading-level-", prefix for class that will be appended level number
     id             = heading id
     consumeLevel   = boolean, default currently always false (DEV NOTE: could be made to depend on calculated level).
@@ -36,8 +38,8 @@
     attribs              = hash of other legacy h1-h6 attributes (mainly for those with dash in name)
     [inlineAttribs...]   = other legacy h1-h6 attributes, inlined
 -->
-<#macro heading elemType=true level="" relLevel="" class=true id="" levelClassPrefix=true consumeLevel="" 
-    containerElemType=false containerClass=true containerId="" attribs={} inlineAttribs...>
+<#macro heading elemType=true level="" relLevel="" class="" id="" levelClassPrefix=true consumeLevel="" 
+    containerElemType=false containerClass="" containerId="" attribs={} inlineAttribs...>
   <#if !level?has_content>
     <#local level = getCurrentHeadingLevel()>
   </#if>
@@ -171,7 +173,9 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
                               TODO: many of these in current templates involving forms and inputs should be converted to @row/@cell (WIP)
     class           = manual classes to add, as string, default depends on table type
                       if specified as string, replaces defaults (class=false prevents class), unless prefixed with "+"
-                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                      supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
                       defaults are looked up in the styles hash using:
                       styles["table_" + type?replace("-","_")]
                       where type is the table type above. if the given hash entry does not exist, the default is instead determined by:
@@ -191,7 +195,7 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     fixedColumnsRight = int value;number of columns that are fixed on the right hand side
     [inlineAttribs...]    = other legacy <table attributes and values, inlined
 -->
-<#macro table type="" class=true id="" cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false fixedColumnsLeft=0 fixedColumnsRight=0 attribs={} inlineAttribs...>
+<#macro table type="" class="" id="" cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false fixedColumnsLeft=0 fixedColumnsRight=0 attribs={} inlineAttribs...>
 <#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
 <#local fieldIdNum = fieldIdNum + 1 />
 <#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
@@ -301,7 +305,7 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
 </#if>
 </#macro>
 
-<#macro thead class=true id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro thead class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
 <#if open>
@@ -328,7 +332,7 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
 </#if>
 </#macro>
 
-<#macro tbody class=true id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro tbody class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
 <#if open>
@@ -355,7 +359,7 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
 </#if>
 </#macro>
 
-<#macro tfoot class=true id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro tfoot class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
 <#if open>
@@ -402,7 +406,9 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
                             such as: spacer rows (<@tr type="util"><@td colspan=3><hr /></@td></@tr>)
                             TODO: this isn't handled yet but SHOULD be used in templates anyhow.
     class           = css classes
-                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                      supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     id              = row id
     useAlt          = boolean, if specified, can manually enable/disable whether alternate row code runs per-row
     alt             = boolean, if specified, override the automatic auto-alt styling to specific value true or false (manual mode)
@@ -417,7 +423,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     attribs               = hash of other legacy <tr attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <tr attributes and values, inlined
 -->
-<#macro tr type="" class=true id="" useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro tr type="" class="" id="" useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
 <#local catoCurrentTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
@@ -500,20 +506,22 @@ Helps define table cells.
                     
    * General Attributes *
     class           = css classes 
-                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                      supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     id              = cell id
     wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (should omit nested for openOnly/closeOnly)
     attribs               = hash of other legacy <th and <td attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <th and <td attributes and values
 -->
-<#macro th class=true id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro th class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
   <#local classes = compileClassArg(class)>
   <#if open><th<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
-<#macro td class=true id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro td class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
   <#local classes = compileClassArg(class)>
@@ -532,11 +540,13 @@ In general, use @table, @tr macros instead.
                     
    * General Attributes *
     class           = css classes 
-                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                      supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     alt             = boolean, if true is alternate row (odd), if false regular (even)
     selected        = boolean, if true marked as selected
 -->
-<#macro tableRowClassStr class=true alt="" selected="">
+<#macro tableRowClassStr class="" alt="" selected="">
   <#if alt?is_boolean>
     <#local class = addClassArgRequired(class, alt?string(styles.row_alt!, styles.row_reg!))>
   </#if>

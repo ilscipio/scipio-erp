@@ -19,11 +19,13 @@
                     
    * General Attributes *
     class           = css classes 
-                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                      supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     alt             = boolean, if true alternate row (odd), if false regular (even)
     selected        = boolean, if true row is marked selected
 -->
-<#macro row class=true id="" collapse=false norows=false alt="" selected="" openOnly=false closeOnly=false wrapIf=true>
+<#macro row class="" id="" collapse=false norows=false alt="" selected="" openOnly=false closeOnly=false wrapIf=true>
   <#local open = wrapIf && !closeOnly && !norows>
   <#local close = wrapIf && !openOnly && !norows>
   <#if open>
@@ -89,7 +91,9 @@
                     
    * General Attributes *
     class           = css classes (if column sizes specified, adds classes; if no column sizes specified, expected to contain manual column sizes and overrides columns size default)
-                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                      supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     columns         = expected number of columns to be rendered (specify as number, default 12, default only used if class empty and no column sizes specified)
     small           = specific number of small columns (specify as number), overrides small part general columns value above
     large           = specific number of large columns (specify as number), overrides large part of general columns value above
@@ -100,7 +104,7 @@
     largeOffset     = specific offset for large columns
     last            = boolean, usually optional, if true indicate last cell in row 
 -->
-<#macro cell columns=-1 small=-1 medium=-1 large=-1 offset=-1 smallOffset=-1 mediumOffset=-1 largeOffset=-1 class=true id="" collapse=false nocells=false last=false openOnly=false closeOnly=false wrapIf=true>
+<#macro cell columns=-1 small=-1 medium=-1 large=-1 offset=-1 smallOffset=-1 mediumOffset=-1 largeOffset=-1 class="" id="" collapse=false nocells=false last=false openOnly=false closeOnly=false wrapIf=true>
   <#local open = wrapIf && !closeOnly && !nocells>
   <#local close = wrapIf && !openOnly && !nocells>
   <#if open>
@@ -155,12 +159,14 @@ Since this is very foundation specific, this function may be dropped in future i
                     
    * General Attributes *
     class           = Adds classes - please use "${styles.grid_block_prefix!}(small|medium|large)${styles.grid_block_postfix!}#"
-                      (FIXME: prepend with "+" to append only, i.e. never replace non-essential defaults)
+                      supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     columns         = Number of columns (default 5)
     type            = (tiles|) default:empty
     
 -->
-<#macro grid type="" class=true columns=4>
+<#macro grid type="" class="" columns=4>
     <#if type == "tiles" || type == "freetiles">
         <#local freewallNum = getRequestVar("catoFreewallIdNum")!0>
         <#local freewallNum = freewallNum + 1 />
@@ -221,14 +227,16 @@ It is loosely based on http://metroui.org.ua/tiles.html
     type            = (small|normal|wide|large|big|super) (default:normal)
     title           = Title
     class           = css classes 
-                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                      supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     link            = Link URL
     id              = field id
     color           = (0|1|2|3|4|5|6|7) defaul:0 (empty)   
     icon            = Set icon code (http://zurb.com/playground/foundation-icon-fonts-3)
     image           = Set a background image-url (icon won't be shown if not empty)
 -->
-<#macro tile type="normal" title="" class=true id="" link="" color=0 icon="" image="">
+<#macro tile type="normal" title="" class="" id="" link="" color=0 icon="" image="">
     <#local class = addClassArgRequired(class, styles.tile_wrap!)>
     <#local class = addClassArgRequired(class, "${styles.tile_wrap!}-${type!}")>
     <#local class = addClassArgRequired(class, "${styles.tile_color!}${color!}")>
@@ -276,7 +284,9 @@ IMPL NOTE: This has dependencies on some non-structural macros.
    * General Attributes *
     type                = [generic], default generic
     class               = css classes, on outer columns element (affects title)
-                          (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                          supports prefixes:
+                            "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                            "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
                           note: boolean false has no effect here
     id                  = set id
     title               = section title
@@ -313,7 +323,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     forceEmptyMenu      = if true, always add menu and must be empty
     hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
 -->
-<#macro section type="" id="" title="" class=true padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" 
+<#macro section type="" id="" title="" class="" padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" 
     menuContent="" menuClass="" menuLayout="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="" openOnly=false closeOnly=false wrapIf=true>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
@@ -389,9 +399,9 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#local titleStyleArgs = {}>
   </#if>
     <#local titleElemType = translateStyleStrClassesArg(titleStyleArgs.elemType!"")!true>
-    <#local titleClass = translateStyleStrClassesArg(titleStyleArgs.elemClass!"")!true>
+    <#local titleClass = translateStyleStrClassesArg(titleStyleArgs.elemClass!"")!"">
     <#local titleContainerElemType = translateStyleStrClassesArg(titleStyleArgs.containerElemType!"")!false>
-    <#local titleContainerClass = translateStyleStrClassesArg(titleStyleArgs.containerElemClass!"")!true>
+    <#local titleContainerClass = translateStyleStrClassesArg(titleStyleArgs.containerElemClass!"")!"">
 
 <#-- title-style parsing end -->
 
@@ -501,12 +511,12 @@ IMPL NOTE: This has dependencies on some non-structural macros.
       </#if>
       <#if menuClass?has_content> <#-- note: don't use defaultMenuClass here; @menu will figure it out instead -->
         <#if menuClass == "none">
-          <#local menuClassArg = false>
+          <#local menuClassArg = "=">
         <#else>
           <#local menuClassArg = menuClass>
         </#if>
       <#else>
-        <#local menuClassArg = true>
+        <#local menuClassArg = "">
       </#if>
     
       <#if menuContent?is_directive || isObjectType("map", menuContent)>

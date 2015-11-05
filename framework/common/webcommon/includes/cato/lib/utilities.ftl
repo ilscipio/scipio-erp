@@ -713,78 +713,67 @@ TODO: doesn't handle dates (ambiguous?)
 * Class argument functions
 ************
 Internal functions to help parse class argument passed to macros.
-Don't use in templates.
+Not for use in templates.
 
-There is problem with class argument. It can have essential and non-essential
-defaults. The essentials can't be omitted. the non-essentials in some cases
-you want to replace with value and other times you want to keep them but only
-add extra classes. having multiple args for each elem class arg gets heavy.
+Macro class arguments can have essential (required) and non-essential (default)
+defaults and values added by the macro. The essentials can't be omitted. 
+The non-essentials in some cases you want to replace with value and other times 
+you want to keep them but only add extra classes. Having multiple args for each elem 
+class arg gets heavy.
 
-so currently these functions cause the class arg to accept following values:
+So currently these functions cause the class arg to accept following values:
 
-- boolean true or string "true": 
-    means allow macro to add non-essential default classes.
-- boolean false or string "false": 
-    means prevent macro from adding non-essential default classes.
-- "" (empty string): 
-    same as boolean true (as of 2015-10-27).
-- string with "+" prefix: 
+- string with "+" prefix or empty string "": 
+    means allow macro to add non-essential default classes. 
     the class names after the "+" will be appended to any classes added
     by the macro, and will never replace macro defaults.
     this means the same as boolean true but with extra classes provided.
 - string with "=" prefix or non-empty string: 
+    means prevent macro from adding non-essential default classes.
     class names given will replace macro defaults, i.e. non-essential classes. 
     macro may still add its own required classes.
     this is the same as boolean false but with replacement classes provided.
   
-this should be intuitive.
-
-in one or two cases the non-essential defaults are "conditionally essential" 
-so class=false makes little sense but we dont really need to handle that.
-NOTE: not all macros support all the cases but the syntax is supported everywhere now anyway
-so doesnt matter to templates.
+In one or two cases the non-essential defaults are "conditionally essential" 
+so class="=" makes little sense, but we dont really need to handle that.
+NOTE: Not all macros support all the cases but the syntax is supported everywhere 
+now anyway so doesn't matter to templates.
 
 compileClassArg should usually be used as late as possible in macro:
   <#local classes = compileClassArg(class)>
-a defaultVal can be set which is the same as doing:
+A defaultVal can be set which is the same as doing:
   <#local class = addClassArgDefault("default-class")>
   <#local classes = compileClassArg(class)>
 -->
 
-<#-- get combined classes string with additionals/boolean logic, use default as needed,
-     explicit class overrides (non-essential) default -->
+<#-- Produces a simple list of class names from a class arg, adding optional default -->
 <#function compileClassArg class defaultVal="">
   <#if defaultVal?has_content>
     <#local class = addClassArgDefault(class, defaultVal)>
   </#if>
 
-  <#if class?is_boolean>
-    <#return ""> <#-- handled by addClassArgDefault -->
-  <#-- check string last because ?is_string doesn't always behave as expected -->
-  <#elseif class?is_string>
-    <#if class == "true" || class == "false">
-      <#return "">
-    <#elseif class?starts_with("+") || class?starts_with("=")>
-      <#return class?substring(1)?trim>
-    <#else>
-      <#return class>
-    </#if>
+  <#if class?starts_with("+") || class?starts_with("=")>
+    <#return class?substring(1)?trim>
+  <#else>
+    <#return class?trim>
   </#if>
 </#function>
 
+<#-- Converts simple class name to an appending class -->
 <#function toClassArgAppending newClass>
   <#if newClass?has_content>
     <#return "+" + newClass>
   <#else>
-    <#return true>
+    <#return "+">
   </#if>
 </#function>
 
+<#-- Converts simple class name to a replacing class -->
 <#function toClassArgReplacing newClass>
   <#if newClass?has_content>
     <#return newClass>
   <#else>
-    <#return false>
+    <#return "=">
   </#if>
 </#function>
 
@@ -792,16 +781,16 @@ a defaultVal can be set which is the same as doing:
 *************
 * addClassArg functions
 ************
-These functions take a template-level/logical cato macro "class" arg and add to it the given class. 
+These functions take a template-level/logical cato macro "class" arg and add to it the given class.
+Should be called by the implementing macros only. 
 
 Depending on the previous value in class, non-essential (default) values may simply be discarded, but
 essentials (required) will always be added in some way, transforming the class value.
 
 The newClass parameter is a simple string literal and is not interpreted.
 
-In general, adding a class to boolean "true" (or empty string) transforms resulting string into an appending string ("+" prefix).
-Adding to boolean "false" transforms string into a replacing string ("=", same as no prefix).
-The exception is addClassArgRequiredReplacing which always transforms into replacing string ("=", same as no prefix).
+These are non-destructive except for addClassArgRequiredReplacing which always causes the string to become
+a replacing string ("=").
 -->
 
 <#-- Adds a required class, that must appear in class string.
@@ -811,20 +800,10 @@ The exception is addClassArgRequiredReplacing which always transforms into repla
   <#if !newClass?has_content>
     <#return class>
   </#if>
-  <#if class?is_boolean>
-    <#if class>
-      <#return "+" + newClass>
-    <#else>
-      <#return "=" + newClass>
-    </#if>
-  <#elseif class?is_string>
-    <#if (!class?has_content) || class == "true">
-      <#return "+" + newClass>
-    <#elseif class == "false">
-      <#return "=" + newClass>
-    <#else>
-      <#return class + " " + newClass>
-    </#if>
+  <#if (!class?has_content)>
+    <#return "+" + newClass> <#-- if string was empty, make sure start with "+" so we don't crush next defaults -->
+  <#else>
+    <#return class + " " + newClass> <#-- don't worry about spaces here; trimmed later -->
   </#if>
 </#function>
 
@@ -836,16 +815,12 @@ The exception is addClassArgRequiredReplacing which always transforms into repla
   <#if !newClass?has_content>
     <#return class>
   </#if>
-  <#if class?is_boolean>
-    <#return "=" + newClass>
-  <#elseif class?is_string>
-    <#if (!class?has_content) || class == "true" || class == "false">
-      <#return "=" + newClass>
-    <#elseif class?starts_with("+")>
-      <#return "=" + class?substring(1) + " " + newClass>
-    <#else>
-      <#return class + " " + newClass>
-    </#if>
+  <#if (!class?has_content)>
+    <#return "=" + newClass> 
+  <#elseif class?starts_with("+")>
+    <#return "=" + class?substring(1) + " " + newClass>
+  <#else>
+    <#return class + " " + newClass>
   </#if>
 </#function>
 
@@ -855,20 +830,12 @@ The exception is addClassArgRequiredReplacing which always transforms into repla
   <#if !newClass?has_content>
     <#return class>
   </#if>
-  <#if class?is_boolean>
-    <#if class>
-      <#return "+" + newClass>
-    <#else>
-      <#return class>
-    </#if>
-  <#elseif class?is_string>
-    <#if (!class?has_content) || class == "true">
-      <#return "+" + newClass>
-    <#elseif class?starts_with("+")>
-      <#return class + " " + newClass>
-    <#else>
-      <#return class>
-    </#if>
+  <#if (!class?has_content)>
+    <#return "+" + newClass>
+  <#elseif class?starts_with("+")>
+    <#return class + " " + newClass>
+  <#else>
+    <#return class> <#-- don't add -->
   </#if>
 </#function>
 
@@ -883,38 +850,21 @@ with "+", in which case depends on the first.
 Essentially it extends the intended use of the class arg to mean "+" also allows appending
 of previous values (in addition of being an appending value itself).
 
-NOTE: even if the second arg is merely "true" (which usually means "use defaults" for cato macros),
-    this method will return true and dismiss the first argument. "true" is not treated as
+NOTE: even if the second arg is merely "+" (which usually means "use defaults" for cato macros),
+    this method will return "+" and dismiss the first argument. "+" is not treated as
     pass-through here. this does not seem consistent,
     but is chosen explicitly so that caller/macro decides what the "pass-through" value
-    is supposed to be. here, we assume "true" was passed explicitly to override the first.
-    we only treat "+".
+    is supposed to be. here, we assume "+" was passed explicitly to override the first.
+    we only treat "+" with an arg.
     in other words, can see this as another kludge for lack of null values in freemarker.
+    TODO: review this
 -->
 <#function combineClassArgs first second>
-  <#if second?is_string && second?starts_with("+")>
-    <#if first?is_string>
-      <#if first == "false">
-        <#local first = false>
-      <#elseif first == "true">
-        <#local first = true>
-      </#if> 
-    </#if>
-
-    <#if first?is_boolean>
-      <#if first>
-        <#-- if first true, return second -->  
-        <#return second>
-      <#else>
-        <#-- here, the first's attempt to remove class defaults with "false" cause the second's append to become a replacement -->
-        <#return second?substring(1)>
-      </#if>
-    <#elseif !first?has_content>
-      <#-- empty currently same as true -->
+  <#if second?starts_with("+") && (second?length > 1)>
+    <#if !first?has_content>
       <#return second>
     <#else>
-      <#-- first has content; whether was absolute or appending, can simply append second here -->
-      <#-- note: I think this handles the ?starts_with("=") case... -->
+      <#-- first has content; whether was replacing or appending, can simply append second here -->
       <#return first + " " + second?substring(1)>
     </#if>
   <#else>
@@ -938,11 +888,7 @@ see compileClassArg, results of getElemSpecFromStyleStr.
 -->
 <#function translateStyleStrClassesArg val>
   <#if val?has_content>
-    <#return val>
-  <#elseif val == "true">
-    <#return true>
-  <#elseif val == "false">
-    <#return false>
+    <#return val> <#-- this is simple since booleans were removed -->
   </#if>    
 </#function>
 

@@ -32,12 +32,12 @@ Cato: Common HTML macro library code
       <#-- don't specify allowedElemTypes because we go through them ourselves below, redundant -->
       <#local headingArgs = getHeadingElemSpecFromStyleStr(style, "", "h|heading", true, "div", "widget-label")>
       <#local elemType = headingArgs.elemType> <#-- don't translate for macro; not passed; just for us -->
-      <#local class = translateStyleStrClassesArg(headingArgs.elemClass!"")!true>
+      <#local class = translateStyleStrClassesArg(headingArgs.elemClass!"")!"">
       <#if headingArgs.isHeadingElem>
         <@heading level=translateStyleStrNumberArg(headingArgs.level!"")!"" relLevel=translateStyleStrNumberArg(headingArgs.relLevel!"")!"" 
             class=class id=id consumeLevel=translateStyleStrBoolArg(headingArgs.consumeLevel!"")!""
             containerElemType=translateStyleStrClassesArg(headingArgs.containerElemType!"")!false
-            containerClass=translateStyleStrClassesArg(headingArgs.containerElemClass!"")!true>${text}</@heading>
+            containerClass=translateStyleStrClassesArg(headingArgs.containerElemClass!"")!"">${text}</@heading>
       <#elseif elemType=="p">
         <p${idText}<#if class?is_string && class?has_content> class="${class}"</#if>>${text}</p>
       <#elseif elemType=="span">

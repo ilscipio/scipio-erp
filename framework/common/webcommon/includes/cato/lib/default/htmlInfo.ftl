@@ -45,9 +45,11 @@ it's an unexpected result, error or one that requires user action. See other mac
    * General Attributes *
     type           = (info|success|warning|secondary|alert|error), default info
     class          = classes or additional classes for nested container
-                     (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                     supports prefixes:
+                       "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                       "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
 -->
-<#macro alert type="info" class=true id="">
+<#macro alert type="info" class="" id="">
 <#local classes = compileClassArg(class, "${styles.grid_large!}12")>
 <#local typeClass = "alert_type_${type!}"/>
 <#if type="error"><#local type = "alert"></#if>
@@ -100,7 +102,7 @@ Other messages such as for missing params/record IDs are usually errors.
     class       = classes or additional classes for nested container
                   (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
-<#macro resultMsg class=true id="">
+<#macro resultMsg class="" id="">
   <#local classes = compileClassArg(class, "result-msg")>
   <p<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#nested></p>
 </#macro>
@@ -121,7 +123,7 @@ templates: currently @alert.
     class          = classes or additional classes for nested container
                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
-<#macro errorMsg type="error" class=true id="">
+<#macro errorMsg type="error" class="" id="">
   <@alert type="error" class=class id=id><#nested></@alert>
 </#macro>
 

@@ -97,14 +97,16 @@ TODO: document better if needed
                      if omitted will not make a progress bar, but script still generated for progressOptions.progTextBoxId
     type           = (warning|info|success) default: success
     class          = Adds classes - please use "(small|medium|large)-block-grid-#"
-                     (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                     supports prefixes:
+                       "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                       "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     showValue      = Display value inside bar
     wrapClass      = classes on outer wrapper only
     progressOptions = if present, attaches progress bar to an upload form with javascript-based progress and 
                       attaches results to page using elem IDs and options in this map - 
                       see CatoUploadProgress javascript class for options; mostly same
 -->
-<#macro progress value=0 id="" type="" class=true showValue=false containerClass=true progressOptions={}>
+<#macro progress value=0 id="" type="" class="" showValue=false containerClass="" progressOptions={}>
   <#local explicitId = id?has_content>
   <#if !id?has_content>
     <#local id = (progressOptions.progBarId)!"">
@@ -168,7 +170,7 @@ HTML form.
     attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
     inlineAttribs       = other attributes for HTML <form> element
 -->
-<#macro form type="input" name="" id="" class=true attribs={} openOnly=false closeOnly=false wrapIf=true inlineAttribs...>
+<#macro form type="input" name="" id="" class="" attribs={} openOnly=false closeOnly=false wrapIf=true inlineAttribs...>
   <#local open = wrapIf && !closeOnly>
   <#local close = wrapIf && !openOnly>
   <#if open>
@@ -197,14 +199,16 @@ A visible fieldset, including the HTML element.
                     
    * General Attributes *
     class           = css classes 
-                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                      supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     containerClass  = class for wrapper 
                       (includes width in columns, or append only with "+")
     id              = set id
     title           = fieldset-title
     collapsed       = show/hide the fieldset
 -->
-<#macro fieldset id="" title="" class=true containerClass=true collapsed=false openOnly=false closeOnly=false wrapIf=true>
+<#macro fieldset id="" title="" class="" containerClass="" collapsed=false openOnly=false closeOnly=false wrapIf=true>
     <#local classes = compileClassArg(class)>
     <#-- FIXME?: We have a problem now... it's the _markup that should decide the default grid values... -->
     <#local containerClasses = compileClassArg(containerClass, "${styles.grid_large!}12")>
@@ -404,7 +408,9 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     value           = field value
     columns         = int value for columns for field (overrides classes)
     class           = css classes for the field element (NOT the cell container!)
-                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                      supports prefixes:
+                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     maxlength       = maxLength
     id              = field id
     onClick         = JS Event
@@ -475,7 +481,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     value           = display value or image URL
     description     = for image type: image alt
 -->
-<#macro field type="" label="" labelDetail="" name="" value="" valueType="" currentValue="" defaultValue="" class=true size=20 maxlength="" id="" onClick="" 
+<#macro field type="" label="" labelDetail="" name="" value="" valueType="" currentValue="" defaultValue="" class="" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false nocontainer=""
         fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 

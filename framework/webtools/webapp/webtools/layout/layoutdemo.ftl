@@ -424,7 +424,7 @@
 </@section>
 
 <@section title="Class arguments test">
-  <#macro myClassTest class=true>
+  <#macro myClassTest class="">
     <#local origClass = class>
     <#local class = addClassArgRequired(class, "macro-required-class-1")>
     <#local class = addClassArgDefault(class, "macro-default-class-1")>
@@ -435,12 +435,9 @@
   </#macro>
 
   <ul>
-    <@myClassTest class=true />
-    <@myClassTest class="true" />
     <@myClassTest class="" />
-
-    <@myClassTest class=false />
-    <@myClassTest class="false" />
+    <@myClassTest class="+" />
+    <@myClassTest class="=" />
 
     <@myClassTest class="+caller-additional-class" />  
     <@myClassTest class="caller-override-class" /> 

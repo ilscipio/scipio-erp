@@ -131,9 +131,9 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#local type = inlineArgs.type!args.type!"generic">
   <#local inlineItems = inlineArgs.inlineItems!args.inlineItems!false>
   <#if inlineArgs.class??>
-    <#local class = combineClassArgs(args.class!true, inlineArgs.class)>
+    <#local class = combineClassArgs(args.class!"", inlineArgs.class)>
   <#else>
-    <#local class = args.class!true>
+    <#local class = args.class!"">
   </#if>
   <#local id = inlineArgs.id!args.id!"">
   <#local style = inlineArgs.style!args.style!"">
@@ -259,17 +259,17 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#local args = toSimpleMap(args)> <#-- DEV NOTE: make sure always do this from now on here... -->
   <#local type = inlineArgs.type!args.type!"generic">
   <#if inlineArgs.class??>
-    <#local class = combineClassArgs(args.class!true, inlineArgs.class)>
+    <#local class = combineClassArgs(args.class!"", inlineArgs.class)>
   <#else>
-    <#local class = args.class!true>
+    <#local class = args.class!"">
   </#if>
   <#local id = inlineArgs.id!args.id!"">
   <#local style = inlineArgs.style!args.style!"">
   <#local attribs = inlineArgs.attribs!args.attribs!"">
   <#if inlineArgs.contentClass??>
-    <#local contentClass = combineClassArgs(args.contentClass!true, inlineArgs.contentClass)>
+    <#local contentClass = combineClassArgs(args.contentClass!"", inlineArgs.contentClass)>
   <#else>
-    <#local contentClass = args.contentClass!true>
+    <#local contentClass = args.contentClass!"">
   </#if>
   <#local contentId = inlineArgs.contentId!args.contentId!"">
   <#local contentStyle = inlineArgs.contentStyle!args.contentStyle!"">
@@ -402,7 +402,9 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
    paginateOn      = indicates whether pagination is currently on or off (use with paginateToggle)
    url             = Base Url to be used for pagination
    class           = css classes 
-                     (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+                     supports prefixes:
+                       "+": causes the classes to append only, never replace defaults (same logic as empty string "")
+                       "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
    listSize        = size of the list in total
    viewIndex       = page currently displayed
    viewSize        = maximum number of items displayed
@@ -415,7 +417,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
    paginateToggle  = if true, include a control to toggle pagination on/off 
                      (specify current state with paginateOn and tweak using paginateToggle* arguments)
 -->
-<#macro paginate mode="single" type="default" layout="default" noResultsMode="default" paginateOn=true url="" class=true viewIndex=0 listSize=0 viewSize=1 altParam=false 
+<#macro paginate mode="single" type="default" layout="default" noResultsMode="default" paginateOn=true url="" class="" viewIndex=0 listSize=0 viewSize=1 altParam=false 
     forcePost=false paramStr="" viewIndexFirst=0 showCount=true countMsg=""
     paginateToggle=false paginateToggleString="" paginateToggleOnValue="Y" paginateToggleOffValue="N">
 

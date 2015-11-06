@@ -907,7 +907,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 
-<#-- INDIVIDUAL FIELD IMPLEMENTATIONS
+<#-- INDIVIDUAL FIELD IMPLEMENTATIONS AND MARKUP
      TODO: the parameters on these should be refined to be less ofbiz-like and more cato-like; but must
         be flexible enough to 100% allow calls from ofbiz widget lib macros.
      TODO: _markup_widget macros should be cleaned up and logic moved to _widget macros -->

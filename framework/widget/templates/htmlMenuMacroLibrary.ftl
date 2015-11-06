@@ -122,7 +122,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 </#if>
 
   <#if linkType?has_content && "hidden-form" == linkType>
-<form method="post" action="${actionUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${uniqueItemName}"><#rt/>
+<form method="post" action="${actionUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${uniqueItemName}" class="menu-widget-action-form"><#rt/>
     <#list parameterList as parameter>
 <input name="${parameter.name}" value="${parameter.value}" type="hidden"/><#rt/>
     </#list>

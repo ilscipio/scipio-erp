@@ -159,9 +159,9 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#global catoCurrentMenuInfo = menuInfo>
   <#global catoCurrentMenuItemIndex = 0>
   <#t>
-  <#local classes = compileClassArg(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
+  <#local class = addClassArgDefault(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
   <#t>
-  <@menu_markup classes=classes id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItems=inlineItems htmlWrap=htmlWrap>
+  <@menu_markup class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItems=inlineItems htmlWrap=htmlWrap>
   <#if !(preItems?is_boolean && preItems == false)>
     <#if preItems?is_sequence>
       <#list preItems as item>
@@ -207,9 +207,9 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
 
 <#-- Markup for @menu container, with minimal logic - may be overridden
      NOTE: inlineItems is included in case needs different effect per-theme (and ugly to factor out) -->
-<#macro menu_markup classes="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false htmlWrap="ul" extraArgs...>
+<#macro menu_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false htmlWrap="ul" extraArgs...>
   <#if !inlineItems>
-    <${htmlWrap!}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>
+    <${htmlWrap!}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>
   </#if>
   <#nested>
   <#if !inlineItems>
@@ -308,7 +308,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     <#local contentClass = addClassArgRequired(contentClass, (styles["menu_" + menuStyleName + "_item_contentactive"]!styles["menu_default_item_contentactive"]!""))>
   </#if>
   <#t>
-  <#local classes = compileClassArg(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>
+  <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>
   <#t>
   <#if type == "link">
     <#local defaultContentClass = styles["menu_" + menuStyleName + "_item_link"]!styles["menu_default_item_link"]!"">
@@ -319,9 +319,9 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#else>
     <#local defaultContentClass = "">
   </#if>
-  <#local contentClasses = compileClassArg(contentClass, defaultContentClass)>
+  <#local contentClass = addClassArgDefault(contentClass, defaultContentClass)>
   <#t>
-  <@menuitem_markup classes=classes id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=inlineItem htmlWrap=htmlWrap><#rt>
+  <@menuitem_markup class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=inlineItem htmlWrap=htmlWrap><#rt>
     <#if !nestedContent?is_boolean>
       <#-- use nestedContent -->
     <#elseif !nestedMenu?is_boolean>
@@ -335,11 +335,11 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
         <#local href = "javascript:void(0);">
       </#if>
       <#local href = interpretRequestUri(href)>
-      <#t><@menuitem_link_markup href=href onclick=onClick classes=contentClasses id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","href","onclick","target","title"] target=target title=title><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_link_markup>
+      <#t><@menuitem_link_markup href=href onclick=onClick class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","href","onclick","target","title"] target=target title=title><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_link_markup>
     <#elseif type == "text">
-      <#t><@menuitem_text_markup classes=contentClasses id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","onclick"] onClick=onClick><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_text_markup>
+      <#t><@menuitem_text_markup class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","onclick"] onClick=onClick><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_text_markup>
     <#elseif type == "submit">
-      <#t><#if wrapNested && nestedFirst>${nestedContent}</#if><@menuitem_submit_markup classes=contentClasses id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","value","onclick","disabled","type"] onClick=onClick disabled=disabled><#if text?has_content>${text}</#if></@menuitem_submit_markup><#if wrapNested && !nestedFirst> ${nestedContent}</#if>
+      <#t><#if wrapNested && nestedFirst>${nestedContent}</#if><@menuitem_submit_markup class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","value","onclick","disabled","type"] onClick=onClick disabled=disabled><#if text?has_content>${text}</#if></@menuitem_submit_markup><#if wrapNested && !nestedFirst> ${nestedContent}</#if>
     <#else>
       <#t><#if text?has_content>${text}</#if><#if wrapNested>${nestedContent}</#if>
     </#if>
@@ -349,27 +349,27 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
 </#macro>
 
 <#-- Markup for @menuitem (outer item wrapper only) - may be overridden -->
-<#macro menuitem_markup classes="" id="" style="" attribs={} excludeAttribs=[] inlineItem=false htmlWrap="li" extraArgs...>
+<#macro menuitem_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItem=false htmlWrap="li" extraArgs...>
   <#if !inlineItem>
-    <${htmlWrap!}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
+    <${htmlWrap!}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
   </#if>
   <#nested><#t>
   <#if !inlineItem></${htmlWrap!}></#if><#lt>
 </#macro>
 
 <#-- Markup for @menuitem type="link" - may be overridden -->
-<#macro menuitem_link_markup classes="" id="" style="" href="" onClick="" target="" title="" attribs={} excludeAttribs=[] extraArgs...>
-  <#t><a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#nested></a>
+<#macro menuitem_link_markup class="" id="" style="" href="" onClick="" target="" title="" attribs={} excludeAttribs=[] extraArgs...>
+  <#t><a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#nested></a>
 </#macro>
 
 <#-- Markup for @menuitem type="text" - may be overridden -->
-<#macro menuitem_text_markup classes="" id="" style="" onClick="" attribs={} excludeAttribs=[] extraArgs...>
-  <#t><span<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if>><#nested></span>
+<#macro menuitem_text_markup class="" id="" style="" onClick="" attribs={} excludeAttribs=[] extraArgs...>
+  <#t><span<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if>><#nested></span>
 </#macro>
 
 <#-- Markup for @menuitem type="submit" - may be overridden -->
-<#macro menuitem_submit_markup classes="" id="" style="" text="" onClick="" disabled=false attribs={} excludeAttribs=[] extraArgs...>
-  <#t><button type="submit"<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#nested></button>
+<#macro menuitem_submit_markup class="" id="" style="" text="" onClick="" disabled=false attribs={} excludeAttribs=[] extraArgs...>
+  <#t><button type="submit"<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#nested></button>
 </#macro>
 
 <#-- 
@@ -421,8 +421,6 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     forcePost=false paramStr="" viewIndexFirst=0 showCount=true countMsg=""
     paginateToggle=false paginateToggleString="" paginateToggleOnValue="Y" paginateToggleOffValue="N">
 
-    <#local classes = compileClassArg(class, "nav-pager")>
-    
     <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
     <#if (!viewSize?is_number)>
         ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize!, "htmlUtilitiesPaginate")!}<#t>
@@ -526,6 +524,10 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
         <#local noResultsMode = "hide">
     </#if>
     <#local showNextPrev = (noResultsMode != "hide") || (listSize > 0)>  
+    
+    <#-- leave this compiled outside core/markup for now because too many style attributes on @paginate_core, all treated as simple -->
+    <#local classes = compileClassArg(class, "nav-pager")>
+    
     <#-- DEV NOTE: make sure all @paginate_core calls same (DO NOT use #local capture; risks duplicate IDs) -->
     <#if mode == "single">
         <#if showNextPrev>

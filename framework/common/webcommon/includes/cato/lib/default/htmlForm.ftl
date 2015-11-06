@@ -486,7 +486,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 -->
 <#macro field type="" label="" labelDetail="" name="" value="" valueType="" currentValue="" defaultValue="" class="" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
-        cols="50" dateType="date" multiple="" checked=false collapse=false tooltip="" columns="" norows=false nocells=false container=""
+        cols="50" dateType="date" multiple="" checked=false collapse="" tooltip="" columns="" norows=false nocells=false container=""
         fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 
         labelType="" labelLayout="" labelArea="" description=""
         submitType="input" text="" href="" src="" confirmMsg="" inlineItems="">
@@ -554,16 +554,6 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#if !id?has_content>
     <#-- FIXME? renderSeqNumber usually empty... where come from? should be as request attribute also? -->
     <#local id = "field_id_${renderSeqNumber!}_${fieldIdNum!0}">
-</#if>
-
-<#-- NOTE: here, "classes" is for @cell container; "class" is for input elem (not same as other macros; FIXME?)! 
-     can't allow specify @cell container classes as-is because can't calculate from it, would need columns param as int -->
-<#local classes = "${styles.grid_large!}12"/>
-<#local columnspostfix = 0/>
-<#if postfix>
-    <#local columnspostfix = postfixSize/>
-    <#local collapse = true/>
-    <#local classes = "${styles.grid_small!}${12-columnspostfix} ${styles.grid_large!}${12-columnspostfix}"/>
 </#if>
 
 <#if required && (!containsStyleName(class, styles.required!""))>
@@ -638,7 +628,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#if useLabelArea>
         <#local labelContent><@field_markup_labelarea label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
     </#if>
-    <@field_markup_container type=type classes=classes columns=columns postfix=postfix postfixSize=postfixSize columnspostfix=columnspostfix useLabelArea=useLabelArea labelContent=labelContent collapse=collapse norows=norows nocells=nocells container=container>
+    <@field_markup_container type=type classes="" columns=columns postfix=postfix postfixSize=postfixSize useLabelArea=useLabelArea labelContent=labelContent collapse=collapse norows=norows nocells=nocells container=container>
         <#switch type>
           <#case "input">
             <@field_input_widget name=name 
@@ -825,7 +815,21 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- TODO: this still needs clarification, more args? -->
-<#macro field_markup_container type="" classes="" columns="" postfix=false postfixSize=0 columnspostfix=0 useLabelArea=true labelContent="" collapse=false norows=false nocells=false container=true extraArgs...>
+<#macro field_markup_container type="" classes="" columns="" postfix=false postfixSize=0 useLabelArea=true labelContent="" collapse="" norows=false nocells=false container=true extraArgs...>
+  <#if postfix>
+      <#local columnspostfix = postfixSize/>
+      <#if !collapse?has_content>
+          <#local collapse = true/> <#-- explicit collapse param overrides postfix setting, but collapse by default -->
+      </#if>
+      <#local classes = joinStyleNames(classes, "${styles.grid_small!}${12-columnspostfix} ${styles.grid_large!}${12-columnspostfix}")/>
+  <#else>
+      <#local classes = joinStyleNames(classes, "${styles.grid_large!}12")/>
+      <#local columnspostfix = 0/>
+  </#if>
+  <#if !collapse?has_content>
+      <#local collapse = false/>
+  </#if>
+
   <#local fieldEntryTypeClass = "field-entry-type-" + mapCatoFieldTypeToStyleName(type)>
   <@row collapse=collapse!false norows=(norows || !container) class=joinStyleNames("+form-field-entry", fieldEntryTypeClass)>
     <#if useLabelArea>
@@ -850,7 +854,10 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   </@row>
 </#macro>
 
-<#macro field_markup_labelarea label="" labelDetail="" fieldType="" fieldId="" collapse=false required=false extraArgs...>
+<#macro field_markup_labelarea label="" labelDetail="" fieldType="" fieldId="" collapse="" required=false extraArgs...>
+  <#if !collapse?has_content>
+      <#local collapse = false/>
+  </#if>
   <#if label?has_content>
     <#if fieldType=="checkbox" || collapse==false>
         <label class="form-field-label"<#if fieldId?has_content> for="${fieldId}"</#if>>${label}<#if required> *</#if></label>

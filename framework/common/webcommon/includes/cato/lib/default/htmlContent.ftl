@@ -54,8 +54,8 @@
   <#else>
     <#local headingLevelClass = "">
   </#if>
-  <#local classes = compileClassArg(class, headingLevelClass)>
-  <#local containerClasses = compileClassArg(containerClass, headingLevelClass)>
+  <#local class = addClassArgDefault(class, headingLevelClass)>
+  <#local containerClass = addClassArgDefault(containerClass, headingLevelClass)>
   <#if (consumeLevel?is_boolean && consumeLevel == true)>
     <#local dummy = setCurrentHeadingLevel(level + 1)>
   </#if>
@@ -82,15 +82,15 @@
   <#else>
     <#local cElem = containerElemType> 
   </#if>
-  <@heading_markup level=level elem=hElem classes=classes id=id attribs=concatMaps(attribs, inlineAttribs) excludeAttribs=["class", "id"] 
-      containerElem=cElem containerClasses=containerClasses containerId=containerId><#nested></@heading_markup>
+  <@heading_markup level=level elem=hElem class=class id=id attribs=concatMaps(attribs, inlineAttribs) excludeAttribs=["class", "id"] 
+      containerElem=cElem containerClass=containerClass containerId=containerId><#nested></@heading_markup>
 </#macro>
 
 <#-- Main markup for @heading (minimal logic; a little needed) - may be overridden
      This may be overridden by themes to change markup without changing logic.
      Here, elem will contain either the value "h" or a valid html element.
      NOTE: wherever this is overridden, should include "extraArgs..." for compatibility (new args won't break old overrides; remove to identify) -->
-<#macro heading_markup level=1 elem="" classes="" id="" attribs={} excludeAttribs=[] containerElem="" containerClasses="" containerId="" extraArgs...>
+<#macro heading_markup level=1 elem="" class="" id="" attribs={} excludeAttribs=[] containerElem="" containerClass="" containerId="" extraArgs...>
   <#local elemLevel = level>
   <#if (elemLevel > 6)>
     <#local elemLevel = 6>
@@ -99,9 +99,9 @@
     <#local elem = "h" + elemLevel?string>
   </#if>
   <#if containerElem?has_content>
-    <${containerElem}<#if containerClasses?has_content> class="${containerClasses}"</#if><#if containerId?has_content> id="${containerId}"</#if>>
+    <${containerElem}<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${containerId}"</#if>>
   </#if>
-  <#if elem?has_content><${elem}<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if><#rt>
+  <#if elem?has_content><${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
     <#lt><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if><#nested><#if elem?has_content></${elem}></#if>
   <#if containerElem?has_content>
     </${containerElem}>

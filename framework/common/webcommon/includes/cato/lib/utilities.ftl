@@ -759,6 +759,12 @@ A defaultVal can be set which is the same as doing:
   </#if>
 </#function>
 
+<#-- produces a class string attribute at same time as compiling class arg -->
+<#macro compiledClassAttribStr class defaultVal="">
+  <#local classes = compileClassArg(class, defaultVal)>
+  <#if classes?has_content> class="${classes}"</#if><#t>
+</#macro>
+
 <#-- Converts simple class name to an appending class -->
 <#function toClassArgAppending newClass>
   <#if newClass?has_content>

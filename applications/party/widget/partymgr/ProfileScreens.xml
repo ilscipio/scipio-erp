@@ -99,7 +99,7 @@
                                </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PartyPartyGroupInformation}" navigation-menu-name="groupUpdate" id="PartyGroupInformationPanel">
-                                    <include-menu name="groupUpdate" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                                    <include-menu name="GroupUpdateSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
                                     <include-form name="ViewPartyGroup" location="component://party/widget/partymgr/PartyForms.xml"/>
                                     <section>
                                         <condition>
@@ -525,7 +525,7 @@
                     </condition>
                     <widgets>
                         <screenlet title="${uiLabelMap.PartyListRelatedContacts}" navigation-menu-name="addRelContactAccounts">
-                            <include-menu name="addRelContactAccounts" location="component://party/widget/partymgr/PartyMenus.xml"/>
+                            <include-menu name="RelContactAccountsSubTabBar" location="component://party/widget/partymgr/PartyMenus.xml"/>
                             <section>
                                 <condition>
                                     <not><if-empty field="parameters.editPartyRel"/></not>

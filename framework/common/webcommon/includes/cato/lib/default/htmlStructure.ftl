@@ -44,13 +44,13 @@
     <#-- WARN: has no memory when closeOnly... -->
     <#local classes = "">
   </#if>
-  <@row_markup open=open close=close classes=classes collapse=collapse id=id><#nested /></@row_markup>
+  <@row_markup open=open close=close classes=classes collapse=collapse id=id alt=alt selected=selected><#nested /></@row_markup>
 </#macro>
 
 <#-- TODO?: review if any of the class logic might belong in markup macro instead 
     EDIT: trying to mitigate defaults-outside-markup problem with styles hash, at least
     NOTE: classes outside of _markup arg is not final; just making consistent for now -->
-<#macro row_markup open=true close=true classes="" collapse=false id="" extraArgs...>
+<#macro row_markup open=true close=true classes="" collapse=false id="" alt="" selected="" extraArgs...>
   <#if open>
     <div<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#rt/>
   </#if>

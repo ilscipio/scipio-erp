@@ -281,6 +281,7 @@ Usage example:
 * containsStyleName function
 ************
 Returns true if class/style string contains given style.
+NOTE: now recognizes special syntax cato class args.
                     
    * Parameters *
     styleString     = style string containing classes
@@ -290,7 +291,7 @@ Returns true if class/style string contains given style.
 -->
 <#function containsStyleName styleString className>
   <#-- don't need regexp -->
-  <#return styleString?split(" ")?seq_contains(className)> 
+  <#return getPlainClassArgNames(styleString)?split(" ")?seq_contains(className)> 
 </#function> 
 
 <#-- 
@@ -299,6 +300,7 @@ Returns true if class/style string contains given style.
 ************   
 Removes style classes from a style string. 
 strips lead/trailing space.
+NOTE: now recognizes special syntax cato class args.
            
    * Parameters *
     styleString     = style string containing classes
@@ -308,6 +310,8 @@ strips lead/trailing space.
     the style string with names removed, same order but reformatted.
 -->
 <#function removeStyleNames styleString namesToRemove>
+  <#local prefix = getClassArgPrefix(styleString)>
+  <#local styleString = getPlainClassArgNames(styleString)>
   <#if namesToRemove?is_string>
     <#local namesToRemove = splitStyleNamesToSet(namesToRemove)>
   <#else>
@@ -321,7 +325,7 @@ strips lead/trailing space.
         <#local res = res + " " + style>
     </#if>
   </#list>
-  <#return res?trim>
+  <#return prefix + res?trim>
 </#function> 
 
 <#-- 
@@ -879,6 +883,23 @@ NOTE: even if the second arg is merely "+" (which usually means "use defaults" f
     <#return second>
   </#if>
 </#function>
+
+<#function getPlainClassArgNames class>
+  <#if class?starts_with("+") || class?starts_with("=")>
+    <#return class?substring(1)>
+  <#else>
+    <#return class>
+  </#if>    
+</#function>
+
+<#function getClassArgPrefix class>
+  <#if class?starts_with("+") || class?starts_with("=")>
+    <#return class[0]>
+  <#else>
+    <#return "">
+  </#if>    
+</#function>
+
 
 <#-- 
 *************

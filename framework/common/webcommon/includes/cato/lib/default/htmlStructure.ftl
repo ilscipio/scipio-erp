@@ -39,20 +39,19 @@
       <#if collapse>
         <#local class = addClassArgRequired(class, styles.collapse!)>
       </#if>
-      <#local classes = compileClassArg(class)>
   <#else>
     <#-- WARN: has no memory when closeOnly... -->
     <#local classes = "">
   </#if>
-  <@row_markup open=open close=close classes=classes collapse=collapse id=id alt=alt selected=selected><#nested /></@row_markup>
+  <@row_markup open=open close=close class=class collapse=collapse id=id alt=alt selected=selected><#nested /></@row_markup>
 </#macro>
 
 <#-- TODO?: review if any of the class logic might belong in markup macro instead 
     EDIT: trying to mitigate defaults-outside-markup problem with styles hash, at least
     NOTE: classes outside of _markup arg is not final; just making consistent for now -->
-<#macro row_markup open=true close=true classes="" collapse=false id="" alt="" selected="" extraArgs...>
+<#macro row_markup open=true close=true class="" collapse=false id="" alt="" selected="" extraArgs...>
   <#if open>
-    <div<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#rt/>
+    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt/>
   </#if>
       <#nested />
   <#if close>
@@ -128,17 +127,16 @@
     <#if last>
       <#local class = addClassArgRequired(class, styles.grid_end!)>
     </#if>
-    <#local classes = compileClassArg(class)>
   <#else>
     <#-- WARN: has no memory when closeOnly... -->
-    <#local classes = "">
+    <#local class = "">
   </#if>
-  <@cell_markup open=open close=close classes=classes id=id last=last><#nested></@cell_markup>
+  <@cell_markup open=open close=close class=class id=id last=last><#nested></@cell_markup>
 </#macro>
 
-<#macro cell_markup open=true close=true classes="" id="" last=false extraArgs...>
+<#macro cell_markup open=true close=true class="" id="" last=false extraArgs...>
   <#if open>
-    <div<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#rt>
+    <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt>
   </#if>
       <#nested><#t>
   <#if close>
@@ -173,8 +171,7 @@ Since this is very foundation specific, this function may be dropped in future i
         <#local dummy = setRequestVar("catoFreewallIdNum", freewallNum)>
         <#local id = "freewall_id_${freewallNum!0}">
         <#local class = addClassArgRequired(class, styles.tile_container!)>
-        <#local classes = compileClassArg(class)>
-        <div<#if classes?has_content> class="${classes}"</#if> id="${id}">
+        <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>>
             <#nested>
         </div>
         <script type="text/javascript">
@@ -203,8 +200,7 @@ Since this is very foundation specific, this function may be dropped in future i
         <#else>
             <#local class = addClassArgDefault(class, "${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
         </#if>
-        <#local classes = compileClassArg(class)>
-        <ul<#if classes?has_content> class="${classes}"</#if>>
+        <ul<@compiledClassAttribStr class=class />>
             <#nested>
         </ul>
     </#if>
@@ -240,9 +236,8 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <#local class = addClassArgRequired(class, styles.tile_wrap!)>
     <#local class = addClassArgRequired(class, "${styles.tile_wrap!}-${type!}")>
     <#local class = addClassArgRequired(class, "${styles.tile_color!}${color!}")>
-    <#local classes = compileClassArg(class)>
     <#local nested><#nested></#local>
-    <div<#if classes?has_content> class="${classes}" </#if><#if id?has_content>id="${id}" </#if>data-sizex="${calcTileSize("x",type!)}" data-sizey="${calcTileSize("y",type!)}">
+    <div<@compiledClassAttribStr class=class /><#if id?has_content>id="${id}" </#if>data-sizex="${calcTileSize("x",type!)}" data-sizey="${calcTileSize("y",type!)}">
         <#if image?has_content><div class="${styles.tile_image!}" style="background-image: url(${image!})"></div></#if>
         <div class="${styles.tile_content!}">
             <#if link?has_content><a href="${link!}"></#if>

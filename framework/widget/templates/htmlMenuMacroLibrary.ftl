@@ -99,12 +99,15 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
         </ul>
     </#if>
   </#if>
-  <#local renderMenuHiddenFormContent = getRequestVar("renderMenuHiddenFormContent")!"">
-  <#if renderMenuHiddenFormContent?has_content>
-    ${renderMenuHiddenFormContent}
-    <#-- note: we don't have to worry about recursion here; will accumulate all forms from sub-menus as well;
-         note: for simplicity, don't use xxxRequestStack for now, probably not needed -->
-    <#local dummy = setRequestVar("renderMenuHiddenFormContent", "")>
+  
+  <#if !readRequestStack("renderMenuStack")??> <#-- if top-level menu -->
+    <#local renderMenuHiddenFormContent = getRequestVar("renderMenuHiddenFormContent")!"">
+    <#if renderMenuHiddenFormContent?has_content>
+      ${renderMenuHiddenFormContent}
+      <#-- note: we don't have to worry about recursion here; will accumulate all forms from sub-menus as well;
+           note: for simplicity, don't use xxxRequestStack for now, probably not needed -->
+      <#local dummy = setRequestVar("renderMenuHiddenFormContent", "")>
+    </#if>
   </#if>
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->

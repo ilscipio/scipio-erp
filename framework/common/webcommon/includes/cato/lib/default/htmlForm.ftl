@@ -178,8 +178,7 @@ HTML form.
   <#if open>
     <#local formInfo = {"type":type, "name":name, "id":id}>
     <#local dummy = pushRequestStack("catoCurrentFormInfo", formInfo)>
-    <#local classes = compileClassArg(class)>
-    <form<#if classes?has_content> class="${classes}</#if><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "name", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "name", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
   </#if>
       <#nested>
   <#if close>

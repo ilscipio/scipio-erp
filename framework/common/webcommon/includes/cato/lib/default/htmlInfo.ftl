@@ -50,14 +50,15 @@ it's an unexpected result, error or one that requires user action. See other mac
                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
 -->
 <#macro alert type="info" class="" id="">
-<#local classes = compileClassArg(class, "${styles.grid_large!}12")>
+<#local class = addClassArgRequired(class, styles.grid_cell!"")>
+<#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
 <#local typeClass = "alert_type_${type!}"/>
 <#if type="error"><#local type = "alert"></#if>
 <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
    <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
        <div data-alert class="${styles.alert_wrap!} ${styles[typeClass]!}">
            <div class="${styles.grid_row!}">
-              <div class="<#if classes?has_content>${classes} </#if>${styles.grid_cell!}">
+              <div<@compiledClassAttribStr class=class />>
                   <a href="#" class="close" data-dismiss="alert">&times;</a>
                   <#nested>
                   </div>
@@ -103,8 +104,7 @@ Other messages such as for missing params/record IDs are usually errors.
                   (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
 <#macro resultMsg class="" id="">
-  <#local classes = compileClassArg(class, "result-msg")>
-  <p<#if classes?has_content> class="${classes}"</#if><#if id?has_content> id="${id}"</#if>><#nested></p>
+  <p<@compiledClassAttribStr class=class defaultVal="result-msg" /><#if id?has_content> id="${id}"</#if>><#nested></p>
 </#macro>
 
 <#-- 

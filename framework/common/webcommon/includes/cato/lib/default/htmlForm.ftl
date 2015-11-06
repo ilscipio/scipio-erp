@@ -560,7 +560,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#if required && (!containsStyleName(class, styles.required!""))>
     <#local class = addClassArgRequired(class, styles.required!"")>
 </#if>
-<#local class = compileClassArg(class)> <#-- FIXME?: is this still too early in function? -->
+<#-- the widgets do this now
+<#local class = compileClassArg(class)>-->
 
 <#local radioSingle = (type=="radio" && !items?has_content)>
 <#-- special case: for radioSingle, the label is passed to its macro instead...
@@ -633,7 +634,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         <#switch type>
           <#case "input">
             <@field_input_widget name=name 
-                                  classes=class 
+                                  class=class 
                                   alert=alert 
                                   value=value 
                                   textSize=size 
@@ -652,7 +653,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
             <#break>
           <#case "textarea">
             <@field_textarea_widget name=name 
-                                  classes=class 
+                                  class=class 
                                   alert=alert 
                                   cols=cols 
                                   rows=rows 
@@ -665,7 +666,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
           <#case "datetime">
             <#if dateType == "date"><#local shortDateInput=true/><#else><#local shortDateInput=false/></#if>
             <@field_datetime_widget name=name 
-                                  classes=class 
+                                  class=class 
                                   alert=alert 
                                   title=label 
                                   value=value 
@@ -699,7 +700,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
             <#local manualItemsOnly = true>
             
             <@field_select_widget name=name
-                                    classes=class 
+                                    class=class 
                                     alert=alert 
                                     id=id 
                                     multiple=multiple
@@ -734,7 +735,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                                     manualItemsOnly=manualItemsOnly><#nested></@field_select_widget>
             <#break>
           <#case "lookup">
-            <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName classes=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
+            <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
           <#break>
           <#case "checkbox">
                 <@field_checkbox_widget id=id currentValue=value checked=checked name=name action=action />
@@ -743,17 +744,17 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                 <#if radioSingle>
                     <#-- single radio button item mode -->
                     <#local items=[{"key":value, "description":inlineLabel!""}]/>
-                    <@field_radio_widget multiMode=false items=items inlineItems=inlineItems classes=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
+                    <@field_radio_widget multiMode=false items=items inlineItems=inlineItems class=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
                 <#else>
                     <#-- multi radio button item mode -->
-                    <@field_radio_widget multiMode=true items=items inlineItems=inlineItems classes=class alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
+                    <@field_radio_widget multiMode=true items=items inlineItems=inlineItems class=class alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
                 </#if>
             <#break>
           <#case "file">
-            <@field_file_widget classes=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
+            <@field_file_widget class=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
             <#break> 
           <#case "password">
-            <@field_password_widget classes=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip/>
+            <@field_password_widget class=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip/>
             <#break> 
           <#case "submit">
           <#case "submitarea">
@@ -770,7 +771,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                 </#if>
                 <#local buttonType = catoSubmitFieldButtonTypeMap[submitType]!"button">
                 <#local inputType = catoSubmitFieldInputTypeMap[submitType]!"">
-                <@field_submit_widget buttonType=buttonType classes=class alert=alert formName=formName name=name event="" action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false onClick=onClick href=href inputType=inputType disabled=disabled />
+                <@field_submit_widget buttonType=buttonType class=class alert=alert formName=formName name=name event="" action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false onClick=onClick href=href inputType=inputType disabled=disabled />
               <#else>
                 <#nested>
               </#if>

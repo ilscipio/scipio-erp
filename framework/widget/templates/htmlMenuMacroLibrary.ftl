@@ -99,6 +99,13 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
         </ul>
     </#if>
   </#if>
+  <#local renderMenuHiddenFormContent = getRequestVar("renderMenuHiddenFormContent")!"">
+  <#if renderMenuHiddenFormContent?has_content>
+    ${renderMenuHiddenFormContent}
+    <#-- note: we don't have to worry about recursion here; will accumulate all forms from sub-menus as well;
+         note: for simplicity, don't use xxxRequestStack for now, probably not needed -->
+    <#local dummy = setRequestVar("renderMenuHiddenFormContent", "")>
+  </#if>
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
@@ -122,11 +129,15 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 </#if>
 
   <#if linkType?has_content && "hidden-form" == linkType>
+    <#local hiddenFormContent>
 <form method="post" action="${actionUrl}"<#if targetWindow?has_content> target="${targetWindow}"</#if> onsubmit="javascript:submitFormDisableSubmits(this)" name="${uniqueItemName}" class="menu-widget-action-form"><#rt/>
     <#list parameterList as parameter>
 <input name="${parameter.name}" value="${parameter.value}" type="hidden"/><#rt/>
     </#list>
 </form><#rt/>
+    </#local>
+    <#local renderMenuHiddenFormContent = getRequestVar("renderMenuHiddenFormContent")!"">
+    <#local dummy = setRequestVar("renderMenuHiddenFormContent", renderMenuHiddenFormContent+hiddenFormContent)>
   </#if>
 <#if (linkType?has_content && "hidden-form" == linkType) || linkUrl?has_content>
 <a<#if id?has_content> id="${id}"</#if><#if style?has_content> class="${style}"</#if><#if name?has_content> name="${name}"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if> href="<#if "hidden-form"==linkType>javascript:document.${uniqueItemName}.submit()<#else>${linkUrl}</#if>"><#rt/>

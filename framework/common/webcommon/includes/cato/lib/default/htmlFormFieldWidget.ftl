@@ -14,7 +14,7 @@ TODO: the parameters on these should be refined to be less ofbiz-like and more c
 TODO: _markup_widget macros should be cleaned up and logic moved to _widget macros -->
 
 <#-- migrated from @renderClass form widget macro -->
-<#macro fieldClassStr class alert=false>
+<#macro fieldClassAttribStr class alert=false>
   <#if alert?string == "true">
     <#local class = addClassArg(class, "alert")>
   </#if>
@@ -81,7 +81,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#if tooltip?has_content> 
      data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"<#rt/>
      </#if><#rt/>
-    <@fieldClassStr class=class alert=alert />
+    <@fieldClassAttribStr class=class alert=alert />
     <#if value?has_content> value="${value}"</#if><#rt/>
     <#if textSize?has_content> size="${textSize}"</#if><#rt/>
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>
@@ -113,7 +113,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#local class = addClassArg(class, "has-tip tip-right")>
   </#if>
   <textarea name="${name}"<#t/>
-    <@fieldClassStr class=class alert=alert />
+    <@fieldClassAttribStr class=class alert=alert />
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
     <#if cols?has_content> cols="${cols}"</#if><#rt/>
     <#if rows?has_content> rows="${rows}"</#if><#rt/>
@@ -177,7 +177,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
           </#if>
           <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
           <#if dateType == "time">
-            <input type="text" name="${name}"<@fieldClassStr class=class alert=alert /><#rt/>
+            <input type="text" name="${name}"<@fieldClassAttribStr class=class alert=alert /><#rt/>
             <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
             <#if title?has_content> title="${title}"</#if>
             <#if value?has_content> value="${value}"</#if>
@@ -185,7 +185,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
             <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
             <#if id?has_content> id="${id}"</#if> /><#rt/>
           <#else>
-            <input type="text" name="${name}_i18n"<@fieldClassStr class=class alert=alert /><#rt/>
+            <input type="text" name="${name}_i18n"<@fieldClassAttribStr class=class alert=alert /><#rt/>
             <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
             <#if title?has_content> title="${title}"</#if>
             <#if value?has_content> value="${value}"</#if>
@@ -261,7 +261,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
         <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
           <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
-          <input id="${name?html}_fld0_value" type="text"<@fieldClassStr class=class alert=alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
+          <input id="${name?html}_fld0_value" type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
         </div>
         <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
           <span class="postfix"><i class="${styles.icon} ${styles.icon_calendar!}"></i></span>
@@ -322,7 +322,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#if tooltip?has_content>
       <#local class = addClassArg(class, "has-tip tip-right")>
     </#if>
-    <select name="${name!""}<#rt/>"<@fieldClassStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
+    <select name="${name!""}<#rt/>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>>
     <#if !manualItemsOnly>  
       <#if firstInList?has_content && currentValue?has_content && !multiple?has_content>
@@ -411,7 +411,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#if size?has_content && size=="0">
       <input type="hidden" <#if name?has_content> name="${name}"/></#if>
     <#else>
-      <input type="text"<@fieldClassStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if>
+      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if>
         <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#rt/>
         <#if readonly?has_content && readonly> readonly="readonly"</#if><#rt/><#if event?has_content && action?has_content> ${event}="${action}"</#if><#rt/>
         <#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/></#if>
@@ -516,7 +516,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#if tooltip?has_content>
       <#local class = addClassArg(class, "has-tip tip-right")>
     </#if>
-    <input type="checkbox"<@fieldClassStr class=class alert=alert />id="<#if id?has_content>${id}<#else>${name!}</#if>"<#rt/>
+    <input type="checkbox"<@fieldClassAttribStr class=class alert=alert />id="<#if id?has_content>${id}<#else>${name!}</#if>"<#rt/>
       <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
       <#if (checked?is_boolean && checked) || (checked?is_string && checked == "Y")> checked="checked"
       <#elseif currentValue?has_content && currentValue=="Y"> checked="checked"</#if> 
@@ -544,7 +544,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   </#if>
 
   <#if multiMode>
-    <div<@fieldClassStr class=class alert=alert />>
+    <div<@fieldClassAttribStr class=class alert=alert />>
     <#local class = ""> <#-- in multi mode, classes only on parent for now (?) -->
   </#if>
   <#if inlineItems>
@@ -556,7 +556,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#local class = addClassArg(class, "has-tip tip-right")>
   </#if>
   <#list items as item>
-    <span<@fieldClassStr class=class alert=alert />><#rt/>
+    <span<@fieldClassAttribStr class=class alert=alert />><#rt/>
       <input type="radio"<#if currentValue?has_content><#if currentValue==item.key> checked="checked"</#if>
         <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
         <#elseif noCurrentSelectedKey?has_content && noCurrentSelectedKey == item.key> checked="checked"</#if> 
@@ -577,7 +577,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 
 <#-- field markup - may be overridden -->
 <#macro field_file_markup_widget class="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false extraArgs...>
-  <input type="file"<@fieldClassStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+  <input type="file"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
 </#macro>
 
 <#-- migrated from @renderPasswordField form widget macro -->
@@ -590,7 +590,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <#if tooltip?has_content>
     <#local class = addClassArg(class, "has-tip tip-right")>
   </#if>
-  <input type="password"<@fieldClassStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if>
+  <input type="password"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if>
   <#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#if autocomplete?has_content> autocomplete="off"</#if> 
   <#if placeholder?has_content> placeholder="${placeholder}"</#if>
   <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
@@ -620,15 +620,15 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <#else>
     <#local buttonMarkup>
       <#if buttonType=="text-link">
-        <a<@fieldClassStr class=class alert=alert />href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if>><#if title?has_content>${title}</#if></a>
+        <a<@fieldClassAttribStr class=class alert=alert />href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if>><#if title?has_content>${title}</#if></a>
       <#elseif buttonType=="image">
-        <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassStr class=class alert=alert /><#if name?has_content> name="${name}"</#if>
+        <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if>
         <#if title?has_content> alt="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
         <#if disabled> disabled="disabled"<#else>
           <#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
         </#if>/>
       <#else>
-        <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassStr class=class alert=alert />
+        <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassAttribStr class=class alert=alert />
         <#if name?has_content> name="${name}"</#if><#if title?has_content> value="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
         <#if disabled> disabled="disabled"<#else>
           <#if onClick?has_content> onclick="${onClick}"<#else>
@@ -686,7 +686,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       <input type="hidden"<#if name?has_content> name="${name}_op"</#if> value="${defaultOption}"/><#rt/>
     </#if>
       <@cell class="${class2!}">
-        <input type="text"<@fieldClassStr class=class alert=alert />name="${name}"<#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+        <input type="text"<@fieldClassAttribStr class=class alert=alert />name="${name}"<#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
       </@cell>
       <@cell class="${class3!}"> 
         <#if hideIgnoreCase>
@@ -713,7 +713,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <#local class2="${styles.grid_small!}3 ${styles.grid_large!}3"/>
   <@row collapse=collapse!false>
     <@cell class=class1>
-      <input type="text"<@fieldClassStr class=class alert=alert /><#if name?has_content>name="${name}_fld0_value"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content>name="${name}_fld0_value"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
     </@cell>
     <@cell class=class2>
       <#if titleStyle?has_content>
@@ -731,7 +731,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   </@row><#rt/>
   <@row>
     <@cell class=class1>
-      <input type="text"<@fieldClassStr class=class alert=alert /><#if name?has_content>name="${name}_fld1_value"</#if><#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content>name="${name}_fld1_value"</#if><#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
     </@cell>
     <@cell class=class2>
       <#if titleStyle?has_content>
@@ -763,7 +763,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <#else>
     <#--
     <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true" || title?has_content>
-      <span<#if idName?has_content> id="cc_${idName}"</#if><#if title?has_content> title="${title}"</#if><@fieldClassStr class=class alert=alert />><#t/>
+      <span<#if idName?has_content> id="cc_${idName}"</#if><#if title?has_content> title="${title}"</#if><@fieldClassAttribStr class=class alert=alert />><#t/>
     </#if>
     -->
     <#if description?has_content>

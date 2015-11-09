@@ -852,7 +852,9 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         </@cell>
     </#if>
     <#local class = addClassArgRequired(class, "field-entry-widget " + fieldEntryTypeClass)>
-    <#-- NOTE: this is the same as doing: class=("=" + compileClassArg(class, defaultClass)) -->
+    <#-- NOTE: here this is the same as doing 
+           class=("=" + compileClassArg(class, defaultClass))
+         as we know the compiled class will never be empty. -->
     <@cell class=compileClassArg(class, defaultClass) nocells=(nocells || !container)>
         <#nested>
     </@cell>

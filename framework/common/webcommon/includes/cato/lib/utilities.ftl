@@ -36,7 +36,7 @@
 
 <#-- 
 *************
-* makeOfbizUrl function
+* makeOfbizUrl
 ************
 Function version of the @ofbizUrl macro.
 Boolean arguments can be given as booleans, string representation of booleans
@@ -52,7 +52,7 @@ or empty string (signifies use defaults).
 
 <#-- 
 *************
-* interpretRequestUri function
+* interpretRequestUri
 ************
 Interprets the given request URI/URL resource and transforms into a valid URL if and as needed.
 Can help to cut down on macro URL arguments, but may be used anywhere.
@@ -81,7 +81,7 @@ The following URI forms are currently interpreted and transformed:
 
 <#-- 
 *************
-* label function
+* label
 ************
 Returns empty string if no label is found
 -->
@@ -100,7 +100,7 @@ Returns empty string if no label is found
 
 <#-- 
 *************
-* getPropertyValue function
+* getPropertyValue
 ************
 Gets property or empty string if missing (same behavior as UtilProperties).
 note: the ?string kludge is to get rid of the wrapString wrapper which can break.
@@ -111,7 +111,7 @@ note: the ?string kludge is to get rid of the wrapString wrapper which can break
 
 <#-- 
 *************
-* getPropertyValueOrNull function
+* getPropertyValueOrNull
 ************
 Gets property or void if missing (use default operator).
 -->
@@ -124,11 +124,11 @@ Gets property or void if missing (use default operator).
 
 <#-- 
 *************
-* addParamDelimToUrl function
+* addParamDelimToUrl
 ************
 Adds a param delimiter to end of url if needed.
                     
-   * Parameters *
+  * Parameters *
     url             = Url to which to append delimiter
     paramDelim      = Param delimiter to use (escaped, "&amp;" by default)
 -->
@@ -148,11 +148,11 @@ Adds a param delimiter to end of url if needed.
 
 <#-- 
 *************
-* addParamsToStr function
+* addParamsToStr
 ************
 Adds parameters from a hash to a URL param string (no full URL logic).
                     
-   * Parameters *
+  * Parameters *
     paramStr        = Escaped param string
     paramMap        = Hash of keys to values to add (FIXME: java Maps from ofbiz widgets may not work)
     paramDelim      = Param delimiter (escaped, "&amp;" by default)
@@ -173,13 +173,13 @@ Adds parameters from a hash to a URL param string (no full URL logic).
 
 <#-- 
 *************
-* splitStrParams function
+* splitStrParams
 ************
 Extracts parameters from a string in the format and returns as a hash:
     name1=val1DELIMname2=val2DELIMname3=val3
 where DELIM is specified delimiter (& &amp; , ; etc.)
                     
-   * Parameters *
+  * Parameters *
     paramStr        = Escaped param string
     paramDelim      = Param delimiter ("&amp;" by default)
 -->
@@ -200,11 +200,11 @@ where DELIM is specified delimiter (& &amp; , ; etc.)
 
 <#-- 
 *************
-* trimParamStrDelims function
+* trimParamStrDelims
 ************
 Strips leading and trailing param delims from a URL param string.
                     
-   * Parameters *
+  * Parameters *
     paramStr        = param string
     paramDelim      = Param delimiter (escaped, "&amp;" by default)
 -->
@@ -225,13 +225,14 @@ Strips leading and trailing param delims from a URL param string.
 
 <#-- 
 *************
-* splitStyleNames function
+* splitStyleNames
 ************
 splits a style classes string into sequence, same order.
                     
-   * Parameters *
+  * Parameters *
     styleString     = style string containing classes
-   * Return value *
+    
+  * Return Value *
     a sequence of style names, same order.
 -->
 <#function splitStyleNames styleString>
@@ -240,13 +241,14 @@ splits a style classes string into sequence, same order.
 
 <#-- 
 *************
-* splitStyleNamesToSet function
+* splitStyleNamesToSet
 ************
 splits a style classes string into a Set of unique elems, no order.
                     
-   * Parameters *
+  * Parameters *
     styleString     = style string containing classes
-   * Return value *
+    
+  * Return Value *
     a java Set of style names (can be seen as sequence)
 -->
 <#function splitStyleNamesToSet styleString>
@@ -255,15 +257,16 @@ splits a style classes string into a Set of unique elems, no order.
 
 <#-- 
 *************
-* joinStyleNames function
+* joinStyleNames
 ************
 Joins style names in a nice string
 Usage example:   
     <#assign myVar = joinStyleNames("class1", "", " class3")>
        
-   * Parameters *
+  * Parameters *
     styleNames     = style names (strings), as positional params.
-   * Return value *
+    
+  * Return Value *
     a string of combined style names
 -->
 <#function joinStyleNames styleNames...>
@@ -278,15 +281,16 @@ Usage example:
 
 <#-- 
 *************
-* containsStyleName function
+* containsStyleName
 ************
 Returns true if class/style string contains given style.
 NOTE: now recognizes special syntax cato class args.
                     
-   * Parameters *
+  * Parameters *
     styleString     = style string containing classes
     className       = name of class to find
-   * Return value *
+    
+  * Return Value *
     true if class/style string contains given style, false otherwise.
 -->
 <#function containsStyleName styleString className>
@@ -296,17 +300,17 @@ NOTE: now recognizes special syntax cato class args.
 
 <#-- 
 *************
-* removeStyleNames function
+* removeStyleNames
 ************   
 Removes style classes from a style string. 
 strips lead/trailing space.
 NOTE: now recognizes special syntax cato class args.
            
-   * Parameters *
+  * Parameters *
     styleString     = style string containing classes
     namesToRemove   = array of names or space-separated string of names to remove 
                       (can be single name)
-   * Return value *
+  * Return Value *
     the style string with names removed, same order but reformatted.
 -->
 <#function removeStyleNames styleString namesToRemove>
@@ -330,11 +334,11 @@ NOTE: now recognizes special syntax cato class args.
 
 <#-- 
 *************
-* addParamsToUrl function
+* addParamsToUrl
 ************
 Adds parameters from a hash to a URL. appends delimiters as needed.
                     
-   * Parameters *
+  * Parameters *
     url             = Url
     paramMap        = Hash of keys to values to add (FIXME: java Maps from ofbiz widgets may not work)
     paramDelim      = Param delimiter (escaped, "&amp;" by default)
@@ -346,7 +350,7 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
 
 <#-- 
 *************
-* escapeUrlParamDelims function
+* escapeUrlParamDelims
 ************
 Escapes the URL's parameter delimiters if they are not already escaped.
 -->
@@ -361,14 +365,14 @@ Escapes the URL's parameter delimiters if they are not already escaped.
 
 <#-- 
 *************
-* isObjectType function
+* isObjectType
 ************
 Checks the given FTL object against a set of logical types.
 Perform special logical type checks because ?is_string and ?is_hash are insufficient for BeanModel-based
 widget context vars.
 Implemented as java transform.
 
-   * Parameters *
+  * Parameters *
     type        = [string|map|simplemap|complexmap]
                   string: Anything meant to be a string WITHOUT being a more complex type.
                   map: Simple hash, or context map that exposes methods as keys (BeanModel with underlying Map) 
@@ -384,7 +388,7 @@ Implemented as java transform.
 
 <#-- 
 *************
-* copyObject function
+* copyObject
 ************
 Performs a shallow copy of a map (TODO: lists). Usually not needed in FTL; for advanced usage.
 The resulting underlying type may differ from the original, but by default will be similar.
@@ -397,7 +401,7 @@ Implemented as java transform.
 
 <#-- 
 *************
-* toSimpleMap function
+* toSimpleMap
 ************
 Takes a bean-wrapped map and gives it a simple map adapter instead. Does not perform a copy.
 If it is not a complex map but already another type of map, returns it as-is. Other types throw errors.
@@ -410,7 +414,7 @@ Implemented as java transform.
 
 <#-- 
 *************
-* mapKeys function
+* mapKeys
 ************
 Gets the logical map keys from any object whether FTL hash (?keys) or context var (.ketSet()).
 Unlike ?keys, behaves as expected on both maps from screen context and FTL.
@@ -423,7 +427,7 @@ Implemented as java transform.
 
 <#-- 
 *************
-* concatMaps function
+* concatMaps
 ************
 Concatenates two maps similar to FTL "+" hash operator, but works with ofbiz maps as well.
 By default, result is now always a simple map, so type is more predictable, and usually this is what we want.
@@ -467,7 +471,7 @@ TODO? This is currently inefficient; but must guarantee immutability.
 
 <#-- 
 *************
-* requireScriptOfbizUrl macro
+* requireScriptOfbizUrl
 ************
 This informs the decorator that the given ofbiz URI must be made available to javascript
 code through the getOfbizUrl(url) JS function.
@@ -479,7 +483,7 @@ Ideally this shouldn't needed and getOfbizUrl should just work, but URLs are gen
 dynamic using controller request defs and can't predict URL patterns unless rewrite
 @ofbizUrl in JS.  
          
-   * Parameters *
+  * Parameters *
     url             = controller request uri
     forceInline     = if true, the include must be inlined in the markup where the macro is used
                       and should never be delegated. in most cases this should be omitted.  
@@ -538,13 +542,13 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 
 <#-- 
 *************
-* getCurrentSectionLevel function
+* getCurrentSectionLevel
 ************
 Gets current @section level. 
 
 Currently must be a function because global var is not always set and request attrib is messy. 
 
-   * Parameters *
+  * Parameters *
     useDefault      = default true; if true, if no heading defined, return default; else return void
 -->
 <#function getCurrentSectionLevel useDefault=true>
@@ -562,7 +566,7 @@ Currently must be a function because global var is not always set and request at
 
 <#-- 
 *************
-* setCurrentSectionLevel function
+* setCurrentSectionLevel
 ************
 Set current @section level manually. For advanced markup, bypassing @section.
 -->
@@ -575,13 +579,13 @@ Set current @section level manually. For advanced markup, bypassing @section.
 
 <#-- 
 *************
-* getCurrentHeadingLevel function
+* getCurrentHeadingLevel
 ************
 Gets current heading level. 
 
 Currently must be a function because global var is not always set and request attrib is messy. 
 
-   * Parameters *
+  * Parameters *
     useDefault      = default true; if true, if no heading defined, return default; else return void
 -->
 <#function getCurrentHeadingLevel useDefault=true>
@@ -599,7 +603,7 @@ Currently must be a function because global var is not always set and request at
 
 <#-- 
 *************
-* setCurrentHeadingLevel function
+* setCurrentHeadingLevel
 ************
 Set current heading level manually. For advanced markup, bypassing @section (but a parent
 @section will restore heading upon closing).
@@ -614,7 +618,7 @@ Set current heading level manually. For advanced markup, bypassing @section (but
 
 <#-- 
 *************
-* objectAsScript macro
+* objectAsScript
 ************
 Output a Freemarker variable as Javascript or JSON
 
@@ -626,7 +630,7 @@ DEV NOTE: This is complicated in Ofbiz because Maps and objects from
 
 TODO: doesn't handle dates (ambiguous?)
                     
-   * Parameters *
+  * Parameters *
     object          = the FTL or context object
     lang            = [js|json]
     wrap            = boolean, default true, if true, wrap in {}, [], "" as needed, otherwise omit
@@ -796,7 +800,7 @@ A defaultVal can be set which is the same as doing:
 
 <#-- 
 *************
-* addClassArg functions
+* addClassArg
 ************
 These functions take a template-level/logical cato macro "class" arg and add to it the given class.
 Should be called by the implementing macros only. 
@@ -858,7 +862,7 @@ a replacing string ("=").
 
 <#-- 
 *************
-* combineClassArgs functions
+* combineClassArgs
 ************
 This function logically combines two template-level cato macro "class" arguments. 
 The second almost always overrides the first, except when second is appending a class
@@ -908,7 +912,7 @@ NOTE: even if the second arg is merely "+" (which usually means "use defaults" f
 
 <#-- 
 *************
-* translateStyleStrClassesArg function
+* translateStyleStrClassesArg
 ************
 Translates a class arg from a string-only representation to a FTL value which can be passed as
 macro args processed by compileClassArg.
@@ -928,7 +932,7 @@ see compileClassArg, results of getElemSpecFromStyleStr.
 
 <#-- 
 *************
-* translateStyleStrBoolArg function
+* translateStyleStrBoolArg
 ************
 Translates a bool arg from a string-only representation to a FTL value which can be passed as
 macro args expected to be booleans.
@@ -960,7 +964,7 @@ see compileClassArg, results of getElemSpecFromStyleStr.
 Pushes a value onto a global stack variable in request scope (request attributes, or if no request, globals).
 Now implemented as java transform.
 
-   * Parameters *
+  * Parameters *
     name        = global request stack var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
     val         = value
@@ -972,13 +976,13 @@ Now implemented as java transform.
 
 <#-- 
 *************
-* readRequestStack function
+* readRequestStack
 ************
 Reads the last value added to the named global stack variable in request scope
 (request attributes, or if no request, globals), without popping.
 Now implemented as java transform.
 
-   * Parameters *
+  * Parameters *
     name        = global request stack var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
 
@@ -989,12 +993,12 @@ Now implemented as java transform.
 
 <#-- 
 *************
-* popRequestStack function
+* popRequestStack
 ************
 Pops a global stack variable in request scope (request attributes, or if no request, globals).
 Now implemented as java transform.
 
-   * Parameters *
+  * Parameters *
     name        = global request stack var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
     
@@ -1005,13 +1009,13 @@ Now implemented as java transform.
 
 <#-- 
 *************
-* setRequestVar function
+* setRequestVar
 ************
 Sets a global var in request scope (request attributes, or if no request, globals).
 Values set by this method must be read using getRequestVar.
 Now implemented as java transform.
 
-   * Parameters *
+  * Parameters *
     name        = global request var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
     val         = value
@@ -1027,14 +1031,14 @@ Now implemented as java transform.
 
 <#-- 
 *************
-* getRequestVar function
+* getRequestVar
 ************
 Gets a global var from request scope (request attributes, or if no request, globals).
 Should only be used to read values set by setRequestVar.
 Not meant to be used on regular request attributes.
 Now implemented as java transform.
 
-   * Parameters *
+  * Parameters *
     name        = global request var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
 
@@ -1045,12 +1049,12 @@ Now implemented as java transform.
 
 <#-- 
 *************
-* globalPutAll function
+* globalPutAll
 ************
 Puts all key-value pairs from given map into FTL globals.
 Now implemented as java transform.
 
-   * Parameters *
+  * Parameters *
     map         = the source map
     mode        = optional mode flags
                   "e": exclude listed keys
@@ -1066,12 +1070,12 @@ Now implemented as java transform.
 
 <#-- 
 *************
-* elemAttribStr macro
+* elemAttribStr
 ************
 Prints a string of element attributes. (HTML, FO, XML)
 TODO: implement as transform instead
 
-   * General Attributes *
+  * Parameters *
     attribs         = hash of attribute-value pairs. 
                       it currently accepts string format as a fallback/legacy support, but this is highly discouraged
                       and other args won't work with it.
@@ -1089,7 +1093,7 @@ TODO: implement as transform instead
 
 <#-- 
 *************
-* getHeadingElemSpecFromStyleStr function
+* getHeadingElemSpecFromStyleStr
 ************
 Parses a complex style string meant to describe an element notably heading 
 in the following formats to a hash of values:
@@ -1248,7 +1252,7 @@ Note that the class portions may be prefixed with "+" as well for append-not-rep
 
 <#-- 
 *************
-* getRenderContextType function
+* getRenderContextType
 ************
 Tries to figure out if this is web render, email, or other general.
 -->
@@ -1267,7 +1271,7 @@ Tries to figure out if this is web render, email, or other general.
 
 <#-- 
 *************
-* getRenderPlatformType function
+* getRenderPlatformType
 ************
 html, xml, etc.; best-effort.
 -->
@@ -1279,13 +1283,13 @@ html, xml, etc.; best-effort.
 
 <#-- 
 *************
-* getDefaultCatoLibLocation function
+* getDefaultCatoLibLocation
 ************
 supported names: "variables", "template"
 note: this is currently render context-unaware
 returns void if nothing.
 
-   * Parameters *
+  * Parameters *
     libName             = [variables|template]
     renderPlatformType  = just call getRenderPlatformType()
     renderContextType   = just call getRenderContextType()
@@ -1315,7 +1319,7 @@ returns void if nothing.
 
 <#-- 
 *************
-* getMacroLibraryLocationStaticFromResources function
+* getMacroLibraryLocationStaticFromResources
 ************
 Gets a lib location from a theme resources variable which contains an expression, which can be either a straight component:// location
 meant as "general" context and for "html" and "default" platforms, or a EL-defined map in format such as:
@@ -1341,7 +1345,7 @@ Checks the resourceNames in the given order.
 
 <#-- 
 *************
-* printVars macro
+* printVars
 ************
 Iterates over all variable attributes & functions and prints in table; useful for determining current vars in context
 NOTE: since is in utilities.ftl, keep generic and check platform.
@@ -1349,7 +1353,7 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
 Usage example:  
     <@printVars />           
                     
-   * General Attributes *
+  * Parameters *
     var           = Custom var to be printed (default:context)
     platform      = [html], default is do lookup
     maxDepth      = default 5, to prevent endless recursion

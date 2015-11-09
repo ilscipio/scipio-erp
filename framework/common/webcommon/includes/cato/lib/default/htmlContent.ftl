@@ -15,7 +15,7 @@
     Usage example:  
     <@heading>My Title</@heading>         
                                  
-   * General Attributes *
+  * Parameters *
     elemType       = [heading|h|p|span|div|raw], default heading (note: do not specify h1-h6 here - use level)
                      boolean true means use default, false same as raw (none)
     level          = specific level (1-6). If not specified, current heading level returned by
@@ -118,7 +118,7 @@ Creates a very basic wrapper for code blocks
        //Some java content
     </@code>
                     
-   * General Attributes *
+  * Parameters *
     type            = (html|java|css|javascript|log) (default:html) 
 -->
 <#macro code type="html">
@@ -150,7 +150,8 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
       </@tbody>
     </@table>
                     
-   * General Attributes *
+  * Parameters *
+    * General *
     type            = [generic|(theme-specific)], default generic
                       * STANDARD TYPES *
                       These types must always be recognized by all styles themes:
@@ -188,12 +189,12 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     cellspacing     = cellspacing, defaults specified in styles hash, set to "" to prevent setting.
     wrapIf/openOnly/closeOnly = advanced structure control, for esoteric cases
     attribs         = hash of other legacy <table attributes (mainly for those with dash in name)
+    [inlineAttribs...]    = other legacy <table attributes and values, inlined
     
-    * Responsive options *
+    * Responsive Tables *
     scrollable      = will rely on the jquery plugin datatables.js (www.datatables.net) to generate responsive table. Can be combined with fixed column type
     fixedColumnsLeft  = int value; number of columns that are fixed on the left-hand side
     fixedColumnsRight = int value;number of columns that are fixed on the right hand side
-    [inlineAttribs...]    = other legacy <table attributes and values, inlined
 -->
 <#macro table type="" class="" id="" cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false fixedColumnsLeft=0 fixedColumnsRight=0 attribs={} inlineAttribs...>
 <#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
@@ -385,11 +386,11 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
 
 <#-- 
 *************
-* Table row
+* Table Row
 ************
 Helps define table rows. takes care of alt row styles. must have a parent @table wrapper. 
                      
-   * General Attributes *
+  * Parameters *
     type            = [generic|content|meta|util], default depends on table type and styles hash; 
                           in complete absence of styles hash, default is "generic";
                           in default cato styles, default is "generic" for "generic" tables, and "content" for all other table types.
@@ -496,11 +497,11 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
 
 <#-- 
 *************
-* Table cell
+* Table Cell
 ************
 Helps define table cells.
                     
-   * General Attributes *
+  * Parameters *
     class           = css classes 
                       supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -524,7 +525,7 @@ Helps define table cells.
 
 <#-- 
 *************
-* Table row class string
+* Table Row Class Attribute String
 ************
 Helps build common data/table row class string (odd, even, etc.). Common pattern.
 In general, use @table, @tr macros instead.
@@ -532,7 +533,7 @@ In general, use @table, @tr macros instead.
     Usage example:  
     <tr<@tableRowClassStr class="myClass" alt=false/>>
                     
-   * General Attributes *
+  * Parameters *
     class           = css classes 
                       supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -552,7 +553,7 @@ In general, use @table, @tr macros instead.
 
 <#-- 
 *************
-* Pricing table
+* Pricing Table
 ************
 Since this is very foundation specific, this function may be dropped in future installations.
 
@@ -561,7 +562,7 @@ Since this is very foundation specific, this function may be dropped in future i
         <@pli>Text or <a href="">Anchor</a></@pli>
     </@pul>            
                     
-   * General Attributes *
+  * Parameters *
     title           = fieldset-title
     
 -->
@@ -594,7 +595,7 @@ Since this is very foundation specific, this function may be dropped in future i
 
 <#-- 
 *************
-* Chart Macro
+* Chart
 ************
 Foundation Pizza: http://zurb.com/playground/pizza-amore-charts-and-graphs (customization through _base.scss)
 Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
@@ -604,7 +605,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
         <@chartdata value="36" title="Peperoni"/> 
     </@chart>              
                     
-   * General Attributes *
+  * Parameters *
     type           = (pie|bar|line) (default:pie)
     library        = (foundation|chart) (default:foundation)
     title          = Data Title  (default:empty)

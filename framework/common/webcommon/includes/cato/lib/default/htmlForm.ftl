@@ -12,7 +12,7 @@
 
 <#-- 
 *************
-* Progress Script Macro
+* Progress Script
 ************
 Generates script data and markup needed to make an instance to initialize upload progress 
 javascript anim for a form, with progress bar and/or text.
@@ -22,7 +22,7 @@ for getFileUploadProgressStatus AJAX calls.
 
 TODO: document better if needed
                     
-   * General Attributes *
+  * Parameters *
     options = elem IDs and options passed to CatoUploadProgress javascript class
               in addition, supports: 
                 submitHook - one of: "formSubmit" (default), "validate" (jquery validate), "none" (caller does manually) 
@@ -80,7 +80,7 @@ TODO: document better if needed
 
 <#-- 
 *************
-* Progress Bar Macro
+* Progress Bar 
 ************
 
     Usage example:  
@@ -93,7 +93,7 @@ TODO: document better if needed
    Can also be animated automatically using progressOptions which activates use of CatoUploadProgress
    script for this progress bar by linking it to a form submit.
                     
-   * General Attributes *
+  * Parameters *
     value          = Percentage done
     id             = custom id; can also be specified as progressOptions.progBarId instead
                      if omitted will not make a progress bar, but script still generated for progressOptions.progTextBoxId
@@ -152,9 +152,9 @@ TODO: document better if needed
 
 <#-- 
 *************
-* Form Macro
+* Form
 ************
-HTML form.
+An HTML form element.
 
     Usage example:  
     <@form name="myform">
@@ -165,7 +165,7 @@ HTML form.
       </@fields>
     </@form>            
                     
-   * General Attributes *
+  * Parameters *
     type                = [input|display], default input
                           DEV NOTE: "display" is special for time being, probably rare or unused;
                                     maybe it should cause to omit <form> element
@@ -190,7 +190,7 @@ HTML form.
 
 <#-- 
 *************
-* Fieldset Macro
+* Fieldset
 ************
 A visible fieldset, including the HTML element.
 
@@ -199,7 +199,7 @@ A visible fieldset, including the HTML element.
         Inner Content
     </@fieldset>            
                     
-   * General Attributes *
+  * Parameters *
     class           = css classes 
                       supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -259,7 +259,7 @@ A visible fieldset, including the HTML element.
 
 <#-- 
 *************
-* Fields Macro
+* Fields
 ************ 
 Fields helper that helps modify a set of @field definitions, or group of fields.
 Not associated with a visible element, as is @fieldset.
@@ -283,7 +283,7 @@ or even multiple per fieldset.
       <@field attr="" />
     </@field>
     
-    * General Attributes *
+  * Parameters *
     type            = [default|default-nolabels|generic], default default. the type of fields arrangement.
                       default: default cato field arrangement. this is the type assumed when no @fields element is present.
                           currently, it mostly influences the label area (present for all @field types except submit).
@@ -353,7 +353,7 @@ or even multiple per fieldset.
 
 <#-- 
 *************
-* mapCatoFieldTypeToStyleName function
+* mapCatoFieldTypeToStyleName
 ************ 
 Maps a cato field type to a style name representing the type.
 
@@ -369,7 +369,7 @@ Should be coordinated with mapWidgetFieldTypeToStyleName to produce common field
 
 <#-- 
 *************
-* mapWidgetFieldTypeToStyleName function
+* mapWidgetFieldTypeToStyleName
 ************ 
 Maps an Ofbiz field type to a style name representing the type.
 
@@ -385,12 +385,13 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 
 <#-- 
 *************
-* Field Macro
+* Field
 ************ 
     Usage example:  
     <@field attr="" />
     
-    * General Attributes *
+  * Parameters *
+    * General *
     type            = [input|textarea|datetime|select|checkbox|radio|display|password|generic], form element type
                       default generic meaning input defined manually with #nested
                       (discouraged; prefer specific; but sometimes required and useful

@@ -10,13 +10,14 @@
 
 <#-- 
 *************
-* Modal Macro
+* Modal
 ************
     Usage example:  
     <@modal id="dsadsa" attr="" >
     modal Content 
-    </@modal>                
-   * General Attributes *
+    </@modal>        
+            
+  * Parameters *
     id              = set id (required)
     label           = set anchor text (required)
     icon            = generates icon inside the link (Note: has to be the full set of classes, e.g. "fa fa-fw fa-info")
@@ -42,7 +43,7 @@ it's an unexpected result, error or one that requires user action. See other mac
         <#nested>
     </@alert>            
                     
-   * General Attributes *
+  * Parameters *
     type           = (info|success|warning|secondary|alert|error), default info
     class          = classes or additional classes for nested container
                      supports prefixes:
@@ -77,7 +78,7 @@ it's an unexpected result, error or one that requires user action. See other mac
         <#nested>
     </@panel>            
                     
-   * General Attributes *
+  * Parameters *
     type           = (callout|) default:empty
     title          = Title
 -->
@@ -90,7 +91,7 @@ it's an unexpected result, error or one that requires user action. See other mac
 
 <#-- 
 *************
-* Query result message
+* Query Result Message
 ************
 Common query result message wrapper.
 Note: this is ONLY for expected, non-error messages, such as no records found in a query.
@@ -99,7 +100,7 @@ Other messages such as for missing params/record IDs are usually errors.
     Usage example:  
     <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>            
                     
-   * General Attributes *
+  * Parameters *
     class       = classes or additional classes for nested container
                   (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
@@ -109,7 +110,7 @@ Other messages such as for missing params/record IDs are usually errors.
 
 <#-- 
 *************
-* Error result message
+* Error Result Message
 ************
 Common error result message wrapper.
 Abstracts/centralizes method used to display error, since of no consequence to most
@@ -118,7 +119,7 @@ templates: currently @alert.
     Usage example:  
     <@errorMsg type="permission">${uiLabelMap.CommonNoPermission}.</@errorMsg>            
                     
-   * General Attributes *
+  * Parameters *
     type           = [permission|security|error], default error
     class          = classes or additional classes for nested container
                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)

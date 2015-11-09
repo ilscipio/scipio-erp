@@ -10,7 +10,7 @@
 
 <#-- 
 *************
-* Nav list
+* Nav List
 ************
 Since this is very foundation specific, this function may be dropped in future installations
 
@@ -26,7 +26,7 @@ Since this is very foundation specific, this function may be dropped in future i
     
     <h3 ${mtarget("id")}>Jump Destination</h3>           
                     
-   * General Attributes *
+  * Parameters *
     type            = (inline|magellan|breadcrumbs) (default:inline)
     class           = Adds classes - please use "(small|medium|large)-block-grid-#"    
 -->
@@ -91,7 +91,7 @@ can be delegated in infinite ways (even to data prep). The inline args have prio
                   
 FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't need to.                  
                     
-   * General Attributes *
+  * Parameters *
     type            = menu type: [generic|section|section-inline|main|tab|subtab|button|...], default generic (but discouraged; prefer specific)
     inlineItems     = boolean, if true, generate only items, not menu container
     class           = menu class style, default based on menu type. 
@@ -223,7 +223,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
 ************
 Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if need to generate items only).
              
-   * General Attributes *
+  * Parameters *
     type            = menu item (content) type: [generic|link|text|submit], default generic (but discouraged; prefer specific)
     class           = menu item class (for <li> element)
                       NOTE: for this macro, the inline "class" args is now logically combined with the "class"
@@ -374,7 +374,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
 
 <#-- 
 *************
-* Pagination Macro
+* Pagination
 ************
     Usage example:  
     <@paginate mode="single" ... />
@@ -384,7 +384,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
       </@table>
     </@paginate>            
                     
-   * General Attributes *
+  * Parameters *
    mode            = [single|content], default single
                      single: produces a single pagination menu
                      content: decorates the nested content with one or more pagination menus

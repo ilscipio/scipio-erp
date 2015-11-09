@@ -10,14 +10,14 @@
 
 <#--
 *************
-* Row Macro
+* Row
 ************
     Usage example:  
     <@row attr="" >
         <@cell attr=""/>
     </@row>              
                     
-   * General Attributes *
+  * Parameters *
     class           = css classes 
                       supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -61,7 +61,7 @@
 
 <#-- 
 *************
-* Cell Macro
+* Cell
 ************
     Usage examples:  
     <@row attr="" >
@@ -88,7 +88,7 @@
         </@cell>
     </@row>            
                     
-   * General Attributes *
+  * Parameters *
     class           = css classes (if column sizes specified, adds classes; if no column sizes specified, expected to contain manual column sizes and overrides columns size default)
                       supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -146,7 +146,7 @@
 
 <#-- 
 *************
-* Grid list
+* Grid List
 ************
 Since this is very foundation specific, this function may be dropped in future installations
 
@@ -155,7 +155,7 @@ Since this is very foundation specific, this function may be dropped in future i
         <li>Text or <a href="">Anchor</a></li>
     </@grid>            
                     
-   * General Attributes *
+  * Parameters *
     class           = Adds classes - please use "${styles.grid_block_prefix!}(small|medium|large)${styles.grid_block_postfix!}#"
                       supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -219,7 +219,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
        // content
     </@tile>
                     
-   * General Attributes *
+  * Parameters *
     type            = (small|normal|wide|large|big|super) (default:normal)
     title           = Title
     class           = css classes 
@@ -261,7 +261,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
 
 <#-- 
 *************
-* Section Macro
+* Section
 ************
 Creates a logical section with optional title and menu. Automatically handles heading sizes
 and keeps track of section nesting for whole request, even across screens.render calls.
@@ -276,7 +276,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
         Inner Content
     </@section>            
                     
-   * General Attributes *
+  * Parameters *
     type                = [generic], default generic
     class               = css classes, on outer columns element (affects title)
                           supports prefixes:
@@ -351,7 +351,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     
     TODO: refinement, clean up macro arguments and dissect further
 
-   * General Attributes *     
+  * Parameters *     
     fromWidgets     = hint of whether called by renderer or ftl macros
     hasContent      = hint to say there will be content, workaround for styling -->
 <#macro section_core id="" title="" class="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuContent="" showMore=true collapsed=false 

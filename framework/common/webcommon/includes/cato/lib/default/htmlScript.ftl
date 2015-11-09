@@ -10,14 +10,14 @@
 
 <#--
 *************
-* HTML Head open
+* HTML Head Open
 ************
 Opens an HTML document and header section.
 
     Usage example:  
     <@htmlHeadOpen />            
                     
-   * General Attributes *
+  * Parameters *
     includeDocType      = boolean, default false (included by screen renderer, @renderScreenBegin)
 -->
 <#macro htmlHeadOpen includeDocType=false>
@@ -47,7 +47,7 @@ Inline script wrapper.
         });
     </@script>         
                     
-   * General Attributes *
+  * Parameters *
     type            = script type identifier
     language        = language identifier
     src             = source

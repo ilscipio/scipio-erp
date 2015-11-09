@@ -32,7 +32,7 @@ under the License.
                         <section>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="EntitySyncStatus" style="smallSubmit" text="${uiLabelMap.CommonRefresh}"/>
+                                    <link target="EntitySyncStatus" style="${styles.link_action}" text="${uiLabelMap.CommonRefresh}"/>
                                 </container>
 
                                 <!-- Now call the SimpleScreen form -->

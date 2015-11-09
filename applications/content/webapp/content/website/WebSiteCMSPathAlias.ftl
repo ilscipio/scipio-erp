@@ -82,6 +82,6 @@
                 <input type="text" name="mapKey" value="" />
             </@field>
             <@field type="submitarea">
-                <input id="submit" type="button" onclick="javascript:pathSave('${contentId}');" class="smallSubmit ${styles.button_default!}" value="Create"/>
+                <input id="submit" type="button" onclick="javascript:pathSave('${contentId}');" class="${styles.link_action!}" value="Create"/>
             </@field>
     </form>

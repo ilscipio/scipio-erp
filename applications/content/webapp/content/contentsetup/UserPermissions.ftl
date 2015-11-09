@@ -107,7 +107,7 @@ function call_fieldlookup3(view_name) {
         <@tfoot>
           <@tr>
             <@td>
-              <a href="javascript:submitRows('${rowCount!}')" class="smallSubmit ${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
+              <a href="javascript:submitRows('${rowCount!}')" class="${styles.link_action!}">${uiLabelMap.CommonUpdate}</a>
             </@td>
           </@tr>
         </@tfoot>

@@ -171,7 +171,7 @@ under the License.
           <option value="2" <#if (orderHeader.priority)! == "2">selected="selected" <#elseif !(orderHeader.priority)?has_content>selected="selected"</#if>>${uiLabelMap.CommonNormal}</option>
           <option value="3" <#if (orderHeader.priority)! == "3">selected="selected" </#if>>${uiLabelMap.CommonLow}</option>
         </select>
-        <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.FormFieldTitle_reserveInventory}"/>
+        <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.FormFieldTitle_reserveInventory}"/>
         </form>
       </@td>
     </@tr>
@@ -185,7 +185,7 @@ under the License.
           <option value="Y" <#if (orderHeader.invoicePerShipment)! == "Y">selected="selected" </#if>>${uiLabelMap.CommonYes}</option>
           <option value="N" <#if (orderHeader.invoicePerShipment)! == "N">selected="selected" </#if>>${uiLabelMap.CommonNo}</option>
         </select>
-        <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonUpdate}"/>
+        <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonUpdate}"/>
         </form>
       </@td>
     </@tr>

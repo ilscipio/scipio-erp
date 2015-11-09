@@ -112,7 +112,7 @@ function insertImageName(size,nameValue) {
             <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductConfigItemImage?configItemId=${configItemId}&amp;upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
                 <@field type="file" size="50" name="fname" />
                 <@field type="submitarea">
-                    <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.ProductUploadImage}" />
+                    <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.ProductUploadImage}" />
                 </@field>
             </form>
     </@section>

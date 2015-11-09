@@ -279,7 +279,7 @@ under the License.
                 </@cell>
                 <@cell columns=3>                 
                     <@field type="submitarea">
-                        <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonContinue}" />
+                        <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonContinue}" />
                     </@field>
                 </@cell>
               </@row>

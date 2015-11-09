@@ -136,7 +136,7 @@ under the License.
                   </#if>
             </@field>
             <@field type="submitarea">
-                <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="smallSubmit ${styles.button_default!}"/>
+                <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action!}"/>
             </@field>
         </form>
         <script language="JavaScript" type="text/javascript">
@@ -159,7 +159,7 @@ under the License.
                 <input type="radio" name="upload_file_type_bogus" value="original" checked="checked" onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>");'/>${uiLabelMap.ProductOriginal}
             </@field>
             <@field type="submitarea">
-                <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.ProductUploadImage}"/>
+                <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.ProductUploadImage}"/>
             </@field>
             <#-- FIXME -->
             <span class="tooltip">${uiLabelMap.ProductOriginalImageMessage} : {ofbiz.home}/applications/product/config/ImageProperties.xml&quot;</span>

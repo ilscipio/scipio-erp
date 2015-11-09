@@ -67,7 +67,7 @@ under the License.
             "submitHook" : "validate"
         }>
         <@field type="submitarea" progressOptions=progressOptions>
-          <input type="submit" value="${uiLabelMap.CommonUpload}" class="smallSubmit ${styles.button_default!}" />
+          <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_action!}" />
         </@field>
       </form>
     </@section>

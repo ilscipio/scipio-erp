@@ -20,7 +20,7 @@ under the License.
             <input type="hidden" name="oldWorkEffortId" value="${workEffortId!}"/>
             <div>
                 <span>${uiLabelMap.ProductDuplicateRemoveSelectedWithNewId}</span>
-                <input type="text" size="20" maxlength="20" name="workEffortId"/>&nbsp;<input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonDuplicate}!"/>
+                <input type="text" size="20" maxlength="20" name="workEffortId"/>&nbsp;<input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonDuplicate}!"/>
             </div>
             <div>
                 <span>${uiLabelMap.CommonDuplicate}</span>

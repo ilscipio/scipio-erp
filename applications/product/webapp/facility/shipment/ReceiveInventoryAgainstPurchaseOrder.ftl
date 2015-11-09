@@ -75,7 +75,7 @@ under the License.
             <@htmlTemplate.lookupField value="${orderId!}" formName="ReceiveInventoryAgainstPurchaseOrder" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>
         </span>
         <span>${uiLabelMap.ProductOrderShipGroupId}</span>&nbsp;<input type="text" size="20" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
-        <input type="submit" value="${uiLabelMap.CommonSelect}" class="smallSubmit ${styles.button_default!}"/>
+        <input type="submit" value="${uiLabelMap.CommonSelect}" class="${styles.link_action!}"/>
     </div>
 </form>
 
@@ -196,12 +196,12 @@ under the License.
                                 <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;clearAll=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClearAll}</a>
                             </@td>
                             <@td align="right">
-                                <a class="smallSubmit ${styles.button_default!}" href="javascript:populateQuantities(${rowCount - 1});document.selectAllForm.submit();">${uiLabelMap.ProductReceiveItem}</a>
+                                <a class="${styles.link_action!}" href="javascript:populateQuantities(${rowCount - 1});document.selectAllForm.submit();">${uiLabelMap.ProductReceiveItem}</a>
                             </@td>
                         </@tr>
                         <@tr>
                             <@td colspan="12" align="right">
-                                <a class="smallSubmit ${styles.button_default!}" href="<@ofbizUrl>completePurchaseOrder?orderId=${orderId}&amp;facilityId=${facilityId}&amp;shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.OrderForceCompletePurchaseOrder}</a>
+                                <a class="${styles.link_action!}" href="<@ofbizUrl>completePurchaseOrder?orderId=${orderId}&amp;facilityId=${facilityId}&amp;shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.OrderForceCompletePurchaseOrder}</a>
                             </@td>
                         </@tr>
                       </@tfoot>
@@ -221,7 +221,7 @@ under the License.
                     <input type="text" size="20" id="productId" name="productId" value=""/>
                         @
                     <input type="text"  name="quantity" size="6" maxlength="6" value="1" tabindex="0"/>
-                    <input type="submit" value="${uiLabelMap.CommonAdd}" class="smallSubmit ${styles.button_default!}"/>
+                    <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_action!}"/>
                 </div>
             </form>
             <script language="javascript" type="text/javascript">

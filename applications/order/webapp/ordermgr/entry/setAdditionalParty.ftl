@@ -117,7 +117,7 @@ under the License.
           <@td>&nbsp;</@td>
           <@td>
             <input type="hidden" name="additionalPartyId" value="${additionalPartyId}" />
-            <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonAdd} "/>
+            <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonAdd} "/>
           </@td>
         </@tr>
         </form>

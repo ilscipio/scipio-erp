@@ -95,7 +95,7 @@ under the License.
                   <input type="text" size="5" name="sequenceNum" />
               </@field>
               <@field type="submitarea">
-                  <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonAdd}" />
+                  <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonAdd}" />
               </@field>
         </form>
 </@section>

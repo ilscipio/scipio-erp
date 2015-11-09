@@ -121,7 +121,7 @@ under the License.
                         <option value="${type.custRequestTypeId}">${type.get("description", locale)}</option>
                       </#list>
                     </select>
-                    <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.PartyCreateNewCustRequest}"/>
+                    <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.PartyCreateNewCustRequest}"/>
                   </form>
                 </#if>
               </@td>
@@ -134,7 +134,7 @@ under the License.
                   <form name="partyDeleteContact" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>" onsubmit="javascript:submitFormDisableSubmits(this)">
                     <input name="partyId" value="${partyId}" type="hidden"/>
                     <input name="contactMechId" value="${contactMech.contactMechId}" type="hidden"/>
-                    <input type="submit" class="smallSubmit ${styles.button_default!}" value="${uiLabelMap.CommonExpire}"/>
+                    <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonExpire}"/>
                   </form>
                 </#if>
               </@td>

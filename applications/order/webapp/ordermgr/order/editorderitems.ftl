@@ -419,7 +419,7 @@ under the License.
                             <@td><input type="text" name="amount" size="6" value="<@ofbizAmount amount=adjustmentAmount/>" class="text-right"/></@td>
                             <@td nowrap="nowrap">
                                 <#if (allowPriceChange)>
-                                    <input class="smallSubmit ${styles.button_default!}" type="submit" value="${uiLabelMap.CommonUpdate}"/>
+                                    <input class="${styles.link_action!}" type="submit" value="${uiLabelMap.CommonUpdate}"/>
                                     <a href="javascript:document.deleteOrderAdjustment${orderAdjustmentId}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
                                 <#else>
                                     <@ofbizAmount amount=adjustmentAmount/>
@@ -463,7 +463,7 @@ under the License.
                         <@td><input type="text" name="amount" size="6" value="<@ofbizAmount amount=0.00/>" class="text-right"/></@td>
                         <@td>
                             
-                            <input class="smallSubmit ${styles.button_default!}" type="submit" value="${uiLabelMap.CommonAdd}"/>
+                            <input class="${styles.link_action!}" type="submit" value="${uiLabelMap.CommonAdd}"/>
                         </@td>
                     </@tr>
             </form>

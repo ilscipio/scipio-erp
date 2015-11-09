@@ -576,7 +576,7 @@ under the License.
    <@tr>
       <@td>&nbsp;</@td>
       <@td colspan="3">
-        <input type="submit" value="${uiLabelMap.CommonAdd}" class="smallSubmit ${styles.button_default!}"/>
+        <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_action!}"/>
       </@td>
    </@tr>
    </form>

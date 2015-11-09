@@ -764,7 +764,8 @@ A defaultVal can be set which is the same as doing:
   </#if>
 </#function>
 
-<#-- produces a class string attribute at same time as compiling class arg, with optional default
+<#-- produces a class string attribute at same time as compiling class arg, with optional default,
+     with leading space
     NOTE: default may also be set prior using addClassArgDefault -->
 <#macro compiledClassAttribStr class defaultVal="">
   <#local classes = compileClassArg(class, defaultVal)>

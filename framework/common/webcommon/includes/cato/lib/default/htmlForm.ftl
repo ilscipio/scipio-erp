@@ -102,6 +102,7 @@ TODO: document better if needed
                      supports prefixes:
                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
+    containerClass = classes added only on container
     showValue      = Display value inside bar
     wrapClass      = classes on outer wrapper only
     progressOptions = if present, attaches progress bar to an upload form with javascript-based progress and 
@@ -128,9 +129,7 @@ TODO: document better if needed
         <#local color=styles.color_success!/>
     </#switch>
 
-    <#local classes = compileClassArg(class)>
-    <#local containerClasses = compileClassArg(containerClass)>
-    <@progress_markup value=value id=id classes=classes showValue=showValue containerClasses=containerClasses color=color />
+    <@progress_markup value=value id=id class=class showValue=showValue containerClass=containerClass color=color />
     
   <#if progressOptions?has_content>
     <#local opts = progressOptions>
@@ -141,7 +140,9 @@ TODO: document better if needed
   </#if>
 </#macro>
 
-<#macro progress_markup value=0 id="" classes="" showValue=false containerClasses="" color="" extraArgs...>
+<#macro progress_markup value=0 id="" class="" showValue=false containerClass="" color="" extraArgs...>
+    <#local classes = compileClassArg(class)>
+    <#local containerClasses = compileClassArg(containerClass)>
     <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if color?has_content> ${color!}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
       <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
         <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
@@ -210,27 +211,26 @@ A visible fieldset, including the HTML element.
     collapsed       = show/hide the fieldset
 -->
 <#macro fieldset id="" title="" class="" containerClass="" collapsed=false openOnly=false closeOnly=false wrapIf=true>
-    <#local classes = compileClassArg(class)>
-    <#-- FIXME?: We have a problem now... it's the _markup that should decide the default grid values... -->
-    <#local containerClasses = compileClassArg(containerClass, "${styles.grid_large!}12")>
-    <@fieldset_core classes=classes containerClasses=containerClasses id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="" openOnly=openOnly closeOnly=closeOnly wrapIf=wrapIf>
+    <@fieldset_core class=class containerClass=containerClass id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="" openOnly=openOnly closeOnly=closeOnly wrapIf=wrapIf>
         <#nested />
     </@fieldset_core>
 </#macro>
 
 <#-- DEV NOTE: see @section_core for details on pattern 
      migrated from @renderFieldGroupOpen/Close form widget macro -->
-<#macro fieldset_core classes="" containerClasses="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false openOnly=false closeOnly=false wrapIf=true>
+<#macro fieldset_core class="" containerClass="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false openOnly=false closeOnly=false wrapIf=true>
   <#local open = wrapIf && !closeOnly>
   <#local close = wrapIf && !openOnly>
-  <@fieldset_markup open=open close=close classes=classes containerClasses=containerClasses id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible><#nested></@fieldset_markup>
+  <@fieldset_markup open=open close=close class=class containerClass=containerClass id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible><#nested></@fieldset_markup>
 </#macro>
 
-<#macro fieldset_markup open=true close=true classes="" containerClasses="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false extraArgs...>
-<#if open>
-<div class="${styles.grid_row!}">
-  <div class="fieldgroup ${styles.grid_cell!}<#if containerClasses?has_content> ${containerClasses}</#if><#if collapsible || collapsed> toggleField<#if collapsed> ${styles.collapsed!}</#if></#if>"<#if id?has_content> id="${id}_wrapper"</#if>>
-    <fieldset<#if classes?has_content> class="${classes!}"</#if><#if id?has_content> id="${id}"</#if>>
+<#macro fieldset_markup open=true close=true class="" containerClass="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false extraArgs...>
+  <#if open>
+    <#local classes = compileClassArg(class)>
+    <#local containerClasses = compileClassArg(containerClass, "${styles.grid_large!}12")>
+    <div class="${styles.grid_row!}">
+      <div class="fieldgroup ${styles.grid_cell!}<#if containerClasses?has_content> ${containerClasses}</#if><#if collapsible || collapsed> toggleField<#if collapsed> ${styles.collapsed!}</#if></#if>"<#if id?has_content> id="${id}_wrapper"</#if>>
+        <fieldset<#if classes?has_content> class="${classes!}"</#if><#if id?has_content> id="${id}"</#if>>
       <#--<#if collapsible>
         <ul>
           <li class="<#if collapsed>${styles.collapsed!}">
@@ -247,14 +247,14 @@ A visible fieldset, including the HTML element.
     </div>
     <div id="${collapsibleAreaId}" class="fieldgroup-body" <#if collapsed && collapsible> style="display: none;"</#if>>
     -->
-    <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] </#if>${title}</legend></#if>
-</#if>
-    <#nested>
-<#if close>
-    </fieldset>
-  </div>
-</div>
-</#if>
+          <#if title?has_content><legend><#if collapsible || collapsed>[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] </#if>${title}</legend></#if>
+  </#if>
+          <#nested>
+  <#if close>
+        </fieldset>
+      </div>
+    </div>
+  </#if>
 </#macro>
 
 <#-- 

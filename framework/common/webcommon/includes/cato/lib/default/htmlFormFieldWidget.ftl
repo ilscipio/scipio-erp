@@ -607,13 +607,6 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- field markup - may be overridden -->
 <#macro field_submit_markup_widget buttonType="" class="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
     containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions={} extraArgs...>
-  <#-- Cato: FIXME?: factor out default submit class somewhere so configurable -->
-  <#if buttonType!="image">
-    <#if !class?has_content || class=="smallSubmit">
-      <#local class = "${styles.button_default!}">
-    </#if>
-  </#if>
-
   <#-- Cato: to omit button (show progress only), we use empty title hack " " similar to what ofbiz does with hyperlinks with no label -->
   <#if (buttonType=="text-link" || buttonType!="image") && !(title?trim?has_content)>
     <#local buttonMarkup = "">

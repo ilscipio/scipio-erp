@@ -291,7 +291,7 @@
     </form>
     
     <form name="EditCustomer" extends="EditPerson" extends-resource="component://party/widget/partymgr/PartyForms.xml">
-        <field name="cancelAction" title=" " widget-style="${styles.link_action} ${styles.button_default}">
+        <field name="cancelAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="partyId" from-field="parameters.partyId"/>
             </hyperlink>

@@ -654,7 +654,7 @@ under the License.
         <field name="communicationEventPrpTypId">
             <display-entity description="${description}" entity-name="CommunicationEventPrpTyp"/>
         </field>
-        <field name="removeAction" title=" " widget-style="${styles.link_action} ${styles.button_default}">
+        <field name="removeAction" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeCommunicationEventPurpose">
                 <parameter param-name="communicationEventPrpTypId"/>
                 <parameter param-name="communicationEventId"/>
@@ -845,7 +845,7 @@ under the License.
                 </sub-hyperlink>
             </lookup>
         </field>
-        <field name="surveyResponseAction" map-name="dummy" widget-style="${styles.link_action} ${styles.button_default}"
+        <field name="surveyResponseAction" map-name="dummy" widget-style="${styles.link_action}"
             use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)==null &amp;&amp; templateDataResource!=null &amp;&amp; templateDataResource.get(&quot;relatedDetailId&quot;)!=null">
             <hyperlink description="Create Response (for Survey ${templateDataResource.relatedDetailId})" target="EditSurveyResponse" also-hidden="false" target-window="_blank">
                 <parameter param-name="surveyId" from-field="templateDataResource.relatedDetailId"/>

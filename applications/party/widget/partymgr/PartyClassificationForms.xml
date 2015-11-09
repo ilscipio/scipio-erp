@@ -35,7 +35,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action} ${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="deletePartyClassification" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="partyClassificationGroupId"/>
                 <parameter param-name="partyId"/>
@@ -97,7 +97,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
-        <!-- <field name="cancelAction" title=" " widget-style="${styles.link_action} ${styles.button_default}">
+        <!-- <field name="cancelAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="segmentGroupId"/>
             </hyperlink>
@@ -113,7 +113,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
-        <!-- <field name="cancelAction" title=" " widget-style="${styles.link_action} ${styles.button_default}">
+        <!-- <field name="cancelAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="segmentGroupId"/>
             </hyperlink>

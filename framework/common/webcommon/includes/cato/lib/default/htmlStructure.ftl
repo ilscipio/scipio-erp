@@ -311,22 +311,21 @@ IMPL NOTE: This has dependencies on some non-structural macros.
                             WARN: if using @menu to pre-generate the menu as string/html, the menu arguments such as "type" are lost and 
                             assumed to be "section" or "section-inline".
     optional menu data or markup, li elements only (ul auto added)
-    menuClass           = menu class, default is section menu (FIXME: doesn't really mean anything at the moment). "none" prevents class. this is a low-level control; avoid if possible (FIXME: currently impossible to avoid).
-    menuLayout          = [post-title|pre-title|inline-title], default post-title. this is a low-level control; avoid if possible (FIXME: currently impossible to avoid).
+    menuLayout          = [post-title|pre-title|inline-title], default post-title. this is a low-level control; avoid where possible.
     menuRole            = "nav-menu" (default), "paginate-menu"
+    menuClass           = optional extra menu classes. this is a low-level control; avoid where possible.
     requireMenu         = if true, add menu elem even if empty
     forceEmptyMenu      = if true, always add menu and must be empty
     hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
 -->
 <#macro section type="" id="" title="" class="" padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" 
-    menuContent="" menuClass="" menuLayout="" menuRole="nav-menu" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="" openOnly=false closeOnly=false wrapIf=true>
+    menuContent="" menuClass="" menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="" openOnly=false closeOnly=false wrapIf=true>
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
 <#if open>
     <#if !type?has_content>
         <#local type = "generic">
     </#if>
-    <#local classes = compileClassArg(class)>
     <#if id?has_content>
         <#local contentId = id + "_content">
         <#local menuId = id + "_menu">
@@ -335,12 +334,12 @@ IMPL NOTE: This has dependencies on some non-structural macros.
         <#local menuId = "">
     </#if>
 <#else>
-    <#-- section_core has its own stack, don't need to preserve these for now-->
+    <#-- section_core has its own stack; don't need to preserve these -->
     <#local class = "">
     <#local contentId = "">
     <#local menuId = "">    
 </#if>
-    <@section_core id=id collapsibleAreaId=contentId title=title classes=classes padded=padded menuContent=menuContent fromWidgets=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
+    <@section_core id=id collapsibleAreaId=contentId title=title class=class padded=padded menuContent=menuContent fromWidgets=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
         forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass 
         openOnly=openOnly closeOnly=closeOnly wrapIf=wrapIf><#nested /></@section_core>
 </#macro>
@@ -350,22 +349,17 @@ IMPL NOTE: This has dependencies on some non-structural macros.
      
     migrated from @renderScreenletBegin/End screen widget macro
     
-    DEV NOTE: section_core and similar macros ARE NOT a final implementation pattern. 
-        it was created initially strictly to remove dependency of cato libs on ofbiz macro library,
-        and to head toward separating macro logic and markup.
     TODO: refinement, clean up macro arguments and dissect further
-    FIXME?: menuClass does not obey class arg rules, not sure if should here      
-          
-    fromWidgets: hint of whether called by renderer or ftl macros
-    hasContent: hint to say there will be content, workaround for styling -->
-<#macro section_core id="" title="" classes="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuContent="" showMore=true collapsed=false 
+
+   * General Attributes *     
+    fromWidgets     = hint of whether called by renderer or ftl macros
+    hasContent      = hint to say there will be content, workaround for styling -->
+<#macro section_core id="" title="" class="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuContent="" showMore=true collapsed=false 
     javaScriptEnabled=true fromWidgets=true menuClass="" menuId="" menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="" titleContainerStyle="" titleConsumeLevel=true 
     autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" openOnly=false closeOnly=false wrapIf=true>
-
 <#local open = wrapIf && !closeOnly>
 <#local close = wrapIf && !openOnly>
 <#if open>
-
 <#-- level logic begin -->
     <#-- note: request obj only available because of macro renderer initial context mod -->
     <#local sLevel = getCurrentSectionLevel()>
@@ -450,6 +444,9 @@ IMPL NOTE: This has dependencies on some non-structural macros.
         note: with recent patch, menuContent passed by renderer is rendered by macro renderer (was not the case before - used old html renderer). -->
     <#if isObjectType("string", menuContent)> <#-- dev note warn: ?is_string would not always work here -->
       <#local menuContent = menuContent?trim>
+    </#if>
+    <#if !menuRole?has_content>
+        <#local menuRole = "nav-menu">
     </#if>
     <#local hasMenu = (menuContent?is_directive || menuContent?has_content || requireMenu || forceEmptyMenu)>
     <#local hasTitle = title?has_content>
@@ -586,13 +583,13 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#if open && !close>
         <#-- save stack of all the args passed to markup macros that have open/close 
             so they don't have to remember a stack themselves -->
-        <#local dummy = pushRequestStack("renderScreenletMarkupStack", {"classes":classes, "contentFlagClasses":contentFlagClasses, 
+        <#local dummy = pushRequestStack("renderScreenletMarkupStack", {"class":class, "contentFlagClasses":contentFlagClasses, 
             "id":id, "title":title, "collapsed":collapsed, "collapsibleAreaId":collapsibleAreaId,
             "sLevel":sLevel, "hLevel":hLevel})>
     <#elseif close && !open>
         <#-- these _must_ override anything passed to this macro call (shouldn't be any) -->
         <#local stackValues = popRequestStack("renderScreenletMarkupStack")!{}>
-        <#local classes = stackValues.classes>
+        <#local class = stackValues.class>
         <#local contentFlagClasses = stackValues.contentFlagClasses>
         <#local id = stackValues.id>
         <#local title = stackValues.title>
@@ -609,7 +606,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
       </#if>
     </#if> 
 
-    <@section_markup_container open=open close=close sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup classes=classes innerClasses="" contentFlagClasses=contentFlagClasses id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId>
+    <@section_markup_container open=open close=close sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup class=class innerClass="" contentFlagClasses=contentFlagClasses id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId>
         <#nested>
     </@section_markup_container>
 
@@ -635,15 +632,25 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 </#macro>
 
 <#-- @section container markup - may be overridden -->
-<#macro section_markup_container open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" classes="" innerClasses="" contentFlagClasses="" id="" title="" collapsed=false collapsibleAreaId="" extraArgs...>
+<#macro section_markup_container open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" class="" outerClass="" innerClass="" contentFlagClasses="" id="" title="" collapsed=false collapsibleAreaId="" extraArgs...>
   <#if open>
-    <div class="section-screenlet<#if contentFlagClasses?has_content> ${contentFlagClasses}</#if><#if collapsed> toggleField</#if>">
+    <#local outerClass = "">
+    <#local outerClass = addClassArgRequired(outerClass, "section-screenlet")>
+    <#local outerClass = addClassArgRequired(outerClass, contentFlagClasses)>
+    <#if collapsed>
+      <#local outerClass = addClassArgRequired(outerClass, "toggleField")>
+    </#if>
+    <div<@compiledClassAttribStr class=outerClass />>
         <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
         <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
-            <div class="section-screenlet-container<#if classes?has_content> ${classes}<#else> ${styles.grid_large!}12</#if> ${styles.grid_cell!}<#if contentFlagClasses?has_content> ${contentFlagClasses}</#if>">
+            <#local class = addClassArgRequired(class, "section-screenlet-container ${styles.grid_cell!}")>
+            <#local class = addClassArgRequired(class, contentFlagClasses)>
+            <div<@compiledClassAttribStr class=class defaultVal="${styles.grid_large!}12" />>
                 ${menuTitleContent}
                 <#-- note: may need to keep this div free of foundation grid classes (for margins collapse?) -->
-                <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if> class="section-screenlet-content<#if innerClasses?has_content> ${innerClasses}</#if><#if contentFlagClasses?has_content> ${contentFlagClasses}</#if>">
+                <#local innerClass = addClassArgRequired(innerClass, "section-screenlet-content")>
+                <#local innerClass = addClassArgRequired(innerClass, contentFlagClasses)>
+                <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if><@compiledClassAttribStr class=innerClass />>
   </#if>
     <#nested>
   <#if close>

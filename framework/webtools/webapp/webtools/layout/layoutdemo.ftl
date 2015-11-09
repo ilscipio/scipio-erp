@@ -90,7 +90,7 @@
   <@section closeOnly=true />
 <@section closeOnly=true />
 
-<@section>
+<@section class="+my-section-headings">
 <@heading attribs=makeMagTargetAttribMap("buttons") id="buttons">Buttons</@heading>
 <@heading relLevel=+1>Heading</@heading>
 <@heading level=1>h1.</@heading>

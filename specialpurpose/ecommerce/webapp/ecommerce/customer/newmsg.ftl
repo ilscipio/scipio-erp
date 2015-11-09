@@ -105,7 +105,7 @@ under the License.
           <@tfoot>
             <@tr>
               <@td colspan="2">&nbsp;</@td>
-              <@td><input type="submit" class="smallSubmit" value="${uiLabelMap.CommonSend}"/></@td>
+              <@td><input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonSend}"/></@td>
             </@tr>
           </@tfoot>
         </@table>

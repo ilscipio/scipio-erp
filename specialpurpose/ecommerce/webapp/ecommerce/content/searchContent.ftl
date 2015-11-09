@@ -85,7 +85,7 @@ under the License.
 &nbsp;</@td>
 <@td>&nbsp;</@td>
 <@td width="80%" colspan="4">
-<input type="submit" class="smallSubmit" name="submitButton" value="${uiLabelMap.CommonQuery}"/>
+<input type="submit" class="${styles.link_action!}" name="submitButton" value="${uiLabelMap.CommonQuery}"/>
 </@td>
 
 </@tr>

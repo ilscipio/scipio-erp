@@ -125,7 +125,7 @@ function setAlternateGwp(field) {
                     &nbsp;&nbsp;${uiLabelMap.OrderNbrPersons}: <input type="text" class="inputBox" size="3" name="reservPersons" value="${requestParameters.reservPersons?default("1")}" />
                 </#if>
                 ${uiLabelMap.CommonQuantity}: <input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity?default("1")}" />
-                <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddToCart}" />
+                <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.OrderAddToCart}" />
                 <#-- <a href="javascript:document.quickaddform.submit()" class="button"><span>[${uiLabelMap.OrderAddToCart}]</span></a> -->
                 </fieldset>
             </form>
@@ -472,7 +472,7 @@ function setAlternateGwp(field) {
             <form method="post" action="<@ofbizUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform">
                 <fieldset>
                 <input type="text" class="inputBox" size="15" name="productPromoCodeId" value="" />
-                <input type="submit" class="smallSubmit" value="${uiLabelMap.OrderAddCode}" />
+                <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.OrderAddCode}" />
                 <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())! />
                 <#if productPromoCodeIds?has_content>
                     ${uiLabelMap.ProductPromoCodesEntered}

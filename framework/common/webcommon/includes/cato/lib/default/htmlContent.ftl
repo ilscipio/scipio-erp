@@ -531,7 +531,7 @@ Helps build common data/table row class string (odd, even, etc.). Common pattern
 In general, use @table, @tr macros instead.
 
     Usage example:  
-    <tr<@tableRowClassStr class="myClass" alt=false/>>
+    <tr<@tableRowClassAttribStr class="myClass" alt=false/>>
                     
   * Parameters *
     class           = css classes 
@@ -541,7 +541,7 @@ In general, use @table, @tr macros instead.
     alt             = boolean, if true is alternate row (odd), if false regular (even)
     selected        = boolean, if true marked as selected
 -->
-<#macro tableRowClassStr class="" alt="" selected="">
+<#macro tableRowClassAttribStr class="" alt="" selected="">
   <#if alt?is_boolean>
     <#local class = addClassArg(class, alt?string(styles.row_alt!, styles.row_reg!))>
   </#if>

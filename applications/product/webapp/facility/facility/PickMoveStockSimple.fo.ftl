@@ -56,7 +56,7 @@
           <#assign facilityLocationTypeEnumTo = (facilityLocationTo.getRelatedOne("TypeEnumeration", true))!>
           <#assign totalQuantity = moveByOisgirInfo.totalQuantity>
           <fo:table-row>
-          <#-- <tr id="moveInfoId_tableRow_${rowCount}" valign="middle"<@tableRowClassStr alt=alt_row />> -->
+          <#-- <tr id="moveInfoId_tableRow_${rowCount}" valign="middle"<@tableRowClassAttribStr alt=alt_row />> -->
               <fo:table-cell>
                 <fo:block>${product.productId}</fo:block>
               </fo:table-cell>
@@ -101,7 +101,7 @@
           <#assign targetProductFacilityLocation = moveByPflInfo.targetProductFacilityLocation>
           <#assign facilityLocationTypeEnumTo = (facilityLocationTo.getRelatedOne("TypeEnumeration", true))!>
           <#assign totalQuantity = moveByPflInfo.totalQuantity>
-          <#-- <tr id="moveInfoId_tableRow_${rowCount}" valign="middle"<@tableRowClassStr alt=alt_row />> -->
+          <#-- <tr id="moveInfoId_tableRow_${rowCount}" valign="middle"<@tableRowClassAttribStr alt=alt_row />> -->
           <fo:table-row>
               <fo:table-cell>
                 <fo:block>${product.productId}</fo:block>

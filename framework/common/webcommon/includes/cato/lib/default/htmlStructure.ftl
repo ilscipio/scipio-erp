@@ -12,7 +12,7 @@
 *************
 * Row
 ************
-    Usage example:  
+  * Usage Example *  
     <@row attr="" >
         <@cell attr=""/>
     </@row>              
@@ -150,7 +150,7 @@
 ************
 Since this is very foundation specific, this function may be dropped in future installations
 
-    Usage example:  
+  * Usage Example *  
     <@grid>
         <li>Text or <a href="">Anchor</a></li>
     </@grid>            
@@ -214,7 +214,7 @@ Creates a very basic wrapper for tiles (can be used in metro designs).
 Please be aware that this is neither based on standard bootstrap, nor foundation. 
 It is loosely based on http://metroui.org.ua/tiles.html 
 
-    Usage example:  
+  * Usage Example *  
     <@tile type="small">
        // content
     </@tile>
@@ -271,7 +271,7 @@ levels manually, but most often should let @section menu handle them.
 
 IMPL NOTE: This has dependencies on some non-structural macros.
 
-    Usage example:  
+  * Usage Example *  
     <@section attr="">
         Inner Content
     </@section>            

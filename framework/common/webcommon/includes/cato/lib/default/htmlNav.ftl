@@ -14,17 +14,17 @@
 ************
 Since this is very foundation specific, this function may be dropped in future installations
 
-    Usage example:  
+  * Usage Example *  
     <@nav type="">
-        <li>Text or <a href="">Anchor</a></li>
+        <li>Text or <a href="#">Anchor</a></li>
     </@nav>
     
     Or:
     <@nav type="magellan">
-        <@mli arrival="MyTargetAnchor">Text or <a href="">Anchor</a></@mli>
+        <@mli arrival="MyTargetAnchor">Text or <a href="#">Anchor</a></@mli>
     </@nav>
     
-    <h3 ${mtarget("id")}>Jump Destination</h3>           
+    <@heading attribs=makeMagTargetAttribMap("MyTargetAnchor") id="MyTargetAnchor">Grid</@heading>
                     
   * Parameters *
     type            = (inline|magellan|breadcrumbs) (default:inline)
@@ -376,7 +376,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
 *************
 * Pagination
 ************
-    Usage example:  
+  * Usage Example *  
     <@paginate mode="single" ... />
     <@paginate mode="content">
       <@table>

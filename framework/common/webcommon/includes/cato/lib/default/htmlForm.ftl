@@ -83,7 +83,7 @@ TODO: document better if needed
 * Progress Bar 
 ************
 
-    Usage example:  
+  * Usage Example *  
     <@progress value=40/>             
     
    Can be animated using js, example: 
@@ -156,7 +156,7 @@ TODO: document better if needed
 ************
 An HTML form element.
 
-    Usage example:  
+  * Usage Example *  
     <@form name="myform">
       <@fields>
         <input type="hidden" ... />
@@ -194,7 +194,7 @@ An HTML form element.
 ************
 A visible fieldset, including the HTML element.
 
-    Usage example:  
+  * Usage Example *  
     <@fieldset title="">
         Inner Content
     </@fieldset>            
@@ -267,7 +267,7 @@ Can be omitted.
 May sometimes need multiple of these per form (so @form insufficient for this purpose),
 or even multiple per fieldset. 
 
-    Usage example: 
+  * Usage Example * 
     <@fields>
       <@field attr="" />
       <@field attr="" />
@@ -387,7 +387,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 *************
 * Field
 ************ 
-    Usage example:  
+  * Usage Example *  
     <@field attr="" />
     
   * Parameters *

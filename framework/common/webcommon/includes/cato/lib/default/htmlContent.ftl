@@ -12,7 +12,7 @@
 *************
 * Heading
 ************
-    Usage example:  
+  * Usage Example *  
     <@heading>My Title</@heading>         
                                  
   * Parameters *
@@ -113,9 +113,10 @@
 * Code Block
 ************
 Creates a very basic wrapper for code blocks
-    Usage example:  
+
+  * Usage Example *  
     <@code type="java">
-       //Some java content
+       // Some java code
     </@code>
                     
   * Parameters *
@@ -134,7 +135,7 @@ Creates a very basic wrapper for code blocks
 ************
 Helps define an HTML table. Required wrapper for all @table sub-element macros.
 
-    Usage example:  
+  * Usage Example *  
     <@table type="data-list" id="my-table">
       <@thead>
         <@tr>
@@ -530,7 +531,7 @@ Helps define table cells.
 Helps build common data/table row class string (odd, even, etc.). Common pattern.
 In general, use @table, @tr macros instead.
 
-    Usage example:  
+  * Usage Example *  
     <tr<@tableRowClassAttribStr class="myClass" alt=false/>>
                     
   * Parameters *
@@ -557,7 +558,7 @@ In general, use @table, @tr macros instead.
 ************
 Since this is very foundation specific, this function may be dropped in future installations.
 
-    Usage example:  
+  * Usage Example *  
     <@pul >
         <@pli>Text or <a href="">Anchor</a></@pli>
     </@pul>            
@@ -600,7 +601,7 @@ Since this is very foundation specific, this function may be dropped in future i
 Foundation Pizza: http://zurb.com/playground/pizza-amore-charts-and-graphs (customization through _base.scss)
 Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 
-    Usage example:  
+  * Usage Example *  
     <@chart type="bar" >
         <@chartdata value="36" title="Peperoni"/> 
     </@chart>              

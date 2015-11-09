@@ -14,7 +14,7 @@
 ************
 Opens an HTML document and header section.
 
-    Usage example:  
+  * Usage Example *  
     <@htmlHeadOpen />            
                     
   * Parameters *
@@ -40,7 +40,7 @@ Opens an HTML document and header section.
 ************
 Inline script wrapper.
 
-    Usage example:  
+  * Usage Example *  
     <@script>
         jQuery(document).ready(function() {
             alert("Page loaded.");

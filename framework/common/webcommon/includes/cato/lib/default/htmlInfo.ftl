@@ -12,9 +12,9 @@
 *************
 * Modal
 ************
-    Usage example:  
+  * Usage Example *  
     <@modal id="dsadsa" attr="" >
-    modal Content 
+        Modal Content 
     </@modal>        
             
   * Parameters *
@@ -38,9 +38,9 @@ Alert box for messages that should grab user attention.
 NOTE: Should avoid using this for regular, common inlined message results such as "no records found" unless
 it's an unexpected result, error or one that requires user action. See other macros such as @resultMsg and @errorMsg.
 
-    Usage example:  
+  * Usage Example *  
     <@alert type="info">
-        <#nested>
+        This is an alert!
     </@alert>            
                     
   * Parameters *
@@ -73,9 +73,9 @@ it's an unexpected result, error or one that requires user action. See other mac
 *************
 * Panel box
 ************
-    Usage example:  
+  * Usage Example *  
     <@panel type="">
-        <#nested>
+        This is a panel.
     </@panel>            
                     
   * Parameters *
@@ -97,7 +97,7 @@ Common query result message wrapper.
 Note: this is ONLY for expected, non-error messages, such as no records found in a query.
 Other messages such as for missing params/record IDs are usually errors.
 
-    Usage example:  
+  * Usage Example *  
     <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>            
                     
   * Parameters *
@@ -116,7 +116,7 @@ Common error result message wrapper.
 Abstracts/centralizes method used to display error, since of no consequence to most
 templates: currently @alert.
 
-    Usage example:  
+  * Usage Example *  
     <@errorMsg type="permission">${uiLabelMap.CommonNoPermission}.</@errorMsg>            
                     
   * Parameters *

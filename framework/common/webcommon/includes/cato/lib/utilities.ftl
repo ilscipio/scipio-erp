@@ -260,7 +260,7 @@ splits a style classes string into a Set of unique elems, no order.
 * joinStyleNames
 ************
 Joins style names in a nice string
-Usage example:   
+  * Usage Example *   
     <#assign myVar = joinStyleNames("class1", "", " class3")>
        
   * Parameters *
@@ -1350,7 +1350,7 @@ Checks the resourceNames in the given order.
 Iterates over all variable attributes & functions and prints in table; useful for determining current vars in context
 NOTE: since is in utilities.ftl, keep generic and check platform.
 
-Usage example:  
+  * Usage Example *  
     <@printVars />           
                     
   * Parameters *

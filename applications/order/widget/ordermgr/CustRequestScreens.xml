@@ -49,11 +49,12 @@ under the License.
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
+                            <!-- duplicate?
                             <decorator-section name="menu-bar">
                                 <container style="button-bar">
                                     <link target="request" text="${uiLabelMap.OrderNewRequest}" style="${styles.button_default} create"/>
                                 </container>
-                            </decorator-section>
+                            </decorator-section> -->
                             <decorator-section name="search-options">
                                 <platform-specific><html><html-template location="component://common/webcommon/includes/setMultipleSelectJsList.ftl"/></html></platform-specific>
                                 <include-form name="FindRequests" location="component://order/widget/ordermgr/CustRequestForms.xml"/>

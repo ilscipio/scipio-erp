@@ -806,14 +806,14 @@ essentials (required) will always be added in some way, transforming the class v
 
 The newClass parameter is a simple string literal and is not interpreted.
 
-These are non-destructive except for addClassArgRequiredReplacing which always causes the string to become
+These are non-destructive except for addClassArgReplacing which always causes the string to become
 a replacing string ("=").
 -->
 
 <#-- Adds a required class, that must appear in class string.
     Note: Does not influence the default value logic perceived by addClassArgDefault (user intention preserved). 
         It does this by prefixing result with "+" string where necessary. -->
-<#function addClassArgRequired class newClass>
+<#function addClassArg class newClass>
   <#if !newClass?has_content>
     <#return class>
   </#if>
@@ -824,11 +824,11 @@ a replacing string ("=").
   </#if>
 </#function>
 
-<#-- Special case of addClassArgRequired where the required class will become a replacing string ("=" prefix),
+<#-- Special case of addClassArg where the required class will become a replacing string ("=" prefix),
      though will not squash previous values. 
      Note: this destroys information about what macro user requested and affects the default value logic
         perceived by addClassArgDefault. -->
-<#function addClassArgRequiredReplacing class newClass>
+<#function addClassArgReplacing class newClass>
   <#if !newClass?has_content>
     <#return class>
   </#if>

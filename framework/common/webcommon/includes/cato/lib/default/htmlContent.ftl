@@ -463,10 +463,10 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
         {"type":type, "useAlt":useAlt, "alt":alt, "isRegAltRow":isRegAltRow})>
   </#if>
   <#if alt?is_boolean>
-    <#local class = addClassArgRequired(class, alt?string(styles.row_alt!, styles.row_reg!))>
+    <#local class = addClassArg(class, alt?string(styles.row_alt!, styles.row_reg!))>
   </#if>
   <#if selected?is_boolean && selected == true>
-    <#local class = addClassArgRequired(class, styles.row_selected!)>
+    <#local class = addClassArg(class, styles.row_selected!)>
   </#if>
   <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
 </#if>    
@@ -542,10 +542,10 @@ In general, use @table, @tr macros instead.
 -->
 <#macro tableRowClassStr class="" alt="" selected="">
   <#if alt?is_boolean>
-    <#local class = addClassArgRequired(class, alt?string(styles.row_alt!, styles.row_reg!))>
+    <#local class = addClassArg(class, alt?string(styles.row_alt!, styles.row_reg!))>
   </#if>
   <#if selected?is_boolean && selected == true>
-    <#local class = addClassArgRequired(class, styles.row_selected!)>
+    <#local class = addClassArg(class, styles.row_selected!)>
   </#if>
   <@compiledClassAttribStr class=class /><#t>
 </#macro>

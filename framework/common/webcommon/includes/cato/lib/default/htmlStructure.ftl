@@ -30,14 +30,14 @@
   <#local close = wrapIf && !openOnly && !norows>
   <#if open>
       <#if alt?is_boolean>
-        <#local class = addClassArgRequired(class, alt?string(styles.row_alt!, styles.row_reg!))>
+        <#local class = addClassArg(class, alt?string(styles.row_alt!, styles.row_reg!))>
       </#if>
       <#if selected?is_boolean && selected == true>
-        <#local class = addClassArgRequired(class, styles.row_selected!)>
+        <#local class = addClassArg(class, styles.row_selected!)>
       </#if>
-      <#local class = addClassArgRequired(class, styles.grid_row!)>
+      <#local class = addClassArg(class, styles.grid_row!)>
       <#if collapse>
-        <#local class = addClassArgRequired(class, styles.collapse!)>
+        <#local class = addClassArg(class, styles.collapse!)>
       </#if>
   <#else>
     <#-- WARN: has no memory when closeOnly... -->
@@ -118,14 +118,14 @@
     
     <#local specColsClasses><#if (small > 0)> ${styles.grid_small!}${small}</#if><#if (medium > 0)> ${styles.grid_medium!}${medium}</#if><#if (large > 0)> ${styles.grid_large!}${large}<#elseif (large != 0) && (columns > 0)> ${styles.grid_large!}${columns}</#if></#local>
     <#-- special case: use Replacing so that if spec col classes present, will turn into replacing class string that will prevent next default -->
-    <#local class = addClassArgRequiredReplacing(class, specColsClasses)>
+    <#local class = addClassArgReplacing(class, specColsClasses)>
     <#local class = addClassArgDefault(class, "${styles.grid_cell_default!}")>
 
     <#local specOffsetClassesStr><#if (smallOffset > 0)> ${styles.grid_small_offset!}${smallOffset}</#if><#if (mediumOffset > 0)> ${styles.grid_medium_offset!}${mediumOffset}</#if><#if (largeOffset > 0)> ${styles.grid_large_offset!}${largeOffset}<#elseif (largeOffset != 0) && (offset > 0)> ${styles.grid_large_offset!}${offset}</#if></#local>
-    <#local class = addClassArgRequired(class, specOffsetClassesStr)>
-    <#local class = addClassArgRequired(class, styles.grid_cell!)>
+    <#local class = addClassArg(class, specOffsetClassesStr)>
+    <#local class = addClassArg(class, styles.grid_cell!)>
     <#if last>
-      <#local class = addClassArgRequired(class, styles.grid_end!)>
+      <#local class = addClassArg(class, styles.grid_end!)>
     </#if>
   <#else>
     <#-- WARN: has no memory when closeOnly... -->
@@ -170,7 +170,7 @@ Since this is very foundation specific, this function may be dropped in future i
         <#local freewallNum = freewallNum + 1 />
         <#local dummy = setRequestVar("catoFreewallIdNum", freewallNum)>
         <#local id = "freewall_id_${freewallNum!0}">
-        <#local class = addClassArgRequired(class, styles.tile_container!)>
+        <#local class = addClassArg(class, styles.tile_container!)>
         <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>>
             <#nested>
         </div>
@@ -233,9 +233,9 @@ It is loosely based on http://metroui.org.ua/tiles.html
     image           = Set a background image-url (icon won't be shown if not empty)
 -->
 <#macro tile type="normal" title="" class="" id="" link="" color=0 icon="" image="">
-    <#local class = addClassArgRequired(class, styles.tile_wrap!)>
-    <#local class = addClassArgRequired(class, "${styles.tile_wrap!}-${type!}")>
-    <#local class = addClassArgRequired(class, "${styles.tile_color!}${color!}")>
+    <#local class = addClassArg(class, styles.tile_wrap!)>
+    <#local class = addClassArg(class, "${styles.tile_wrap!}-${type!}")>
+    <#local class = addClassArg(class, "${styles.tile_color!}${color!}")>
     <#local nested><#nested></#local>
     <div<@compiledClassAttribStr class=class /><#if id?has_content>id="${id}" </#if>data-sizex="${calcTileSize("x",type!)}" data-sizey="${calcTileSize("y",type!)}">
         <#if image?has_content><div class="${styles.tile_image!}" style="background-image: url(${image!})"></div></#if>
@@ -635,21 +635,21 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 <#macro section_markup_container open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" class="" outerClass="" innerClass="" contentFlagClasses="" id="" title="" collapsed=false collapsibleAreaId="" extraArgs...>
   <#if open>
     <#local outerClass = "">
-    <#local outerClass = addClassArgRequired(outerClass, "section-screenlet")>
-    <#local outerClass = addClassArgRequired(outerClass, contentFlagClasses)>
+    <#local outerClass = addClassArg(outerClass, "section-screenlet")>
+    <#local outerClass = addClassArg(outerClass, contentFlagClasses)>
     <#if collapsed>
-      <#local outerClass = addClassArgRequired(outerClass, "toggleField")>
+      <#local outerClass = addClassArg(outerClass, "toggleField")>
     </#if>
     <div<@compiledClassAttribStr class=outerClass />>
         <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
         <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
-            <#local class = addClassArgRequired(class, "section-screenlet-container ${styles.grid_cell!}")>
-            <#local class = addClassArgRequired(class, contentFlagClasses)>
+            <#local class = addClassArg(class, "section-screenlet-container ${styles.grid_cell!}")>
+            <#local class = addClassArg(class, contentFlagClasses)>
             <div<@compiledClassAttribStr class=class defaultVal="${styles.grid_large!}12" />>
                 ${menuTitleContent}
                 <#-- note: may need to keep this div free of foundation grid classes (for margins collapse?) -->
-                <#local innerClass = addClassArgRequired(innerClass, "section-screenlet-content")>
-                <#local innerClass = addClassArgRequired(innerClass, contentFlagClasses)>
+                <#local innerClass = addClassArg(innerClass, "section-screenlet-content")>
+                <#local innerClass = addClassArg(innerClass, contentFlagClasses)>
                 <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if><@compiledClassAttribStr class=innerClass />>
   </#if>
     <#nested>

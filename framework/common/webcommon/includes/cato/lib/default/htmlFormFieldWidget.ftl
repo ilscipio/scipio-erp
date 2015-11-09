@@ -16,7 +16,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- migrated from @renderClass form widget macro -->
 <#macro fieldClassStr class alert=false>
   <#if alert?string == "true">
-    <#local class = addClassArgRequired(class, "alert")>
+    <#local class = addClassArg(class, "alert")>
   </#if>
   <@compiledClassAttribStr class=class /><#t>
 </#macro>
@@ -70,7 +70,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_input_markup_widget name="" class="" alert="" value="" textSize="" maxlength="" id="" event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false 
     mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false extraArgs...>
   <#if tooltip?has_content> 
-    <#local class = addClassArgRequired(class, "has-tip tip-right")>
+    <#local class = addClassArg(class, "has-tip tip-right")>
   </#if>
   <#if mask?has_content && mask>
     <script type="text/javascript">
@@ -110,7 +110,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_textarea_markup_widget name="" class="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
     buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false extraArgs...>
   <#if tooltip?has_content> 
-    <#local class = addClassArgRequired(class, "has-tip tip-right")>
+    <#local class = addClassArg(class, "has-tip tip-right")>
   </#if>
   <textarea name="${name}"<#t/>
     <@fieldClassStr class=class alert=alert />
@@ -173,9 +173,9 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
         <div class="${styles.grid_small!}11 ${styles.grid_cell!}">
           <#if tooltip?has_content> 
-            <#local class = addClassArgRequired(class, "has-tip tip-right")>
+            <#local class = addClassArg(class, "has-tip tip-right")>
           </#if>
-          <#local class = addClassArgRequired(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
+          <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
           <#if dateType == "time">
             <input type="text" name="${name}"<@fieldClassStr class=class alert=alert /><#rt/>
             <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
@@ -260,7 +260,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
         <div class="${styles.grid_small!}5 ${styles.grid_cell!}">
-          <#local class = addClassArgRequired(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
+          <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
           <input id="${name?html}_fld0_value" type="text"<@fieldClassStr class=class alert=alert /><#if name?has_content> name="${name?html}_fld0_value"</#if><#if localizedInputTitle?has_content> title="${localizedInputTitle}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if>/><#rt/>
         </div>
         <div class="${styles.grid_small!}1 ${styles.grid_cell!}">
@@ -320,7 +320,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     collapse=false fieldTitleBlank=false extraArgs...>
 
     <#if tooltip?has_content>
-      <#local class = addClassArgRequired(class, "has-tip tip-right")>
+      <#local class = addClassArg(class, "has-tip tip-right")>
     </#if>
     <select name="${name!""}<#rt/>"<@fieldClassStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if multiple?has_content> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>>
@@ -514,7 +514,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#local class = "">
     <#local alert = false>
     <#if tooltip?has_content>
-      <#local class = addClassArgRequired(class, "has-tip tip-right")>
+      <#local class = addClassArg(class, "has-tip tip-right")>
     </#if>
     <input type="checkbox"<@fieldClassStr class=class alert=alert />id="<#if id?has_content>${id}<#else>${name!}</#if>"<#rt/>
       <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
@@ -548,12 +548,12 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#local class = ""> <#-- in multi mode, classes only on parent for now (?) -->
   </#if>
   <#if inlineItems>
-    <#local class = addClassArgRequired(class, "radio-item-inline")>
+    <#local class = addClassArg(class, "radio-item-inline")>
   <#else>
-    <#local class = addClassArgRequired(class, "radio-item-noninline")>
+    <#local class = addClassArg(class, "radio-item-noninline")>
   </#if>
   <#if tooltip?has_content>
-    <#local class = addClassArgRequired(class, "has-tip tip-right")>
+    <#local class = addClassArg(class, "has-tip tip-right")>
   </#if>
   <#list items as item>
     <span<@fieldClassStr class=class alert=alert />><#rt/>
@@ -588,7 +588,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- field markup - may be overridden -->
 <#macro field_password_markup_widget class="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="" extraArgs...>
   <#if tooltip?has_content>
-    <#local class = addClassArgRequired(class, "has-tip tip-right")>
+    <#local class = addClassArg(class, "has-tip tip-right")>
   </#if>
   <input type="password"<@fieldClassStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if>
   <#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#if autocomplete?has_content> autocomplete="off"</#if> 

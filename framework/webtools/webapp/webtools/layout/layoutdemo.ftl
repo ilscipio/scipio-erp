@@ -426,9 +426,9 @@
 <@section title="Class arguments test">
   <#macro myClassTest class="">
     <#local origClass = class>
-    <#local class = addClassArgRequired(class, "macro-required-class-1")>
+    <#local class = addClassArg(class, "macro-required-class-1")>
     <#local class = addClassArgDefault(class, "macro-default-class-1")>
-    <#local class = addClassArgRequired(class, "macro-required-class-2")>
+    <#local class = addClassArg(class, "macro-required-class-2")>
     <#local class = addClassArgDefault(class, "macro-default-class-2")>
     <#local classes = compileClassArg(class)>
     <li class="${classes}"><#if origClass?is_string>"${origClass?string}"<#else>${origClass?string}</#if> -> "${classes}"</li>

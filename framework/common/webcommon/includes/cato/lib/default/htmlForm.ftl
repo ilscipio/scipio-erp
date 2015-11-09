@@ -558,7 +558,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#if>
 
 <#if required && (!containsStyleName(class, styles.required!""))>
-    <#local class = addClassArgRequired(class, styles.required!"")>
+    <#local class = addClassArg(class, styles.required!"")>
 </#if>
 <#-- the widgets do this now
 <#local class = compileClassArg(class)>-->
@@ -837,7 +837,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 
   <#local fieldEntryTypeClass = "field-entry-type-" + mapCatoFieldTypeToStyleName(type)>
   
-  <#local rowClass = addClassArgRequired(rowClass, "form-field-entry " + fieldEntryTypeClass)>
+  <#local rowClass = addClassArg(rowClass, "form-field-entry " + fieldEntryTypeClass)>
   <@row class=rowClass collapse=collapse!false norows=(norows || !container)>
     <#if useLabelArea>
         <#local defaultLabelAreaClass="${styles.grid_small!}3 ${styles.grid_large!}2"/>
@@ -846,12 +846,12 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
             <#local defaultLabelAreaClass="${styles.grid_small!}${12-columns+1} ${styles.grid_large!}${12-columns}"/>
             <#local defaultClass="${styles.grid_small!}${columns-columnspostfix-1} ${styles.grid_large!}${columns-columnspostfix}"/>
         </#if>
-        <#local labelAreaClass = addClassArgRequired(labelAreaClass, "field-entry-title " + fieldEntryTypeClass)>
+        <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title " + fieldEntryTypeClass)>
         <@cell class=compileClassArg(labelAreaClass, defaultLabelAreaClass) nocells=(nocells || !container)>
             ${labelContent}
         </@cell>
     </#if>
-    <#local class = addClassArgRequired(class, "field-entry-widget " + fieldEntryTypeClass)>
+    <#local class = addClassArg(class, "field-entry-widget " + fieldEntryTypeClass)>
     <#-- NOTE: here this is the same as doing 
            class=("=" + compileClassArg(class, defaultClass))
          as we know the compiled class will never be empty. -->
@@ -860,7 +860,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     </@cell>
     <#if postfix && !nocells && container>
         <#local defaultPostfixClass = "${styles.grid_small!}${postfixSize} ${styles.grid_large!}${postfixSize}">
-        <#local postfixClass = addClassArgRequired(postfixClass, "field-entry-postfix " + fieldEntryTypeClass)>
+        <#local postfixClass = addClassArg(postfixClass, "field-entry-postfix " + fieldEntryTypeClass)>
         <@cell class=compileClassArg(postfixClass, defaultPostfixClass)>
             <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
         </@cell>

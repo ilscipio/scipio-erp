@@ -50,7 +50,7 @@ it's an unexpected result, error or one that requires user action. See other mac
                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
 -->
 <#macro alert type="info" class="" id="">
-<#local class = addClassArgRequired(class, styles.grid_cell!"")>
+<#local class = addClassArg(class, styles.grid_cell!"")>
 <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
 <#local typeClass = "alert_type_${type!}"/>
 <#if type="error"><#local type = "alert"></#if>

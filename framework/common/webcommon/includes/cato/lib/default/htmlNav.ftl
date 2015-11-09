@@ -295,17 +295,17 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#local menuStyleName = (catoCurrentMenuInfo.styleName)!"">
   <#t>
   <#if disabled>
-    <#local class = addClassArgRequired(class, (styles["menu_" + menuStyleName + "_itemdisabled"]!styles["menu_default_itemdisabled"]!""))>
-    <#local contentClass = addClassArgRequired(contentClass, (styles["menu_" + menuStyleName + "_item_contentdisabled"]!styles["menu_default_item_contentdisabled"]!""))>
+    <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemdisabled"]!styles["menu_default_itemdisabled"]!""))>
+    <#local contentClass = addClassArg(contentClass, (styles["menu_" + menuStyleName + "_item_contentdisabled"]!styles["menu_default_item_contentdisabled"]!""))>
     <#local href = "javascript:void(0);">
   </#if>
   <#if selected>
-    <#local class = addClassArgRequired(class, (styles["menu_" + menuStyleName + "_itemselected"]!styles["menu_default_itemselected"]!""))>
-    <#local contentClass = addClassArgRequired(contentClass, (styles["menu_" + menuStyleName + "_item_contentselected"]!styles["menu_default_item_contentselected"]!""))>
+    <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemselected"]!styles["menu_default_itemselected"]!""))>
+    <#local contentClass = addClassArg(contentClass, (styles["menu_" + menuStyleName + "_item_contentselected"]!styles["menu_default_item_contentselected"]!""))>
   </#if>
   <#if active>
-    <#local class = addClassArgRequired(class, (styles["menu_" + menuStyleName + "_itemactive"]!styles["menu_default_itemactive"]!""))>
-    <#local contentClass = addClassArgRequired(contentClass, (styles["menu_" + menuStyleName + "_item_contentactive"]!styles["menu_default_item_contentactive"]!""))>
+    <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemactive"]!styles["menu_default_itemactive"]!""))>
+    <#local contentClass = addClassArg(contentClass, (styles["menu_" + menuStyleName + "_item_contentactive"]!styles["menu_default_item_contentactive"]!""))>
   </#if>
   <#t>
   <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>

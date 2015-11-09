@@ -160,7 +160,7 @@ under the License.
                 <list-options list-name="partyList" key-name="contact.partyId" list-entry-name="contact" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, 'partyId', false)} ${contact.partyId}"/>
             </drop-down>
         </field>
-        <field name="submitAction" position="3" title="${uiLabelMap.SfaMergeContacts}" widget-style="${styles.button_default}" tooltip-style="button-text"><submit button-type="text-link"/></field>
+        <field name="submitAction" position="3" title="${uiLabelMap.SfaMergeContacts}" widget-style="${styles.link_action}" tooltip-style="button-text"><submit button-type="text-link"/></field>
     </form>
 
     <form name="NewContactFromVCard" type="upload" target="createContactFromVCard" header-row-style="header-row" default-table-style="${styles.table_basic}">

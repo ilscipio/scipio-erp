@@ -110,7 +110,7 @@ under the License.
                <list-options list-name="partyList" key-name="lead.partyId" list-entry-name="lead" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, 'partyId', false)} ${lead.partyId}"/>
             </drop-down>
         </field>
-        <field name="submitAction" position="3" title="${uiLabelMap.SfaMergeLeads}" widget-style="${styles.button_default}" tooltip-style="button-text"><submit button-type="text-link"/></field>
+        <field name="submitAction" position="3" title="${uiLabelMap.SfaMergeLeads}" widget-style="${styles.link_action}" tooltip-style="button-text"><submit button-type="text-link"/></field>
     </form>
 
     <form name="NewLeadFromVCard" type="upload" target="createLeadFromVCard" header-row-style="header-row" default-table-style="${styles.table_basic}">

@@ -649,7 +649,7 @@
             <text default-value="${taskInfo.planHours}" size="2"/>
         </field>
         <field name="UpdateAction" title="${uiLabelMap.CommonUpdate}"><submit/></field>
-        <field name="RemoveAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}">
+        <field name="RemoveAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}">
             <hyperlink target="unassignPartyFromWorkEffort" description="${uiLabelMap.CommonRemove}" confirmation-message="Are you sure to remove this task ?" link-type="hidden-form">
                 <parameter param-name="workEffortId" from-field="taskId"/>
                 <parameter param-name="partyId" from-field="partyId"/>
@@ -738,13 +738,13 @@
         <field name="taskEstimatedMilliSeconds" title="${uiLabelMap.ScrumPlannedHours}" parameter-name="planHours"><display></display></field>
         <field name="taskActualMilliSeconds" title="${uiLabelMap.ScrumActualHours}" parameter-name="actualHours"><display description="${result.actualHours}"/></field>
         <field name="taskEstimatedStartDate" title="${uiLabelMap.CommonStartDate}" parameter-name="estimatedStartDate"><display type="date"/></field>
-        <field name="editAction" title=" " widget-style="${styles.button_default}">
+        <field name="editAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="EditTask" description="${uiLabelMap.CommonEdit}" link-type="hidden-form">
                 <parameter param-name="taskId"/>
                 <parameter param-name="sprintId"></parameter>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="deleteTask" description="${uiLabelMap.CommonDelete}" link-type="hidden-form" confirmation-message="Are you sure to delete this task?">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="workEffortId" from-field="taskId"/>

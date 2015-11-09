@@ -111,7 +111,7 @@ under the License.
             <display-entity entity-name="ShoppingListType"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
-        <field name="addFromListAction" title=" " widget-style="${styles.button_default}">
+        <field name="addFromListAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="addFromShoppingList" description="${uiLabelMap.OrderToAddSelectedItemsToShoppingList}" also-hidden="false">
                 <parameter param-name="shoppingListId"/>
             </hyperlink>

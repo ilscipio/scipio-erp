@@ -283,7 +283,7 @@
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
-        <field name="setToCompleteAction" title=" " use-when="partyAcctgPreference==null" widget-style="${styles.button_default}">
+        <field name="setToCompleteAction" title=" " use-when="partyAcctgPreference==null" widget-style="${styles.link_action}">
             <hyperlink target="OrganizationToComplete" description="${uiLabelMap.SetupSetToComplete}">
                 <parameter param-name="partyId"/>
             </hyperlink>

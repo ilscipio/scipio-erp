@@ -31,7 +31,7 @@
             </hyperlink>
         </field>
         <field name="wellKnownText" title="${uiLabelMap.CommonGeoWellKnownText}"><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="deleteGeo" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="geoId"/>
                 <parameter param-name="noConditionFind" value="Y"/>

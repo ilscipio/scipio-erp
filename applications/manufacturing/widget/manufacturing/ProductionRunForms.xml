@@ -816,7 +816,7 @@ under the License.
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
         <field name="estimatedShipDate" sort-field="true"><display/></field>
-        <field name="viewShipmentPlanAction" title=" " widget-style="${styles.button_default}">
+        <field name="viewShipmentPlanAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="WorkWithShipmentPlans" description="${uiLabelMap.CommonView}" also-hidden="false">
                 <parameter param-name="shipmentId"/>
             </hyperlink>

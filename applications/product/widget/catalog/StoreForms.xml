@@ -78,7 +78,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="sequenceNum"><display/></field>
-        <field name="editAction" widget-style="${styles.button_default}" title="${uiLabelMap.CommonEdit}">
+        <field name="editAction" widget-style="${styles.link_action}" title="${uiLabelMap.CommonEdit}">
            <hyperlink target="FindProductStoreRoles" description="${uiLabelMap.CommonEdit}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="productStoreId"/>
@@ -86,7 +86,7 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" widget-style="${styles.button_default}" title="${uiLabelMap.CommonDelete}">
+        <field name="deleteAction" widget-style="${styles.link_action}" title="${uiLabelMap.CommonDelete}">
             <hyperlink target="storeRemoveRole" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="productStoreId"/>
@@ -228,7 +228,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
-        <field name="submitAction" title=" " widget-style="${styles.button_default}">
+        <field name="submitAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="updateProductStoreGroupRollup" request-confirmation="true" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productStoreGroupId"/>
                 <parameter param-name="parentGroupId"/>

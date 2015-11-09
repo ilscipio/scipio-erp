@@ -97,7 +97,7 @@ under the License.
                 <list-options list-name="creditCardList" list-entry-name="creditCardPm" key-name="creditCardPm.paymentMethodId" description="${groovy:org.ofbiz.party.contact.ContactHelper.formatCreditCard(creditCardPm.getRelatedOne(&quot;CreditCard&quot;, false))}"/>
             </drop-down>
         </field>
-        <field name="newCreditCardAction" widget-style="${styles.button_default}" use-when="returnHeader!=null&amp;&amp;returnHeader.getString(&quot;fromPartyId&quot;)!=null">
+        <field name="newCreditCardAction" widget-style="${styles.link_action}" use-when="returnHeader!=null&amp;&amp;returnHeader.getString(&quot;fromPartyId&quot;)!=null">
             <hyperlink also-hidden="false" target="/partymgr/control/editcreditcard" target-window="partymgr" description="${uiLabelMap.AccountingCreateNewCreditCard}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="returnHeader.fromPartyId"/>
             </hyperlink>

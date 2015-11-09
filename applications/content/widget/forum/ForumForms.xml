@@ -31,7 +31,7 @@ under the License.
         </field>
         <field name="forumGroupName" entry-name="contentName" parameter-name="contentName"><text/></field>
         <field name="forumGroupDescription" entry-name="description" parameter-name="description"><text/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
     <form name="AddForumGroup" type="single" target="createForumGroup" title="" default-map-name="forumGroup"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -56,8 +56,8 @@ under the License.
         <field name="forumName" entry-name="contentName" parameter-name="contentName"><text/></field>
         <field name="forumDescription" entry-name="description" parameter-name="description"><text/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" entry-name="caThruDate"><date-time/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
             <hyperlink target="updateForum">
                 <parameter param-name="forumGroupId" from-field="parameters.forumGroupId"/>
                 <parameter param-name="contentIdTo" from-field="parameters.forumGroupId"/>
@@ -112,7 +112,7 @@ under the License.
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="text-link"/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
             <hyperlink target="deleteForumGroupRole">
                 <parameter param-name="forumGroupId"/>
                 <parameter param-name="contentIdTo"/>
@@ -156,7 +156,7 @@ under the License.
         <field name="createdBy" entry-name="createdByUserLogin"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" entry-name="caFromDate"><display description="${groovy:caFromDate!=null?caFromDate.toString().substring(0,10):&quot;&quot;}"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" entry-name="caThruDate"><display description="${groovy:caThruDate!=null?caThruDate.toString().substring(0,10):&quot;&quot;}"/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}"><hyperlink target="updateForumMessage">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}"><hyperlink target="updateForumMessage">
                 <parameter param-name="forumGroupId"/>
                 <parameter param-name="forumId"/>
                 <parameter param-name="contentIdTo"/>
@@ -165,8 +165,8 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink></field>
         <field name="messageText" entry-name="contentData.resultData.electronicText.textData" parameter-name="textData"><textarea rows="8"/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
-        <field name="responseAction" title="${uiLabelMap.FormFieldTitle_reponse}" widget-style="${styles.button_default}">
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="responseAction" title="${uiLabelMap.FormFieldTitle_reponse}" widget-style="${styles.link_action}">
             <hyperlink target="addForumMessage" description="${uiLabelMap.FormFieldTitle_reponse}">
                 <parameter param-name="forumGroupId" from-field="parameters.forumGroupId"/>
                 <parameter param-name="forumId" from-field="parameters.forumId"/>

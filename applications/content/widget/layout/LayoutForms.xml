@@ -95,7 +95,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
-        <field name="createAction" title=" " widget-style="${styles.button_default}" position="1">
+        <field name="createAction" title=" " widget-style="${styles.link_action}" position="1">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreateNew}" target="EditLayoutTemplate?mode=add&amp;contentIdTo=TEMPLATE_MASTER"/>
         </field>
         -->
@@ -174,7 +174,7 @@ under the License.
         <field name="description"><display/></field>
         <field name="drObjectInfo"><display/></field>
         <!--
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeLayout">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentIdTo"/>
@@ -196,7 +196,7 @@ under the License.
         <field name="contentName"><display/></field>
         <field name="description"><display/></field>
         <field name="drObjectInfo"><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeLayout">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentIdTo" from-field="caContentIdTo"/>

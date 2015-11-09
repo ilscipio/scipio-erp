@@ -31,8 +31,8 @@ under the License.
     
     <form name="EditBillingAccount" type="single" target="updateBillingAccount" extends="EditBillingAccount" extends-resource="component://accounting/widget/BillingAccountForms.xml">
         <field name="submitAction"><hidden/></field>
-        <field name="saveAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.button_default}"><submit button-type="button"/></field>
-        <field name="cancelAction" title=" " widget-style="${styles.button_default}">
+        <field name="saveAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="cancelAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="viewprofile" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="partyId" from-field="partyId"/>
             </hyperlink>

@@ -177,7 +177,7 @@ under the License.
         </field>
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}"><display-entity also-hidden="false" entity-name="RoleType"/></field>
         <field name="quoteId"><hidden/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="removeQuoteRole" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>
@@ -328,7 +328,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="custRequestItemSeqId"><hidden/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="removeQuoteItem" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="quoteItemSeqId"/>
                 <parameter param-name="quoteId"/>
@@ -359,7 +359,7 @@ under the License.
         </field>
         <field name="attrValue" title="${uiLabelMap.OrderOrderQuoteAttributeValue}"></field>
         <field name="quoteId"><hidden/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="removeQuoteAttribute" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="attrName"/>
                 <parameter param-name="quoteId"/>
@@ -378,7 +378,7 @@ under the License.
         </field>
         <field name="coeffValue" title="${uiLabelMap.OrderOrderQuoteCoeffValue}"></field>
         <field name="quoteId"><hidden/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="removeQuoteCoefficient" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="coeffName"/>
                 <parameter param-name="quoteId"/>
@@ -442,7 +442,7 @@ under the License.
         <field name="productPromoRuleId" title="${uiLabelMap.ProductPromoRule}"><display/></field>
         <field name="productPromoActionSeqId" title="${uiLabelMap.ProductPromoAction}"><display/></field>
         <field name="amount" widget-area-style="amount" title-area-style="align-right"><display type="currency"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="removeQuoteAdjustment" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="quoteAdjustmentId"/>
                 <parameter param-name="quoteId"/>
@@ -557,7 +557,7 @@ under the License.
             <display-entity entity-name="Uom" description="${uomId}" key-field-name="uomId"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
-        <field name="editAction" title=" " widget-style="${styles.button_default}">
+        <field name="editAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="EditQuoteTerm" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="termTypeId"/>
                 <parameter param-name="quoteItemSeqId"/>
@@ -566,7 +566,7 @@ under the License.
                 <parameter param-name="tabButtonItems" value="QuoteTerms"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="deleteQuoteTerm" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="termTypeId"/>
                 <parameter param-name="quoteItemSeqId"/>
@@ -576,7 +576,7 @@ under the License.
     </form>
     
     <form name="ListQuoteTermItem" extends="ListQuoteTerms">
-        <field name="editAction" title=" " widget-style="${styles.button_default}">
+        <field name="editAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="EditQuoteTermItem" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="termTypeId"/>
                 <parameter param-name="quoteItemSeqId"/>
@@ -585,7 +585,7 @@ under the License.
                 <parameter param-name="tabButtonItems" value="ListQuoteItems"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="deleteQuoteTermFromItem" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="termTypeId"/>
                 <parameter param-name="quoteItemSeqId"/>
@@ -600,7 +600,7 @@ under the License.
         <auto-fields-entity entity-name="QuoteNoteView" default-field-type="display"/>
         <field name="quoteId"><hidden/></field>
         <field name="noteId"><hidden/></field>
-        <field name="editAction" title=" " widget-style="${styles.button_default}">
+        <field name="editAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="EditQuoteNote" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="noteId"/>

@@ -85,12 +85,12 @@ under the License.
         <field name="ruleOperator"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><display/></field>
-        <field name="updateAction" title=" " widget-style="${styles.button_default}">
+        <field name="updateAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="EditProductManufacturingRules" description="${uiLabelMap.CommonSelect}" >
                 <parameter param-name="ruleId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="DeleteProductManufacturingRule" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="ruleId"/>
             </hyperlink>

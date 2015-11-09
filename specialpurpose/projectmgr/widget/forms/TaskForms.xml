@@ -277,7 +277,7 @@
         <field name="workEffortId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden/></field>
         <field name="updateAction"><submit/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}">
             <hyperlink target="updateTaskAssigment" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="partyId"/>
@@ -286,7 +286,7 @@
                 <parameter param-name="statusId" value="PAS_ENDED"/>
             </hyperlink>
         </field>
-        <field name="toCompleteAction" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.button_default}">
+        <field name="toCompleteAction" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.link_action}">
             <hyperlink target="updateTaskAssigment" description="${uiLabelMap.CommonStatustoComplete}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="partyId"/>
@@ -476,7 +476,7 @@
         <field name="invoiceInfo"><hidden/></field>
         <field name="comments"><text size="60"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
             <hyperlink target="deleteTimeEntry" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="timeEntryId"/>
@@ -584,7 +584,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <field name="deleteAction" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="completeAction" widget-style="${styles.button_default}">
+        <field name="completeAction" widget-style="${styles.link_action}">
             <hyperlink description="${uiLabelMap.ProjectMgrToComplete}" target="updateTaskPartyAssign">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="partyId"/>

@@ -376,7 +376,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" sort-field="true">
             <display type="date"/>
         </field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}" use-when="!compCheck">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}" use-when="!compCheck">
             <hyperlink target="removeProductMember" description="${uiLabelMap.CommonRemove}" link-type="hidden-form">
                 <parameter param-name="productId" from-field="productId"/>
                 <parameter param-name="partyId"/>

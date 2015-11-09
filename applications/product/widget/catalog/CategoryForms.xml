@@ -144,7 +144,7 @@ under the License.
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="category_removeProductCategoryFromProdCatalog" description="${uiLabelMap.CommonDelete}" also-hidden="false">
               <parameter param-name="productCategoryId"/>
               <parameter param-name="prodCatalogCategoryTypeId"/>
@@ -172,7 +172,7 @@ under the License.
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
         <field name="comment" title="${uiLabelMap.CommonComment}"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="removeProductCategoryFromCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
               <parameter param-name="showproductCategoryId"/>
               <parameter param-name="productCategoryId"/>
@@ -200,7 +200,7 @@ under the License.
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
         <field name="comment" title="${uiLabelMap.CommonComment}"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="removeProductCategoryFromCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
               <parameter param-name="showProductCategoryId"/>
               <parameter param-name="productCategoryId" value="${showProductCategoryId}"/>
@@ -230,7 +230,7 @@ under the License.
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
         <field name="comment" title="${uiLabelMap.CommonComment}"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="category_removeProductCategoryFromProdCatalog" description="${uiLabelMap.CommonDelete}" also-hidden="false">
               <parameter param-name="productCategoryId"/>
               <parameter param-name="prodCatalogCategoryTypeId"/>
@@ -245,7 +245,7 @@ under the License.
         <field name="productCategoryId"><hidden/></field>
         <field name="attrValue"><text size="60"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="deleteProductCategoryAttribute" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productCategoryId"/>
                 <parameter param-name="attrName"/>
@@ -322,12 +322,12 @@ under the License.
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
         -->
-        <field name="editAction" title="${uiLabelMap.ProductEditContent}" widget-style="${styles.button_default}">
+        <field name="editAction" title="${uiLabelMap.ProductEditContent}" widget-style="${styles.link_action}">
             <hyperlink target="/content/control/EditContent" target-type="inter-app" description="${contentId}">
                 <parameter param-name="contentId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="removeContentFromCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productCategoryId"/>
                 <parameter param-name="contentId"/>
@@ -395,7 +395,7 @@ under the License.
         <field name="detailSubScreen"><ignored/></field>
         <field name="imageUrl"><ignored/></field>
         <field name="imageTwoUrl"><ignored/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="deleteProductCategoryAction" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productCategoryId"/>
                 <parameter param-name="linkSeqId"/>
@@ -428,7 +428,7 @@ under the License.
         <field name="detailSubScreen" tooltip="${uiLabelMap.ProductDetailSubScreenTooltip}"><text size="60" maxlength="255"/></field>
         <field name="submitAction" use-when="productCategoryLink==null" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
         <field name="submitAction" use-when="productCategoryLink!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="clearFormAction" title=" " use-when="productCategoryLink!=null" widget-style="${styles.button_default}">
+        <field name="clearFormAction" title=" " use-when="productCategoryLink!=null" widget-style="${styles.link_action}">
             <hyperlink target="EditProductCategoryLinks" target-type="intra-app" description="${uiLabelMap.CommonClear}">
                 <parameter param-name="productCategoryId"/>
             </hyperlink>

@@ -59,7 +59,7 @@ under the License.
         </field>
         <field name="parentGroupId"><display/></field>
         <field name="description" title=" "><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="deletePartyClassificationGroup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="partyClassificationGroupId"/>
             </hyperlink>
@@ -81,7 +81,7 @@ under the License.
         </field>
         <field name="parentGroupId"><lookup target-form-name="LookupPartyClassificationGroup"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text size="55"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
 
     <form name="AddPartyClassification" type="single" target="createPartyClassification" default-map-name="partyClassification"
@@ -140,7 +140,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="deletePartyClassification" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="partyClassificationGroupId"/>
                 <parameter param-name="partyId"/>

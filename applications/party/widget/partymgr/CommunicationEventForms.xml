@@ -173,10 +173,10 @@ under the License.
         <field name="subject"><text size="74" default-value="${parameters.subject}"/></field>
         <field name="contentMimeTypeId"><hidden value="text/plain"/></field>
         <field name="content" title="${uiLabelMap.CommonContent}" encode-output="false"><textarea cols="72" rows="15" default-value="${parameters.content}"/></field>
-        <field name="sendAction" title=" " position="1" use-when="communicationEvent!=null" widget-style="${styles.button_default}">
+        <field name="sendAction" title=" " position="1" use-when="communicationEvent!=null" widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonSend}" target="javascript:(document.EditEmail.form.value='list'),(document.EditEmail.submit())"/>
         </field>
-        <field name="saveAction" title=" " position="2" use-when="communicationEvent!=null" widget-style="${styles.button_default}">
+        <field name="saveAction" title=" " position="2" use-when="communicationEvent!=null" widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonSave}" target="javascript:(document.EditEmail.form.value='list'),(document.EditEmail.statusId.value='COM_PENDING'),(document.EditEmail.submit())"/>
         </field>
         <field name="createAction" use-when="communicationEvent==null"><submit/></field>
@@ -204,12 +204,12 @@ under the License.
         <field name="subject"><text size="60"/></field>
         <field name="contentMimeTypeId"><hidden value="text/plain"/></field>
         <field name="content" title="${uiLabelMap.CommonContent}" encode-output="false"><textarea cols="72" rows="15" default-value="${parameters.content}"/></field>
-        <field name="sendAction" title=" " position="1" use-when="communicationEvent!=null" widget-style="${styles.button_default}">
+        <field name="sendAction" title=" " position="1" use-when="communicationEvent!=null" widget-style="${styles.link_action}">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.CommonSend}"
                 target="javascript:(document.EditInternalNote.form.value='list'),(document.EditInternalNote.statusId.value='COM_ENTERED'),(document.EditInternalNote.datetimeStarted.value='${nowDate}'),(document.EditInternalNote.submit())"/>
         </field>
-        <field name="saveAction" title=" " position="2" use-when="communicationEvent!=null" widget-style="${styles.button_default}">
+        <field name="saveAction" title=" " position="2" use-when="communicationEvent!=null" widget-style="${styles.link_action}">
             <hyperlink also-hidden="true" target-type="plain" description="${uiLabelMap.CommonSave}" target="javascript:(document.EditInternalNote.form.value='list'),(document.EditInternalNote.submit())"/>
         </field>
         <field name="createAction" use-when="communicationEvent==null"><submit/></field>
@@ -729,7 +729,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title=" " widget-style="${styles.button_default}">
+        <field name="submitAction" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.PartyAddRole}"
                 target="${AddEventRole_submitAction}"/>
@@ -898,7 +898,7 @@ under the License.
         <field name="contentId" title="${uiLabelMap.FormFieldTitle_existContentId}"><lookup target-form-name="LookupTreeContent"/></field>
         <field name="uploadedFile"><file/></field>
         <field name="contentIdFrom" title="${uiLabelMap.ContentCompDocParentContentId}"><lookup target-form-name="LookupDetailContentTree"/></field>        
-        <field name="sendAction" title=" " widget-style="${styles.button_default}">
+        <field name="sendAction" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.CommonUpload}"
                 target="${uploadContent_submitAction}"/>

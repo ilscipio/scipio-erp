@@ -385,7 +385,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="performSearch" position="1"><hidden value="Y"/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
 
     <form name="ListAcctgTrans" type="list" title="List Accounting Transactions" list-name="acctgTransList"
@@ -497,14 +497,14 @@ under the License.
         <field name="partyId" title="${uiLabelMap.CommonParty}"><display/></field>
         <field name="workEffortId"><display/></field>
         <field name="shipmentId" title="${uiLabelMap.CommonShipment}"><display/></field>
-        <field name="verifyAction" title=" " widget-style="${styles.button_default}">
+        <field name="verifyAction" title=" " widget-style="${styles.link_action}">
             <hyperlink description="${uiLabelMap.AccountingVerifyTransaction}" target="postAcctgTrans" also-hidden="false">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="organizationPartyId"/>
                 <parameter param-name="verifyOnly" value="Y"/>
             </hyperlink>
         </field>
-        <field name="postAction" title=" " widget-style="${styles.button_default}">
+        <field name="postAction" title=" " widget-style="${styles.link_action}">
             <hyperlink description="${uiLabelMap.AccountingPostTransaction}" target="postAcctgTrans" also-hidden="false">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="organizationPartyId"/>
@@ -570,7 +570,7 @@ under the License.
         <field name="settlementTermId" position="1"><text size="20"/></field>
         <field name="isSummary" position="2"><text size="10"/></field>
         <field name="description" position="1" entry-name="resetFieldValue"><text size="30"/></field>
-        <field name="createAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.button_default}" ><submit button-type="text-link"/></field>
+        <field name="createAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}" ><submit button-type="text-link"/></field>
     </form>
     
     <form name="ListAcctgTransEntries" type="list" list-name="acctgTransEntries" default-entity-name="AcctgTransEntry" target="updateAcctgTransEntry"
@@ -629,7 +629,7 @@ under the License.
         <field name="origAmount"><display type="currency" currency="${origCurrencyUomId}"/></field>
         <field name="amount" title="${uiLabelMap.CommonAmount}"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="removeAction" title=" " widget-style="${styles.button_default}">
+        <field name="removeAction" title=" " widget-style="${styles.link_action}">
            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteAcctgTransEntry">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="acctgTransEntrySeqId"/>
@@ -697,7 +697,7 @@ under the License.
                 <option description="${uiLabelMap.AccountingByDate}" key="byDate"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListFindAcctgTransEntriesByAccount" type="list" title="List Accounting Transaction Entries" list-name="acctgTransEntryList"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -985,7 +985,7 @@ under the License.
             </drop-down>
         </field>
         <field name="performSearch"><hidden value="Y"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSearch}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSearch}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListGlAccountReconciliation" type="multi" use-row-submit="true" target="EditGlReconciliation?organizationPartyId=${organizationPartyId}&amp;tabButtonItem=AccountReconciliation"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -1025,7 +1025,7 @@ under the License.
         </field>
         <field name="amount" title="${uiLabelMap.CommonAmount}"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.AccountingCreateAcctRecons}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.AccountingCreateAcctRecons}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
     <form name="EditGlReconciliation" type="single" target="updateGlReconciliation?tabButtonItem=${tabButtonItem}" default-map-name="glReconciliation"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -1046,7 +1046,7 @@ under the License.
         <field name="organizationPartyId"><display/></field>
         <field name="openingBalance" use-when="&quot;GLREC_RECONCILED&quot;.equals(&quot;${glReconciliation.statusId}&quot;)"><display/></field>
         <field name="reconciledBalance" position="2"><display/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="glReconciliationId!=null" widget-style="${styles.button_default}" ><submit button-type="text-link"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="glReconciliationId!=null" widget-style="${styles.link_action}" ><submit button-type="text-link"/></field>
     </form>
     <form name="ListGlReconciliationEntries" type="list" use-row-submit="true"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -1077,7 +1077,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="performSearch"><hidden value="Y"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSearch}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSearch}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
     
     <form name="ListGlAccountReconciliations" type="list" default-entity-name="GlReconciliation"

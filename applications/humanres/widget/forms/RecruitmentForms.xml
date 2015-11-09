@@ -85,12 +85,12 @@ under the License.
         <field name="jobLocation"><display/></field>
         <field name="experienceYears"><display/></field>
         <field name="experienceMonths"><display/></field>
-        <field name="applyAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.button_default}">
+        <field name="applyAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonApply}" target="EditInternalJobPosting"> 
                 <parameter param-name="jobRequisitionId"/> 
             </hyperlink>
         </field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}" use-when="hasAdminPermission">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}" use-when="hasAdminPermission">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteJobRequisition"> 
                 <parameter param-name="jobRequisitionId"/> 
             </hyperlink>
@@ -202,7 +202,7 @@ under the License.
                 <parameter param-name="jobRequisitionId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}" use-when="hasAdminPermission">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}" use-when="hasAdminPermission">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteInternalJobPosting"> 
                 <parameter param-name="applicationId"/> 
             </hyperlink>
@@ -285,7 +285,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteJobInterview"> 
                 <parameter param-name="jobInterviewId"/> 
             </hyperlink>

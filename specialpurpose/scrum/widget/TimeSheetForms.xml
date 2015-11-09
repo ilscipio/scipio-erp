@@ -74,13 +74,13 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <!--field name="comments" title="${uiLabelMap.CommonComments}"><display/></field-->
-        <field name="completeAction" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.button_default}">
+        <field name="completeAction" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.link_action}">
             <hyperlink target="TimeSheetStatusToComplete" description="${groovy:statusId.equals(&quot;TIMESHEET_IN_PROCESS&quot;)?complete:&quot;&quot;}">
                 <parameter param-name="timesheetId"/>
                 <parameter param-name="statusId" value="TIMESHEET_COMPLETED"/>
             </hyperlink>
         </field>
-        <field name="inProcessAction" title="${uiLabelMap.StatusToInProcess}" widget-style="${styles.button_default}">
+        <field name="inProcessAction" title="${uiLabelMap.StatusToInProcess}" widget-style="${styles.link_action}">
             <hyperlink target="updateTimesheetToInProcess" description="${groovy:statusId.equals(&quot;TIMESHEET_COMPLETED&quot;)?inProcess:&quot;&quot;}" >
                 <parameter param-name="timesheetId"/>
                 <parameter param-name="statusId" value="TIMESHEET_IN_PROCESS"/>
@@ -103,7 +103,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <field name="hours"><display/></field>
         <field name="comments" title="${uiLabelMap.CommonComments}"><display/></field>
-        <field name="completeAction" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.button_default}">
+        <field name="completeAction" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.link_action}">
             <hyperlink target="TimeSheetStatusToComplete" description="${groovy:statusId.equals(&quot;TIMESHEET_IN_PROCESS&quot;)?complete:&quot;&quot;}" also-hidden="false">
                 <parameter param-name="timesheetId"/>
                 <parameter param-name="statusId" value="TIMESHEET_COMPLETED"/>

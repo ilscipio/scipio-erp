@@ -172,7 +172,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="removeContentFromProductConfigItem" description="[${uiLabelMap.CommonDelete}]" also-hidden="false">
                 <parameter param-name="configItemId" from-field="productContent.configItemId"/>
                 <parameter param-name="contentId" from-field="productContent.contentId"/>
@@ -235,7 +235,7 @@ under the License.
         </field>
         <field name="configOptionId" ><hidden/></field>
         <field name="configOptionName" ><hidden/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}" >
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}" >
             <hyperlink target="deleteProductConfigOption" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="configItemId"/>
                 <parameter param-name="configOptionId"/>
@@ -259,7 +259,7 @@ under the License.
                 <parameter param-name="productId" from-field="product.productId"/>
             </hyperlink>
         </field>
-        <field name="removeAction" widget-style="${styles.button_default}" >
+        <field name="removeAction" widget-style="${styles.link_action}" >
             <hyperlink target="deleteProductConfigProduct" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="configItemId"/>
                 <parameter param-name="configOptionId"/>

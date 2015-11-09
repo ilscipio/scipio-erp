@@ -183,7 +183,7 @@ under the License.
         <field name="contentName"><text-find/></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
 <!--
-        <field name="createAction" title=" " widget-style="${styles.button_default}">
+        <field name="createAction" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" description="Create New" target="AddContent"/>
         </field>
 -->
@@ -372,7 +372,7 @@ under the License.
         <field name="lastModifiedByUserLogin" position="1"><display/></field>
         <field name="lastModifiedDate" position="2"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="createAction" title=" " widget-style="${styles.button_default}" position="1">
+        <field name="createAction" title=" " widget-style="${styles.link_action}" position="1">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreateNew}" target="AddContent"/>
         </field>
         <field name="findContent" title=" " widget-style="${styles.button_default}" position="2">

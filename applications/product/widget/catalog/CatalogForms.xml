@@ -167,7 +167,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="removeProdCatalogFromParty" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="prodCatalogId" />
                 <parameter param-name="partyId" />
@@ -228,7 +228,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="deleteProdCatalogStore" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="prodCatalogId" />
                 <parameter param-name="productStoreId" />
@@ -266,7 +266,7 @@
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}">
             <text />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="removeProductCategoryFromProdCatalog" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="prodCatalogId" />
                 <parameter param-name="productCategoryId" />
@@ -275,7 +275,7 @@
                 <parameter param-name="prodCatalogCategoryTypeId" />
             </hyperlink>
         </field>
-        <field name="makeTopAction" title=" " widget-style="${styles.button_default}">
+        <field name="makeTopAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="EditCategory" description="${uiLabelMap.ProductMakeTop}" also-hidden="false">
                 <parameter param-name="CATALOG_TOP_CATEGORY" from-field="productCategoryId" />
                 <parameter param-name="productCategoryId" />

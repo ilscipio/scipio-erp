@@ -46,7 +46,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="webSiteId"><hidden value="${webSiteId}"/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.button_default}">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}">
             <hyperlink target="deleteWebAnalyticsConfig" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="webSiteId"/>
                 <parameter param-name="webAnalyticsTypeId"/>

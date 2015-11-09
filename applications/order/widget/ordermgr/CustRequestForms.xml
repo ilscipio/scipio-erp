@@ -165,7 +165,7 @@ under the License.
         </field>
         <field name="lastModifiedDate" sort-field="true"><display/></field>
         <!--field name="statusId"><hidden value="CRQ_REJECTED"/></field-->
-        <field name="rejectAction" widget-style="${styles.button_default}">
+        <field name="rejectAction" widget-style="${styles.link_action}">
             <hyperlink target="setCustRequestStatus" description="${uiLabelMap.FormFieldTitle_rejectButton}">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="statusId" value="CRQ_REJECTED"/>
@@ -554,7 +554,7 @@ under the License.
         </field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="deleteAction" widget-style="${styles.button_default}">
+        <field name="deleteAction" widget-style="${styles.link_action}">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteCustRequestParty">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="partyId"/>
@@ -601,7 +601,7 @@ under the License.
             </display-entity>
         </field>
 
-        <field name="deleteAction" widget-style="${styles.button_default}">
+        <field name="deleteAction" widget-style="${styles.link_action}">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteCustRequestItemWorkEffort">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="partyId"/>
@@ -722,7 +722,7 @@ under the License.
         </field>
         <field name="mimeTypeId"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.button_default}" use-when="tabButtonItem!=void&amp;&amp;tabButtonItem.equals(&quot;custRequestContent&quot;)">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}" use-when="tabButtonItem!=void&amp;&amp;tabButtonItem.equals(&quot;custRequestContent&quot;)">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteCustRequestContent">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="contentId"/>

@@ -97,7 +97,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" title="" widget-style="${styles.button_default}">
+        <field name="deleteAction" title="" widget-style="${styles.link_action}">
             <hyperlink target="feature_deleteExampleFeatureAppl" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="exampleId"/>
                 <parameter param-name="exampleFeatureId"/>

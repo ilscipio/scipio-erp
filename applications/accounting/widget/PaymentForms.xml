@@ -49,7 +49,7 @@ under the License.
         <field position="1" name="amount"><text/></field>
         <field name="paymentRefNum"><text-find ignore-case="true"/></field>
         <field name="paymentGatewayResponseId"><text/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListPayments" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate-target="findPayments" paginate="true"
@@ -165,7 +165,7 @@ under the License.
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
-        <field position="1" name="createAction" widget-style="smallSubmit">
+        <field position="1" name="createAction" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -212,7 +212,7 @@ under the License.
         </field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
-        <field position="1" name="createAction" widget-style="smallSubmit">
+        <field position="1" name="createAction" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -268,7 +268,7 @@ under the License.
         <field name="paymentGatewayResponseId"><ignored/></field>
         <field name="finAccountTransId" position="1"><text/></field>
         <field name="overrideGlAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
-        <field position="1" name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field position="1" name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="editPaymentApplicationsInv" default-entity-name="PaymentApplication" list-name="paymentApplicationsInv" target="removePaymentApplication" type="list" separate-columns="false"
@@ -500,7 +500,7 @@ under the License.
         <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="effectiveDate"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonPrint}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonPrint}" widget-style="${styles.link_action}">
             <submit/>
         </field>
     </form>
@@ -519,7 +519,7 @@ under the License.
         <field name="effectiveDate"><display/></field>
         <field name="paymentRefNum"><text/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSend}" widget-style="smallSubmit"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSend}" widget-style="${styles.link_action}"><submit/></field>
     </form>
 
     <form name="FindSalesInvoicesByDueDate" type="single" target="findSalesInvoicesByDueDate"

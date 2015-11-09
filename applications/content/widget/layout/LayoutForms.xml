@@ -50,7 +50,7 @@ under the License.
         <field name="lastModifiedDate">
             <date-find/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -92,7 +92,7 @@ under the License.
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
         <field name="createAction" title=" " widget-style="${styles.button_default}" position="1">
@@ -139,7 +139,7 @@ under the License.
         <field name="textData" title="${uiLabelMap.ContentText}" id-name="textData">
         <textarea rows="24" cols="80"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -263,7 +263,7 @@ under the License.
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -292,7 +292,7 @@ under the License.
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -328,7 +328,7 @@ under the License.
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -354,7 +354,7 @@ under the License.
         <field name="imageData" entity-name="ImageDataResource">
             <file />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -383,7 +383,7 @@ under the License.
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -457,7 +457,7 @@ under the License.
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>

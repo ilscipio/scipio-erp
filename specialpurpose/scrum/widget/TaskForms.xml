@@ -318,7 +318,7 @@
         <field name="howToTest" title="${uiLabelMap.ScrumHowToTest}"><textarea/></field>
         <field name="workEffortId" title="${uiLabelMap.ScrumTaskId}"><hidden value="${taskId}"/></field>
         <field name="custRequestId" title="${uiLabelMap.ScrumCustRequestId}"><hidden value="${custRequestId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit" >
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}" >
             <submit/>
         </field>
     </form>
@@ -581,7 +581,7 @@
         <field name="roleTypeId"><hidden value="SCRUM_MEMBER"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListTaskParties" type="list" list-name="taskMembers" target="deleteTaskPartyAssign"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true">

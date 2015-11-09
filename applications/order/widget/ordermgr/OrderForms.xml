@@ -77,7 +77,7 @@ under the License.
         <field name="productStoreId">
             <lookup target-form-name="/marketing/control/LookupProductStore"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListOrderHeaders" type="single" target="" title=""
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -101,7 +101,7 @@ under the License.
         <field name="termTypeId"><display-entity also-hidden="true" entity-name="TermType"/></field>
         <field name="orderId"><hidden/></field>
         <field name="orderItemSeqId"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeOrderTerm" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="orderId"/>
@@ -121,7 +121,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="addAction" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addAction" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="LookupBulkAddSupplierProductsInApprovedOrder" type="multi" use-row-submit="true" list-name="productList" title="" target="bulkAddProductsInApprovedOrder"
             odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="LookupBulkAddSupplierProductsInApprovedOrder" view-size="10">
@@ -144,7 +144,7 @@ under the License.
         <field name="itemDesiredDeliveryDate" title="${uiLabelMap.OrderDesiredDeliveryDate}">
             <date-time/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.OrderAddToOrder}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.OrderAddToOrder}" widget-style="${styles.link_action}">
             <submit/>
         </field>
     </form>
@@ -256,7 +256,7 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
 </forms>

@@ -37,7 +37,7 @@ under the License.
              </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     
     <form name="listLookupFixedAsset" list-name="listIt" title="" type="list" paginate-target="LookupFixedAsset"
@@ -71,7 +71,7 @@ under the License.
         <field name="customTimePeriodId"><text-find/></field>
         <field name="comments"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupBudget" list-name="listIt" title="" type="list" paginate-target="LookupBudget"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -97,7 +97,7 @@ under the License.
         <field name="externalAccountId" title="${uiLabelMap.AccountingExternalAccountId}"><text-find/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="listBillingAccount" list-name="listIt" title="" type="list" paginate-target="LookupBillingAccount"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -137,7 +137,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupGlAccount" list-name="listIt" title="" type="list" paginate-target="LookupGlAccount"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -165,7 +165,7 @@ under the License.
         <field name="amountApplied"><text-find default-value=""></text-find> </field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="listPayment" list-name="listIt" title="" type="list" paginate-target="LookupPayment"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -209,7 +209,7 @@ under the License.
         <field position="2" name="DateThru" title="${uiLabelMap.CommonThru}"><date-time/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     
     <form name="listInvoice" list-name="listIt" title="" type="list" paginate-target="LookupInvoice"
@@ -242,7 +242,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.AccountingPartyIdTo}"><text-find/></field>
         <field name="agreementDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="listAgreements" list-name="listIt" title="" type="list" target="LookupAgreement"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -273,7 +273,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="listAgreementItems" list-name="listIt" title="" type="list" target="LookupAgreementItem"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -300,7 +300,7 @@ under the License.
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="sequenceNum"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="listPaymentGroupMember" list-name="listIt" title="" type="list" target="LookupPaymentGroupMember"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -326,7 +326,7 @@ under the License.
         <field name="organizationPartyId" title="${uiLabelMap.FormFieldTitle_organizationPartyId}"><lookup  target-form-name="LookupPartyName"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListLookupReconciliation" list-name="listIt" type="list" target="LookupGlReconciliation"
@@ -370,7 +370,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupCustomTimePeriod" list-name="listIt" title="" type="list" paginate-target="LookupCustomTimePeriod"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

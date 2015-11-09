@@ -62,7 +62,7 @@ under the License.
         <field name="workEffortId"><lookup target-form-name="LookupWorkEffort"/></field>
         <field name="hours"><text size="5"/></field>
         <field name="comments"><text size="40"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="FindTimesheet" default-map-name="timesheet" target="FindTimesheet" title="" type="single"
@@ -72,7 +72,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListFindTimesheet" target="" title="" type="list" list-name="listIt" paginate-target="FindTimesheet" paginate="true"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -112,7 +112,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="DisplayTimesheetEntries" type="list" list-name="timesheetEntries"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -148,14 +148,14 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="timesheetId"><hidden/></field>
         <field name="invoiceId"><lookup target-form-name="LookupInvoice"/></field>
-        <field name="submitAction" title="${uiLabelMap.PageTitleAddWorkEffortTimeToInvoice}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PageTitleAddWorkEffortTimeToInvoice}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="AddTimesheetToNewInvoice" target="addTimesheetToNewInvoice" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="timesheetId"><hidden/></field>
         <field name="partyIdFrom" title="${uiLabelMap.WorkEffortTimeBillFromParty}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="partyId" title="${uiLabelMap.WorkEffortTimeBillToParty}"><lookup target-form-name="LookupPartyName" default-value="${timesheet.clientPartyId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.PageTitleAddWorkEffortTimeToNewInvoice}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PageTitleAddWorkEffortTimeToNewInvoice}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <!-- TimesheetRole -->
@@ -193,7 +193,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <!-- TimesheetEntry -->
@@ -234,7 +234,7 @@ under the License.
 
         <field name="comments"><text size="60"/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
 
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteTimesheetEntry" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -264,6 +264,6 @@ under the License.
         <field name="invoiceId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
         <field name="invoiceItemSeqId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 </forms>

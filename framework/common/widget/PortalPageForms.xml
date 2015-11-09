@@ -136,7 +136,7 @@ under the License.
         <field name="description" ><text size="16"/></field>
         <field name="description_op" ><hidden value="contains"/></field>
         <field name="description_ic" ><hidden value="Y"/></field>
-        <field name="submitAction" title=" " widget-style="smallSubmit">
+        <field name="submitAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="javascript:ajaxUpdateArea('List${entity}Area', 'list${entity}', $(FindGenericEntity).serialize());" target-type="plain" description="${uiLabelMap.CommonSearch}"/>
         </field>
     </form>

@@ -38,7 +38,7 @@ under the License.
         <field name="forumGroupName" parameter-name="contentName"><text/></field>
         <field name="forumGroupDescription" parameter-name="description"><text/></field>
         <field name="contentTypeId"><hidden value="FORUM_ROOT"/></field>
-        <field name="submitAction" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListForums" type="list" list-name="forums" separate-columns="true" target="updateForum"
@@ -80,7 +80,7 @@ under the License.
         <field name="ownerContentId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="caContentId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="caContentAssocTypeId"><hidden value="SUBSITE"/></field>
-        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="ForumGroupPurposes" type="list" list-name="forumPurposes" target="deleteForumGroupPurpose" separate-columns="true"
@@ -89,7 +89,7 @@ under the License.
         <field name="forumGroupId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="contentId"><hidden value="${parameters.forumGroupId}"/></field>
         <field name="contentPurposeTypeId"><display-entity entity-name="ContentPurposeType" description="${description}"/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="AddForumGroupPurpose" type="single" target="createForumGroupPurpose" title=""
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -100,7 +100,7 @@ under the License.
             <drop-down>
                 <entity-options entity-name="ContentPurposeType" description="${description}"></entity-options>
             </drop-down></field>
-        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="ForumGroupRoles" type="list" list-name="forumRoles" target="updateForumGroupRole" separate-columns="true"
@@ -135,7 +135,7 @@ under the License.
             <drop-down>
                 <entity-options entity-name="RoleType" description="${description}"></entity-options>
             </drop-down></field>
-        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListForumMessages" type="list" list-name="forumMessages" separate-columns="true" target="updateForumMessage"
@@ -208,7 +208,7 @@ under the License.
         <field name="caContentAssocTypeId"><hidden value="RESPONSE"/></field>
         <field name="dataResourceTypeId"><hidden value="ELECTRONIC_TEXT"/></field>
         <field name="forumMessageText" parameter-name="textData"><textarea rows="10"/></field>
-        <field name="addAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="AddForumMessage" type="single" target="updateForumMessage" default-map-name="message"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -224,7 +224,7 @@ under the License.
         <field name="caContentId"><hidden value="${parameters.forumMessageIdTo}"/></field>
         <field name="caContentAssocTypeId"><hidden value="RESPONSE"/></field>
         <field name="forumMessageText" parameter-name="textData"><textarea rows="10" visual-editor-enable="true" visual-editor-buttons="compact"/></field>
-        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="AddForumThreadMessage" type="single" extends="AddForumMessage" target="updateForumThreadMessage"
         header-row-style="header-row" default-table-style="${styles.table_basic}"/>

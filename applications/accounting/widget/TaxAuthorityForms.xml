@@ -48,7 +48,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -147,7 +147,7 @@ under the License.
         </field>
         <field name="taxIdFormatPattern" tooltip="${uiLabelMap.AccountingValidationPattern}"><text/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListTaxAuthorityCategories" type="list" list-name="taxAuthorityCategoryList" target="updateTaxAuthorityCategory"
@@ -186,7 +186,7 @@ under the License.
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
         <field name="productCategoryId" title="${uiLabelMap.CommonCategory}"><lookup target-form-name="LookupProductCategory"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListTaxAuthorityAssocs" type="list" list-name="taxAuthorityAssocList" target="updateTaxAuthorityAssoc"
@@ -226,7 +226,7 @@ under the License.
             </drop-down>
         </field>
         
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteTaxAuthorityAssoc" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
@@ -254,7 +254,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelmap.CommonFrom}"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelmap.CommonThru}" position="2"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListTaxAuthorityGlAccounts" type="list" list-name="taxAuthorityGlAccountList" target="updateTaxAuthorityGlAccount"
@@ -305,7 +305,7 @@ under the License.
         <field name="taxAuthGeoId"><hidden/></field>
         <field name="organizationPartyId" title="${uiLabelMap.PartyOrganizationPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="glAccountId" title="${uiLabelMap.AccountingGlAccount}"><lookup target-form-name="LookupGlAccount"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListTaxAuthorityRateProducts" type="list" list-name="taxAuthorityRateProductList" target="updateTaxAuthorityRateProduct" separate-columns="true"
@@ -351,7 +351,7 @@ under the License.
             </drop-down>
         </field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="deleteTaxAuthorityRateProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
@@ -409,7 +409,7 @@ under the License.
         <field name="fromDate" title="${uiLabelmap.CommonFrom}"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelmap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="description"><textarea/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="FindTaxAuthorityParties" type="single" target="ListTaxAuthorityParties" title=""

@@ -60,7 +60,7 @@ under the License.
             <lookup target-form-name="LookupProduct"/>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -160,7 +160,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -207,7 +207,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -284,7 +284,7 @@ under the License.
         <field name="description"><textarea cols="6"/></field>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -303,7 +303,7 @@ under the License.
             </drop-down>
         </field>
         <field name="geoId" use-when="agreementGeographicalApplic!=null"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -335,7 +335,7 @@ under the License.
             <lookup target-form-name="LookupFacility"/>
         </field>
         <field name="facilityId" use-when="agreementFacilityAppl!=null"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -390,7 +390,7 @@ under the License.
             <lookup target-form-name="LookupPartyName"/>
         </field>
         <field name="partyId" use-when="agreementPartyApplic!=null"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -428,7 +428,7 @@ under the License.
             <lookup target-form-name="LookupProduct"/>
         </field>
         <field name="productId" title="${uiLabelMap.CommonProduct}" use-when="agreementProductAppl!=null"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -487,7 +487,7 @@ under the License.
         <field name="sequenceNum" position-span="1"><text/></field>
         <field use-when="agreementPromoAppl!=null" name="fromDate"><display/></field>
         <field use-when="agreementPromoAppl==null" name="fromDate"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -644,7 +644,7 @@ under the License.
         <field name="termValue" position="2"><text/></field>
         <field name="textValue"><text/></field>
         <field name="description"><textarea cols="5"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -692,7 +692,7 @@ under the License.
         <field name="workEffortId" title="${uiLabelMap.WorkEffort}" position="2">
             <lookup target-form-name="LookupWorkEffort"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListAgreementWorkEffortApplics" type="list" target="updateAgreementWorkEffortApplic" list-name="agreementWorkEffortApplics"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -761,7 +761,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     
     <form name="CopyAgreement" type="single" target="copyAgreement"
@@ -787,6 +787,6 @@ under the License.
                 <option key="Y" description="${uiLabelMap.CommonYes}"/>
             </check>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCopy}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCopy}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 </forms>

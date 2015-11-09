@@ -583,7 +583,7 @@
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
-        <field name="deleteAction" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="deleteAction" widget-style="${styles.link_action}"><submit button-type="button"/></field>
         <field name="completeAction" widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.ProjectMgrToComplete}" target="updateTaskPartyAssign">
                 <parameter param-name="workEffortId"/>
@@ -614,7 +614,7 @@
                 <field-map field-name="workEffortId" from-field="workEffortId"/>
             </entity-and>
         </actions>
-        <field name="contentName" widget-style="smallSubmit ${styles.link_default}">
+        <field name="contentName" widget-style="${styles.link_action} ${styles.link_default}">
             <hyperlink also-hidden="false" description="${contentName} [${contentId}]" target="ViewSimpleContent">
                 <parameter param-name="contentId"/>
                 <parameter param-name="dataResourceId"/>

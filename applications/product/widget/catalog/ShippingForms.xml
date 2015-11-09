@@ -48,7 +48,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListShipmentMethodTypes" target="" title="" type="list" list-name="shipmentMethodTypes"
         paginate-target="ListShipmentMethodTypes" odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
@@ -69,7 +69,7 @@
         <alt-target use-when="shipmentMethodType!=null" target="updateShipmentMethodType"/>
         <auto-fields-service service-name="createShipmentMethodType" default-field-type="edit"/>
         <field name="shipmentMethodTypeId" use-when="shipmentMethodType!=null"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListCarrierShipmentMethods" target="" title="" type="list" list-name="carrierShipmentMethods"
         paginate-target="ListCarrierShipmentMethods" odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
@@ -116,6 +116,6 @@
             </drop-down>
         </field>
         <field name="sequenceNumber" tooltip="${uiLabelMap.ProductUsedForDisplayOrdering}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 </forms>

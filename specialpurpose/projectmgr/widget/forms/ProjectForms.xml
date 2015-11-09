@@ -453,7 +453,7 @@
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
         <field name="workEffortId"><hidden value="${projectId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListOrderInfo" target="EditProjectOrders?projectId=${projectId}" type="list" list-name="listOrderAssoProject" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="orderId" widget-style="${styles.link_default}">
@@ -577,7 +577,7 @@
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date-time"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date-time"/></field>
-        <field name="expireAction" widget-style="smallSubmit" use-when="${thruDate==null || (thruDate &gt; nowTimestamp)}"><submit button-type="button"/></field>
+        <field name="expireAction" widget-style="${styles.link_action}" use-when="${thruDate==null || (thruDate &gt; nowTimestamp)}"><submit button-type="button"/></field>
     </form>
     <form name="AddWorkEffortPartyAssign" target="createWorkEffortPartyAssign" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -658,7 +658,7 @@
         </field>
         <field entry-name="xx" name="fromDate"><date-time type="date"/></field>
         <field entry-name="xx" name="thruDate"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListProjectNotes" extends="ListWorkEffortNotes" extends-resource="component://workeffort/widget/WorkEffortForms.xml" type="list" paginate-target="EditWorkEffortNotes"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -792,7 +792,7 @@
         </field>
         <field entry-name="test" name="fromDate"><date-time type="date"/></field>
         <field entry-name="test" name="thruDate"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="AddResourceTaskParty" target="addTaskPartyAssign" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -820,7 +820,7 @@
         </field>
         <field entry-name="test" name="fromDate"><date-time type="date"/></field>
         <field entry-name="test" name="thruDate"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="AddProjectTimeToNewInvoice" target="addProjectTimeToNewInvoice" title="" type="single">
         <actions>
@@ -846,7 +846,7 @@
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
            </field>
-        <field name="submitAction" title="${uiLabelMap.PageTitleAddProjectTimeToNewInvoice}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PageTitleAddProjectTimeToNewInvoice}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListContents" extends="ListWorkEffortContents" extends-resource="component://workeffort/widget/WorkEffortForms.xml" default-entity-name="WorkEffortContent">
         <field name="contentId" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">

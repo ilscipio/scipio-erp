@@ -92,7 +92,7 @@ under the License.
             </drop-down>
         </field>
         <field name="reason" position="2"><text-find/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -374,7 +374,7 @@ under the License.
         <field name="createdByUserLogin"><hidden/></field>
         <field name="lastModifiedDate"><hidden/></field>
         <field name="lastModifiedByUserLogin"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
         
         <sort-order>
             <field-group>
@@ -462,7 +462,7 @@ under the License.
             </drop-down>
         </field>
         <field name="productId"><lookup target-form-name="LookupProduct"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -503,7 +503,7 @@ under the License.
         <field name="selectedAmount" map-name="parameters" use-when="quoteItem==null"><text/></field>
         <field name="quoteUnitPrice" title="${uiLabelMap.OrderOrderQuoteUnitPrice}"/>
         <field name="comments" map-name="parameters" use-when="quoteItem==null"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -532,7 +532,7 @@ under the License.
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestItemSeqId"><hidden/></field>
         <field name="note"><textarea cols="60" rows="10"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -553,7 +553,7 @@ under the License.
             <display-entity also-hidden="true" entity-name="RoleType"/>
         </field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
         <field name="deleteAction" widget-style="${styles.button_default}">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteCustRequestParty">
                 <parameter param-name="custRequestId"/>
@@ -578,7 +578,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListRequestItemRequirements" type="list" title="" list-name="custRequestRequirements"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="RequestItemRequirements">
@@ -616,7 +616,7 @@ under the License.
         <field name="custRequestItemSeqId"><hidden/></field>
         <field name="workEffortId"><lookup target-form-name="LookupWorkEffort"/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <!-- request form -->
@@ -795,7 +795,7 @@ under the License.
             </drop-down>
         </field>
         <field name="priority" use-when="statusId.equals(&quot;CRQ_COMPLETED&quot;)"><display/></field>
-        <field name="updateAction" widget-style="smallSubmit" use-when="!statusId.equals(&quot;CRQ_COMPLETED&quot;)"><submit /></field>
+        <field name="updateAction" widget-style="${styles.link_action}" use-when="!statusId.equals(&quot;CRQ_COMPLETED&quot;)"><submit /></field>
         <field name="currentStatusId" map-name="taskResult.taskInfo" title="${uiLabelMap.MyPortalTaskStatus}"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="estimatedStartDate" map-name="taskResult.taskInfo" title="${uiLabelMap.MyPortalTaskPlanStartDate}"><display type="date"/></field>
         <field name="estimatedCompletionDate" map-name="taskResult.taskInfo" title="${uiLabelMap.MyPortalTaskPlanEndDate}"><display type="date"/></field>

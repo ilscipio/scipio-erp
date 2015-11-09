@@ -90,7 +90,7 @@ under the License.
         <!-- contact list -->
         <field name="contactListId">
             <lookup size="20" target-form-name="LookupContactList">
-                <sub-hyperlink target="/marketing/control/EditContactList" target-type="inter-app" link-style="smallSubmit">
+                <sub-hyperlink target="/marketing/control/EditContactList" target-type="inter-app" link-style="${styles.link_action}">
                 <parameter param-name="contactListId" from-field="communicationEvent.contactListId"/>
             </sub-hyperlink>
             </lookup>
@@ -550,7 +550,7 @@ under the License.
         </field>
         <field name="entryDate" sort-field="true"><display type="date-time"/></field>
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
-        <field name="removeAction" widget-style="smallSubmit"><submit/></field>
+        <field name="removeAction" widget-style="${styles.link_action}"><submit/></field>
     </form>
     <form name="ListPendingCommEvents" type="list" extends="ListCommEvents" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
@@ -579,7 +579,7 @@ under the License.
         <field name="_rowSubmit" title="${uiLabelMap.CommonYes}">
             <check/>
         </field>
-        <field name="deleteSelectedAction" widget-style="smallSubmit">
+        <field name="deleteSelectedAction" widget-style="${styles.link_action}">
             <submit />
         </field>
     </form>
@@ -622,7 +622,7 @@ under the License.
         </actions>
         <field name="workEffortId" title="${uiLabelMap.WorkEffort}">
             <display-entity entity-name="WorkEffort" description="${workEffortName}">
-                <sub-hyperlink description="${workEffortId}" target="/workeffort/control/WorkEffortSummary" target-type="inter-app" link-style="smallSubmit">
+                <sub-hyperlink description="${workEffortId}" target="/workeffort/control/WorkEffortSummary" target-type="inter-app" link-style="${styles.link_action}">
                     <parameter param-name="workEffortId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -635,7 +635,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="communicationEventId"><display/></field>
         <field name="workEffortId" use-when="workEffort==null&amp;&amp;workEffortId==null" ><lookup target-form-name="/workeffort/control/LookupWorkEffort"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="text-link"/> </field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="text-link"/> </field>
         <sort-order>
             <sort-field name="communicationEventId"/>
             <banner left-text="${uiLabelMap.WorkEffortBannerAddWorkEffortAndAssoc1}"/>
@@ -654,7 +654,7 @@ under the License.
         <field name="communicationEventPrpTypId">
             <display-entity description="${description}" entity-name="CommunicationEventPrpTyp"/>
         </field>
-        <field name="removeAction" title=" " widget-style="smallSubmit ${styles.button_default}">
+        <field name="removeAction" title=" " widget-style="${styles.link_action} ${styles.button_default}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeCommunicationEventPurpose">
                 <parameter param-name="communicationEventPrpTypId"/>
                 <parameter param-name="communicationEventId"/>
@@ -694,7 +694,7 @@ under the License.
         <field name="contactMechId"><display-entity description="${infoString}" entity-name="ContactMech"/></field>
         <field name="roleTypeId"><display-entity description="${description}" entity-name="RoleType"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
-        <field name="removeAction" widget-style="smallSubmit"><submit/></field>
+        <field name="removeAction" widget-style="${styles.link_action}"><submit/></field>
     </form>
     
     <form name="ListCommRolesInline" extends="ListCommRoles" hide-table-when="${!formHasListResult}" use-alternate-text-when="${false}" paginate="false">
@@ -832,7 +832,7 @@ under the License.
         <field name="relatedDetailId" map-name="dataResource" title="Survey ID"
             use-when="dataResource!=null &amp;&amp; &quot;SURVEY&quot;.equals(dataResource.getString(&quot;dataResourceTypeId&quot;))">
             <lookup target-form-name="LookupSurvey">
-                <sub-hyperlink target="EditSurvey" description="Edit Survey" link-style="smallSubmit" use-when="dataResource.get(&quot;relatedDetailId&quot;)!=null">
+                <sub-hyperlink target="EditSurvey" description="Edit Survey" link-style="${styles.link_action}" use-when="dataResource.get(&quot;relatedDetailId&quot;)!=null">
                 <parameter param-name="surveyId" from-field="dataResource.relatedDetailId"/>
             </sub-hyperlink>
             </lookup>
@@ -840,12 +840,12 @@ under the License.
         <field name="relatedDetailId" map-name="dataResource" title="Survey Response ID"
             use-when="dataResource!=null &amp;&amp; &quot;SURVEY_RESPONSE&quot;.equals(dataResource.getString(&quot;dataResourceTypeId&quot;))">
             <lookup target-form-name="LookupSurveyResponse">
-                <sub-hyperlink target="EditSurveyResponse" description="Edit Survey Response" link-style="smallSubmit" use-when="dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)!=null">
+                <sub-hyperlink target="EditSurveyResponse" description="Edit Survey Response" link-style="${styles.link_action}" use-when="dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)!=null">
                     <parameter param-name="surveyResponseId" from-field="dataResource.relatedDetailId"/>
                 </sub-hyperlink>
             </lookup>
         </field>
-        <field name="surveyResponseAction" map-name="dummy" widget-style="smallSubmit ${styles.button_default}"
+        <field name="surveyResponseAction" map-name="dummy" widget-style="${styles.link_action} ${styles.button_default}"
             use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)==null &amp;&amp; templateDataResource!=null &amp;&amp; templateDataResource.get(&quot;relatedDetailId&quot;)!=null">
             <hyperlink description="Create Response (for Survey ${templateDataResource.relatedDetailId})" target="EditSurveyResponse" also-hidden="false" target-window="_blank">
                 <parameter param-name="surveyId" from-field="templateDataResource.relatedDetailId"/>
@@ -946,7 +946,7 @@ under the License.
         </field>
         <field name="note" widget-area-style="fieldWidth200"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonYes}"><check/></field>
-        <field name="deleteSelectedAction" widget-style="smallSubmit"><submit/></field>
+        <field name="deleteSelectedAction" widget-style="${styles.link_action}"><submit/></field>
     </form>
 
     <form name="allocateMsgToPartyForm" type="single" target="allocateMsgToParty" title="create a new party for a unknown incoming email address">
@@ -962,7 +962,7 @@ under the License.
         <field name="firstName" position="1"><text/></field>
         <field name="middleName" position="2"><text/></field>
         <field name="lastName"><text/></field>
-        <field name="submit" title="${uiLabelMap.PartyCreateAddEmail}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submit" title="${uiLabelMap.PartyCreateAddEmail}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="deleteEmail" type="single" title="delete the email"
         target="deleteUnknownCommunicationEvent">
@@ -971,7 +971,7 @@ under the License.
         <field name="delContentDataResource"><hidden value="Y"/></field>
         <field name="dummy1" title=" " position="1"><display/></field>
         <field name="dummy2" title=" " position="2"><display/></field>
-        <field name="deleteEmail" widget-style="smallSubmit" position="3"><submit/></field>
+        <field name="deleteEmail" widget-style="${styles.link_action}" position="3"><submit/></field>
     </form>
     <form name="EditRequestFromCommEvent" type="single" target="createRequestFromCommEvent" default-map-name="communicationEvent">
         <field name="communicationEventId"><hidden value="${parameters.communicationEventId}"/></field>
@@ -986,7 +986,7 @@ under the License.
         <field name="custRequestName" entry-name="subject"><text size="60"/></field>
         <field name="contentMimeTypeId"><hidden/></field>
         <field name="content" title="${uiLabelMap.CommonContent}"><textarea cols="70" rows="20"/></field>
-        <field name="submit" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submit" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListRequests" extends="ListRequests" extends-resource="component://order/widget/ordermgr/CustRequestForms.xml">
         <field name="custRequestName">
@@ -1019,12 +1019,12 @@ under the License.
                 <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
             </hyperlink>
         </field>
-        <field name="removeAction" title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit"><submit/></field>
+        <field name="removeAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}"><submit/></field>
     </form>
     <form name="ListProgressEmails" type="list" extends="ListPartyCommEvents" list-name="commEventProgress">
         <field name="partyIdFrom"><ignored/></field>
         <field name="startDate"><display type="date-time"/></field>
-        <field name="removeAction" widget-style="smallSubmit"><submit/></field>
+        <field name="removeAction" widget-style="${styles.link_action}"><submit/></field>
     </form>
     <form name="ListCommOrders" list-name="ordersList" type="list" target="deleteCommunicationEventOrder" paginate-target="UpdateCommOrders" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" view-size="20">
         <actions>
@@ -1046,12 +1046,12 @@ under the License.
         <field name="createdBy" title="${uiLabelMap.CommonCreatedBy}">
             <display description="${orderHeader.createdBy}"/>
         </field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit"><submit/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}"><submit/></field>
     </form>
     <form name="AddCommOrder" type="single" target="createCommunicationEventOrder" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="communicationEventId"><hidden/></field>
         <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
-        <field name="submitAction" title="${uiLabelMap.PartyOrderAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PartyOrderAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListCommProducts" list-name="productsList" type="list" target="deleteCommunicationEventProduct" paginate-target="ListCommProducts" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" view-size="20">
         <actions>
@@ -1067,11 +1067,11 @@ under the License.
         <field name="internalName">
             <display description="${product.internalName}"/>
         </field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="smallSubmit"><submit/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}"><submit/></field>
     </form>
     <form name="AddCommProduct" type="single" target="createCommunicationEventProduct" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="communicationEventId"><hidden/></field>
         <field name="productId" title="${uiLabelMap.PartyProductId}"><lookup target-form-name="LookupProduct"/></field>
-        <field name="submitAction" title="${uiLabelMap.PartyProductAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PartyProductAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 </forms>

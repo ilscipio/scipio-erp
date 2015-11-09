@@ -26,7 +26,7 @@ under the License.
     <form name="AddDataResourceType" target="addDataResourceType" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createDataResourceType"/>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -39,7 +39,7 @@ under the License.
         <field name="dataResourceTypeId">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -59,7 +59,7 @@ under the License.
                     entity-name="DataResourceType" key-field-name="dataResourceTypeId"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -87,7 +87,7 @@ under the License.
     <form name="AddCharacterSet" target="addCharacterSet" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createCharacterSet"/>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -100,7 +100,7 @@ under the License.
         <field name="characterSetId">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -119,7 +119,7 @@ under the License.
                 <entity-options entity-name="DataCategory" description="${categoryName}" key-field-name="dataCategoryId"></entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -139,7 +139,7 @@ under the License.
                     />
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -159,7 +159,7 @@ under the License.
                     entity-name="MimeType" key-field-name="mimeTypeId"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -178,7 +178,7 @@ under the License.
                     entity-name="MimeType" key-field-name="mimeTypeId"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -192,7 +192,7 @@ under the License.
     <form name="AddMetaDataPredicate" target="addMetaDataPredicate" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createMetaDataPredicate"/>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -205,7 +205,7 @@ under the License.
         <field name="metaDataPredicateId">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -219,7 +219,7 @@ under the License.
     <form name="AddMimeType" target="addMimeType" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createMimeType"/>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -232,7 +232,7 @@ under the License.
         <field name="mimeTypeId">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
@@ -251,7 +251,7 @@ under the License.
                 <entity-options entity-name="MimeType" description="${description}" key-field-name="mimeTypeId"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -267,7 +267,7 @@ under the License.
                 <parameter param-name="mimeTypeId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">

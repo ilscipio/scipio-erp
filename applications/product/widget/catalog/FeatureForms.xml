@@ -61,7 +61,7 @@
         <field name="idCode" title="${uiLabelMap.ProductIdCode}"/>
         <field name="abbrev" title="${uiLabelMap.ProductAbbreviation}"/>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="CreateSupplierProductFeature" type="single" target="createSupplierProductFeature" title=""
@@ -100,7 +100,7 @@
                 <entity-options entity-name="Uom" description="${uomId}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.button_default}">
             <hyperlink target="removeSupplierProductFeature" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productFeatureId"/>
@@ -112,7 +112,7 @@
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureTypeId"><text-find size="25"></text-find></field>
         <field name="description"><text-find size="25"></text-find></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit/></field>
     </form>
     <form name="ListFeatureTypes" list-name="listIt" target="" title="" type="list" paginate-target="EditFeatureTypes"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
@@ -159,13 +159,13 @@
             </drop-down>
         </field>
         <field name="hasTable"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="FindFeatureInterAction" type="single" target="EditFeatureInterActions"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureId"><text-find size="25"></text-find></field>
         <field name="productFeatureIdTo"><text-find size="25"></text-find></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit/></field>
     </form>
     <form name="ListFeatureInterActions" list-name="listIt" target="" title="" type="list" paginate-target="EditFeatureInterAction"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
@@ -228,7 +228,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListFeatureGroupAppls" type="multi" use-row-submit="false" list-name="productFeatureGroupAndAppls" target="UpdateProductFeatureGroupAppl?productFeatureGroupId=${productFeatureGroupId}" title=""
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
@@ -250,7 +250,7 @@
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit/>
         </field>
     </form>
@@ -258,7 +258,7 @@
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureGroupId"><hidden/></field>
         <field name="productFeatureId" title="${uiLabelMap.ProductFeatureId}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -270,7 +270,7 @@
                 <list-options key-name="productFeatureCategoryId" list-name="productFeatureCategories" description="${description}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonContinue}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonContinue}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -285,7 +285,7 @@
         <field name="idCode" title="${uiLabelMap.CommonIdCode}"><display/></field>
         <field name="abbrev" title="${uiLabelMap.ProductAbbrev}"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
           <submit/>
         </field>
     </form>
@@ -294,7 +294,7 @@
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureCategoryId" title="${uiLabelMap.CommonId}"><text-find size="20" maxlength="255"></text-find></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find size="25"></text-find></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit find"><submit/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action} find"><submit/></field>
     </form>
 
     <form name="ListProductFeature" type="list" list-name="listIt" paginate-target="EditFeatureCategories" target="UpdateFeatureCategory"
@@ -326,7 +326,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
 
     </form>
     <form name="ListFeaturePrice" type="list" target="updateFeaturePrice" list-name="productFeaturePrice"
@@ -342,7 +342,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time default-value="${thruDate}"/></field>
         <field name="price" title="${uiLabelMap.ProductPrice}" widget-style="required"><text size="25" default-value="${price}"/></field>
-        <field name="updateFeaturePrice" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="updateFeaturePrice" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
         <field name="lastModifiedBy" title="${uiLabelMap.ProductLastModifiedBy}"><display description="[${lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${lastModifiedDate}"/></field>
         <field name="deleteFeaturePriceAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
             <hyperlink target="deleteFeaturePrice" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -376,6 +376,6 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 </forms>

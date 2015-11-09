@@ -97,7 +97,7 @@ under the License.
         <field name="workEffortId" title="${uiLabelMap.WorkEffort}" position="2"><lookup target-form-name="LookupWorkEffort" size="20" maxlength="20"/></field>
         <field name="voucherRef" position="1"><text/></field>
         <field name="voucherDate" position="2"><date-time/></field>
-        <field name="createAction" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="createAction" widget-style="${styles.link_action}"><submit button-type="button"/></field>
         <sort-order>
             <field-group>
                 <sort-field name="organisationPartyId"/>

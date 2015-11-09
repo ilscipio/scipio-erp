@@ -25,8 +25,8 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="partyId"><hidden/></field>
         <field name="avsDeclineString" title="${uiLabelMap.PartyAvsString}"><text size="60" maxlength="250"/></field>
-        <field name="submitAction" title="[${uiLabelMap.CommonSave}]" widget-style="smallSubmit"><submit button-type="text-link"/></field>
-        <field name="cancelAction" title=" " widget-style="smallSubmit ${styles.button_default}"><hyperlink target="backHome" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
+        <field name="submitAction" title="[${uiLabelMap.CommonSave}]" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="cancelAction" title=" " widget-style="${styles.link_action} ${styles.button_default}"><hyperlink target="backHome" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
     </form>
     
     <form name="EditBillingAccount" type="single" target="updateBillingAccount" extends="EditBillingAccount" extends-resource="component://accounting/widget/BillingAccountForms.xml">

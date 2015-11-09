@@ -141,7 +141,7 @@ under the License.
                 <entity-options entity-name="ContactList" description="${description}" key-field-name="contactListId"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="MergeContacts" type="single" target="MergeContacts">
         <actions>
@@ -166,7 +166,7 @@ under the License.
     <form name="NewContactFromVCard" type="upload" target="createContactFromVCard" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="infile" title="${uiLabelMap.SfaUploadVCard}"><file/></field>
         <field name="serviceName"><hidden value="createContact"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="QuickAddContact" type="single" target="quickAddContact">

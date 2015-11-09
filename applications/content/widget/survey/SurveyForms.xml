@@ -35,7 +35,7 @@ under the License.
         </field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListFindSurvey" target="" title="" list-name="listIt" type="list" paginate-target="FindSurvey"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -75,7 +75,7 @@ under the License.
         </field>
         <field name="acroFormContentId" use-when="survey==null"><ignored/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="BuildSurveyFromPdf" type="single" target="buildSurveyFromPdf" title="" default-map-name="survey"
@@ -84,7 +84,7 @@ under the License.
         <field name="contentId" map-name="empty" title="${uiLabelMap.ContentPDF}">
             <lookup target-form-name="LookupContent"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.ContentSurveyGenerateQuestions}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.ContentSurveyGenerateQuestions}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="BuildSurveyResponseFromPdf" type="single" target="buildSurveyResponseFromPdf" title="" default-map-name="survey"
@@ -96,7 +96,7 @@ under the License.
         <field name="contentId" map-name="empty" title="${uiLabelMap.ContentPDF}">
             <lookup target-form-name="LookupContent"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.ContentSurveyBuildRespondeFromPDF}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.ContentSurveyBuildRespondeFromPDF}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <!-- SurveyMultiResp & SurveyMultiRespColumn -->
@@ -107,7 +107,7 @@ under the License.
         <field name="surveyId"><hidden/></field>
         <field name="surveyMultiRespId"><display/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListSurveyMultiRespColumns" type="list" target="updateSurveyMultiRespColumn" title="" list-name="surveyMultiRespColumnList"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -127,7 +127,7 @@ under the License.
         <field name="surveyMultiRespId"><display/></field>
         <field name="surveyMultiRespColId"><display/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="AddSurveyMultiRespColumn" type="single" target="createSurveyMultiRespColumn" title=""
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -135,14 +135,14 @@ under the License.
 
         <field name="surveyId" map-name="surveyMultiResp"><hidden/></field>
         <field name="surveyMultiRespId" map-name="surveyMultiResp"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="AddSurveyMultiResp" type="single" target="createSurveyMultiResp" title=""
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createSurveyMultiResp" default-field-type="edit"/>
 
         <field name="surveyId" map-name="survey"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <!-- SurveyPage -->
@@ -160,7 +160,7 @@ under the License.
         <field name="surveyId"><hidden/></field>
         <field name="surveyPageSeqId"><display/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="AddSurveyPage" type="single" target="createSurveyPage" title="" default-map-name="surveyPage"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -168,7 +168,7 @@ under the License.
 
         <field name="surveyId"><hidden/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <!-- UNUSED FORM
@@ -184,7 +184,7 @@ under the License.
             </drop-down>
         </field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     -->
 
@@ -207,8 +207,8 @@ under the License.
             </drop-down>
         </field>
 
-        <field use-when="surveyQuestion!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="surveyQuestion!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="CreateSurveyQuestionCategory" type="single" target="createSurveyQuestionCategory" title=""
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -221,7 +221,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="CreateSurveyQuestionOption" type="single" target="createSurveyQuestionOption" title="" default-map-name="surveyQuestionOption"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -249,8 +249,8 @@ under the License.
             </drop-down>
         </field>
 
-        <field use-when="surveyQuestionOption!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field use-when="surveyQuestionOption==null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field use-when="surveyQuestionOption!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field use-when="surveyQuestionOption==null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="FindSurveyResponse" target="FindSurveyResponse" title="" type="single"
@@ -258,7 +258,7 @@ under the License.
         <auto-fields-entity entity-name="SurveyResponse" default-field-type="find"/>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListFindSurveyResponse" list-name="listIt" title="" type="list" paginate-target="FindSurveyResponse"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -287,7 +287,7 @@ under the License.
         <field name="allowUpdate"><drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupSurvey" list-name="listIt" title="" type="list" paginate-target="LookupSurvey"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -310,7 +310,7 @@ under the License.
         <auto-fields-entity entity-name="SurveyResponse" default-field-type="find"/>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupSurveyResponse" list-name="listIt" title="" type="list" paginate-target="LookupSurveyResponse"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

@@ -56,7 +56,7 @@
         </field>
         <field entry-name="test" name="fromDate"><date-time type="date"/></field>
         <field entry-name="test" name="thruDate"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="listResourcesProjects" type="list" list-name="parties" target="deleteProjectPartyAssign"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true">

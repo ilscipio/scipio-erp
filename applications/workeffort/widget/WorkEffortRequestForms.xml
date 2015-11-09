@@ -83,6 +83,6 @@ under the License.
         <field name="workEffortId"><hidden/></field>
         <field name="custRequestId"><lookup target-form-name="LookupCustRequest"/></field>
         <field name="custRequestItemSeqId"><lookup target-form-name="LookupCustRequestItem" target-parameter="custRequestId"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 </forms>

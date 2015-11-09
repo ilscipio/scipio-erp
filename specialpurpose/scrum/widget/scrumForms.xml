@@ -539,7 +539,7 @@ under the License.
             </drop-down>
         </field>
         <field name="projectId"><hidden value="${parameters.projectId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="smallSubmit"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit/></field>
     </form>
     <form name="newScrumProject" extends="editScrumProject">
         <field name="productId" title="${uiLabelMap.ScrumProductName}"><display-entity entity-name="Product" description="${internalName} [${productId}]"/> </field>
@@ -772,7 +772,7 @@ under the License.
         <field name="story" title="${uiLabelMap.ScrumStory}" use-when="custRequest!=null&amp;&amp;isTeamMember==false"><textarea  rows="4" cols="60" default-value="${story}" /></field>
         <field name="story" title="${uiLabelMap.ScrumStory}" use-when="custRequest!=null&amp;&amp;isTeamMember==true"><display description="${story}"/></field>
         <field name="noteInfo" title="${uiLabelMap.ScrumHowToTest}"><textarea  rows="4" cols="60" default-value="${noteInfo}" /></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
         <sort-order>
             <sort-field name="description"/>
             <sort-field name="productId"/>
@@ -855,7 +855,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="FindTotalBacklog" type="single" target="FindTotalBacklog">
         <actions>
@@ -913,7 +913,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListProdBacklog" type="multi" use-row-submit="true" list-name="custRequestAndCustRequestItems" target="updateProductBacklogItemRow?productId=${productId}&amp;sequence=${sequence}&amp;" paginate-target="AddProdBacklog" separate-columns="true"
@@ -1514,8 +1514,8 @@ under the License.
         <field name="longDescription" title="${uiLabelMap.CommonDescription}"><textarea/></field>
         <field name="productTypeId"><hidden value="SCRUM_ITEM"/></field>
         <field name="productId"><hidden value="${parameters.productId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="product==null" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" position="1" use-when="product!=null" widget-style="smallSubmit" event="onClick" action="javascript: if(document.EditProduct.statusId.value == 'PRODUCT_CLOSED') {
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="product==null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" position="1" use-when="product!=null" widget-style="${styles.link_action}" event="onClick" action="javascript: if(document.EditProduct.statusId.value == 'PRODUCT_CLOSED') {
                                                                                                                                                                                 if (confirm('Are you sure to close this product ?.')){ 
                                                                                                                                                                                     document.ViewEditProdBacklog.disable();
                                                                                                                                                                                     document.EditProduct.action = 'updateProduct';
@@ -1575,7 +1575,7 @@ under the License.
         <field name="internalName" title="${uiLabelMap.ScrumProductName}"><display description="${product.internalName} [${product.productId}]"/></field>
         <field name="longDescription" title="${uiLabelMap.CommonDescription}"><display /></field>
         <field name="productTypeId"><hidden value="SCRUM_ITEM"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="product==null" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="product==null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListProductBacklogCategories" type="list" use-row-submit="true" list-name="listIt" target="DeleteSprint" paginate-target="SprintList" separate-columns="true"
         odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
@@ -1638,8 +1638,8 @@ under the License.
         <field name="productId"><hidden value="${productId}"/></field>
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestName" title="${uiLabelMap.ScrumCategory}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="custRequest==null" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="custRequest!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="custRequest==null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="custRequest!=null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListProductByAdmin" type="list" default-entity-name="ProductRole" use-row-submit="true" list-name="listIt" target="deleteProduct" paginate-target="EditProduct" separate-columns="true"
         odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
@@ -1721,7 +1721,7 @@ under the License.
             </field>
             <field name="partyId"><hidden value="${userLogin.partyId}"/></field>
             <field name="roleTypeId"><hidden value="PRODUCT_OWNER"/></field>
-            <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+            <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
             <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done -->
             </field>
         </form>
@@ -1859,11 +1859,11 @@ under the License.
         </field>
         <field name="rateTypeId" title="${uiLabelMap.ScrumRateTypeId}" position="2"><display-entity entity-name="RateType" description="${description}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonDate}" position="2"><display type="date"/> </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="totalHoursNotYetBilled" extends="hoursNotYetBilled" paginate-target="TotalBilling"
        target="updateTotalNotBilledBacklog?productId=${productId}&amp;fromDate=${fromDate}&amp;thruDate=${thruDate}&amp;includeMeeting=${includeMeeting}&amp;VIEW_SIZE_1=${parameters.VIEW_SIZE_1}&amp;VIEW_INDEX_1=${parameters.VIEW_INDEX_1}" >
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="AddProductTimeToNewInvoice" type="single" target="addProductTimeToNewInvoice">
         <field name="partyIdFrom" title="${uiLabelMap.WorkEffortTimeBillFromParty}"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} [${partyId}]"/></field>
@@ -1885,7 +1885,7 @@ under the License.
             </drop-down>
            </field>
         <field name="invoiceDate" title="${uiLabelMap.ScrumInvoiceDate}" use-when="context.get(&quot;invoiceId&quot;)!=null"><date-time type="date"></date-time></field>
-        <field name="submitAction" title="${uiLabelMap.PageTitleAddProjectTimeToNewInvoice}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PageTitleAddProjectTimeToNewInvoice}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="FindProductBilling" type="single" target="ProductBilling">
         <field name="productId"><hidden/></field>
@@ -1897,7 +1897,7 @@ under the License.
                 <option key="N"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="FindProductTotalBilling" extends="FindProductBilling" type="single" target="TotalBilling">
         <field name="productId" title="${uiLabelMap.ScrumProductName}">
@@ -1915,7 +1915,7 @@ under the License.
     </form>
     <!-- View Form -->
     <form name="ViewEditScrumProject" type="single" extends="editScrumProject">
-        <field name="submitAction" title="Save" widget-style="smallSubmit" event="onClick" action="javascript:document.ViewEditScrumProject.disable();"><submit/></field>
+        <field name="submitAction" title="Save" widget-style="${styles.link_action}" event="onClick" action="javascript:document.ViewEditScrumProject.disable();"><submit/></field>
     </form>
     <form name="ViewEditProdBacklog" type="single" default-map-name="custRequest">
         <actions>
@@ -2076,7 +2076,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" event="onClick" action="javascript:document.ViewDailyMeetingMinute.disable();"><hidden/></field>
     </form>
     <form name="ViewEditScrumProject" type="single" extends="editScrumProject">
-        <field name="submitAction" title="Save" widget-style="smallSubmit"><hidden/></field>
+        <field name="submitAction" title="Save" widget-style="${styles.link_action}"><hidden/></field>
     </form>
     <form name="ViewAddSprintBacklog" type="single" extends="addSprintBacklog">
         <field name="submitAction"><hidden/></field>
@@ -2890,7 +2890,7 @@ under the License.
         <field name="story" title="${uiLabelMap.ScrumStory}" ><textarea  rows="4" cols="60"/></field>
         <field name="custSequenceNum"><hidden value="1"/></field>
         <field name="noteInfo" title="${uiLabelMap.ScrumHowToTest}" ><textarea  rows="4" cols="60"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     
     <form name="QuickAddNewTask" type="upload" target="createTaskForBacklog">

@@ -39,7 +39,7 @@ under the License.
         </field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
-                <sub-hyperlink target="viewprofile" link-style="smallSubmit" target-type="inter-app" description="${partyId}">
+                <sub-hyperlink target="viewprofile" link-style="${styles.link_action}" target-type="inter-app" description="${partyId}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -73,7 +73,7 @@ under the License.
         </field>
         <!--<field name="partyId" title="Organization PartyId">
             <display-entity description="${groupName}" entity-name="PartyNameView">
-                <sub-hyperlink target="viewprofile" link-style="smallSubmit" target-type="inter-app" description="${partyId}">
+                <sub-hyperlink target="viewprofile" link-style="${styles.link_action}" target-type="inter-app" description="${partyId}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -96,7 +96,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitAction" use-when="emplPosition==null" title="${uiLabelMap.CommonCreate}" widget-style="${styles.button_default}"><submit button-type="text-link"/></field>
-        <field name="submitAction" use-when="emplPosition!=null" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="emplPosition!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplPositionFulfillments" type="list" target="updateEmplPositionFulfillment" title="" paginate-target="findEmplPositionFulfillments"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -109,7 +109,7 @@ under the License.
         <auto-fields-service service-name="updateEmplPositionFulfillment"/>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
-                <sub-hyperlink target="EmployeeProfile" link-style="smallSubmit" description="${partyId}">
+                <sub-hyperlink target="EmployeeProfile" link-style="${styles.link_action}" description="${partyId}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -298,7 +298,7 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
         </field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="EmplPositionInfo" type="single" default-map-name="emplPosition" paginate-target="FindEmplPositions"
         header-row-style="header-row" default-table-style="${styles.table_basic}">

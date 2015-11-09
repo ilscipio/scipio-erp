@@ -29,8 +29,8 @@ under the License.
             doesn't work well when we want to allow changes in the original form. -->
         <field name="submitAction" use-when="example!=null"><hidden/></field>
         <field name="submitAction" use-when="example==null"><hidden/></field>
-        <field name="submitActionOvrd" title="${uiLabelMap.CommonCreate}" use-when="example==null" widget-style="smallSubmit"><submit button-type="button"/></field>
-        <field name="submitActionOvrd" title="${uiLabelMap.CommonUpdate}" use-when="example!=null" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitActionOvrd" title="${uiLabelMap.CommonCreate}" use-when="example==null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitActionOvrd" title="${uiLabelMap.CommonUpdate}" use-when="example!=null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
 </forms>

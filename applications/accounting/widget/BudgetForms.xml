@@ -52,7 +52,7 @@ under the License.
     <form name="FindBudgetOptions" extends="lookupBudget" extends-resource="component://accounting/widget/FieldLookupForms.xml"
         target="ListBudgets">
         <field name="searchOptions_collapsed"><hidden value="true"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <!-- create and update a fixed asset -->
@@ -176,10 +176,10 @@ under the License.
        <field name="amount" title="${uiLabelMap.CommonAmount}" ><text size="10"/></field>
        <field name="purpose" ><text size="50"/></field>
        <field name="justification" ><text size="50"/></field>
-        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" use-when="invoiceItem==null">
+        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}" use-when="invoiceItem==null">
             <submit button-type="button"/>
         </field>
-        <field name="updateAction" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" use-when="invoiceItem!=null">
+        <field name="updateAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}" use-when="invoiceItem!=null">
             <submit button-type="button"/>
         </field>
     </form>
@@ -196,7 +196,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListBudgetRoles" type="list" use-row-submit="true" title="" list-name="budgetRoles" paginate-target="BudgetRoles"
@@ -236,7 +236,7 @@ under the License.
             </drop-down>
         </field>
         <field name="reviewDate"><date-time /></field>
-        <field name="submitAction" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListBudgetReviews" type="list" use-row-submit="true" title="" list-name="budgetReviews" paginate-target="BudgetReviews"

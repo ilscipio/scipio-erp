@@ -38,7 +38,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="OagisMessageInfo" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -55,7 +55,7 @@ under the License.
          <field name="orderId" >
              <lookup target-form-name="/ordermgr/control/LookupOrderHeader"/>
          </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -87,7 +87,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="OagisMessageErrorInfo" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -96,7 +96,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <alt-target use-when="oagisMessageErrorInfo==null" target="createOagisMessageErrorInfo"/>
         <auto-fields-service service-name="updateOagisMessageErrorInfo" default-field-type="edit"/>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>

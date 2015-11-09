@@ -48,7 +48,7 @@ under the License.
         <field position="2" name="DateThru" title="${uiLabelMap.CommonThru}"><date-time/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="LookupPayment" target="LookupPayment" title="" type="single"
@@ -66,6 +66,6 @@ under the License.
         <field name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field>
         <field name="amountApplied"><text-find default-value=""></text-find> </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 </forms>

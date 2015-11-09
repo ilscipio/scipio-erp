@@ -720,23 +720,27 @@ Internal functions to help parse class argument passed to macros.
 Not for use in templates.
 
 Macro class arguments can have essential (required) and non-essential (default)
-defaults and values added by the macro. The essentials can't be omitted. 
+defaults and values added by the macro before producing the final class attribute. 
+The essentials can't be omitted. 
 The non-essentials in some cases you want to replace with value and other times 
 you want to keep them but only add extra classes. Having multiple args for each elem 
 class arg gets heavy.
 
-So currently these functions cause the class arg to accept following values:
+So to address all the cases, these functions cause the class arg on all supporting macros 
+to accept following values:
 
 - string with "+" prefix or empty string "": 
     means allow macro to add non-essential default classes. 
     the class names after the "+" will be appended to any classes added
     by the macro, and will never replace macro defaults.
     this means the same as boolean true but with extra classes provided.
+    in other words, appends extra classes.
 - string with "=" prefix or non-empty string: 
     means prevent macro from adding non-essential default classes.
     class names given will replace macro defaults, i.e. non-essential classes. 
     macro may still add its own required classes.
     this is the same as boolean false but with replacement classes provided.
+    in other words, replaces default (non-essential) classes.
   
 In one or two cases the non-essential defaults are "conditionally essential" 
 so class="=" makes little sense, but we dont really need to handle that.

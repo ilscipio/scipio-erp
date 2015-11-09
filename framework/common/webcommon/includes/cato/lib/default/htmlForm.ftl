@@ -630,7 +630,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#if useLabelArea>
         <#local labelContent><@field_markup_labelarea label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
     </#if>
-    <@field_markup_container type=type classes="" columns=columns postfix=postfix postfixSize=postfixSize useLabelArea=useLabelArea labelContent=labelContent collapse=collapse norows=norows nocells=nocells container=container>
+    <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize useLabelArea=useLabelArea labelContent=labelContent collapse=collapse norows=norows nocells=nocells container=container>
         <#switch type>
           <#case "input">
             <@field_input_widget name=name 
@@ -817,15 +817,18 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- TODO: this still needs clarification, more args? -->
-<#macro field_markup_container type="" classes="" columns="" postfix=false postfixSize=0 useLabelArea=true labelContent="" collapse="" norows=false nocells=false container=true extraArgs...>
+<#macro field_markup_container type="" class="" columns="" postfix=false postfixSize=0 useLabelArea=true labelContent="" collapse="" norows=false nocells=false container=true extraArgs...>
+  <#local rowClass = "">
+  <#local labelAreaClass = "">  
+  <#local postfixClass = "">
   <#if postfix>
       <#local columnspostfix = postfixSize/>
       <#if !collapse?has_content>
           <#local collapse = true/> <#-- explicit collapse param overrides postfix setting, but collapse by default -->
       </#if>
-      <#local classes = joinStyleNames(classes, "${styles.grid_small!}${12-columnspostfix} ${styles.grid_large!}${12-columnspostfix}")/>
+      <#local defaultClass = "${styles.grid_small!}${12-columnspostfix} ${styles.grid_large!}${12-columnspostfix}"/>
   <#else>
-      <#local classes = joinStyleNames(classes, "${styles.grid_large!}12")/>
+      <#local defaultClass = "${styles.grid_large!}12"/>
       <#local columnspostfix = 0/>
   </#if>
   <#if !collapse?has_content>
@@ -833,23 +836,30 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   </#if>
 
   <#local fieldEntryTypeClass = "field-entry-type-" + mapCatoFieldTypeToStyleName(type)>
-  <@row collapse=collapse!false norows=(norows || !container) class=joinStyleNames("+form-field-entry", fieldEntryTypeClass)>
+  
+  <#local rowClass = addClassArgRequired(rowClass, "form-field-entry " + fieldEntryTypeClass)>
+  <@row class=rowClass collapse=collapse!false norows=(norows || !container)>
     <#if useLabelArea>
-        <#local subclasses="${styles.grid_small!}3 ${styles.grid_large!}2"/>
-        <#local classes="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
+        <#local defaultLabelAreaClass="${styles.grid_small!}3 ${styles.grid_large!}2"/>
+        <#local defaultClass="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
         <#if columns?has_content>
-            <#local subclasses="${styles.grid_small!}${12-columns+1} ${styles.grid_large!}${12-columns}"/>
-            <#local classes="${styles.grid_small!}${columns-columnspostfix-1} ${styles.grid_large!}${columns-columnspostfix}"/>
+            <#local defaultLabelAreaClass="${styles.grid_small!}${12-columns+1} ${styles.grid_large!}${12-columns}"/>
+            <#local defaultClass="${styles.grid_small!}${columns-columnspostfix-1} ${styles.grid_large!}${columns-columnspostfix}"/>
         </#if>
-        <@cell class=joinStyleNames(subclasses, "field-entry-title", fieldEntryTypeClass) nocells=(nocells || !container)>
+        <#local labelAreaClass = addClassArgRequired(labelAreaClass, "field-entry-title " + fieldEntryTypeClass)>
+        <@cell class=compileClassArg(labelAreaClass, defaultLabelAreaClass) nocells=(nocells || !container)>
             ${labelContent}
         </@cell>
     </#if>
-    <@cell class=joinStyleNames(classes, "field-entry-widget", fieldEntryTypeClass) nocells=(nocells || !container)>
+    <#local class = addClassArgRequired(class, "field-entry-widget " + fieldEntryTypeClass)>
+    <#-- NOTE: this is the same as doing: class=("=" + compileClassArg(class, defaultClass)) -->
+    <@cell class=compileClassArg(class, defaultClass) nocells=(nocells || !container)>
         <#nested>
     </@cell>
     <#if postfix && !nocells && container>
-        <@cell class="${styles.grid_small!}${postfixSize} ${styles.grid_large!}${postfixSize}">
+        <#local defaultPostfixClass = "${styles.grid_small!}${postfixSize} ${styles.grid_large!}${postfixSize}">
+        <#local postfixClass = addClassArgRequired(postfixClass, "field-entry-postfix " + fieldEntryTypeClass)>
+        <@cell class=compileClassArg(postfixClass, defaultPostfixClass)>
             <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
         </@cell>
     </#if>

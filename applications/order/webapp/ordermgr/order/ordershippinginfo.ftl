@@ -136,7 +136,7 @@ under the License.
                               </#list>
                           </#if>
                   </@td>
-                  <@td width="20%" class="text-right">
+                  <@td width="20%" class="${styles.text_right!}">
                       <div id="displayQuantity${index}${rowCount}">${OISGAssContent.quantity!}</div>
                           <#if (orderShipments.size()?default(0)) == 0>
                       <div id="editQuantity${index}${rowCount}" style="display: none;"><input id="edit${index}_o_${rowCount}" name="quantity_o_${rowCount}" size="5" value="${OISGAssContent.quantity!}" title="${OISGAssContent.quantity!}" /></div>

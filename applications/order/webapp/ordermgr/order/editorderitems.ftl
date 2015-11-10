@@ -59,11 +59,11 @@ under the License.
               <@thead>
                 <@tr class="header-row">
                     <@th width="30%">${uiLabelMap.ProductProduct}</@th>
-                    <@th width="10%" class="text-right">${uiLabelMap.CommonStatus}</@th>
+                    <@th width="10%" class="${styles.text_right!}">${uiLabelMap.CommonStatus}</@th>
                     <@th width="10%">${uiLabelMap.OrderQuantity}</@th>
-                    <@th width="10%" class="text-right">${uiLabelMap.OrderUnitList}</@th>
-                    <@th width="10%" class="text-right">${uiLabelMap.OrderAdjustments}</@th>
-                    <@th width="10%" class="text-right">${uiLabelMap.OrderSubTotal}</@th>
+                    <@th width="10%" class="${styles.text_right!}">${uiLabelMap.OrderUnitList}</@th>
+                    <@th width="10%" class="${styles.text_right!}">${uiLabelMap.OrderAdjustments}</@th>
+                    <@th width="10%" class="${styles.text_right!}">${uiLabelMap.OrderSubTotal}</@th>
                     <@th width="20%">&nbsp;</@th>
                 </@tr>
               </@thead>
@@ -121,7 +121,7 @@ under the License.
 
                               <#-- now show status details per line item -->
                               <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)>
-                              <@td class="text-right">
+                              <@td class="${styles.text_right!}">
                                   <@modal id="${productId}_st" label="${currentItemStatus.get('description',locale)?default(currentItemStatus.statusId)}">
                                    
                                             <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
@@ -154,7 +154,7 @@ under the License.
                                 </#if>
                                    </@modal>
                               </@td>
-                              <@td valign="top" class="text-right">
+                              <@td valign="top" class="${styles.text_right!}">
                                 <#assign shippedQuantity = orderReadHelper.getItemShippedQuantity(orderItem)>
                                 <#assign shipmentReceipts = delegator.findByAnd("ShipmentReceipt", {"orderId" : orderHeader.getString("orderId"), "orderItemSeqId" : orderItem.orderItemSeqId}, null, false)/>
                                 <#assign totalReceived = 0.0>
@@ -222,19 +222,19 @@ under the License.
                                         </@modal>
                                   
                               </@td>
-                              <@td valign="top" class="text-right">
+                              <@td valign="top" class="${styles.text_right!}">
                                   <#-- check for permission to modify price -->
                                   <#if (allowPriceChange)>
-                                      <input type="text" size="8" name="ipm_${orderItem.orderItemSeqId}" value="<@ofbizAmount amount=orderItem.unitPrice/>" class="text-right"/>
+                                      <input type="text" size="8" name="ipm_${orderItem.orderItemSeqId}" value="<@ofbizAmount amount=orderItem.unitPrice/>" class="${styles.text_right!}"/>
                                       <input type="hidden" name="opm_${orderItem.orderItemSeqId}" value="Y"/>
                                   <#else>
                                       <div><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/> / <@ofbizCurrency amount=orderItem.unitListPrice isoCode=currencyUomId/></div>
                                   </#if>
                               </@td>
-                              <@td valign="top" class="text-right">
+                              <@td valign="top" class="${styles.text_right!}">
                                   <@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemAdjustmentsTotal(orderItem, orderAdjustments, true, false, false) isoCode=currencyUomId/>
                               </@td>
-                              <@td valign="top" class="text-right">
+                              <@td valign="top" class="${styles.text_right!}">
                                 <#if orderItem.statusId != "ITEM_CANCELLED">
                                   <@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].getOrderItemSubTotal(orderItem, orderAdjustments) isoCode=currencyUomId/>
                                 <#else>
@@ -286,7 +286,7 @@ under the License.
                                   <@td>&nbsp;</@td>
                                   <@td>&nbsp;</@td>
                                   <@td>&nbsp;</@td>
-                                  <@td class="text-right">
+                                  <@td class="${styles.text_right!}">
                                       <@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcItemAdjustment(orderItemAdjustment, orderItem) isoCode=currencyUomId/>
                                   </@td>
                                   <@td colspan="2">&nbsp;</@td>
@@ -311,7 +311,7 @@ under the License.
                                     </@td>
                                     <@td></@td>
                                     <@td align="center">
-                                        <input type="text" name="iqm_${shipGroupAssoc.orderItemSeqId}:${shipGroupAssoc.shipGroupSeqId}" size="6" value="${shipGroupQty?string.number}" class="text-right"/>
+                                        <input type="text" name="iqm_${shipGroupAssoc.orderItemSeqId}:${shipGroupAssoc.shipGroupSeqId}" size="6" value="${shipGroupQty?string.number}" class="${styles.text_right!}"/>
                                         <#if itemSelectable>
                                             <input type="hidden" name="selectedItem" value="${orderItem.orderItemSeqId}" />
                                         </#if>
@@ -416,7 +416,7 @@ under the License.
                                     ${orderHeaderAdjustment.get("description")!}
                                 </#if>
                             </@td>
-                            <@td><input type="text" name="amount" size="6" value="<@ofbizAmount amount=adjustmentAmount/>" class="text-right"/></@td>
+                            <@td><input type="text" name="amount" size="6" value="<@ofbizAmount amount=adjustmentAmount/>" class="${styles.text_right!}"/></@td>
                             <@td nowrap="nowrap">
                                 <#if (allowPriceChange)>
                                     <input class="${styles.link_action!}" type="submit" value="${uiLabelMap.CommonUpdate}"/>
@@ -459,8 +459,8 @@ under the License.
                                 </#list>
                             </select>
                         </@td>
-                        <@td><input type="text" name="description" value="" size="30" maxlength="60" class="text-right"/></@td>
-                        <@td><input type="text" name="amount" size="6" value="<@ofbizAmount amount=0.00/>" class="text-right"/></@td>
+                        <@td><input type="text" name="description" value="" size="30" maxlength="60" class="${styles.text_right!}"/></@td>
+                        <@td><input type="text" name="amount" size="6" value="<@ofbizAmount amount=0.00/>" class="${styles.text_right!}"/></@td>
                         <@td>
                             
                             <input class="${styles.link_action!}" type="submit" value="${uiLabelMap.CommonAdd}"/>
@@ -476,40 +476,40 @@ under the License.
                     <@td colspan="1"></@td>
                 </@tr>
                 <@tr>
-                    <@td colspan="5" class="text-right">
+                    <@td colspan="5" class="${styles.text_right!}">
                         ${uiLabelMap.OrderItemsSubTotal}
                     </@td>
-                    <@td nowrap="nowrap" class="text-right">
+                    <@td nowrap="nowrap" class="${styles.text_right!}">
                         <@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/>
                     </@td>
                     <@td>&nbsp;</@td>
                 </@tr>
             <#-- other adjustments -->
                 <@tr>
-                    <@td colspan="5" class="text-right">
+                    <@td colspan="5" class="${styles.text_right!}">
                         ${uiLabelMap.OrderTotalOtherOrderAdjustments}
                     </@td>
-                    <@td nowrap="nowrap" class="text-right">
+                    <@td nowrap="nowrap" class="${styles.text_right!}">
                         <@ofbizCurrency amount=otherAdjAmount isoCode=currencyUomId/>
                     </@td>
                     <@td>&nbsp;</@td>
                 </@tr>
             <#-- shipping adjustments -->
                 <@tr>
-                    <@td colspan="5" class="text-right">
+                    <@td colspan="5" class="${styles.text_right!}">
                             ${uiLabelMap.OrderTotalShippingAndHandling}
                     </@td>
-                    <@td nowrap="nowrap" class="text-right">
+                    <@td nowrap="nowrap" class="${styles.text_right!}">
                             <@ofbizCurrency amount=shippingAmount isoCode=currencyUomId/>
                     </@td>
                     <@td>&nbsp;</@td>
                 </@tr>
             <#-- tax adjustments -->
                 <@tr>
-                    <@td colspan="5" class="text-right">
+                    <@td colspan="5" class="${styles.text_right!}">
                              ${uiLabelMap.OrderTotalSalesTax}
                     </@td>
-                    <@td nowrap="nowrap" class="text-right">
+                    <@td nowrap="nowrap" class="${styles.text_right!}">
                             <@ofbizCurrency amount=taxAmount isoCode=currencyUomId/>
                     </@td>
                     <@td>&nbsp;</@td>
@@ -521,10 +521,10 @@ under the License.
                     <@td colspan="1"></@td>
                 </@tr>
                 <@tr>
-                    <@td colspan="5" class="text-right">
+                    <@td colspan="5" class="${styles.text_right!}">
                             <strong>${uiLabelMap.OrderTotalDue}</strong>
                     </@td>
-                    <@td nowrap="nowrap" class="text-right">
+                    <@td nowrap="nowrap" class="${styles.text_right!}">
                             <@ofbizCurrency amount=grandTotal isoCode=currencyUomId/>
                             </strong>
                     </@td>

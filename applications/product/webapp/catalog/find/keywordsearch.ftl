@@ -63,7 +63,7 @@ under the License.
     
   <#macro keywordSearchNav>
     <@row>
-        <@cell class="+text-right">
+        <@cell class="+${styles.text_right!}">
         <#if (0 < listSize?int)>
           <@menu type="button">
               <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>

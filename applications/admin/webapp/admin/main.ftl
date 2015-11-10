@@ -28,10 +28,9 @@ under the License.
         </#if>
         <#assign tileIcon ="${label('AdminTileIcon'+display.name)!}"/>
         <#assign tileBackground = "${label('AdminTileBackground'+display.name)!}"/>
-        <@tile type="large" color=color title="${display.title}" link="${thisURL!}?${StringUtil.wrapString(externalKeyParam)!}" icon="${tileIcon!}" image="${tileBackground!}"><#compress>
-            <#if label(display.description)?has_content && uiLabelMap[display.description]!=uiLabelMap[display.title]>${label(display.description)}</#if>
-            </#compress>
-        </@tile>
+        <@tile type="large" color=color title="${display.title}" link="${thisURL!}?${StringUtil.wrapString(externalKeyParam)!}" icon="${tileIcon!}" image="${tileBackground!}"><#rt>
+            <#if label(display.description)?has_content && uiLabelMap[display.description]!=uiLabelMap[display.title]>${label(display.description)}</#if><#t>
+        </@tile><#lt>
         <#if color+1 gt 8>
             <#assign color = 0/>
         <#else>

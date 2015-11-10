@@ -209,11 +209,11 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
      NOTE: inlineItems is included in case needs different effect per-theme (and ugly to factor out) -->
 <#macro menu_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false htmlWrap="ul" extraArgs...>
   <#if !inlineItems>
-    <${htmlWrap!}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>
+    <${htmlWrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>
   </#if>
       <#nested>
   <#if !inlineItems>
-    </${htmlWrap!}>
+    </${htmlWrap}>
   </#if>
 </#macro>
 
@@ -348,11 +348,11 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
 <#-- Markup for @menuitem (outer item wrapper only) - may be overridden -->
 <#macro menuitem_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItem=false htmlWrap="li" extraArgs...>
   <#if !inlineItem>
-    <${htmlWrap!}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
+    <${htmlWrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
   </#if>
       <#nested><#t>
   <#if !inlineItem>
-    </${htmlWrap!}><#lt>
+    </${htmlWrap}><#lt>
   </#if>
 </#macro>
 

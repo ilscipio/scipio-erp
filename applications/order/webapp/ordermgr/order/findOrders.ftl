@@ -117,7 +117,7 @@ function submitFindForm(val){
 <@section menuContent=menuContent hasContent=showFields>
 <#if showFields>
   <@row>
-    <@cell class="${styles.grid_large!}9">
+    <@cell columns=9>
 
         <@field type="input" label="${uiLabelMap.OrderOrderId}" name="orderId"/>
       
@@ -254,15 +254,15 @@ function submitFindForm(val){
             
             
             <@row collapse=false>
-                <@cell class="${styles.grid_large!}4">
+                <@cell columns=4>
                     <#-- TODO: Get rid of these widget calls -->
                     <@htmlTemplate.renderCheckBox name="filterInventoryProblems" currentValue="Y" checked=requestParameters.filterInventoryProblems!"N"/> ${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterInventoryProblems}
                 </@cell>
-                <@cell class="${styles.grid_large!}4">
+                <@cell columns=4>
                     <@htmlTemplate.renderCheckBox name="filterPOsOpenPastTheirETA" currentValue="Y" checked=requestParameters.filterPOsOpenPastTheirETA!"N" /> ${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsOpenPastTheirETA}
                 </@cell>
     
-                <@cell class="${styles.grid_large!}4">
+                <@cell columns=4>
                     <@htmlTemplate.renderCheckBox name="filterPOsWithRejectedItems" currentValue="Y" checked=requestParameters.filterPOsWithRejectedItems!"N"/> ${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsWithRejectedItems}      
                 </@cell>
             </@row>

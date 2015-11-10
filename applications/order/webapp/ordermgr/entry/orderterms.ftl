@@ -23,7 +23,7 @@ under the License.
             <input type="hidden" name="finalizeMode" value="term" />
         </form>
         <@row>
-            <@cell class="${styles.grid_large!}6">
+            <@cell columns=6>
                         <#if orderTerms?has_content && parameters.createNew?default('') != 'Y'>
                             <@table type="data-list" autoAltRows=true class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->
                               <@thead>

@@ -78,10 +78,10 @@ under the License.
           </#if>
 
         <@row>
-            <@cell class="${styles.grid_large!}6 text-left">
+            <@cell class="${styles.grid_large!}6 ${styles.text_left!}">
                 <a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a>
             </@cell>
-            <@cell class="${styles.grid_large!}6 text-right">
+            <@cell class="${styles.grid_large!}6 ${styles.text_right!}">
                 <input type="submit" value="${uiLabelMap.CommonLogin}"/>
                 <a href="<@ofbizUrl>newRegisterLogin</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.MyPortalNewRegistration}</a>
             </@cell>

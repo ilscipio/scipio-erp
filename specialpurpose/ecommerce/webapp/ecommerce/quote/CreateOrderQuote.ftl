@@ -22,7 +22,7 @@ under the License.
         <#if quote.statusId == "QUO_APPROVED">
             <a href="<@ofbizUrl>loadCartFromQuote?quoteId=${quote.quoteId}&amp;finalizeMode=init</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderCreateOrder}</a>
         <#else>
-            <span class="${styles.button_default!}disabled">${uiLabelMap.OrderCreateOrder}</span>
+            <span class="${styles.button_default!} ${styles.disabled!}">${uiLabelMap.OrderCreateOrder}</span>
         </#if>
     </#if>
 </div>

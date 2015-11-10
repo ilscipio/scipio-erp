@@ -20,7 +20,7 @@ under the License.
 <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>
   <@section title="${uiLabelMap.OrderSendConfirmationEmail}">
     <@row>
-      <@cell class="${styles.grid_large!}6 ${styles.grid_cell!}">
+      <@cell columns=6>
     
       <#macro actionMenu>
         <@menu type="button">

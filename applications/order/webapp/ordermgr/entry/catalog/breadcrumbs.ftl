@@ -32,7 +32,7 @@ under the License.
          <#if catContentWrappers?? && catContentWrappers[crumb]??>
             <#if !isDefaultTheme>         
               <li>
-                 <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="<#if crumb_has_next>linktext<#else>${styles.button_default!}disabled</#if>">
+                 <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="<#if crumb_has_next>linktext<#else>${styles.button_default!} ${styles.disabled!}</#if>">
                    <#if catContentWrappers[crumb].get("CATEGORY_NAME", "html")??>
                      ${catContentWrappers[crumb].get("CATEGORY_NAME", "html")}
                    <#elseif catContentWrappers[crumb].get("DESCRIPTION", "html")??>
@@ -43,7 +43,7 @@ under the License.
                  </a>
               </li>
             <#else>  
-               <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="<#if crumb_has_next>linktext<#else>${styles.button_default!}disabled</#if>">
+               <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="<#if crumb_has_next>linktext<#else>${styles.button_default!} ${styles.disabled!}</#if>">
                  <#if catContentWrappers[crumb].get("CATEGORY_NAME", "html")??>
                    ${catContentWrappers[crumb].get("CATEGORY_NAME", "html")}
                  <#elseif catContentWrappers[crumb].get("DESCRIPTION", "html")??>

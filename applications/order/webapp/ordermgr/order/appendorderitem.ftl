@@ -26,7 +26,7 @@ under the License.
 <#if orderHeader?has_content>
   <@section title="${uiLabelMap.OrderAddToOrder}">
     <@row>
-      <@cell class="${styles.grid_large!}6 columns">
+      <@cell columns=6>
         <form method="post" action="<@ofbizUrl>appendItemToOrder</@ofbizUrl>" name="appendItemForm">
             <input type="hidden" size="25" name="orderId" value="${orderId!}"/>
             <#if !catalogCol?has_content>

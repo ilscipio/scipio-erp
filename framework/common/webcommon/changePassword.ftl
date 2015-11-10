@@ -20,9 +20,9 @@ under the License.
 <#assign username = requestParameters.USERNAME?default((sessionAttributes.autoUserLogin.userLoginId)?default(""))>
 <#assign tenantId = requestParameters.userTenantId!>
 
-<div class="${styles.grid_large!}3 ${styles.grid_large!}centered columns login-box" id="login">
-<div id="login-box-title">
-    <h1>${uiLabelMap.CommonPasswordChange}</h1>
+<div class="${styles.grid_large!}3 ${styles.grid_large!}centered ${styles.grid_cell!} login-box" id="login">
+  <div id="login-box-title">
+    <@heading level=1>${uiLabelMap.CommonPasswordChange}</@heading>
   </div>
   <@section id="login-box-content">
     <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
@@ -32,22 +32,22 @@ under the License.
       <@table cellspacing="0">
         <@tr>
           <@td class="label">${uiLabelMap.CommonUsername}</@td>
-          <@@td>${username}</@td>
+          <@td>${username}</@td>
         </@tr>
         <@tr>
           <@td class="label">${uiLabelMap.CommonCurrentPassword}</@td>
-          <@@td><input type="password" name="PASSWORD" value="" size="20"/></@td>
+          <@td><input type="password" name="PASSWORD" value="" size="20"/></@td>
         </@tr>
         <@tr>
-          <td class="label">${uiLabelMap.CommonNewPassword}</@td>
+          <@td class="label">${uiLabelMap.CommonNewPassword}</@td>
           <@td><input type="password" name="newPassword" value="" size="20"/></@td>
         </@tr>
         <@tr>
-          <td class="label">${uiLabelMap.CommonNewPasswordVerify}</@td>
+          <@td class="label">${uiLabelMap.CommonNewPasswordVerify}</@td>
           <@td><input type="password" name="newPasswordVerify" value="" size="20"/></@td>
         </@tr>
         <@tr>
-          <td colspan="2" align="center">
+          <@td colspan="2" align="center">
             <input type="submit" value="${uiLabelMap.CommonSubmit}"/>
           </@td>
         </@tr>

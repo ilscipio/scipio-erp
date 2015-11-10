@@ -26,7 +26,7 @@ under the License.
     <@menuitem type="link" href=makeOfbizUrl("xmldsrawdump") target="_blank" text="Click Here to Get Data (or save to file)" />
   </@menu>
 <#else>
-    <@alert type="error">You do not have permission to use this page (ENTITY_MAINT needed)</@alert>
+  <@alert type="error">You do not have permission to use this page (ENTITY_MAINT needed)</@alert>
 </#if>
 <#else>
 <#macro displayButtonBar>
@@ -58,30 +58,29 @@ under the License.
 
   <@heading>${uiLabelMap.WebtoolsExport}:</@heading>
   <form method="post" action="<@ofbizUrl>xmldsdump</@ofbizUrl>" name="entityExport">
-   <@row>
-    <@cell class="${styles.grid_large!}6 columns">
-  
+  <@row>
+    <@cell columns=6>
     <@field type="input" label="${uiLabelMap.WebtoolsOutputDirectory}" size="60" name="outpath" value="${parameters.outpath!}"/>
     <@field type="input" label="${uiLabelMap.WebtoolsMaxRecordsPerFile}" size="10" name="maxrecords"/>
     <@field type="input" label="${uiLabelMap.WebtoolsSingleFilename}" size="60" name="filename" value="${parameters.filename!}"/>
     <@field type="datetime" dateType="datetime" label="${uiLabelMap.WebtoolsRecordsUpdatedSince}" name="entityFrom"  value="" size="25" maxlength="30" id="entityFrom1" dateType="date" />
     <@field type="datetime" dateType="datetime" label="${uiLabelMap.WebtoolsRecordsUpdatedBefore}" name="entityThru" value="" size="25" maxlength="30" id="entityThru1" dateType="date" />
     <@field type="checkbox" name="tobrowser" value="N" label="${StringUtil.wrapString(uiLabelMap.WebtoolsOutToBrowser)}"/>
-     </@cell>
-    </@row>
+    </@cell>
+  </@row>
     <hr>
     <@heading relLevel=1>${uiLabelMap.WebtoolsEntityNames}:</@heading>
      <@row>
-        <@cell class="${styles.grid_large!}6 columns">
-    <@displayButtonBar/>
+        <@cell columns=6>
+          <@displayButtonBar/>
           <@field type="input" name="entitySyncId" size="30" value="${entitySyncId!}" label="${uiLabelMap.WebtoolsEntitySyncDump}"/>
           <@field type="select" label="${uiLabelMap.WebtoolsPreConfiguredSet}" name="preConfiguredSetName">
-        <option value="">${uiLabelMap.CommonNone}</option>
-        <option value="CatalogExport">${uiLabelMap.WebtoolsPreConfiguredSet1}</option>
-        <option value="Product1">${uiLabelMap.WebtoolsPreConfiguredSet2}</option>
-        <option value="Product2">${uiLabelMap.WebtoolsPreConfiguredSet3}</option>
-        <option value="Product3">${uiLabelMap.WebtoolsPreConfiguredSet4}</option>
-        <option value="Product4">${uiLabelMap.WebtoolsPreConfiguredSet5}</option>
+            <option value="">${uiLabelMap.CommonNone}</option>
+            <option value="CatalogExport">${uiLabelMap.WebtoolsPreConfiguredSet1}</option>
+            <option value="Product1">${uiLabelMap.WebtoolsPreConfiguredSet2}</option>
+            <option value="Product2">${uiLabelMap.WebtoolsPreConfiguredSet3}</option>
+            <option value="Product3">${uiLabelMap.WebtoolsPreConfiguredSet4}</option>
+            <option value="Product4">${uiLabelMap.WebtoolsPreConfiguredSet5}</option>
           </@field>
         </@cell>
     </@row>

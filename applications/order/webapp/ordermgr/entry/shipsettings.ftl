@@ -36,7 +36,7 @@ under the License.
 <#assign shipGroupIndex = currIndex - 1>
     <@section title="${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}">
         <@row>
-            <@cell class="${styles.grid_large!}6">
+            <@cell columns=6>
             <@table type="data-complex"> <#-- orig: class="basic-table" -->
                 <#assign i = 0>
                 <#assign shipGroup = cart.getShipInfo(shipGroupIndex)>
@@ -101,7 +101,7 @@ under the License.
 <#if shipToPartyShippingContactMechList?has_content>  
   <@section title="${uiLabelMap.OrderShipToAnotherParty}">
     <@row>
-      <@cell class="${styles.grid_large!}6">
+      <@cell columns=6>
         <@table type="data-complex"> <#-- orig: class="basic-table" -->
         
           <@tr><@td colspan="3">${uiLabelMap.OrderShipToAnotherParty}: <b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(shipToParty)}</b></@td></@tr>
@@ -162,7 +162,7 @@ under the License.
 <#assign facilityId = cart.getShipGroupFacilityId(shipGroupIndex)!>
     <@section title="${uiLabelMap.OrderShipGroup} ${uiLabelMap.CommonNbr} ${currIndex}">
         <@row>
-        <@cell class="${styles.grid_large!}6">
+        <@cell columns=6>
             <@table type="data-complex"> <#-- orig: class="basic-table" -->
               <@tr>
                 <@td class="${styles.grid_large!}3">${uiLabelMap.PartySupplier}</@td>

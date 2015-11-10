@@ -22,7 +22,7 @@ under the License.
 
 <@section title="${uiLabelMap.OrderFindOrder}">
   <@row>
-    <@cell class="${styles.grid_large!}9 columns">
+    <@cell columns=9>
       <@field type="input" label="${uiLabelMap.OrderOrderId}" name="orderId"/>
 
       <@row collapse=true>

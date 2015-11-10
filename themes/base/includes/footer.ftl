@@ -29,12 +29,12 @@ under the License.
 <footer id="footer">
     <#--
     <div class="row"> 
-        <div class="${styles.grid_small!}12 ${styles.grid_medium!}4 ${styles.grid_large!}4 columns">
+        <div class="${styles.grid_small!}12 ${styles.grid_medium!}4 ${styles.grid_large!}4 ${styles.grid_cell!}">
             <p></p>
         </div>
     </div>-->
     <div class="row">
-        <div class="${styles.grid_small!}12 ${styles.grid_medium!}12 ${styles.grid_large!}12 columns text-center">
+        <div class="${styles.grid_small!}12 ${styles.grid_medium!}12 ${styles.grid_large!}12 ${styles.grid_cell!} ${styles.text_center!}">
          <small>
          ${uiLabelMap.CommonCopyright} (c) 2014-${nowTimestamp?string("yyyy")} <a href="http://www.ilscipio.com" target="_blank">ilscipio GmbH</a>. ${uiLabelMap.CommonPoweredBy} <a href="http://www.cato-commerce.com" target="_blank">Cato Commerce.</a> <#include "ofbizhome://runtime/svninfo.ftl" /> <#include "ofbizhome://runtime/gitinfo.ftl" />
          <#include "ofbizhome://runtime/svninfo.ftl" /> <#include "ofbizhome://runtime/gitinfo.ftl" />

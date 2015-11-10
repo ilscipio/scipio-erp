@@ -26,26 +26,26 @@ function submitForm(form) {
     <#if (enableShippingAddress)??>
         <a href="<@ofbizUrl>setShipping</@ofbizUrl>" <#if callSubmitForm??>onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Shipping Address</a>
     <#else>
-        <span class="${styles.button_default!}disabled">Shipping Address</span>
+        <span class="${styles.button_default!} ${styles.disabled!}">Shipping Address</span>
     </#if>
     <#if (enableShipmentMethod)??>
         <a href="<@ofbizUrl>setShipOptions</@ofbizUrl>" <#if callSubmitForm??>onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Shipping Options</a>
     <#else>
-        <span class="${styles.button_default!}disabled">Shipping Options</span>
+        <span class="${styles.button_default!} ${styles.disabled!}">Shipping Options</span>
     </#if>
     <#if (enablePaymentOptions)??>
         <a href="<@ofbizUrl>setPaymentOption</@ofbizUrl>" <#if callSubmitForm??>onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Payment Options</a>
     <#else>
-        <span class="${styles.button_default!}disabled">Payment Options</span>
+        <span class="${styles.button_default!} ${styles.disabled!}">Payment Options</span>
     </#if>
     <#if (enablePaymentInformation)??>
         <a href="<@ofbizUrl>setPaymentInformation?paymentMethodTypeId=${requestParameters.paymentMethodTypeId!}</@ofbizUrl>" <#if callSubmitForm??>onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Payment Information</a>
     <#else>
-        <span class="${styles.button_default!}disabled">Payment Information</span>
+        <span class="${styles.button_default!} ${styles.disabled!}">Payment Information</span>
     </#if>
     <#if (enableReviewOrder)??>
         <a href="<@ofbizUrl>reviewOrder</@ofbizUrl>" <#if callSubmitForm??>onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Review Order</a>
     <#else>
-        <span class="${styles.button_default!}disabled">Review Order</span>
+        <span class="${styles.button_default!} ${styles.disabled!}">Review Order</span>
     </#if>
 </div>

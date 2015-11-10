@@ -131,7 +131,7 @@ under the License.
                   <#if contactMechPurposeType??>
                     ${contactMechPurposeType.get("description",locale)}
                     <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (profiledefs.defaultShipAddr)?default("") == contactMech.contactMechId>
-                      <span class="${styles.button_default!}disabled">${uiLabelMap.EcommerceIsDefault}</span>
+                      <span class="${styles.button_default!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
                     <#elseif contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION">
                       <form name="defaultShippingAddressForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
                         <input type="hidden" name="productStoreId" value="${productStoreId}" />
@@ -306,7 +306,7 @@ under the License.
                 </@td>
                 <@td align="right" valign="top">
                   <#if (profiledefs.defaultPayMeth)?default("") == paymentMethod.paymentMethodId>
-                    <span class="${styles.button_default!}disabled">${uiLabelMap.EcommerceIsDefault}</span>
+                    <span class="${styles.button_default!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
                   <#else>
                     <form name="defaultPaymentMethodForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
                       <input type="hidden" name="productStoreId" value="${productStoreId}" />

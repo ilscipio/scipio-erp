@@ -1378,10 +1378,9 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
 <#if platform == "html">
   <#local var = value>
 
-      <#attempt><#compress>
+      <#attempt>
         <#-- WARN: ?is_ tests may not work as expected on widget context variables (BeanModel)
              see @objectAsScript -->
-
         <#if isObjectType("string", var)>
             ${var?string}
         <#elseif var?is_boolean>
@@ -1411,8 +1410,6 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
         <#elseif var?is_string>
             ${var?string}
         </#if>
-        
-      </#compress>
       <#recover>
         <span style="color:red"><strong>${(.error)!"(generic)"}</strong></span>
       </#attempt>

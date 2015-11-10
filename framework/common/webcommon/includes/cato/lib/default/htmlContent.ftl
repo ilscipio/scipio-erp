@@ -123,10 +123,9 @@ Creates a very basic wrapper for code blocks
     type            = (html|java|css|javascript|log) (default:html) 
 -->
 <#macro code type="html">
-    <pre><code data-language="${type!}"><#compress>
-    <#nested>
-    </#compress>
-    </code></pre>
+    <pre><code data-language="${type!}"><#rt>
+      <#nested><#t>
+    </code></pre><#lt>
 </#macro>
 
 <#-- 

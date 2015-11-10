@@ -51,22 +51,22 @@ it's an unexpected result, error or one that requires user action. See other mac
                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
 -->
 <#macro alert type="info" class="" id="">
-<#local class = addClassArg(class, styles.grid_cell!"")>
-<#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
-<#local typeClass = "alert_type_${type!}"/>
-<#if type="error"><#local type = "alert"></#if>
-<div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
-   <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
-       <div data-alert class="${styles.alert_wrap!} ${styles[typeClass]!}">
-           <div class="${styles.grid_row!}">
-              <div<@compiledClassAttribStr class=class />>
-                  <a href="#" class="close" data-dismiss="alert">&times;</a>
-                  <#nested>
-                  </div>
-              </div>
-           </div>
-       </div>
-   </div>
+  <#local class = addClassArg(class, styles.grid_cell!"")>
+  <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
+  <#local typeClass = "alert_type_${type!}"/>
+  <#if type="error"><#local type = "alert"></#if>
+  <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
+    <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
+      <div data-alert class="${styles.alert_wrap!} ${styles[typeClass]!}">
+        <div class="${styles.grid_row!}">
+          <div<@compiledClassAttribStr class=class />>
+            <a href="#" class="close" data-dismiss="alert">&times;</a>
+            <#nested>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </#macro>
 
 <#--
@@ -83,10 +83,10 @@ it's an unexpected result, error or one that requires user action. See other mac
     title          = Title
 -->
 <#macro panel type="" title="">
-<div class="${styles.panel_wrap!} ${type}">
-  <div class="${styles.panel_head!}"><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
-  <div class="${styles.panel_body!}"><p><#nested></p></div>
-</div>
+  <div class="${styles.panel_wrap!} ${type}">
+    <div class="${styles.panel_head!}"><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
+    <div class="${styles.panel_body!}"><p><#nested></p></div>
+  </div>
 </#macro>
 
 <#-- 

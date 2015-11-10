@@ -13,6 +13,7 @@
 * HTML Head Open
 ************
 Opens an HTML document and header section.
+IMPL NOTE: Beware of whitespace.
 
   * Usage Example *  
     <@htmlHeadOpen />            
@@ -55,15 +56,15 @@ Inline script wrapper.
                       and should never be delegated. in most cases this should be omitted.
 -->
 <#macro script type="text/javascript" language="" src="" ofbizContentSrc="" forceInline=false>
-<#if ofbizContentSrc?has_content>
-  <script type="${type}"<#if language?has_content> language="${language}"</#if> src="<@ofbizContentUrl>${ofbizContentSrc}</@ofbizContentUrl>"></script>
-<#elseif src?has_content>
-  <script type="${type}"<#if language?has_content> language="${language}"</#if> src="${src}"></script>
-<#else>
-  <script type="${type}"<#if language?has_content> language="${language}"</#if>>
-  //<![CDATA[
-    <#nested>
-  //]]>
-  </script>
-</#if>
+  <#if ofbizContentSrc?has_content>
+    <script type="${type}"<#if language?has_content> language="${language}"</#if> src="<@ofbizContentUrl>${ofbizContentSrc}</@ofbizContentUrl>"></script>
+  <#elseif src?has_content>
+    <script type="${type}"<#if language?has_content> language="${language}"</#if> src="${src}"></script>
+  <#else>
+    <script type="${type}"<#if language?has_content> language="${language}"</#if>>
+    //<![CDATA[
+      <#nested>
+    //]]>
+    </script>
+  </#if>
 </#macro>

@@ -492,329 +492,329 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 
         labelType="" labelLayout="" labelArea="" description=""
         submitType="input" text="" href="" src="" confirmMsg="" inlineItems="">
-<#if !type?has_content>
-  <#local type = "generic">
-</#if>
-<#if !valueType?has_content>
-  <#local valueType = "generic">
-</#if>
-<#-- treat tooltip and description as synonyms for now -->
-<#if tooltip?has_content>
-  <#if !description?has_content>
-    <#local description = tooltip>
+  <#if !type?has_content>
+    <#local type = "generic">
   </#if>
-<#else>
-  <#if description?has_content>
-    <#local tooltip = description>
+  <#if !valueType?has_content>
+    <#local valueType = "generic">
   </#if>
-</#if>
-
-<#-- parent @fields group elem info (if any; may be omitted) -->
-<#local fieldsInfo = readRequestStack("catoCurrentFieldsInfo")!{}>
-<#if !fieldsInfo.type??>
-  <#if !catoDefaultFieldsInfo?has_content>
-    <#-- optimization -->
-    <#global catoDefaultFieldsInfo = makeFieldsInfo("default")>
-  </#if>
-  <#local fieldsInfo = catoDefaultFieldsInfo>
-</#if>
-
-<#-- parent @field elem info (if any; is possible) -->
-<#local parentFieldInfo = readRequestStack("catoCurrentFieldInfo")!{}>
-<#local hasParentField = ((parentFieldInfo.type)!"")?has_content>
-<#local isTopLevelField = !hasParentField>
-<#local isChildField = hasParentField>
-
-<#local formInfo = readRequestStack("catoCurrentFormInfo")!{}>
-
-<#-- this field's info (popped at end) -->
-<#local dummy = pushRequestStack("catoCurrentFieldInfo", 
-    {"type":type})>
-
-<#-- get form name and id -->
-<#if !formName?has_content>
-  <#if fieldsInfo.formName?has_content>
-    <#local formName = fieldsInfo.formName>
-  <#elseif formInfo.name?has_content>
-    <#local formName = formInfo.formName>
-  </#if>
-</#if>
-<#if !formId?has_content>
-  <#if fieldsInfo.formId?has_content>
-    <#local formId = fieldsInfo.formName>
-  <#elseif formInfo.id?has_content>
-    <#local formId = formInfo.id>
-  </#if>
-</#if>
-
-<#-- fieldIdNum will always increment throughout the page 
-     now stored in request attributes so survived screens.render though still accessible as a global -->
-<#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
-<#local fieldIdNum = fieldIdNum + 1 />
-<#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
-
-<#if !id?has_content>
-    <#-- FIXME? renderSeqNumber usually empty... where come from? should be as request attribute also? -->
-    <#local id = "field_id_${renderSeqNumber!}_${fieldIdNum!0}">
-</#if>
-
-<#if required && (!containsStyleName(class, styles.required!""))>
-    <#local class = addClassArg(class, styles.required!"")>
-</#if>
-<#-- the widgets do this now
-<#local class = compileClassArg(class)>-->
-
-<#local radioSingle = (type=="radio" && !items?has_content)>
-<#-- special case: for radioSingle, the label is passed to its macro instead...
-    note this doesn't automatically prevent the container label area (otherwise inconsistent with everything else) -->
-<#local inlineLabel = "">
-<#if radioSingle>
-  <#local inlineLabel = label>
-  <#local label = "">
-</#if>
-
-<#if !catoFieldNoContainerChildren??>
-  <#global catoFieldNoContainerChildren = {
-   <#-- "submit":true -->   <#-- only if parent is submitarea -->
-    "radio":true    <#-- child radio will pretty much always imply radioSingle -->
-  }>
-  <#global catoFieldNoContainerParent = {
-    "submitarea":true
-  }>
-</#if>
-<#if !container?is_boolean>
-  <#if container?has_content>
-    <#local container = container?boolean>
-  <#elseif isChildField && (catoFieldNoContainerChildren[type]?? || catoFieldNoContainerParent[parentFieldInfo.type!]??)>
-    <#local container = false>
-  <#else> 
-    <#local container = true>
-  </#if>
-</#if>
-
-<#-- label area logic
-    TODO: right now most of the fieldsInfo parameters are not fully exploited.
-        assumes labelType=="gridarea" (unless "none" which influences labelArea) and 
-        labelLayout="left" (unless "none" which influences labelArea). -->
-<#if labelArea?is_boolean>
-  <#local labelAreaDefault = labelArea>
-<#elseif labelType == "none" || labelLayout == "none">
-  <#local labelAreaDefault = false>
-<#elseif isChildField>
-  <#-- based on current usage, a child field should never really have a label area by default (requires explicit)... -->
-  <#local labelAreaDefault = false>
-<#else>
-  <#local labelAreaDefault = (fieldsInfo.labelArea)!false>
-  <#if (fieldsInfo.labelAreaExceptions)?has_content>
-    <#if fieldsInfo.labelAreaExceptions?seq_contains(type)>
-      <#local labelAreaDefault = !labelAreaDefault>
+  <#-- treat tooltip and description as synonyms for now -->
+  <#if tooltip?has_content>
+    <#if !description?has_content>
+      <#local description = tooltip>
+    </#if>
+  <#else>
+    <#if description?has_content>
+      <#local tooltip = description>
     </#if>
   </#if>
-</#if>
-
-<#if labelType?has_content>
-  <#local effLabelType = labelType>
-<#else>
-  <#local effLabelType = (fieldsInfo.labelType)!"">
-</#if>
-<#if labelLayout?has_content>
-  <#local effLabelLayout = labelLayout>
-<#else>
-  <#local effLabelLayout = (fieldsInfo.labelLayout)!"">
-</#if>
-
-<#local useLabelArea = (labelArea?is_boolean && labelArea == true) || 
-         (!(labelArea?is_boolean && labelArea == false) && (label?has_content || labelDetail?has_content || labelAreaDefault))>
-
-<#-- main markup begin -->
-    <#local labelContent = "">
-    <#if useLabelArea>
-        <#local labelContent><@field_markup_labelarea label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
+  
+  <#-- parent @fields group elem info (if any; may be omitted) -->
+  <#local fieldsInfo = readRequestStack("catoCurrentFieldsInfo")!{}>
+  <#if !fieldsInfo.type??>
+    <#if !catoDefaultFieldsInfo?has_content>
+      <#-- optimization -->
+      <#global catoDefaultFieldsInfo = makeFieldsInfo("default")>
     </#if>
-    <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize useLabelArea=useLabelArea labelContent=labelContent collapse=collapse norows=norows nocells=nocells container=container>
-        <#switch type>
-          <#case "input">
-            <@field_input_widget name=name 
-                                  class=class 
-                                  alert=alert 
-                                  value=value 
-                                  textSize=size 
-                                  maxlength=maxlength 
-                                  id=id 
-                                  event="onClick" 
-                                  action=onClick 
-                                  disabled=disabled
-                                  readonly=readonly 
-                                  clientAutocomplete="" 
-                                  ajaxUrl=autoCompleteUrl 
-                                  ajaxEnabled="" 
-                                  mask=mask 
-                                  placeholder=placeholder 
-                                  tooltip=tooltip/>
-            <#break>
-          <#case "textarea">
-            <@field_textarea_widget name=name 
-                                  class=class 
-                                  alert=alert 
-                                  cols=cols 
-                                  rows=rows 
-                                  id=id 
-                                  readonly=readonly 
-                                  value=value 
-                                  placeholder=placeholder
-                                  tooltip=tooltip><#nested></@field_textarea_widget>
-            <#break>
-          <#case "datetime">
-            <#if dateType == "date"><#local shortDateInput=true/><#else><#local shortDateInput=false/></#if>
-            <@field_datetime_widget name=name 
-                                  class=class 
-                                  alert=alert 
-                                  title=label 
-                                  value=value 
-                                  size=size 
-                                  maxlength=maxlength 
-                                  id=id 
-                                  dateType=dateType 
-                                  shortDateInput=shortDateInput 
-                                  timeDropdownParamName="" 
-                                  defaultDateTimeString="" 
-                                  localizedIconTitle="" 
-                                  timeDropdown="" 
-                                  timeHourName="" 
-                                  classString="" 
-                                  hour1="" 
-                                  hour2="" 
-                                  timeMinutesName="" 
-                                  minutes="" 
-                                  isTwelveHour="" 
-                                  ampmName="" 
-                                  amSelected="" 
-                                  pmSelected="" 
-                                  compositeType="" 
-                                  formName=""
-                                  tooltip=tooltip/>                
-            <#break>
-          <#case "select">
-            <#-- TODO: Currently, select only supports manual items, not auto-generated items
-                 Must set manualItems to true especially, otherwise extra empty options generated -->
-            <#local manualItems = true>
-            <#local manualItemsOnly = true>
-            
-            <@field_select_widget name=name
-                                    class=class 
-                                    alert=alert 
-                                    id=id 
-                                    multiple=multiple
-                                    formName=""
-                                    otherFieldName="" 
-                                    event="onClick" 
-                                    action=onClick  
-                                    size=size
-                                    firstInList="" 
-                                    currentValue=currentValue 
-                                    explicitDescription="" 
-                                    allowEmpty=""
-                                    options=[]
-                                    fieldName=name
-                                    otherFieldName="" 
-                                    otherValue="" 
-                                    otherFieldSize=0 
-                                    dDFCurrent=""
-                                    ajaxEnabled=false
-                                    noCurrentSelectedKey=""
-                                    ajaxOptions=""
-                                    frequency=""
-                                    minChars=""
-                                    choices="" 
-                                    autoSelect=""
-                                    partialSearch=""
-                                    partialChars=""
-                                    ignoreCase=""
-                                    fullSearch=""
-                                    tooltip=tooltip
-                                    manualItems=manualItems
-                                    manualItemsOnly=manualItemsOnly><#nested></@field_select_widget>
-            <#break>
-          <#case "lookup">
-            <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
-          <#break>
-          <#case "checkbox">
-                <@field_checkbox_widget id=id currentValue=value checked=checked name=name action=action />
-            <#break>
-          <#case "radio">
-                <#if radioSingle>
-                    <#-- single radio button item mode -->
-                    <#local items=[{"key":value, "description":inlineLabel!""}]/>
-                    <@field_radio_widget multiMode=false items=items inlineItems=inlineItems class=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
-                <#else>
-                    <#-- multi radio button item mode -->
-                    <@field_radio_widget multiMode=true items=items inlineItems=inlineItems class=class alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
-                </#if>
-            <#break>
-          <#case "file">
-            <@field_file_widget class=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
-            <#break> 
-          <#case "password">
-            <@field_password_widget class=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip/>
-            <#break> 
-          <#case "submit">
-          <#case "submitarea">
-            <#local hasProgress = (progressOptions.formSel)?has_content>
-            <#local content>
-              <#if type == "submit">
-                <#if !catoSubmitFieldTypeButtonMap??>
-                  <#global catoSubmitFieldButtonTypeMap = {
-                    "submit":"button", "button":"button", "link":"text-link", "image":"image"
-                  }>
-                  <#global catoSubmitFieldInputTypeMap = {
-                    "submit":"submit", "button":"button", "link":"", "image":"image"
-                  }>
-                </#if>
-                <#local buttonType = catoSubmitFieldButtonTypeMap[submitType]!"button">
-                <#local inputType = catoSubmitFieldInputTypeMap[submitType]!"">
-                <@field_submit_widget buttonType=buttonType class=class alert=alert formName=formName name=name event="" action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false onClick=onClick href=href inputType=inputType disabled=disabled />
-              <#else>
-                <#nested>
-              </#if>
-            </#local>
-            <#if hasProgress>
-              <@fieldSubmitAreaProgress progressOptions=progressOptions nestedContent=content />
+    <#local fieldsInfo = catoDefaultFieldsInfo>
+  </#if>
+  
+  <#-- parent @field elem info (if any; is possible) -->
+  <#local parentFieldInfo = readRequestStack("catoCurrentFieldInfo")!{}>
+  <#local hasParentField = ((parentFieldInfo.type)!"")?has_content>
+  <#local isTopLevelField = !hasParentField>
+  <#local isChildField = hasParentField>
+  
+  <#local formInfo = readRequestStack("catoCurrentFormInfo")!{}>
+  
+  <#-- this field's info (popped at end) -->
+  <#local dummy = pushRequestStack("catoCurrentFieldInfo", 
+      {"type":type})>
+  
+  <#-- get form name and id -->
+  <#if !formName?has_content>
+    <#if fieldsInfo.formName?has_content>
+      <#local formName = fieldsInfo.formName>
+    <#elseif formInfo.name?has_content>
+      <#local formName = formInfo.formName>
+    </#if>
+  </#if>
+  <#if !formId?has_content>
+    <#if fieldsInfo.formId?has_content>
+      <#local formId = fieldsInfo.formName>
+    <#elseif formInfo.id?has_content>
+      <#local formId = formInfo.id>
+    </#if>
+  </#if>
+  
+  <#-- fieldIdNum will always increment throughout the page 
+       now stored in request attributes so survived screens.render though still accessible as a global -->
+  <#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
+  <#local fieldIdNum = fieldIdNum + 1 />
+  <#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
+  
+  <#if !id?has_content>
+      <#-- FIXME? renderSeqNumber usually empty... where come from? should be as request attribute also? -->
+      <#local id = "field_id_${renderSeqNumber!}_${fieldIdNum!0}">
+  </#if>
+  
+  <#if required && (!containsStyleName(class, styles.required!""))>
+      <#local class = addClassArg(class, styles.required!"")>
+  </#if>
+  <#-- the widgets do this now
+  <#local class = compileClassArg(class)>-->
+  
+  <#local radioSingle = (type=="radio" && !items?has_content)>
+  <#-- special case: for radioSingle, the label is passed to its macro instead...
+      note this doesn't automatically prevent the container label area (otherwise inconsistent with everything else) -->
+  <#local inlineLabel = "">
+  <#if radioSingle>
+    <#local inlineLabel = label>
+    <#local label = "">
+  </#if>
+  
+  <#if !catoFieldNoContainerChildren??>
+    <#global catoFieldNoContainerChildren = {
+     <#-- "submit":true -->   <#-- only if parent is submitarea -->
+      "radio":true    <#-- child radio will pretty much always imply radioSingle -->
+    }>
+    <#global catoFieldNoContainerParent = {
+      "submitarea":true
+    }>
+  </#if>
+  <#if !container?is_boolean>
+    <#if container?has_content>
+      <#local container = container?boolean>
+    <#elseif isChildField && (catoFieldNoContainerChildren[type]?? || catoFieldNoContainerParent[parentFieldInfo.type!]??)>
+      <#local container = false>
+    <#else> 
+      <#local container = true>
+    </#if>
+  </#if>
+  
+  <#-- label area logic
+      TODO: right now most of the fieldsInfo parameters are not fully exploited.
+          assumes labelType=="gridarea" (unless "none" which influences labelArea) and 
+          labelLayout="left" (unless "none" which influences labelArea). -->
+  <#if labelArea?is_boolean>
+    <#local labelAreaDefault = labelArea>
+  <#elseif labelType == "none" || labelLayout == "none">
+    <#local labelAreaDefault = false>
+  <#elseif isChildField>
+    <#-- based on current usage, a child field should never really have a label area by default (requires explicit)... -->
+    <#local labelAreaDefault = false>
+  <#else>
+    <#local labelAreaDefault = (fieldsInfo.labelArea)!false>
+    <#if (fieldsInfo.labelAreaExceptions)?has_content>
+      <#if fieldsInfo.labelAreaExceptions?seq_contains(type)>
+        <#local labelAreaDefault = !labelAreaDefault>
+      </#if>
+    </#if>
+  </#if>
+  
+  <#if labelType?has_content>
+    <#local effLabelType = labelType>
+  <#else>
+    <#local effLabelType = (fieldsInfo.labelType)!"">
+  </#if>
+  <#if labelLayout?has_content>
+    <#local effLabelLayout = labelLayout>
+  <#else>
+    <#local effLabelLayout = (fieldsInfo.labelLayout)!"">
+  </#if>
+  
+  <#local useLabelArea = (labelArea?is_boolean && labelArea == true) || 
+           (!(labelArea?is_boolean && labelArea == false) && (label?has_content || labelDetail?has_content || labelAreaDefault))>
+  
+  <#-- main markup begin -->
+  <#local labelContent = "">
+  <#if useLabelArea>
+      <#local labelContent><@field_markup_labelarea label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
+  </#if>
+  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize useLabelArea=useLabelArea labelContent=labelContent collapse=collapse norows=norows nocells=nocells container=container>
+    <#switch type>
+      <#case "input">
+        <@field_input_widget name=name 
+                              class=class 
+                              alert=alert 
+                              value=value 
+                              textSize=size 
+                              maxlength=maxlength 
+                              id=id 
+                              event="onClick" 
+                              action=onClick 
+                              disabled=disabled
+                              readonly=readonly 
+                              clientAutocomplete="" 
+                              ajaxUrl=autoCompleteUrl 
+                              ajaxEnabled="" 
+                              mask=mask 
+                              placeholder=placeholder 
+                              tooltip=tooltip/>
+        <#break>
+      <#case "textarea">
+        <@field_textarea_widget name=name 
+                              class=class 
+                              alert=alert 
+                              cols=cols 
+                              rows=rows 
+                              id=id 
+                              readonly=readonly 
+                              value=value 
+                              placeholder=placeholder
+                              tooltip=tooltip><#nested></@field_textarea_widget>
+        <#break>
+      <#case "datetime">
+        <#if dateType == "date"><#local shortDateInput=true/><#else><#local shortDateInput=false/></#if>
+        <@field_datetime_widget name=name 
+                              class=class 
+                              alert=alert 
+                              title=label 
+                              value=value 
+                              size=size 
+                              maxlength=maxlength 
+                              id=id 
+                              dateType=dateType 
+                              shortDateInput=shortDateInput 
+                              timeDropdownParamName="" 
+                              defaultDateTimeString="" 
+                              localizedIconTitle="" 
+                              timeDropdown="" 
+                              timeHourName="" 
+                              classString="" 
+                              hour1="" 
+                              hour2="" 
+                              timeMinutesName="" 
+                              minutes="" 
+                              isTwelveHour="" 
+                              ampmName="" 
+                              amSelected="" 
+                              pmSelected="" 
+                              compositeType="" 
+                              formName=""
+                              tooltip=tooltip/>                
+        <#break>
+      <#case "select">
+        <#-- TODO: Currently, select only supports manual items, not auto-generated items
+             Must set manualItems to true especially, otherwise extra empty options generated -->
+        <#local manualItems = true>
+        <#local manualItemsOnly = true>
+        
+        <@field_select_widget name=name
+                                class=class 
+                                alert=alert 
+                                id=id 
+                                multiple=multiple
+                                formName=""
+                                otherFieldName="" 
+                                event="onClick" 
+                                action=onClick  
+                                size=size
+                                firstInList="" 
+                                currentValue=currentValue 
+                                explicitDescription="" 
+                                allowEmpty=""
+                                options=[]
+                                fieldName=name
+                                otherFieldName="" 
+                                otherValue="" 
+                                otherFieldSize=0 
+                                dDFCurrent=""
+                                ajaxEnabled=false
+                                noCurrentSelectedKey=""
+                                ajaxOptions=""
+                                frequency=""
+                                minChars=""
+                                choices="" 
+                                autoSelect=""
+                                partialSearch=""
+                                partialChars=""
+                                ignoreCase=""
+                                fullSearch=""
+                                tooltip=tooltip
+                                manualItems=manualItems
+                                manualItemsOnly=manualItemsOnly><#nested></@field_select_widget>
+        <#break>
+      <#case "lookup">
+        <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
+      <#break>
+      <#case "checkbox">
+            <@field_checkbox_widget id=id currentValue=value checked=checked name=name action=action />
+        <#break>
+      <#case "radio">
+            <#if radioSingle>
+                <#-- single radio button item mode -->
+                <#local items=[{"key":value, "description":inlineLabel!""}]/>
+                <@field_radio_widget multiMode=false items=items inlineItems=inlineItems class=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
             <#else>
-              ${content}
+                <#-- multi radio button item mode -->
+                <@field_radio_widget multiMode=true items=items inlineItems=inlineItems class=class alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
             </#if>
-            <#break> 
-          <#case "display">
-            <#-- TODO? may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 
-                 can also partially detect type of value with ?is_, but is not enough... -->
-            <#if !valueType?has_content || (valueType=="generic")>
-              <#local displayType = "text">
-            <#else>
-              <#local displayType = valueType>
+        <#break>
+      <#case "file">
+        <@field_file_widget class=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
+        <#break> 
+      <#case "password">
+        <@field_password_widget class=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip/>
+        <#break> 
+      <#case "submit">
+      <#case "submitarea">
+        <#local hasProgress = (progressOptions.formSel)?has_content>
+        <#local content>
+          <#if type == "submit">
+            <#if !catoSubmitFieldTypeButtonMap??>
+              <#global catoSubmitFieldButtonTypeMap = {
+                "submit":"button", "button":"button", "link":"text-link", "image":"image"
+              }>
+              <#global catoSubmitFieldInputTypeMap = {
+                "submit":"submit", "button":"button", "link":"", "image":"image"
+              }>
             </#if>
-            <#if !value?has_content>
-              <#local value><#nested></#local>
-            </#if>
-            <#if displayType == "image">
-              <#local imageLocation = value>
-              <#local desc = "">
-            <#else>
-              <#local imageLocation = "">
-              <#local desc = value>
-            </#if>
-                <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc 
-                    title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" 
-                    imageAlt=description tooltip=tooltip />
-            <#break> 
-          <#default> <#-- "generic", empty or unrecognized -->
-            <#if value?has_content>
-                <@field_generic_widget text=value tooltip=tooltip/>
-            <#else>
-                <@field_generic_widget tooltip=tooltip><#nested /></@field_generic_widget>
-            </#if>
-        </#switch>
-    </@field_markup_container>
-<#-- pop field info when done -->
-<#local dummy = popRequestStack("catoCurrentFieldInfo")>
+            <#local buttonType = catoSubmitFieldButtonTypeMap[submitType]!"button">
+            <#local inputType = catoSubmitFieldInputTypeMap[submitType]!"">
+            <@field_submit_widget buttonType=buttonType class=class alert=alert formName=formName name=name event="" action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false onClick=onClick href=href inputType=inputType disabled=disabled />
+          <#else>
+            <#nested>
+          </#if>
+        </#local>
+        <#if hasProgress>
+          <@fieldSubmitAreaProgress progressOptions=progressOptions nestedContent=content />
+        <#else>
+          ${content}
+        </#if>
+        <#break> 
+      <#case "display">
+        <#-- TODO? may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 
+             can also partially detect type of value with ?is_, but is not enough... -->
+        <#if !valueType?has_content || (valueType=="generic")>
+          <#local displayType = "text">
+        <#else>
+          <#local displayType = valueType>
+        </#if>
+        <#if !value?has_content>
+          <#local value><#nested></#local>
+        </#if>
+        <#if displayType == "image">
+          <#local imageLocation = value>
+          <#local desc = "">
+        <#else>
+          <#local imageLocation = "">
+          <#local desc = value>
+        </#if>
+            <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc 
+                title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" 
+                imageAlt=description tooltip=tooltip />
+        <#break> 
+      <#default> <#-- "generic", empty or unrecognized -->
+        <#if value?has_content>
+            <@field_generic_widget text=value tooltip=tooltip/>
+        <#else>
+            <@field_generic_widget tooltip=tooltip><#nested /></@field_generic_widget>
+        </#if>
+    </#switch>
+  </@field_markup_container>
+  <#-- pop field info when done -->
+  <#local dummy = popRequestStack("catoCurrentFieldInfo")>
 </#macro>
 
 <#-- TODO: this still needs clarification, more args? -->

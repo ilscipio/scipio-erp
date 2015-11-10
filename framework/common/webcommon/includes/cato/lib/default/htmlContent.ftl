@@ -198,191 +198,191 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     fixedColumnsRight = int value;number of columns that are fixed on the right hand side
 -->
 <#macro table type="" class="" id="" cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false fixedColumnsLeft=0 fixedColumnsRight=0 attribs={} inlineAttribs...>
-<#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
-<#local fieldIdNum = fieldIdNum + 1 />
-<#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
-<#if !id?has_content><#local id="table_"+fieldIdNum/></#if>
-<#if !type?has_content>
-  <#local type = "generic">
-</#if>
-<#local open = wrapIf && !closeOnly>
-<#local close = wrapIf && !openOnly>
-<#if open>
-  <#-- save previous globals, for nesting -->
-  <#local prevTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
-  <#local prevSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
-  <#local prevRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag")!""> <#-- used to keep track of state (always boolean) -->
-  <#local prevCurrentRowAlt = getRequestVar("catoCurrentTableCurrentRowAlt")!""> <#-- the actual alt value of current row (may be empty) -->
-  <#local prevLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt")!""> <#-- the actual alt value of "last" row (may be empty) -->
-  <#local styleName = type?replace("-","_")>
-  <#if (!styleName?has_content) || (!(styles["table_" + styleName]!false)?is_string)>
-    <#local styleName = "default">
+  <#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
+  <#local fieldIdNum = fieldIdNum + 1 />
+  <#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
+  <#if !id?has_content><#local id="table_"+fieldIdNum/></#if>
+  <#if !type?has_content>
+    <#local type = "generic">
   </#if>
-  <#if !autoAltRows?is_boolean>
-    <#if inheritAltRows>
-      <#local autoAltRows = true>
-    <#else>
-      <#local autoAltRows = styles["table_" + styleName + "_autoaltrows"]!styles["table_default_autoaltrows"]!false>
+  <#local open = wrapIf && !closeOnly>
+  <#local close = wrapIf && !openOnly>
+  <#if open>
+    <#-- save previous globals, for nesting -->
+    <#local prevTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
+    <#local prevSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
+    <#local prevRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag")!""> <#-- used to keep track of state (always boolean) -->
+    <#local prevCurrentRowAlt = getRequestVar("catoCurrentTableCurrentRowAlt")!""> <#-- the actual alt value of current row (may be empty) -->
+    <#local prevLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt")!""> <#-- the actual alt value of "last" row (may be empty) -->
+    <#local styleName = type?replace("-","_")>
+    <#if (!styleName?has_content) || (!(styles["table_" + styleName]!false)?is_string)>
+      <#local styleName = "default">
     </#if>
-  </#if>
-  <#local defaultClass = styles["table_" + styleName]!styles["table_default"]!"">
-  <#local class = addClassArgDefault(class, defaultClass)>
-  <#if cellspacing?is_boolean>
-    <#if cellspacing>
-      <#local cellspacing = styles["table_" + styleName + "_cellspacing"]!styles["table_default_cellspacing"]!"">
-    <#else>
-      <#local cellspacing = "">
+    <#if !autoAltRows?is_boolean>
+      <#if inheritAltRows>
+        <#local autoAltRows = true>
+      <#else>
+        <#local autoAltRows = styles["table_" + styleName + "_autoaltrows"]!styles["table_default_autoaltrows"]!false>
+      </#if>
     </#if>
-  </#if>
-  <#local catoCurrentTableInfo = {"type": type, "styleName": styleName, "autoAltRows": autoAltRows,
-    "inheritAltRows": inheritAltRows, "parentRowAlt": prevCurrentRowAlt, "useFootAltRows": useFootAltRows}>
-  <#local dummy = setRequestVar("catoCurrentTableInfo", catoCurrentTableInfo)!>
-  <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
-  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
-  <#-- note: catoCurrentTableRowAltFlag should always be boolean
-       note: catoCurrentTableCurrentRowAlt probably doesn't need to be set here, but playing it safe -->
-  <#if firstRowAlt?is_boolean>
-    <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", firstRowAlt)!>
-    <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", firstRowAlt)!>
-  <#elseif inheritAltRows>
-    <#if prevCurrentRowAlt?is_boolean>
-      <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", prevCurrentRowAlt)!>
+    <#local defaultClass = styles["table_" + styleName]!styles["table_default"]!"">
+    <#local class = addClassArgDefault(class, defaultClass)>
+    <#if cellspacing?is_boolean>
+      <#if cellspacing>
+        <#local cellspacing = styles["table_" + styleName + "_cellspacing"]!styles["table_default_cellspacing"]!"">
+      <#else>
+        <#local cellspacing = "">
+      </#if>
+    </#if>
+    <#local catoCurrentTableInfo = {"type": type, "styleName": styleName, "autoAltRows": autoAltRows,
+      "inheritAltRows": inheritAltRows, "parentRowAlt": prevCurrentRowAlt, "useFootAltRows": useFootAltRows}>
+    <#local dummy = setRequestVar("catoCurrentTableInfo", catoCurrentTableInfo)!>
+    <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
+    <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
+    <#-- note: catoCurrentTableRowAltFlag should always be boolean
+         note: catoCurrentTableCurrentRowAlt probably doesn't need to be set here, but playing it safe -->
+    <#if firstRowAlt?is_boolean>
+      <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", firstRowAlt)!>
+      <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", firstRowAlt)!>
+    <#elseif inheritAltRows>
+      <#if prevCurrentRowAlt?is_boolean>
+        <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", prevCurrentRowAlt)!>
+      <#else>
+        <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", false)!>
+      </#if>
+      <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", prevCurrentRowAlt)!>
     <#else>
       <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", false)!>
+      <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", false)!>
     </#if>
+    <#-- note: this var may be empty string (none) -->
+    <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", prevCurrentRowAlt)!>
+    <#local style = "">
+    <#-- need to save values on a stack if open-only! -->
+    <#if !close>
+      <#local dummy = pushRequestStack("catoCurrentTableStack", 
+          {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevRowAltFlag":prevRowAltFlag, 
+           "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, "scrollable":scrollable})>
+    </#if>
+    <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
+      <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "cellspacing"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+  </#if>
+      <#nested>
+  <#if close>
+    <#-- need to get values back from stack if close-only! -->
+    <#if !open>
+      <#local stackValues = popRequestStack("catoCurrentTableStack")!{}>
+      <#local prevTableInfo = stackValues.prevTableInfo>
+      <#local prevSectionInfo = stackValues.prevSectionInfo>
+      <#local prevRowAltFlag = stackValues.prevRowAltFlag>
+      <#local prevCurrentRowAlt = stackValues.prevCurrentRowAlt>
+      <#local prevLastRowAlt = stackValues.prevLastRowAlt>
+      <#local scrollable = stackValues.scrollable>
+    </#if>
+    </table>
+    <#if scrollable>
+    <script type="">
+      $(document).ready(function() {
+          var ${id!} = $('#${id}').DataTable( {
+              fixedHeader: true,
+              scrollX: true,
+              info: false,
+              paging: false,
+              searching : false
+              <#if fixedColumnsLeft&gt;0 || fixedColumnsRight&gt;0>,fixedColumns:   {
+              leftColumns: ${fixedColumnsLeft!0},
+              rightColumns: ${fixedColumnsRight!0}
+              }
+              </#if>
+              
+          } );
+      } );
+    </script>
+    </#if>
+    <#local dummy = setRequestVar("catoCurrentTableInfo", prevTableInfo)!>
+    <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevSectionInfo)!>
+    <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", prevRowAltFlag)!>
     <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", prevCurrentRowAlt)!>
-  <#else>
-    <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", false)!>
-    <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", false)!>
+    <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", prevLastRowAlt)!>
   </#if>
-  <#-- note: this var may be empty string (none) -->
-  <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", prevCurrentRowAlt)!>
-  <#local style = "">
-  <#-- need to save values on a stack if open-only! -->
-  <#if !close>
-    <#local dummy = pushRequestStack("catoCurrentTableStack", 
-        {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevRowAltFlag":prevRowAltFlag, 
-         "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, "scrollable":scrollable})>
-  </#if>
-  <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
-    <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "cellspacing"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
-</#if>
-    <#nested>
-<#if close>
-  <#-- need to get values back from stack if close-only! -->
-  <#if !open>
-    <#local stackValues = popRequestStack("catoCurrentTableStack")!{}>
-    <#local prevTableInfo = stackValues.prevTableInfo>
-    <#local prevSectionInfo = stackValues.prevSectionInfo>
-    <#local prevRowAltFlag = stackValues.prevRowAltFlag>
-    <#local prevCurrentRowAlt = stackValues.prevCurrentRowAlt>
-    <#local prevLastRowAlt = stackValues.prevLastRowAlt>
-    <#local scrollable = stackValues.scrollable>
-  </#if>
-  </table>
-  <#if scrollable>
-  <script type="">
-    $(document).ready(function() {
-        var ${id!} = $('#${id}').DataTable( {
-            fixedHeader: true,
-            scrollX: true,
-            info: false,
-            paging: false,
-            searching : false
-            <#if fixedColumnsLeft&gt;0 || fixedColumnsRight&gt;0>,fixedColumns:   {
-            leftColumns: ${fixedColumnsLeft!0},
-            rightColumns: ${fixedColumnsRight!0}
-            }
-            </#if>
-            
-        } );
-    } );
-  </script>
-  </#if>
-  <#local dummy = setRequestVar("catoCurrentTableInfo", prevTableInfo)!>
-  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevSectionInfo)!>
-  <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", prevRowAltFlag)!>
-  <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", prevCurrentRowAlt)!>
-  <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", prevLastRowAlt)!>
-</#if>
 </#macro>
 
 <#macro thead class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
-<#local open = wrapIf && !closeOnly>
-<#local close = wrapIf && !openOnly>
-<#if open>
-  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
-  <#local catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
-  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
-  <#-- need to save values on a stack if open-only! -->
-  <#if !close>
-    <#local dummy = pushRequestStack("catoCurrentTableHeadStack", 
-        {"prevTableSectionInfo":prevTableSectionInfo})>
+  <#local open = wrapIf && !closeOnly>
+  <#local close = wrapIf && !openOnly>
+  <#if open>
+    <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
+    <#local catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
+    <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
+    <#-- need to save values on a stack if open-only! -->
+    <#if !close>
+      <#local dummy = pushRequestStack("catoCurrentTableHeadStack", 
+          {"prevTableSectionInfo":prevTableSectionInfo})>
+    </#if>
+    <thead<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
   </#if>
-  <thead<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
-</#if>
-    <#nested>
-<#if close>
-  <#-- need to get values back from stack if close-only! -->
-  <#if !open>
-    <#local stackValues = popRequestStack("catoCurrentTableHeadStack")!{}>
-    <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
+      <#nested>
+  <#if close>
+    <#-- need to get values back from stack if close-only! -->
+    <#if !open>
+      <#local stackValues = popRequestStack("catoCurrentTableHeadStack")!{}>
+      <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
+    </#if>
+    </thead>
+    <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
   </#if>
-  </thead>
-  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
-</#if>
 </#macro>
 
 <#macro tbody class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
-<#local open = wrapIf && !closeOnly>
-<#local close = wrapIf && !openOnly>
-<#if open>
-  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
-  <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
-  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
-  <#-- need to save values on a stack if open-only! -->
-  <#if !close>
-    <#local dummy = pushRequestStack("catoCurrentTableBodyStack", 
-        {"prevTableSectionInfo":prevTableSectionInfo})>
+  <#local open = wrapIf && !closeOnly>
+  <#local close = wrapIf && !openOnly>
+  <#if open>
+    <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
+    <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
+    <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
+    <#-- need to save values on a stack if open-only! -->
+    <#if !close>
+      <#local dummy = pushRequestStack("catoCurrentTableBodyStack", 
+          {"prevTableSectionInfo":prevTableSectionInfo})>
+    </#if>
+    <tbody<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
   </#if>
-  <tbody<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
-</#if>
-    <#nested>
-<#if close>
-  <#-- need to get values back from stack if close-only! -->
-  <#if !open>
-    <#local stackValues = popRequestStack("catoCurrentTableBodyStack")!{}>
-    <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
+      <#nested>
+  <#if close>
+    <#-- need to get values back from stack if close-only! -->
+    <#if !open>
+      <#local stackValues = popRequestStack("catoCurrentTableBodyStack")!{}>
+      <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
+    </#if>
+    </tbody>
+    <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
   </#if>
-  </tbody>
-  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
-</#if>
 </#macro>
 
 <#macro tfoot class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
-<#local open = wrapIf && !closeOnly>
-<#local close = wrapIf && !openOnly>
-<#if open>
-  <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
-  <#local catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
-  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
-  <#-- need to save values on a stack if open-only! -->
-  <#if !close>
-    <#local dummy = pushRequestStack("catoCurrentTableFootStack", 
-        {"prevTableSectionInfo":prevTableSectionInfo})>
+  <#local open = wrapIf && !closeOnly>
+  <#local close = wrapIf && !openOnly>
+  <#if open>
+    <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
+    <#local catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
+    <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
+    <#-- need to save values on a stack if open-only! -->
+    <#if !close>
+      <#local dummy = pushRequestStack("catoCurrentTableFootStack", 
+          {"prevTableSectionInfo":prevTableSectionInfo})>
+    </#if>
+    <tfoot<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
   </#if>
-  <tfoot<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
-</#if>
-    <#nested>
-<#if close>
-  <#-- need to get values back from stack if close-only! -->
-  <#if !open>
-    <#local stackValues = popRequestStack("catoCurrentTableFootStack")!{}>
-    <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
+      <#nested>
+  <#if close>
+    <#-- need to get values back from stack if close-only! -->
+    <#if !open>
+      <#local stackValues = popRequestStack("catoCurrentTableFootStack")!{}>
+      <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
+    </#if>
+    </tfoot>
+    <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
   </#if>
-  </tfoot>
-  <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
-</#if>
 </#macro>
 
 <#-- 
@@ -423,77 +423,77 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     [inlineAttribs...]    = other legacy <tr attributes and values, inlined
 -->
 <#macro tr type="" class="" id="" useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
-<#local open = wrapIf && !closeOnly>
-<#local close = wrapIf && !openOnly>
-<#local catoCurrentTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
-<#local catoCurrentTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
-<#local catoCurrentTableRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag")!false>
-<#local catoCurrentTableLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt")!"">
-<#if open>
-  <#local tableType = (catoCurrentTableInfo.type)!"generic">
-  <#local tableStyleName = (catoCurrentTableInfo.styleName)!tableType>
-  <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
-  <#if !type?has_content>
-    <#local type = styles["table_" + tableStyleName + "_rowtype"]!styles["table_default_rowtype"]!"generic">
-  </#if>
-  <#local metaRow = (type == "meta")>
-  <#local isRegAltRow = !metaRow && ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>
-  <#if !(useAlt?is_boolean && useAlt == false)>
-    <#if !alt?is_boolean>
-      <#if groupLast?is_boolean && groupLast == true>
-        <#local alt = catoCurrentTableLastRowAlt!""> <#-- may be empty string (none) -->
-      <#elseif groupParent?is_boolean && groupParent == true>
-        <#local alt = (catoCurrentTableInfo.parentRowAlt)!"">
-      <#elseif (isRegAltRow && ((catoCurrentTableInfo.autoAltRows)!false)==true)>
-        <#if ((catoCurrentTableInfo.inheritAltRows)!false)==true>
+  <#local open = wrapIf && !closeOnly>
+  <#local close = wrapIf && !openOnly>
+  <#local catoCurrentTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
+  <#local catoCurrentTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
+  <#local catoCurrentTableRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag")!false>
+  <#local catoCurrentTableLastRowAlt = getRequestVar("catoCurrentTableLastRowAlt")!"">
+  <#if open>
+    <#local tableType = (catoCurrentTableInfo.type)!"generic">
+    <#local tableStyleName = (catoCurrentTableInfo.styleName)!tableType>
+    <#local sectionType = (catoCurrentTableSectionInfo.type)!"body">
+    <#if !type?has_content>
+      <#local type = styles["table_" + tableStyleName + "_rowtype"]!styles["table_default_rowtype"]!"generic">
+    </#if>
+    <#local metaRow = (type == "meta")>
+    <#local isRegAltRow = !metaRow && ((sectionType == "body") || (sectionType == "foot" && ((catoCurrentTableInfo.useFootAltRows)!)==true))>
+    <#if !(useAlt?is_boolean && useAlt == false)>
+      <#if !alt?is_boolean>
+        <#if groupLast?is_boolean && groupLast == true>
+          <#local alt = catoCurrentTableLastRowAlt!""> <#-- may be empty string (none) -->
+        <#elseif groupParent?is_boolean && groupParent == true>
           <#local alt = (catoCurrentTableInfo.parentRowAlt)!"">
-        <#else>
-          <#local alt = catoCurrentTableRowAltFlag!false> <#-- always boolean -->
+        <#elseif (isRegAltRow && ((catoCurrentTableInfo.autoAltRows)!false)==true)>
+          <#if ((catoCurrentTableInfo.inheritAltRows)!false)==true>
+            <#local alt = (catoCurrentTableInfo.parentRowAlt)!"">
+          <#else>
+            <#local alt = catoCurrentTableRowAltFlag!false> <#-- always boolean -->
+          </#if>
+        <#elseif useAlt?is_boolean && useAlt == true>
+          <#-- forced -->
+          <#local alt = catoCurrentTableRowAltFlag!false>
         </#if>
-      <#elseif useAlt?is_boolean && useAlt == true>
-        <#-- forced -->
-        <#local alt = catoCurrentTableRowAltFlag!false>
       </#if>
     </#if>
-  </#if>
-  <#-- save the "effective" or "real" current row alt -->
-  <#local catoCurrentTableCurrentRowAlt = alt>
-  <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", catoCurrentTableCurrentRowAlt)!>
-  <#-- need to save values on a stack if open-only! -->
-  <#if !close>
-    <#local dummy = pushRequestStack("catoCurrentTableRowStack", 
-        {"type":type, "useAlt":useAlt, "alt":alt, "isRegAltRow":isRegAltRow})>
-  </#if>
-  <#if alt?is_boolean>
-    <#local class = addClassArg(class, alt?string(styles.row_alt!, styles.row_reg!))>
-  </#if>
-  <#if selected?is_boolean && selected == true>
-    <#local class = addClassArg(class, styles.row_selected!)>
-  </#if>
-  <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
-</#if>    
-    <#nested>
-<#if close>
-  <#-- need to get values back from stack if close-only! -->
-  <#if !open>
-    <#local stackValues = popRequestStack("catoCurrentTableRowStack")!{}>
-    <#local type = stackValues.type>
-    <#local useAlt = stackValues.useAlt>
-    <#local alt = stackValues.alt>
-    <#local isRegAltRow = stackValues.isRegAltRow>
-  </#if>
-  </tr>
-  <#if !(useAlt?is_boolean && useAlt == false)>
-    <#-- note: isRegAltRow check here could be removed but maybe better to keep? only auto-toggle for regular rows... -->
-    <#if alt?is_boolean && isRegAltRow> <#-- not needed:  && ((catoCurrentTableInfo.inheritAltRows)!)==false -->
-      <#local catoCurrentTableRowAltFlag = !alt>
-      <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", catoCurrentTableRowAltFlag)!>
+    <#-- save the "effective" or "real" current row alt -->
+    <#local catoCurrentTableCurrentRowAlt = alt>
+    <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", catoCurrentTableCurrentRowAlt)!>
+    <#-- need to save values on a stack if open-only! -->
+    <#if !close>
+      <#local dummy = pushRequestStack("catoCurrentTableRowStack", 
+          {"type":type, "useAlt":useAlt, "alt":alt, "isRegAltRow":isRegAltRow})>
     </#if>
+    <#if alt?is_boolean>
+      <#local class = addClassArg(class, alt?string(styles.row_alt!, styles.row_reg!))>
+    </#if>
+    <#if selected?is_boolean && selected == true>
+      <#local class = addClassArg(class, styles.row_selected!)>
+    </#if>
+    <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+  </#if>    
+      <#nested>
+  <#if close>
+    <#-- need to get values back from stack if close-only! -->
+    <#if !open>
+      <#local stackValues = popRequestStack("catoCurrentTableRowStack")!{}>
+      <#local type = stackValues.type>
+      <#local useAlt = stackValues.useAlt>
+      <#local alt = stackValues.alt>
+      <#local isRegAltRow = stackValues.isRegAltRow>
+    </#if>
+    </tr>
+    <#if !(useAlt?is_boolean && useAlt == false)>
+      <#-- note: isRegAltRow check here could be removed but maybe better to keep? only auto-toggle for regular rows... -->
+      <#if alt?is_boolean && isRegAltRow> <#-- not needed:  && ((catoCurrentTableInfo.inheritAltRows)!)==false -->
+        <#local catoCurrentTableRowAltFlag = !alt>
+        <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", catoCurrentTableRowAltFlag)!>
+      </#if>
+    </#if>
+    <#-- note: may be empty string, that's ok, will record if last was disabled so groupLast always makes sense -->
+    <#local catoCurrentTableLastRowAlt = alt>
+    <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", catoCurrentTableLastRowAlt)!>
   </#if>
-  <#-- note: may be empty string, that's ok, will record if last was disabled so groupLast always makes sense -->
-  <#local catoCurrentTableLastRowAlt = alt>
-  <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", catoCurrentTableLastRowAlt)!>
-</#if>
 </#macro>
 
 <#-- 
@@ -513,14 +513,14 @@ Helps define table cells.
     [inlineAttribs...]    = other legacy <th and <td attributes and values
 -->
 <#macro th class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
-<#local open = wrapIf && !closeOnly>
-<#local close = wrapIf && !openOnly>
+  <#local open = wrapIf && !closeOnly>
+  <#local close = wrapIf && !openOnly>
   <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
 <#macro td class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
-<#local open = wrapIf && !closeOnly>
-<#local close = wrapIf && !openOnly>
+  <#local open = wrapIf && !closeOnly>
+  <#local close = wrapIf && !openOnly>
   <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></td></#if>
 </#macro>
 
@@ -568,29 +568,29 @@ Since this is very foundation specific, this function may be dropped in future i
     
 -->
 <#macro pul title="">
-          <ul class="${styles.pricing_wrap!}">
-              <@pli type="title">${title!}</@pli>
-              <#nested>
-          </ul>
+    <ul class="${styles.pricing_wrap!}">
+        <@pli type="title">${title!}</@pli>
+        <#nested>
+    </ul>
 </#macro>
 
 <#macro pli type="">
     <#switch type>
-          <#case "price">
-              <li class="${styles.pricing_price!}"><#nested></li>
-          <#break>
-          <#case "description">
-              <li class="${styles.pricing_description!}"><#nested></li>
-          <#break>
-          <#case "title">
-              <li class="${styles.pricing_title!}"><#nested></li>
-          <#break>
-          <#case "button">
-              <li class="${styles.pricing_cta!}"><#nested></li>
-          <#break>        
-          <#default>
-              <li class="${styles.pricing_bullet!}"><#nested></li>
-          <#break>
+        <#case "price">
+            <li class="${styles.pricing_price!}"><#nested></li>
+        <#break>
+        <#case "description">
+            <li class="${styles.pricing_description!}"><#nested></li>
+        <#break>
+        <#case "title">
+            <li class="${styles.pricing_title!}"><#nested></li>
+        <#break>
+        <#case "button">
+            <li class="${styles.pricing_cta!}"><#nested></li>
+        <#break>        
+        <#default>
+            <li class="${styles.pricing_bullet!}"><#nested></li>
+        <#break>
     </#switch>
 </#macro>
 

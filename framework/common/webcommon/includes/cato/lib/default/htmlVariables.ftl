@@ -202,6 +202,12 @@
     "grid_sidebar_2_main" : "large-8 medium-6 columns",
     "grid_sidebar_2_side" : "large-2 medium-3 columns",
 
+  <#-- Text align -->
+    "text_left" : "text-left",
+    "text_right" : "text-right",
+    "text_center" : "text-center",
+    "text_justify" : "text-justify",
+
   <#-- Floats -->
     "float_left" : "left",
     "float_right" : "right",

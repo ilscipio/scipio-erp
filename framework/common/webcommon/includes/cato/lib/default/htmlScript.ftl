@@ -22,14 +22,19 @@ IMPL NOTE: Beware of whitespace.
     includeDocType      = boolean, default false (included by screen renderer, @renderScreenBegin)
 -->
 <#macro htmlHeadOpen includeDocType=false>
-<#if includeDocType><!DOCTYPE html></#if><#t>
-<#if locale??><#local docLangAttr = locale.toString()?replace("_", "-")></#if>
+<#if includeDocType><!DOCTYPE html></#if>
+<#if locale??>
+    <#local docLangAttr = locale.toString()?replace("_", "-")>
+</#if>
 <#local langDir = "ltr">
 <#if docLangAttr?? && "ar.iw"?contains(docLangAttr?substring(0, 2))>
     <#local langDir = "rtl">
 </#if>
-<!--[if IE 9]><html class="lt-ie10" lang="${docLangAttr!"en"}" <#if langDir??>dir="${langDir}"</#if>> <![endif]-->
-<html class="no-js" lang="${doctLangAttr!"en"}"<#if langDir?has_content> dir="${langDir!}"</#if>>
+<#if !docLangAttr?has_content>
+  <#local docLangAttr = "en">
+</#if>
+<!--[if IE 9]><html class="lt-ie10"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>><![endif]-->
+<html class="no-js"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

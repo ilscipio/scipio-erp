@@ -43,7 +43,7 @@ under the License.
                     ${partyData[party].lastName!}
                   </#if>
               </@td>
-              <@td align="right">
+              <@td class="+${styles.text_right!}">
                 <a href="<@ofbizUrl>removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
               </@td>
             </@tr>

@@ -263,10 +263,10 @@ under the License.
                                         <a href="#" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>updateProductExportDetail</@ofbizUrl>';document.ProductsExportToEbay.submit();" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
                                     <#-- request.setAttribute("isSaved")-->
                                     <#if isSaved?? && isSaved=="Y">
-                                        <a href="#" class="${styles.button_default!}" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>verifyItemBeforeAddAndExportToEbay</@ofbizUrl>';document.ProductsExportToEbay.submit();">Verifly Item</a>
+                                        <a href="#" class="${styles.link_action!}" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>verifyItemBeforeAddAndExportToEbay</@ofbizUrl>';document.ProductsExportToEbay.submit();">Verifly Item</a>
                                     </#if>
-                                        <a href="#" class="${styles.button_default!}" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>removeProductFromListing</@ofbizUrl>';document.ProductsExportToEbay.submit();">Remove</a>
-                                        <#--a href="#" class="${styles.button_default!}">Save and ${uiLabelMap.EbayExportToEbay}</a-->
+                                        <a href="#" class="${styles.link_action!}" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>removeProductFromListing</@ofbizUrl>';document.ProductsExportToEbay.submit();">Remove</a>
+                                        <#--a href="#" class="${styles.link_action!}">Save and ${uiLabelMap.EbayExportToEbay}</a-->
                                         <!-- end buttons bar -->
                                 </@td>
                             </@tr>
@@ -314,7 +314,7 @@ under the License.
                                                             </#if>
                                                         </#if>
                                                   </select>
-                                                  <a class="${styles.button_default!}" href="javascript:retrieveEbayCategoryByParent('<@ofbizUrl>retrieveEbayCategoryByParent</@ofbizUrl>','CH_<#if primaryCate?has_content>${primaryCate.getCategoryID()!}</#if>','${productStoreId}','ebayCategory')">${uiLabelMap.EbayChangeCategory}</a> <a class="${styles.button_default!}" href="javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>setSelectedCategory</@ofbizUrl>?isProductId=${isProductId!}';document.getElementById('ProductsExportToEbay').submit();">${uiLabelMap.EbaySet}</a>
+                                                  <a class="${styles.link_action!}" href="javascript:retrieveEbayCategoryByParent('<@ofbizUrl>retrieveEbayCategoryByParent</@ofbizUrl>','CH_<#if primaryCate?has_content>${primaryCate.getCategoryID()!}</#if>','${productStoreId}','ebayCategory')">${uiLabelMap.EbayChangeCategory}</a> <a class="${styles.link_action!}" href="javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>setSelectedCategory</@ofbizUrl>?isProductId=${isProductId!}';document.getElementById('ProductsExportToEbay').submit();">${uiLabelMap.EbaySet}</a>
                                               </div>
                                               <input type="hidden" name="primaryCateId" value="${primaryCateId!}"/>
                                               <div id="ebayCategory_Name">${priCateName!}</div>

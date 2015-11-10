@@ -170,7 +170,7 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#global portalPageGridUsed = 0>
   <#--
   <#if confMode == "true">
-    <a class="${styles.button_default!}" href="javascript:document.addColumn_${portalPageId}.submit()" title="${addColumnHint}">${addColumnLabel}</a> <b>PortalPageId: ${portalPageId}</b>
+    <a class="${styles.link_action!}" href="javascript:document.addColumn_${portalPageId}.submit()" title="${addColumnHint}">${addColumnLabel}</a> <b>PortalPageId: ${portalPageId}</b>
     <form method="post" action="addPortalPageColumn" name="addColumn_${portalPageId}">
       <input name="portalPageId" value="${portalPageId}" type="hidden"/>
     </form>
@@ -264,19 +264,19 @@ not "current" context (too intrusive in current renderer design). still relies o
             <form method="post" action="deletePortalPageColumn" name="delColumn_${columnKey}">
               ${columnKeyFields}
             </form>
-            <a class="${styles.button_default!}" href="javascript:document.delColumn_${columnKey}.submit()" title="${delColumnHint}">${delColumnLabel}</a>
+            <a class="${styles.link_action!}" href="javascript:document.delColumn_${columnKey}.submit()" title="${delColumnHint}">${delColumnLabel}</a>
           </li>
           <li>
             <form method="post" action="addPortlet" name="addPortlet_${columnKey}">
               ${columnKeyFields}
             </form>
-            <a class="${styles.button_default!}" href="javascript:document.addPortlet_${columnKey}.submit()" title="${addPortletHint}">${addPortletLabel}</a>
+            <a class="${styles.link_action!}" href="javascript:document.addPortlet_${columnKey}.submit()" title="${addPortletHint}">${addPortletLabel}</a>
           </li>
           <li>
             <form method="post" action="editPortalPageColumnWidth" name="setColumnSize_${columnKey}">
               ${columnKeyFields}
             </form>
-            <a class="${styles.button_default!}" href="javascript:document.setColumnSize_${columnKey}.submit()" title="${setColumnSizeHint}">${colWidthLabel}: ${width}</a>
+            <a class="${styles.link_action!}" href="javascript:document.setColumnSize_${columnKey}.submit()" title="${setColumnSizeHint}">${colWidthLabel}: ${width}</a>
           </li>
         </ul>
       </div>

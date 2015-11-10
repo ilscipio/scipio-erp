@@ -145,8 +145,12 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#local sortBy = inlineArgs.sortBy!args.sortBy!"">
   <#local sortDesc = inlineArgs.sortDesc!args.sortDesc!false>
   <#local nestedFirst = inlineArgs.nestedFirst!args.nestedFirst!false>
-  <#local htmlWrap  = inlineArgs.htmlWrap!args.htmlWrap!"ul"/>
-  <#t>
+  <#local htmlWrap  = inlineArgs.htmlWrap!args.htmlWrap!true/>
+
+  <#if htmlWrap?is_boolean>
+    <#local htmlWrap = htmlWrap?string("ul", "")>
+  </#if>
+
   <#local prevMenuInfo = catoCurrentMenuInfo!>
   <#local prevMenuItemIndex = catoCurrentMenuItemIndex!>
   <#local styleName = type?replace("-","_")>
@@ -158,9 +162,9 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     "preItems":preItems, "postItems":postItems, "sort":sort, "sortBy":sortBy, "sortDesc":sortDesc, "nestedFirst":nestedFirst}>
   <#global catoCurrentMenuInfo = menuInfo>
   <#global catoCurrentMenuItemIndex = 0>
-  <#t>
+
   <#local class = addClassArgDefault(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
-  <#t>
+
   <@menu_markup class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItems=inlineItems htmlWrap=htmlWrap>
   <#if !(preItems?is_boolean && preItems == false)>
     <#if preItems?is_sequence>
@@ -199,7 +203,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     </#if>
   </#if>
   </@menu_markup>
-  <#t>
+
   <#global catoCurrentMenuInfo = prevMenuInfo>
   <#global catoCurrentMenuItemIndex = prevMenuItemIndex>
   <#global catoLastMenuInfo = menuInfo>
@@ -208,11 +212,11 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
 <#-- Markup for @menu container, with minimal logic - may be overridden
      NOTE: inlineItems is included in case needs different effect per-theme (and ugly to factor out) -->
 <#macro menu_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false htmlWrap="ul" extraArgs...>
-  <#if !inlineItems>
+  <#if !inlineItems && htmlWrap?has_content>
     <${htmlWrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>
   </#if>
       <#nested>
-  <#if !inlineItems>
+  <#if !inlineItems && htmlWrap?has_content>
     </${htmlWrap}>
   </#if>
 </#macro>
@@ -285,12 +289,16 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#local nestedMenu = inlineArgs.nestedMenu!args.nestedMenu!false>
   <#local wrapNested = inlineArgs.wrapNested!args.wrapNested!false>
   <#local nestedFirst = inlineArgs.nestedFirst!args.nestedFirst!false>
-  <#local htmlWrap  = inlineArgs.htmlWrap!args.htmlWrap!"li"/>
+  <#local htmlWrap  = inlineArgs.htmlWrap!args.htmlWrap!true/>
   <#local inlineItem = inlineArgs.inlineItem!args.inlineItem!false>
-  <#t>
+
   <#local menuType = (catoCurrentMenuInfo.type)!"">
   <#local menuStyleName = (catoCurrentMenuInfo.styleName)!"">
-  <#t>
+  
+  <#if htmlWrap?is_boolean>
+    <#local htmlWrap = htmlWrap?string("li", "")>
+  </#if>
+
   <#if disabled>
     <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemdisabled"]!styles["menu_default_itemdisabled"]!""))>
     <#local contentClass = addClassArg(contentClass, (styles["menu_" + menuStyleName + "_item_contentdisabled"]!styles["menu_default_item_contentdisabled"]!""))>
@@ -304,9 +312,9 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     <#local class = addClassArg(class, (styles["menu_" + menuStyleName + "_itemactive"]!styles["menu_default_itemactive"]!""))>
     <#local contentClass = addClassArg(contentClass, (styles["menu_" + menuStyleName + "_item_contentactive"]!styles["menu_default_item_contentactive"]!""))>
   </#if>
-  <#t>
+
   <#local class = addClassArgDefault(class, styles["menu_" + menuStyleName + "_item"]!styles["menu_default_item"]!"")>
-  <#t>
+
   <#if type == "link">
     <#local defaultContentClass = styles["menu_" + menuStyleName + "_item_link"]!styles["menu_default_item_link"]!"">
   <#elseif type == "text">
@@ -317,7 +325,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     <#local defaultContentClass = "">
   </#if>
   <#local contentClass = addClassArgDefault(contentClass, defaultContentClass)>
-  <#t>
+
   <@menuitem_markup class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=inlineItem htmlWrap=htmlWrap><#rt>
     <#if !nestedContent?is_boolean>
       <#-- use nestedContent -->
@@ -347,11 +355,11 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
 
 <#-- Markup for @menuitem (outer item wrapper only) - may be overridden -->
 <#macro menuitem_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItem=false htmlWrap="li" extraArgs...>
-  <#if !inlineItem>
+  <#if !inlineItem && htmlWrap?has_content>
     <${htmlWrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
   </#if>
       <#nested><#t>
-  <#if !inlineItem>
+  <#if !inlineItem && htmlWrap?has_content>
     </${htmlWrap}><#lt>
   </#if>
 </#macro>

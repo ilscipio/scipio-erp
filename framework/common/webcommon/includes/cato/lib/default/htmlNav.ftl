@@ -568,10 +568,18 @@ menu item element must override this and provide a proper check.
     </#if>
 </#macro>
 
-<#-- DEV NOTE: see @section_core for details on pattern
-     migrated from @renderNextPrev form widget macro
-     new params: paginate, forcePost, viewIndexFirst, listItemsOnly, paginateToggle*
-     paginate is a display hint, does not seem to mean guarantee data wasn't paginated -->
+<#-- Core implementation of @paginate. 
+    More options than @paginate, but raw and less friendly interface; not meant for template use, but can be called from other macro implementations.
+     
+    Migrated from @renderNextPrev form widget macro.
+     
+  * Parameters *
+    paginate        = display hint, does not seem to mean guarantee data wasn't paginated
+    forcePost       = if true, HTTP requests must be in HTTP POST (sometimes required, other times simply better)
+    viewIndexFirst  = first index
+    listItemsOnly   = only show core paginate items, no container
+    paginateToggle  = if true, include a control to toggle pagination on or off
+-->
 <#macro paginate_core paginateStyle="" paginateFirstStyle="" viewIndex=1 highIndex=0 listSize=0 viewSize=1 ajaxEnabled=false javaScriptEnabled=false ajaxFirstUrl="" firstUrl="" 
     paginateFirstLabel="" paginatePreviousStyle="" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" 
     pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying="" 
@@ -580,21 +588,23 @@ menu item element must override this and provide a proper check.
     paginate=true forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false ajaxPaginateOnUrl="" 
     paginateOnUrl="" paginateOnStyle="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffStyle="" 
     paginateOffLabel="">
+    
+  <#local availPageSizes = [10, 20, 30, 50, 100, 200]>
+  <#local minPageSize = availPageSizes?first>
+  <#local viewIndexLast = 0>
+  <#local multiPage = false>
+    
   <#-- note: possible that data was paginated even if paginate false, but don't bother right now -->
   <#if paginate>
-    <#local availPageSizes = [10, 20, 30, 50, 100, 200]>
-    <#local minPageSize = availPageSizes?first>
-    <#local itemRange = 2/>
-    <#local placeHolder ="..."/>
     
     <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
     <#if (!viewSize?is_number)>
-        ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize!, "htmlFormMacroLibraryRenderNextPrev")!}<#t>
+        <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize!, "htmlFormMacroLibraryRenderNextPrev")!><#t>
         <#local viewSize = viewSize?number>
     </#if>
     <#local viewSize = viewSize?floor>
     <#if (!viewIndex?is_number)>
-        ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex!, "htmlFormMacroLibraryRenderNextPrev")!}<#t>
+        <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex!, "htmlFormMacroLibraryRenderNextPrev")!><#t>
         <#local viewIndex = viewIndex?number>
     </#if>
     <#local viewIndex = viewIndex?floor>
@@ -604,13 +614,14 @@ menu item element must override this and provide a proper check.
       <#local viewIndexLast = viewIndexFirst>
     </#if>
     <#if (viewIndex < viewIndexFirst) || (viewIndex > viewIndexLast)>
-        ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlFormMacroLibraryRenderNextPrev")!}<#t>
+        <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlFormMacroLibraryRenderNextPrev")!><#t>
         <#if (viewIndex < viewIndexFirst)>
             <#local viewIndex = viewIndexFirst>
         <#else>
             <#local viewIndex = viewIndexLast>
         </#if>
     </#if>
+    <#local multiPage = (listSize > viewSize)>
     
     <#-- Fix up ajaxSelectUrl here so doesn't affect other render types (?) -->
     <#local ajaxSelectUrl = ajaxSelectUrl?replace("' + this.value + '", "' + '")>
@@ -630,113 +641,165 @@ menu item element must override this and provide a proper check.
     <#local nextUrl = escapeUrlParamDelims(nextUrl)>
     <#local ajaxLastUrl = escapeUrlParamDelims(ajaxLastUrl)>
     <#local lastUrl = escapeUrlParamDelims(lastUrl)>
-    
-    <#-- note: must use submitPaginationPost to force send as POST for some requests, because Ofbiz security feature prevents
-         GET params passed to controller service event when request is https="true".
-         note: submitPagination (new in stock Ofbiz 14) already sends as POST in some cases, but not based on controller.
-         FIXME: POST/forcePost currently only supported when js enabled (non-js need extra markup for a form, ugly),
-                currently non-js falls back to GET only, won't always work -->
-    
-    <#-- note: implies (listSize > 0), some cases this gets called with listSize zero -->
-    <#if (listSize > minPageSize)>
-      <#local multiPage = (listSize > viewSize)>
-    
-      <#-- DEV NOTE: duplicated below -->
-      <#if !listItemsOnly>
-      <div class="${styles.grid_row!}">
-        <div class="${styles.grid_large!}2 ${styles.grid_cell!}">${commonDisplaying}</div>
-        <div class="${styles.grid_large!}8 ${styles.grid_cell!}">
-          <div class="${styles.pagination_wrap!} ${paginateStyle}">
-            <ul class="${styles.pagination_list!}">
-      </#if>
+
+    <@paginate_markup paginateStyle=paginateStyle paginateFirstStyle=paginateFirstStyle viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxEnabled=ajaxEnabled javaScriptEnabled=javaScriptEnabled ajaxFirstUrl=ajaxFirstUrl firstUrl=firstUrl 
+      paginateFirstLabel=paginateFirstLabel paginatePreviousStyle=paginatePreviousStyle ajaxPreviousUrl=ajaxPreviousUrl previousUrl=previousUrl paginatePreviousLabel=paginatePreviousLabel 
+      pageLabel=pageLabel ajaxSelectUrl=ajaxSelectUrl selectUrl=selectUrl ajaxSelectSizeUrl=ajaxSelectSizeUrl selectSizeUrl=selectSizeUrl commonDisplaying=commonDisplaying 
+      paginateNextStyle=paginateNextStyle ajaxNextUrl=ajaxNextUrl nextUrl=nextUrl paginateNextLabel=paginateNextLabel paginateLastStyle=paginateLastStyle ajaxLastUrl=ajaxLastUrl 
+      lastUrl=lastUrl paginateLastLabel=paginateLastLabel paginateViewSizeLabel=paginateViewSizeLabel 
+      paginate=paginate forcePost=forcePost viewIndexFirst=viewIndexFirst listItemsOnly=listItemsOnly paginateToggle=paginateToggle ajaxPaginateOnUrl=ajaxPaginateOnUrl 
+      paginateOnUrl=paginateOnUrl paginateOnStyle=paginateOnStyle paginateOnLabel=paginateOnLabel ajaxPaginateOffUrl=ajaxPaginateOffUrl paginateOffUrl=paginateOffUrl paginateOffStyle=paginateOffStyle 
+      paginateOffLabel=paginateOffLabel
+      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage />
   
-              <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxFirstUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${firstUrl}')"</#if><#else>href="${firstUrl}"</#if></#local>
-              <li class="${styles.pagination_item!} ${paginateFirstStyle}<#if (viewIndex> viewIndexFirst)>"><a ${actionStr}>${paginateFirstLabel}</a><#else> ${styles.pagination_item_disabled!}"><span>${paginateFirstLabel}</span></#if></li>
-              <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPreviousUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${previousUrl}')"</#if><#else>href="${previousUrl}"</#if></#local>
-              <li class="${styles.pagination_item!} ${paginatePreviousStyle}<#if (viewIndex> viewIndexFirst)>"><a ${actionStr}>${paginatePreviousLabel}</a><#else> ${styles.pagination_item_disabled!}"><span>${paginatePreviousLabel}</span></#if></li>
-          <#local displayDots = true/>
-          <#if (listSize > 0)> 
-            <#local x=(listSize/viewSize)?ceiling>
-              <#list 1..x as i>
-                <#local vi = viewIndexFirst + (i - 1)>
-                <#if (vi gte viewIndexFirst && vi lte viewIndexFirst+itemRange) || (vi gte viewIndex-itemRange && vi lte viewIndex+itemRange)>
-                  <#local displayDots = true/>
-                  <#if vi == viewIndex>
-                    <li class="${styles.pagination_item!} ${styles.pagination_item_active!}"><a href="javascript:void(0)">${i}</a></li>
-                  <#else>
-                    <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxSelectUrl}${vi}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectUrl}${vi}')"</#if><#else>href="${selectUrl}${vi}"</#if></#local>
-                    <li><a ${actionStr}>${i}</a></li>
-                  </#if>
-                <#else>
-                <#if displayDots><li>${placeHolder!}</li></#if>
-                <#local displayDots = false/>
-                </#if>
-              </#list>
-          </#if>
-          
-              <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxNextUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${nextUrl}')"</#if><#else>href="${nextUrl}"</#if></#local>
-              <li class="${styles.pagination_item!} ${paginateNextStyle}<#if (highIndex < listSize)>"><a ${actionStr}>${paginateNextLabel}</a><#else> ${styles.pagination_item_disabled!}"><span>${paginateNextLabel}</span></#if></li>
-              <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxLastUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${lastUrl}')"</#if><#else>href="${lastUrl}"</#if></#local>
-              <li class="${styles.pagination_item!} ${paginateLastStyle}<#if (highIndex < listSize)>"><a ${actionStr}>${paginateLastLabel}</a><#else> ${styles.pagination_item_disabled!}"><span>${paginateLastLabel}</span></#if></li>         
-  
-      <#if !listItemsOnly>  
-            </ul>
-          </div>
-        </div>
-        <div class="${styles.grid_large!}2 ${styles.grid_cell!}">
-           <#if javaScriptEnabled>
-                  <#local actionStr>onchange="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxSelectSizeUrl}')<#else><#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectSizeUrl}')</#if>"</#local>
-                  <div class="${styles.grid_row!}">
-                      <div class="${styles.grid_large!}6 ${styles.grid_cell!}">
-                          <label>${paginateViewSizeLabel}</span>
-                      </div>
-                      <div class="${styles.grid_large!}6 ${styles.grid_cell!}">
-                          <select name="pageSize" size="1" ${actionStr}><#rt/>    
-                          <#local sufficientPs = false>
-                          <#list availPageSizes as ps>
-                             <#if !sufficientPs>
-                                <option <#if viewSize == ps> selected="selected" </#if> value="${ps}">${ps}</option>
-                                <#if (ps >= listSize)>
-                                  <#local sufficientPs = true>
-                                </#if>
-                              </#if>
-                          </#list>
-                          </select>
-                      </div>
-                  </div>
-                 
-              </#if>
-      
-              <#if paginateToggle>
-                  <#local ajaxPaginateOffUrl = escapeUrlParamDelims(ajaxPaginateOffUrl)>
-                  <#local paginateOffUrl = escapeUrlParamDelims(paginateOffUrl)>
-                  <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPaginateOffUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${paginateOffUrl}')"</#if><#else>href="${paginateOffUrl}"</#if></#local>
-                  <span<#if paginateOffStyle?has_content> class="${styles.pagination_item!} ${paginateOffStyle}"</#if>><a ${actionStr}>${paginateOffLabel}</a></span>           
-              </#if>
-          </div>
-      </div>
-      </#if>
-    </#if>
   <#elseif paginateToggle>
   
     <#local ajaxPaginateOnUrl = escapeUrlParamDelims(ajaxPaginateOnUrl)>
     <#local paginateOnUrl = escapeUrlParamDelims(paginateOnUrl)>
   
+    <@paginate_markup paginateStyle=paginateStyle paginateFirstStyle=paginateFirstStyle viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxEnabled=ajaxEnabled javaScriptEnabled=javaScriptEnabled ajaxFirstUrl=ajaxFirstUrl firstUrl=firstUrl 
+      paginateFirstLabel=paginateFirstLabel paginatePreviousStyle=paginatePreviousStyle ajaxPreviousUrl=ajaxPreviousUrl previousUrl=previousUrl paginatePreviousLabel=paginatePreviousLabel 
+      pageLabel=pageLabel ajaxSelectUrl=ajaxSelectUrl selectUrl=selectUrl ajaxSelectSizeUrl=ajaxSelectSizeUrl selectSizeUrl=selectSizeUrl commonDisplaying=commonDisplaying 
+      paginateNextStyle=paginateNextStyle ajaxNextUrl=ajaxNextUrl nextUrl=nextUrl paginateNextLabel=paginateNextLabel paginateLastStyle=paginateLastStyle ajaxLastUrl=ajaxLastUrl 
+      lastUrl=lastUrl paginateLastLabel=paginateLastLabel paginateViewSizeLabel=paginateViewSizeLabel 
+      paginate=paginate forcePost=forcePost viewIndexFirst=viewIndexFirst listItemsOnly=listItemsOnly paginateToggle=paginateToggle ajaxPaginateOnUrl=ajaxPaginateOnUrl 
+      paginateOnUrl=paginateOnUrl paginateOnStyle=paginateOnStyle paginateOnLabel=paginateOnLabel ajaxPaginateOffUrl=ajaxPaginateOffUrl paginateOffUrl=paginateOffUrl paginateOffStyle=paginateOffStyle 
+      paginateOffLabel=paginateOffLabel
+      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage />
+  </#if>
+</#macro>
+
+<#-- @paginate markup - may be overridden -->
+<#macro paginate_markup paginateStyle="" paginateFirstStyle="" viewIndex=1 highIndex=0 listSize=0 viewSize=1 ajaxEnabled=false javaScriptEnabled=false ajaxFirstUrl="" firstUrl="" 
+    paginateFirstLabel="" paginatePreviousStyle="" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" 
+    pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying="" 
+    paginateNextStyle="" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastStyle="" ajaxLastUrl="" 
+    lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" 
+    paginate=true forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false ajaxPaginateOnUrl="" 
+    paginateOnUrl="" paginateOnStyle="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffStyle="" 
+    paginateOffLabel=""
+    availPageSizes=[] minPageSize=1 viewIndexLast=1 multiPage=true>
+    
+  <#-- note: possible that data was paginated even if paginate false, but don't bother right now -->
+  <#if paginate>
+    <#local itemRange = 2/>
+    <#local placeHolder ="..."/>
+    
+    <#-- note: implies (listSize > 0), some cases this gets called with listSize zero -->
+    <#if (listSize > minPageSize)>
+    
       <#if !listItemsOnly>
+        <div class="${styles.grid_row!}">
+          <div class="${styles.grid_large!}2 ${styles.grid_cell!}">${commonDisplaying}</div>
+          <div class="${styles.grid_large!}8 ${styles.grid_cell!}">
+            <div class="${styles.pagination_wrap!} ${paginateStyle}">
+              <ul class="${styles.pagination_list!}">
+      </#if>
+  
+    
+            <#-- NOTE: must use submitPaginationPost JS function to force send as POST for some requests, because Ofbiz security feature prevents
+                 GET params passed to controller service event when request is https="true".
+                 note: submitPagination (new in stock Ofbiz 14) already sends as POST in some cases, but not based on controller.
+                 FIXME: POST/forcePost currently only supported when js enabled (non-js need extra markup for a form, ugly),
+                    currently non-js falls back to GET only, won't always work -->
+  
+                <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxFirstUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${firstUrl}')"</#if><#else>href="${firstUrl}"</#if></#local>
+                <li class="${styles.pagination_item!} ${paginateFirstStyle}<#if (viewIndex> viewIndexFirst)>"><a ${actionStr}>${paginateFirstLabel}</a><#else> ${styles.pagination_item_disabled!}"><span>${paginateFirstLabel}</span></#if></li>
+                <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPreviousUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${previousUrl}')"</#if><#else>href="${previousUrl}"</#if></#local>
+                <li class="${styles.pagination_item!} ${paginatePreviousStyle}<#if (viewIndex> viewIndexFirst)>"><a ${actionStr}>${paginatePreviousLabel}</a><#else> ${styles.pagination_item_disabled!}"><span>${paginatePreviousLabel}</span></#if></li>
+            <#local displayDots = true/>
+            <#if (listSize > 0)> 
+              <#local x=(listSize/viewSize)?ceiling>
+                <#list 1..x as i>
+                  <#local vi = viewIndexFirst + (i - 1)>
+                  <#if (vi gte viewIndexFirst && vi lte viewIndexFirst+itemRange) || (vi gte viewIndex-itemRange && vi lte viewIndex+itemRange)>
+                    <#local displayDots = true/>
+                    <#if vi == viewIndex>
+                      <li class="${styles.pagination_item!} ${styles.pagination_item_active!}"><a href="javascript:void(0)">${i}</a></li>
+                    <#else>
+                      <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxSelectUrl}${vi}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectUrl}${vi}')"</#if><#else>href="${selectUrl}${vi}"</#if></#local>
+                      <li><a ${actionStr}>${i}</a></li>
+                    </#if>
+                  <#else>
+                  <#if displayDots><li>${placeHolder!}</li></#if>
+                  <#local displayDots = false/>
+                  </#if>
+                </#list>
+            </#if>
+            
+                <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxNextUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${nextUrl}')"</#if><#else>href="${nextUrl}"</#if></#local>
+                <li class="${styles.pagination_item!} ${paginateNextStyle}<#if (highIndex < listSize)>"><a ${actionStr}>${paginateNextLabel}</a><#else> ${styles.pagination_item_disabled!}"><span>${paginateNextLabel}</span></#if></li>
+                <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxLastUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${lastUrl}')"</#if><#else>href="${lastUrl}"</#if></#local>
+                <li class="${styles.pagination_item!} ${paginateLastStyle}<#if (highIndex < listSize)>"><a ${actionStr}>${paginateLastLabel}</a><#else> ${styles.pagination_item_disabled!}"><span>${paginateLastLabel}</span></#if></li>         
+  
+      <#if !listItemsOnly>  
+              </ul>
+            </div>
+          </div>
+          <#if paginateToggle>
+            <#local paginateToggleContent>
+              <#-- NOTE: duplicated below -->
+              <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPaginateOffUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${paginateOffUrl}')"</#if><#else>href="${paginateOffUrl}"</#if></#local>
+              <span<#if paginateOffStyle?has_content> class="${styles.pagination_item!} ${paginateOffStyle}"</#if>><a ${actionStr}>${paginateOffLabel}</a></span>       
+            </#local>    
+          </#if>
+          <div class="${styles.grid_large!}2 ${styles.grid_cell!}">
+            <#if javaScriptEnabled>
+                <#local actionStr>onchange="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxSelectSizeUrl}')<#else><#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectSizeUrl}')</#if>"</#local>
+                <div class="${styles.grid_row!}">
+                    <div class="${styles.grid_large!}6 ${styles.grid_cell!}">
+                        <label>${paginateViewSizeLabel}</span>
+                    </div>
+                    <div class="${styles.grid_large!}6 ${styles.grid_cell!}">
+                        <select name="pageSize" size="1" ${actionStr}><#rt/>    
+                        <#local sufficientPs = false>
+                        <#list availPageSizes as ps>
+                           <#if !sufficientPs>
+                              <option <#if viewSize == ps> selected="selected" </#if> value="${ps}">${ps}</option>
+                              <#if (ps >= listSize)>
+                                <#local sufficientPs = true>
+                              </#if>
+                            </#if>
+                        </#list>
+                        </select>
+                    </div>
+                </div>
+                
+              <#if paginateToggle>
+                <div class="${styles.grid_row!}">
+                    <div class="${styles.grid_large!}12 ${styles.grid_cell!} ${styles.text_right!}">
+                        ${paginateToggleContent}
+                    </div>
+                </div>
+              </#if>
+            <#elseif paginateToggle>
+                <div class="${styles.grid_row!}">
+                    <div class="${styles.grid_large!}12 ${styles.grid_cell!} ${styles.text_right!}">
+                        ${paginateToggleContent}
+                    </div>
+                </div>
+            </#if>
+          </div>
+        </div>
+      </#if>
+    </#if>
+  <#elseif paginateToggle>
+    <#if !listItemsOnly>
       <div class="${styles.grid_row!}">
         <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
           <div class="${styles.pagination_wrap!} ${paginateStyle}">
             <ul class="${styles.pagination_list!}">
-      </#if>
+    </#if>
   
               <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPaginateOnUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${paginateOnUrl}')"</#if><#else>href="${paginateOnUrl}"</#if></#local>
               <li<#if paginateOnStyle?has_content> class="${paginateOnStyle}"</#if>><a ${actionStr}>${paginateOnLabel}</a></li>  
   
-      <#if !listItemsOnly>  
+    <#if !listItemsOnly>  
             </ul>
           </div>
         </div>
       </div>
-      </#if>
+    </#if>
   </#if>
-</#macro>
+</#macro>    
+

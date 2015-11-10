@@ -1256,8 +1256,8 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
                 // this.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
 
                 // this.renderFormatItemRowCellOpen(writer, context, modelForm, submitField);
-
-                submitField.renderFieldString(writer, context, this);
+            	if (modelForm.getUseRowSubmit())
+            		submitField.renderFieldString(writer, context, this);
 
                 // this.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
 

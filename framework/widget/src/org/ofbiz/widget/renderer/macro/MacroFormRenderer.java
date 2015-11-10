@@ -24,6 +24,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.rmi.server.UID;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -1162,6 +1163,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("\" />");
         executeMacro(writer, sr.toString());
         this.appendTooltip(writer, context, modelFormField);
+        
+        // Cato: when the form doesn't use a specific row for the submit button, render it within the current row being rendered.
+        if (!modelFormField.isRowSubmit()) {        	
+        	makeSubmit(writer, new HashMap<String, String>(), modelFormField.getWidgetStyle(context), modelFormField, this.request, this.response, context);
+        }
     }
 
     public void renderResetField(Appendable writer, Map<String, Object> context, ResetField resetField) throws IOException {
@@ -1489,7 +1495,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 // this.renderFormatItemRowCellOpen(writer, context, modelForm, submitField);
                 // this.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
                 // this.renderFormatItemRowCellOpen(writer, context, modelForm, submitField);
-                submitField.renderFieldString(writer, context, this);
+            	// Cato: Render the row submit button only if the use-row-submit flag is set to true
+                if (modelForm.getUseRowSubmit())
+                	submitField.renderFieldString(writer, context, this);
                 // this.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
             }
         }
@@ -3198,6 +3206,56 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
 
     }
+    
+    
+    // Cato: 
+    public void makeSubmit(Appendable writer, Map<String, String> parameterMap, String description, ModelFormField modelFormField, HttpServletRequest request,
+            HttpServletResponse response, Map<String, Object> context) throws IOException {
+//        String realLinkType = WidgetWorker.determineAutoLinkType(linkType, target, targetType, request);
+        String encodedDescription = encode(description, modelFormField, context);
+        // get the parameterized pagination index and size fields
+        int paginatorNumber = WidgetWorker.getPaginatorNumber(context);
+        ModelForm modelForm = modelFormField.getModelForm();        
+        String viewIndexField = modelForm.getMultiPaginateIndexField(context);
+        String viewSizeField = modelForm.getMultiPaginateSizeField(context);
+        int viewIndex = Paginator.getViewIndex(modelForm, context);
+        int viewSize = Paginator.getViewSize(modelForm, context);
+        if (viewIndexField.equals("viewIndex" + "_" + paginatorNumber)) {
+            viewIndexField = "VIEW_INDEX" + "_" + paginatorNumber;
+        }
+        if (viewSizeField.equals("viewSize" + "_" + paginatorNumber)) {
+            viewSizeField = "VIEW_SIZE" + "_" + paginatorNumber;
+        }
+//        if ("hidden-form".equals(realLinkType)) {
+            parameterMap.put(viewIndexField, Integer.toString(viewIndex));
+            parameterMap.put(viewSizeField, Integer.toString(viewSize));
+           
+            if (modelFormField != null && "multi".equals(modelForm.getType())) {
+//                WidgetWorker.makeHiddenFormLinkAnchor(writer, linkStyle, encodedDescription, confirmation, modelFormField, request, response, context);
+                // this is a bit trickier, since we can't do a nested form we'll have to put the link to submit the form in place, but put the actual form def elsewhere, ie after the big form is closed
+                Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
+                Appendable postMultiFormWriter = wholeFormContext != null ? (Appendable) wholeFormContext.get("postMultiFormWriter") : null;
+                if (postMultiFormWriter == null) {
+                    postMultiFormWriter = new StringWriter();
+                    wholeFormContext.put("postMultiFormWriter", postMultiFormWriter);
+                }
+              
+                List<ModelFormField> rowSubmitFields = null;
+                if (context.containsKey("rowSubmitFields")) 
+                	rowSubmitFields = (List<ModelFormField>) context.get("rowSubmitFields");
+                
+                WidgetWorker.makeHiddenFormSubmitForm(postMultiFormWriter, "", "", "", parameterMap, modelFormField, request, response, rowSubmitFields, context);
+            } else {
+            	  // TODO: Find out if we need to render something in here, I don't think so but maybe I'm just missing something
+//                WidgetWorker.makeHiddenFormLinkForm(writer, target, targetType, targetWindow, parameterMap, modelFormField, request, response, context);
+//                WidgetWorker.makeHiddenFormLinkAnchor(writer, linkStyle, encodedDescription, confirmation, modelFormField, request, response, context);
+            }
+//        } else {
+//            makeHyperlinkString(writer, linkStyle, targetType, target, parameterMap, encodedDescription, confirmation, modelFormField, request, response, context, targetWindow);
+//        }
+
+    }
+    
 
     public void makeHyperlinkString(Appendable writer, String linkStyle, String targetType, String target, Map<String, String> parameterMap, String description, String confirmation, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context,
             String targetWindow) throws IOException {

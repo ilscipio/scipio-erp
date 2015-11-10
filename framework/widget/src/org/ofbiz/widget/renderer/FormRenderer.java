@@ -19,6 +19,7 @@
 package org.ofbiz.widget.renderer;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -906,10 +907,34 @@ public class FormRenderer {
                         innerDisplayHyperlinkFieldsEnd.add(modelFormField);
                         currentPosition = modelFormField.getPosition();
                     }
+                          
+                    // Cato: Adding submit buttons if use-row-submit flag in the form definition is set to false
+					if ("multi".equals(modelForm.getType())) {
+						Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
+						while (submitFields.hasNext()) {
+							ModelFormField submitField = submitFields.next();
+							if (submitField != null && submitField.shouldUse(context)) {
+								if (!modelForm.getUseRowSubmit())
+									innerDisplayHyperlinkFieldsEnd.add(submitField);
+							}
+						}
+					}
+                    
                     List<ModelFormField> hiddenIgnoredFieldList = getHiddenIgnoredFields(localContext, null, tempFieldList,
                             currentPosition);
-
-                    // Rendering:
+                    // Cato: I don't know where to add all the submit values, for now I'm gonna add them here
+					if ("multi".equals(modelForm.getType()) && !modelForm.getUseRowSubmit()) {
+						List<ModelFormField> rowSubmitFields = new LinkedList<ModelFormField>(innerFormFields);
+						for (ModelFormField hiddenIgnoredField : hiddenIgnoredFieldList) {
+							if (hiddenIgnoredField.getFieldInfo().getFieldType() == FieldInfo.HIDDEN
+                            || hiddenIgnoredField.getFieldInfo().getFieldType() == FieldInfo.IGNORED) {
+								rowSubmitFields.add(hiddenIgnoredField);
+							}
+						}
+						localContext.put("rowSubmitFields", rowSubmitFields);
+                    }						
+					
+					// Rendering:
                     // the fields in the three lists created in the preprocessing phase
                     // are now rendered: this will create a visual representation
                     // of one row (for the current position).

@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -40,8 +41,10 @@ import org.ofbiz.webapp.control.ConfigXMLReader;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.control.WebAppConfigurationException;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
+import org.ofbiz.widget.model.FieldInfo;
 import org.ofbiz.widget.model.ModelForm;
 import org.ofbiz.widget.model.ModelFormField;
+import org.ofbiz.widget.renderer.FormStringRenderer;
 
 public final class WidgetWorker {
 
@@ -291,6 +294,65 @@ public final class WidgetWorker {
         }
 
         writer.append("</form>");
+    }
+    
+    // Cato: Creates a form that triggers a custom a script function used to append hidden elements with their corresponding values of the associated fields defined within the main form
+    public static void makeHiddenFormSubmitForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, List<ModelFormField> rowSubmitFields, Map<String, Object> context) throws IOException {    	
+    	String hiddenFormName = makeLinkHiddenFormName(context, modelFormField);    	
+		if (rowSubmitFields != null) {
+			writer.append("<script type=\"text/javascript\">\r\n");
+			writer.append("function submitForm_" + hiddenFormName + "() {\r\n");
+			writer.append("var form = document.form." + hiddenFormName + ";\r\n");
+			for (ModelFormField rowSubmitField : rowSubmitFields) {
+				if (rowSubmitField.getFieldInfo().getFieldType() != FieldInfo.HIDDEN && rowSubmitField.getFieldInfo().getFieldType() != FieldInfo.IGNORED) {
+					 writer.append("var hiddenField = $(\"<input></input>\")\r\n");
+					 writer.append("$(hiddenField).attr(\"type\", \"hidden\");\r\n");
+					 writer.append("$(hiddenField).attr(\"name\", \"" + rowSubmitField.getParameterName(context) + "\");\r\n");
+					 writer.append("$(hiddenField).attr(\"value\", $(\"input[name=" + rowSubmitField.getParameterName(context) + "]\").val());\r\n");
+					 writer.append("$(form).append($(hiddenField));\r\n");
+				}
+			}
+			writer.append("}\r\n");
+			writer.append("</script>\r\n");
+		}    	
+    	
+        writer.append("<form method=\"post\"");
+        writer.append(" action=\"");
+        // note that this passes null for the parameterList on purpose so they won't be put into the URL
+        WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, false, false, true, request, response, context);
+        writer.append("\"");
+
+        if (UtilValidate.isNotEmpty(targetWindow)) {
+            writer.append(" target=\"");
+            writer.append(targetWindow);
+            writer.append("\"");
+        }
+
+        writer.append(" onsubmit=\"javascript:submitFormDisableSubmits(this); submitForm_" + hiddenFormName + "();\"");
+
+        writer.append(" name=\"");
+        writer.append(hiddenFormName);
+        writer.append("\">");
+
+        for (Map.Entry<String, String> parameter: parameterMap.entrySet()) {
+            if (parameter.getValue() != null) {
+                writer.append("<input name=\"");
+                writer.append(parameter.getKey());
+                writer.append("\" value=\"");
+                writer.append(UtilCodec.getEncoder("html").encode(parameter.getValue()));
+                writer.append("\" type=\"hidden\"/>");
+            }
+        }
+		if (rowSubmitFields != null) {
+			for (ModelFormField rowSubmitField : rowSubmitFields) {
+				if (rowSubmitField.getFieldInfo().getFieldType() == FieldInfo.HIDDEN || rowSubmitField.getFieldInfo().getFieldType() == FieldInfo.IGNORED) {
+					rowSubmitField.renderFieldString(writer, context, (FormStringRenderer) context.get("formStringRenderer"));
+				}
+			}
+		}
+
+        writer.append("</form>");
+        
     }
 
     public static String makeLinkHiddenFormName(Map<String, Object> context, ModelFormField modelFormField) {

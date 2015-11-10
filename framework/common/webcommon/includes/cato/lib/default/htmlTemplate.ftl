@@ -18,7 +18,7 @@
 *     even though it would be convenient, we can't allow a "attribString" arg because no way
 *     for macro to get attribs out of it if it needs them, cause problems.
 *     FIXME: not all macros currently properly check attribMap for duplicate attribs
-*       of args and inlineAttribs (priority should be: args - inlineAttribs - attribMap).
+*         of args and inlineAttribs (priority should be: args - inlineAttribs - attribMap).
 -->
 
 <#-- 

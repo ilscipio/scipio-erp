@@ -5,15 +5,17 @@
 * Ensures include order, #compress, keeps other templates clean and (TODO) per-context include loading.
 * Automatically included at all times.
 *
+* DEV NOTE: should try to avoid #compress in general because sometimes behaves oddly in Ofbiz.
+*     the one in this file should (hopefully) be ok because this include produces no markup.
 * DEV NOTE: this essentially takes the place of a renderer prep hook.
-* maybe should be done from java/renderer prep for performance reasons
-* (FreeMarkerWorker maybe) but currently this is only surefire way to ensure include 
-* script at least always runs (in reality there could be a higher level hook than FreeMarkerWorker
-* but doesn't seem to exist in ofbiz).
+*     maybe should be done from java/renderer prep for performance reasons
+*     (FreeMarkerWorker maybe) but currently this is only surefire way to ensure include 
+*     script at least always runs (in reality there could be a higher level hook than FreeMarkerWorker
+*     but doesn't seem to exist in ofbiz).
 * DEV NOTE: variables like "request" are unavailable here in general in OOTB ofbiz,
-* but minor cato renderer patches ("initial context mod", survey renderer) try to make some available 
-* so they can be used. however, only use the major one likes "delegator" and "request"; 
-* rest of context may not be current. note "request" not available in emails.
+*     but minor cato renderer patches ("initial context mod", survey renderer) try to make some available 
+*     so they can be used. however, only use the major one likes "delegator" and "request"; 
+*     rest of context may not be current. note "request" not available in emails.
 *
 -->
 

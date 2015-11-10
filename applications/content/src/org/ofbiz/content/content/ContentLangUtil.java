@@ -24,6 +24,10 @@ public class ContentLangUtil {
         public String encode(String original) {
             return UtilCodec.getRawEncoder().encode(original);
         }
+        @Override
+        public String sanitize(String original) {
+            return UtilCodec.getRawEncoder().sanitize(original);
+        }
     }
     
     public static class UrlContentSanitizer implements ContentSanitizer {
@@ -33,6 +37,11 @@ public class ContentLangUtil {
         }
         @Override
         public String encode(String original) {
+            // TODO?: Here we would URL-encode the parameters (ONLY)
+            return UtilCodec.getRawEncoder().encode(original);
+        }
+        @Override
+        public String sanitize(String original) {
             // TODO?: Here we would URL-encode the parameters (ONLY)
             return UtilCodec.getRawEncoder().encode(original);
         }

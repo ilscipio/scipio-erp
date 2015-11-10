@@ -144,7 +144,7 @@ public class ProductContentWrapper extends CommonContentWrapper {
                 outString = product.getModelEntity().isField(candidateFieldName) ? product.getString(candidateFieldName): "";
                 outString = outString == null? "" : outString;
             }
-            outString = encoder.encode(outString);
+            outString = encoder.sanitize(outString);
             if (useCache && productContentCache != null) {
                 productContentCache.put(cacheKey, outString);
             }
@@ -152,11 +152,11 @@ public class ProductContentWrapper extends CommonContentWrapper {
         } catch (GeneralException e) {
             Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
             String candidateOut = product.getModelEntity().isField(candidateFieldName) ? product.getString(candidateFieldName): "";
-            return candidateOut == null? "" : encoder.encode(candidateOut);
+            return candidateOut == null? "" : encoder.sanitize(candidateOut);
         } catch (IOException e) {
             Debug.logError(e, "Error rendering ProductContent, inserting empty String", module);
             String candidateOut = product.getModelEntity().isField(candidateFieldName) ? product.getString(candidateFieldName): "";
-            return candidateOut == null? "" : encoder.encode(candidateOut);
+            return candidateOut == null? "" : encoder.sanitize(candidateOut);
         }
     }
 

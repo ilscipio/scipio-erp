@@ -133,7 +133,7 @@ public class OrderContentWrapper extends CommonContentWrapper {
             if (UtilValidate.isEmpty(outString)) {
                 outString = outString == null? "" : outString;
             }
-            outString = encoder.encode(outString);
+            outString = encoder.sanitize(outString);
             if (useCache && orderContentCache != null) {
                 orderContentCache.put(cacheKey, outString);
             }

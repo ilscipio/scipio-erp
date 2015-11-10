@@ -169,19 +169,19 @@ public class PartyContentWrapper extends CommonContentWrapper {
                 outString = party.getModelEntity().isField(candidateFieldName) ? party.getString(candidateFieldName): "";
                 outString = outString == null? "" : outString;
             }
-            outString = encoder.encode(outString);
-            if (useCache && partyContentCache != null) { // SCIPIO: CHANGED: useCache=false now prevents storage (stock code only prevented read)
+            outString = encoder.sanitize(outString);
+            if (useCache && partyContentCache != null) {
                 partyContentCache.put(cacheKey, outString);
             }
             return outString;
         } catch (GeneralException e) {
             Debug.logError(e, "Error rendering PartyContent, inserting empty String", module);
             String candidateOut = party.getModelEntity().isField(candidateFieldName) ? party.getString(candidateFieldName): "";
-            return candidateOut == null? "" : encoder.encode(candidateOut);
+            return candidateOut == null? "" : encoder.sanitize(candidateOut);
         } catch (IOException e) {
             Debug.logError(e, "Error rendering PartyContent, inserting empty String", module);
             String candidateOut = party.getModelEntity().isField(candidateFieldName) ? party.getString(candidateFieldName): "";
-            return candidateOut == null? "" : encoder.encode(candidateOut);
+            return candidateOut == null? "" : encoder.sanitize(candidateOut);
         }
     }
 

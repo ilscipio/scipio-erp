@@ -211,7 +211,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#if !inlineItems>
     <${htmlWrap!}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>
   </#if>
-  <#nested>
+      <#nested>
   <#if !inlineItems>
     </${htmlWrap!}>
   </#if>
@@ -276,9 +276,6 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#local contentAttribs = inlineArgs.contentAttribs!args.contentAttribs!"">
   <#local text = inlineArgs.text!args.text!"">
   <#local href = inlineArgs.href!args.href!true>
-  <#local fullPath = inlineArgs.fullPath!args.fullPath!false>
-  <#local secure = inlineArgs.secure!args.secure!false>
-  <#local encode = inlineArgs.encode!args.encode!true>
   <#local onClick = inlineArgs.onClick!args.onClick!"">
   <#local disabled = inlineArgs.disabled!args.disabled!false>
   <#local selected = inlineArgs.selected!args.selected!false>
@@ -353,8 +350,10 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#if !inlineItem>
     <${htmlWrap!}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
   </#if>
-  <#nested><#t>
-  <#if !inlineItem></${htmlWrap!}></#if><#lt>
+      <#nested><#t>
+  <#if !inlineItem>
+    </${htmlWrap!}><#lt>
+  </#if>
 </#macro>
 
 <#-- Markup for @menuitem type="link" - may be overridden -->

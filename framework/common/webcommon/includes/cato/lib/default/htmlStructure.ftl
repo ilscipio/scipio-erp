@@ -83,7 +83,7 @@
     </@row> 
     
     <@row>
-        <@cell columns=3 small=2 class="mycell">
+        <@cell columns=3 small=2 class="+my-cell">
             cell content goes in here!
         </@cell>
     </@row>            

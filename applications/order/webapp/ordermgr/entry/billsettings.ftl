@@ -36,7 +36,7 @@ function makeExpDate() {
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 <@section>
     <@row>
-        <@cell class="${styles.grid_large!}6">
+        <@cell columns=6>
         <#if request.getAttribute("paymentMethodId")?? || ( (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew??)>
          <@menu type="button">
            <@menuitem type="link" href=makeOfbizUrl("setBilling?createNew=Y") text="${uiLabelMap.CommonNew}" />

@@ -148,7 +148,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#macro renderScreenletBegin id="" title="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true menuRole="" titleStyle="">
     <#-- now delegates to Cato implementation. TODO? this call is still too closely based on this macro and its args; rework later -->
     <@section_core openOnly=true id=id title=title collapsible=collapsible saveCollapsed=saveCollapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip fullUrlString=fullUrlString padded=padded menuContent=menuString 
-        showMore=showMore collapsed=collapsed javaScriptEnabled=javaScriptEnabled fromWidgets=true menuClass="" menuId="" menuLayout="" menuRole=menuRole requireMenu=false forceEmptyMenu=false hasContent=true titleStyle=titleStyle titleContainerStyle="" titleConsumeLevel=true 
+        showMore=showMore collapsed=collapsed javaScriptEnabled=javaScriptEnabled fromScreenDef=true menuClass="" menuId="" menuLayout="" menuRole=menuRole requireMenu=false forceEmptyMenu=false hasContent=true titleStyle=titleStyle titleContainerStyle="" titleConsumeLevel=true 
         autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" />
 </#macro>
 

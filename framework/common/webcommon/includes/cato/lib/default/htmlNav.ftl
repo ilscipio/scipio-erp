@@ -373,6 +373,23 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
 
 <#-- 
 *************
+* Menu Markup Inline Check
+************
+Function that examines a string containing menu HTML markup and returns true if and only if
+the menu items are inlined, i.e. without container. Occasionally macros need to check this,
+notably for compatibility with Ofbiz screens.
+By default, this checks if the first item is a <li> element. Themes that use a different
+menu item element must override this and provide a proper check.
+             
+  * Parameters *
+    menuContent   = string of HTML markup
+-->
+<#function isMenuMarkupItemsInline menuContent>
+  <#return menuContent?matches(r'(\s*<!--((?!<!--).)*?-->\s*)*\s*<li(\s|>).*', 'rs')>
+</#function>
+
+<#-- 
+*************
 * Pagination
 ************
   * Usage Example *  

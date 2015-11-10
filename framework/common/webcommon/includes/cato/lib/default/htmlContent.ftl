@@ -288,7 +288,7 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
               info: false,
               paging: false,
               searching : false
-              <#if fixedColumnsLeft&gt;0 || fixedColumnsRight&gt;0>,fixedColumns:   {
+              <#if (fixedColumnsLeft > 0) || (fixedColumnsRight > 0)>,fixedColumns:   {
               leftColumns: ${fixedColumnsLeft!0},
               rightColumns: ${fixedColumnsRight!0}
               }

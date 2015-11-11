@@ -299,7 +299,9 @@ or even multiple per fieldset.
     labelLayout     = [left|right|none], defaults specified in styles variables based on fields type. override for layout/positioning of the labels.
     labelArea       = boolean, defaults specified in styles variables based on fields type. overrides whether fields are expected to have a label area or not, mainly when label omitted. 
                       logic is influenced by other arguments.
-                      note that this is weaker than labelArea arg of @field macro, but stronger than other args of this macro.
+                      NOTE: This does not determine label area type (gridarea, etc.); only labelType does that (in current code).
+                          They are decoupled. This only controls presence of it.
+                      NOTE: This is weaker than labelArea arg of @field macro, but stronger than other args of this macro.
     labelAreaExceptions = string of space-delimited @field type names or list of names, defaults specified in styles variables based on fields type  
     formName            = the form name the child fields should assume  
     formId              = the form ID the child fields should assume             
@@ -399,13 +401,19 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                       (discouraged; prefer specific; but sometimes required and useful
                       for transition)
     label           = field label
-                      note: label area behavior may also be influenced by containing macros such as @fields
+                      NOTE: Presence of label arg does not guarantee a label will be shown; this is controlled
+                          by labelArea (and labelType) and its defaults, optionally coming from @fields container.
+                          For generic parent fields, label type must be specified explicitly, e.g.
+                            <@fields type="generic"><@field labelType="gridarea" label="mylabel">...</@fields> 
+                      NOTE: label area behavior may also be influenced by containing macros such as @fields
     labelDetail     = extra content (HTML) inserted with (after) label
     labelType       = explicit label type (see @fields)
     labelLayout     = explicit label layout (see @fields)
     labelArea       = boolean, default empty string (use @fields type default).
                       if true, forces a label area.
                       if false, prevents a label area.
+                      NOTE: This does not determine label area type (gridarea, etc.); only labelType does that (in current code).
+                          They are decoupled. This only controls presence of it.
     tooltip         = Small field description - to be displayed to the customer
     description     = alternative to tooltip
     name            = field name
@@ -594,7 +602,10 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#-- label area logic
       TODO: right now most of the fieldsInfo parameters are not fully exploited.
           assumes labelType=="gridarea" (unless "none" which influences labelArea) and 
-          labelLayout="left" (unless "none" which influences labelArea). -->
+          labelLayout="left" (unless "none" which influences labelArea). 
+      NOTE: labelArea boolean logic does not determine "label type" or "label area type"; 
+          only controls presence of. so labelArea logic and usage anywhere should not change
+          if new label (area) type were to be added (e.g. on top instead of side by side). -->
   <#if labelArea?is_boolean>
     <#local labelAreaDefault = labelArea>
   <#elseif labelType == "none" || labelLayout == "none">
@@ -636,12 +647,12 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#local labelAreaContent = "">
   <#local inlineLabel = "">
   <#if useLabelArea>
-      <#local labelAreaContent><@field_markup_labelarea label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
+      <#local labelAreaContent><@field_markup_labelarea labelType=effLabelType labelLayout=effLabelLayout label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
   <#else>
       <#-- if there's no label area, label was not used up, so label arg becomes an inline label (used on radio and checkbox) -->
       <#local inlineLabel = label>
   </#if>
-  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize useLabelArea=useLabelArea labelAreaContent=labelAreaContent collapse=collapse norows=norows nocells=nocells container=container>
+  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize labelArea=useLabelArea labelType=effLabelType labelLayout=effLabelLayout labelAreaContent=labelAreaContent collapse=collapse norows=norows nocells=nocells container=container>
     <#switch type>
       <#case "input">
         <@field_input_widget name=name 
@@ -835,7 +846,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- @field container markup - theme override -->
-<#macro field_markup_container type="" class="" columns="" postfix=false postfixSize=0 useLabelArea=true labelAreaContent="" collapse="" norows=false nocells=false container=true extraArgs...>
+<#macro field_markup_container type="" class="" columns="" postfix=false postfixSize=0 labelArea=true labelType="" labelLayout="" labelAreaContent="" collapse="" norows=false nocells=false container=true extraArgs...>
   <#local rowClass = "">
   <#local labelAreaClass = "">  
   <#local postfixClass = "">
@@ -857,7 +868,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   
   <#local rowClass = addClassArg(rowClass, "form-field-entry " + fieldEntryTypeClass)>
   <@row class=rowClass collapse=collapse!false norows=(norows || !container)>
-    <#if useLabelArea>
+    <#-- TODO: support more label configurations (besides gridarea left) -->
+    <#if labelArea && labelType == "gridarea" && labelLayout == "left">
         <#local defaultLabelAreaClass="${styles.grid_small!}3 ${styles.grid_large!}2"/>
         <#local defaultClass="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
         <#if columns?has_content>
@@ -887,7 +899,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- @field label area markup - theme override -->
-<#macro field_markup_labelarea label="" labelDetail="" fieldType="" fieldId="" collapse="" required=false extraArgs...>
+<#macro field_markup_labelarea labelType="" labelLayout="" label="" labelDetail="" fieldType="" fieldId="" collapse="" required=false extraArgs...>
   <#if !collapse?has_content>
       <#local collapse = false/>
   </#if>

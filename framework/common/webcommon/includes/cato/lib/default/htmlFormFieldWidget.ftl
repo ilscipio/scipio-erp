@@ -497,9 +497,9 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       <#elseif currentValue?has_content && currentValue=="Y"> checked="checked"</#if> 
       name="${name!""?html}" value="${currentValue!}"<#if action?has_content> onClick="${action}"</#if>/><#rt/>
     <label<#if id?has_content> for="${id}"</#if>></label>
+    <#-- FIXME?: this explodes when put in <label> above... no idea why... -->
+    <#if description?has_content>${description}</#if>
   </div>
-  <#-- FIXME?: this explodes when put in <label> above... no idea why... -->
-  <#if description?has_content>${description}</#if>
 </#macro>
 
 <#-- migrated from @renderRadioField form widget macro -->
@@ -579,9 +579,12 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     buttonType    = [text-link|image|button], default button - logical button type (based on ofbiz form widget types)
     inputType     = the low-level <input> type attrib (within/depends on buttonType) -->
 <#macro field_submit_widget buttonType="" class="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
-    containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions={}>
+    containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions="">
   <#if disabled>
     <#local class = addClassArg(class, styles.disabled!)>
+  </#if>
+  <#if !progressOptions?has_content> <#-- note this could be a string -->
+    <#local progressOptions = {}>
   </#if>
   <@field_submit_markup_widget buttonType=buttonType class=class alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation 
     containerId=containerId ajaxUrl=ajaxUrl title=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressOptions=progressOptions><#nested></@field_submit_markup_widget>
@@ -619,20 +622,23 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       </#if>
     </#local>
   </#if>
-  <#if progressOptions.formSel?has_content>
+  <#if progressOptions?has_content>
       <@field_submitarea_markup_widget_progress progressOptions=progressOptions>${buttonMarkup}</@field_submitarea_markup_widget_progress>
   <#else>
       ${buttonMarkup}
   </#if>
 </#macro>
 
-<#macro field_submitarea_widget progressOptions={}>
+<#macro field_submitarea_widget progressOptions="">
+  <#if !progressOptions?has_content> <#-- note this could be a string -->
+    <#local progressOptions = {}>
+  </#if>
   <@field_submitarea_markup_widget progressOptions=progressOptions><#nested></@field_submitarea_markup_widget>
 </#macro>
 
 <#-- submitarea widget markup - theme override -->
 <#macro field_submitarea_markup_widget progressOptions={} extraArgs...>
-  <#if progressOptions.formSel?has_content>
+  <#if progressOptions?has_content>
       <@field_submitarea_markup_widget_progress progressOptions=progressOptions><#nested></@field_submitarea_markup_widget_progress>
   <#else>
       <#nested>

@@ -570,21 +570,11 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   </#if>
   <#-- the widgets do this now
   <#local class = compileClassArg(class)>-->
-  
-  <#local radioSingle = (type == "radio" && !items?has_content)>
-  <#local checkboxSingle = (type == "checkbox" && !items?has_content)>
-  <#-- special case: for radioSingle, the label is passed to its macro instead...
-      note this doesn't automatically prevent the container label area (otherwise inconsistent with everything else) -->
-  <#local inlineLabel = "">
-  <#if radioSingle || checkboxSingle>
-    <#local inlineLabel = label>
-    <#local label = "">
-  </#if>
-  
+    
   <#if !catoFieldNoContainerChildren??>
     <#global catoFieldNoContainerChildren = {
-     <#-- "submit":true -->   <#-- only if parent is submitarea -->
-      "radio":true,    <#-- child radio will pretty much always imply radioSingle -->
+     <#-- "submit":true -->   <#-- only if parent is submitarea (below) -->
+      "radio":true,
       "checkbox":true
     }>
     <#global catoFieldNoContainerParent = {
@@ -632,15 +622,26 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#local effLabelLayout = (fieldsInfo.labelLayout)!"">
   </#if>
   
+  <#-- NOTE: I've changed
+      (label?has_content || labelDetail?has_content || labelAreaDefault)
+      to
+      (labelAreaDefault)
+      because this gives caller more control over label and simplifies logic; and label presence alone 
+      can't determine well what kind of label gets used (label area or inline) unless adding more per-field checks.
+      this way, if label area present, it "consumes" the label; otherwise it becomes an inlineLabel (or potentially something else first).  -->
   <#local useLabelArea = (labelArea?is_boolean && labelArea == true) || 
-           (!(labelArea?is_boolean && labelArea == false) && (label?has_content || labelDetail?has_content || labelAreaDefault))>
+           (!(labelArea?is_boolean && labelArea == false) && (labelAreaDefault))>
   
   <#-- main markup begin -->
-  <#local labelContent = "">
+  <#local labelAreaContent = "">
+  <#local inlineLabel = "">
   <#if useLabelArea>
-      <#local labelContent><@field_markup_labelarea label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
+      <#local labelAreaContent><@field_markup_labelarea label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
+  <#else>
+      <#-- if there's no label area, label was not used up, so label arg becomes an inline label (used on radio and checkbox) -->
+      <#local inlineLabel = label>
   </#if>
-  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize useLabelArea=useLabelArea labelContent=labelContent collapse=collapse norows=norows nocells=nocells container=container>
+  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize useLabelArea=useLabelArea labelAreaContent=labelAreaContent collapse=collapse norows=norows nocells=nocells container=container>
     <#switch type>
       <#case "input">
         <@field_input_widget name=name 
@@ -756,7 +757,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         <@field_checkbox_widget id=id currentValue=value checked=checked name=name description=inlineLabel action=action />
         <#break>
       <#case "radio">
-        <#if radioSingle>
+        <#if !items?has_content>
             <#-- single radio button item mode -->
             <#local items=[{"key":value, "description":inlineLabel}]/>
             <@field_radio_widget multiMode=false items=items inlineItems=inlineItems class=class alert=alert 
@@ -834,7 +835,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- @field container markup - theme override -->
-<#macro field_markup_container type="" class="" columns="" postfix=false postfixSize=0 useLabelArea=true labelContent="" collapse="" norows=false nocells=false container=true extraArgs...>
+<#macro field_markup_container type="" class="" columns="" postfix=false postfixSize=0 useLabelArea=true labelAreaContent="" collapse="" norows=false nocells=false container=true extraArgs...>
   <#local rowClass = "">
   <#local labelAreaClass = "">  
   <#local postfixClass = "">
@@ -865,7 +866,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         </#if>
         <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title " + fieldEntryTypeClass)>
         <@cell class=compileClassArg(labelAreaClass, defaultLabelAreaClass) nocells=(nocells || !container)>
-            ${labelContent}
+            ${labelAreaContent}
         </@cell>
     </#if>
     <#local class = addClassArg(class, "field-entry-widget " + fieldEntryTypeClass)>

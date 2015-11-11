@@ -358,37 +358,53 @@
 <@section title="Fields">
   <#-- TODO: submitarea -> submit (but not to remove submitarea; still important) -->
 
-  <@section title="Default form fields (with labels)">
+  <@section title="Default form fields (with label area)">
     <@fields type="default"> <#-- note: @fields currently optional for type="default"-->
-      <@field type="input" label="Input 1" />
-      <@field type="input" label="Input 2" />
+      <@field type="input" name="input1" label="Input 1" />
+      <@field type="input" name="input2" label="Input 2" />
       <@field type="display">Display value</@field>
-      <@field type="input" label="Input 3" />
+      <@field type="input" name="input3" label="Input 3" />
+      <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
+      <@field type="checkbox" name="checkbox1" label="Checkbox 1" value="Y" />
       <@field type="submit" submitType="submit" text="Submit" disabled=true />
     </@fields>
   </@section>
 
-  <@section title="Default form fields (without labels)">
+  <@section title="Default form fields (without label area)">
     <@fields type="default-nolabels">
-      <@field type="input"/>
-      <@field type="input"  />
+      <@field type="input" name="input1"/>
+      <@field type="input" name="input2" />
       <@field type="display">Display value</@field>
-      <@field type="input" />
+      <@field type="input" name="input3"/>
+      <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
+      <@field type="checkbox" name="checkbox1" label="Checkbox 1" value="Y" />
       <@field type="submit" submitType="button" text="Submit" disabled=true />
     </@fields>
   </@section>
 
-  <@section title="Default form fields (with labels) with parent/child fields">
+  <@section title="Default form fields (with label area) with parent/child fields">
       <@field type="generic" label="Multi-fields">
-        <@field type="input" />
+        <@field type="input" name="input1"/>
         <@field type="display">Child display value</@field>
-        <@field type="input" />
+        <@field type="input" name="input2"/>
       </@field>
-      <@field type="input" label="Regular field" />
+      <@field type="input" name="input3" label="Regular field" />
       <@field type="display">Regular display field</@field>
       <@field type="submitarea">
         <@field type="submit" submitType="link" text="Save" disabled=true />
         <@field type="submit" submitType="link" text="Cancel" disabled=true />
+      </@field>
+      <@field type="generic" label="Select one">
+        <@field type="radio" name="radio1" label="Radio 1-a" value="val1" />
+        <@field type="radio" name="radio1" label="Radio 1-b" value="val2" />
+      </@field>
+      <@field type="generic" label="Select many">
+        <@field type="checkbox" name="checkbox1" label="Checkbox 1-a" value="val1" />
+        <@field type="checkbox" name="checkbox1" label="Checkbox 1-b" value="val2" />
+      </@field>
+      <@field type="generic">
+        <@field type="radio" name="radio2" label="Radio 2-a" value="val1" />
+        <@field type="radio" name="radio2" label="Radio 2-b" value="val2" />
       </@field>
   </@section>
 
@@ -396,10 +412,10 @@
     <@fields type="generic">
       <@row>
         <@cell columns=6>
-          <@field type="input" label="Input 1 and 2" />
+          <@field type="input" name="input1" label="Input 1 and 2" />
         </@cell>
         <@cell columns=6>
-          <@field type="input" />
+          <@field type="input" name="input2" />
         </@cell>
       </@row>
       <@row>
@@ -408,7 +424,7 @@
           <@field type="display" labelArea=true>Display value with label area</@field>
         </@cell>
         <@cell columns=6>
-          <@field type="input" label="Input 3" />
+          <@field type="input" name="input3" label="Input 3" />
         </@cell>
       </@row>      
       <@row>

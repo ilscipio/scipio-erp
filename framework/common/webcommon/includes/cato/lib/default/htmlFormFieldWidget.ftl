@@ -326,6 +326,18 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   </#if>
 </#macro>
 
+<#macro field_option_widget text="" value="" selected=false>
+  <#if !text?has_content>
+    <#local text><#nested></#local>
+  </#if>
+  <@field_option_markup_widget text=text value=value selected=selected />
+</#macro>
+
+<#-- field markup - theme override -->
+<#macro field_option_markup_widget text="" value="" selected=false extraArgs...>
+   <option value="${value}"<#if selected> selected="selected"</#if>>${text}</option><#t>
+</#macro>    
+
 <#-- migrated from @renderLookupField form widget macro -->
 <#macro field_lookup_widget name="" formName="" fieldFormName="" class="" alert="false" value="" size="" 
     maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" 
@@ -465,13 +477,14 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   </#if>
 </#macro>
 
-<#-- migrated from @renderCheckBox form widget macro -->
-<#macro field_checkbox_widget id="" checked=false currentValue="N" name="" action="" tooltip="" fieldTitleBlank=false>
-  <@field_checkbox_markup_widget id=id checked=checked currentValue=currentValue name=name action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank><#nested></@field_checkbox_markup_widget>
+<#-- migrated from @renderCheckBox form widget macro 
+    FIXME: this should be merged with renderCheckField, this was never an official ofbiz macro... -->
+<#macro field_checkbox_widget id="" checked=false currentValue="N" name="" description="" action="" tooltip="" fieldTitleBlank=false>
+  <@field_checkbox_markup_widget id=id checked=checked currentValue=currentValue name=name description=description action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank><#nested></@field_checkbox_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_checkbox_markup_widget id="" checked=false currentValue="N" name="" action="" tooltip="" fieldTitleBlank=false extraArgs...>
+<#macro field_checkbox_markup_widget id="" checked=false currentValue="N" name="" description="" action="" tooltip="" fieldTitleBlank=false extraArgs...>
   <div class="switch small">
     <#local class = "">
     <#local alert = false>
@@ -483,8 +496,10 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       <#if (checked?is_boolean && checked) || (checked?is_string && checked == "Y")> checked="checked"
       <#elseif currentValue?has_content && currentValue=="Y"> checked="checked"</#if> 
       name="${name!""?html}" value="${currentValue!}"<#if action?has_content> onClick="${action}"</#if>/><#rt/>
-      <label for="<#if id?has_content>${id}<#else>${name!}</#if>"></label>
+    <label<#if id?has_content> for="${id}"</#if>></label>
   </div>
+  <#-- FIXME?: this explodes when put in <label> above... no idea why... -->
+  <#if description?has_content>${description}</#if>
 </#macro>
 
 <#-- migrated from @renderRadioField form widget macro -->

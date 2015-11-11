@@ -119,181 +119,173 @@ function submitFindForm(val){
   <@row>
     <@cell columns=9>
 
-        <@field type="input" label="${uiLabelMap.OrderOrderId}" name="orderId"/>
+          <@field type="input" label="${uiLabelMap.OrderOrderId}" name="orderId"/>
       
-        <@field type="generic" label="${uiLabelMap.CommonDateFilter}">
-            <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonFrom}" name="minDate" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1" collapse=true/>
-            <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonThru}" name="maxDate" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate" collapse=true/>
-        </@field>
+          <@field type="generic" label="${uiLabelMap.CommonDateFilter}">
+              <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonFrom}" name="minDate" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1" collapse=true/>
+              <@field type="datetime" dateType="datetime" label="${uiLabelMap.CommonThru}" name="maxDate" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate" collapse=true/>
+          </@field>
       
-        <@fieldset title="${uiLabelMap.CommonAdvancedSearch}" collapsed=true>
+      <@fieldset title="${uiLabelMap.CommonAdvancedSearch}" collapsed=true>
           <@field type="input" label="${uiLabelMap.OrderExternalId}" name="externalId"/>
           <@field type="input" label="${uiLabelMap.OrderCustomerPo}" name="correspondingPoId" value="${requestParameters.correspondingPoId!}"/>
           <@field type="input" label="${uiLabelMap.OrderInternalCode}" name="internalCode" value="${requestParameters.internalCode!}"/>
           <@field type="input" label="${uiLabelMap.ProductProductId}" name="productId" value="${requestParameters.productId!}"/>
-              <#if goodIdentificationTypes?has_content>
+          <#if goodIdentificationTypes?has_content>
             <@field type="select" label="${uiLabelMap.ProductGoodIdentificationType}" name="goodIdentificationTypeId">
-                          <#if currentGoodIdentificationType?has_content>
-                              <option value="${currentGoodIdentificationType.goodIdentificationTypeId}">${currentGoodIdentificationType.get("description", locale)}</option>
-                              <option value="${currentGoodIdentificationType.goodIdentificationTypeId}">---</option>
-                          </#if>
-                          <option value="">${uiLabelMap.ProductAnyGoodIdentification}</option>
-                          <#list goodIdentificationTypes as goodIdentificationType>
-                              <option value="${goodIdentificationType.goodIdentificationTypeId}">${goodIdentificationType.get("description", locale)}</option>
-                          </#list>
+                <#if currentGoodIdentificationType?has_content>
+                  <@field type="option" value="${currentGoodIdentificationType.goodIdentificationTypeId}">${currentGoodIdentificationType.get("description", locale)}</@field>
+                  <@field type="option" value="${currentGoodIdentificationType.goodIdentificationTypeId}">---</@field>
+                </#if>
+                <@field type="option" value="">${uiLabelMap.ProductAnyGoodIdentification}</@field>
+                <#list goodIdentificationTypes as goodIdentificationType>
+                  <@field type="option" value="${goodIdentificationType.goodIdentificationTypeId}">${goodIdentificationType.get("description", locale)}</@field>
+                </#list>
             </@field>
-          <@field type="input" label="${uiLabelMap.ProductGoodIdentification}" name="goodIdentificationIdValue" value="${requestParameters.goodIdentificationIdValue!}"/>        
-              </#if>
+            <@field type="input" label="${uiLabelMap.ProductGoodIdentification}" name="goodIdentificationIdValue" value="${requestParameters.goodIdentificationIdValue!}"/>        
+          </#if>
           <@field type="input" label="${uiLabelMap.ProductInventoryItemId}" name="inventoryItemId" value="${requestParameters.inventoryItemId!}"/>
           <@field type="input" label="${uiLabelMap.ProductSerialNumber}" name="serialNumber" value="${requestParameters.serialNumber!}"/>
           <@field type="input" label="${uiLabelMap.ProductSoftIdentifier}" name="softIdentifier" value="${requestParameters.softIdentifier!}"/>
           <@field type="select" label="${uiLabelMap.PartyRoleType}" name="roleTypeId" id="roleTypeId" multiple="multiple">
-                    <#if currentRole?has_content>
-                    <option value="${currentRole.roleTypeId}">${currentRole.get("description", locale)}</option>
-                    </#if>
-                    <option value="">${uiLabelMap.CommonAnyRoleType}</option>
-                    <#list roleTypes as roleType>
-                      <option value="${roleType.roleTypeId}">${roleType.get("description", locale)}</option>
-                    </#list>
-          </@field>     
-          <@row collapse=true>
-                <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">
-                    <label class="inline">${uiLabelMap.PartyPartyId}</label>
-                </@cell>
-                <@cell class="${styles.grid_small!}9 ${styles.grid_large!}10">
-                  <@htmlTemplate.lookupField value='${requestParameters.partyId!}' formName="lookuporder" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
-                </@cell>
-           </@row>
-           <@field type="input" label="${uiLabelMap.CommonUserLoginId}" name="userLoginId" value="${requestParameters.userLoginId!}"/>
-           <@field type="select" label="${uiLabelMap.OrderOrderType}" name="orderTypeId">
-                    <#if currentType?has_content>
-                    <option value="${currentType.orderTypeId}">${currentType.get("description", locale)}</option>
-                    <option value="${currentType.orderTypeId}">---</option>
-                    </#if>
-                    <option value="">${uiLabelMap.OrderAnyOrderType}</option>
-                    <#list orderTypes as orderType>
-                      <option value="${orderType.orderTypeId}">${orderType.get("description", locale)}</option>
-                    </#list>
-            </@field>
-            <@field type="input" label="${uiLabelMap.AccountingBillingAccount}" name="billingAccountId" value="${requestParameters.billingAccountId!}"/>
-            <@field type="input" label="${uiLabelMap.CommonCreatedBy}" name="createdBy" value="${requestParameters.createdBy!}"/>
-            <@field type="select" label="${uiLabelMap.OrderSalesChannel}" name="salesChannelEnumId">
-                    <#if currentSalesChannel?has_content>
-                    <option value="${currentSalesChannel.enumId}">${currentSalesChannel.get("description", locale)}</option>
-                    <option value="${currentSalesChannel.enumId}">---</option>
-                    </#if>
-                    <option value="">${uiLabelMap.CommonAnySalesChannel}</option>
-                    <#list salesChannels as channel>
-                      <option value="${channel.enumId}">${channel.get("description", locale)}</option>
-                    </#list>
-            </@field>
-            <@field type="select" label="${uiLabelMap.ProductProductStore}" name="productStoreId">
-                    <#if currentProductStore?has_content>
-                    <option value="${currentProductStore.productStoreId}">${currentProductStore.storeName!}</option>
-                    <option value="${currentProductStore.productStoreId}">---</option>
-                    </#if>
-                    <option value="">${uiLabelMap.CommonAnyStore}</option>
-                    <#list productStores as store>
-                      <option value="${store.productStoreId}">${store.storeName!}</option>
-                    </#list>
-             </@field>
-             <@field type="select" label="${uiLabelMap.ProductWebSite}" name="orderWebSiteId">
-    
-                    <#if currentWebSite?has_content>
-                    <option value="${currentWebSite.webSiteId}">${currentWebSite.siteName}</option>
-                    <option value="${currentWebSite.webSiteId}">---</option>
-                    </#if>
-                    <option value="">${uiLabelMap.CommonAnyWebSite}</option>
-                    <#list webSites as webSite>
-                      <option value="${webSite.webSiteId}">${webSite.siteName!}</option>
-                    </#list>
-            </@field>
-            <@field type="select" label="${uiLabelMap.CommonStatus}" name="orderStatusId">
-    
-                    <#if currentStatus?has_content>
-                    <option value="${currentStatus.statusId}">${currentStatus.get("description", locale)}</option>
-                    <option value="${currentStatus.statusId}">---</option>
-                    </#if>
-                    <option value="">${uiLabelMap.OrderAnyOrderStatus}</option>
-                    <#list orderStatuses as orderStatus>
-                      <option value="${orderStatus.statusId}">${orderStatus.get("description", locale)}</option>
-                    </#list>
-             </@field>
-             <@field type="select" label="${uiLabelMap.OrderContainsBackOrders}" name="hasBackOrders">
-                    <#if requestParameters.hasBackOrders?has_content>
-                    <option value="Y">${uiLabelMap.OrderBackOrders}</option>
-                    <option value="Y">---</option>
-                    </#if>
-                    <option value="">${uiLabelMap.CommonShowAll}</option>
-                    <option value="Y">${uiLabelMap.CommonOnly}</option>
-             </@field>
-             <@field type="select" label="${uiLabelMap.OrderSelectShippingMethod}" name="shipmentMethod">
-                    <#if currentCarrierShipmentMethod?has_content>
-                      <#assign currentShipmentMethodType = currentCarrierShipmentMethod.getRelatedOne("ShipmentMethodType", false)>
-                      <option value="${currentCarrierShipmentMethod.partyId}@${currentCarrierShipmentMethod.shipmentMethodTypeId}">${currentCarrierShipmentMethod.partyId!} ${currentShipmentMethodType.description!}</option>
-                      <option value="${currentCarrierShipmentMethod.partyId}@${currentCarrierShipmentMethod.shipmentMethodTypeId}">---</option>
-                    </#if>
-                    <option value="">${uiLabelMap.OrderSelectShippingMethod}</option>
-                    <#list carrierShipmentMethods as carrierShipmentMethod>
-                      <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType", false)>
-                      <option value="${carrierShipmentMethod.partyId}@${carrierShipmentMethod.shipmentMethodTypeId}">${carrierShipmentMethod.partyId!} ${shipmentMethodType.description!}</option>
-                    </#list>
-             </@field>
-             <@field type="select" label="${uiLabelMap.OrderViewed}" name="isViewed">
-                    <#if requestParameters.isViewed?has_content>
-                      <#assign isViewed = requestParameters.isViewed>
-                      <option value="${isViewed}"><#if "Y" == isViewed>${uiLabelMap.CommonYes}<#elseif "N" == isViewed>${uiLabelMap.CommonNo}</#if></option>
-                    </#if>
-                    <option value=""></option>
-                    <option value="Y">${uiLabelMap.CommonYes}</option>
-                    <option value="N">${uiLabelMap.CommonNo}</option>
-            </@field>
-    
-            <@field type="input" label="${uiLabelMap.OrderAddressVerification}" name="gatewayAvsResult" value="${requestParameters.gatewayAvsResult!}"/>
-            <@field type="input" label="${uiLabelMap.OrderScore}" name="gatewayScoreResult" value="${requestParameters.gatewayScoreResult!}"/>
-            
-            
-            <@row collapse=false>
-                <@cell columns=4>
-                    <#-- TODO: Get rid of these widget calls -->
-                    <@htmlTemplate.renderCheckBox name="filterInventoryProblems" currentValue="Y" checked=requestParameters.filterInventoryProblems!"N"/> ${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterInventoryProblems}
-                </@cell>
-                <@cell columns=4>
-                    <@htmlTemplate.renderCheckBox name="filterPOsOpenPastTheirETA" currentValue="Y" checked=requestParameters.filterPOsOpenPastTheirETA!"N" /> ${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsOpenPastTheirETA}
-                </@cell>
-    
-                <@cell columns=4>
-                    <@htmlTemplate.renderCheckBox name="filterPOsWithRejectedItems" currentValue="Y" checked=requestParameters.filterPOsWithRejectedItems!"N"/> ${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsWithRejectedItems}      
-                </@cell>
-            </@row>
-            <@field type="select" label="${uiLabelMap.OrderShipToCountry}" name="countryGeoId">
-                    <#if requestParameters.countryGeoId?has_content>
-                        <#assign countryGeoId = requestParameters.countryGeoId>
-                        <#assign geo = delegator.findOne("Geo", Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId", countryGeoId), true)>
-                        <option value="${countryGeoId}">${geo.geoName!}</option>
-                        <option value="${countryGeoId}">---</option>
-                    <#else>
-                        <option value="">---</option>
-                    </#if>
-                    ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-            </@field>
-            <@field type="select" name="includeCountry" label="${uiLabelMap.OrderIncludeCountry}">
-                    <option value="">${uiLabelMap.CommonAny}</option>
-                    <#if requestParameters.includeCountry?has_content>
-                       <#assign includeCountry = requestParameters.includeCountry>
-                       <option value="${includeCountry}"><#if "Y" == includeCountry>${uiLabelMap.OrderOnlyInclude}<#elseif "N" == includeCountry>${uiLabelMap.OrderDoNotInclude}</#if></option>
-                       <option value="${includeCountry}">---</option>
-                    </#if>
-                    <option value="Y">${uiLabelMap.OrderOnlyInclude}</option>
-                    <option value="N">${uiLabelMap.OrderDoNotInclude}</option>
-            </@field>
-            <@field type="select" label="${uiLabelMap.AccountingPaymentStatus}" name="paymentStatusId">
-                        <option value="">${uiLabelMap.CommonAll}</option>
-                        <#list paymentStatusList as paymentStatus>
-                            <option value="${paymentStatus.statusId}">${paymentStatus.get("description", locale)}</option>
-                        </#list>
-            </@field>
-        </@fieldset>
+              <#if currentRole?has_content>
+                <@field type="option" value="${currentRole.roleTypeId}">${currentRole.get("description", locale)}</@field>
+              </#if>
+              <@field type="option" value="">${uiLabelMap.CommonAnyRoleType}</@field>
+              <#list roleTypes as roleType>
+                <@field type="option" value="${roleType.roleTypeId}">${roleType.get("description", locale)}</@field>
+              </#list>
+          </@field>  
+          <@field type="lookup" label="${uiLabelMap.PartyPartyId}" value="${requestParameters.partyId!}" formName="lookuporder" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
+          <@field type="input" label="${uiLabelMap.CommonUserLoginId}" name="userLoginId" value="${requestParameters.userLoginId!}"/>
+          <@field type="select" label="${uiLabelMap.OrderOrderType}" name="orderTypeId">
+              <#if currentType?has_content>
+                <@field type="option" value="${currentType.orderTypeId}">${currentType.get("description", locale)}</@field>
+                <@field type="option" value="${currentType.orderTypeId}">---</@field>
+              </#if>
+              <@field type="option" value="">${uiLabelMap.OrderAnyOrderType}</@field>
+              <#list orderTypes as orderType>
+                <@field type="option" value="${orderType.orderTypeId}">${orderType.get("description", locale)}</@field>
+              </#list>
+          </@field>
+          <@field type="input" label="${uiLabelMap.AccountingBillingAccount}" name="billingAccountId" value="${requestParameters.billingAccountId!}"/>
+          <@field type="input" label="${uiLabelMap.CommonCreatedBy}" name="createdBy" value="${requestParameters.createdBy!}"/>
+          <@field type="select" label="${uiLabelMap.OrderSalesChannel}" name="salesChannelEnumId">
+              <#if currentSalesChannel?has_content>
+                <@field type="option" value="${currentSalesChannel.enumId}">${currentSalesChannel.get("description", locale)}</@field>
+                <@field type="option" value="${currentSalesChannel.enumId}">---</@field>
+              </#if>
+              <@field type="option" value="">${uiLabelMap.CommonAnySalesChannel}</@field>
+              <#list salesChannels as channel>
+                <@field type="option" value="${channel.enumId}">${channel.get("description", locale)}</@field>
+              </#list>
+          </@field>
+          <@field type="select" label="${uiLabelMap.ProductProductStore}" name="productStoreId">
+              <#if currentProductStore?has_content>
+                <@field type="option" value="${currentProductStore.productStoreId}">${currentProductStore.storeName!}</@field>
+                <@field type="option" value="${currentProductStore.productStoreId}">---</@field>
+              </#if>
+              <@field type="option" value="">${uiLabelMap.CommonAnyStore}</@field>
+              <#list productStores as store>
+                <@field type="option" value="${store.productStoreId}">${store.storeName!}</@field>
+              </#list>
+          </@field>
+          <@field type="select" label="${uiLabelMap.ProductWebSite}" name="orderWebSiteId">
+              <#if currentWebSite?has_content>
+                <@field type="option" value="${currentWebSite.webSiteId}">${currentWebSite.siteName}</@field>
+                <@field type="option" value="${currentWebSite.webSiteId}">---</@field>
+              </#if>
+              <@field type="option" value="">${uiLabelMap.CommonAnyWebSite}</@field>
+              <#list webSites as webSite>
+                <@field type="option" value="${webSite.webSiteId}">${webSite.siteName!}</@field>
+              </#list>
+          </@field>
+          <@field type="select" label="${uiLabelMap.CommonStatus}" name="orderStatusId">
+              <#if currentStatus?has_content>
+                <@field type="option" value="${currentStatus.statusId}">${currentStatus.get("description", locale)}</@field>
+                <@field type="option" value="${currentStatus.statusId}">---</@field>
+              </#if>
+              <@field type="option" value="">${uiLabelMap.OrderAnyOrderStatus}</@field>
+              <#list orderStatuses as orderStatus>
+                <@field type="option" value="${orderStatus.statusId}">${orderStatus.get("description", locale)}</@field>
+              </#list>
+          </@field>
+          <@field type="select" label="${uiLabelMap.OrderContainsBackOrders}" name="hasBackOrders">
+              <#if requestParameters.hasBackOrders?has_content>
+                <@field type="option" value="Y">${uiLabelMap.OrderBackOrders}</@field>
+                <@field type="option" value="Y">---</@field>
+              </#if>
+              <@field type="option" value="">${uiLabelMap.CommonShowAll}</@field>
+              <@field type="option" value="Y">${uiLabelMap.CommonOnly}</@field>
+          </@field>
+          <@field type="select" label="${uiLabelMap.OrderSelectShippingMethod}" name="shipmentMethod">
+              <#if currentCarrierShipmentMethod?has_content>
+                <#assign currentShipmentMethodType = currentCarrierShipmentMethod.getRelatedOne("ShipmentMethodType", false)>
+                <@field type="option" value="${currentCarrierShipmentMethod.partyId}@${currentCarrierShipmentMethod.shipmentMethodTypeId}">${currentCarrierShipmentMethod.partyId!} ${currentShipmentMethodType.description!}</@field>
+                <@field type="option" value="${currentCarrierShipmentMethod.partyId}@${currentCarrierShipmentMethod.shipmentMethodTypeId}">---</@field>
+              </#if>
+              <@field type="option" value="">${uiLabelMap.OrderSelectShippingMethod}</@field>
+              <#list carrierShipmentMethods as carrierShipmentMethod>
+                <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType", false)>
+                <@field type="option" value="${carrierShipmentMethod.partyId}@${carrierShipmentMethod.shipmentMethodTypeId}">${carrierShipmentMethod.partyId!} ${shipmentMethodType.description!}</@field>
+              </#list>
+          </@field>
+          <@field type="select" label="${uiLabelMap.OrderViewed}" name="isViewed">
+              <#if requestParameters.isViewed?has_content>
+                <#assign isViewed = requestParameters.isViewed>
+                <@field type="option" value="${isViewed}"><#if "Y" == isViewed>${uiLabelMap.CommonYes}<#elseif "N" == isViewed>${uiLabelMap.CommonNo}</#if></@field>
+              </#if>
+              <@field type="option" value=""></@field>
+              <@field type="option" value="Y">${uiLabelMap.CommonYes}</@field>
+              <@field type="option" value="N">${uiLabelMap.CommonNo}</@field>
+          </@field>
+  
+          <@field type="input" label="${uiLabelMap.OrderAddressVerification}" name="gatewayAvsResult" value="${requestParameters.gatewayAvsResult!}"/>
+          <@field type="input" label="${uiLabelMap.OrderScore}" name="gatewayScoreResult" value="${requestParameters.gatewayScoreResult!}"/>
+          
+        <@fields type="default-nolabels"> <#-- no label area for these -->
+          <@row collapse=false>
+              <@cell columns=4>
+                  <@field type="checkbox" name="filterInventoryProblems" currentValue="Y" checked=requestParameters.filterInventoryProblems!"N" label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterInventoryProblems}"/> 
+              </@cell>
+              <@cell columns=4>
+                  <@field type="checkbox" name="filterPOsOpenPastTheirETA" currentValue="Y" checked=requestParameters.filterPOsOpenPastTheirETA!"N" label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsOpenPastTheirETA}"/> 
+              </@cell>
+              <@cell columns=4>
+                  <@field type="checkbox" name="filterPOsWithRejectedItems" currentValue="Y" checked=requestParameters.filterPOsWithRejectedItems!"N" label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsWithRejectedItems}"/> 
+              </@cell>
+          </@row>
+        </@fields>
+
+          <@field type="select" label="${uiLabelMap.OrderShipToCountry}" name="countryGeoId">
+              <#if requestParameters.countryGeoId?has_content>
+                  <#assign countryGeoId = requestParameters.countryGeoId>
+                  <#assign geo = delegator.findOne("Geo", Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId", countryGeoId), true)>
+                  <@field type="option" value="${countryGeoId}">${geo.geoName!}</@field>
+                  <@field type="option" value="${countryGeoId}">---</@field>
+              <#else>
+                  <@field type="option" value="">---</@field>
+              </#if>
+              ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+          </@field>
+          <@field type="select" name="includeCountry" label="${uiLabelMap.OrderIncludeCountry}">
+              <@field type="option" value="">${uiLabelMap.CommonAny}</@field>
+              <#if requestParameters.includeCountry?has_content>
+                 <#assign includeCountry = requestParameters.includeCountry>
+                 <@field type="option" value="${includeCountry}"><#if "Y" == includeCountry>${uiLabelMap.OrderOnlyInclude}<#elseif "N" == includeCountry>${uiLabelMap.OrderDoNotInclude}</#if></@field>
+                 <@field type="option" value="${includeCountry}">---</@field>
+              </#if>
+              <@field type="option" value="Y">${uiLabelMap.OrderOnlyInclude}</@field>
+              <@field type="option" value="N">${uiLabelMap.OrderDoNotInclude}</@field>
+          </@field>
+          <@field type="select" label="${uiLabelMap.AccountingPaymentStatus}" name="paymentStatusId">
+              <@field type="option" value="">${uiLabelMap.CommonAll}</@field>
+              <#list paymentStatusList as paymentStatus>
+                  <@field type="option" value="${paymentStatus.statusId}">${paymentStatus.get("description", locale)}</@field>
+              </#list>
+          </@field>
+      </@fieldset>
+
         <input type="hidden" name="showAll" value="Y"/>
         <@field type="submit" text="${uiLabelMap.CommonFind}"/>
     </@cell>

@@ -444,6 +444,11 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     multiple        = allow multiple select true/false
     currentValue    = currently selected value
     
+    * option *
+    text            = option label (can also specify as #nested)
+    value           = value (sent to server)
+    selected        = boolean
+    
     * lookup *
     formName        = The name of the form that contains the lookup field.
     fieldForName    = Contains the lookup window form name.
@@ -493,7 +498,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         cols="50" dateType="date" multiple="" checked=false collapse="" tooltip="" columns="" norows=false nocells=false container=""
         fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 
         labelType="" labelLayout="" labelArea="" description=""
-        submitType="input" text="" href="" src="" confirmMsg="" inlineItems="">
+        submitType="input" text="" href="" src="" confirmMsg="" inlineItems="" selected=false>
   <#if !type?has_content>
     <#local type = "generic">
   </#if>
@@ -566,11 +571,12 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#-- the widgets do this now
   <#local class = compileClassArg(class)>-->
   
-  <#local radioSingle = (type=="radio" && !items?has_content)>
+  <#local radioSingle = (type == "radio" && !items?has_content)>
+  <#local checkboxSingle = (type == "checkbox" && !items?has_content)>
   <#-- special case: for radioSingle, the label is passed to its macro instead...
       note this doesn't automatically prevent the container label area (otherwise inconsistent with everything else) -->
   <#local inlineLabel = "">
-  <#if radioSingle>
+  <#if radioSingle || checkboxSingle>
     <#local inlineLabel = label>
     <#local label = "">
   </#if>
@@ -578,7 +584,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#if !catoFieldNoContainerChildren??>
     <#global catoFieldNoContainerChildren = {
      <#-- "submit":true -->   <#-- only if parent is submitarea -->
-      "radio":true    <#-- child radio will pretty much always imply radioSingle -->
+      "radio":true,    <#-- child radio will pretty much always imply radioSingle -->
+      "checkbox":true
     }>
     <#global catoFieldNoContainerParent = {
       "submitarea":true
@@ -737,24 +744,28 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                                 manualItems=manualItems
                                 manualItemsOnly=manualItemsOnly><#nested></@field_select_widget>
         <#break>
+      <#case "option">
+        <@field_option_widget value=value text=text selected=selected><#nested></@field_option_widget>
+        <#break>
       <#case "lookup">
         <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class alert="false" value=value 
           size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
       <#break>
       <#case "checkbox">
-            <@field_checkbox_widget id=id currentValue=value checked=checked name=name action=action />
+        <#-- TODO: multiple support -->
+        <@field_checkbox_widget id=id currentValue=value checked=checked name=name description=inlineLabel action=action />
         <#break>
       <#case "radio">
-            <#if radioSingle>
-                <#-- single radio button item mode -->
-                <#local items=[{"key":value, "description":inlineLabel!""}]/>
-                <@field_radio_widget multiMode=false items=items inlineItems=inlineItems class=class alert=alert 
-                  currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
-            <#else>
-                <#-- multi radio button item mode -->
-                <@field_radio_widget multiMode=true items=items inlineItems=inlineItems class=class alert=alert 
-                  currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
-            </#if>
+        <#if radioSingle>
+            <#-- single radio button item mode -->
+            <#local items=[{"key":value, "description":inlineLabel}]/>
+            <@field_radio_widget multiMode=false items=items inlineItems=inlineItems class=class alert=alert 
+              currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
+        <#else>
+            <#-- multi radio button item mode -->
+            <@field_radio_widget multiMode=true items=items inlineItems=inlineItems class=class alert=alert 
+              currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
+        </#if>
         <#break>
       <#case "file">
         <@field_file_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 

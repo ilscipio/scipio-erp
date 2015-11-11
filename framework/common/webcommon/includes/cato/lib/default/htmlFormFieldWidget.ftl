@@ -559,7 +559,10 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   />
 </#macro>
 
-<#-- migrated from @renderSubmitField form widget macro -->
+<#-- migrated from @renderSubmitField form widget macro 
+  * Parameters*
+    buttonType    = [text-link|image|button], default button - logical button type (based on ofbiz form widget types)
+    inputType     = the low-level <input> type attrib (within/depends on buttonType) -->
 <#macro field_submit_widget buttonType="" class="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
     containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions={}>
   <#if disabled>

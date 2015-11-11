@@ -766,15 +766,21 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         <#break> 
       <#case "submit">
         <#if !catoSubmitFieldTypeButtonMap??>
+          <#-- the logical button types (based on form widget types) -->
           <#global catoSubmitFieldButtonTypeMap = {
             "submit":"button", "button":"button", "link":"text-link", "image":"image"
           }>
+          <#-- the low-level input type attrib, within the logical button types -->
           <#global catoSubmitFieldInputTypeMap = {
             "submit":"submit", "button":"button", "link":"", "image":"image"
           }>
         </#if>      
         <#local buttonType = catoSubmitFieldButtonTypeMap[submitType]!"button">
-        <#local inputType = catoSubmitFieldInputTypeMap[submitType]!"">
+        <#local inputType = catoSubmitFieldInputTypeMap[submitType]!"submit">
+        <#-- support legacy "value" for text as conversion help -->
+        <#if inputType == "submit" && !text?has_content && value?has_content>
+          <#local text = value>
+        </#if>
         <@field_submit_widget buttonType=buttonType class=class alert=alert formName=formName name=name event="" 
           action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false 
           onClick=onClick href=href inputType=inputType disabled=disabled progressOptions=progressOptions />

@@ -428,6 +428,14 @@
         </@cell>
       </@row>      
       <@row>
+        <@cell>
+          <@field type="radio" name="radio1" label="Radio 1 (with label area)" value="val1" labelArea=true/>
+          <@field type="radio" name="radio2" label="Radio 2 (no label area - inlined label)" value="val2" />
+          <@field type="checkbox" name="checkbox1" label="Checkbox 1 (with label area)" value="val1" labelArea=true/>
+          <@field type="checkbox" name="checkbox2" label="Checkbox 2 (no label area - inlined label)" value="val2" />
+        </@cell>
+      </@row>
+      <@row>
         <@cell offset=6 columns=6>      
           <@field type="submitarea">
             <@field type="submit" submitType="button" text="Submit" disabled=true />

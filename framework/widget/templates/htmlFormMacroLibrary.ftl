@@ -53,6 +53,7 @@ not "current" context (too intrusive in current renderer design). still relies o
   <@field_select_widget name=name class=className alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size firstInList=firstInList currentValue=currentValue explicitDescription=explicitDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize dDFCurrent=dDFCurrent noCurrentSelectedKey=noCurrentSelectedKey ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars ignoreCase=ignoreCase fullSearch=fullSearch event=event action=action ajaxEnabled=ajaxEnabled tooltip=tooltip manualItems=manualItems manualItemsOnly=manualItemsOnly collapse=collapse fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
+<#-- FIXME: this macro was added in cato; should remove; should merge with renderCheckField and field_checkbox_widget -->
 <#macro renderCheckBox id="" checked=false currentValue="N" name="" action="" tooltip="" fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
   <@field_checkbox_widget id=id checked=checked currentValue=currentValue name=name action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank />

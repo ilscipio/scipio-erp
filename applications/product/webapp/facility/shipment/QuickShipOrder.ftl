@@ -75,7 +75,7 @@ function setWeight(weight) {
                 </@field>
               </@cell>
               <@cell columns=3>
-                <@field type="submitarea" labelArea=false>
+                <@field type="submitarea">
                     <a href="javascript:document.routeForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductConfirmShipmentUps}</a>
                 </@field>
               </@cell>
@@ -97,7 +97,7 @@ function setWeight(weight) {
                 </@field>
               </@cell>
               <@cell columns=3>
-                <@field type="submitarea" labelArea=false>
+                <@field type="submitarea">
                     <a href="<@ofbizUrl>quickShipOrder?facilityId=${facilityId}&amp;shipmentId=${shipmentId}&amp;reweigh=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductReWeighPackage}</a>
                 </@field>
               </@cell>
@@ -107,7 +107,7 @@ function setWeight(weight) {
                 &nbsp;
               </@cell>
               <@cell columns=3>
-                <@field type="submitarea" labelArea=false>
+                <@field type="submitarea">
                     <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.routeForm.submit();" />
                 </@field>
               </@cell>

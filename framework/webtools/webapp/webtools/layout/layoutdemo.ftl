@@ -412,7 +412,7 @@
     <@fields type="generic">
       <@row>
         <@cell columns=6>
-          <@field type="input" name="input1" label="Input 1 and 2" />
+          <@field type="input" name="input1" label="Input 1 and 2" labelArea=true />
         </@cell>
         <@cell columns=6>
           <@field type="input" name="input2" />
@@ -424,7 +424,7 @@
           <@field type="display" labelArea=true>Display value with label area</@field>
         </@cell>
         <@cell columns=6>
-          <@field type="input" name="input3" label="Input 3" />
+          <@field type="input" name="input3" label="Input 3" labelArea=true />
         </@cell>
       </@row>      
       <@row>

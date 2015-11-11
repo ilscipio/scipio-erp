@@ -140,6 +140,7 @@ TODO: document better if needed
   </#if>
 </#macro>
 
+<#-- @progress main markup - theme override -->
 <#macro progress_markup value=0 id="" class="" showValue=false containerClass="" color="" extraArgs...>
     <#local classes = compileClassArg(class)>
     <#local containerClasses = compileClassArg(containerClass)>
@@ -224,6 +225,7 @@ A visible fieldset, including the HTML element.
   <@fieldset_markup open=open close=close class=class containerClass=containerClass id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible><#nested></@fieldset_markup>
 </#macro>
 
+<#-- @fieldset main markup - theme override -->
 <#macro fieldset_markup open=true close=true class="" containerClass="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false extraArgs...>
   <#if open>
     <#local classes = compileClassArg(class)>
@@ -778,7 +780,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
           </#if>
         </#local>
         <#if hasProgress>
-          <@fieldSubmitAreaProgress progressOptions=progressOptions nestedContent=content />
+          <@field_submitarea_markup_progress progressOptions=progressOptions nestedContent=content />
         <#else>
           ${content}
         </#if>
@@ -817,7 +819,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#local dummy = popRequestStack("catoCurrentFieldInfo")>
 </#macro>
 
-<#-- TODO: this still needs clarification, more args? -->
+<#-- @field container markup - theme override -->
 <#macro field_markup_container type="" class="" columns="" postfix=false postfixSize=0 useLabelArea=true labelContent="" collapse="" norows=false nocells=false container=true extraArgs...>
   <#local rowClass = "">
   <#local labelAreaClass = "">  
@@ -869,6 +871,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   </@row>
 </#macro>
 
+<#-- @field label area markup - theme override -->
 <#macro field_markup_labelarea label="" labelDetail="" fieldType="" fieldId="" collapse="" required=false extraArgs...>
   <#if !collapse?has_content>
       <#local collapse = false/>

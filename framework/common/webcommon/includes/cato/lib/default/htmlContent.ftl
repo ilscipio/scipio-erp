@@ -86,7 +86,7 @@
       containerElem=cElem containerClass=containerClass containerId=containerId><#nested></@heading_markup>
 </#macro>
 
-<#-- Main markup for @heading (minimal logic; a little needed) - may be overridden
+<#-- Main markup for @heading (minimal logic; a little needed) - theme override
      This may be overridden by themes to change markup without changing logic.
      Here, elem will contain either the value "h" or a valid html element.
      NOTE: wherever this is overridden, should include "extraArgs..." for compatibility (new args won't break old overrides; remove to identify) -->

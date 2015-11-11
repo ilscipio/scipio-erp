@@ -46,9 +46,7 @@
   <@row_markup open=open close=close class=class collapse=collapse id=id alt=alt selected=selected><#nested /></@row_markup>
 </#macro>
 
-<#-- TODO?: review if any of the class logic might belong in markup macro instead 
-    EDIT: trying to mitigate defaults-outside-markup problem with styles hash, at least
-    NOTE: classes outside of _markup arg is not final; just making consistent for now -->
+<#-- @row container markup - theme override -->
 <#macro row_markup open=true close=true class="" collapse=false id="" alt="" selected="" extraArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt/>
@@ -134,6 +132,7 @@
   <@cell_markup open=open close=close class=class id=id last=last><#nested></@cell_markup>
 </#macro>
 
+<#-- @cell container markup - theme override -->
 <#macro cell_markup open=true close=true class="" id="" last=false extraArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt>
@@ -644,14 +643,18 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   </#if> <#-- /#(if close) -->
 </#macro>
 
-<#-- May be overridden. Return value is string of classes (no starting/trailing spaces). -->
+<#-- @section content classes markup - theme override
+  * Return Value *
+    string of classes (plain; no starting/trailing spaces or special class arg syntax) -->
 <#function makeSectionContentFlagClasses sectionLevel=1 headingLevel=1hasMenu=false hasTitle=false hasContent=true
      menuLayout="" menuRole="" collapsible=false collapsed=false javaScriptEnabled=false fromScreenDef=false extraArgs...>
   <#local contentFlagClasses>section-level-${sectionLevel} heading-level-${headingLevel}<#if hasTitle> has-title<#else> no-title</#if><#if hasMenu> has-menu<#else> no-menu</#if><#if hasContent> has-content<#else> no-content</#if></#local>
   <#return contentFlagClasses>
 </#function>
 
-<#-- May be overridden. Return values as {"preMenuItems":[...], "postMenuItems":[...]} map. -->
+<#-- @section extra main menu items markup - theme override
+  * Return Value *
+    map of lists, in the format {"preMenuItems":[...], "postMenuItems":[...]} -->
 <#function makeSectionExtraMainMenuItems sectionLevel=1 headingLevel=1 menuLayout="" menuRole="" hasMenu=false contentFlagClasses="" 
     collapsible=false collapsed=false javaScriptEnabled=false collapsibleAreaId="" saveCollapsed=false expandToolTip="" 
     collapseToolTip="" fullUrlString="" fromScreenDef=false extraArgs...>
@@ -674,7 +677,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   -->
 </#function>
 
-<#-- @section container markup - may be overridden -->
+<#-- @section container markup - theme override -->
 <#macro section_markup_container open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" class="" outerClass="" 
     innerClass="" contentFlagClasses="" id="" title="" collapsed=false collapsibleAreaId="" collapsible=false saveCollapsed=true 
     expandToolTip=true collapseToolTip=true padded=false showMore=true fullUrlString=""
@@ -707,7 +710,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   </#if>
 </#macro>
 
-<#-- @section menu and title combo markup - may be overridden -->
+<#-- @section menu and title arrangement markup - theme override -->
 <#macro section_markup_menutitle sectionLevel=1 headingLevel=1 menuLayout="" menuRole="" hasMenu=false menuMarkup="" 
     hasTitle=false titleMarkup="" contentFlagClasses="" fromScreenDef=false extraArgs...>
   <#-- Currently supports only one menu. could have one for each layout (with current macro

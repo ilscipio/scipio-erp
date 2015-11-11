@@ -209,8 +209,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#global catoLastMenuInfo = menuInfo>
 </#macro>
 
-<#-- Markup for @menu container, with minimal logic - may be overridden
-     NOTE: inlineItems is included in case needs different effect per-theme (and ugly to factor out) -->
+<#-- @menu container main markup - theme override -->
 <#macro menu_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false htmlWrap="ul" extraArgs...>
   <#if !inlineItems && htmlWrap?has_content>
     <${htmlWrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>
@@ -353,7 +352,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#global catoCurrentMenuItemIndex = catoCurrentMenuItemIndex + 1>
 </#macro>
 
-<#-- Markup for @menuitem (outer item wrapper only) - may be overridden -->
+<#-- @menuitem container markup - theme override -->
 <#macro menuitem_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItem=false htmlWrap="li" extraArgs...>
   <#if !inlineItem && htmlWrap?has_content>
     <${htmlWrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
@@ -364,17 +363,17 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   </#if>
 </#macro>
 
-<#-- Markup for @menuitem type="link" - may be overridden -->
+<#-- @menuitem type="link" markup - theme override -->
 <#macro menuitem_link_markup class="" id="" style="" href="" onClick="" target="" title="" attribs={} excludeAttribs=[] extraArgs...>
   <#t><a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#nested></a>
 </#macro>
 
-<#-- Markup for @menuitem type="text" - may be overridden -->
+<#-- @menuitem type="text" markup - theme override -->
 <#macro menuitem_text_markup class="" id="" style="" onClick="" attribs={} excludeAttribs=[] extraArgs...>
   <#t><span<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if>><#nested></span>
 </#macro>
 
-<#-- Markup for @menuitem type="submit" - may be overridden -->
+<#-- @menuitem type="submit" markup - theme override -->
 <#macro menuitem_submit_markup class="" id="" style="" text="" onClick="" disabled=false attribs={} excludeAttribs=[] extraArgs...>
   <#t><button type="submit"<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#nested></button>
 </#macro>
@@ -668,7 +667,7 @@ menu item element must override this and provide a proper check.
   </#if>
 </#macro>
 
-<#-- @paginate markup - may be overridden -->
+<#-- @paginate main markup - theme override -->
 <#macro paginate_markup paginateClass="" paginateFirstClass="" viewIndex=1 highIndex=0 listSize=0 viewSize=1 
     ajaxEnabled=false javaScriptEnabled=false ajaxFirstUrl="" firstUrl="" 
     paginateFirstLabel="" paginatePreviousClass="" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" 

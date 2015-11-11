@@ -295,9 +295,7 @@ function submitFindForm(val){
             </@field>
         </@fieldset>
         <input type="hidden" name="showAll" value="Y"/>
-        <@field type="submitarea">
-            <input type="submit" value='${uiLabelMap.CommonFind}'/>
-        </@field>
+        <@field type="submit" text="${uiLabelMap.CommonFind}"/>
     </@cell>
   </@row>    
 </#if>

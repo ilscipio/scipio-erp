@@ -478,7 +478,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#if tooltip?has_content>
       <#local class = addClassArg(class, "has-tip tip-right")>
     </#if>
-    <input type="checkbox"<@fieldClassAttribStr class=class alert=alert />id="<#if id?has_content>${id}<#else>${name!}</#if>"<#rt/>
+    <input type="checkbox"<@fieldClassAttribStr class=class alert=alert /> id="<#if id?has_content>${id}<#else>${name!}</#if>"<#rt/>
       <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
       <#if (checked?is_boolean && checked) || (checked?is_string && checked == "Y")> checked="checked"
       <#elseif currentValue?has_content && currentValue=="Y"> checked="checked"</#if> 
@@ -562,6 +562,9 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- migrated from @renderSubmitField form widget macro -->
 <#macro field_submit_widget buttonType="" class="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
     containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions={}>
+  <#if disabled>
+    <#local class = addClassArg(class, styles.disabled!)>
+  </#if>
   <@field_submit_markup_widget buttonType=buttonType class=class alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation 
     containerId=containerId ajaxUrl=ajaxUrl title=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressOptions=progressOptions><#nested></@field_submit_markup_widget>
 </#macro>
@@ -570,19 +573,22 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_submit_markup_widget buttonType="" class="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
     containerId="" ajaxUrl="" title="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions={} extraArgs...>
   <#-- Cato: to omit button (show progress only), we use empty title hack " " similar to what ofbiz does with hyperlinks with no label -->
-  <#if (buttonType=="text-link" || buttonType!="image") && !(title?trim?has_content)>
+  <#if (buttonType == "text-link" || buttonType != "image") && !(title?trim?has_content)>
     <#local buttonMarkup = "">
   <#else>
     <#local buttonMarkup>
-      <#if buttonType=="text-link">
-        <a<@fieldClassAttribStr class=class alert=alert />href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if>><#if title?has_content>${title}</#if></a>
-      <#elseif buttonType=="image">
+      <#if buttonType == "text-link">
+        <#local class = addClassArgDefault(class, styles.button_default!)>
+        <a<@fieldClassAttribStr class=class alert=alert /> href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>" 
+          <#if disabled> disabled="disabled"<#else><#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if>><#if title?has_content>${title}</#if></a>
+      <#elseif buttonType == "image">
         <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if>
         <#if title?has_content> alt="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
         <#if disabled> disabled="disabled"<#else>
           <#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
         </#if>/>
       <#else>
+        <#local class = addClassArgDefault(class, styles.button_default!)>
         <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassAttribStr class=class alert=alert />
         <#if name?has_content> name="${name}"</#if><#if title?has_content> value="${title}"</#if><#if event?has_content> ${event}="${action}"</#if>
         <#if disabled> disabled="disabled"<#else>
@@ -595,24 +601,30 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       </#if>
     </#local>
   </#if>
-  <#if progressOptions?has_content>
-      <@field_submitarea_markup_progress progressOptions=progressOptions nestedContent=buttonMarkup />
+  <#if progressOptions.formSel?has_content>
+      <@field_submitarea_markup_widget_progress progressOptions=progressOptions>${buttonMarkup}</@field_submitarea_markup_widget_progress>
   <#else>
       ${buttonMarkup}
   </#if>
 </#macro>
 
-<#-- Submit area progress markup - theme override -->
-<#macro field_submitarea_markup_progress progressOptions nestedContent=true>
-  <#if !nestedContent?is_string>
-    <#if nestedContent?is_boolean && nestedContent == false>
-      <#local nestedContent = "">
-    <#else>
-      <#local nestedContent><#nested></#local>
-    </#if>
-  </#if>
+<#macro field_submitarea_widget progressOptions={}>
+  <@field_submitarea_markup_widget progressOptions=progressOptions><#nested></@field_submitarea_markup_widget>
+</#macro>
 
-  <#local rowClass>submit-progress-row<#if buttonMarkup?has_content> has-submit-button<#else> no-submit-button</#if></#local>
+<#-- submitarea widget markup - theme override -->
+<#macro field_submitarea_markup_widget progressOptions={} extraArgs...>
+  <#if progressOptions.formSel?has_content>
+      <@field_submitarea_markup_widget_progress progressOptions=progressOptions><#nested></@field_submitarea_markup_widget_progress>
+  <#else>
+      <#nested>
+  </#if>
+</#macro>
+
+<#-- submitarea widget progress markup - theme override -->
+<#macro field_submitarea_markup_widget_progress progressOptions={} extraArgs...>
+  <#local nestedContent><#nested></#local>
+  <#local rowClass>submit-progress-row<#if nestedContent?has_content> has-submit-button<#else> no-submit-button</#if></#local>
   <@row class=("+" + rowClass)>
     <#if nestedContent?has_content>
       <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2">
@@ -639,7 +651,6 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     </#if>
   </@row>
 </#macro>
-
 
 <#-- migrated from @renderRangeFindField form widget macro -->
 <#macro field_textfind_widget name="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
@@ -680,7 +691,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       <input type="hidden"<#if name?has_content> name="${name}_op"</#if> value="${defaultOption}"/><#rt/>
     </#if>
       <@cell class="${class2!}">
-        <input type="text"<@fieldClassAttribStr class=class alert=alert />name="${name}"<#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+        <input type="text"<@fieldClassAttribStr class=class alert=alert /> name="${name}"<#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
       </@cell>
       <@cell class="${class3!}"> 
         <#if hideIgnoreCase>
@@ -707,7 +718,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <#local class2="${styles.grid_small!}3 ${styles.grid_large!}3"/>
   <@row collapse=collapse!false>
     <@cell class=class1>
-      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content>name="${name}_fld0_value"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}_fld0_value"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
     </@cell>
     <@cell class=class2>
       <#if titleStyle?has_content>
@@ -725,7 +736,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   </@row><#rt/>
   <@row>
     <@cell class=class1>
-      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content>name="${name}_fld1_value"</#if><#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
+      <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}_fld1_value"</#if><#if value2?has_content> value="${value2}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
     </@cell>
     <@cell class=class2>
       <#if titleStyle?has_content>

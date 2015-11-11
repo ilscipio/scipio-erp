@@ -471,7 +471,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     autocomplete    = true/false, default true (false to prevent)
     
     * submitarea *
-    <#nested>       = button(s) (<@field type="submit"> or manual <input, <a, <button) to include
+    <#nested>       = button(s) (<@field type="submit"> or manual <input>, <a>, <button>) to include
     progressOptions = if this is an upload form, specify progress upload options, enables progress next to buttons. 
                       see @progress[Script] macro[s]. should specify formSel, (progBarId and/or progTextBoxId), and others.
                       
@@ -738,7 +738,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                                 manualItemsOnly=manualItemsOnly><#nested></@field_select_widget>
         <#break>
       <#case "lookup">
-        <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class alert="false" value=value size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
+        <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class alert="false" value=value 
+          size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
       <#break>
       <#case "checkbox">
             <@field_checkbox_widget id=id currentValue=value checked=checked name=name action=action />
@@ -747,44 +748,40 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
             <#if radioSingle>
                 <#-- single radio button item mode -->
                 <#local items=[{"key":value, "description":inlineLabel!""}]/>
-                <@field_radio_widget multiMode=false items=items inlineItems=inlineItems class=class alert=alert currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
+                <@field_radio_widget multiMode=false items=items inlineItems=inlineItems class=class alert=alert 
+                  currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
             <#else>
                 <#-- multi radio button item mode -->
-                <@field_radio_widget multiMode=true items=items inlineItems=inlineItems class=class alert=alert currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
+                <@field_radio_widget multiMode=true items=items inlineItems=inlineItems class=class alert=alert 
+                  currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
             </#if>
         <#break>
       <#case "file">
-        <@field_file_widget class=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete?string("", "off") id=id />
-        <#break> 
+        <@field_file_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
+          autocomplete=autocomplete?string("", "off") id=id />
+        <#break>
       <#case "password">
-        <@field_password_widget class=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip/>
+        <@field_password_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
+          id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip/>
         <#break> 
       <#case "submit">
+        <#if !catoSubmitFieldTypeButtonMap??>
+          <#global catoSubmitFieldButtonTypeMap = {
+            "submit":"button", "button":"button", "link":"text-link", "image":"image"
+          }>
+          <#global catoSubmitFieldInputTypeMap = {
+            "submit":"submit", "button":"button", "link":"", "image":"image"
+          }>
+        </#if>      
+        <#local buttonType = catoSubmitFieldButtonTypeMap[submitType]!"button">
+        <#local inputType = catoSubmitFieldInputTypeMap[submitType]!"">
+        <@field_submit_widget buttonType=buttonType class=class alert=alert formName=formName name=name event="" 
+          action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false 
+          onClick=onClick href=href inputType=inputType disabled=disabled progressOptions=progressOptions />
+        <#break>
       <#case "submitarea">
-        <#local hasProgress = (progressOptions.formSel)?has_content>
-        <#local content>
-          <#if type == "submit">
-            <#if !catoSubmitFieldTypeButtonMap??>
-              <#global catoSubmitFieldButtonTypeMap = {
-                "submit":"button", "button":"button", "link":"text-link", "image":"image"
-              }>
-              <#global catoSubmitFieldInputTypeMap = {
-                "submit":"submit", "button":"button", "link":"", "image":"image"
-              }>
-            </#if>
-            <#local buttonType = catoSubmitFieldButtonTypeMap[submitType]!"button">
-            <#local inputType = catoSubmitFieldInputTypeMap[submitType]!"">
-            <@field_submit_widget buttonType=buttonType class=class alert=alert formName=formName name=name event="" action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false onClick=onClick href=href inputType=inputType disabled=disabled />
-          <#else>
-            <#nested>
-          </#if>
-        </#local>
-        <#if hasProgress>
-          <@field_submitarea_markup_progress progressOptions=progressOptions nestedContent=content />
-        <#else>
-          ${content}
-        </#if>
-        <#break> 
+        <@field_submitarea_widget progressOptions=progressOptions><#nested></@field_submitarea_widget>
+        <#break>
       <#case "display">
         <#-- TODO? may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 
              can also partially detect type of value with ?is_, but is not enough... -->
@@ -803,9 +800,9 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
           <#local imageLocation = "">
           <#local desc = value>
         </#if>
-            <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc 
-                title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" 
-                imageAlt=description tooltip=tooltip />
+        <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc 
+            title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" 
+            imageAlt=description tooltip=tooltip />
         <#break> 
       <#default> <#-- "generic", empty or unrecognized -->
         <#if value?has_content>

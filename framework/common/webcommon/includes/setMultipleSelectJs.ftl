@@ -26,13 +26,15 @@ jQuery(document).ready(function() {
     multiple.attr('title', '${asm_title}');
   </#if>
   
+    <#-- Cato: get options from styles -->
+    <#assign defaultAsmSelectOpts = {
+      "addItemTarget": 'top',
+      "sortable": asm_sortable!false,
+      "removeLabel": uiLabelMap.CommonRemove!'Remove'
+      <#--, debugMode: true-->
+    }>
     // use asmSelect in Widget Forms
-    multiple.asmSelect({
-      addItemTarget: 'top',
-      sortable: ${asm_sortable!'false'},
-      removeLabel: '${uiLabelMap.CommonRemove!'Remove'}'
-      //, debugMode: true
-    });
+    multiple.asmSelect(<@objectAsScript lang="js" object=(defaultAsmSelectOpts + styles.field_select_asmselect!{}) />);
       
   <#if asm_relatedField??> <#-- can be used without related field -->
     // track possible relatedField changes

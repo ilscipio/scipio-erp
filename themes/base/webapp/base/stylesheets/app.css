@@ -9934,6 +9934,11 @@ div.scrollable-table-container > table {
   display: none;
 }
 
+/* line 359, ../scss/_base.scss */
+.asmListItemRemove {
+  margin-left: 1rem;
+}
+
 /* line 1, ../scss/_ui_autocomplete.scss */
 .ui-helper-hidden-accessible {
   display: none;

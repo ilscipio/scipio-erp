@@ -125,6 +125,7 @@
     <#if last>
       <#local class = addClassArg(class, styles.grid_end!)>
     </#if>
+    <#-- save grid sizes -->
     <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
   <#else>
     <#-- WARN: has no memory when closeOnly... -->
@@ -132,6 +133,7 @@
   </#if>
   <@cell_markup open=open close=close class=class id=id last=last><#nested></@cell_markup>
   <#if close>
+    <#-- pop grid sizes -->
     <#local dummy = unsetCurrentContainerSizes()>
   </#if>
 </#macro>
@@ -731,7 +733,10 @@ IMPL NOTE: This has dependencies on some non-structural macros.
         <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
             <#local class = addClassArg(class, "section-screenlet-container ${styles.grid_cell!}")>
             <#local class = addClassArg(class, contentFlagClasses)>
-            <div<@compiledClassAttribStr class=class defaultVal="${styles.grid_large!}12" />>
+            <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
+            <#-- save grid sizes -->
+            <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
+            <div<@compiledClassAttribStr class=class />>
                 ${menuTitleContent}
                 <#-- note: may need to keep this div free of foundation grid classes (for margins collapse?) -->
                 <#local innerClass = addClassArg(innerClass, "section-screenlet-content")>
@@ -742,6 +747,8 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   <#if close>
                 </div>
             </div>
+            <#-- pop the grid sizes -->
+            <#local dummy = unsetCurrentContainerSizes()>
         </div>
     </div>
   </#if>

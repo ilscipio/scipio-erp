@@ -321,7 +321,10 @@ not "current" context (too intrusive in current renderer design). still relies o
        fieldEntrySize: ${fieldEntrySize!} gridSize: ${gridSize!} -->
   
   <#local fieldEntryTypeClass = "field-entry-type-" + mapWidgetFieldTypeToStyleName(fieldType)>
-  <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#if> ${styles.grid_cell!}<#if markLast> ${styles.grid_end!}</#if>">
+  <#local outerClasses><#if style?has_content>${style}<#else>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#if> ${styles.grid_cell!}<#if markLast> ${styles.grid_end!}</#if></#local>
+  <#-- Cato: save grid sizes (if any) -->
+  <#local dummy = saveCurrentContainerSizesFromStyleStr(outerClasses)>
+  <div class="${outerClasses}">
     <div class="${styles.grid_row!} form-field-entry ${fieldEntryTypeClass}">
     
   <#-- DEV NOTE: field spans were intentionally made to total to 11 instead of 12 as temporary workaround for small-vs-large-sizing-within-columns adaptation problems -->
@@ -341,10 +344,12 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderFormatFieldRowWidgetCellClose fieldType="" fieldTitleBlank=false>
-  </div>
-  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
       </div>
+  <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
     </div>
+  </div>
+  <#-- Cato: pop the grid sizes -->
+  <#local dummy = unsetCurrentContainerSizes()>  
 </#macro>
 
 

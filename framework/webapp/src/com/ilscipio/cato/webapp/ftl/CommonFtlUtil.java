@@ -1032,14 +1032,25 @@ public final class CommonFtlUtil {
     
     /**
      * Copies a list to a target model/raw list type. In general does not wrap/unwrap individual values.
-     * <p>
-     * TODO: fix redundancy.
      */
     public static Object copyList(Object object, TemplateValueTargetType targetType, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (targetType == null) {
             targetType = TemplateValueTargetType.PRESERVE;
         }
-        
+        if (object instanceof Iterable) {
+            return copyList(UtilGenerics.<Iterable<Object>>cast(object), targetType, objectWrapper);
+        }
+        else if (object instanceof TemplateModel) {
+            return copyList((TemplateModel) object, targetType, objectWrapper);
+        }
+        throw new TemplateModelException("Cannot copy list of type " + object.getClass().toString() + 
+            " to target type: " + targetType.toString());
+    }
+    
+    public static Object copyList(Iterable<Object> object, TemplateValueTargetType targetType, ObjectWrapper objectWrapper) throws TemplateModelException {
+        if (targetType == null) {
+            targetType = TemplateValueTargetType.PRESERVE;
+        }
         if (object instanceof Collection) {
             Collection<Object> collection = UtilGenerics.<Collection<Object>>cast(object);
             if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.RAW) {
@@ -1052,7 +1063,7 @@ public final class CommonFtlUtil {
                 return objectWrapper.wrap(new ArrayList<Object>(collection));
             }
         }
-        else if (object instanceof Iterable) {
+        else {
             Iterable<Object> iterable = UtilGenerics.<Iterable<Object>>cast(object);
             if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.RAW) {
                 List<Object> res = new ArrayList<Object>();
@@ -1076,7 +1087,15 @@ public final class CommonFtlUtil {
                 return objectWrapper.wrap(res);
             } 
         }
-        else if (object instanceof TemplateCollectionModel) { // TODO: isObjectType
+        throw new TemplateModelException("Cannot copy list of type " + object.getClass().toString() + 
+                " to target type: " + targetType.toString());
+    }
+    
+    public static Object copyList(TemplateModel object, TemplateValueTargetType targetType, ObjectWrapper objectWrapper) throws TemplateModelException {
+        if (targetType == null) {
+            targetType = TemplateValueTargetType.PRESERVE;
+        }
+        if (object instanceof TemplateCollectionModel) { // TODO: isObjectType
             TemplateCollectionModel collectionModel = (TemplateCollectionModel) object;
             if (targetType == TemplateValueTargetType.RAW) {
                 List<Object> res = new ArrayList<Object>();
@@ -1164,6 +1183,7 @@ public final class CommonFtlUtil {
         throw new TemplateModelException("Cannot copy list of type " + object.getClass().toString() + 
                 " to target type: " + targetType.toString());
     }
+    
     
     public static TemplateHashModel toSimpleMap(ObjectWrapper objectWrapper, TemplateModel object) throws TemplateModelException {
         if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {

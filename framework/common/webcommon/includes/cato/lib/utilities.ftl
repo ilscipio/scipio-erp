@@ -1270,7 +1270,7 @@ Every push should be followed by a pop.
                 {"large":12, "medium":12, "small":12}
 -->
 <#function saveCurrentContainerSizes sizes>
-  <#local dummy = pushRequestStack("catoContainerSizeStack", sizes)>
+  <#local dummy = pushRequestStack("catoContainerSizesStack", sizes)>
   <#return "">
 </#function>
 
@@ -1281,7 +1281,7 @@ Every push should be followed by a pop.
 Gets the last set of size values set by saveCurrentContainerSizes.
 -->
 <#function getLastContainerSizes>
-  <#return readRequestStack("catoContainerSizeStack")!{}>
+  <#return readRequestStack("catoContainerSizesStack")!{}>
 </#function>
 
 <#-- 
@@ -1290,8 +1290,8 @@ Gets the last set of size values set by saveCurrentContainerSizes.
 ************
 Gets the last set of size values set by saveCurrentContainerSizes as a list.
 -->
-<#function getLastContainerSizes>
-  <#return readRequestStackAsList("catoContainerSizeStack")![]>
+<#function getAllContainerSizes>
+  <#return getRequestStackAsList("catoContainerSizesStack")![]>
 </#function>
 
 <#-- 
@@ -1300,7 +1300,7 @@ Gets the last set of size values set by saveCurrentContainerSizes as a list.
 ************
 -->
 <#function unsetCurrentContainerSizes>
-  <#return popRequestStack("catoContainerSizeStack")!{}>
+  <#return popRequestStack("catoContainerSizesStack")!{}>
 </#function>
 
 

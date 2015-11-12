@@ -262,15 +262,15 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 </#macro>
 
 <#-- migrated from @renderDropDownField form widget macro -->
-<#macro field_select_widget name="" class="" alert="" id="" multiple="" formName="" otherFieldName="" size="" firstInList="" 
-    currentValue="" explicitDescription="" allowEmpty="" options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
+<#macro field_select_widget name="" class="" alert="" id="" multiple="" formName="" otherFieldName="" size="" currentFirst="" 
+    currentValue="" currentDescription="" allowEmpty="" options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" noCurrentSelectedKey="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
     ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false 
-    collapse=false fieldTitleBlank=false>
+    collapse=false fieldTitleBlank=false inlineSelected=true>
   <#if !multiple?is_boolean>
-    <#if multiple == "true" || multiple == "multiple">
+    <#if multiple == "true" || multiple == "multiple" || multiple == "Y">
       <#local multiple = true>
-    <#elseif multiple == "false">
+    <#elseif multiple == "false" || multiple == "N">
       <#local multiple = false>
     <#elseif multiple?has_content> <#-- legacy ofbiz behavior -->
       <#local multiple = true>
@@ -278,38 +278,76 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       <#local multiple = false>
     </#if>
   </#if>
-  <@field_select_markup_widget name=name class=class alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size firstInList=firstInList 
-    currentValue=currentValue explicitDescription=explicitDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize 
+  <#if !allowEmpty?is_boolean>
+    <#if allowEmpty == "true" || allowEmpty == "Y">
+      <#local allowEmpty = true>
+    <#elseif allowEmpty == "false" || allowEmpty == "N">
+      <#local allowEmpty = false>  
+    <#elseif allowEmpty?has_content> <#-- legacy ofbiz behavior -->
+      <#local allowEmpty = true>
+    <#else>
+      <#local allowEmpty = false>
+    </#if>
+  </#if>
+  <#if !currentFirst?is_boolean>
+    <#if currentFirst == "true" || currentFirst == "Y" || currentFirst == "first-in-list">
+      <#local currentFirst = true>
+    <#elseif currentFirst == "false" || currentFirst == "N">
+      <#local currentFirst = false>  
+    <#elseif currentFirst?has_content> <#-- legacy ofbiz behavior -->
+      <#local currentFirst = true>
+    <#else>
+      <#local currentFirst = false>
+    </#if>
+  </#if>
+  <#if currentFirst>
+    <#-- these are mutually exclusive -->
+    <#local inlineSelected = false>
+  </#if>
+  <#if currentFirst && !currentDescription?has_content && currentValue?has_content>
+    <#-- have to find it -->
+    <#if options?has_content>
+      <#list options as option>
+        <#if (option.key!"") == currentValue>
+          <#local currentDescription = option.description!"">
+          <#break>
+        </#if>
+      </#list>
+    </#if>
+  </#if>
+  <@field_select_markup_widget name=name class=class alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size currentFirst=currentFirst 
+    currentValue=currentValue currentDescription=currentDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize 
     dDFCurrent=dDFCurrent noCurrentSelectedKey=noCurrentSelectedKey ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars 
     ignoreCase=ignoreCase fullSearch=fullSearch event=event action=action ajaxEnabled=ajaxEnabled tooltip=tooltip manualItems=manualItems manualItemsOnly=manualItemsOnly 
-    collapse=collapse fieldTitleBlank=fieldTitleBlank><#nested></@field_select_markup_widget>
+    collapse=collapse fieldTitleBlank=fieldTitleBlank inlineSelected=inlineSelected><#nested></@field_select_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_select_markup_widget name="" class="" alert="" id="" multiple=false formName="" otherFieldName="" size="" firstInList="" 
-    currentValue="" explicitDescription="" allowEmpty="" options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
+<#macro field_select_markup_widget name="" class="" alert="" id="" multiple=false formName="" otherFieldName="" size="" currentFirst=false 
+    currentValue="" currentDescription="" allowEmpty=true options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" noCurrentSelectedKey="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
     ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false 
-    collapse=false fieldTitleBlank=false extraArgs...>
+    collapse=false fieldTitleBlank=false inlineSelected=true extraArgs...>
 
     <#if tooltip?has_content>
       <#local class = addClassArg(class, "has-tip tip-right")>
     </#if>
-    <select name="${name!""}<#rt/>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if multiple> multiple="multiple"</#if><#if otherFieldSize gt 0> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
+    <select name="${name!""}<#rt/>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if multiple> multiple="multiple"</#if><#if (otherFieldSize > 0)> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>>
     <#if !manualItemsOnly>  
-      <#if firstInList?has_content && currentValue?has_content && !multiple>
-        <option selected="selected" value="${currentValue}">${explicitDescription}</option><#rt/>
+      <#if currentFirst && currentValue?has_content && !multiple>
+        <option selected="selected" value="${currentValue}">${currentDescription}</option><#rt/>
         <option value="${currentValue}">---</option><#rt/>
       </#if>
-      <#if allowEmpty?has_content || (!manualItems && !options?has_content)>
+      <#if allowEmpty || (!manualItems && !options?has_content)>
         <option value="">&nbsp;</option>
       </#if>
       <#list options as item>
+        <#local itemMarkedSelected = item.selected?? && ((item.selected?is_boolean && item.selected == true) || (!item.selected?is_boolean && item.selected?has_content))>
         <#if multiple>
-          <option<#if currentValue?has_content && item.selected?has_content> selected="${item.selected}" <#elseif !currentValue?has_content && noCurrentSelectedKey?has_content && noCurrentSelectedKey == item.key> selected="selected" </#if> value="${item.key}">${item.description}</option><#rt/>
+          <option<#if currentValue?has_content && itemMarkedSelected> selected="selected"<#elseif !currentValue?has_content && noCurrentSelectedKey?has_content && noCurrentSelectedKey == (item.key!"")> selected="selected"</#if> value="${item.key}">${item.description!}</option><#rt/>
         <#else>
-          <option<#if currentValue?has_content && currentValue == item.key && dDFCurrent?has_content && "selected" == dDFCurrent> selected="selected"<#elseif !currentValue?has_content && noCurrentSelectedKey?has_content && noCurrentSelectedKey == item.key> selected="selected"</#if> value="${item.key}">${item.description}</option><#rt/>
+          <option<#if currentValue?has_content && currentValue == (item.key!"") && inlineSelected> selected="selected"<#elseif !currentValue?has_content && noCurrentSelectedKey?has_content && noCurrentSelectedKey == (item.key!"")> selected="selected"</#if> value="${item.key!}">${item.description!}</option><#rt/>
         </#if>
       </#list>
     </#if>

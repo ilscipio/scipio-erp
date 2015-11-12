@@ -366,6 +366,26 @@
       <@field type="input" name="input3" label="Input 3" />
       <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
       <@field type="checkbox" name="checkbox1" label="Checkbox 1" value="Y" />
+      <#assign items = [
+        {"key":"val1", "description":"Value 1"},
+        {"key":"val2", "description":"Value 2"},
+        {"key":"val3", "description":"Value 3"},
+        {"key":"val4", "description":"Value 4"},
+        {"key":"val5", "description":"Value 5"}
+      ]>
+      <@field type="select" items=items name="select1" label="Select 1" currentValue="val2" />
+      <@field type="select" items=items name="select1" label="Select 2" currentValue="val2" currentFirst=true currentDescription="THE FIRST"/>
+      <@field type="select" items=items name="select1" label="Select 2" currentValue="val2" currentFirst=true />
+      <@field type="select" items=items name="select1" label="Select 3" currentValue="val2" allowEmpty=true />
+      <@field type="select" items=items name="select1" label="Select 3" allowEmpty=true />
+      <#assign items = [
+        {"key":"val1", "description":"Value 1"},
+        {"key":"val2", "description":"Value 2"},
+        {"key":"val3", "description":"Value 3", "selected":true},
+        {"key":"val4", "description":"Value 4"},
+        {"key":"val5", "description":"Value 5", "selected":true}
+      ]>
+      <@field type="select" items=items name="select1" label="Select 4 (multiple)" currentValue="val3" multiple="multiple" />
       <@field type="submit" submitType="submit" text="Submit" disabled=true />
     </@fields>
   </@section>

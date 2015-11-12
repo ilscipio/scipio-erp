@@ -450,7 +450,23 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     
     * select *
     multiple        = allow multiple select true/false
-    currentValue    = currently selected value
+    items           = if specified, generates options from list of maps; 
+                      list of {"key": value, "description": label, "selected": true/false} maps
+                      NOTE: selected is currently ignored for non-multiple (uses currentValue instead)
+                      if items list not specified, manual #nested content options can be specified instead.
+    allowEmpty      = default false; if true, will add an empty option
+    currentValue    = currently selected value/key (only for non-multiple)
+    currentFirst    = default false; if true (and multiple false), will add a "first" item with current value selected, if there is one
+    currentDescription    = if currentFirst true, this is used as first's description if specified
+    noCurrentSelectedKey  = optional selected option value for when none otherwise selected
+    manualItemsOnly = optional boolean hint caller may specify to say that this select should
+                      contain exclusively manually generated items. 
+                      by default, this is based on whether the items arg is specified or not.
+    manualItems     = optional boolean hint caller may sometimes need to give macro to say that #nested contains
+                      manual options, but not exclusively. 
+                      by default, this is based on whether the items arg is specified or not (NOT whether
+                      there is any nested content or not).
+                      if specifying both items arg AND #nested content (discouraged), this should be manually set to true.
     
     * option *
     text            = option label (can also specify as #nested)
@@ -471,7 +487,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     
     * radio (multi mode) *
     items           = if specified, multiple-items radio generated; 
-                      list of {"key": value, "description": label, "event": html-dom-event-attrib, "action": event-js} hashes
+                      list of {"key": value, "description": label, "event": html-dom-event-attrib, "action": event-js} maps
     inlineItems     = if true (default), radio items are many per line; if false, one per line
                       note this takes effect whether single-item or multiple-item radio.
     currentValue    = current value, determines checked
@@ -504,9 +520,11 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#macro field type="" label="" labelDetail="" name="" value="" valueType="" currentValue="" defaultValue="" class="" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse="" tooltip="" columns="" norows=false nocells=false container=""
-        fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=[] autocomplete=true progressOptions={} 
+        fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=false autocomplete=true progressOptions={} 
         labelType="" labelLayout="" labelArea="" description=""
-        submitType="input" text="" href="" src="" confirmMsg="" inlineItems="" selected=false>
+        submitType="input" text="" href="" src="" confirmMsg="" inlineItems="" 
+        selected=false allowEmpty=false currentFirst=false currentDescription="", noCurrentSelectedKey="",
+        manualItems="" manualItemsOnly="">
   <#if !type?has_content>
     <#local type = "generic">
   </#if>
@@ -716,11 +734,13 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                               tooltip=tooltip/>                
         <#break>
       <#case "select">
-        <#-- TODO: Currently, select only supports manual items, not auto-generated items
-             Must set manualItems to true especially, otherwise extra empty options generated -->
-        <#local manualItems = true>
-        <#local manualItemsOnly = true>
-        
+        <#if !manualItemsOnly?is_boolean>
+          <#local manualItemsOnly = !items?is_sequence>
+        </#if>
+        <#if !manualItems?is_boolean>
+          <#-- FIXME? this should be based on whether #nested has content, but don't want to invoke #nested twice -->
+          <#local manualItems = !items?is_sequence>
+        </#if>
         <@field_select_widget name=name
                                 class=class 
                                 alert=alert 
@@ -731,18 +751,17 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                                 event="onClick" 
                                 action=onClick  
                                 size=size
-                                firstInList="" 
+                                currentFirst=currentFirst
                                 currentValue=currentValue 
-                                explicitDescription="" 
-                                allowEmpty=""
-                                options=[]
+                                allowEmpty=allowEmpty
+                                options=items
                                 fieldName=name
                                 otherFieldName="" 
                                 otherValue="" 
                                 otherFieldSize=0 
-                                dDFCurrent=""
+                                inlineSelected=!currentFirst
                                 ajaxEnabled=false
-                                noCurrentSelectedKey=""
+                                noCurrentSelectedKey=noCurrentSelectedKey
                                 ajaxOptions=""
                                 frequency=""
                                 minChars=""
@@ -754,7 +773,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                                 fullSearch=""
                                 tooltip=tooltip
                                 manualItems=manualItems
-                                manualItemsOnly=manualItemsOnly><#nested></@field_select_widget>
+                                manualItemsOnly=manualItemsOnly
+                                currentDescription=currentDescription><#nested></@field_select_widget>
         <#break>
       <#case "option">
         <@field_option_widget value=value text=text selected=selected><#nested></@field_option_widget>
@@ -768,7 +788,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         <@field_checkbox_widget id=id currentValue=value checked=checked name=name description=inlineLabel action=action />
         <#break>
       <#case "radio">
-        <#if !items?has_content>
+        <#if !items?is_sequence>
             <#-- single radio button item mode -->
             <#local items=[{"key":value, "description":inlineLabel}]/>
             <@field_radio_widget multiMode=false items=items inlineItems=inlineItems class=class alert=alert 

@@ -372,8 +372,8 @@ under the License.
        </field>
        <field name="amount" title="${uiLabelMap.AccountingUnitPrice}"><text size="10"/></field>
        <field name="total" widget-area-style="amount"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence display -->
-       <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}" ><submit button-type="text-link"/></field>
-       <field name="removeAction" title=" " widget-style="${styles.link_action}">
+       <field name="updateAction" id-name="updateInvoiceItem" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}" ><submit button-type="text-link"/></field>
+       <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceItem">
                 <parameter param-name="invoiceId"/>
                 <parameter param-name="invoiceItemSeqId"/>

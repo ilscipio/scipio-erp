@@ -298,7 +298,10 @@ public class FormRenderer {
         // conditions are used or when a form is extended or when the fields are
         // automatically retrieved by a service or entity definition.
         List<ModelFormField> tempFieldList = new LinkedList<ModelFormField>();
-        tempFieldList.addAll(modelForm.getFieldList());
+        tempFieldList.addAll(modelForm.getFieldList());        
+        if ("multi".equals(modelForm.getType()) && !modelForm.getUseRowSubmit()) {
+        	tempFieldList.addAll(modelForm.getMultiSubmitFields());
+        }
         for (int j = 0; j < tempFieldList.size(); j++) {
             ModelFormField modelFormField = tempFieldList.get(j);
             for (int i = j + 1; i < tempFieldList.size(); i++) {
@@ -338,6 +341,7 @@ public class FormRenderer {
             boolean inputFieldFound = false;
             for (ModelFormField modelFormField : mainFieldList) {
                 FieldInfo fieldInfo = modelFormField.getFieldInfo();
+               
 
                 // if the field's title is explicitly set to "" (title="") then
                 // the header is not created for it; this is useful for position list
@@ -355,7 +359,8 @@ public class FormRenderer {
 
                 if (fieldInfo.getFieldType() != FieldInfo.DISPLAY
                         && fieldInfo.getFieldType() != FieldInfo.DISPLAY_ENTITY
-                        && fieldInfo.getFieldType() != FieldInfo.HYPERLINK) {
+                        && fieldInfo.getFieldType() != FieldInfo.HYPERLINK  
+                        && fieldInfo.getFieldType() != FieldInfo.SUBMIT) {
                     inputFieldFound = true;
                     continue;
                 }
@@ -382,7 +387,8 @@ public class FormRenderer {
                 // skip all of the display/hyperlink fields
                 if (fieldInfo.getFieldType() == FieldInfo.DISPLAY
                         || fieldInfo.getFieldType() == FieldInfo.DISPLAY_ENTITY
-                        || fieldInfo.getFieldType() == FieldInfo.HYPERLINK) {
+                        || fieldInfo.getFieldType() == FieldInfo.HYPERLINK
+                        || fieldInfo.getFieldType() == FieldInfo.SUBMIT) {
                     continue;
                 }
 
@@ -436,20 +442,25 @@ public class FormRenderer {
                     }
                     if (innerFormFields.size() > 0) {
                         // TODO: manage colspan
-                        formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
+                    	if (modelForm.getUseRowSubmit())
+                    		formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
                         Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
                         while (innerFormFieldsIt.hasNext()) {
                             ModelFormField modelFormField = innerFormFieldsIt.next();
 
-                            if (modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) {
+                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit()) {
                                 formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, modelFormField, 1);
+                            } else if (!modelForm.getUseRowSubmit()) {
+                            	formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
                             }
 
                             // render title (unless this is a submit or a reset field)
                             formStringRenderer.renderFieldTitle(writer, context, modelFormField);
 
-                            if (modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) {
+                            if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit()) {
                                 formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, modelFormField);
+                            } else if (!modelForm.getUseRowSubmit()) {
+                            	formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
                             }
 
                             if (innerFormFieldsIt.hasNext()) {
@@ -460,7 +471,8 @@ public class FormRenderer {
                                 }
                             }
                         }
-                        formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
+                        if (modelForm.getUseRowSubmit())
+                        	formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
                     }
                     Iterator<ModelFormField> innerDisplayHyperlinkFieldsEndIt = innerDisplayHyperlinkFieldsEnd.iterator();
                     while (innerDisplayHyperlinkFieldsEndIt.hasNext()) {
@@ -542,7 +554,7 @@ public class FormRenderer {
             numOfColumnsToSpan = 1;
         }
 
-        // render row formatting open
+        // render row formatting open        
         formStringRenderer.renderFormatItemRowOpen(writer, localContext, modelForm);
         Iterator<ModelFormField> innerDisplayHyperlinkFieldsBeginIter = innerDisplayHyperlinkFieldsBegin.iterator();
         Map<String, Integer> fieldCount = new HashMap<String, Integer>();
@@ -582,7 +594,7 @@ public class FormRenderer {
                         }
                         cellOpen = true;
                     }
-                    modelFormField.renderFieldString(writer, localContext, formStringRenderer);
+					modelFormField.renderFieldString(writer, localContext, formStringRenderer);
                 }
                 if (cellOpen) {
                     formStringRenderer.renderFormatItemRowCellClose(writer, localContext, modelForm, modelFormField);
@@ -591,8 +603,10 @@ public class FormRenderer {
 
             // The form cell is rendered only if there is at least an input field
             if (innerFormFields.size() > 0) {
-                // render the "form" cell
-                formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm); // TODO: colspan
+                // render the "form" cell            	
+            	formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm); // TODO: colspan
+            	// Cato: Controls where a cell has been opened already so we don't generate invalid markup (similar to what is done for firsts links rendered above)
+            	boolean cellOpen = true;
 
                 if (formPerItem) {
                     formStringRenderer.renderFormOpen(writer, localContext, modelForm);
@@ -604,8 +618,9 @@ public class FormRenderer {
                 Iterator<ModelFormField> innerFormFieldIter = innerFormFields.iterator();
                 while (innerFormFieldIter.hasNext()) {
                     ModelFormField modelFormField = innerFormFieldIter.next();
-                    if (modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) {
+                    if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && !cellOpen) {
                         formStringRenderer.renderFormatItemRowCellOpen(writer, localContext, modelForm, modelFormField, 1);
+                        cellOpen = true;
                     }
                     // render field widget
                     if ((!"list".equals(modelForm.getType()) && !"multi".equals(modelForm.getType()))
@@ -613,8 +628,9 @@ public class FormRenderer {
                         modelFormField.renderFieldString(writer, localContext, formStringRenderer);
                     }
 
-                    if (modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) {
+                    if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && cellOpen) {
                         formStringRenderer.renderFormatItemRowCellClose(writer, localContext, modelForm, modelFormField);
+                        cellOpen = false;
                     }
                 }
 
@@ -622,7 +638,8 @@ public class FormRenderer {
                     formStringRenderer.renderFormClose(writer, localContext, modelForm);
                 }
 
-                formStringRenderer.renderFormatItemRowFormCellClose(writer, localContext, modelForm);
+                if (cellOpen)
+                	formStringRenderer.renderFormatItemRowFormCellClose(writer, localContext, modelForm);
             }
 
             // render the rest of the display/hyperlink fields
@@ -922,17 +939,7 @@ public class FormRenderer {
                     
                     List<ModelFormField> hiddenIgnoredFieldList = getHiddenIgnoredFields(localContext, null, tempFieldList,
                             currentPosition);
-                    // Cato: I don't know where to add all the submit values, for now I'm gonna add them here
-					if ("multi".equals(modelForm.getType()) && !modelForm.getUseRowSubmit()) {
-						List<ModelFormField> rowSubmitFields = new LinkedList<ModelFormField>(innerFormFields);
-						for (ModelFormField hiddenIgnoredField : hiddenIgnoredFieldList) {
-							if (hiddenIgnoredField.getFieldInfo().getFieldType() == FieldInfo.HIDDEN
-                            || hiddenIgnoredField.getFieldInfo().getFieldType() == FieldInfo.IGNORED) {
-								rowSubmitFields.add(hiddenIgnoredField);
-							}
-						}
-						localContext.put("rowSubmitFields", rowSubmitFields);
-                    }						
+                    
 					
 					// Rendering:
                     // the fields in the three lists created in the preprocessing phase

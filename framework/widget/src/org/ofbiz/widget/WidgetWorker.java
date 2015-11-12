@@ -24,6 +24,8 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -45,6 +47,7 @@ import org.ofbiz.widget.model.FieldInfo;
 import org.ofbiz.widget.model.ModelForm;
 import org.ofbiz.widget.model.ModelFormField;
 import org.ofbiz.widget.renderer.FormStringRenderer;
+import org.owasp.esapi.Randomizer;
 
 public final class WidgetWorker {
 
@@ -296,30 +299,48 @@ public final class WidgetWorker {
         writer.append("</form>");
     }
     
-    // Cato: Creates a form that triggers a custom a script function used to append hidden elements with their corresponding values of the associated fields defined within the main form
-    public static void makeHiddenFormSubmitForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, List<ModelFormField> rowSubmitFields, Map<String, Object> context) throws IOException {    	
-    	String hiddenFormName = makeLinkHiddenFormName(context, modelFormField);    	
+    // Cato: Creates a form that gets populated with the corresponding fields of the row being submitted and then submits it.
+	public static void makeHiddenFormSubmitForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap,
+			HttpServletRequest request, HttpServletResponse response, ModelForm modelForm, Map<String, Object> context) throws IOException {
+		List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
+    	String hiddenFormName = makeLinkHiddenFormName(context, modelForm, "submitForm" + modelForm.getItemIndexSeparator() + new Random().nextInt(Integer.MAX_VALUE));    	
 		if (rowSubmitFields != null) {
 			writer.append("<script type=\"text/javascript\">\r\n");
-			writer.append("function submitForm_" + hiddenFormName + "() {\r\n");
-			writer.append("var form = document.form." + hiddenFormName + ";\r\n");
+			writer.append("jQuery(document).ready(function() {\r\n");			
+			writer.append("\tvar submitForm = $(\"form[name=" + hiddenFormName + "]\");\r\n");
+			writer.append("\tif (submitForm) {\r\n");
 			for (ModelFormField rowSubmitField : rowSubmitFields) {
-				if (rowSubmitField.getFieldInfo().getFieldType() != FieldInfo.HIDDEN && rowSubmitField.getFieldInfo().getFieldType() != FieldInfo.IGNORED) {
-					 writer.append("var hiddenField = $(\"<input></input>\")\r\n");
-					 writer.append("$(hiddenField).attr(\"type\", \"hidden\");\r\n");
-					 writer.append("$(hiddenField).attr(\"name\", \"" + rowSubmitField.getParameterName(context) + "\");\r\n");
-					 writer.append("$(hiddenField).attr(\"value\", $(\"input[name=" + rowSubmitField.getParameterName(context) + "]\").val());\r\n");
-					 writer.append("$(form).append($(hiddenField));\r\n");
-				}
+				writer.append("\t\tvar id = $(\"[id^=" + rowSubmitField.getIdName() + "]\");\r\n");
+				writer.append("\t\t$(id).click(function(e) {\r\n");
+				writer.append("\t\te.preventDefault();\r\n");
+				writer.append("\t\t\tconsole.log(\"id ========> \" + $(this).attr(\"id\"));\r\n");
+				writer.append("\t\t\t$(this).parents(\"tr\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");				
+				writer.append("\t\t\tconsole.log(\"element ======> \" + $(e).attr(\"name\"));\r\n");
+//				 writer.append("var hiddenField = $(\"<input></input>\")\r\n");
+//				 writer.append("$(hiddenField).attr(\"type\", \"hidden\");\r\n");
+//				 
+//				 writer.append("$(hiddenField).attr(\"name\", \"" + rowSubmitField.getParameterName(context) + "\");\r\n");
+//				 writer.append("$(hiddenField).attr(\"value\", $(\"input[name=" + rowSubmitField.getParameterName(context) + "]\").val());\r\n");
+//				 writer.append("$(form).append($(hiddenField));\r\n");				
+				writer.append("\t\t\t$(submitForm).append($(e).clone());\r\n");				
+				writer.append("\t\t\t$(submitForm).children().hide();\r\n");
+				
+				writer.append("\t\t\t});\r\n");
+				writer.append("\t\t\tsubmitForm.submit();\r\n");
+//				writer.append("\t\t\tconsole.log(\"submitForm ==========> \" + $(submitForm).html());");
+				writer.append("\t\t});\r\n");
 			}
-			writer.append("}\r\n");
+			writer.append("\t} else {\r\n");
+			writer.append("\t\treturn false;\r\n");
+			writer.append("\t}");
+			writer.append("});\r\n");
 			writer.append("</script>\r\n");
 		}    	
     	
         writer.append("<form method=\"post\"");
         writer.append(" action=\"");
         // note that this passes null for the parameterList on purpose so they won't be put into the URL
-        WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, false, false, true, request, response, context);
+        WidgetWorker.buildHyperlinkUrl(writer, target, targetType, null, null, false, false, true, request, response, context);                     
         writer.append("\"");
 
         if (UtilValidate.isNotEmpty(targetWindow)) {
@@ -328,7 +349,7 @@ public final class WidgetWorker {
             writer.append("\"");
         }
 
-        writer.append(" onsubmit=\"javascript:submitFormDisableSubmits(this); submitForm_" + hiddenFormName + "();\"");
+        writer.append(" onsubmit=\"javascript:submitFormDisableSubmits(this);\"");
 
         writer.append(" name=\"");
         writer.append(hiddenFormName);
@@ -343,25 +364,34 @@ public final class WidgetWorker {
                 writer.append("\" type=\"hidden\"/>");
             }
         }
-		if (rowSubmitFields != null) {
-			for (ModelFormField rowSubmitField : rowSubmitFields) {
-				if (rowSubmitField.getFieldInfo().getFieldType() == FieldInfo.HIDDEN || rowSubmitField.getFieldInfo().getFieldType() == FieldInfo.IGNORED) {
-					rowSubmitField.renderFieldString(writer, context, (FormStringRenderer) context.get("formStringRenderer"));
-				}
-			}
-		}
+		
+//		for (ModelFormField rowField : modelForm.getFieldList()) {
+//			if (rowField.getFieldInfo().getFieldType() == FieldInfo.HIDDEN || rowField.getFieldInfo().getFieldType() == FieldInfo.IGNORED) {
+//				rowField.renderFieldString(writer, context, (FormStringRenderer) context.get("formStringRenderer"));
+//			}
+//		}
 
         writer.append("</form>");
         
     }
 
+	public static String makeLinkHiddenFormName(Map<String, Object> context, ModelForm modelForm, String prefix) {
+		if (UtilValidate.isNotEmpty(modelForm.getName()))
+			return prefix + modelForm.getItemIndexSeparator() + modelForm.getName();
+		else if (UtilValidate.isNotEmpty(context.get("formName")))
+			return prefix + modelForm.getItemIndexSeparator()+ context.get("formName");
+		return prefix;	
+	}
+	
     public static String makeLinkHiddenFormName(Map<String, Object> context, ModelFormField modelFormField) {
-        ModelForm modelForm = modelFormField.getModelForm();
+		ModelForm modelForm = null;
+		if (UtilValidate.isNotEmpty(modelFormField))
+			modelForm = modelFormField.getModelForm();
         Integer itemIndex = (Integer) context.get("itemIndex");
         String iterateId = "";
         String formUniqueId = "";
         String formName = (String) context.get("formName");
-        if (UtilValidate.isEmpty(formName)) {
+        if (UtilValidate.isNotEmpty(modelForm) && UtilValidate.isEmpty(formName)) {
             formName = modelForm.getName();
         }
         if (UtilValidate.isNotEmpty(context.get("iterateId"))) {
@@ -376,6 +406,7 @@ public final class WidgetWorker {
             return formName + modelForm.getItemIndexSeparator() + modelFormField.getName();
         }
     }
+    
     public static String determineAutoLinkType(String linkType, String target, String targetType, HttpServletRequest request) {
         if ("auto".equals(linkType)) {
             if ("intra-app".equals(targetType)) {

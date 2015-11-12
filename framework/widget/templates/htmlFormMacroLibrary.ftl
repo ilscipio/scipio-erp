@@ -79,7 +79,7 @@ not "current" context (too intrusive in current renderer design). still relies o
   <@field_radio_widget items=items class=className alert=alert currentValue=currentValue noCurrentSelectedKey=noCurrentSelectedKey name=name event=event action=action tooltip=tooltip />
 </#macro>
 
-<#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false>
+<#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false id="">
   <#local progressOptions = "">
     <#if !(showProgress?is_boolean && showProgress == false) && 
        ((showProgress?is_boolean && showProgress == true) ||
@@ -113,7 +113,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     </#if>
 
   <#-- delegate to cato libs -->
-  <@field_submit_widget buttonType=buttonType class=className alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation containerId=containerId ajaxUrl=ajaxUrl title=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressOptions=progressOptions/>
+  <@field_submit_widget buttonType=buttonType class=className alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation containerId=containerId ajaxUrl=ajaxUrl title=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressOptions=progressOptions id=id/>
 </#macro>
 
 <#macro renderResetField className alert name title="" fieldType="" fieldTitleBlank=false>
@@ -139,7 +139,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit showProgress=false progressOptions="" progressSuccessAction="">
   <#global htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressOptions" : StringUtil.wrapString(progressOptions), "progressSuccessAction" : StringUtil.wrapString(progressSuccessAction)}>
-  <form method="post" action="${linkUrl}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if><#if containerId?has_content> id="${containerId}"</#if> class=<#if containerStyle?has_content>"${containerStyle}"<#else>"basic-form"</#if> onsubmit="javascript:submitFormDisableSubmits(this)"<#if autocomplete?has_content> autocomplete="${autocomplete}"</#if> name="${name}"><#lt/>
+  <form method="post" action="${linkUrl}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if><#if containerId?has_content> id="${containerId}"</#if> class=<#if containerStyle?has_content>"${containerStyle}"<#else>"basic-form"</#if> onsubmit="javascript:submitFormDisableSubmits(this); <#if !useRowSubmit>submitRowForm(this);</#if>"<#if autocomplete?has_content> autocomplete="${autocomplete}"</#if> name="${name}"><#lt/>
     <#if useRowSubmit?has_content && useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>
       <#if (linkUrl?index_of("VIEW_INDEX") <= 0) && (linkUrl?index_of(viewIndexField) <= 0)>
@@ -191,7 +191,8 @@ not "current" context (too intrusive in current renderer design). still relies o
        this is a custom workaround to get scrolling, nothing else working. -->
   <div class="${styles.table_responsive_wrap!}">
   </#if>
-  <table cellspacing="0" class="<#if style?has_content>${style}<#else>${styles.table_default!} form-widget-table dark-grid</#if>"><#lt/>
+  <#-- Cato: Remove the invalid HTML5 attribute (cellspacing) -->
+  <table class="<#if style?has_content>${style}<#else>${styles.table_default!} form-widget-table dark-grid</#if>"><#lt/>
 </#macro>
 
 <#macro renderFormatListWrapperClose formName>

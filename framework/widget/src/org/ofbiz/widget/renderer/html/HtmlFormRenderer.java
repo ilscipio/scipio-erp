@@ -1296,7 +1296,8 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
         if (this.renderPagination) {
             this.renderNextPrev(writer, context, modelForm);
         }
-        writer.append(" <table cellspacing=\"0\" class=\"");
+        // Cato: Removed the invalid HTML5 attribute (cellspacing)
+        writer.append(" <table class=\"");
         if (UtilValidate.isNotEmpty(modelForm.getDefaultTableStyle())) {
             writer.append(FlexibleStringExpander.expandString(modelForm.getDefaultTableStyle(), context));
         } else {
@@ -1418,7 +1419,8 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
 
         writer.append("  <tr");
         if (itemIndex!=null) {
-
+            writer.append(" id=\"");
+            writer.append(String.valueOf(itemIndex));
             String altRowStyles = modelForm.getStyleAltRowStyle(context);
             if (itemIndex.intValue() % 2 == 0) {
                 String evenRowStyle = modelForm.getEvenRowStyle();

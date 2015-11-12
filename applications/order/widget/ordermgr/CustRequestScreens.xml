@@ -28,18 +28,19 @@ under the License.
                 <set field="entityName" value="CustRequest"/>
                 <set field="asm_multipleSelectForm" value="FindRequests"/>
                 <set field="asm_asmListItemPercentOfForm" value="110"/>
-                <set field="custRequestType.asm_multipleSelect"  value="FindRequests_custRequestTypeId"/>
+                <property-to-field resource="CommonUiLabels" property="CommonPleaseSelect" field="commonPleaseSelectText" default=""/>            
+                <set field="custRequestType.asm_multipleSelect" value="FindRequests_custRequestTypeId"/>
                 <set field="custRequestType.asm_sortable" value="true"/>
-                <set field="custRequestType.asm_title" value=" "/>
-                <set field="statusId.asm_multipleSelect"  value="FindRequests_statusId"/>
+                <set field="custRequestType.asm_title" from-field="commonPleaseSelectText"/>
+                <set field="statusId.asm_multipleSelect" value="FindRequests_statusId"/>
                 <set field="statusId.asm_sortable" value="true"/>
-                <set field="statusId.asm_title" value=" "/>
-                <set field="productStoreId.asm_multipleSelect"  value="FindRequests_productStoreId"/>
+                <set field="statusId.asm_title" from-field="commonPleaseSelectText"/>
+                <set field="productStoreId.asm_multipleSelect" value="FindRequests_productStoreId"/>
                 <set field="productStoreId.asm_sortable" value="true"/>
-                <set field="productStoreId.asm_title" value=" "/>
-                <set field="salesChannelEnumId.asm_multipleSelect"  value="FindRequests_salesChannelEnumId"/>
+                <set field="productStoreId.asm_title" from-field="commonPleaseSelectText"/>
+                <set field="salesChannelEnumId.asm_multipleSelect" value="FindRequests_salesChannelEnumId"/>
                 <set field="salesChannelEnumId.asm_sortable" value="true"/>
-                <set field="salesChannelEnumId.asm_title" value=" "/>
+                <set field="salesChannelEnumId.asm_title" from-field="commonPleaseSelectText"/>
                 <set field="asm_listField[]" from-field="custRequestType"/>
                 <set field="asm_listField[]" from-field="statusId"/>
                 <set field="asm_listField[]" from-field="productStoreId"/>

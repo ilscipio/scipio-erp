@@ -172,7 +172,7 @@ framework-agnostic, unlike these.
       "${styles.grid_large!}" : "large", "${styles.grid_medium!}" : "medium", "${styles.grid_small!}" : "small"
     }>
   </#if>
-  <#return extractPrefixedStyleNamesWithInt(style, catoContainerSizesPrefixMap)>
+  <#return extractPrefixedStyleNamesWithInt(getPlainClassArgNames(style), catoContainerSizesPrefixMap)>
 </#function>
 
 <#function saveCurrentContainerSizesFromStyleStr style>

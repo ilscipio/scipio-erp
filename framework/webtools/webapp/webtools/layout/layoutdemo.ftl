@@ -530,10 +530,16 @@
   
   <@row>
     <@cell class="${styles.grid_large!}10 ${styles.grid_medium!}9 ${styles.grid_small!}8 ${styles.grid_end!}">
-      <@cell class="${styles.grid_large!}7 ${styles.grid_medium!}6 ${styles.grid_small!}5 ${styles.grid_end!}">
-        <#assign containerSizesList = getAllContainerSizes()![]>
-        <@objectAsScript lang="raw" escape=false object=containerSizesList />
-      </@cell>
+      <@row>
+        <@cell class="${styles.grid_large!}7 ${styles.grid_small!}5 ${styles.grid_end!}">
+          <@row>
+            <@cell class="+testclass">
+              <#assign containerSizesList = getAllContainerSizes()![]>
+              <@objectAsScript lang="raw" escape=false object=containerSizesList />
+            </@cell>
+          </@row>
+        </@cell>
+      </@row>
     </@cell>
   </@row>
 </@section>

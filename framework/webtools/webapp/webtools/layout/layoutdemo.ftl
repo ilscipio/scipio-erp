@@ -516,4 +516,16 @@
 
 </@section>
 
+<@section title="FTL request-scope stacks">
+  <#assign dummy = pushRequestStack("testStack", {"key1":"val1", "key2":"val2"})>
+  <#assign dummy = pushRequestStack("testStack", {"key3":"val3", "key4":"val4"})>
+  <#assign dummy = pushRequestStack("testStack", {"key5":"val5", "key6":"val6"})>
+  
+  <#assign stackList = getRequestStackAsList("testStack")>
+  <@objectAsScript lang="raw" escape=false object=stackList />
+  
+  <#assign dummy = popRequestStack("testStack")>
+  <#assign dummy = popRequestStack("testStack")>
+  <#assign dummy = popRequestStack("testStack")>
+</@section>
 

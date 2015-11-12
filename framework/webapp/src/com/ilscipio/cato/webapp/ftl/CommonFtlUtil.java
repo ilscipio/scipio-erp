@@ -23,7 +23,6 @@ import org.ofbiz.base.util.cache.UtilCache;
 
 import freemarker.core.Environment;
 import freemarker.core.Macro;
-import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.SimpleMapModel;
 import freemarker.ext.util.WrapperTemplateModel;
@@ -74,6 +73,16 @@ public final class CommonFtlUtil {
     private CommonFtlUtil() {
     }
     
+    /**
+     * Used for TemplateModel <-> unwrapped/raw value conversions.
+     */
+    public enum TemplateValueTargetType {
+        PRESERVE,
+        RAW,
+        MODEL,
+        SIMPLEMODEL,
+        COMPLEXMODEL
+    }
 
     /**
      * Parses a complex style string meant to describe an element notably heading into hash of constituent values.
@@ -862,6 +871,102 @@ public final class CommonFtlUtil {
     }
 
     /**
+     * Gets the request stack as a list. The stack cannot be modified using this list.
+     * It may be TemplateModel-wrapped or unwrapped as may be the individual values.
+     *
+     * @param name
+     * @param request
+     * @param context
+     * @param env
+     * @param copyTargetType target type for list copy. if null, does not copy (should be avoided in most cases!).
+     * @return
+     * @throws TemplateModelException
+     */
+    public static Object getRequestStackAsList(String name, HttpServletRequest request, 
+            Map<String, Object> context, Environment env, TemplateValueTargetType copyTargetType) throws TemplateModelException {
+        if (request != null) {
+            List<Object> stack = null;
+            Object stackObj = getRequestVarMapFromAttribs(request).get(name);
+            if (stackObj instanceof List) {
+                stack = UtilGenerics.checkList(stackObj);
+            }
+            if (stack != null) {
+                if (copyTargetType == null) {
+                    return Collections.unmodifiableList(stack);
+                }
+                else {
+                    return copyList(stack, copyTargetType, env != null ? env.getObjectWrapper() : null);
+                }
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            Map<String, Object> globalContext = FtlTransformUtil.getGlobalContext(context, env);
+            if (globalContext != null) {   
+                List<Object> stack = null;
+                Object stackObj = getRequestVarMapFromMap(globalContext).get(name);
+                if (stackObj instanceof List) {
+                    stack = UtilGenerics.checkList(stackObj);
+                }
+                if (stack != null) {
+                    if (copyTargetType == null) {
+                        return Collections.unmodifiableList(stack);
+                    }
+                    else {
+                        return copyList(stack, copyTargetType, env != null ? env.getObjectWrapper() : null);
+                    }
+                }
+                else {
+                    return null;
+                }
+            }
+            else if (env != null) {
+                SimpleHash requestVarMap = getRequestVarMapFromFtlGlobals(env);
+                SimpleSequence stack = null;
+                Object stackObj = requestVarMap.get(name);
+                if (stackObj instanceof SimpleSequence) {
+                    stack = (SimpleSequence) stackObj;
+                }
+                if (stack != null) {
+                    if (copyTargetType == null) {
+                        return stack; // WARN: can't make unmodifiable?!
+                    }
+                    else {
+                        return copyList(stack, copyTargetType, env != null ? env.getObjectWrapper() : null);
+                    }
+                }
+                else {
+                    return null;
+                }
+            }
+            else {
+                throw new IllegalArgumentException("No request, context or ftl environment to get request scope stack (name: " + name + ")");
+            }
+        }
+    }
+        
+    /**
+     * Returns copy of request stack as a SimpleSequence.
+     */
+    public static Object getRequestStackAsList(String name, Environment env) throws TemplateModelException {
+        HttpServletRequest request = FtlTransformUtil.getRequest(env);
+        Map<String, Object> context = null;
+        if (request == null) {
+            context = FtlTransformUtil.getContext(env);
+        }
+        return getRequestStackAsList(name, request, context, env, TemplateValueTargetType.SIMPLEMODEL);
+    }
+    
+    /**
+     * Returns copy of request stack as a List (elements may still be TemplateModels).
+     */
+    public static Object getRequestStackAsList(String name, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
+        return getRequestStackAsList(name, request, context, null, TemplateValueTargetType.RAW);
+    }
+    
+    /**
      * Checks if the given model matches the logical FTL object type.
      * 
      * @see com.ilscipio.cato.webapp.ftl.OfbizFtlObjectType
@@ -892,11 +997,14 @@ public final class CommonFtlUtil {
      * @return
      * @throws TemplateModelException
      */
-    public static Object copyObject(ObjectWrapper objectWrapper, TemplateModel object, boolean toSimpleType) throws TemplateModelException {
+    public static Object copyObject(TemplateModel object, TemplateValueTargetType targetType, ObjectWrapper objectWrapper) throws TemplateModelException {
+        if (targetType == null) {
+            targetType = TemplateValueTargetType.PRESERVE;
+        }
         if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
             // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
             Map<Object, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
-            if (toSimpleType) {
+            if (targetType == TemplateValueTargetType.SIMPLEMODEL) {
                 return new SimpleHash(wrappedObject, objectWrapper);
             }
             else {
@@ -923,6 +1031,141 @@ public final class CommonFtlUtil {
         else {
             throw new TemplateModelException("object is not cloneable");
         }
+    }
+    
+    /**
+     * Copies a list to a target model/raw list type. In general does not wrap/unwrap individual values.
+     * <p>
+     * TODO: fix redundancy.
+     */
+    public static Object copyList(Object object, TemplateValueTargetType targetType, ObjectWrapper objectWrapper) throws TemplateModelException {
+        if (targetType == null) {
+            targetType = TemplateValueTargetType.PRESERVE;
+        }
+        
+        if (object instanceof Collection) {
+            Collection<Object> collection = UtilGenerics.<Collection<Object>>cast(object);
+            if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.RAW) {
+                return new ArrayList<Object>(collection);
+            }
+            else if (targetType == TemplateValueTargetType.MODEL || targetType == TemplateValueTargetType.SIMPLEMODEL) {
+                return new SimpleSequence(collection, objectWrapper);
+            }
+            else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
+                return objectWrapper.wrap(new ArrayList<Object>(collection));
+            }
+        }
+        else if (object instanceof Iterable) {
+            Iterable<Object> iterable = UtilGenerics.<Iterable<Object>>cast(object);
+            if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.RAW) {
+                List<Object> res = new ArrayList<Object>();
+                for(Object val : iterable) {
+                    res.add(val);
+                }
+                return res;
+            }
+            else if (targetType == TemplateValueTargetType.MODEL || targetType == TemplateValueTargetType.SIMPLEMODEL) {
+                SimpleSequence res = new SimpleSequence(objectWrapper);
+                for(Object val : iterable) {
+                    res.add(val);
+                }
+                return res;
+            }
+            else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
+                List<Object> res = new ArrayList<Object>();
+                for(Object val : iterable) {
+                    res.add(val);
+                }
+                return objectWrapper.wrap(res);
+            } 
+        }
+        else if (object instanceof TemplateCollectionModel) { // TODO: isObjectType
+            TemplateCollectionModel collectionModel = (TemplateCollectionModel) object;
+            if (targetType == TemplateValueTargetType.RAW) {
+                List<Object> res = new ArrayList<Object>();
+                TemplateModelIterator it = collectionModel.iterator();
+                while(it.hasNext()) {
+                    res.add(it.next());
+                }
+                return res;
+            }
+            else if (targetType == TemplateValueTargetType.MODEL || targetType == TemplateValueTargetType.SIMPLEMODEL || targetType == TemplateValueTargetType.PRESERVE) {
+                return new SimpleSequence(collectionModel);
+            }
+            else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
+                List<Object> res = new ArrayList<Object>();
+                TemplateModelIterator it = collectionModel.iterator();
+                while(it.hasNext()) {
+                    res.add(it.next());
+                }
+                return objectWrapper.wrap(res);
+            } 
+        }
+        else if (object instanceof TemplateSequenceModel) { // TODO: isObjectType
+            TemplateSequenceModel seqModel = (TemplateSequenceModel) object;
+            if (targetType == TemplateValueTargetType.RAW) {
+                List<Object> res = new ArrayList<Object>();
+                for(int i=0; i < seqModel.size(); i++) {
+                    res.add(seqModel.get(i));
+                }
+                return res;
+            }
+            else if (targetType == TemplateValueTargetType.MODEL || targetType == TemplateValueTargetType.SIMPLEMODEL || targetType == TemplateValueTargetType.PRESERVE) {
+                SimpleSequence res = new SimpleSequence(seqModel.size(), objectWrapper);
+                for(int i=0; i < seqModel.size(); i++) {
+                    res.add(seqModel.get(i));
+                }
+                return res;
+            }
+            else if (targetType == TemplateValueTargetType.COMPLEXMODEL) {
+                List<Object> res = new ArrayList<Object>();
+                for(int i=0; i < seqModel.size(); i++) {
+                    res.add(seqModel.get(i));
+                }
+                return objectWrapper.wrap(res);
+            } 
+        }
+        else if (object instanceof WrapperTemplateModel) {
+            Object wrappedObj = ((WrapperTemplateModel) object).getWrappedObject();
+            if (wrappedObj instanceof Collection) {
+                Collection<Object> collection = UtilGenerics.<Collection<Object>>cast(object);
+                if (targetType == TemplateValueTargetType.RAW) {
+                    return new ArrayList<Object>(collection);
+                }
+                else if (targetType == TemplateValueTargetType.MODEL || targetType == TemplateValueTargetType.SIMPLEMODEL) {
+                    return new SimpleSequence(collection, objectWrapper);
+                }
+                else if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.COMPLEXMODEL) {
+                    return objectWrapper.wrap(new ArrayList<Object>(collection));
+                }
+            }
+            else if (wrappedObj instanceof Iterable) {
+                Iterable<Object> iterable = UtilGenerics.<Iterable<Object>>cast(object);
+                if (targetType == TemplateValueTargetType.RAW) {
+                    List<Object> res = new ArrayList<Object>();
+                    for(Object val : iterable) {
+                        res.add(val);
+                    }
+                    return res;
+                }
+                else if (targetType == TemplateValueTargetType.MODEL || targetType == TemplateValueTargetType.SIMPLEMODEL) {
+                    SimpleSequence res = new SimpleSequence(objectWrapper);
+                    for(Object val : iterable) {
+                        res.add(val);
+                    }
+                    return res;
+                }
+                else if (targetType == TemplateValueTargetType.PRESERVE || targetType == TemplateValueTargetType.COMPLEXMODEL) {
+                    List<Object> res = new ArrayList<Object>();
+                    for(Object val : iterable) {
+                        res.add(val);
+                    }
+                    return objectWrapper.wrap(res);
+                }
+            }
+        }
+        throw new TemplateModelException("Cannot copy list of type " + object.getClass().toString() + 
+                " to target type: " + targetType.toString());
     }
     
     public static TemplateHashModel toSimpleMap(ObjectWrapper objectWrapper, TemplateModel object) throws TemplateModelException {

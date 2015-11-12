@@ -615,7 +615,6 @@ Set current heading level manually. For advanced markup, bypassing @section (but
   <#return "">
 </#function>
 
-
 <#-- 
 *************
 * objectAsScript
@@ -993,6 +992,22 @@ Now implemented as java transform.
 
 <#-- 
 *************
+* getRequestStackAsList
+************
+Gets a copy of the named request stack as a list (read-only).
+Now implemented as java transform.
+
+  * Parameters *
+    name        = global request stack var name; must be unique 
+                  across all known types of contexts (request attribs, screen context, FTL globals)
+
+<#function getRequestStackAsList name>
+- implemented as java transform -
+</#function>
+-->
+
+<#-- 
+*************
 * popRequestStack
 ************
 Pops a global stack variable in request scope (request attributes, or if no request, globals).
@@ -1240,6 +1255,52 @@ Note that the class portions may be prefixed with "+" as well for append-not-rep
         "argsStr":titleArgsStr
     }>
 -->
+</#function>
+
+<#-- 
+*************
+* saveCurrentContainerSizes
+************
+This records current container (grid) sizes into a global stack, so that it's generally possible for inner
+containers to be aware of all the sizes applied to it and the general width.
+Every push should be followed by a pop.
+
+  * Parameters *
+    size      = a map of size names to integer values. typically, this will be (e.g.):
+                {"large":12, "medium":12, "small":12}
+-->
+<#function saveCurrentContainerSizes sizes>
+  <#local dummy = pushRequestStack("catoContainerSizeStack", sizes)>
+  <#return "">
+</#function>
+
+<#-- 
+*************
+* getCurrentContainerSizes
+************
+Gets the last set of size values set by saveCurrentContainerSizes.
+-->
+<#function getLastContainerSizes>
+  <#return readRequestStack("catoContainerSizeStack")!{}>
+</#function>
+
+<#-- 
+*************
+* getAllContainerSizes
+************
+Gets the last set of size values set by saveCurrentContainerSizes as a list.
+-->
+<#function getLastContainerSizes>
+  <#return readRequestStackAsList("catoContainerSizeStack")![]>
+</#function>
+
+<#-- 
+*************
+* unsetCurrentContainerSizes
+************
+-->
+<#function unsetCurrentContainerSizes>
+  <#return popRequestStack("catoContainerSizeStack")!{}>
 </#function>
 
 

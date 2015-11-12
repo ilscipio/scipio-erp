@@ -20,17 +20,15 @@ package com.ilscipio.cato.webapp.ftl;
 
 import java.util.List;
 
-import freemarker.core.Environment;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * Cato: CopyObjectMethod - Helper method to clone (shallow copy) a map or list.
+ * Cato: ReadRequestStackMethod - Freemarker Method providing support for a stack
+ * structure having request scope, with fallback to globals.
  */
-public class CopyObjectMethod implements TemplateMethodModelEx {
+public class GetRequestStackAsListMethod extends RequestStackMethod {
 
-    public static final String module = CopyObjectMethod.class.getName();
+    public static final String module = GetRequestStackAsListMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -38,12 +36,7 @@ public class CopyObjectMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        if (args == null || args.size() < 1 || args.size() > 2) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
-        }
-        Environment env = FtlTransformUtil.getCurrentEnvironment();
-        TemplateModel object = (TemplateModel) args.get(0);
-        return CommonFtlUtil.copyObject(object, null, env.getObjectWrapper());
+        return execGetAsList(args);
     }
-    
+
 }

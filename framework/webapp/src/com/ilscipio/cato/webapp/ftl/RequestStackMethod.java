@@ -68,4 +68,19 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         return res; // NOTE: result automatically wrapped as needed by freemarker
     }
     
+    @SuppressWarnings("unchecked")
+    protected Object execGetAsList(List args) throws TemplateModelException {
+        if (args == null || args.size() != 1) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 1)");
+        }
+        TemplateModel nameModel = (TemplateModel) args.get(0);
+        if (!(nameModel instanceof TemplateScalarModel)) {
+            throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
+        }
+
+        Environment env = FtlTransformUtil.getCurrentEnvironment();
+        Object res = CommonFtlUtil.getRequestStackAsList(((TemplateScalarModel) nameModel).getAsString(), env);
+        return res;
+    }    
+    
 }

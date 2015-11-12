@@ -236,7 +236,7 @@ splits a style classes string into sequence, same order.
     a sequence of style names, same order.
 -->
 <#function splitStyleNames styleString>
-  <#return styleString?split(r'\s+', 'r')>
+  <#return getPlainClassArgNames(styleString)?split(r'\s+', 'r')>
 </#function> 
 
 <#-- 
@@ -252,7 +252,7 @@ splits a style classes string into a Set of unique elems, no order.
     a java Set of style names (can be seen as sequence)
 -->
 <#function splitStyleNamesToSet styleString>
-  <#return Static['org.ofbiz.base.util.UtilMisc'].collectionToSet(styleString?split(r'\s+', 'r'))>
+  <#return Static['org.ofbiz.base.util.UtilMisc'].collectionToSet(getPlainClassArgNames(styleString)?split(r'\s+', 'r'))>
 </#function> 
 
 <#-- 
@@ -1264,14 +1264,14 @@ Note that the class portions may be prefixed with "+" as well for append-not-rep
 This records current container (grid) sizes into a global stack, so that it's generally possible for inner
 containers to be aware of all the sizes applied to it and the general width.
 Every push should be followed by a pop.
+NOTE: this is generally framework-agnostic and size-key agnostic.
 
   * Parameters *
     size      = a map of size names to integer values. typically, this will be (e.g.):
                 {"large":12, "medium":12, "small":12}
 -->
 <#function saveCurrentContainerSizes sizes>
-  <#local dummy = pushRequestStack("catoContainerSizesStack", sizes)>
-  <#return "">
+  <#return pushRequestStack("catoContainerSizesStack", sizes)>
 </#function>
 
 <#-- 

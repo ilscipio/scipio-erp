@@ -129,8 +129,9 @@
          it is also used for individual fallback values. -->    
     "table_default" : "basic-table",
     "table_default_cellspacing" : "",
-    "table_default_autoaltrows" : false,    <#-- this is also default autoAltRows for any table type that doesn't specify it above -->
-    "table_default_rowtype" : "content",    <#-- this is also default row type for any table type that doesn't specify it above -->
+    "table_default_autoaltrows" : false,
+    "table_default_rowtype" : "content",
+    "table_default_scrollable" : false,
     
     <#-- free-form and other table-related styles -->
     "table_basic" : "basic-table",  <#-- this is not a table type, but simply the basic-table style -->

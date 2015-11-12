@@ -44,7 +44,8 @@ IMPL NOTE: Beware of whitespace.
 *************
 * Script
 ************
-Inline script wrapper.
+Inline script wrapper. By default, makes a javascript block.
+DEV NOTE: In future, could be used to collect scripts for inclusion at end of page.
 
   * Usage Example *  
     <@script>

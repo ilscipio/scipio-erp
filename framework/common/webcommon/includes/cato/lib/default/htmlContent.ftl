@@ -192,11 +192,13 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     [inlineAttribs...]    = other legacy <table attributes and values, inlined
     
     * Responsive Tables *
-    scrollable      = will rely on the jquery plugin datatables.js (www.datatables.net) to generate responsive table. Can be combined with fixed column type
+    scrollable        = will rely on the jquery plugin datatables.js (www.datatables.net) to generate responsive table. 
+                        Can be combined with fixed column type.
+                        default is dependent on table type (global styles).
     fixedColumnsLeft  = int value; number of columns that are fixed on the left-hand side
     fixedColumnsRight = int value;number of columns that are fixed on the right hand side
 -->
-<#macro table type="" class="" id="" cellspacing=true scrollable=false autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false fixedColumnsLeft=0 fixedColumnsRight=0 attribs={} inlineAttribs...>
+<#macro table type="" class="" id="" cellspacing=true scrollable="" autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false fixedColumnsLeft=0 fixedColumnsRight=0 attribs={} inlineAttribs...>
   <#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
   <#local fieldIdNum = fieldIdNum + 1 />
   <#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
@@ -232,6 +234,9 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
       <#else>
         <#local cellspacing = "">
       </#if>
+    </#if>
+    <#if !scrollable?is_boolean>
+      <#local scrollable = styles["table_" + styleName + "_scrollable"]!styles["table_default_scrollable"]!false>
     </#if>
     <#local catoCurrentTableInfo = {"type": type, "styleName": styleName, "autoAltRows": autoAltRows,
       "inheritAltRows": inheritAltRows, "parentRowAlt": prevCurrentRowAlt, "useFootAltRows": useFootAltRows}>
@@ -280,9 +285,9 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     </#if>
     </table>
     <#if scrollable>
-    <script type="">
+    <@script>
       $(document).ready(function() {
-          var ${id!} = $('#${id}').DataTable( {
+          $('#${id}').DataTable( {
               fixedHeader: true,
               scrollX: true,
               info: false,
@@ -293,10 +298,9 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
               rightColumns: ${fixedColumnsRight!0}
               }
               </#if>
-              
           } );
       } );
-    </script>
+    </@script>
     </#if>
     <#local dummy = setRequestVar("catoCurrentTableInfo", prevTableInfo)!>
     <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevSectionInfo)!>

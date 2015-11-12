@@ -1022,11 +1022,8 @@ public final class CommonFtlUtil {
             }
             return res;
         }
-        else if (object instanceof TemplateCollectionModel) {
-            throw new TemplateModelException("object is not cloneable - TODO");
-        }
-        else if (object instanceof TemplateSequenceModel) {
-            throw new TemplateModelException("object is not cloneable - TODO");
+        else if (object instanceof TemplateCollectionModel || object instanceof TemplateSequenceModel) {
+            return copyList(object, targetType, objectWrapper);
         }
         else {
             throw new TemplateModelException("object is not cloneable");

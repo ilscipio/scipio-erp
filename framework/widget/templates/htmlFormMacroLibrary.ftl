@@ -314,10 +314,10 @@ not "current" context (too intrusive in current renderer design). still relies o
   </#if>
   
   <#-- may be more than one title+widget in one row, so wrap each combo in another div - necessary for now... -->
- <!-- positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} posSpan: ${posSpan!} markLast: ${markLast!?string}
-  fieldEntryOffset: ${fieldEntryOffset}
-  renderFormatFieldRow_gridUsed: ${renderFormatFieldRow_gridUsed}
-  fieldEntrySize: ${fieldEntrySize!} gridSize: ${gridSize!} -->
+  <#-- positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} posSpan: ${posSpan!} markLast: ${markLast!?string}
+       fieldEntryOffset: ${fieldEntryOffset}
+       renderFormatFieldRow_gridUsed: ${renderFormatFieldRow_gridUsed}
+       fieldEntrySize: ${fieldEntrySize!} gridSize: ${gridSize!} -->
   
   <#local fieldEntryTypeClass = "field-entry-type-" + mapWidgetFieldTypeToStyleName(fieldType)>
   <div class="<#if style?has_content>${style}<#else>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#if> ${styles.grid_cell!}<#if markLast> ${styles.grid_end!}</#if>">

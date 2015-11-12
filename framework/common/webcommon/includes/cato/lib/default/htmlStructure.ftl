@@ -125,11 +125,15 @@
     <#if last>
       <#local class = addClassArg(class, styles.grid_end!)>
     </#if>
+    <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
   <#else>
     <#-- WARN: has no memory when closeOnly... -->
     <#local class = "">
   </#if>
   <@cell_markup open=open close=close class=class id=id last=last><#nested></@cell_markup>
+  <#if close>
+    <#local dummy = unsetCurrentContainerSizes()>
+  </#if>
 </#macro>
 
 <#-- @cell container markup - theme override -->
@@ -142,6 +146,39 @@
     </div><#lt>
   </#if>
 </#macro>
+
+<#-- 
+*************
+* parseContainerSizesFromStyleStr and saveCurrentContainerSizesFromStyleStr
+************   
+These methods parse the container sizes from a class names string to be saved into
+a global stack.
+This is needed to know grid sizes because most of the facilities only support setting
+class name strings (except for @cell which supports columns/small/medium/large args).
+These supplement the save/get/unsetCurrentContainerSizes functions in utilities lib with
+theme-specific handling. The ones in utilities lib may be used directly, but are fully
+framework-agnostic, unlike these.
+           
+  * Parameters *
+    styleString     = style string containing classes
+    namesToRemove   = array of names or space-separated string of names to remove 
+                      (can be single name)
+  * Return Value *
+    the style string with names removed, same order but reformatted.
+-->
+<#function parseContainerSizesFromStyleStr style>
+  <#if !catoContainerSizesPrefixMap??>
+    <#global catoContainerSizesPrefixMap = {
+      "${styles.grid_large!}" : "large", "${styles.grid_medium!}" : "medium", "${styles.grid_small!}" : "small"
+    }>
+  </#if>
+  <#return extractPrefixedStyleNamesWithInt(style, catoContainerSizesPrefixMap)>
+</#function>
+
+<#function saveCurrentContainerSizesFromStyleStr style>
+  <#return saveCurrentContainerSizes(parseContainerSizesFromStyleStr(style))>
+</#function>
+
 
 <#-- 
 *************

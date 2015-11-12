@@ -1259,6 +1259,15 @@ Note that the class portions may be prefixed with "+" as well for append-not-rep
 
 <#-- 
 *************
+* extractPrefixedStyleNamesWithInt
+************
+-->
+<#function extractPrefixedStyleNamesWithInt styleNames prefixMap>
+  <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].extractPrefixedStyleNamesWithInt(styleNames, prefixMap)>
+</#function>
+
+<#-- 
+*************
 * saveCurrentContainerSizes
 ************
 This records current container (grid) sizes into a global stack, so that it's generally possible for inner
@@ -1267,8 +1276,9 @@ Every push should be followed by a pop.
 NOTE: this is generally framework-agnostic and size-key agnostic.
 
   * Parameters *
-    size      = a map of size names to integer values. typically, this will be (e.g.):
-                {"large":12, "medium":12, "small":12}
+    sizes      = a map of size names to integer values. typically, this will be (e.g.):
+                 {"large":12, "medium":12, "small":12}
+                 but can be anything (the methods in this file do not care).
 -->
 <#function saveCurrentContainerSizes sizes>
   <#return pushRequestStack("catoContainerSizesStack", sizes)>

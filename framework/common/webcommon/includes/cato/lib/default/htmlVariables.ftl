@@ -114,7 +114,6 @@
     "table_generic" : "",    <#-- represents free-form <table>. probably should have no class (let template decide). -->
     "table_generic_cellspacing" : "",
     "table_generic_rowtype" : "generic",    <#-- the default row type is normally "content", but generic tables need "generic" -->
-    "table_responsive_wrap" : "scrollable-table-container", <#-- responsive table wrapping div element -->
     "table_data_list" : "basic-table",  <#-- analogous to ofbiz "list" type form widgets -->
     "table_data_list_cellspacing" : 0,
     <#-- not enabled, but may be desirable: "table_data_list_autoaltrows" : true, -->
@@ -135,6 +134,8 @@
     
     <#-- free-form and other table-related styles -->
     "table_basic" : "basic-table",  <#-- this is not a table type, but simply the basic-table style -->
+    "table_responsive_wrap" : "scrollable-table-container", <#-- responsive table wrapping div element -->
+
     "row_reg" : "even",
     "row_alt" : "odd",
     "row_selected" : "selected",

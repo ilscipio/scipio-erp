@@ -130,6 +130,20 @@ Creates a very basic wrapper for code blocks
 
 <#-- 
 *************
+* mapOfbizFormTypeToTableType
+************ 
+Maps an Ofbiz form widget type to a @table macro type.
+-->
+<#function mapOfbizFormTypeToTableType formType>
+  <#local res = (styles.form_type_tabletypes_ofbiz[formType])!(styles.form_type_tabletypes_ofbiz["default"])!"">
+  <#if res?is_boolean>
+    <#return res?string(formType, "")>
+  </#if>
+  <#return res>
+</#function>
+
+<#-- 
+*************
 * Table
 ************
 Helps define an HTML table. Required wrapper for all @table sub-element macros.

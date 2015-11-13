@@ -361,7 +361,7 @@ or even multiple per fieldset.
 ************ 
 Maps a cato field type to a style name representing the type.
 
-Should be coordinated with mapWidgetFieldTypeToStyleName to produce common field type style names.
+Should be coordinated with mapOfbizFieldTypeToStyleName to produce common field type style names.
 -->
 <#function mapCatoFieldTypeToStyleName fieldType>
   <#local res = (styles.field_type_stylenames_cato[fieldType])!(styles.field_type_stylenames_cato["default"])!"">
@@ -373,13 +373,13 @@ Should be coordinated with mapWidgetFieldTypeToStyleName to produce common field
 
 <#-- 
 *************
-* mapWidgetFieldTypeToStyleName
+* mapOfbizFieldTypeToStyleName
 ************ 
 Maps an Ofbiz field type to a style name representing the type.
 
 Should be coordinated with mapCatoFieldTypeToStyleName to produce common field type style names.
 -->
-<#function mapWidgetFieldTypeToStyleName fieldType>
+<#function mapOfbizFieldTypeToStyleName fieldType>
   <#local res = (styles.field_type_stylenames_ofbiz[fieldType])!(styles.field_type_stylenames_ofbiz["default"])!"">
   <#if res?is_boolean>
     <#return res?string(fieldType, "")>

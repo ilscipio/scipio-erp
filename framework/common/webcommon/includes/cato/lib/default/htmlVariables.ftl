@@ -344,6 +344,13 @@
         "default": "other"
     },
     
+  <#-- Form type to table type maps -->
+    "form_type_tabletypes_ofbiz" : {
+        "list": "data-list",
+        "multi": "data-list-multiform",
+        "default": "generic"
+    },
+    
   <#-- Field select element multiple-select classes (jQuery asmselect) -->
     "field_select_asmselect" : {
       "containerClass" : "asmContainer",            <#-- Class for container that wraps this widget -->

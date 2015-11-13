@@ -175,6 +175,7 @@ not "current" context (too intrusive in current renderer design). still relies o
       });
     </script>
   </#if>
+  <#global htmlFormRenderFormInfo = {}>
 </#macro>
 <#macro renderMultiFormClose>
   </form><#lt/>
@@ -182,28 +183,28 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderFormatListWrapperOpen formName style columnStyles>
   <#local styleSet = splitStyleNamesToSet(style)>
-  <#local scrollable = false>
+  <#local scrollable = ""> <#-- Cato: empty string means table type default takes effect -->
   <#if styleSet.contains("scrollable")>
     <#local scrollable = true>
     <#local style = removeStyleNames(style, "scrollable")>
   </#if>
   <#local dummy = pushRequestStack("renderFormatListWrapperStack", {"formName":formName, "style":style, "scrollable":scrollable})>
-  <#if scrollable>
-  <#-- TODO: change this to something more foundation-like.
-       this is a custom workaround to get scrolling, nothing else working. -->
-  <div class="${styles.table_responsive_wrap!}">
+  <#-- Cato: use @table macro to open -->
+  <#if style?has_content>
+    <#-- specified style will replace default class from @table (unless prefixed with "+" in widget defs) -->
+    <#local class = addClassArg(style, "form-widget-table")>
+  <#else>
+    <#-- with "+" (append only), default class will be selected by @table macro -->
+    <#local class = "+form-widget-table dark-grid">
   </#if>
-  <#-- Cato: Remove the invalid HTML5 attribute (cellspacing) -->
-  <table class="<#if style?has_content>${style}<#else>${styles.table_default!} form-widget-table dark-grid</#if>"><#lt/>
+  <#local formType = (htmlFormRenderFormInfo.formType)!"">
+  <!-- form type: ${formType} -->
+  <@table openOnly=true type=mapOfbizFormTypeToTableType(formType) class=class scrollable=scrollable />
 </#macro>
 
 <#macro renderFormatListWrapperClose formName>
   <#local stackValues = popRequestStack("renderFormatListWrapperStack")!{}>
-  <#local scrollable = stackValues.scrollable>
-  </table><#lt/>
-  <#if scrollable>
-  </div>
-  </#if>
+  <@table closeOnly=true />
 </#macro>
 
 <#macro renderFormatHeaderRowOpen style>
@@ -327,7 +328,7 @@ not "current" context (too intrusive in current renderer design). still relies o
        renderFormatFieldRow_gridUsed: ${renderFormatFieldRow_gridUsed}
        fieldEntrySize: ${fieldEntrySize!} gridSize: ${gridSize!} -->
   
-  <#local fieldEntryTypeClass = "field-entry-type-" + mapWidgetFieldTypeToStyleName(fieldType)>
+  <#local fieldEntryTypeClass = "field-entry-type-" + mapOfbizFieldTypeToStyleName(fieldType)>
   <#local outerClasses><#if style?has_content>${style}<#else>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#if> ${styles.grid_cell!}<#if markLast> ${styles.grid_end!}</#if></#local>
   <#-- Cato: save grid sizes (if any) -->
   <#local dummy = saveCurrentContainerSizesFromStyleStr(outerClasses)>

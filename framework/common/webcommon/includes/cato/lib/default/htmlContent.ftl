@@ -217,10 +217,10 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     fixedColumnsRight = int value;number of columns that are fixed on the right hand side
 -->
 <#macro table type="" class="" id="" cellspacing=true scrollable="" autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false fixedColumnsLeft=0 fixedColumnsRight=0 attribs={} inlineAttribs...>
-  <#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
-  <#local fieldIdNum = fieldIdNum + 1 />
-  <#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
-  <#if !id?has_content><#local id="table_"+fieldIdNum/></#if>
+  <#local tableIdNum = getRequestVar("catoTableIdNum")!0>
+  <#local tableIdNum = tableIdNum + 1 />
+  <#local dummy = setRequestVar("catoTableIdNum", tableIdNum)>
+  <#if !id?has_content><#local id="table_"+tableIdNum/></#if>
   <#if !type?has_content>
     <#local type = "generic">
   </#if>
@@ -284,7 +284,8 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     <#if !close>
       <#local dummy = pushRequestStack("catoCurrentTableStack", 
           {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevRowAltFlag":prevRowAltFlag, 
-           "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, "scrollable":scrollable})>
+           "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, "scrollable":scrollable, 
+           "id":id, "tableIdNum":tableIdNum})>
     </#if>
     <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
       <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "cellspacing"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
@@ -300,6 +301,8 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
       <#local prevCurrentRowAlt = stackValues.prevCurrentRowAlt>
       <#local prevLastRowAlt = stackValues.prevLastRowAlt>
       <#local scrollable = stackValues.scrollable>
+      <#local id = stackValues.id>
+      <#local tableIdNum = stackValues.tableIdNum>
     </#if>
     </table>
     <#if scrollable>

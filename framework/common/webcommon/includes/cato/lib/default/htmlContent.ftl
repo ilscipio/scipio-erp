@@ -156,22 +156,26 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
                       * STANDARD TYPES *
                       These types must always be recognized by all styles themes:
                       generic: generic html table (free-form, complex); no features enabled by default.
-                               similar to defining an html <table> manually, but more powerful.
+                          similar to defining an html <table> manually, but more powerful.
                       * DEFAULT STYLES TYPES *
                       WARN: these are WIP types, may not be enough (important part is to label things for easy search)
                       The following are currently recognized by the default cato styles (NOTE: targeted for backend):
                       data-list: record-containing table, one data record per row (but row cells may be complex and may have tfoot)
-                                 similar to a form widget "list" or "multi" table; intended to resemble these, to unify them.
+                          similar to a form widget "list" or "multi" table; intended to resemble these, to unify them.
+                      data-list-multiform: virtually same as data-list, but expected to contain a multi-submit form, which
+                          could change styling requirements.
+                          this makes no real semantic difference from data-list to @table macro, but this type exists as analog
+                          to form widget "multi" form type, so possible to style differently.
                       data-complex: record-containing table, but with complex structure (more than one row per record, separators, etc.)
-                                    there is no form widget equivalent of these and usually need some custom alt-row work.
+                          there is no form widget equivalent of these and usually need some custom alt-row work.
                       summary: usually table with one or a few set rows of summary totals
-                               e.g. order grand totals. 
-                               TODO? review need for this type (should be converted?)
+                          e.g. order grand totals. 
+                          TODO? review need for this type (should be converted?)
                       fields: label-value pairs for display, side-by-side, usually no header, roughly
-                              this is especially for legacy Ofbiz code. it is somewhat still valid for display-only fields.
-                              legacy Ofbiz code tables may be assigned this for input forms formatted with tables, but they
-                              ultimately belong as @field and @row/@cell.
-                              TODO: many of these in current templates involving forms and inputs should be converted to @row/@cell (WIP)
+                          this is especially for legacy Ofbiz code. it is somewhat still valid for display-only fields.
+                          legacy Ofbiz code tables may be assigned this for input forms formatted with tables, but they
+                          ultimately belong as @field and @row/@cell.
+                          TODO: many of these in current templates involving forms and inputs should be converted to @row/@cell (WIP)
     class           = manual classes to add, as string, default depends on table type
                       if specified as string, replaces defaults (class=false prevents class), unless prefixed with "+"
                       supports prefixes:

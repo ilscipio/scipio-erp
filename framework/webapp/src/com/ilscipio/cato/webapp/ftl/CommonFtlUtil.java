@@ -1296,6 +1296,10 @@ public final class CommonFtlUtil {
     
     /**
      * Same as Freemarker's ?is_directive.
+     * <p>
+     * <em>NOTE:</em> This <em>must</em> have the exact same behavior as Freemarker's ?is_directive.
+     *     Please refer to Freemarker source code. 
+     *     Unfortunately there is no evident way of reusing their code from here...
      */
     public static boolean isDirective(Object object) {
         return (object instanceof TemplateTransformModel || object instanceof Macro || object instanceof TemplateDirectiveModel);

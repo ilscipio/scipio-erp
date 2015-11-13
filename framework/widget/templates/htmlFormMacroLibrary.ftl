@@ -197,8 +197,6 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#-- with "+" (append only), default class will be selected by @table macro -->
     <#local class = "+form-widget-table dark-grid">
   </#if>
-  <#local formType = (htmlFormRenderFormInfo.formType)!"">
-  <!-- form type: ${formType} -->
   <@table openOnly=true type=mapOfbizFormTypeToTableType(formType) class=class scrollable=scrollable />
 </#macro>
 

@@ -206,6 +206,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderFormatHeaderRowOpen style>
+<#-- Cato: TODO: translate all thead/td/th/td/etc to @thead openOnly/closeOnly/etc... -->
 <thead>
   <tr class="<#if style?has_content>${style}<#else>header-row</#if>">
 </#macro>

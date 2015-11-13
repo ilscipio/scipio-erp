@@ -57,7 +57,7 @@ under the License.
 <#macro renderFormClose focusFieldName formName containerId hasRequiredField></#macro>
 <#macro renderMultiFormClose></#macro>
 
-<#macro renderFormatListWrapperOpen formName style columnStyles></#macro>
+<#macro renderFormatListWrapperOpen formName style columnStyles formType=""></#macro>
 <#macro renderFormatListWrapperClose formName></#macro>
 
 <#macro renderFormatHeaderRowOpen style></#macro>

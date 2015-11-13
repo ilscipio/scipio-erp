@@ -181,7 +181,7 @@ not "current" context (too intrusive in current renderer design). still relies o
   </form><#lt/>
 </#macro>
 
-<#macro renderFormatListWrapperOpen formName style columnStyles>
+<#macro renderFormatListWrapperOpen formName style columnStyles formType="">
   <#local styleSet = splitStyleNamesToSet(style)>
   <#local scrollable = ""> <#-- Cato: empty string means table type default takes effect -->
   <#if styleSet.contains("scrollable")>

@@ -1583,7 +1583,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
             // this is a fix for forms with no fields
             sr.append(columnStyleListString);
         }
-        sr.append("] />");
+        // Cato: also pass formType, to remove all ambiguity (so macro doesn't have to assume)
+        sr.append("] formType=\"");
+        sr.append(modelForm.getType());        
+        sr.append("\" />");
         executeMacro(writer, sr.toString());
 
     }

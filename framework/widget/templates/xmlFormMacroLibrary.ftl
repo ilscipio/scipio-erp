@@ -19,7 +19,7 @@ under the License.
 
 <#macro renderField text><#if text??>${text?xml}</#if></#macro>
 
-<#macro renderFormatListWrapperOpen formName style columnStyles><${formName}Export></#macro>
+<#macro renderFormatListWrapperOpen formName style columnStyles formType=""><${formName}Export></#macro>
 
 <#macro renderFormatListWrapperClose formName></${formName}Export></#macro>
 

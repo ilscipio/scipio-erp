@@ -396,10 +396,10 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     
   * Parameters *
     * General *
-    type            = [input|textarea|datetime|select|checkbox|radio|display|password|generic], form element type
-                      default generic meaning input defined manually with #nested
-                      (discouraged; prefer specific; but sometimes required and useful
-                      for transition)
+    type            = form element type - supported values and their parameters listed below, between asterix.
+                      default "generic", which means input defined manually with #nested.
+                      generic is mostly for grouping multiple sub-fields, but can be used anywhere.
+                      (specific field types should be preferred to manually defining content, where possible)
     label           = field label
                       NOTE: Presence of label arg does not guarantee a label will be shown; this is controlled
                           by labelArea (and labelType) and its defaults, optionally coming from @fields container.
@@ -510,6 +510,9 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     href            = href for submitType=="link"  
     src             = image url for submitType=="image"    
     confirmMsg      = confirmation message            
+                      
+    * reset *
+    text            = label to show on reset button
                       
     * display *
     valueType       = [image|text|currency|date|date-time|accounting-number|generic], default generic (treated as text)
@@ -807,6 +810,9 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         <@field_password_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
           id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip/>
         <#break> 
+      <#case "reset">                    
+        <@field_reset_widget class=class alert=alert name=name text=text fieldTitleBlank=false />
+        <#break>    
       <#case "submit">
         <#if !catoSubmitFieldTypeButtonMap??>
           <#-- the logical button types (based on form widget types) -->
@@ -825,12 +831,15 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
           <#local text = value>
         </#if>
         <@field_submit_widget buttonType=buttonType class=class alert=alert formName=formName name=name event="" 
-          action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" title=text showProgress=false 
+          action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" text=text description=description showProgress=false 
           onClick=onClick href=href inputType=inputType disabled=disabled progressOptions=progressOptions />
         <#break>
       <#case "submitarea">
         <@field_submitarea_widget progressOptions=progressOptions><#nested></@field_submitarea_widget>
         <#break>
+      <#case "hidden">                    
+        <@field_hidden_widget name=name value=value id=id event="onClick" action=onClick />
+        <#break>        
       <#case "display">
         <#-- TODO? may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 
              can also partially detect type of value with ?is_, but is not enough... -->

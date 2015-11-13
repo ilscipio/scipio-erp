@@ -113,15 +113,17 @@ not "current" context (too intrusive in current renderer design). still relies o
     </#if>
 
   <#-- delegate to cato libs -->
-  <@field_submit_widget buttonType=buttonType class=className alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation containerId=containerId ajaxUrl=ajaxUrl title=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressOptions=progressOptions id=id/>
+  <@field_submit_widget buttonType=buttonType class=className alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation containerId=containerId ajaxUrl=ajaxUrl text=title description=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressOptions=progressOptions id=id/>
 </#macro>
 
 <#macro renderResetField className alert name title="" fieldType="" fieldTitleBlank=false>
-  <input type="reset" <@renderClass className alert /> name="${name}"<#if title?has_content> value="${title}"</#if>/>
+  <#-- delegate to cato libs -->
+  <@field_reset_widget class=className alert=alert name=name text=title fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#macro renderHiddenField name value id event action>
-  <input type="hidden" name="${name}"<#if value?has_content> value="${value}"</#if><#if id?has_content> id="${id}"</#if><#if event?has_content && action?has_content> ${event}="${action}"</#if>/>
+  <#-- delegate to cato libs -->
+  <@field_hidden_widget name=name value=value id=id event=event action=action />
 </#macro>
 
 <#macro renderIgnoredField></#macro>

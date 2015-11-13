@@ -1298,7 +1298,8 @@ Gets the last set of size values set by saveCurrentContainerSizes.
 *************
 * getAllContainerSizes
 ************
-Gets the last set of size values set by saveCurrentContainerSizes as a list.
+Gets a list of maps describing all (parent) container sizes nesting the current container
+and the current container size (if was added).
 -->
 <#function getAllContainerSizes>
   <#return getRequestStackAsList("catoContainerSizesStack")![]>

@@ -181,6 +181,49 @@ framework-agnostic, unlike these.
   <#return saveCurrentContainerSizes(parseContainerSizesFromStyleStr(style))>
 </#function>
 
+<#-- 
+*************
+* getAbsContainerSizeFactors
+************
+This returns a map of container size factors following:
+{"large":n1, "medium":n2, "small":n3}
+where n1, n2, n3 are floating-point (NOT integer) values calculated from the combination of all
+grid sizes of all the current parent containers.
+These numbers can be used to approximate the current absolute column width in grid sizes,
+in the absence of interfering CSS. It will only be useful if the parent containers save their
+sizes in the stack using saveCurrentContainerSizesFromStyleStr or saveCurrentContainerSizes, and pop appropriately.
+Requires framework-specific logic.
+-->
+<#function getAbsContainerSizeFactors maxColumns=12>
+  <#local sizesList = getAllContainerSizes()![]>
+  <#local large = maxColumns>
+  <#local medium = maxColumns>
+  <#local small = maxColumns>
+  <#-- beginning of list is outermost container -->
+  <#list sizesList as sizes>
+    <#-- need to use same logic as framework when figuring out defaultSize... e.g., small has priority... -->
+    <#local defaultSize = maxColumns>
+    
+    <#if sizes.small??>
+      <#local defaultSize = sizes.small>
+      <#local small = small * (sizes.small / maxColumns)>
+    </#if> <#-- don't need an else here, if no small will just multiply by maxColumns/maxColumns -->
+
+    <#if sizes.medium??>
+      <#local defaultSize = sizes.medium>
+      <#local medium = medium * (sizes.medium / maxColumns)>
+    <#else>
+      <#local medium = medium * (defaultSize / maxColumns)>
+    </#if>
+      
+    <#if sizes.large??>
+      <#local large = large * (sizes.large / maxColumns)>    
+    <#else>
+      <#local large = large * (defaultSize / maxColumns)>
+    </#if>  
+  </#list>
+  <#return {"large":large, "medium":medium, "small":small}>
+</#function>
 
 <#-- 
 *************

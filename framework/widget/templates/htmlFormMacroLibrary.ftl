@@ -345,15 +345,19 @@ not "current" context (too intrusive in current renderer design). still relies o
   </#if>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}8<#if isLarge>  ${styles.grid_large!}9</#if></#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}">
+      <#local innerClasses><#if style?has_content>${style}<#else>${styles.grid_small!}8<#if isLarge>  ${styles.grid_large!}9</#if></#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}"</#local>
   <#else>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}12<#if isLarge>  ${styles.grid_large!}12</#if></#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}">
+      <#local innerClasses><#if style?has_content>${style}<#else>${styles.grid_small!}12<#if isLarge>  ${styles.grid_large!}12</#if></#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}"</#local>
   </#if>
-    
+        <#-- Cato: save grid sizes (if any) for widgets -->
+        <#local dummy = saveCurrentContainerSizesFromStyleStr(innerClasses)>
+        <div class="${innerClasses}">
 </#macro>
 
 <#macro renderFormatFieldRowWidgetCellClose fieldType="" fieldTitleBlank=false>
       </div>
+      <#-- Cato: pop the grid sizes -->
+      <#local dummy = unsetCurrentContainerSizes()>  
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
     </div>
   </div>

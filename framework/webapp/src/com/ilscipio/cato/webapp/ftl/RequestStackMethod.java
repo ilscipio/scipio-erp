@@ -36,7 +36,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
     public static final String module = RequestStackMethod.class.getName();
 
     @SuppressWarnings("unchecked")
-    protected Object execPush(List args) throws TemplateModelException {
+    protected Object execPush(List args, boolean setLast) throws TemplateModelException {
         if (args == null || args.size() != 2) {
             throw new TemplateModelException("Invalid number of arguments (expected: 2)");
         }
@@ -47,7 +47,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         TemplateModel valueModel = (TemplateModel) args.get(1);
 
         Environment env = FtlTransformUtil.getCurrentEnvironment();
-        CommonFtlUtil.pushRequestStack(((TemplateScalarModel) nameModel).getAsString(), valueModel, env);
+        CommonFtlUtil.pushRequestStack(((TemplateScalarModel) nameModel).getAsString(), valueModel, setLast, env);
         
         return new SimpleScalar("");
     }

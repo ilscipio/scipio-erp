@@ -619,7 +619,7 @@ public final class CommonFtlUtil {
      * 
      * @see #setRequestVar
      */
-    public static void pushRequestStack(String name, Object value, HttpServletRequest request, 
+    static void pushRequestStack(String name, Object value, boolean setLast, HttpServletRequest request, 
             Map<String, Object> context, Environment env) throws TemplateModelException {
         // WARNING: currently I don't see any need to wrap OR unwrap the value, no matter how inconsistent
         // it makes the list, so don't do it for performance reasons, but in future it could be needed.
@@ -647,7 +647,17 @@ public final class CommonFtlUtil {
                 stack = new ArrayList<Object>(REQUEST_STACK_INITIAL_CAPACITY);
             }
             
-            stack.add(value);
+            if (setLast) {
+                if (stack.isEmpty()) {
+                    stack.add(value);
+                }
+                else {
+                    stack.set(stack.size() - 1, value);
+                }                    
+            }
+            else {
+                stack.add(value);
+            }
 
             requestVarMap.put(name, stack);
             //Debug.logInfo("pushRequestStack: request attrib (name: " + name + ")", module);
@@ -669,8 +679,18 @@ public final class CommonFtlUtil {
                     stack = new ArrayList<Object>(REQUEST_STACK_INITIAL_CAPACITY);
                 }
                 
-                stack.add(value);
-                
+                if (setLast) {
+                    if (stack.isEmpty()) {
+                        stack.add(value);
+                    }
+                    else {
+                        stack.set(stack.size() - 1, value);
+                    }                    
+                }
+                else {
+                    stack.add(value);
+                }
+ 
                 requestVarMap.put(name, stack);
                 //Debug.logInfo("pushRequestStack: globalContext var (name: " + name + ")", module);
             }
@@ -689,9 +709,27 @@ public final class CommonFtlUtil {
                     stack = new SimpleSequence(REQUEST_STACK_INITIAL_CAPACITY, env.getObjectWrapper());
                 }
                 
-                // WARN: this sort of violates freemarker language by modifying list in-place after initial construction,
+                // WARN: stack.add() sort of violates freemarker language by modifying list in-place after initial construction,
                 // but no one should ever be accessing this list directly anyway apart from these methods
-                stack.add(value);
+                if (setLast) {
+                    if (stack.size() <= 0) {
+                        stack.add(value);
+                    }
+                    else {
+                        // NOTE: unfortunately we are forced to create a new stack here... still faster than multiple push/pop calls
+                        SimpleSequence newStack = new SimpleSequence(
+                                (stack.size() >= REQUEST_STACK_INITIAL_CAPACITY) ? stack.size() + REQUEST_STACK_INITIAL_CAPACITY : REQUEST_STACK_INITIAL_CAPACITY, 
+                                env.getObjectWrapper());
+                        for(int i=0; i < (stack.size() - 1); i++) {
+                            newStack.add(stack.get(i));
+                        }
+                        stack = newStack;
+                        stack.add(value);
+                    }                    
+                }
+                else {
+                    stack.add(value);
+                }
                 
                 requestVarMap.put(name, stack);
                 //Debug.logInfo("pushRequestStack: ftl global var (name: " + name + ")", module);
@@ -702,18 +740,62 @@ public final class CommonFtlUtil {
         }
     }
     
+    static void pushRequestStack(String name, Object value, boolean setLast, Environment env) throws TemplateModelException {
+        HttpServletRequest request = FtlTransformUtil.getRequest(env);
+        Map<String, Object> context = null;
+        if (request == null) {
+            context = FtlTransformUtil.getContext(env);
+        }
+        pushRequestStack(name, value, setLast, request, context, env);
+    }
+    
+    static void pushRequestStack(String name, Object value, boolean setLast, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
+        pushRequestStack(name, value, setLast, request, context, null);
+    }
+    
+    
+    public static void pushRequestStack(String name, Object value, HttpServletRequest request, 
+            Map<String, Object> context, Environment env) throws TemplateModelException {
+        pushRequestStack(name, value, false, request, context, env);
+    }
+    
     public static void pushRequestStack(String name, Object value, Environment env) throws TemplateModelException {
         HttpServletRequest request = FtlTransformUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
             context = FtlTransformUtil.getContext(env);
         }
-        pushRequestStack(name, value, request, context, env);
+        pushRequestStack(name, value, false, request, context, env);
     }
     
     public static void pushRequestStack(String name, Object value, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
-        pushRequestStack(name, value, request, context, null);
+        pushRequestStack(name, value, false, request, context, null);
     }
+    
+    /**
+     * Similar to pushRequestStack but replaces last elem and never fails.
+     * <p>
+     * <strong>Do not access underlying structure directly.</strong>
+     * 
+     * @see #setRequestVar
+     */
+    public static void setLastRequestStack(String name, Object value, HttpServletRequest request, 
+            Map<String, Object> context, Environment env) throws TemplateModelException {
+        pushRequestStack(name, value, true, request, context, env);
+    }
+    
+    public static void setLastRequestStack(String name, Object value, Environment env) throws TemplateModelException {
+        HttpServletRequest request = FtlTransformUtil.getRequest(env);
+        Map<String, Object> context = null;
+        if (request == null) {
+            context = FtlTransformUtil.getContext(env);
+        }
+        pushRequestStack(name, value, true, request, context, env);
+    }
+    
+    public static void setLastRequestStack(String name, Object value, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
+        pushRequestStack(name, value, true, request, context, null);
+    }  
     
     /**
      * Method providing support for a stack structure having request scope, with fallback to globals.
@@ -799,7 +881,9 @@ public final class CommonFtlUtil {
                         else {
                             // unfortunately this part is poor performance, but it's the only slow op
                             // in all of this (apart from recursive wrapping/unwrapping), so not big deal
-                            SimpleSequence newStack = new SimpleSequence(REQUEST_STACK_INITIAL_CAPACITY, env.getObjectWrapper());
+                            SimpleSequence newStack = new SimpleSequence(
+                                    (stack.size() >= REQUEST_STACK_INITIAL_CAPACITY) ? stack.size() + REQUEST_STACK_INITIAL_CAPACITY : REQUEST_STACK_INITIAL_CAPACITY, 
+                                    env.getObjectWrapper());
                             for(int i=0; i < (stack.size() - 1); i++) {
                                 newStack.add(stack.get(i));
                             }

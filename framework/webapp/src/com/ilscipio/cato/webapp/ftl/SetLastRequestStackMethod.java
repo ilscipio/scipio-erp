@@ -26,9 +26,9 @@ import freemarker.template.TemplateModelException;
  * Cato: PushRequestStackMethod - Freemarker Method providing support for a stack
  * structure having request scope, with fallback to globals.
  */
-public class PushRequestStackMethod extends RequestStackMethod {
+public class SetLastRequestStackMethod extends RequestStackMethod {
 
-    public static final String module = PushRequestStackMethod.class.getName();
+    public static final String module = SetLastRequestStackMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -36,7 +36,7 @@ public class PushRequestStackMethod extends RequestStackMethod {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        return execPush(args, false);
+        return execPush(args, true);
     }
 
 }

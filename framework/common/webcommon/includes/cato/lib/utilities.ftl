@@ -975,6 +975,24 @@ Now implemented as java transform.
 
 <#-- 
 *************
+* setLastRequestStack
+************
+Same as doing popRequestStack + pushRequestStack, but will never fail if stack is empty - will simply
+do a pushRequestStack, and much more efficient.
+Now implemented as java transform.
+
+  * Parameters *
+    name        = global request stack var name; must be unique 
+                  across all known types of contexts (request attribs, screen context, FTL globals)
+    val         = value
+    
+<#function setLastRequestStack name val>
+- implemented as java transform -
+</#function>
+-->
+
+<#-- 
+*************
 * readRequestStack
 ************
 Reads the last value added to the named global stack variable in request scope

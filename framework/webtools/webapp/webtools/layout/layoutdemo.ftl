@@ -518,20 +518,28 @@
 
 <@section title="FTL request-scope stacks">
   <@section title="Basic stack">
+    <#macro printTestStack>
+      <@objectAsScript lang="raw" escape=false object=getRequestStackAsList("testStack")!"(none)" />
+    </#macro>
+
+    <p>Stack: <@printTestStack /></p>
     <#assign dummy = pushRequestStack("testStack", {"key1":"val1", "key2":"val2"})>
+    <p>Stack: <@printTestStack /></p>
     <#assign dummy = pushRequestStack("testStack", {"key3":"val3", "key4":"val4"})>
+    <p>Stack: <@printTestStack /></p>
     <#assign dummy = pushRequestStack("testStack", {"key5":"val5", "key6":"val6"})>
-    
-    <#assign stackList = getRequestStackAsList("testStack")>
-    <@objectAsScript lang="raw" escape=false object=stackList />
-    
+    <p>Stack: <@printTestStack /></p>
+    <p>Stack with last replaced: <@printTestStack /> </p>
     <#assign dummy = popRequestStack("testStack")>
+    <p>Stack: <@printTestStack /></p>
     <#assign dummy = popRequestStack("testStack")>
+    <p>Stack: <@printTestStack /></p>
     <#assign dummy = popRequestStack("testStack")>
+    <p>Stack: <@printTestStack /></p>
   </@section>
   
   <@section title="Container size stack">
-    <#macro printSizesAndFactors>
+    <#macro printTestContainerSizesAndFactors>
       <p>
         Container sizes: <@objectAsScript lang="raw" escape=false object=getAllContainerSizes()![] /><br/>
         Container factors: <@objectAsScript lang="raw" escape=false object=getAbsContainerSizeFactors()!{} /><br/> 
@@ -540,23 +548,23 @@
   
     <@row>
       <@cell class="${styles.grid_large!}10 ${styles.grid_medium!}9 ${styles.grid_small!}8 ${styles.grid_end!}">
-        <@printSizesAndFactors />
+        <@printTestContainerSizesAndFactors />
         <@row>
           <@cell class="${styles.grid_large!}7 ${styles.grid_small!}6 ${styles.grid_end!}">
-            <@printSizesAndFactors />
+            <@printTestContainerSizesAndFactors />
             <@section class="${styles.grid_small!}11 ${styles.grid_end!}">
-              <@printSizesAndFactors />
+              <@printTestContainerSizesAndFactors />
               <@row>
                 <@cell class="+testclass">
-                  <@printSizesAndFactors />
+                  <@printTestContainerSizesAndFactors />
                 </@cell>
               </@row>
-              <@printSizesAndFactors />
+              <@printTestContainerSizesAndFactors />
             </@section>
-            <@printSizesAndFactors />
+            <@printTestContainerSizesAndFactors />
           </@cell>
         </@row>
-        <@printSizesAndFactors />
+        <@printTestContainerSizesAndFactors />
       </@cell>
     </@row>
   </@section>

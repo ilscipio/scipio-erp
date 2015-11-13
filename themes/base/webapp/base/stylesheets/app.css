@@ -6496,25 +6496,26 @@ ul.pagination li {
   border-radius: 2rem;
 }
 
-/* line 131, ../bower_components/foundation/scss/foundation/components/_tables.scss */
+/* line 133, ../bower_components/foundation/scss/foundation/components/_tables.scss */
 table {
   background: white;
   border: solid 1px #dddddd;
+  border-collapse: collapse;
   margin-bottom: 1.25rem;
   table-layout: auto;
 }
-/* line 69, ../bower_components/foundation/scss/foundation/components/_tables.scss */
+/* line 71, ../bower_components/foundation/scss/foundation/components/_tables.scss */
 table caption {
   background: transparent;
   color: #222222;
   font-size: 1rem;
   font-weight: bold;
 }
-/* line 78, ../bower_components/foundation/scss/foundation/components/_tables.scss */
+/* line 80, ../bower_components/foundation/scss/foundation/components/_tables.scss */
 table thead {
   background: whitesmoke;
 }
-/* line 82, ../bower_components/foundation/scss/foundation/components/_tables.scss */
+/* line 84, ../bower_components/foundation/scss/foundation/components/_tables.scss */
 table thead tr th,
 table thead tr td {
   color: #222222;
@@ -6522,11 +6523,11 @@ table thead tr td {
   font-weight: bold;
   padding: 0.5rem 0.625rem 0.625rem;
 }
-/* line 92, ../bower_components/foundation/scss/foundation/components/_tables.scss */
+/* line 94, ../bower_components/foundation/scss/foundation/components/_tables.scss */
 table tfoot {
   background: whitesmoke;
 }
-/* line 96, ../bower_components/foundation/scss/foundation/components/_tables.scss */
+/* line 98, ../bower_components/foundation/scss/foundation/components/_tables.scss */
 table tfoot tr th,
 table tfoot tr td {
   color: #222222;
@@ -6534,7 +6535,7 @@ table tfoot tr td {
   font-weight: bold;
   padding: 0.5rem 0.625rem 0.625rem;
 }
-/* line 107, ../bower_components/foundation/scss/foundation/components/_tables.scss */
+/* line 109, ../bower_components/foundation/scss/foundation/components/_tables.scss */
 table tr th,
 table tr td {
   color: #222222;
@@ -6542,11 +6543,11 @@ table tr td {
   padding: 0.5625rem 0.625rem;
   text-align: left;
 }
-/* line 115, ../bower_components/foundation/scss/foundation/components/_tables.scss */
+/* line 117, ../bower_components/foundation/scss/foundation/components/_tables.scss */
 table tr.even, table tr.alt, table tr:nth-of-type(even) {
   background: #f9f9f9;
 }
-/* line 120, ../bower_components/foundation/scss/foundation/components/_tables.scss */
+/* line 122, ../bower_components/foundation/scss/foundation/components/_tables.scss */
 table thead tr th,
 table tfoot tr th,
 table tfoot tr td,

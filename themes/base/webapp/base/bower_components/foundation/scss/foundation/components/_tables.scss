@@ -23,6 +23,7 @@ $table-even-row-bg: $snow !default;
 $table-border-style: solid !default;
 $table-border-size: 1px !default;
 $table-border-color: $gainsboro !default;
+$table-border-collapse: collapse !default;
 
 // These control the table head styles
 $table-head-bg: $white-smoke !default;
@@ -63,6 +64,7 @@ $table-margin-bottom: rem-calc(20) !default;
 @mixin table {
   background: $table-bg;
   border: $table-border-style $table-border-size $table-border-color;
+  border-collapse: $table-border-collapse;
   margin-bottom: $table-margin-bottom;
   table-layout: $table-layout;
 

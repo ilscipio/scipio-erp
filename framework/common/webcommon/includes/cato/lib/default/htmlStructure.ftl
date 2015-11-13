@@ -158,12 +158,13 @@ saveCurrentContainerSizes and related utilities lib functions.
 
 NOTE: implementation of evalAbsContainerSizeFactors assumes all max sizes for large/medium/small are the
     same.
+NOTE: extraArgs is in case of interface changes.
 
 DEV NOTE: TODO: these should be general enough to work for both foundation and bootstrap, but
     should be confirmed...
 -->
 
-<#function parseContainerSizesFromStyleStr style>
+<#function parseContainerSizesFromStyleStr style extraArgs...>
   <#if !catoContainerSizesPrefixMap??>
     <#global catoContainerSizesPrefixMap = {
       "${styles.grid_large!}" : "large", "${styles.grid_medium!}" : "medium", "${styles.grid_small!}" : "small"
@@ -172,7 +173,7 @@ DEV NOTE: TODO: these should be general enough to work for both foundation and b
   <#return extractPrefixedStyleNamesWithInt(getPlainClassArgNames(style), catoContainerSizesPrefixMap)>
 </#function>
 
-<#function evalAbsContainerSizeFactors sizesList maxSizes=0>
+<#function evalAbsContainerSizeFactors sizesList maxSizes=0 extraArgs...>
   <#local maxSize = 12>
   <#if maxSizes?is_number>
     <#if (maxSizes > 0)>

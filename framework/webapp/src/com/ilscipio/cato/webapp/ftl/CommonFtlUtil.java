@@ -1209,7 +1209,7 @@ public final class CommonFtlUtil {
     public static Map<String, Object> extractPrefixedStyleNamesWithInt(String styleStr, Map<String, String> prefixMap) {
         Map<String, Object> res = new HashMap<String, Object>();        
         Set<String> prefixes = prefixMap.keySet();
-        Matcher m = Pattern.compile("(^|\\s)(" + StringUtils.join(prefixes, "|") + ")(\\d+)").matcher(styleStr);
+        Matcher m = Pattern.compile("(^|\\s)(" + StringUtils.join(prefixes, "|") + ")(\\d+)(\\s|$)").matcher(styleStr);
         while (m.find()) {
             String prefix = m.group(2);
             Integer val = Integer.parseInt(m.group(3));

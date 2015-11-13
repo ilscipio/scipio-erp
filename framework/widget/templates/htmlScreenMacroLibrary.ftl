@@ -183,7 +183,10 @@ not "current" context (too intrusive in current renderer design). still relies o
   </#if>
   -->
   <div class="${styles.grid_row!}">
-    <div class="${styles.grid_large!}12 ${styles.grid_cell!}">  
+    <#local cellClasses = "${styles.grid_large!}12 ${styles.grid_cell!}">
+    <#-- Cato: save grid sizes (if any) -->
+    <#local dummy = saveCurrentContainerSizesFromStyleStr(cellClasses)>  
+    <div class="${cellClasses}">  
       <div class="${styles.grid_row!}">
         <#-- for now, make each column a huge cell 
              (can't use grid any other way without rewriting portal page render order?) -->
@@ -192,6 +195,8 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#macro renderPortalPageEnd>
       </div>
     </div>
+    <#-- Cato: pop the grid sizes -->
+    <#local dummy = unsetCurrentContainerSizes()>       
   </div>
 </#macro>
 
@@ -262,8 +267,8 @@ not "current" context (too intrusive in current renderer design). still relies o
     </#if>
     
     <#-- Column: columnCount: ${columnCount}, columnIndex: ${columnIndex}, portalPageGridUsed: ${portalPageGridUsed}, width: ${width} --> 
-    <#-- Cato: save grid sizes (if any) -->
     <#local portalPageClasses = "${styles.grid_large!}${columnSize} ${styles.grid_cell!}${endClassStr}">
+    <#-- Cato: save grid sizes (if any) -->
     <#local dummy = saveCurrentContainerSizesFromStyleStr(portalPageClasses)>
     <div class="${portalPageClasses}">
     <#if confMode == "true">

@@ -151,23 +151,18 @@
 
 <#-- 
 *************
-* parseContainerSizesFromStyleStr and saveCurrentContainerSizesFromStyleStr
+* Container size method overrides
 ************   
-These methods parse the container sizes from a class names string to be saved into
-a global stack.
-This is needed to know grid sizes because most of the facilities only support setting
-class name strings (except for @cell which supports columns/small/medium/large args).
-These supplement the save/get/unsetCurrentContainerSizes functions in utilities lib with
-theme-specific handling. The ones in utilities lib may be used directly, but are fully
-framework-agnostic, unlike these.
-           
-  * Parameters *
-    styleString     = style string containing classes
-    namesToRemove   = array of names or space-separated string of names to remove 
-                      (can be single name)
-  * Return Value *
-    the style string with names removed, same order but reformatted.
+These provide framework-/theme-specific overriding implementations of the placeholder functions of the
+saveCurrentContainerSizes and related utilities lib functions.
+
+NOTE: implementation of evalAbsContainerSizeFactors assumes all max sizes for large/medium/small are the
+    same.
+
+DEV NOTE: TODO: these should be general enough to work for both foundation and bootstrap, but
+    should be confirmed...
 -->
+
 <#function parseContainerSizesFromStyleStr style>
   <#if !catoContainerSizesPrefixMap??>
     <#global catoContainerSizesPrefixMap = {
@@ -177,49 +172,45 @@ framework-agnostic, unlike these.
   <#return extractPrefixedStyleNamesWithInt(getPlainClassArgNames(style), catoContainerSizesPrefixMap)>
 </#function>
 
-<#function saveCurrentContainerSizesFromStyleStr style>
-  <#return saveCurrentContainerSizes(parseContainerSizesFromStyleStr(style))>
-</#function>
+<#function evalAbsContainerSizeFactors sizesList maxSizes=0>
+  <#local maxSize = 12>
+  <#if maxSizes?is_number>
+    <#if (maxSizes > 0)>
+      <#local maxSize = maxSizes>
+    </#if>  
+  <#else>
+    <#-- per-size maxes are not really supported here, this is only to satisfy interface -->
+    <#local maxSize = maxSizes.small!maxSizes.medium!maxSizes.large!maxSize>
+  </#if>
 
-<#-- 
-*************
-* getAbsContainerSizeFactors
-************
-This returns a map of container size factors following:
-{"large":n1, "medium":n2, "small":n3}
-where n1, n2, n3 are floating-point (NOT integer) values calculated from the combination of all
-grid sizes of all the current parent containers.
-These numbers can be used to approximate the current absolute column width in grid sizes,
-in the absence of interfering CSS. It will only be useful if the parent containers save their
-sizes in the stack using saveCurrentContainerSizesFromStyleStr or saveCurrentContainerSizes, and pop appropriately.
-Requires framework-specific logic.
--->
-<#function getAbsContainerSizeFactors maxColumns=12>
-  <#local sizesList = getAllContainerSizes()![]>
-  <#local large = maxColumns>
-  <#local medium = maxColumns>
-  <#local small = maxColumns>
+  <#local large = maxSize>
+  <#local medium = maxSize>
+  <#local small = maxSize>
   <#-- beginning of list is outermost container -->
   <#list sizesList as sizes>
-    <#-- need to use same logic as framework when figuring out defaultSize... e.g., small has priority... -->
-    <#local defaultSize = maxColumns>
+    <#-- need to use same logic as framework when figuring out defaultSize... e.g., small has priority... 
+        assuming all max sizes are same simplifies this -->
+    <#local defaultSize = maxSize>
     
     <#if sizes.small??>
       <#local defaultSize = sizes.small>
-      <#local small = small * (sizes.small / maxColumns)>
-    </#if> <#-- don't need an else here, if no small will just multiply by maxColumns/maxColumns -->
+      <#local small = small * (sizes.small / maxSize)>
+    <#-- always 1 
+    <#else>
+      <#local small = small * (defaultSize / maxSize)>-->
+    </#if>
 
     <#if sizes.medium??>
       <#local defaultSize = sizes.medium>
-      <#local medium = medium * (sizes.medium / maxColumns)>
+      <#local medium = medium * (sizes.medium / maxSize)>
     <#else>
-      <#local medium = medium * (defaultSize / maxColumns)>
+      <#local medium = medium * (defaultSize / maxSize)>
     </#if>
       
     <#if sizes.large??>
-      <#local large = large * (sizes.large / maxColumns)>    
+      <#local large = large * (sizes.large / maxSize)>    
     <#else>
-      <#local large = large * (defaultSize / maxColumns)>
+      <#local large = large * (defaultSize / maxSize)>
     </#if>  
   </#list>
   <#return {"large":large, "medium":medium, "small":small}>

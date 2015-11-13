@@ -1261,9 +1261,17 @@ Note that the class portions may be prefixed with "+" as well for append-not-rep
 *************
 * extractPrefixedStyleNamesWithInt
 ************
+Helper method that can extract style names by prefix with int value suffix from style strings.
+
+  * Parameters *
+    style       = style/classes string
+    prefixMap   = map of CSS class prefixes to result names
+    
+  * Return Value *
+    a hash/map of result names to integer values.
 -->
-<#function extractPrefixedStyleNamesWithInt styleNames prefixMap>
-  <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].extractPrefixedStyleNamesWithInt(styleNames, prefixMap)>
+<#function extractPrefixedStyleNamesWithInt style prefixMap>
+  <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].extractPrefixedStyleNamesWithInt(style, prefixMap)>
 </#function>
 
 <#-- 
@@ -1286,6 +1294,42 @@ NOTE: this is generally framework-agnostic and size-key agnostic.
 
 <#-- 
 *************
+* saveCurrentContainerSizesFromStyleStr
+************
+Same as saveCurrentContainerSizes but tries to extract the container sizes from a style/classes string.
+
+This is needed to know grid sizes because most of the facilities only support setting
+class name strings (except for @cell which supports columns/small/medium/large args).
+
+IMPL NOTE: For this method to work, the framework-/theme-specific code must override the abstract
+    function parseContainerSizesFromStyleStr.
+
+  * Parameters *
+    style      = style/classes string containing grid size classes
+-->
+<#function saveCurrentContainerSizesFromStyleStr style>
+  <#return saveCurrentContainerSizes(parseContainerSizesFromStyleStr(style))>
+</#function>
+
+<#-- 
+*************
+* parseContainerSizesFromStyleStr [PLACEHOLDER]
+************   
+This function should be overridden by a framework-specific implementation that parses the 
+container sizes from a class names string.
+           
+  * Parameters *
+    style     = style/classes string containing grid size classes
+    
+  * Return Value *
+    a map/hash of size names to integer values.
+-->
+<#function parseContainerSizesFromStyleStr style>
+  <#return {}>
+</#function>
+
+<#-- 
+*************
 * getCurrentContainerSizes
 ************
 Gets the last set of size values set by saveCurrentContainerSizes.
@@ -1303,6 +1347,56 @@ and the current container size (if was added).
 -->
 <#function getAllContainerSizes>
   <#return getRequestStackAsList("catoContainerSizesStack")![]>
+</#function>
+
+<#-- 
+*************
+* getAbsContainerSizeFactors
+************
+This returns a map of container size factors along the format:
+{"large":n1, "medium":n2, "small":n3}
+where n1, n2, n3 are floating-point (NOT integer) values calculated from the combination of all
+grid sizes of all the current parent containers.
+NOTE: this is only an example; this method is framework-agnostic.
+
+These numbers can be used to approximate the current absolute column width in grid sizes,
+in the absence of interfering CSS. It will only be useful if the parent containers save their
+sizes in the stack using saveCurrentContainerSizesFromStyleStr or saveCurrentContainerSizes, and pop appropriately.
+Requires framework-specific logic.
+
+IMPL NOTE: For this method to work, the framework-/theme-specific code must override the abstract
+    function evalAbsContainerSizeFactors.
+    ALTERNATIVELY, the framework-/theme-specific code may override getAbsContainerSizeFactors
+    if more specific parameters are needed.
+    
+TODO: since this is split from evalAbsContainerSizeFactors, we should be able to cache the values
+    from here (in separate stack?)... evalAbsContainerSizeFactors is costly...
+    
+  * Parameters *
+    maxSizes     = hash/map of per-key max container sizes OR a single number giving max size
+                   for all keys (usually same in most frameworks) OR zero to mean use defaults
+-->
+<#function getAbsContainerSizeFactors maxSizes=0>
+  <#local sizesList = getAllContainerSizes()![]>
+  <#return evalAbsContainerSizeFactors(sizesList, maxSizes)>
+</#function>
+
+<#-- 
+*************
+* evalAbsContainerSizeFactors [PLACEHOLDER]
+************   
+This function should be overridden by a framework-specific implementation that evals container
+size factors 
+           
+  * Parameters *
+    sizesList     = list of hashes describing all (known) parent and current container sizes
+    maxSizes      = same as getAbsContainerSizeFactors maxSizes
+    
+  * Return Value *
+    a map/hash of size names to float values.
+-->
+<#function evalAbsContainerSizeFactors sizesList maxSizes=0>
+  <#return {}>
 </#function>
 
 <#-- 

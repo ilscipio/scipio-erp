@@ -517,32 +517,50 @@
 </@section>
 
 <@section title="FTL request-scope stacks">
-  <#assign dummy = pushRequestStack("testStack", {"key1":"val1", "key2":"val2"})>
-  <#assign dummy = pushRequestStack("testStack", {"key3":"val3", "key4":"val4"})>
-  <#assign dummy = pushRequestStack("testStack", {"key5":"val5", "key6":"val6"})>
+  <@section title="Basic stack">
+    <#assign dummy = pushRequestStack("testStack", {"key1":"val1", "key2":"val2"})>
+    <#assign dummy = pushRequestStack("testStack", {"key3":"val3", "key4":"val4"})>
+    <#assign dummy = pushRequestStack("testStack", {"key5":"val5", "key6":"val6"})>
+    
+    <#assign stackList = getRequestStackAsList("testStack")>
+    <@objectAsScript lang="raw" escape=false object=stackList />
+    
+    <#assign dummy = popRequestStack("testStack")>
+    <#assign dummy = popRequestStack("testStack")>
+    <#assign dummy = popRequestStack("testStack")>
+  </@section>
   
-  <#assign stackList = getRequestStackAsList("testStack")>
-  <@objectAsScript lang="raw" escape=false object=stackList />
+  <@section title="Container size stack">
+    <#macro printSizesAndFactors>
+      <p>
+        Container sizes: <@objectAsScript lang="raw" escape=false object=getAllContainerSizes()![] /><br/>
+        Container factors: <@objectAsScript lang="raw" escape=false object=getAbsContainerSizeFactors()!{} /><br/> 
+      </p>
+    </#macro>
   
-  <#assign dummy = popRequestStack("testStack")>
-  <#assign dummy = popRequestStack("testStack")>
-  <#assign dummy = popRequestStack("testStack")>
-  
-  <@row>
-    <@cell class="${styles.grid_large!}10 ${styles.grid_medium!}9 ${styles.grid_small!}8 ${styles.grid_end!}">
-      <@row>
-        <@cell class="${styles.grid_large!}7 ${styles.grid_small!}6 ${styles.grid_end!}">
-          <@section class="${styles.grid_small!}11 ${styles.grid_end!}">
-            <@row>
-              <@cell class="+testclass">
-                <#assign containerSizesList = getAllContainerSizes()![]>
-                <@objectAsScript lang="raw" escape=false object=containerSizesList />
-              </@cell>
-            </@row>
-          </@section>
-        </@cell>
-      </@row>
-    </@cell>
-  </@row>
+    <@row>
+      <@cell class="${styles.grid_large!}10 ${styles.grid_medium!}9 ${styles.grid_small!}8 ${styles.grid_end!}">
+        <@printSizesAndFactors />
+        <@row>
+          <@cell class="${styles.grid_large!}7 ${styles.grid_small!}6 ${styles.grid_end!}">
+            <@printSizesAndFactors />
+            <@section class="${styles.grid_small!}11 ${styles.grid_end!}">
+              <@printSizesAndFactors />
+              <@row>
+                <@cell class="+testclass">
+                  <@printSizesAndFactors />
+                </@cell>
+              </@row>
+              <@printSizesAndFactors />
+            </@section>
+            <@printSizesAndFactors />
+          </@cell>
+        </@row>
+        <@printSizesAndFactors />
+      </@cell>
+    </@row>
+  </@section>
 </@section>
+
+
 

@@ -329,6 +329,8 @@ not "current" context (too intrusive in current renderer design). still relies o
     
   <#-- Cato: get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
   <#local absColSizes = getAbsContainerSizeFactors()>
+  <!-- Column size factors: <@objectAsScript lang="raw" escape=false object=absColSizes /> -->
+  <!-- All parent/current col sizes: <@objectAsScript lang="raw" escape=false object=getAllContainerSizes()![] /> -->
   <#-- TODO: review this: for the time being, we will only set the grid_large values if the
           estimated absolute column width for "large" is larger than 6. 
           otherwise, this form is probably in a small space so the grid_small settings are more appropriate. -->

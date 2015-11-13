@@ -529,6 +529,7 @@
     <p>Stack: <@printTestStack /></p>
     <#assign dummy = pushRequestStack("testStack", {"key5":"val5", "key6":"val6"})>
     <p>Stack: <@printTestStack /></p>
+    <#assign dummy = setLastRequestStack("testStack", {"key7":"val7", "key8":"val8"})>
     <p>Stack with last replaced: <@printTestStack /> </p>
     <#assign dummy = popRequestStack("testStack")>
     <p>Stack: <@printTestStack /></p>

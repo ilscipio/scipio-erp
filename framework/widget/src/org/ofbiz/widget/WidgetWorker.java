@@ -312,20 +312,18 @@ public final class WidgetWorker {
 			for (ModelFormField rowSubmitField : rowSubmitFields) {
 				writer.append("\t\tvar id = $(\"[id^=" + rowSubmitField.getIdName() + "]\");\r\n");
 				writer.append("\t\t$(id).click(function(e) {\r\n");
-				writer.append("\t\te.preventDefault();\r\n");
-				writer.append("\t\t\tconsole.log(\"id ========> \" + $(this).attr(\"id\"));\r\n");
-				writer.append("\t\t\t$(this).parents(\"tr\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");				
-				writer.append("\t\t\tconsole.log(\"element ======> \" + $(e).attr(\"name\"));\r\n");
-//				 writer.append("var hiddenField = $(\"<input></input>\")\r\n");
-//				 writer.append("$(hiddenField).attr(\"type\", \"hidden\");\r\n");
-//				 
-//				 writer.append("$(hiddenField).attr(\"name\", \"" + rowSubmitField.getParameterName(context) + "\");\r\n");
-//				 writer.append("$(hiddenField).attr(\"value\", $(\"input[name=" + rowSubmitField.getParameterName(context) + "]\").val());\r\n");
-//				 writer.append("$(form).append($(hiddenField));\r\n");				
-				writer.append("\t\t\t$(submitForm).append($(e).clone());\r\n");				
-				writer.append("\t\t\t$(submitForm).children().hide();\r\n");
-				
+				writer.append("\t\te.preventDefault();\r\n");				
+				writer.append("\t\t\t$(this).parents(\"tr\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");
+				// TODO: Determine what's better in terms of SEO and/or valid markup and tidiness, clone elements into the form or create new hidden form items.
+//				writer.append("\t\t\tconsole.log(\"element ======> \" + $(e).attr(\"name\"));\r\n");
+//				writer.append("var hiddenField = $(\"<input></input>\")\r\n");
+//				writer.append("$(hiddenField).attr(\"type\", \"hidden\");\r\n");//				 
+//				writer.append("$(hiddenField).attr(\"name\", \"" + rowSubmitField.getParameterName(context) + "\");\r\n");
+//				writer.append("$(hiddenField).attr(\"value\", $(\"input[name=" + rowSubmitField.getParameterName(context) + "]\").val());\r\n");
+//				writer.append("$(form).append($(hiddenField));\r\n");				
+				writer.append("\t\t\t$(submitForm).append($(e).clone());\r\n");
 				writer.append("\t\t\t});\r\n");
+				writer.append("\t\t\t$(submitForm).children().hide();\r\n");	
 				writer.append("\t\t\tsubmitForm.submit();\r\n");
 //				writer.append("\t\t\tconsole.log(\"submitForm ==========> \" + $(submitForm).html());");
 				writer.append("\t\t});\r\n");
@@ -364,15 +362,7 @@ public final class WidgetWorker {
                 writer.append("\" type=\"hidden\"/>");
             }
         }
-		
-//		for (ModelFormField rowField : modelForm.getFieldList()) {
-//			if (rowField.getFieldInfo().getFieldType() == FieldInfo.HIDDEN || rowField.getFieldInfo().getFieldType() == FieldInfo.IGNORED) {
-//				rowField.renderFieldString(writer, context, (FormStringRenderer) context.get("formStringRenderer"));
-//			}
-//		}
-
         writer.append("</form>");
-        
     }
 
 	public static String makeLinkHiddenFormName(Map<String, Object> context, ModelForm modelForm, String prefix) {

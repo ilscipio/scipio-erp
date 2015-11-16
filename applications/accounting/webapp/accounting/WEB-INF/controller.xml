@@ -81,7 +81,7 @@ under the License.
     </request-map>
     <request-map uri="updateBillingAccountRole">
         <security https="true" auth="true"/>
-        <event type="service" invoke="updateBillingAccountRole"/>
+        <event type="service-multi" invoke="updateBillingAccountRole"/>
         <response name="success" type="view" value="EditBillingAccountRoles"/>
         <response name="error" type="view" value="EditBillingAccountRoles"/>
     </request-map>

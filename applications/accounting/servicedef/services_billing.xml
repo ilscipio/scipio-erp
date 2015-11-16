@@ -69,7 +69,7 @@ under the License.
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
     </service>
     <service name="removeBillingAccountRole" engine="simple" default-entity-name="BillingAccountRole"
             location="component://accounting/script/org/ofbiz/accounting/payment/BillingServices.xml" invoke="removeBillingAccountRole">

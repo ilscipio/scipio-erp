@@ -20233,6 +20233,25 @@
         <value xml:lang="zh">添加账单账户角色</value>
         <value xml:lang="zh_TW">增加帳單帳戶角色</value>
     </property>
+    <property key="PageTitleListBillingAccountRoles">        
+        <value xml:lang="en">Billing Account Role List</value>
+    </property>
+    <property key="PageTitleAddBillingAccountTerms">        
+        <value xml:lang="en">Add Billing Account Term</value>
+    </property>
+    <property key="PageTitleListBillingAccountTerms">        
+        <value xml:lang="en">Billing Account Term List</value>
+    </property>
+    <property key="PageTitleAddBillingAccountPayments">        
+        <value xml:lang="en">Add Billing Account Payment</value>
+    </property>
+    <property key="PageTitleListBillingAccountPayments">        
+        <value xml:lang="en">Billing Account Payment List</value>
+    </property>
+    <property key="PageTitleListBillingAccountOrders">        
+        <value xml:lang="en">Billing Account Order List</value>
+    </property>
+    
     <property key="PageTitleAddGlAccount">
         <value xml:lang="en">Add Gl Account</value>
         <value xml:lang="es">Agregar Cuenta de LM</value>

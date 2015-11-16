@@ -25,12 +25,12 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     
     <form name="FindBillingAccounts" type="single" target="FindBillingAccount" header-row-style="header-row" default-table-style="${styles.table_basic}">
-        <field name="billingAccountId" title="${uiLabelMap.CommonId}"><text-find ignore-case="true"/></field>
+        <field name="billingAccountId" position="1" title="${uiLabelMap.CommonId}"><text-find ignore-case="true"/></field>
         <field name="accountLimit" position="2"><text/></field>
-        <field name="description"><text-find ignore-case="true"/></field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
-        <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
+        <field name="description" position="1"><text-find ignore-case="true"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="2"><date-time type="date"/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" position="1"><date-time type="date"/></field>
+        <field name="noConditionFind" position="2"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     
@@ -170,16 +170,15 @@ under the License.
             <display description="${groovy:org.ofbiz.accounting.payment.BillingAccountWorker.getBillingAccountNetBalance(delegator, billingAccountId)}" type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
         </field>
         -->
-        <field name="availableBalance" title="${uiLabelMap.AccountingBillingAvailableBalance}" tooltip="${uiLabelMap.AccountingBillingAvailableBalanceMessage}"
-            widget-area-style="amount" title-area-style="align-right">
+        <field name="availableBalance" title="${uiLabelMap.AccountingBillingAvailableBalance}" tooltip="${uiLabelMap.AccountingBillingAvailableBalanceMessage}" position="2">
             <display type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="billingAccount == null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="billingAccount!=null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
-    <form name="ListBillingAccountRoles" type="list" list-name="billingAccountRoleList" target="updateBillingAccountRole"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+    <form name="ListBillingAccountRoles" type="multi" list-name="billingAccountRoleList" target="updateBillingAccountRole?billingAccountId=${billingAccountId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar" separate-columns="true" use-row-submit="false">
         <actions>
             <entity-condition entity-name="BillingAccountRole" list="billingAccountRoleList">
                 <condition-expr field-name="billingAccountId" from-field="billingAccountId"/>
@@ -191,19 +190,22 @@ under the License.
         </row-actions>
         <field name="billingAccountId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_default}">
-           <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
+           <hyperlink also-hidden="true" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
                 <parameter param-name="partyId"/>
                 <parameter param-name="agreementId"/>
                 <parameter param-name="agreementItemSeqId"/>
             </hyperlink>
         </field>
-        <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
+        <!-- <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
             <display-entity entity-name="RoleType" description="${description}"/>
+        </field> -->
+        <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
+         <display-entity entity-name="RoleType" description="${description}"/>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
-
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
+ 		<field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
             <hyperlink target="deleteBillingAccountRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="billingAccountId"/>
                 <parameter param-name="roleTypeId"/>
@@ -281,7 +283,7 @@ under the License.
             </drop-down>
         </field>
         <field name="termValue" title="${uiLabelMap.PartyTermValue}"><text size="10"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListBillingAccountPayments" type="list" list-name="payments" paginate-target="BillingAccountPayments"
@@ -342,12 +344,12 @@ under the License.
             </drop-down>
         </field>
         <field name="amount" title="${uiLabelMap.CommonAmount}" position="2"><text/></field>
-        <field name="createAction" title="${uiLabelMap.CommonCreate}">
+        <field name="createAction" title="${uiLabelMap.CommonAdd}">
             <submit button-type="button"/>
         </field>
     </form>
     <form name="ListBillingAccountOrders" type="list" list-name="orderPaymentPreferencesList" paginate-target="BillingAccountOrders"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <field name="billingAccountId"><hidden/></field>
         <field name="orderId" title="${uiLabelMap.CommonOrder}" widget-style="${styles.link_default}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}" also-hidden="false">

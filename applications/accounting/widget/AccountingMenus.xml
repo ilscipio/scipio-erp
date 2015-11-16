@@ -344,7 +344,7 @@
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>
         </menu-item>
-        <menu-item name="EditBillingAccountRoles" title="${uiLabelMap.CommonParties}">
+        <menu-item name="EditBillingAccountRoles" title="${uiLabelMap.CommonRoles}">
             <link target="EditBillingAccountRoles">
                 <parameter param-name="billingAccountId" from-field="billingAccount.billingAccountId" />
             </link>

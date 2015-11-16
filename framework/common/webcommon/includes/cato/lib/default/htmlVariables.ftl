@@ -116,11 +116,11 @@
     "table_generic_rowtype" : "generic",    <#-- the default row type is normally "content", but generic tables need "generic" -->
     "table_data_list" : "basic-table",  <#-- analogous to ofbiz "list" type form widgets (and still very close to "multi" type) -->
     "table_data_list_cellspacing" : 0,
-    "table_data_list_scrollable" : true,
+    "table_data_list_responsive" : true,
     <#-- "table_data_list_autoaltrows" : true, -->
     "table_data_list_multiform" : "basic-table",  <#-- analogous to ofbiz "multi" type form widgets (but still basically a "list" type) -->
     "table_data_list_multiform_cellspacing" : 0,
-    "table_data_list_multiform_scrollable" : false,    
+    "table_data_list_multiform_responsive" : false,    
     "table_data_complex" : "basic-table", <#-- like data_list but with complex structure (no form widget equivalent) -->
     "table_data_complex_cellspacing" : 0,
     "table_summary" : "basic-table",
@@ -134,11 +134,11 @@
     "table_default_cellspacing" : "",
     "table_default_autoaltrows" : false,
     "table_default_rowtype" : "content",
-    "table_default_scrollable" : false,
+    "table_default_responsive" : false,
     
     <#-- other table-related styles -->
     "table_basic" : "basic-table",  <#-- this is not a table type, but simply the basic-table style -->
-    "table_responsive_wrap" : "scrollable-table-container", <#-- responsive table wrapping div element -->
+    "table_responsive_wrap" : "responsive-table-container", <#-- responsive table wrapping div element -->
 
     "row_reg" : "even",
     "row_alt" : "odd",

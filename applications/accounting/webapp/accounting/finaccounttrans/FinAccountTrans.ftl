@@ -128,7 +128,7 @@ function getFinAccountTransRunningTotalAndBalances() {
 				</@row>
       		</#if>
 	
-      		<@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0" scrollable=true> <#-- orig: class="basic-table hover-bar" -->
+      		<@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0" responsive=true scrollable=true> <#-- orig: class="basic-table hover-bar" -->
 	        	<#-- Header Begins -->
 	        	<@thead>
 	        		<@tr class="header-row-2">

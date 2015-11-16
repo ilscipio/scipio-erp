@@ -210,13 +210,17 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     [inlineAttribs...]    = other legacy <table attributes and values, inlined
     
     * Responsive Tables *
-    scrollable        = will rely on the jquery plugin datatables.js (www.datatables.net) to generate responsive table. 
+    responsive        = will rely on the jquery plugin datatables.js (www.datatables.net) to generate responsive table. 
                         Can be combined with fixed column type.
                         default is dependent on table type (global styles).
+    scrollable        = if true guarantees table will be scrollable horizontally.
+                        implementation of scrollable depends on macro and global styles (by default, uses responsive).
+                        default is dependent on table type (global styles); if not specified there, default
+                        is the calculated setting of responsive flag (so usually responsive true implies scrollable true, though not vice-versa).
     fixedColumnsLeft  = int value; number of columns that are fixed on the left-hand side
-    fixedColumnsRight = int value;number of columns that are fixed on the right hand side
+    fixedColumnsRight = int value; number of columns that are fixed on the right hand side
 -->
-<#macro table type="" class="" id="" cellspacing=true scrollable="" autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false fixedColumnsLeft=0 fixedColumnsRight=0 attribs={} inlineAttribs...>
+<#macro table type="" class="" id="" cellspacing=true responsive="" scrollable="" autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false fixedColumnsLeft=0 fixedColumnsRight=0 attribs={} inlineAttribs...>
   <#local tableIdNum = getRequestVar("catoTableIdNum")!0>
   <#local tableIdNum = tableIdNum + 1 />
   <#local dummy = setRequestVar("catoTableIdNum", tableIdNum)>
@@ -253,8 +257,11 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
         <#local cellspacing = "">
       </#if>
     </#if>
+    <#if !responsive?is_boolean>
+      <#local responsive = styles["table_" + styleName + "_responsive"]!styles["table_default_responsive"]!false>
+    </#if>
     <#if !scrollable?is_boolean>
-      <#local scrollable = styles["table_" + styleName + "_scrollable"]!styles["table_default_scrollable"]!false>
+      <#local scrollable = styles["table_" + styleName + "_scrollable"]!styles["table_default_scrollable"]!responsive>
     </#if>
     <#local catoCurrentTableInfo = {"type": type, "styleName": styleName, "autoAltRows": autoAltRows,
       "inheritAltRows": inheritAltRows, "parentRowAlt": prevCurrentRowAlt, "useFootAltRows": useFootAltRows}>
@@ -284,7 +291,7 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     <#if !close>
       <#local dummy = pushRequestStack("catoCurrentTableStack", 
           {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevRowAltFlag":prevRowAltFlag, 
-           "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, "scrollable":scrollable, 
+           "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, "responsive":responsive, "scrollable":scrollable,
            "id":id, "tableIdNum":tableIdNum})>
     </#if>
     <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
@@ -300,28 +307,50 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
       <#local prevRowAltFlag = stackValues.prevRowAltFlag>
       <#local prevCurrentRowAlt = stackValues.prevCurrentRowAlt>
       <#local prevLastRowAlt = stackValues.prevLastRowAlt>
+      <#local responsive = stackValues.responsive>
       <#local scrollable = stackValues.scrollable>
       <#local id = stackValues.id>
       <#local tableIdNum = stackValues.tableIdNum>
     </#if>
     </table>
-    <#if scrollable>
-    <@script>
-      $(document).ready(function() {
-          $('#${id}').DataTable( {
-              fixedHeader: true,
-              scrollX: true,
-              info: false,
-              paging: false,
-              searching : false
-              <#if (fixedColumnsLeft > 0) || (fixedColumnsRight > 0)>,fixedColumns:   {
-              leftColumns: ${fixedColumnsLeft!0},
-              rightColumns: ${fixedColumnsRight!0}
-              }
-              </#if>
-          } );
-      } );
-    </@script>
+    <#-- TODO: currently responsive and scrollable generate the same responsive settings. but scrollable alone
+         shouldn't add all the controls responsive adds by default because they might interfere with some types of tables. -->
+    <#if responsive>
+      <@script>
+        $(document).ready(function() {
+            $('#${id}').DataTable( {
+                fixedHeader: true,
+                scrollX: true,
+                info: false,
+                paging: false,
+                searching : false,
+                ordering : true
+                <#if (fixedColumnsLeft > 0) || (fixedColumnsRight > 0)>,fixedColumns: {
+                leftColumns: ${fixedColumnsLeft!0},
+                rightColumns: ${fixedColumnsRight!0}
+                }
+                </#if>
+            } );
+        } );
+      </@script>
+    <#elseif scrollable>
+      <@script>
+        $(document).ready(function() {
+            $('#${id}').DataTable( {
+                fixedHeader: false,
+                scrollX: true,
+                info: false,
+                paging: false,
+                searching : false,
+                ordering : false
+                <#if (fixedColumnsLeft > 0) || (fixedColumnsRight > 0)>,fixedColumns: {
+                leftColumns: ${fixedColumnsLeft!0},
+                rightColumns: ${fixedColumnsRight!0}
+                }
+                </#if>
+            } );
+        } );
+      </@script>
     </#if>
     <#local dummy = setRequestVar("catoCurrentTableInfo", prevTableInfo)!>
     <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevSectionInfo)!>

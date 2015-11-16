@@ -183,12 +183,24 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderFormatListWrapperOpen formName style columnStyles formType="">
   <#local styleSet = splitStyleNamesToSet(style)>
-  <#local scrollable = ""> <#-- Cato: empty string means table type default takes effect -->
+  <#-- Cato: support setting and removing responsive/scrollable settings from widget table via style attribute -->
+  <#local responsive = ""> <#-- Cato: empty string means table type default takes effect -->
+  <#if styleSet.contains("responsive")>
+    <#local responsive = true>
+    <#local style = removeStyleNames(style, "responsive")>
+  <#elseif styleSet.contains("non-responsive")>
+    <#local responsive = false>
+    <#local style = removeStyleNames(style, "non-responsive")>
+  </#if>
+  <#local scrollable = "">
   <#if styleSet.contains("scrollable")>
     <#local scrollable = true>
     <#local style = removeStyleNames(style, "scrollable")>
+  <#elseif styleSet.contains("non-scrollable")>
+    <#local scrollable = false>
+    <#local style = removeStyleNames(style, "non-scrollable")>
   </#if>
-  <#local dummy = pushRequestStack("renderFormatListWrapperStack", {"formName":formName, "style":style, "scrollable":scrollable})>
+  <#local dummy = pushRequestStack("renderFormatListWrapperStack", {"formName":formName, "style":style, "responsive":responsive, "scrollable":scrollable})>
   <#-- Cato: use @table macro to open -->
   <#if style?has_content>
     <#-- specified style will replace default class from @table (unless prefixed with "+" in widget defs) -->
@@ -197,7 +209,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#-- with "+" (append only), default class will be selected by @table macro -->
     <#local class = "+form-widget-table dark-grid">
   </#if>
-  <@table openOnly=true type=mapOfbizFormTypeToTableType(formType) class=class scrollable=scrollable />
+  <@table openOnly=true type=mapOfbizFormTypeToTableType(formType) class=class responsive=responsive scrollable=scrollable />
 </#macro>
 
 <#macro renderFormatListWrapperClose formName>

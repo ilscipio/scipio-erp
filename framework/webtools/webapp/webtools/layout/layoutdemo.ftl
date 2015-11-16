@@ -195,73 +195,140 @@
 </@section>
 
 <@section title="Tables">
-    <@table type="data-complex" autoAltRows=true>
-      <@thead>
-        <@tr><@th>Column 1</@th><@th>Column 2</@th><@th>Column 3</@th></@tr>
-      </@thead>
-      <@tbody>
-        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
-        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
-        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
-        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
-        <@tr groupLast=true><@td>Grouped row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
-        <@tr groupLast=true><@td>Grouped row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
-        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
-        <@tr><@td>
-          <@table type="data-complex" inheritAltRows=true>
-            <@tr><@td>Table inheriting alt rows from parent</@td><@td>Cell</@td></@tr>
-            <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
-            <@tr><@td>Regular row</@td><@td>
-              <@table type="data-complex" inheritAltRows=true>
-                <@tr><@td>Table inheriting alt rows from parent</@td><@td>Cell</@td></@tr>
-                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
-                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
-              </@table>
-            </@td></@tr>
-            <@tr><@td>Regular row</@td><@td>
-              <@table type="data-complex" autoAltRows=true firstRowAlt=true inheritAltRows=false>
-                <@tr><@td>Table using its own alt rows within parent, first row odd</@td><@td>Cell</@td></@tr>
-                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
-                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
-                <@tr groupLast=true><@td>Grouped row</@td><@td>Cell</@td></@tr>
-                <@tr groupLast=true><@td>Grouped row</@td><@td>Cell</@td></@tr>
-                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
-                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
-                <@tr type="meta"><@td colspan=2>Special meta row</@td></@tr>
-                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
-                <@tr alt=false><@td>Row forced to even alt</@td><@td>Cell</@td></@tr>
-                <@tr alt=false><@td>Row forced to even alt</@td><@td>Cell</@td></@tr>
-                <@tr alt=true><@td>Row forced to odd alt</@td><@td>Cell</@td></@tr>
-                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
-                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
-                <@tr type="util"><@td colspan=2>Special utility row <hr /></@td></@tr>
-                <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
-              </@table>
-            </@td></@tr>
-          </@table>
-        </@td><@td>Regular row</@td><@td>Cell</@td></@tr>
-        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
-        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
-        <@tr type="meta"><@td colspan=3>Special meta row</@td></@tr>
-        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+  <#macro commonTestTableContent numRows=4 rowDividerContent="">
+    <@thead>
+      <@tr><@th>Column 1</@th><@th>Column 2</@th><@th>Column 3</@th></@tr>
+    </@thead>
+    <@tbody>
+    <#list 1..numRows as rowIndex>
+      <@tr><@td>Regular row ${rowIndex}-1</@td><@td>Cell ${rowIndex}-2</@td><@td>Cell ${rowIndex}-3</@td></@tr>
+      <#if rowIndex_has_next>
+        ${rowDividerContent}
+      </#if>
+    </#list>
+      <#nested>
+    </@tbody>
+    <@tfoot>
+      <@tr><@td colspan=3>Footer</@td></@tr>
+    </@tfoot>       
+  </#macro>
 
-        <@tr openOnly=true colspan=3 />
-            <@td openOnly=true/>Manual open/close rows and table<@td closeOnly=true />
-            <@td openOnly=true colspan=2/>
-                <@table type="data-complex" inheritAltRows=true openOnly=true />
-                    <@thead openOnly=true /><@tr openOnly=true /><@td openOnly=true/>Header<@td closeOnly=true /><@td openOnly=true/>Cell<@td closeOnly=true /><@tr closeOnly=true /><@thead closeOnly=true />
-                    <@tbody openOnly=true /><@tr openOnly=true /><@td openOnly=true/>Body<@td closeOnly=true /><@td openOnly=true/>Cell<@td closeOnly=true /><@tr closeOnly=true /><@tbody closeOnly=true />
-                    <@tfoot openOnly=true /><@tr openOnly=true /><@td openOnly=true/>Footer<@td closeOnly=true /><@td openOnly=true/>Cell<@td closeOnly=true /><@tr closeOnly=true /><@tfoot closeOnly=true />
-                <@table closeOnly=true />
-            <@td closeOnly=true />
-        <@tr closeOnly=true />
+  <@section title="Default tables">
+    <@section title="generic table">
+      <@table type="generic">
+        <@commonTestTableContent />
+      </@table>
+    </@section>  
+    <@section title="data-list table">
+      <@table type="data-list">
+        <@commonTestTableContent />
+      </@table>
+    </@section>   
+    <@section title="data-list-multiform table">
+      <@table type="data-list-multiform">
+        <@commonTestTableContent />
+      </@table>
+    </@section>       
+    <@section title="data-complex table">
+      <@table type="data-complex">
+        <#assign rowDividerContent><@tr type="util"><@td colspan="3"><hr /></@td></@tr></#assign>
+        <@commonTestTableContent rowDividerContent=rowDividerContent/>
+      </@table>
+    </@section>     
+    <@section title="fields table">
+      <@table type="fields">
+        <@commonTestTableContent />
+      </@table>
+    </@section>   
+    <@section title="summary table">
+      <@table type="summary">
+        <@commonTestTableContent numRows=1 />
+      </@table>
+    </@section>       
+  </@section>    
 
-        <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
-      </@tbody>
-      <@tfoot>
-        <@tr><@td colspan=3>Footer</@td></@tr>
-      </@tfoot>
-    </@table>
+  <@section title="Complex tables">
+    <@section title="data-complex table (scrollable only)">
+      <@table type="data-complex" scrollable=true>
+        <@commonTestTableContent />
+      </@table>
+    </@section>
+    <@section title="data-complex table (responsive - default/full responsive)">
+      <@table type="data-complex" responsive=true>
+        <@commonTestTableContent />
+      </@table>
+    </@section>  
+
+    <@section title="data-complex table (nested tables and alt rows)">
+      <@table type="data-complex" autoAltRows=true>
+        <@thead>
+          <@tr><@th>Column 1</@th><@th>Column 2</@th><@th>Column 3</@th></@tr>
+        </@thead>
+        <@tbody>
+          <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+          <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+          <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+          <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+          <@tr groupLast=true><@td>Grouped row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+          <@tr groupLast=true><@td>Grouped row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+          <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+          <@tr><@td>
+            <@table type="data-complex" inheritAltRows=true>
+              <@tr><@td>Table inheriting alt rows from parent</@td><@td>Cell</@td></@tr>
+              <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+              <@tr><@td>Regular row</@td><@td>
+                <@table type="data-complex" inheritAltRows=true>
+                  <@tr><@td>Table inheriting alt rows from parent</@td><@td>Cell</@td></@tr>
+                  <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                  <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                </@table>
+              </@td></@tr>
+              <@tr><@td>Regular row</@td><@td>
+                <@table type="data-complex" autoAltRows=true firstRowAlt=true inheritAltRows=false>
+                  <@tr><@td>Table using its own alt rows within parent, first row odd</@td><@td>Cell</@td></@tr>
+                  <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                  <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                  <@tr groupLast=true><@td>Grouped row</@td><@td>Cell</@td></@tr>
+                  <@tr groupLast=true><@td>Grouped row</@td><@td>Cell</@td></@tr>
+                  <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                  <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                  <@tr type="meta"><@td colspan=2>Special meta row</@td></@tr>
+                  <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                  <@tr alt=false><@td>Row forced to even alt</@td><@td>Cell</@td></@tr>
+                  <@tr alt=false><@td>Row forced to even alt</@td><@td>Cell</@td></@tr>
+                  <@tr alt=true><@td>Row forced to odd alt</@td><@td>Cell</@td></@tr>
+                  <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                  <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                  <@tr type="util"><@td colspan=2>Special utility row <hr /></@td></@tr>
+                  <@tr><@td>Regular row</@td><@td>Cell</@td></@tr>
+                </@table>
+              </@td></@tr>
+            </@table>
+          </@td><@td>Regular row</@td><@td>Cell</@td></@tr>
+          <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+          <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+          <@tr type="meta"><@td colspan=3>Special meta row</@td></@tr>
+          <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+  
+          <@tr openOnly=true colspan=3 />
+              <@td openOnly=true/>Manual open/close rows and table<@td closeOnly=true />
+              <@td openOnly=true colspan=2/>
+                  <@table type="data-complex" inheritAltRows=true openOnly=true />
+                      <@thead openOnly=true /><@tr openOnly=true /><@td openOnly=true/>Header<@td closeOnly=true /><@td openOnly=true/>Cell<@td closeOnly=true /><@tr closeOnly=true /><@thead closeOnly=true />
+                      <@tbody openOnly=true /><@tr openOnly=true /><@td openOnly=true/>Body<@td closeOnly=true /><@td openOnly=true/>Cell<@td closeOnly=true /><@tr closeOnly=true /><@tbody closeOnly=true />
+                      <@tfoot openOnly=true /><@tr openOnly=true /><@td openOnly=true/>Footer<@td closeOnly=true /><@td openOnly=true/>Cell<@td closeOnly=true /><@tr closeOnly=true /><@tfoot closeOnly=true />
+                  <@table closeOnly=true />
+              <@td closeOnly=true />
+          <@tr closeOnly=true />
+  
+          <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
+        </@tbody>
+        <@tfoot>
+          <@tr><@td colspan=3>Footer</@td></@tr>
+        </@tfoot>
+      </@table>
+    </@section>
+  </@section>
 </@section>
 
 <@section title="Menus">

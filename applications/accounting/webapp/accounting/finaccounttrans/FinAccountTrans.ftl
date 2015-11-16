@@ -171,8 +171,10 @@ function getFinAccountTransRunningTotalAndBalances() {
 			          	<#assign glReconciliation = "">
 			          	<#assign partyName = "">
 			          	<#if finAccountTrans.paymentId?has_content>
+			          		${Static["org.ofbiz.base.util.Debug"].log("finAccountTrans id =========> " + finAccountTrans.finAccountTransId + " finAccountTrans payment id =========> " + finAccountTrans.paymentId)}
 			            	<#assign payment = delegator.findOne("Payment", {"paymentId" : finAccountTrans.paymentId}, true)>
 			          	<#else>
+			          		${Static["org.ofbiz.base.util.Debug"].log("finAccountTrans id =========> " + finAccountTrans.finAccountTransId)}
 			            	<#assign payments = delegator.findByAnd("Payment", {"finAccountTransId" : finAccountTrans.finAccountTransId}, null, false)>
 			          	</#if>
 			          	<#assign finAccountTransType = delegator.findOne("FinAccountTransType", {"finAccountTransTypeId" : finAccountTrans.finAccountTransTypeId}, true)>
@@ -195,7 +197,7 @@ function getFinAccountTransRunningTotalAndBalances() {
 			          	<@tr valign="middle">
 			            	<@td>
 			            		<#-- FIXME: This is ugly but it might make the UX coherent if we determine how buttons must be shown inside grid cells and the most important thing, 
-			            			should we allow modal windows to be opened located in place of the grid?
+			            			should we allow modal windows to be opened that are located in any place of the grid?
 			            		-->
 			              		<#if payments?has_content>
 			                		<@modal id="displayPayments_${finAccountTrans.finAccountTransId}" label="${finAccountTrans.finAccountTransId}">

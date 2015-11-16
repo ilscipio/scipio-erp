@@ -19,30 +19,30 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if glAcctBalancesByCostCenter?has_content && glAccountCategories?has_content>
-  <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
-    <@thead>
-    <@tr class="header-row">
-      <@th>${uiLabelMap.CommonId}</@th>
-      <@th>${uiLabelMap.CommonCode}</@th>
-      <@th>${uiLabelMap.CommonName}</@th>
-      <@th class="align-right">${uiLabelMap.FormFieldTitle_postedBalance} - (${currencyUomId})</@th>
-      <#list glAccountCategories as glAccountCategory>
-        <@th class="align-right">${glAccountCategory.description!} - (${currencyUomId})</@th>
-      </#list>
-    </@tr>
-    </@thead>
-    <#list glAcctBalancesByCostCenter as glAcctBalanceByCostCenter>
-        <@tr>
-          <@td>${glAcctBalanceByCostCenter.glAccountId!}</@td>
-          <@td>${glAcctBalanceByCostCenter.accountCode!}</@td>
-          <@td>${glAcctBalanceByCostCenter.accountName!}</@td>
-          <@td class="amount">${glAcctBalanceByCostCenter.balance!}</@td>
-          <#list glAccountCategories as glAccountCategory>
-            <@td classs="amount">${(glAcctBalanceByCostCenter[glAccountCategory.glAccountCategoryId!]!)}</@td>
-          </#list>
-        </@tr>
-    </#list>
-  </@table>
+	<@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+    	<@thead>
+    		<@tr class="header-row">
+	      		<@th>${uiLabelMap.CommonId}</@th>
+	      		<@th>${uiLabelMap.CommonCode}</@th>
+	      		<@th>${uiLabelMap.CommonName}</@th>
+	      		<@th class="align-right">${uiLabelMap.FormFieldTitle_postedBalance} - (${currencyUomId})</@th>
+	      		<#list glAccountCategories as glAccountCategory>
+	        		<@th class="align-right">${glAccountCategory.description!} - (${currencyUomId})</@th>
+	      		</#list>
+    		</@tr>
+    	</@thead>
+    	<#list glAcctBalancesByCostCenter as glAcctBalanceByCostCenter>
+        	<@tr>
+          		<@td>${glAcctBalanceByCostCenter.glAccountId!}</@td>
+          		<@td>${glAcctBalanceByCostCenter.accountCode!}</@td>
+          		<@td>${glAcctBalanceByCostCenter.accountName!}</@td>
+          		<@td class="amount">${glAcctBalanceByCostCenter.balance!}</@td>
+          		<#list glAccountCategories as glAccountCategory>
+            		<@td class="amount">${(glAcctBalanceByCostCenter[glAccountCategory.glAccountCategoryId!]!)}</@td>
+          		</#list>
+        	</@tr>
+    	</#list>
+  	</@table>
 <#else>
-  <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+  	<@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
 </#if>

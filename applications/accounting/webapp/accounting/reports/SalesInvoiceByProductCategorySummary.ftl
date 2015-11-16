@@ -36,16 +36,16 @@ under the License.
 <div>NOTE: each set of numbers is: &lt;quantity&gt;:&lt;total amount&gt;:&lt;average amount&gt;</div>
 <@table type="data-complex" cellspacing="0"> <#-- orig: class="basic-table" -->
     <@thead>
-    <@tr class="header-row">
-        <@th>Day</@th>
-        <@th>[No Product]</@th>
-    <#list productList as product>
-        <@th>${product.internalName?default((Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "PRODUCT_NAME", locale, dispatcher, "html"))!)}<br />P:[${product.productId}]</@th>
-    </#list>
-    <#list productCategoryList as productCategory>
-        <@th>${(Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(productCategory, "CATEGORY_NAME", locale, dispatcher, "html"))!}<br />C:[${productCategory.productCategoryId}]</@th>
-    </#list>
-    </@tr>
+	    <@tr class="header-row">
+	        <@th>Day</@th>
+	        <@th>[No Product]</@th>
+		    <#list productList as product>
+		        <@th>${product.internalName?default((Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(product, "PRODUCT_NAME", locale, dispatcher, "html"))!)}<br />P:[${product.productId}]</@th>
+		    </#list>
+		    <#list productCategoryList as productCategory>
+		        <@th>${(Static["org.ofbiz.product.category.CategoryContentWrapper"].getProductCategoryContentAsText(productCategory, "CATEGORY_NAME", locale, dispatcher, "html"))!}<br />C:[${productCategory.productCategoryId}]</@th>
+		    </#list>
+	    </@tr>
     </@thead>
     <#-- Days of the month -->
     <#list productNullResultByDayList as productNullResult>
@@ -56,14 +56,14 @@ under the License.
         <@tr>
             <@td>${(productNullResult_index + 1)}</@td>
             <@td><@resultSummary resultMap=productNullResult/></@td>
-        <#list productList as product>
-            <#assign productResult = productResultMap[product.productId]!/>
-            <@td><@resultSummary resultMap=productResult/></@td>
-        </#list>
-        <#list productCategoryList as productCategory>
-            <#assign categoryResult = categoryResultMap[productCategory.productCategoryId]!/>
-            <@td><@resultSummary resultMap=categoryResult/></@td>
-        </#list>
+	        <#list productList as product>
+	            <#assign productResult = productResultMap[product.productId]!/>
+	            <@td><@resultSummary resultMap=productResult/></@td>
+	        </#list>
+	        <#list productCategoryList as productCategory>
+	            <#assign categoryResult = categoryResultMap[productCategory.productCategoryId]!/>
+	            <@td><@resultSummary resultMap=categoryResult/></@td>
+	        </#list>
         </@tr>
     </#list>
 
@@ -71,13 +71,13 @@ under the License.
     <@tr>
         <@td>Month Total</@td>
         <@td><@resultSummary resultMap=monthProductNullResult/></@td>
-    <#list productList as product>
-        <#assign productResult = monthProductResultMap[product.productId]!/>
-        <@td><@resultSummary resultMap=productResult/></@td>
-    </#list>
-    <#list productCategoryList as productCategory>
-        <#assign categoryResult = monthCategoryResultMap[productCategory.productCategoryId]!/>
-        <@td><@resultSummary resultMap=categoryResult/></@td>
-    </#list>
+	    <#list productList as product>
+	        <#assign productResult = monthProductResultMap[product.productId]!/>
+	        <@td><@resultSummary resultMap=productResult/></@td>
+	    </#list>
+	    <#list productCategoryList as productCategory>
+	        <#assign categoryResult = monthCategoryResultMap[productCategory.productCategoryId]!/>
+	        <@td><@resultSummary resultMap=categoryResult/></@td>
+	    </#list>
     </@tr>
 </@table>

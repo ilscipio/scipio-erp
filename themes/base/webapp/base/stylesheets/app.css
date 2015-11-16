@@ -9914,28 +9914,27 @@ div.section-screenlet-container.no-title.no-menu {
     min-width: 0;
   }
 }
-/* line 340, ../scss/_base.scss */
+/* no longer used - quick custom workaround for be able to scroll tables.
 div.scrollable-table-container {
   overflow-x: scroll;
+  // FIXME: should get same margin as table had, not hardcoded, but doesn't collapse
   margin-bottom: 1.25rem;
 }
-
-/* line 345, ../scss/_base.scss */
 div.scrollable-table-container > table {
   margin-bottom: 0;
 }
-
-/* line 350, ../scss/_base.scss */
+*/
+/* line 351, ../scss/_base.scss */
 .field-entry-widget.field-entry-type-display:last-child {
   margin-bottom: 1rem;
 }
 
-/* line 354, ../scss/_base.scss */
+/* line 355, ../scss/_base.scss */
 .radio-item-inline .radio-item-separator {
   display: none;
 }
 
-/* line 359, ../scss/_base.scss */
+/* line 360, ../scss/_base.scss */
 .asmListItemRemove {
   margin-left: 1rem;
 }

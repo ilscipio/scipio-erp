@@ -336,7 +336,7 @@ $pie-color: $primary-color; // chart-color
     }
 }
 
-// quick custom workaround for be able to scroll tables.
+/* no longer used - quick custom workaround for be able to scroll tables.
 div.scrollable-table-container {
   overflow-x: scroll;
   // FIXME: should get same margin as table had, not hardcoded, but doesn't collapse
@@ -345,6 +345,7 @@ div.scrollable-table-container {
 div.scrollable-table-container > table {
   margin-bottom: 0;
 }
+*/
 
 // adds a margin to last elem inside "display" type fields, because all other types get a margin
 .field-entry-widget.field-entry-type-display:last-child {

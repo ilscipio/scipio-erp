@@ -210,17 +210,23 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     [inlineAttribs...]    = other legacy <table attributes and values, inlined
     
     * Responsive Tables *
-    responsive        = will rely on the jquery plugin datatables.js (www.datatables.net) to generate responsive table. 
-                        Can be combined with fixed column type.
-                        default is dependent on table type (global styles).
-    scrollable        = if true guarantees table will be scrollable horizontally.
-                        implementation of scrollable depends on macro and global styles (by default, uses responsive).
-                        default is dependent on table type (global styles); if not specified there, default
-                        is the calculated setting of responsive flag (so usually responsive true implies scrollable true, though not vice-versa).
-    fixedColumnsLeft  = int value; number of columns that are fixed on the left-hand side
-    fixedColumnsRight = int value; number of columns that are fixed on the right hand side
+    responsive          = if true, will rely on the jquery plugin datatables.js (www.datatables.net) to generate responsive table. 
+                          Can be combined with fixed column type.
+                          default is dependent on table type (global styles).
+    scrollable          = if true guarantees table will be scrollable horizontally.
+                          implementation of scrollable depends on macro and global styles (by default, uses responsive).
+                          default is dependent on table type (global styles); if not specified there, default
+                          is the calculated setting of responsive flag (so usually responsive true implies scrollable true, though not vice-versa).
+                          (convenience option; avoids having to specify responsive options)
+    responsiveOptions   = a map of options passed directly to responsive tables
+    responsiveDefaults  = if true, responsive defaults are looked up, and any option in responsiveOptions overrides the defaults
+                          per-option; if false, no defaults are used and only 
+                          responsiveOptions, fixedColumnsLeft and fixedColumnsRight are used. 
+                          default is true.
+    fixedColumnsLeft    = int value; number of columns that are fixed on the left-hand side (convenience option; alias for responsiveOptions.fixedColumns.leftColumns)
+    fixedColumnsRight   = int value; number of columns that are fixed on the right hand side (convenience option; alias for responsiveOptions.fixedColumns.rightColumns)             
 -->
-<#macro table type="" class="" id="" cellspacing=true responsive="" scrollable="" autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false fixedColumnsLeft=0 fixedColumnsRight=0 attribs={} inlineAttribs...>
+<#macro table type="" class="" id="" cellspacing=true responsive="" scrollable="" responsiveOptions={} responsiveDefaults="" autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false fixedColumnsLeft=0 fixedColumnsRight=0 attribs={} inlineAttribs...>
   <#local tableIdNum = getRequestVar("catoTableIdNum")!0>
   <#local tableIdNum = tableIdNum + 1 />
   <#local dummy = setRequestVar("catoTableIdNum", tableIdNum)>
@@ -263,6 +269,9 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     <#if !scrollable?is_boolean>
       <#local scrollable = styles["table_" + styleName + "_scrollable"]!styles["table_default_scrollable"]!responsive>
     </#if>
+    <#if !responsiveDefaults?is_boolean>
+      <#local responsiveDefaults = true>
+    </#if>
     <#local catoCurrentTableInfo = {"type": type, "styleName": styleName, "autoAltRows": autoAltRows,
       "inheritAltRows": inheritAltRows, "parentRowAlt": prevCurrentRowAlt, "useFootAltRows": useFootAltRows}>
     <#local dummy = setRequestVar("catoCurrentTableInfo", catoCurrentTableInfo)!>
@@ -291,8 +300,11 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     <#if !close>
       <#local dummy = pushRequestStack("catoCurrentTableStack", 
           {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevRowAltFlag":prevRowAltFlag, 
-           "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, "responsive":responsive, "scrollable":scrollable,
-           "id":id, "tableIdNum":tableIdNum})>
+           "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, 
+           "type":type, "id":id, "tableIdNum":tableIdNum,
+           "responsive":responsive, "scrollable":scrollable, "responsiveOptions":responsiveOptions,
+           "responsiveDefaults":responsiveDefaults, "fixedColumnsLeft":fixedColumnsLeft, "fixedColumnsRight":fixedColumnsRight
+           })>
     </#if>
     <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
       <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "cellspacing"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
@@ -307,51 +319,62 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
       <#local prevRowAltFlag = stackValues.prevRowAltFlag>
       <#local prevCurrentRowAlt = stackValues.prevCurrentRowAlt>
       <#local prevLastRowAlt = stackValues.prevLastRowAlt>
-      <#local responsive = stackValues.responsive>
-      <#local scrollable = stackValues.scrollable>
+      <#local type = stackValues.type>
       <#local id = stackValues.id>
       <#local tableIdNum = stackValues.tableIdNum>
+      <#local responsive = stackValues.responsive>
+      <#local scrollable = stackValues.scrollable>
+      <#local responsiveOptions = stackValues.responsiveOptions>
+      <#local responsiveDefaults = stackValues.responsiveDefaults>
+      <#local fixedColumnsLeft = stackValues.fixedColumnsLeft>
+      <#local fixedColumnsRight = stackValues.fixedColumnsRight>      
     </#if>
     </table>
-    <#-- TODO: currently responsive and scrollable generate the same responsive settings. but scrollable alone
-         shouldn't add all the controls responsive adds by default because they might interfere with some types of tables. -->
-    <#if responsive>
+    <#-- DEV NOTE: WARN: any vars used below here must have been preserved through stackValues above -->
+    <#if responsive || responsiveOptions?has_content || scrollable>
+      <#if !responsiveDefaults>
+        <#local respOpts = {}>
+      <#elseif responsive>
+        <#local respOpts = {
+            "fixedHeader" : true,
+            "scrollX" : true,
+            "info" : false,
+            "paging" : false,
+            "searching" : false,
+            "ordering" : true
+        }>
+      <#elseif scrollable>
+        <#local respOpts = {
+            "fixedHeader" : false,
+            "scrollX" : true,
+            "info" : false,
+            "paging" : false,
+            "searching" : false,
+            "ordering" : false
+        }>      
+      <#else>
+        <#local respOpts = {}>
+      </#if>
+
+      <#if (fixedColumnsLeft > 0) || (fixedColumnsRight > 0)>
+        <#local respOpts = respOpts + { "fixedColumns" : {
+            "leftColumns": fixedColumnsLeft!0,
+            "rightColumns": fixedColumnsRight!0
+          }
+        }>
+      </#if>
+
+      <#if responsiveOptions?has_content>
+        <#local respOpts = respOpts + responsiveOptions>
+      </#if>
+      
       <@script>
         $(document).ready(function() {
-            $('#${id}').DataTable( {
-                fixedHeader: true,
-                scrollX: true,
-                info: false,
-                paging: false,
-                searching : false,
-                ordering : true
-                <#if (fixedColumnsLeft > 0) || (fixedColumnsRight > 0)>,fixedColumns: {
-                leftColumns: ${fixedColumnsLeft!0},
-                rightColumns: ${fixedColumnsRight!0}
-                }
-                </#if>
-            } );
-        } );
-      </@script>
-    <#elseif scrollable>
-      <@script>
-        $(document).ready(function() {
-            $('#${id}').DataTable( {
-                fixedHeader: false,
-                scrollX: true,
-                info: false,
-                paging: false,
-                searching : false,
-                ordering : false
-                <#if (fixedColumnsLeft > 0) || (fixedColumnsRight > 0)>,fixedColumns: {
-                leftColumns: ${fixedColumnsLeft!0},
-                rightColumns: ${fixedColumnsRight!0}
-                }
-                </#if>
-            } );
+            $('#${id}').DataTable(<@objectAsScript lang="js" object=respOpts />);
         } );
       </@script>
     </#if>
+
     <#local dummy = setRequestVar("catoCurrentTableInfo", prevTableInfo)!>
     <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevSectionInfo)!>
     <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", prevRowAltFlag)!>

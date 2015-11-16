@@ -253,11 +253,24 @@
         <@commonTestTableContent />
       </@table>
     </@section>
-    <@section title="data-complex table (responsive - default/full responsive)">
+    <@section title="data-complex table (responsive - default responsive)">
       <@table type="data-complex" responsive=true>
         <@commonTestTableContent />
       </@table>
     </@section>  
+    <#assign responsiveOptions = {
+        "fixedHeader" : true,
+        "scrollX" : false,
+        "info" : true,
+        "paging" : false,
+        "searching" : false,
+        "ordering" : true
+    }>
+    <@section title="data-complex table (responsive - custom responsive)">
+      <@table type="data-complex" responsive=true responsiveOptions=responsiveOptions fixedColumnsLeft=1 responsiveDefaults=false>
+        <@commonTestTableContent />
+      </@table>
+    </@section>      
 
     <@section title="data-complex table (nested tables and alt rows)">
       <@table type="data-complex" autoAltRows=true>

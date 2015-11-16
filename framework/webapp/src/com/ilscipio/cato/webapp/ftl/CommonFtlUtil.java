@@ -23,6 +23,7 @@ import org.ofbiz.base.util.cache.UtilCache;
 
 import freemarker.core.Environment;
 import freemarker.core.Macro;
+import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.SimpleMapModel;
 import freemarker.ext.util.WrapperTemplateModel;
@@ -94,6 +95,13 @@ public final class CommonFtlUtil {
         SIMPLEMODEL,
         COMPLEXMODEL
     }
+    
+    public enum SetOperations {
+        UNION,
+        INTERSECT,
+        DIFFERENCE
+    }
+    
 
     /**
      * Parses a complex style string meant to describe an element notably heading into hash of constituent values.
@@ -1096,26 +1104,8 @@ public final class CommonFtlUtil {
         if (targetType == null) {
             targetType = TemplateValueTargetType.PRESERVE;
         }
-        if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
-            // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
-            Map<Object, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
-            if (targetType == TemplateValueTargetType.SIMPLEMODEL) {
-                return new SimpleHash(wrappedObject, objectWrapper);
-            }
-            else {
-                return new HashMap<Object, Object>(wrappedObject);
-            }
-        }
-        else if (object instanceof TemplateHashModelEx && OfbizFtlObjectType.MAP.isObjectType(object)) {
-            TemplateHashModelEx hashModel = (TemplateHashModelEx) object;
-            SimpleHash res = new SimpleHash(objectWrapper);
-            TemplateCollectionModel modelColl = hashModel.keys();
-            TemplateModelIterator modelIt = modelColl.iterator();
-            while(modelIt.hasNext()) {
-                String key = ((TemplateScalarModel) modelIt.next()).getAsString();
-                res.put(key, hashModel.get(key));
-            }
-            return res;
+        if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object) || (object instanceof TemplateHashModelEx && OfbizFtlObjectType.MAP.isObjectType(object))) {
+            return copyMap(object, null, null, targetType, objectWrapper);
         }
         else if (object instanceof TemplateCollectionModel || object instanceof TemplateSequenceModel) {
             return copyList(object, targetType, objectWrapper);
@@ -1124,6 +1114,135 @@ public final class CommonFtlUtil {
             throw new TemplateModelException("object is not cloneable");
         }
     }
+    
+    public static Object copyMap(TemplateModel object, Set<String> inExKeys, Boolean include, 
+            TemplateValueTargetType targetType, ObjectWrapper objectWrapper) throws TemplateModelException {
+        if (targetType == null) {
+            targetType = TemplateValueTargetType.PRESERVE;
+        }
+        if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
+            // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
+            Map<String, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
+            // TODO: this only handles most urgent targetType case
+            if (targetType == TemplateValueTargetType.SIMPLEMODEL) {
+                return copyMapToSimple(wrappedObject, inExKeys, include, objectWrapper);
+            }
+            else {
+                return copyMapToRawMap(wrappedObject, inExKeys, include);
+            }
+        }
+        else if (object instanceof TemplateHashModel && OfbizFtlObjectType.MAP.isObjectType(object)) {
+            // TODO: this ignores targetType
+            return copyMapToSimple((TemplateHashModel) object, inExKeys, include, objectWrapper);
+        }
+        throw new TemplateModelException("Cannot copy map of type " + object.getClass().toString() + 
+                " to target type: " + targetType.toString());        
+    }
+    
+    private static SimpleHash copyMapToSimple(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, ObjectWrapper objectWrapper) throws TemplateModelException {
+        SimpleHash res = new SimpleHash(objectWrapper);
+        
+        if (include == Boolean.TRUE) {
+            if (inExKeys == null) {
+                inExKeys = new HashSet<String>();
+            }
+            for(String key : inExKeys) {
+                TemplateModel valueModel = hashModel.get(key);
+                if (inExKeys.contains(key)) {
+                    res.put(key, valueModel);
+                }
+            }                
+        }
+        else if (include == null || inExKeys == null || inExKeys.isEmpty()) {
+            if (!(hashModel instanceof TemplateHashModelEx)) {
+                throw new TemplateModelException("Hash to copy does not support ?keys");
+            }
+            
+            TemplateCollectionModel keys = ((TemplateHashModelEx) hashModel).keys();
+            TemplateModelIterator keysIt = keys.iterator();
+
+            while(keysIt.hasNext()) {
+                String key = ((TemplateScalarModel) keysIt.next()).getAsString();
+                res.put(key, hashModel.get(key));
+            }                
+        }
+        else {
+            if (!(hashModel instanceof TemplateHashModelEx)) {
+                throw new TemplateModelException("Hash to copy does not support ?keys");
+            }
+            
+            TemplateCollectionModel keys = ((TemplateHashModelEx) hashModel).keys();
+            TemplateModelIterator keysIt = keys.iterator();
+
+            while(keysIt.hasNext()) {
+                String key = ((TemplateScalarModel) keysIt.next()).getAsString();
+                TemplateModel valueModel = hashModel.get(key);
+                if (!inExKeys.contains(key)) {
+                    res.put(key, valueModel);
+                }
+            } 
+        }
+        return res;
+    }
+    
+    private static SimpleHash copyMapToSimple(Map<String, Object> map, Set<String> inExKeys, Boolean include, ObjectWrapper objectWrapper) throws TemplateModelException {
+        if (include == Boolean.TRUE) {
+            SimpleHash res = new SimpleHash(objectWrapper);
+            if (inExKeys == null) {
+                inExKeys = new HashSet<String>();
+            }
+            for(String key : inExKeys) {
+                Object valueModel = map.get(key);
+                if (inExKeys.contains(key)) {
+                    res.put(key, valueModel);
+                }
+            }     
+            return res;
+        }
+        else if (include == null || inExKeys == null || inExKeys.isEmpty()) {
+            return new SimpleHash(map, objectWrapper);          
+        }
+        else {
+            SimpleHash res = new SimpleHash(objectWrapper);
+            for(Map.Entry<String, Object> entry : map.entrySet()) {
+                String key = entry.getKey();
+                if (!inExKeys.contains(key)) {
+                    res.put(key, entry.getValue());
+                }                
+            }
+            return res;
+        }
+    }    
+    
+    private static Map<String, Object> copyMapToRawMap(Map<String, Object> map, Set<String> inExKeys, Boolean include) throws TemplateModelException {
+        if (include == Boolean.TRUE) {
+            Map<String, Object> res = new HashMap<String, Object>(map.size());
+            if (inExKeys == null) {
+                inExKeys = new HashSet<String>();
+            }
+            for(String key : inExKeys) {
+                Object valueModel = map.get(key);
+                if (inExKeys.contains(key)) {
+                    res.put(key, valueModel);
+                }
+            }     
+            return res;
+        }
+        else if (include == null || inExKeys == null || inExKeys.isEmpty()) {
+            return new HashMap<String, Object>(map);        
+        }
+        else {
+            Map<String, Object> res = new HashMap<String, Object>(map.size());
+            for(Map.Entry<String, Object> entry : map.entrySet()) {
+                String key = entry.getKey();
+                if (!inExKeys.contains(key)) {
+                    res.put(key, entry.getValue());
+                }                
+            }
+            return res;
+        }
+    }        
+    
     
     /**
      * Copies a list to a target model/raw list type. In general does not wrap/unwrap individual values.
@@ -1315,6 +1434,212 @@ public final class CommonFtlUtil {
             res.put(prefixMap.get(prefix), val);
         }
         return res;
+    }
+    
+    /**
+     * Adds to simple hash from source map.
+     * <p>
+     * TODO: WARN: This is not currently BeanModel-aware (complex map).
+     */    
+    public static void addToSimpleMap(SimpleHash dest, TemplateHashModelEx source) throws TemplateModelException {
+        TemplateCollectionModel keysModel = source.keys();
+        TemplateModelIterator modelIt = keysModel.iterator();
+        while(modelIt.hasNext()) {
+            String key = ((TemplateScalarModel) modelIt.next()).getAsString();
+            dest.put(key, source.get(key));
+        }
+    }
+    
+    public static void addToSimpleMap(SimpleHash dest, TemplateHashModel source, Set<String> keys) throws TemplateModelException {
+        for(String key : keys) {
+            dest.put(key, source.get(key));
+        }
+    }    
+    
+    /**
+     * Makes a simple hash from source map; only specified keys.
+     * <p>
+     * TODO: WARN: This is not currently BeanModel-aware (complex map).
+     */
+    public static SimpleHash makeSimpleMap(TemplateHashModel map, Set<String> keys, ObjectWrapper objectWrapper) throws TemplateModelException {
+        SimpleHash res = new SimpleHash(objectWrapper);
+        addToSimpleMap(res, map, keys);
+        return res;
+    }
+    
+    public static SimpleHash makeSimpleMap(TemplateHashModel map, TemplateCollectionModel keys, ObjectWrapper objectWrapper) throws TemplateModelException {
+        SimpleHash res = new SimpleHash(objectWrapper);
+        addToSimpleMap(res, map, toStringSet(keys));
+        return res;
+    }
+    
+    public static SimpleHash makeSimpleMap(TemplateHashModel map, TemplateSequenceModel keys, ObjectWrapper objectWrapper) throws TemplateModelException {
+        SimpleHash res = new SimpleHash(objectWrapper);
+        addToSimpleMap(res, map, toStringSet(keys));
+        return res;
+    }
+    
+    public static Set<String> toStringSet(TemplateCollectionModel collModel) throws TemplateModelException {
+        Set<String> set = new HashSet<String>();
+        TemplateModelIterator modelIt = collModel.iterator();
+        while(modelIt.hasNext()) {
+            set.add(((TemplateScalarModel) modelIt.next()).getAsString());
+        }
+        return set;
+    }    
+    
+    public static void addToStringSet(Set<String> dest, TemplateCollectionModel collModel) throws TemplateModelException {
+        TemplateModelIterator modelIt = collModel.iterator();
+        while(modelIt.hasNext()) {
+            dest.add(((TemplateScalarModel) modelIt.next()).getAsString());
+        }
+    }
+    
+    public static Set<String> toStringSet(TemplateSequenceModel seqModel) throws TemplateModelException {
+        Set<String> set = new HashSet<String>();
+        for(int i=0; i < seqModel.size(); i++) {
+            set.add(((TemplateScalarModel) seqModel.get(i)).getAsString());
+        }
+        return set;
+    }    
+    
+    public static void addToStringSet(Set<String> dest, TemplateSequenceModel seqModel) throws TemplateModelException {
+        for(int i=0; i < seqModel.size(); i++) {
+            dest.add(((TemplateScalarModel) seqModel.get(i)).getAsString());
+        }
+    }    
+    
+    /**
+     * Combines two maps with the given operator into a new hash.
+     */
+    public static TemplateHashModelEx combineMaps(TemplateHashModelEx first, TemplateHashModelEx second, SetOperations ops, 
+            ObjectWrapper objectWrapper) throws TemplateModelException {
+        SimpleHash res = new SimpleHash(objectWrapper);
+        if (ops == null || ops == SetOperations.UNION) {
+            // this is less efficient than freemarker + operator, but provides the "alternative" implementation, so have choice
+            addToSimpleMap(res, first);
+            addToSimpleMap(res, second);
+        }
+        else if (ops == SetOperations.INTERSECT) {
+            Set<String> intersectKeys = toStringSet(second.keys());
+            intersectKeys.retainAll(toStringSet(first.keys()));
+            addToSimpleMap(res, second, intersectKeys);
+        }
+        else if (ops == SetOperations.DIFFERENCE) {
+            Set<String> diffKeys = toStringSet(first.keys());
+            diffKeys.removeAll(toStringSet(second.keys()));
+            addToSimpleMap(res, first, diffKeys);
+        }
+        else {
+            throw new TemplateModelException("Unsupported combineMaps operation");
+        }
+        return res;
+    }
+
+    public static Set<String> getAsStringSet(TemplateModel model) throws TemplateModelException {
+        Set<String> exKeys = null;
+        if (model != null) {
+            if (model instanceof BeanModel && ((BeanModel) model).getWrappedObject() instanceof Set) {
+                exKeys = UtilGenerics.cast(((BeanModel) model).getWrappedObject());
+            }
+            else if (model instanceof TemplateCollectionModel) {
+                exKeys = new HashSet<String>();
+                TemplateModelIterator keysIt = ((TemplateCollectionModel) model).iterator();
+                while(keysIt.hasNext()) {
+                    exKeys.add(((TemplateScalarModel) keysIt.next()).getAsString());
+                }
+            }
+            else if (model instanceof TemplateSequenceModel) {
+                TemplateSequenceModel seqModel = (TemplateSequenceModel) model;
+                exKeys = new HashSet<String>(seqModel.size());
+                for(int i=0; i < seqModel.size(); i++) {
+                    exKeys.add(((TemplateScalarModel) seqModel.get(i)).getAsString());
+                }
+            }
+            else {
+                throw new TemplateModelException("Include/exclude keys argument not a collection or set of strings");
+            }
+        }
+        return exKeys;
+    }
+    
+    
+    /**
+     * Puts all values in hash into FTL globals.
+     * <p>
+     * @see #copyMapToSimple(TemplateHashModel, Set, Boolean, ObjectWrapper)
+     */
+    public static void globalsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Boolean onlyDirectives, Environment env) throws TemplateModelException {
+        if (include == Boolean.TRUE) {
+            if (inExKeys == null) {
+                inExKeys = new HashSet<String>();
+            }
+            if (onlyDirectives == Boolean.TRUE) {
+                for(String key : inExKeys) {
+                    TemplateModel valueModel = hashModel.get(key);
+                    if (CommonFtlUtil.isDirective(valueModel)) {
+                        env.setGlobalVariable(key, valueModel);
+                    }
+                }
+            }
+            else {
+                for(String key : inExKeys) {
+                    TemplateModel valueModel = hashModel.get(key);
+                    if (inExKeys.contains(key)) {
+                        env.setGlobalVariable(key, valueModel);
+                    }
+                }                
+            }
+        }
+        else if (include == null || inExKeys == null || inExKeys.isEmpty()) {
+            if (!(hashModel instanceof TemplateHashModelEx)) {
+                throw new TemplateModelException("Hash to copy does not support ?keys");
+            }
+            
+            TemplateCollectionModel keys = ((TemplateHashModelEx) hashModel).keys();
+            TemplateModelIterator keysIt = keys.iterator();
+            if (onlyDirectives == Boolean.TRUE) {
+                while(keysIt.hasNext()) {
+                    String key = ((TemplateScalarModel) keysIt.next()).getAsString();
+                    TemplateModel valueModel = hashModel.get(key);
+                    if (CommonFtlUtil.isDirective(valueModel)) {
+                        env.setGlobalVariable(key, valueModel);
+                    }
+                }
+            }
+            else {
+                while(keysIt.hasNext()) {
+                    String key = ((TemplateScalarModel) keysIt.next()).getAsString();
+                    env.setGlobalVariable(key, hashModel.get(key));
+                }                
+            }
+        }
+        else {
+            if (!(hashModel instanceof TemplateHashModelEx)) {
+                throw new TemplateModelException("Hash to copy does not support ?keys");
+            }
+            
+            TemplateCollectionModel keys = ((TemplateHashModelEx) hashModel).keys();
+            TemplateModelIterator keysIt = keys.iterator();
+            if (onlyDirectives == Boolean.TRUE) {
+                while(keysIt.hasNext()) {
+                    String key = ((TemplateScalarModel) keysIt.next()).getAsString();
+                    TemplateModel valueModel = hashModel.get(key);
+                    if (!inExKeys.contains(key) && CommonFtlUtil.isDirective(valueModel)) {
+                        env.setGlobalVariable(key, valueModel);
+                    }
+                }
+            }
+            else {
+                while(keysIt.hasNext()) {
+                    String key = ((TemplateScalarModel) keysIt.next()).getAsString();
+                    TemplateModel valueModel = hashModel.get(key);
+                    if (!inExKeys.contains(key)) {
+                        env.setGlobalVariable(key, valueModel);
+                    }
+                } 
+            }
+        }
     }
     
 }

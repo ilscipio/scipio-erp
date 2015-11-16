@@ -390,11 +390,36 @@ Implemented as java transform.
 *************
 * copyObject
 ************
-Performs a shallow copy of a map (TODO: lists). Usually not needed in FTL; for advanced usage.
+Performs a shallow copy of an object (map or list). Usually not needed in FTL; for advanced usage.
 The resulting underlying type may differ from the original, but by default will be similar.
 Implemented as java transform.
 
 <#function copyObject object>
+- implemented as java transform -
+</#function>
+-->
+
+<#-- 
+*************
+* copyMap
+************
+Performs a shallow copy of a map. Usually not needed in FTL; for advanced usage.
+The resulting underlying type may differ from the original; in principle tries to preserve, but in most
+cases will create a simple hash.
+Implemented as java transform.
+
+NOTE: copyObject will also work fine on maps, but this has more map-specific options.
+
+NOTE: This can only copy maps without ?keys support if mode is include ("i") and keys specified.
+
+  * Parameters *
+    map         = the source map
+    mode        = optional mode flags
+                  "e": exclude listed keys
+                  "i": include only listed keys
+    inExKeys    = optional list or wrapped set of keys to include or exclude    
+
+<#function copyMap map mode inExKeys>
 - implemented as java transform -
 </#function>
 -->
@@ -1082,7 +1107,7 @@ Now implemented as java transform.
 
 <#-- 
 *************
-* globalPutAll
+* globalsPutAll
 ************
 Puts all key-value pairs from given map into FTL globals.
 Now implemented as java transform.
@@ -1095,7 +1120,7 @@ Now implemented as java transform.
                   "d": include only directives (?is_directive)
     inExKeys    = optional list or wrapped set of keys to include or exclude           
 
-<#function globalPutAll map mode="" inExKeys=[]>
+<#function globalsPutAll map mode="" inExKeys=[]>
 - implemented as java transform -
 </#function>
 -->

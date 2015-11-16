@@ -143,8 +143,8 @@ under the License.
                 </service>
                 <set field="layoutSettings" from-field="themeResources" default-value="${layoutSettings}" global="true" />
                 
-                <set field="setContextCatoStylesAsGlobal" type="Boolean" value="true" />
-                <script location="component://common/webcommon/WEB-INF/actions/includes/setContextCatoStyles.groovy" />
+                <set field="setContextCatoTmplGlobalVarsAsGlobal" type="Boolean" value="true" />
+                <script location="component://common/webcommon/WEB-INF/actions/includes/cato/SetContextCatoTmplGlobalVars.groovy" />
             </actions>
             <widgets />
         </section>

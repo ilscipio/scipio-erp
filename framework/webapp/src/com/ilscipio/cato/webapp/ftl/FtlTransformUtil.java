@@ -1,8 +1,6 @@
 package com.ilscipio.cato.webapp.ftl;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,12 +9,8 @@ import org.ofbiz.base.util.template.FreeMarkerWorker;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
-import freemarker.template.TemplateCollectionModel;
-import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateModelIterator;
-import freemarker.template.TemplateScalarModel;
 import freemarker.template.utility.DeepUnwrap;
 
 /**
@@ -194,91 +188,5 @@ public final class FtlTransformUtil {
             throw new TemplateModelException("Cannot unwrap non-TemplateModel value (type " + value.getClass().getName() + ")");
         }
     }    
-    
-    public static Set<String> getAsStringSet(TemplateModel model) throws TemplateModelException {
-        Set<String> exKeys = null;
-        if (model != null) {
-            if (model instanceof BeanModel && ((BeanModel) model).getWrappedObject() instanceof Set) {
-                exKeys = UtilGenerics.cast(((BeanModel) model).getWrappedObject());
-            }
-            else if (model instanceof TemplateCollectionModel) {
-                exKeys = new HashSet<String>();
-                TemplateModelIterator keysIt = ((TemplateCollectionModel) model).iterator();
-                while(keysIt.hasNext()) {
-                    exKeys.add(((TemplateScalarModel) keysIt.next()).getAsString());
-                }
-            }
-            else {
-                throw new TemplateModelException("Include/exclude keys argument not a collection or set of strings");
-            }
-        }
-        return exKeys;
-    }
-    
-    
-    public static void globalsPutAll(TemplateHashModelEx hashModel, Set<String> inExKeys, Boolean include, Boolean onlyDirectives, Environment env) throws TemplateModelException {
-        TemplateCollectionModel keys = hashModel.keys();
-        TemplateModelIterator keysIt = keys.iterator();
-        if (include == Boolean.TRUE) {
-            if (inExKeys == null) {
-                inExKeys = new HashSet<String>();
-            }
-            if (onlyDirectives == Boolean.TRUE) {
-                while(keysIt.hasNext()) {
-                    String key = ((TemplateScalarModel) keysIt.next()).getAsString();
-                    TemplateModel valueModel = hashModel.get(key);
-                    if (inExKeys.contains(key) && CommonFtlUtil.isDirective(valueModel)) {
-                        env.setGlobalVariable(key, valueModel);
-                    }
-                }
-            }
-            else {
-                while(keysIt.hasNext()) {
-                    String key = ((TemplateScalarModel) keysIt.next()).getAsString();
-                    TemplateModel valueModel = hashModel.get(key);
-                    if (inExKeys.contains(key)) {
-                        env.setGlobalVariable(key, valueModel);
-                    }
-                }                
-            }
-        }
-        else if (inExKeys == null || inExKeys.isEmpty()) {
-            if (onlyDirectives == Boolean.TRUE) {
-                while(keysIt.hasNext()) {
-                    String key = ((TemplateScalarModel) keysIt.next()).getAsString();
-                    TemplateModel valueModel = hashModel.get(key);
-                    if (CommonFtlUtil.isDirective(valueModel)) {
-                        env.setGlobalVariable(key, valueModel);
-                    }
-                }
-            }
-            else {
-                while(keysIt.hasNext()) {
-                    String key = ((TemplateScalarModel) keysIt.next()).getAsString();
-                    env.setGlobalVariable(key, hashModel.get(key));
-                }                
-            }
-        }
-        else {
-            if (onlyDirectives == Boolean.TRUE) {
-                while(keysIt.hasNext()) {
-                    String key = ((TemplateScalarModel) keysIt.next()).getAsString();
-                    TemplateModel valueModel = hashModel.get(key);
-                    if (!inExKeys.contains(key) && CommonFtlUtil.isDirective(valueModel)) {
-                        env.setGlobalVariable(key, valueModel);
-                    }
-                }
-            }
-            else {
-                while(keysIt.hasNext()) {
-                    String key = ((TemplateScalarModel) keysIt.next()).getAsString();
-                    TemplateModel valueModel = hashModel.get(key);
-                    if (!inExKeys.contains(key)) {
-                        env.setGlobalVariable(key, valueModel);
-                    }
-                } 
-            }
-        }
-    }
     
 }

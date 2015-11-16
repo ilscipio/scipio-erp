@@ -20,22 +20,21 @@ package com.ilscipio.cato.webapp.ftl;
 
 import java.util.List;
 
+import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.TemplateValueTargetType;
+
 import freemarker.core.Environment;
-import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateHashModel;
-import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * Cato: GlobalsPutAllMethod - Freemarker Method for dumping all values in a map
- * into FTL globals.
+ * Cato: CopyObjectMethod - Helper method to clone (shallow copy) a map or list.
  */
-public class GlobalsPutAllMethod implements TemplateMethodModelEx {
+public class CopyMapMethod implements TemplateMethodModelEx {
 
-    public static final String module = GlobalsPutAllMethod.class.getName();
+    public static final String module = CopyMapMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -47,7 +46,7 @@ public class GlobalsPutAllMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("Invalid number of arguments (expected: 1-3)");
         }
         TemplateModel hashObjModel = (TemplateModel) args.get(0);
-        if (!(hashObjModel instanceof TemplateHashModelEx)) {
+        if (!(hashObjModel instanceof TemplateHashModel)) {
             throw new TemplateModelException("First argument not an instance of TemplateHashModel");
         }
         TemplateHashModel hashModel = (TemplateHashModel) hashObjModel;
@@ -65,7 +64,6 @@ public class GlobalsPutAllMethod implements TemplateMethodModelEx {
         Environment env = FtlTransformUtil.getCurrentEnvironment();
         
         Boolean include = null;
-        Boolean onlyDirectives = null;
         if (mode != null && !mode.isEmpty()) {
             if (mode.contains("i")) {
                 include = Boolean.TRUE;
@@ -73,15 +71,10 @@ public class GlobalsPutAllMethod implements TemplateMethodModelEx {
             else if (mode.contains("e")) {
                 include = Boolean.FALSE;
             }
-            
-            if (mode.contains("d")) {
-                onlyDirectives = Boolean.TRUE;
-            }
         }
         
-        CommonFtlUtil.globalsPutAll(hashModel, CommonFtlUtil.getAsStringSet(keysModel), include, onlyDirectives, env);
-        
-        return new SimpleScalar("");
+        return CommonFtlUtil.copyMap(hashModel, CommonFtlUtil.getAsStringSet(keysModel), include, 
+                TemplateValueTargetType.SIMPLEMODEL, env.getObjectWrapper());
     }
-
+    
 }

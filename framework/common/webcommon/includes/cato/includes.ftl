@@ -29,6 +29,8 @@
 
 <#if catoVariablesIncludeDirective?is_directive>
     <#assign catoTemplateIncludeDirective = getRequestVar("catoTemplateIncludeDirective")>
+    <#-- get the cached variables and styles -->
+    <#assign dummy = globalsPutAll(getRequestVar("catoTmplGlobalVars")!{})>
 <#else>
     <#-- cache these var lookups so it only needs to happen once in a request -->
     <#assign catoVariablesLibraryPath = getRequestVar("catoVariablesLibraryPath")!false>
@@ -73,14 +75,25 @@
 
     <#assign dummy = setRequestVar("catoVariablesIncludeDirective", catoVariablesIncludeDirective)>
     <#assign dummy = setRequestVar("catoTemplateIncludeDirective", catoTemplateIncludeDirective)>
+    
+    <#-- Include and cache the global variables -->
+    <#global styles = {}>
+    <#assign catoTmplGlobalVarsNames = ["styles"]>
+    <#-- Main theme variables include -->
+    <@catoVariablesIncludeDirective />
+    <#-- NOTE: we can call copyMap on non-?keys .globals because include keys specified -->
+    <#assign catoTmplGlobalVars = copyMap(.globals, "i", catoTmplGlobalVarsNames)>
+
+    <#-- make the styles var persist for anything that might need it (usually not FTL, for now always reincluded above) 
+        NOTE: is guaranteed to stay FTL-wrapped; any outside code reading back must use FtlTransformUtil.unwrapXxx 
+        NOTE: would have to do this even if there was no caching, because non-FTL currently needs to read back -->
+    <#assign dummy = setRequestVar("catoTmplGlobalVars", catoTmplGlobalVars, "w")>
+    
 </#if>
 
-<#-- Do the platform-dependent lib includes. -->
-<@catoVariablesIncludeDirective />
-<#-- make the styles var persist for anything that might need it (usually not FTL, for now always reincluded above) 
-     NOTE: is FTL-wrapped; any code reading back must use FtlTransformUtil.unwrapXxx -->
-<#assign dummy = setRequestVar("catoTmplVarStyles", styles!{}, "w")> 
+<#-- Do the platform-dependent lib always-includes. -->
 
+<#-- Main theme macros include (TODO? is there any way to cache this further? (like global vars)) -->
 <@catoTemplateIncludeDirective />
 
 <#-- FIXME? For now we must copy/dump all cato macro and function defs from main namespace into the global namespace manually.

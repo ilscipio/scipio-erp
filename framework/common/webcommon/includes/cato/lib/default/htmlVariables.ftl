@@ -7,6 +7,9 @@
 * Intended to be swappable.
 *
 * NOTE: currently targeted toward Foundation CSS.
+*
+* NOTE: variables must now be defined using #assign, not #global (treat this file as if it were being
+*   included in its own namespace, even if it is not).
 * 
 -->
 
@@ -17,7 +20,7 @@
 * Cato automatically recognizes the "styles" global hash.
 -->
 
-<#global styles = {
+<#assign styles = {
   <#-- Misc -->
     "framework" : "foundation",
     "disabled" : "disabled",
@@ -382,15 +385,10 @@
 
 <#-- 
 *************************************
-* EXTRA TEMPLATING GLOBALS *
+* OTHER TEMPLATING GLOBALS *
 *************************************
 -->
 
-<#-- By default, cato only recognizes the global variables in the previous section.
-    More globals may be added, but they have to be added to the list of recognized var names.
-    (due to FTL limitations with globals). Note that the list uses #assign, not #global.
-<#global myGlobalThemeVar = "some-value">    
-<#assign catoTmplGlobalVarsNames = catoTmplGlobalVarsNames + ["myGlobalThemeVar"]>
--->
+<#-- (currently none) -->
 
 

@@ -494,9 +494,9 @@ under the License.
                                             <@td width="60%" valign="top">
                                                  <@table type="fields" cellspacing="0"> <#-- orig: class="" -->
                                                     <@tr><@td>
-                                                        <script language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/js/elrte.min.js</@ofbizContentUrl>" type="text/javascript"></script>
+                                                        <script src="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/js/elrte.min.js</@ofbizContentUrl>" type="text/javascript"></script>
                                                         <#if language?has_content && language != "en">
-                                                        <script language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!"en"}.js</@ofbizContentUrl>" type="text/javascript"></script><#rt/>
+                                                        <script src="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!"en"}.js</@ofbizContentUrl>" type="text/javascript"></script><#rt/>
                                                         </#if>
                                                         <link href="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/css/elrte.min.css</@ofbizContentUrl>" rel="stylesheet" type="text/css">
                                                         <@script>

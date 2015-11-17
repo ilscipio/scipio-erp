@@ -16,7 +16,7 @@
   specific language governing permissions and limitations
   under the License.
   -->
-<script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jsTree/jquery.jstree.js</@ofbizContentUrl>"></script>
+<script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jsTree/jquery.jstree.js</@ofbizContentUrl>"></script>
 <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/ui/js/jquery.cookie-1.4.0.js</@ofbizContentUrl>"></script>
   
 <@script>

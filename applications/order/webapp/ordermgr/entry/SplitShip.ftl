@@ -17,8 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="javascript" type="text/javascript">
-//<![CDATA[
+<@script>
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; payment info
@@ -42,8 +41,7 @@ function submitForm(form, mode, value) {
         form.submit();
     }
 }
-//]]>
-</script>
+</@script>
 
 <@section title="${uiLabelMap.OrderItemGroups}">
         <@table type="data-complex" width="100%" cellspacing="0" cellpadding="1" border="0">

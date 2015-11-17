@@ -510,37 +510,31 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
          
   * Parameters *
     url             = controller request uri
-    forceInline     = if true, the include must be inlined in the markup where the macro is used
+    inline          = if true, the include must be inlined in the markup where the macro is used
                       and should never be delegated. in most cases this should be omitted.  
-                      DEV NOTE: if false (default) for now simply accumulates the names  
-                      and will be included by decorator in footer
+                      DEV NOTE: if not specified, "" or false for now simply accumulates the names  
+                          and will be included by decorator in footer.
 -->
-<#macro requireScriptOfbizUrl uri htmlwrap=false forceInline=false>
+<#macro requireScriptOfbizUrl uri htmlwrap=false inline="">
   <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
   <#if requiredScriptOfbizUrls?is_boolean || !requiredScriptOfbizUrls.contains(uri)>
-    <#if forceInline>
-      <#if htmlwrap>
-<script language="JavaScript" type="text/javascript">
-<!-- //
-      </#if>
-      <#if requiredScriptOfbizUrls?is_boolean>
-    if (typeof variable === 'undefined') {
-        var commonOfbizUrls = {};
-    }
-      </#if>
-
-    commonOfbizUrls["${uri}"] = "<@ofbizUrl>${uri}</@ofbizUrl>";
-      <#if htmlwrap>
-// -->
-</script>
-      </#if>
-    </#if>
-    <#if requiredScriptOfbizUrls?is_boolean>
-      <#local requiredScriptOfbizUrls = Static["org.ofbiz.base.util.UtilMisc"].toSet(uri)>
+    <#if inline?is_boolean && inline == true>
+      <@script wrapIf=htmlwrap>
+        <#if requiredScriptOfbizUrls?is_boolean>
+          if (typeof variable === 'undefined') {
+              var commonOfbizUrls = {};
+          }
+        </#if>
+        commonOfbizUrls["${uri}"] = "<@ofbizUrl>${uri}</@ofbizUrl>";
+      </@script>
     <#else>
-      <#local dummy = requiredScriptOfbizUrls.add(uri)!>
+      <#if requiredScriptOfbizUrls?is_boolean>
+        <#local requiredScriptOfbizUrls = Static["org.ofbiz.base.util.UtilMisc"].toSet(uri)>
+      <#else>
+        <#local dummy = requiredScriptOfbizUrls.add(uri)!>
+      </#if>
+      <#local dummy = setRequestVar("requiredScriptOfbizUrls", requiredScriptOfbizUrls)>
     </#if>
-    <#local dummy = setRequestVar("requiredScriptOfbizUrls", requiredScriptOfbizUrls)>
   </#if>
 </#macro>
 

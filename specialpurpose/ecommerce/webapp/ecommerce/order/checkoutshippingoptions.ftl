@@ -17,8 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="javascript" type="text/javascript">
-//<![CDATA[
+<@script>
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
@@ -55,8 +54,7 @@ function submitForm(form, mode, value) {
     }
 }
 
-//]]>
-</script>
+</@script>
 
 <form method="post" name="checkoutInfoForm">
   <fieldset>

@@ -57,13 +57,16 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
     </@script>         
                     
   * Parameters *
-    type            = script type identifier
-    language        = language identifier
-    src             = source
-    forceInline     = if true, the script must be inlined in the markup where the macro is used
-                      and should never be delegated. in most cases this should be omitted.
+    type            = script type identifier (default "text/javascript")
+    language        = language identifier (deprecated - avoid)
+    src             = source (if no nested content)
+    inline          = if true, the script must be inlined in the markup where the macro is used
+                      and should never be delegated. in most cases this should be omitted,
+                      except when used in html <head> or in a footer.
+                      if not specified or "", cato decides what to do with them (inline or accumulate at bottom of page).
+                      TODO: code to accumulate at footer.
 -->
-<#macro script type="text/javascript" language="" src="" ofbizContentSrc="" forceInline=false cdata=true wrapIf=true>
+<#macro script type="text/javascript" language="" src="" ofbizContentSrc="" inline="" cdata=true wrapIf=true>
   <#local open = wrapIf>
   <#local close = wrapIf>
   <#if ofbizContentSrc?has_content>

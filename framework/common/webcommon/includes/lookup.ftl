@@ -19,7 +19,7 @@ under the License.
 <@htmlHeadOpen />
     <title>${title!}</title>
     <#-- the trick "<scr" + "ipt below is because browsers should not parse the contents of CDATA elements, but apparently they do. -->
-    <script language="JavaScript" type="text/javascript">//<![CDATA[
+    <@script inline=true>
     var jQueryLibLoaded = false;
     function initJQuery() {
         if (typeof(jQuery) == 'undefined') {
@@ -32,8 +32,8 @@ under the License.
         }
     }
     initJQuery();
-    //]]></script>
-    <script language="javascript" src="<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>" type="text/javascript"></script>
+    </@script>
+    <script src="<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>" type="text/javascript"></script>
     <#if layoutSettings.javaScripts?has_content>
         <#--layoutSettings.javaScripts is a list of java scripts. -->
         <#-- use a Set to make sure each javascript is declared only once, but iterate the list to maintain the correct order -->
@@ -71,7 +71,7 @@ under the License.
         </#list>
     </#if>
 
-    <script language="JavaScript" type="text/javascript">
+    <@script inline=true>
         // This code inserts the value lookedup by a popup window back into the associated form element
         var re_id = new RegExp('id=(\\d+)');
         var num_id = (re_id.exec(String(window.location))
@@ -95,6 +95,6 @@ under the License.
                 }
             }
          }
-    </script>
+    </@script>
 </head>
 <body>

@@ -30,7 +30,7 @@ TODO: document better if needed
 -->
 <#macro progressScript options={} htmlwrap=false>
   <#if options?has_content && options.formSel?has_content>
-    <@script wrapIf=htmlwrap>
+    <@script htmlwrap=htmlwrap>
     
     <#-- This belongs here, but due to Ofbiz bug, moved to commonScripts.ftl
     <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" />

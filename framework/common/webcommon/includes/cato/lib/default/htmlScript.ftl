@@ -62,7 +62,7 @@ Not associated with any HTML element.
     </@scripts>         
                     
   * Parameters *
-    scriptType/output/cdata/wrapIf    = defaults for child @script calls (see @script)
+    scriptType/output/cdata/htmlwrap  = defaults for child @script calls (see @script)
 -->
 <#macro scripts inlineArgs...>
   <#if !inlineArgs?is_hash>
@@ -98,7 +98,7 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
                       this should be omitted, except when used in html <head> or in a footer.
                       if not specified or "", cato decides what to do with them (output or accumulate at bottom of page).
                       TODO: code to accumulate at footer.
-    wrapIf          = boolean, default true, if false don't include HTML wrapper (or cdata)
+    htmlwrap        = boolean, default true, if false don't include HTML wrapper (or cdata)
     cdata           = boolean, default true, if false don't include CDATA guard
 -->
 <#macro script inlineArgs...>
@@ -113,15 +113,13 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
     <script type="${type}" src="${src}"></script>
   <#else>
     <#local cdata = inlineArgs.cdata!scriptsInfo.cdata!true>
-    <#local wrapIf = inlineArgs.wrapIf!scriptsInfo.wrapIf!true>
-    <#local open = wrapIf>
-    <#local close = wrapIf>
-    <#if open>
+    <#local htmlwrap = inlineArgs.htmlwrap!scriptsInfo.htmlwrap!true>
+    <#if htmlwrap>
       <script type="${type}">
       <#if cdata>//<![CDATA[</#if>
     </#if>
         <#nested>
-    <#if close>
+    <#if htmlwrap>
       <#if cdata>//]]></#if>
       </script>
     </#if>

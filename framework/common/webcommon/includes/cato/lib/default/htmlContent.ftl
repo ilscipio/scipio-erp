@@ -207,7 +207,7 @@ Creates a responsive tables script (script only - no markup).
       <#local respOpts = respOpts + responsiveOptions>
     </#if>
     
-    <@script wrapIf=htmlwrap>
+    <@script htmlwrap=htmlwrap>
       $(document).ready(function() {
           $('#${tableId}').DataTable(<@objectAsScript lang="js" object=respOpts />);
       } );

@@ -530,7 +530,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
   <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
   <#if requiredScriptOfbizUrls?is_boolean || !requiredScriptOfbizUrls.contains(uri)>
     <#if output?is_boolean && output == true>
-      <@script wrapIf=htmlwrap output=output>
+      <@script htmlwrap=htmlwrap output=output>
         <#if requiredScriptOfbizUrls?is_boolean>
           if (typeof variable === 'undefined') {
               var commonOfbizUrls = {};
@@ -552,7 +552,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 <#macro includeRecordedScriptOfbizUrls htmlwrap=false>
   <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
   <#if !requiredScriptOfbizUrls?is_boolean || (!requiredScriptOfbizUrls.isEmpty())>
-    <@script output=true wrapIf=htmlwrap>
+    <@script output=true htmlwrap=htmlwrap>
 
       if (typeof variable === 'undefined') {
           var commonOfbizUrls = {};

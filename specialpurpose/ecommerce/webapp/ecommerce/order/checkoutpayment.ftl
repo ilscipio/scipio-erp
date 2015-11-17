@@ -19,8 +19,7 @@ under the License.
 
 
 <!-- TODO : Need formatting -->
-<script type="text/javascript">
-//<![CDATA[
+<@script>
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
@@ -55,9 +54,9 @@ function submitForm(form, mode, value) {
         form.action="<@ofbizUrl>updateCheckoutOptions/editgiftcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
 }
-//]]>
+
 $(document).ready(function(){
-var issuerId = "";
+    var issuerId = "";
     if ($('#checkOutPaymentId_IDEAL').attr('checked') == true) {
         $('#issuers').show();
         issuerId = $('#issuer').val();
@@ -81,7 +80,7 @@ var issuerId = "";
         $('#issuerId').val(issuerId);
     });
 });
-</script>
+</@script>
 
  
 <#assign cart = shoppingCart! />

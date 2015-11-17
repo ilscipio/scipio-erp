@@ -24,8 +24,7 @@ under the License.
 <#-- virtual product javascript -->
 ${virtualJavaScript!}
 ${virtualVariantJavaScript!}
-<script type="text/javascript">
-//<![CDATA[
+<@script>
     var detailImageUrl = null;
     function setAddProductId(name) {
         document.addform.add_product_id.value = name;
@@ -304,19 +303,19 @@ ${virtualVariantJavaScript!}
             priceElem.appendChild(priceTxt);
         }
     }
-//]]>
-$(function(){
-    $('a[id^=productTag_]').click(function(){
-        var id = $(this).attr('id');
-        var ids = id.split('_');
-        var productTagStr = ids[1];
-        if (productTagStr) {
-            $('#productTagStr').val(productTagStr);
-            $('#productTagsearchform').submit();
-        }
+    
+    $(function(){
+        $('a[id^=productTag_]').click(function(){
+            var id = $(this).attr('id');
+            var ids = id.split('_');
+            var productTagStr = ids[1];
+            if (productTagStr) {
+                $('#productTagStr').val(productTagStr);
+                $('#productTagsearchform').submit();
+            }
+        });
     });
-})
- </script>
+</@script>
 
 <#macro showUnavailableVarients>
   <#if unavailableVariants??>

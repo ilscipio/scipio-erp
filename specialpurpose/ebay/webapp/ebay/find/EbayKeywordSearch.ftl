@@ -28,8 +28,7 @@ under the License.
     </#if>
 
     <#if productIds?has_content>
-      <script language="JavaScript" type="text/javascript">
-        //<![CDATA[
+      <@script>
             function toggleAll(e) {
                 var cform = document.products;
                 var len = cform.elements.length;
@@ -44,8 +43,7 @@ under the License.
             function toggle(e) {
                 e.checked = !e.checked;
             }
-        //]]>
-      </script>
+      </@script>
       <#macro paginationPanel>
         <#if (0 < listSize?int)>
         <div class="clearfix">

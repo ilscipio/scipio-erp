@@ -22,11 +22,9 @@ under the License.
         <#--assign detailImage = Static["org.ofbiz.base.util.Base64"].base64Decode(requestParameters.detail)-->
         <img src="${requestParameters.detail}" alt="" />
       <#else>
-        <script language="JavaScript" type="text/javascript">
-        <!-- //
+        <@script>
             window.close();
-        // -->
-        </script>
+        </@script>
       </#if>
   </body>
 </html>

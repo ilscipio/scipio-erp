@@ -47,11 +47,9 @@ under the License.
         </@field>
         
       </form>
-      <script language="JavaScript" type="text/javascript">
-      <!-- //
+      <@script>
           jQuery("form[name=matchform]").validate();
-      // -->
-      </script>
+      </@script>
       
       
           <#if match?has_content>

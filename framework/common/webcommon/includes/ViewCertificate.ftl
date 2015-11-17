@@ -41,8 +41,7 @@ under the License.
 </@section>
 <#if (cert?has_content)>
 <@section title="${uiLabelMap.CertSaveToKeyStore}">
-    <script language="JavaScript" type="text/javascript">
-    <!-- //
+    <@script>
         jQuery(document).ready(function() {
             jQuery('form.savecertform').submit(function(event) {
                 var form = jQuery(this);
@@ -57,8 +56,7 @@ under the License.
                 jQuery('input[name=alias]', form).val(jQuery('input[name=aliasVisible]', row).val());
             });
         });
-    // -->
-    </script>
+    </@script>
     
     <table cellspacing="0" class="basic-table">
       <thead>

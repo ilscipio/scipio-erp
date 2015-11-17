@@ -54,11 +54,9 @@ under the License.
           </@tr>
         </@table>
       <#else>
-        <script language="JavaScript" type="text/javascript">
-        <!-- //
+        <@script>
         window.close();
-        // -->
-        </script>
+        </@script>
         <div>${uiLabelMap.EcommerceTellAFriendSorry}</div>
       </#if>
     </form>

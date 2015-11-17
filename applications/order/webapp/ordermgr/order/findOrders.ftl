@@ -17,8 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
-<!-- //
+<@script>
 function lookupOrders(click) {
     orderIdValue = document.lookuporder.orderId.value;
     <#-- Cato: don't lookup if ID contains search wildcards -->
@@ -70,8 +69,7 @@ function submitFindForm(val){
     form.submit();
 }
 
-// -->
-</script>
+</@script>
 
 <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
 <#if parameters.hideFields?has_content>
@@ -295,11 +293,9 @@ function submitFindForm(val){
 <#--<input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:lookupOrders(true);"/>-->
 </form>
 <#if (requestParameters.hideFields!"N") != "Y">
-<script language="JavaScript" type="text/javascript">
-<!--//
+<@script>
 document.lookuporder.orderId.focus();
-//-->
-</script>
+</@script>
 </#if>
 
 <#if (searchPerformed!false)==true>

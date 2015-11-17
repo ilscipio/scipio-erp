@@ -16,8 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script language="JavaScript" type="text/javascript">
-<!-- //
+<@script>
 function lookupShipments() {
     shipmentIdValue = document.lookupShipmentForm.shipmentId.value;
     if (shipmentIdValue.length > 1) {
@@ -27,8 +26,7 @@ function lookupShipments() {
     }
     document.lookupShipmentForm.submit();
 }
-// -->
-</script>
+</@script>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if requestParameters.facilityId?has_content>

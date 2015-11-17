@@ -17,8 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
-<!-- //
+<@script>
 function copyAndAddRoutingTask() {
     document.addtaskassocform.copyTask.value = "Y";
     document.addtaskassocform.submit();
@@ -27,8 +26,7 @@ function addRoutingTask() {
     document.addtaskassocform.copyTask.value = "N";
     document.addtaskassocform.submit();
 }
-// -->
-</script>
+</@script>
 
 <#if security.hasEntityPermission("MANUFACTURING", "_CREATE", session)>
 <form method="post" action="<@ofbizUrl>AddRoutingTaskAssoc</@ofbizUrl>" name="addtaskassocform">

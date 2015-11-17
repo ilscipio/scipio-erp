@@ -16,15 +16,13 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script language="JavaScript" type="text/javascript">
-<!-- //
+<@script>
 function uploadTrackingCode(orderId, productStoreId) {
     document.uploadTracking.orderId.value = orderId;
     document.uploadTracking.productStoreId.value = productStoreId;
     document.uploadTracking.submit();
 }
-// -->
-</script>
+</@script>
 <@section title="${uiLabelMap.EbayListOrderImported}">
   <form name="uploadTracking" action="<@ofbizUrl>uploadTrackingCodeBack</@ofbizUrl>" method="post">
       <input type="hidden" name="orderId" value=""/>

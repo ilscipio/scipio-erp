@@ -17,15 +17,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
-<!-- //
+<@script>
 function lookupBom() {
     document.searchbom.productId.value=document.editProductAssocForm.productId.value;
     document.searchbom.productAssocTypeId.value=document.editProductAssocForm.productAssocTypeId.options[document.editProductAssocForm.productAssocTypeId.selectedIndex].value;
     document.searchbom.submit();
 }
-// -->
-</script>
+</@script>
 
 <#assign sectionTitle>${uiLabelMap.PageTitleEditProductBom}<#if product??> ${(product.internalName)!}</#if>&nbsp;[${uiLabelMap.CommonId}&nbsp;${productId!}]</#assign>
 <#macro menuContent menuArgs={}>

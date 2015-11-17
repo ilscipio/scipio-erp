@@ -17,13 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
-<!-- //
+<@script>
 function lookupInventory() {
     document.lookupinventory.submit();
 }
-// -->
-</script>
+</@script>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
       <#if requestParameters.hideFields?default("N") == "Y">
@@ -54,11 +52,9 @@ function lookupInventory() {
 </@section>
 
 <#if requestParameters.hideFields?default("N") != "Y">
-<script language="JavaScript" type="text/javascript">
-<!--//
+<@script>
 document.lookupinventory.productId.focus();
-//-->
-</script>
+</@script>
 </#if>
 <#if requestParameters.lookupFlag?default("N") == "Y">
     <@section>

@@ -26,13 +26,17 @@ under the License.
 <#-- OrderOrdersTotals -->
 
 <#if title?has_content><@heading relLevel=1>${title!}</@heading></#if>
-<@chart type=chartType library=library>
+<#if ((currData.isEmpty())!true) == false>
+  <@chart type=chartType library=library>
     <#list currData.keySet() as key>
       <#if chartType=="line">
-        <@chartdata value="${currData[key][chartValue]}" value2="${currData[key].pos}" title="${key}"/>
+        <@chartdata value="${(currData[key][chartValue])!0}" value2="${(currData[key].pos)!0}" title="${key}"/>
       <#else>
-        <@chartdata value="${currData[key][chartValue]}" title="${key}"/>
+        <@chartdata value="${(currData[key][chartValue])!0}" title="${key}"/>
       </#if>
     </#list>  
-</@chart>
+  </@chart>
+<#else>
+  <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+</#if>
         

@@ -1,5 +1,5 @@
 
-<@script inline=true>
+<@script output=true>
 
     <#-- Common Ofbiz URIs for use in javascript -->
     <@requireScriptOfbizUrl uri="getJSONuiLabelArray" />

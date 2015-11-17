@@ -48,7 +48,7 @@ Optional scripts include modifier. Modifies the @script calls within it.
 Not associated with any HTML element.
 
   * Usage Example *  
-    <@scripts inline=true>
+    <@scripts output=true>
       <@script>
         jQuery(document).ready(function() {
             alert("Page loaded.");
@@ -62,7 +62,7 @@ Not associated with any HTML element.
     </@scripts>         
                     
   * Parameters *
-    scriptType/inline/cdata/wrapIf    = defaults for child @script calls (see @script)
+    scriptType/output/cdata/wrapIf    = defaults for child @script calls (see @script)
 -->
 <#macro scripts inlineArgs...>
   <#if !inlineArgs?is_hash>
@@ -91,13 +91,15 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
                     
   * Parameters *
     type            = script type identifier (default "text/javascript")
-    language        = deprecated by HTML - ignored by macro
     src             = source (if no nested content)
-    inline          = if true, the script must be inlined in the markup where the macro is used
-                      and should never be delegated. in most cases this should be omitted,
-                      except when used in html <head> or in a footer.
-                      if not specified or "", cato decides what to do with them (inline or accumulate at bottom of page).
+    language        = deprecated by HTML - ignored by macro
+    output          = if true, the script must be output in the markup where the macro is used
+                      and should never be delegated. in cases of scripts within common templates,
+                      this should be omitted, except when used in html <head> or in a footer.
+                      if not specified or "", cato decides what to do with them (output or accumulate at bottom of page).
                       TODO: code to accumulate at footer.
+    wrapIf          = boolean, default true, if false don't include HTML wrapper (or cdata)
+    cdata           = boolean, default true, if false don't include CDATA guard
 -->
 <#macro script inlineArgs...>
   <#if !inlineArgs?is_hash>
@@ -106,15 +108,14 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
   <#local scriptsInfo = getRequestVar("catoScriptsInfo")!{}>
   <#local type = inlineArgs.type!scriptsInfo.scriptType!"text/javascript">
   <#local src = inlineArgs.src!"">
-  <#local inline = inlineArgs.inline!scriptsInfo.inline!"">
-  <#local cdata = inlineArgs.cdata!scriptsInfo.cdata!true>
-  <#local wrapIf = inlineArgs.wrapIf!scriptsInfo.wrapIf!true>
-
-  <#local open = wrapIf>
-  <#local close = wrapIf>
+  <#local output = inlineArgs.output!scriptsInfo.output!"">
   <#if src?has_content>
     <script type="${type}" src="${src}"></script>
   <#else>
+    <#local cdata = inlineArgs.cdata!scriptsInfo.cdata!true>
+    <#local wrapIf = inlineArgs.wrapIf!scriptsInfo.wrapIf!true>
+    <#local open = wrapIf>
+    <#local close = wrapIf>
     <#if open>
       <script type="${type}">
       <#if cdata>//<![CDATA[</#if>

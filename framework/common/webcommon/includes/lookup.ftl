@@ -19,7 +19,7 @@ under the License.
 <@htmlHeadOpen />
     <title>${title!}</title>
     <#-- the trick "<scr" + "ipt below is because browsers should not parse the contents of CDATA elements, but apparently they do. -->
-    <@script inline=true>
+    <@script output=true>
     var jQueryLibLoaded = false;
     function initJQuery() {
         if (typeof(jQuery) == 'undefined') {
@@ -71,7 +71,7 @@ under the License.
         </#list>
     </#if>
 
-    <@script inline=true>
+    <@script output=true>
         // This code inserts the value lookedup by a popup window back into the associated form element
         var re_id = new RegExp('id=(\\d+)');
         var num_id = (re_id.exec(String(window.location))

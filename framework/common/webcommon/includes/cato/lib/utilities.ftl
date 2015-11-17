@@ -521,16 +521,16 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
          
   * Parameters *
     url             = controller request uri
-    inline          = if true, the include must be inlined in the markup where the macro is used
+    output          = if true, the include must be output in the markup where the macro is used
                       and should never be delegated. in most cases this should be omitted.  
                       DEV NOTE: if not specified, "" or false for now simply accumulates the names  
                           and will be included by decorator in footer.
 -->
-<#macro requireScriptOfbizUrl uri htmlwrap=false inline="">
+<#macro requireScriptOfbizUrl uri htmlwrap=false output="">
   <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
   <#if requiredScriptOfbizUrls?is_boolean || !requiredScriptOfbizUrls.contains(uri)>
-    <#if inline?is_boolean && inline == true>
-      <@script wrapIf=htmlwrap inline=inline>
+    <#if output?is_boolean && output == true>
+      <@script wrapIf=htmlwrap output=output>
         <#if requiredScriptOfbizUrls?is_boolean>
           if (typeof variable === 'undefined') {
               var commonOfbizUrls = {};
@@ -552,7 +552,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 <#macro includeRecordedScriptOfbizUrls htmlwrap=false>
   <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
   <#if !requiredScriptOfbizUrls?is_boolean || (!requiredScriptOfbizUrls.isEmpty())>
-    <@script inline=true wrapIf=htmlwrap>
+    <@script output=true wrapIf=htmlwrap>
 
       if (typeof variable === 'undefined') {
           var commonOfbizUrls = {};

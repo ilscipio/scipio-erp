@@ -1,5 +1,5 @@
 
-<@script inline=true>
+<@script output=true>
 
     <@includeRecordedScriptOfbizUrls />
 

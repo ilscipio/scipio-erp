@@ -18,8 +18,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script type="text/javascript">
-//<![CDATA[
+<@script>
 
     function toggleInvoiceId(master) {
         var invoices = jQuery("#listInvoices :checkbox[name='invoiceIds']");
@@ -111,8 +110,7 @@ under the License.
             jQuery('#submitButton').prop('disabled', true);
         }
     }
-//]]>
-</script>
+</@script>
 <#if invoices?has_content>
   <#assign invoiceList  =  invoices.getCompleteList() />
   <#assign eliClose = invoices.close() />

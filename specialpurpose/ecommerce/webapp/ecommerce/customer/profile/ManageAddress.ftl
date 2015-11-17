@@ -88,8 +88,7 @@ under the License.
         </fieldset>
       </form>
     </div>
-    <script type="text/javascript">
-      //<![CDATA[
+    <@script>
         jQuery("#displayCreateAddressForm").dialog({autoOpen: false, modal: true,
                 buttons: {
                 '${uiLabelMap.CommonSubmit}': function() {
@@ -105,8 +104,7 @@ under the License.
                 }
         });
         jQuery("#addAddress").click(function(){jQuery("#displayCreateAddressForm").dialog("open")});
-      //]]>
-    </script>
+      </@script>
   </div>
 
   <#-- Default Addresses -->
@@ -143,8 +141,7 @@ under the License.
       <div id="displayEditBillToPostalAddress" style="display: none;">
         <#include "EditBillToAddress.ftl" />
       </div>
-      <script type="text/javascript">
-        //<![CDATA[
+      <@script>
         jQuery("#displayEditBillToPostalAddress").dialog({autoOpen: false, modal: true,
             buttons: {
             '${uiLabelMap.CommonSubmit}': function() {
@@ -161,8 +158,7 @@ under the License.
             }
         });
         jQuery("#updateBillToPostalAddress").click(function(){jQuery("#displayEditBillToPostalAddress").dialog("open")});
-        //]]>
-      </script>
+        </@script>
 
     <#--===================================== Shipping Address and Telecom number ===========================================-->
       <h3>${uiLabelMap.EcommercePrimaryShippingAddress}</h3>
@@ -194,8 +190,7 @@ under the License.
       <div id="displayEditShipToPostalAddress" style="display: none;">
         <#include "EditShipToAddress.ftl" />
       </div>
-      <script type="text/javascript">
-         //<![CDATA[
+      <@script>
           jQuery("#displayEditShipToPostalAddress").dialog({autoOpen: false, modal: true,
             buttons: {
             '${uiLabelMap.CommonSubmit}': function() {
@@ -211,8 +206,7 @@ under the License.
             }
           });
           jQuery("#updateShipToPostalAddress").click(function(){jQuery("#displayEditShipToPostalAddress").dialog("open")});
-          //]]>
-      </script>
+          </@script>
     </div>
   </div>
 
@@ -264,8 +258,7 @@ under the License.
                     </fieldset>
                   </form>
               </div>
-              <script type="text/javascript">
-                //<![CDATA[
+              <@script>
                 jQuery("#displayEditAddressForm_${contactMech.contactMechId}").dialog({autoOpen: false, modal: true,
                     buttons: {
                     '${uiLabelMap.CommonSubmit}': function() {
@@ -281,8 +274,7 @@ under the License.
                     }
                 });
                 jQuery("#update_${contactMech.contactMechId}").click(function(){jQuery("#displayEditAddressForm_${contactMech.contactMechId}").dialog("open")});
-                //]]>
-              </script>
+                </@script>
             <#else>
               <@resultMsg>${uiLabelMap.PartyPostalInformationNotFound}.</@resultMsg>
             </#if>

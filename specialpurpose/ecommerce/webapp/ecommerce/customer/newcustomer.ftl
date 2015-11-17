@@ -18,8 +18,7 @@ under the License.
 -->
 
 <#if getUsername>
-<script type="text/javascript">
-  //<![CDATA[
+<@script>
      lastFocusedName = null;
      function setLastFocused(formElement) {
          lastFocusedName = formElement.name;
@@ -59,8 +58,7 @@ under the License.
              customerStateElement.style.display = "none";
          }
      }
-   //]]>
-</script>
+   </@script>
 </#if>
 
 <#------------------------------------------------------------------------------
@@ -404,8 +402,6 @@ button actions.
   &nbsp;<a href="javascript:document.getElementById('newuserform').submit()" class="button">${uiLabelMap.CommonSave}</a>   
 </div>
 
-<script type="text/javascript">
-  //<![CDATA[
+<@script>
       hideShowUsaStates();
-  //]]>
-</script>
+  </@script>

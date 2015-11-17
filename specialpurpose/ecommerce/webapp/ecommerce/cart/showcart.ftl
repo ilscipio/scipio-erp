@@ -16,8 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script type="text/javascript">
-//<![CDATA[
+<@script>
 function toggle(e) {
     e.checked = !e.checked;
 }
@@ -89,16 +88,13 @@ function gwAll(e) {
     }
     cform.submit();
 }
-//]]>
-</script>
+</@script>
 
-<script type="text/javascript">
-//<![CDATA[
+<@script>
 function setAlternateGwp(field) {
   window.location=field.value;
 };
-//]]>
-</script>
+</@script>
 <#assign fixedAssetExist = shoppingCart.containAnyWorkEffortCartItems() /> <#-- change display format when rental items exist in the shoppingcart -->
 <div>
     <@heading>
@@ -133,11 +129,9 @@ function setAlternateGwp(field) {
     </div>
 </div>
 
-<script type="text/javascript">
-//<![CDATA[
+<@script>
   document.quickaddform.add_product_id.focus();
-//]]>
-</script>
+</@script>
 
 <div>
     <div>

@@ -19,8 +19,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script type="text/javascript">
-//<![CDATA[
+<@script>
 function togglePaymentId(master) {
     var payments = jQuery("#paymentBatchForm :checkbox[name='paymentIds']");
 
@@ -118,9 +117,7 @@ function setServiceName(selection) {
     }
 
 }
-//]]>
-
-</script>
+</@script>
 <@section>
         <form id="paymentBatchForm" method="post" action="">
             <#if paymentList?has_content>

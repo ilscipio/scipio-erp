@@ -17,8 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script type="text/javascript">
-//<![CDATA[
+<@script>
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
@@ -51,8 +50,7 @@ function toggleBillingAccount(box) {
     }
 }
 
-//]]>
-</script>
+</@script>
 
 <#assign cart = shoppingCart!/>
 

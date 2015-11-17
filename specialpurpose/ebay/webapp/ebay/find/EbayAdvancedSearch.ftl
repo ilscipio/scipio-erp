@@ -17,8 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script type="text/javascript">
-//<![CDATA[
+<@script>
     function selectChange(formId, elementId) {
         if (elementId.id == 'searchProductStoreId') {
            document.getElementById('searchCatalogId')[document.getElementById('searchCatalogId').selectedIndex].value = "";
@@ -51,8 +50,7 @@ under the License.
           }
       }
     }
-//]]>
-</script>
+</@script>
 <@section title="${uiLabelMap.ProductAdvancedSearchInCategory}">
     <form id="advToKeywordSearchform" name="advToKeywordSearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
       <fieldset>

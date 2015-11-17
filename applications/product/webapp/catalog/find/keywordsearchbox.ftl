@@ -18,8 +18,7 @@ under the License.
 -->
 <#if (requestAttributes.uiLabelMap)??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
-<script type="text/javascript">
-//<![CDATA[
+<@script>
      function changeCategory() {
          document.forms["keywordsearchform"].elements["SEARCH_CATEGORY_ID"].value=document.forms["advancedsearchform"].elements["DUMMYCAT"].value;
          document.forms["advancedsearchform"].elements["SEARCH_CATEGORY_ID"].value=document.forms["advancedsearchform"].elements["DUMMYCAT"].value;
@@ -29,8 +28,7 @@ under the License.
          jQuery('#productJumpForm').attr('action', jQuery('#dummyPage').val());
          jQuery('#productJumpForm').submit();
      }
-//]]>
- </script>
+</@script>
 
 <form name="keywordsearchform" id="keywordSearchForm" method="post" action="<@ofbizUrl>keywordsearch?VIEW_SIZE=25&amp;PAGING=Y</@ofbizUrl>">
   <fieldset>

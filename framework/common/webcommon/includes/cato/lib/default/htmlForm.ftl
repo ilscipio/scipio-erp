@@ -520,7 +520,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=false autocomplete=true progressOptions={} 
         labelType="" labelLayout="" labelArea="" description=""
         submitType="input" text="" href="" src="" confirmMsg="" inlineItems="" 
-        selected=false allowEmpty=false currentFirst=false currentDescription="", noCurrentSelectedKey="",
+        selected=false allowEmpty=false currentFirst=false currentDescription="" noCurrentSelectedKey=""
         manualItems="" manualItemsOnly="">
   <#if !type?has_content>
     <#local type = "generic">

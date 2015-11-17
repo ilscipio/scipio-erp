@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
+<@script>
 function shipBillAddr() {
     <#if requestParameters.singleUsePayment?default("N") == "Y">
       <#assign singleUse = "&amp;singleUsePayment=Y">
@@ -30,7 +30,7 @@ function shipBillAddr() {
         window.location.replace("setBilling?createNew=Y&amp;finalizeMode=payment&amp;useGc=${requestParameters.useGc!}&amp;paymentMethodType=${paymentMethodType!}${singleUse}");
     }
 }
-</script>
+</@script>
 
 <div class="screenlet">
     <div class="screenlet-title-bar">

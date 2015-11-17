@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script type="text/javascript" language="javascript">
+<@script>
     function submitRows(rowCount) {
         var rowCountElement = document.createElement("input");
         rowCountElement.setAttribute("name", "_rowCount");
@@ -26,7 +26,7 @@ under the License.
         document.forms.mostrecent.appendChild(rowCountElement);
         document.forms.mostrecent.submit();
     }
-</script>
+</@script>
 
 <@table width="100%" border="0">
 

@@ -16,12 +16,12 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script type="text/javascript">
+<@script>
     $("#dialog").dialog('open');
     $(function() {
         $( "#rmvemplposition" ).dialog({ autoOpen: true, width: 900});
     });
-</script>
+</@script>
 <div id="rmvemplposition" title="Remove Employee Position">
     ${screens.render("component://humanres/widget/EmplPositionScreens.xml#RemoveEmplPositionOnlyForm")}
 </div>

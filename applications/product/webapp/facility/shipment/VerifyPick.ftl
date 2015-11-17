@@ -322,18 +322,18 @@ under the License.
     </form>
   </#if>
   <#if orderId?has_content>
-    <script language="javascript" type="text/javascript">
+    <@script>
       document.singlePickForm.productId.focus();
-    </script>
+    </@script>
   <#else>
-    <script language="javascript" type="text/javascript">
+    <@script>
       document.selectOrderForm.orderId.focus();
-    </script>
+    </@script>
   </#if>
   <#if shipmentId?has_content>
-    <script language="javascript" type="text/javascript">
+    <@script>
       document.selectOrderForm.orderId.focus();
-    </script>
+    </@script>
   </#if>
 <#else>
   <@alert type="error">${uiLabelMap.ProductFacilityViewPermissionError}</@alert>

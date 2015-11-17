@@ -62,7 +62,7 @@ under the License.
   <@tr closeOnly=true />
   </#if>
 </@table>
-<script language="JavaScript" type="text/javascript">
+<@script>
   showSelectedButton();
-</script>
+</@script>
 </#if>

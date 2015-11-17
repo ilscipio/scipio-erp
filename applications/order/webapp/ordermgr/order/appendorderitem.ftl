@@ -17,11 +17,11 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
+<@script>
   function quicklookup(element) {
     window.location='<@ofbizUrl>LookupBulkAddSupplierProductsInApprovedOrder</@ofbizUrl>?orderId='+element.value;
   }
-</script>
+</@script>
 
 <#if orderHeader?has_content>
   <@section title="${uiLabelMap.OrderAddToOrder}">

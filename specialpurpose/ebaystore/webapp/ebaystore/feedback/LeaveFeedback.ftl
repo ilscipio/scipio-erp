@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if results.itemsAwaitingFeedback?has_content>
-<script type="text/javascript">
+<@script>
     var active = "";
     function overStar(obj){
         if(obj.src.match("starActive")){
@@ -48,7 +48,7 @@ under the License.
         setTo = name+feedbackCounter;
         document.getElementById(setTo).value = numstar;
     }
-</script>
+</@script>
 <form name="leaveFeedback" action="<@ofbizUrl>sendLeaveFeedback</@ofbizUrl>" method="post">
     <input type="hidden" value="${parameters.productStoreId}" name="productStoreId"/>
 <@table type="data-complex" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->

@@ -144,6 +144,6 @@ under the License.
     </#if>
   </@table>
 </div>
-<script language="JavaScript" type="text/javascript">
+<@script>
   selectCartItem();
-</script>
+</@script>

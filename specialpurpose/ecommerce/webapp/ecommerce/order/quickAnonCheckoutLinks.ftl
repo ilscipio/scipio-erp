@@ -16,11 +16,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script language="javascript" type="text/javascript">
+<@script>
 function submitForm(form) {
    form.submit();
 }
-</script>
+</@script>
 <div>
     <a href="<@ofbizUrl>quickAnonSetCustomer</@ofbizUrl>" class="${styles.link_action!}" <#if callSubmitForm??>onclick="javascript:submitForm(document.${parameters.formNameValue!});"</#if>>Personal Info</a>
     <#if (enableShipmentMethod)??>

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/imagemanagement/sizzle.min.js</@ofbizContentUrl>"></script>
-<script type="text/javascript">
+<@script>
     jQuery.noConflict();
     var host = document.location.host;
     jQuery(document).ready(function() {
@@ -110,4 +110,4 @@ under the License.
        var previewCount = jQuery('#ImageWatermarking_previewCount').val();
        jQuery.post("deletePreviewWatermarkImage", {productId : productId, imageName : imageName, contentId : contentId, dataResourceId : dataResourceId, count : previewCount});
     }
-</script>
+</@script>

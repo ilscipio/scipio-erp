@@ -28,7 +28,7 @@ under the License.
         left : 10px !important;
     }
 </style>
-<script type="text/javascript">
+<@script>
 jQuery.noConflict();
 jQuery(document).ready(function(){
     var angleHold = 0;
@@ -58,4 +58,4 @@ jQuery(document).ready(function(){
         });
     }
 });
-</script>
+</@script>

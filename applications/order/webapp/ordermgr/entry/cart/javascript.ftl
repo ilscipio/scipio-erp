@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script language="JavaScript" type="text/javascript">
+<@script>
 function toggle(e) {
     e.checked = !e.checked;
 }
@@ -102,4 +102,4 @@ function quicklookup(element) {
     window.location='<@ofbizUrl>LookupBulkAddProducts</@ofbizUrl>?productId='+element.value;
     </#if>
 }
-</script>
+</@script>

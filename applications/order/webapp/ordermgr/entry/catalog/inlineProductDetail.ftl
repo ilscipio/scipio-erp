@@ -21,7 +21,7 @@ ${virtualJavaScript!}
 <#assign addedJavaScript = requestAttributes.addedJavaScript?default("N")/>
 <#if ("N" == addedJavaScript)>
   ${setRequestAttribute("addedJavaScript", "Y")}
-  <script language="JavaScript" type="text/javascript">
+  <@script>
 
      function popupDetailInline(inlineCounter) {
         var imageField = 'detailImage' + inlineCounter;
@@ -227,11 +227,11 @@ ${virtualJavaScript!}
     }
 
 
- </script>
+ </@script>
 </#if>
 
 <#if product.virtualVariantMethodEnum! == "VV_FEATURETREE" && featureLists?has_content>
-  <script language="JavaScript" type="text/javascript">
+  <@script>
         function checkRadioButtoninline${inlineCounter}(inlineCounter, productId) {
         var add_product_id = 'add_product_id' + inlineCounter;
             <#list featureLists as featureList>
@@ -249,7 +249,7 @@ ${virtualJavaScript!}
             </#list>
             document.configform[add_product_id].value = productId;
         }
-  </script>
+  </@script>
 </#if>
 
 
@@ -350,7 +350,7 @@ ${virtualJavaScript!}
 
       <@tr><@td COLSPAN="2" align="right">
       <#if variantTree?? && 0 < variantTree.size()>
-        <script language="JavaScript" type="text/javascript">eval("list"+ "${inlineCounter}" + "${featureOrderFirst}" + "()");</script>
+        <@script>eval("list"+ "${inlineCounter}" + "${featureOrderFirst}" + "()");</@script>
       </#if>
 
       <#-- Swatches (virtual products only) . For now commented out, before fixing a bug

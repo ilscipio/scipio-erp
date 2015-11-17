@@ -67,9 +67,9 @@ under the License.
       <a id="updateCartItem" name="updateCartItem" href="javascript:updateCartItem();" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
       <a id="deleteCartItem" name="deleteCartItem" href="javascript:deleteCartItem('${cartLineIndex}');" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
     </div>
-    <script language="JavaScript" type="text/javascript">
+    <@script>
       cartItemSelectedEvents('${focusOnQuantity}');
-    </script>
+    </@script>
     </#if>
   </#if>
 </#if>

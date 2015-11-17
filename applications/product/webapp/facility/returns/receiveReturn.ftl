@@ -233,7 +233,7 @@ under the License.
           </#if>
             <input type="hidden" name="_rowCount" value="${rowCount}" />
           </form>
-          <script language="JavaScript" type="text/javascript">selectAll('selectAllForm');</script>
+          <@script>selectAll('selectAllForm');</@script>
           </@section>
           <#-- Initial Screen -->
         <#else>
@@ -251,7 +251,7 @@ under the License.
           </@section>
         </#if>
 </@section>
-<script language="JavaScript" type="text/javascript">
+<@script>
     function setInventoryItemStatus(selection,index) {
         var statusId = "statusId_o_" + index;
         jObjectStatusId = jQuery("#" + statusId);
@@ -262,4 +262,4 @@ under the License.
             success: function(data){jObjectStatusId.html(data);}
         });
     }
-</script>
+</@script>

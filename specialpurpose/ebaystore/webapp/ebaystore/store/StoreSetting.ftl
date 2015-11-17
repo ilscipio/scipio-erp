@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script language="Javascript" type="text/javascript">
+<@script>
     function countAreaChars(areaName, limit, charleft)
     {
         if (areaName.value.length > limit){
@@ -121,7 +121,7 @@ under the License.
             document.StoreSettingForm.storeAdvancedThemeColor.disabled = false;
         }
     }
-</script>
+</@script>
 
   <#if parameters.ebayStore?has_content>
     <#assign ebayStore = parameters.ebayStore!>
@@ -389,14 +389,14 @@ under the License.
                 <input type="submit" value="${uiLabelMap.CommonSubmit}" name="submitButton" class="${styles.link_action!}" />
             </@field>
 
-      <script language="Javascript" type="text/javascript">
+      <@script>
             document.getElementById('charsleft1').innerHTML =  (35 - document.StoreSettingForm.storeName.value.length)  + " charactors left.";
             document.getElementById('charsleft2').innerHTML =  (300 - document.StoreSettingForm.storeDesc.value.length)  + " charactors left.";
-      </script>
+      </@script>
      </fieldset>
    </form>
   </#if>
- <script language="Javascript" type="text/javascript">
+ <@script>
     <#if themeType! == "Basic">
         document.StoreSettingForm.storeAdvancedTheme.disabled = true;
         document.StoreSettingForm.storeAdvancedThemeColor.disabled = true;
@@ -418,4 +418,4 @@ under the License.
         document.StoreSettingForm.storeDescFontSize.disabled = true;
         document.StoreSettingForm.storeDescFontColor.disabled = true;
     </#if>
-</script>
+</@script>

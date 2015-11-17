@@ -18,11 +18,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script language="JavaScript" type="text/javascript">
+<@script>
 function insertImageName(type,nameValue) {
   eval('document.productCategoryForm.' + type + 'ImageUrl.value=nameValue;');
 };
-</script>
+</@script>
 
 <#if fileType?has_content>
     <@section title="${uiLabelMap.ProductResultOfImageUpload}">

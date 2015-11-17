@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script language="JavaScript" type="text/javascript">
+<@script>
 
 jQuery(document).ready(init);
 
@@ -59,7 +59,7 @@ function onClickShippingMethod(e) {
     return true;
 }
 
-</script>
+</@script>
 
 <form id="quickAnonOptSetupForm" method="post" action="<@ofbizUrl>quickAnonProcessShipOptions</@ofbizUrl>" name="quickAnonOptSetupForm">
 <div id="optInfoSection">

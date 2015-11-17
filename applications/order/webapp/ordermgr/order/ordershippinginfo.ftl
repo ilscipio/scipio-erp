@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
+<@script>
     function editInstruction(shipGroupSeqId) {
         jQuery('#shippingInstructions_' + shipGroupSeqId).css({display:'block'});
         jQuery('#saveInstruction_' + shipGroupSeqId).css({display:'inline'});
@@ -46,7 +46,7 @@ under the License.
     function saveGiftMessage(shipGroupSeqId) {
         jQuery("#setGiftMessageForm_" + shipGroupSeqId).submit();
     }
-</script>
+</@script>
 
 <#if shipGroups?has_content && (!orderHeader.salesChannelEnumId?? || orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL")>
   <#if parameters.view?has_content && parameters.view = "OISGA">
@@ -292,9 +292,9 @@ under the License.
                     <@td valign="top" width="80%">
                         <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action!}"/>
                         <a class="${styles.button_default!}" id="newShippingAddress" href="javascript:void(0);">${uiLabelMap.OrderNewShippingAddress}</a>
-                        <script type="text/javascript">
+                        <@script>
                             jQuery("#newShippingAddress").click(function(){jQuery("#newShippingAddressForm").dialog("open")});
-                        </script>
+                        </@script>
                     </@td>
                 </@tr>
                 </#if>
@@ -361,7 +361,7 @@ under the License.
           </div>
         </form>
       </div>
-      <script language="JavaScript" type="text/javascript">
+      <@script>
        jQuery(document).ready( function() {
         jQuery("#newShippingAddressForm").dialog({autoOpen: false, modal: true,
                 buttons: {
@@ -376,7 +376,7 @@ under the License.
                 }
                 });
        });
-      </script>
+      </@script>
       <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
         <#if shipGroup.supplierPartyId?has_content>
            <#assign OISGAContent = shipGroup.getRelated("OrderItemShipGroupAssoc")>

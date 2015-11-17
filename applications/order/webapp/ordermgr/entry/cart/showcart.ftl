@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
+<@script>
     function showQohAtp() {
         document.qohAtpForm.productId.value = document.quickaddform.add_product_id.value;
         document.qohAtpForm.submit();
@@ -25,7 +25,7 @@ under the License.
     function quicklookupGiftCertificate() {
         window.location='AddGiftCertificate';
     }
-</script>
+</@script>
 
 <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
   <#assign target="productAvailabalityByFacility">
@@ -173,8 +173,8 @@ under the License.
    </@row>
 </@section>
 
-<script language="JavaScript" type="text/javascript">
+<@script>
   document.quickaddform.add_product_id.focus();
-</script>
+</@script>
 
 <!-- Internal cart info: productStoreId=${shoppingCart.getProductStoreId()!} locale=${shoppingCart.getLocale()!} currencyUom=${shoppingCart.getCurrency()!} userLoginId=${(shoppingCart.getUserLogin().getString("userLoginId"))!} autoUserLogin=${(shoppingCart.getAutoUserLogin().getString("userLoginId"))!} -->

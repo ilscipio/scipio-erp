@@ -45,7 +45,7 @@ under the License.
 
       <#-- ================================= Here we go with different types of maps renderer ======================================-->
       <#if geoChart.dataSourceId == "GEOPT_GOOGLE">
-        <script type="text/javascript">
+        <@script>
             function showAllMarkers(map, points) {
                 if (points.length > 1) {
                     var latlngbounds = new google.maps.LatLngBounds();
@@ -83,12 +83,12 @@ under the License.
               ];
               showAllMarkers(map, latlngs);
             </#if>
-        </script>
+        </@script>
       <#elseif  geoChart.dataSourceId == "GEOPT_YAHOO">
       <#elseif  geoChart.dataSourceId == "GEOPT_MICROSOFT">
       <#elseif  geoChart.dataSourceId == "GEOPT_MAPTP">
       <#elseif  geoChart.dataSourceId == "GEOPT_ADDRESS_GOOGLE">
-        <script type="text/javascript">
+        <@script>
             var geocoder = new google.maps.Geocoder();
             var map = new google.maps.Map(document.getElementById("${id}"),
               { center: new google.maps.LatLng(38, 15),
@@ -108,12 +108,12 @@ under the License.
                 });
               }
             });
-        </script>
+        </@script>
       <#elseif geoChart.dataSourceId == "GEOPT_OSM">
         <div id="${id}" style="border:1px solid #979797; background-color:#e5e3df; width:${geoChart.width}; height:${geoChart.height}; margin:2em auto;"></div>
         <#-- due to https://github.com/openlayers/openlayers/issues/1025 rather use a local version loaded by framework/common/widget/CommonScreens.xml -->
         <#-- script src="//www.openlayers.org/api/OpenLayers.js"></script-->
-        <script type="text/javascript">
+        <@script>
           map = new OpenLayers.Map("${id}");           
           map.addLayer(new OpenLayers.Layer.OSM());
             var zoom = ${zoom};
@@ -135,7 +135,7 @@ under the License.
           map.setCenter(center, zoom);
           var newBound = markers.getDataExtent();
           map.zoomToExtent(newBound);
-        </script>
+        </@script>
       </#if>
     </#if>
 <#else>

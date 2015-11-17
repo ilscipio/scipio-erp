@@ -26,7 +26,7 @@ under the License.
     <#if !productIds?has_content>
       <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
     <#else>
-    <script language="JavaScript" type="text/javascript">
+    <@script>
         function checkProductToBagTextArea(field, idValue) {
             fullValue = idValue + "\n";
             tempStr = document.forms["quickCreateVirtualWithVariants"].elements["variantProductIdsBag"].value;
@@ -59,7 +59,7 @@ under the License.
         function toggle(e) {
             e.checked = !e.checked;
         }
-    </script>
+    </@script>
     
   <#macro keywordSearchNav>
     <@row>

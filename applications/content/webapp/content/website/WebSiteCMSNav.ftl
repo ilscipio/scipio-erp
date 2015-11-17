@@ -26,7 +26,7 @@
 
 <link href="/images/jquery/plugins/elrte-1.3/css/elrte.min.css" rel="stylesheet" type="text/css">
 
-<script type="text/javascript">
+<@script>
     jQuery(document).ready(loadTrees);
     jQuery(document).ready(createEditor);
 
@@ -498,7 +498,7 @@ function callMetaInfo(contentId) {
         }
     }
 
-</script>
+</@script>
 
 
 <div>

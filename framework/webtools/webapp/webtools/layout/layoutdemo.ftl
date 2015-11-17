@@ -425,13 +425,13 @@
 </@section>
 
 <#-- javascript test; entitymaint should only appear once in output... -->
-<script language="JavaScript" type="text/javascript">
+<@script>
 <@requireScriptOfbizUrl "entitymaint" />
 <@requireScriptOfbizUrl "entitymaint" />
 <@requireScriptOfbizUrl "entitymaint" />
 <@requireScriptOfbizUrl "entitymaint" />
 <@requireScriptOfbizUrl "ServiceList" />
-</script>
+</@script>
 
 
 <@section title="Fields">

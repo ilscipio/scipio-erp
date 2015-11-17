@@ -32,7 +32,7 @@ under the License.
         </#list>
     </#if>
 <#else>
-<script type="text/javascript">
+<@script>
 var autocomp = [
     <#if autocompleteOptions?has_content>
         <#if !displayReturnField??>
@@ -68,5 +68,5 @@ var autocomp = [
       }
     </#if>
     ];
-</script>
+</@script>
 </#if>

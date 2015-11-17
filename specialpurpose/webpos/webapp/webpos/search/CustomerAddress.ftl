@@ -109,6 +109,6 @@ under the License.
       </div>
     </div>
 </@section>
-<script language="JavaScript" type="text/javascript">
+<@script>
   customerAddressSelected();
-</script>
+</@script>

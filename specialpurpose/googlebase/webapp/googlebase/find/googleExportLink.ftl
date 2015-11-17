@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
+<@script>
     function exportToGoogle() {
         var productIds = document.getElementsByName("selectResult");
         var count = 0;
@@ -32,7 +32,7 @@ under the License.
             alert("${StringUtil.wrapString(uiLabelMap.productsExportToGoogle.missingProduct)}");
         }
     }
-</script>
+</@script>
 
 <#if productIds?has_content>
     <hr />

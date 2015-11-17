@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script type="text/javascript">
+<@script>
     function callDocumentByPaginate(info) {
         var str = info.split('~');
         var checkUrl = '<@ofbizUrl>categoryAjaxFired</@ofbizUrl>';
@@ -38,7 +38,7 @@ under the License.
             }
         });
      }
-</script>
+</@script>
 
 <#macro paginationControls>
     <#assign viewIndexMax = Static["java.lang.Math"].ceil((listSize)?double / viewSize?double)>

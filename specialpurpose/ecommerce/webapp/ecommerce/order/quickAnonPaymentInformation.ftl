@@ -19,7 +19,7 @@ under the License.
 <#if requestParameters.paymentMethodTypeId?has_content>
    <#assign paymentMethodTypeId = "${requestParameters.paymentMethodTypeId!}">
 </#if>
-<script language="JavaScript" type="text/javascript">
+<@script>
 
 jQuery(document).ready(init);
 
@@ -106,7 +106,7 @@ function getPaymentInformation() {
       }
    }
 }
-</script>
+</@script>
 <form id="setPaymentInformation" method="post" action="<@ofbizUrl>quickAnonAddGiftCardToCart</@ofbizUrl>" name="setPaymentInformation">
 <@section title="${uiLabelMap.AccountingPaymentInformation}" class="+screenlet">
           <#if requestParameters.singleUsePayment?default("N") == "Y">

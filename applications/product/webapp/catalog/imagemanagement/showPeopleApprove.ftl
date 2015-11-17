@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/imagemanagement/sizzle.min.js</@ofbizContentUrl>"></script>
-<script type="text/javascript">
+<@script>
 jQuery.noConflict();
 jQuery(document).ready(function(){
     jQuery('input:radio').click(function(){
@@ -30,7 +30,7 @@ jQuery(document).ready(function(){
         this.checked = true;
     });
 });
-</script>
+</@script>
         
 <@table type="generic">
   <@tr>

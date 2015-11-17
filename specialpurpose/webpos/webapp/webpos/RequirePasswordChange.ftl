@@ -54,7 +54,7 @@ under the License.
     </form>
 </@section>
 
-<script language="JavaScript" type="text/javascript">
+<@script>
   <#if autoUserLogin?has_content>document.loginform.PASSWORD.focus();</#if>
   <#if !autoUserLogin?has_content>document.loginform.USERNAME.focus();</#if>
-</script>
+</@script>

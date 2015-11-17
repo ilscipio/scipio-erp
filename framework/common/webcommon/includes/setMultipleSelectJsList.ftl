@@ -19,7 +19,7 @@ under the License.
 <#if asm_listField??> <#-- we check only this var and suppose the others are also present -->
     <#list asm_listField as row>
         <#if row.asm_multipleSelect??>
-        <script type="text/javascript">
+        <@script>
         jQuery(document).ready(function() {
             multiple = jQuery("#${row.asm_multipleSelect!}");
         
@@ -51,7 +51,7 @@ under the License.
             selectMultipleRelatedValues('${row.asm_requestName}', '${row.asm_paramKey}', '${row.asm_relatedField}', '${row.asm_multipleSelect}', '${row.asm_type}', typeValue, '${row.asm_responseName}');
           </#if>
           });  
-        </script>
+        </@script>
         
         </#if>
     </#list>

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/imagemanagement/sizzle.min.js</@ofbizContentUrl>"></script>
-<script type="text/javascript">
+<@script>
 jQuery.noConflict();
 jQuery(document).ready(function(){
     jQuery('img').attr('id',"previewImage");
@@ -67,4 +67,4 @@ function getSizeVars(){
     result = pathElement.substring(0, pathElement.lastIndexOf(".")); 
     return result;
 }
-</script>
+</@script>

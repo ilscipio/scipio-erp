@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script type="text/javascript">
+<@script>
 jQuery(document).ready( function() {
 <#if 0 < productPriceConds.size()>
   <#list 0..productPriceConds.size()-1 as i>
@@ -37,4 +37,4 @@ jQuery(document).ready( function() {
     getDependentDropdownValues('getAssociatedPriceRulesConds', 'inputParamEnumId', 'AddProductPriceRulesCond_inputParamEnumId_o_0', 'AddProductPriceRulesCond_condValue_o_0', 'productPriceRulesCondValues', 'condValue_o_0', 'description', '', '', '', '', '', 'AddProductPriceRulesCond_condValueInput_o_0');
   }
 })
-</script>
+</@script>

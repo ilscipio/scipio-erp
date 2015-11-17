@@ -21,7 +21,7 @@ under the License.
 
 <#-- FIXME: this is not being called in any way right now, @field type 'checkbox'  doesn't accept JS events. On the other hand, we must
 	determine if whatever this functions do, makes sense to do it in that way -->  
-<script language="JavaScript" type="text/javascript">
+<@script>
 function togglefinAccountTransId(master) {
     var form = document.selectAllForm;
     var finAccountTransList = form.elements.length;
@@ -83,7 +83,7 @@ function getFinAccountTransRunningTotalAndBalances() {
         jQuery('#submitButton').attr('disabled', true);
     }
 }
-</script>
+</@script>
 
 <@section>
 	<#if finAccountTransList?has_content && parameters.noConditionFind?? && parameters.noConditionFind == 'Y'>

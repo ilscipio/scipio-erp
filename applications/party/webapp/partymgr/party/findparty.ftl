@@ -133,11 +133,11 @@ under the License.
         </@field>
       </form>
     </div>
-    <script language="JavaScript" type="text/javascript">
+    <@script>
         $(document).ready(function() {
             document.lookupparty.partyId.focus();
         });
-    </script>
+    </@script>
     
     </@cell>
   </@row>

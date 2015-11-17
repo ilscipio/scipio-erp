@@ -55,6 +55,6 @@ under the License.
     </form>
 </@section>
 
-<script language="JavaScript" type="text/javascript">
+<@script>
   document.loginform.PASSWORD.focus();
-</script>
+</@script>

@@ -16,9 +16,9 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script language="JavaScript" type="text/javascript">
+<@script>
     function setNow(field) { eval('document.selectAllForm.' + field + '.value="${nowTimestamp}"'); }
-</script>
+</@script>
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
@@ -195,9 +195,9 @@ under the License.
               <@field type="submitarea">
                   <input type="submit" value="${uiLabelMap.CommonReceive}" />
               </@field>
-            <script language="JavaScript" type="text/javascript">
+            <@script>
               document.selectAllForm.quantityAccepted.focus();
-            </script>
+            </@script>
           </form>
           </@section>
         <#-- Select Shipment Screen -->
@@ -464,7 +464,7 @@ under the License.
           </#if>
             <input type="hidden" name="_rowCount" value="${rowCount}"/>
           </form>
-          <script language="JavaScript" type="text/javascript">selectAll('selectAllForm');</script>
+          <@script>selectAll('selectAllForm');</@script>
           </@section>
         <#-- Initial Screen -->
         <#else>

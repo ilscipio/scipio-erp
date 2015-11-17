@@ -27,7 +27,7 @@ margin: 1em;
 <script type="text/javascript" src="/images/jquery/plugins/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <link rel="stylesheet" href="/images/jquery/plugins/fancybox/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
 
-<script type="text/javascript">
+<@script>
     $(document).ready(function() {
         $("a#single_image").fancybox();
         $("a#inline").fancybox({
@@ -41,7 +41,7 @@ margin: 1em;
             'overlayShow'   :   false
         });
     });
-</script>
+</@script>
 <@panel type="callout">${uiLabelMap.CommonVisualThemeUsage}</@panel>
 
 <@section title="${uiLabelMap.CommonVisualThemes}">

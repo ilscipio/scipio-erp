@@ -209,7 +209,7 @@ under the License.
         <div align="right"><input type="submit" class="${styles.link_action!}" value="${uiLabelMap.ProductIssueAll}"/></div>
         <input type="hidden" name="_rowCount" value="${rowCount}" />
         </form>
-        <script language="JavaScript" type="text/javascript">selectAll('selectAllForm');</script>
+        <@script>selectAll('selectAllForm');</@script>
     </#if>
 </@section>
 

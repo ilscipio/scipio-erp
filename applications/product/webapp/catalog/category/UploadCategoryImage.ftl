@@ -1,12 +1,12 @@
 <#-- TODO: License -->
 
 <#if productCategoryId?has_content>
-    <script language="JavaScript" type="text/javascript">
+    <@script>
         function setUploadUrl(newUrl) {
         var toExec = 'document.imageUploadForm.action="' + newUrl + '";';
         eval(toExec);
         };
-    </script>
+    </@script>
     <@section title="${uiLabelMap.ProductCategoryUploadImage}">
         <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadCategoryImage?productCategoryId=${productCategoryId!}&amp;upload_file_type=category</@ofbizUrl>" name="imageUploadForm">
           <@fields type="default-nolabels">

@@ -18,7 +18,7 @@ under the License.
 -->
 <#assign enableEdit = parameters.enableEdit?default("false")>
 <#--
-<script language="JavaScript" type="text/javascript">
+<@script>
 var numTabs=${(entity.getRelationsSize()+1)};
 function ShowTab(lname) {
   for(inc=1; inc <= numTabs; inc++) {
@@ -36,7 +36,7 @@ function ShowTab(lname) {
     }
   }
 }
-</script>-->
+</@script>-->
 <@section title="${uiLabelMap.WebtoolsViewValue} ${uiLabelMap.WebtoolsForEntity} ${entityName}">
 
     <@menu type="button">

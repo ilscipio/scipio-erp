@@ -28,11 +28,11 @@ under the License.
         <input type="submit" value="${uiLabelMap.WebtoolsCheckUpdateDatabase}"/>
     </form>
     <p>${uiLabelMap.WebtoolsNoteUseAtYourOwnRisk}</p>
-    <script language="JavaScript" type="text/javascript">
+    <@script>
          function enableTablesRemove() {
              document.forms["TablesRemoveForm"].elements["TablesRemoveButton"].disabled=false;
          }
-    </script>
+    </@script>
     <h3>${uiLabelMap.WebtoolsRemoveAllTables}</h3>
     <form method="post" action="${encodeURLCheckDb}" name="TablesRemoveForm">
         <input type="hidden" name="option" value="removetables"/>

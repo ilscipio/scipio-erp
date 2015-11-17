@@ -19,7 +19,7 @@ under the License.
 <#if requestParameters.paymentMethodTypeId?has_content>
    <#assign paymentMethodTypeId = "${requestParameters.paymentMethodTypeId!}">
 </#if>
-<script language="JavaScript" type="text/javascript">
+<@script>
 function shipBillAddr() {
     <#if requestParameters.singleUsePayment?default("N") == "Y">
       <#assign singleUse = "&amp;singleUsePayment=Y">
@@ -32,7 +32,7 @@ function shipBillAddr() {
         window.location.replace("setPaymentInformation?createNew=Y&amp;addGiftCard=${requestParameters.addGiftCard!}&amp;paymentMethodTypeId=${paymentMethodTypeId!}${singleUse}");
     }
 }
-</script>
+</@script>
 
 <@section title="${uiLabelMap.AccountingPaymentInformation}" class="+screenlet">
           <#-- after initial screen; show detailed screens for selected type -->

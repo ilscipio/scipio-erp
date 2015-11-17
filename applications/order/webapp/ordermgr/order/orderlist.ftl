@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script type="text/javascript">
+<@script>
     var checkBoxNameStart = "view";
     var formName = "findorder";
 
@@ -33,7 +33,7 @@ under the License.
         }
     }
 
-</script>
+</@script>
 
 <#-- order list -->
 <@section>

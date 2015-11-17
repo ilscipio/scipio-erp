@@ -17,8 +17,8 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script type="text/javascript">
-    <!-- function to add extra info for Timestamp format -->
+<@script>
+    // function to add extra info for Timestamp format
     function TimestampSubmit(obj) {
        reservStartStr = jQuery(obj).find("input[name='reservStartStr']");
        val1 = reservStartStr.val();
@@ -51,7 +51,7 @@ under the License.
             }
         });
      }
-</script>
+</@script>
 <br />
 <#macro paginationControls>
   <#assign viewIndexMax = Static["java.lang.Math"].ceil((listSize)?double / viewSize?double)>

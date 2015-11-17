@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script language="JavaScript" type="text/javascript">
+<@script>
     function quicklookup(func, locationelement, facilityelement, productelement) {
         
         var productId = productelement.value;
@@ -28,7 +28,7 @@ under the License.
         var request = "LookupProductInventoryLocation?productId=" + productId + "&facilityId=" + facilityId;
         window[func](locationelement, request);
     }
-</script>
+</@script>
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>

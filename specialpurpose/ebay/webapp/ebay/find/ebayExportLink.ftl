@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
+<@script>
     function exportToEbay() {
         <#if toEbayStore??>
             document.products.action="<@ofbizUrl>prepareProductListing</@ofbizUrl>";
@@ -26,7 +26,7 @@ under the License.
         </#if>
         document.products.submit();
     }
-</script>
+</@script>
 
 <#if productIds?has_content>
     <@menu type="button">

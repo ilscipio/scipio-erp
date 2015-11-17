@@ -34,7 +34,7 @@ under the License.
         <INPUT type="HIDDEN" name="maxHours" value="${maxHours!}"/>
     </div>
     <form id="form_birtReport" method="post"></form>
-    <script type="text/javascript">
+    <@script>
     function loadViewerbirtReport(){
     var formObj = document.getElementById( "form_birtReport" );
     var paramContainer = document.getElementById("params_birtReport");
@@ -55,7 +55,7 @@ under the License.
     formObj.submit( );
     }
     
-    </script>
+    </@script>
     <iframe name="birtReport" frameborder="no"  scrolling = "auto"  style='height:350px;width:100%;'></iframe>
-    <script type="text/javascript">loadViewerbirtReport();</script> 
+    <@script>loadViewerbirtReport();</@script> 
 </#if>

@@ -26,7 +26,7 @@ under the License.
     </@td>
   </@tr>
 </@table>
-<script type="text/javascript">
+<@script>
   function activateHotKeys() {
     $(document).keydown(function(e){
         switch (e.keyCode) {
@@ -89,4 +89,4 @@ under the License.
     WebPosHotkeys.bind("keydown", "down", keyDown, "keyDown()", "${uiLabelMap.WebPosShortcutKeyDown}");
     updateHotKeys();
   }
-</script>
+</@script>

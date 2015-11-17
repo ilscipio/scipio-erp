@@ -34,7 +34,7 @@ under the License.
     <input type="hidden" name="productFeatureTypeId" value=""/>
 </form>
 
-<script language="JavaScript" type="text/javascript">
+<@script>
 
 function removeAssoc(productIdTo, fromDate) {
     if (confirm("Are you sure you want to remove the association of " + productIdTo + "?")) {
@@ -57,7 +57,7 @@ function doPublish() {
     document.publish.submit();
 }
 
-</script>
+</@script>
 
 <@section title="${uiLabelMap.PageTitleEditProductQuickAdmin}">
         <!-- Name update section -->

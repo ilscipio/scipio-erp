@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script type="text/javascript">
+<@script>
     jQuery.noConflict();
     var host = document.location.host;
     jQuery(document).ready(function() {
@@ -67,4 +67,4 @@ under the License.
     function deletePreviewFrameImage() {
         jQuery.post("deleteFrameImage");
     }
-</script>
+</@script>

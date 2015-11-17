@@ -19,7 +19,7 @@ under the License.
 <#assign janrainEnabled = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("ecommerce.properties", "janrain.enabled")>
 <#assign appName = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("ecommerce.properties", "janrain.appName")>
 <#if janrainEnabled == "Y">
-<script type="text/javascript">
+<@script>
 (function() {
     if (typeof window.janrain !== 'object') window.janrain = {};
     window.janrain.settings = {};
@@ -46,7 +46,7 @@ under the License.
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(e, s);
 })();
-</script>
+</@script>
 <@heading level=1>${uiLabelMap.CommonLogin}</@heading>
 <div class="screenlet">
   <div class="screenlet-title-bar"><h3>${uiLabelMap.CommonRegistered}</h3></div>
@@ -141,7 +141,7 @@ under the License.
 -->
 <div class="endcolumns">&nbsp;</div>
 
-<script language="JavaScript" type="text/javascript">
+<@script>
   <#if autoUserLogin?has_content>document.loginform.PASSWORD.focus();</#if>
   <#if !autoUserLogin?has_content>document.loginform.USERNAME.focus();</#if>
-</script>
+</@script>

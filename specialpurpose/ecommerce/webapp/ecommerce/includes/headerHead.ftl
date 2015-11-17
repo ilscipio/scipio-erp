@@ -98,12 +98,12 @@ under the License.
     <meta name="keywords" content="${metaKeywords}"/>
   </#if>
   <#if webAnalyticsConfigs?has_content>
-    <script language="JavaScript" type="text/javascript">
+    <@script>
     <#list webAnalyticsConfigs as webAnalyticsConfig>
       <#if  webAnalyticsConfig.webAnalyticsTypeId != "BACKEND_ANALYTICS">
         ${StringUtil.wrapString(webAnalyticsConfig.webAnalyticsCode!)}
       </#if>
     </#list>
-    </script>
+    </@script>
   </#if>
 </head>

@@ -19,7 +19,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
+<@script>
 function togglePaymentId(master) {
     var form = document.depositWithdrawPaymentsForm;
     var payments = form.elements.length;
@@ -70,7 +70,7 @@ function getPaymentRunningTotal() {
 }
 
 
-</script>
+</@script>
 <@section>
     <form id="depositWithdrawPaymentsForm" name="depositWithdrawPaymentsForm" method="post" action="<@ofbizUrl>depositWithdrawPayments</@ofbizUrl>">
         <#if paymentList?has_content>

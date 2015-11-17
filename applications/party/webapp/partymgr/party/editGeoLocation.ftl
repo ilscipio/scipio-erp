@@ -18,7 +18,7 @@ under the License.
 -->
 
 <script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
-<script type="text/javascript">
+<@script>
     function load() {
         var geocoder = new google.maps.Geocoder();
         var center = new google.maps.LatLng(${latitude!38}, ${longitude!15});
@@ -114,7 +114,7 @@ under the License.
         });
         }
     }
-</script>
+</@script>
 
 <body onload="load()">
     <center>

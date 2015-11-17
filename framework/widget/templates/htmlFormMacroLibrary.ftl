@@ -155,7 +155,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#macro renderFormClose focusFieldName formName containerId hasRequiredField>
   </form><#lt/>
   <#if focusFieldName?has_content>
-    <script language="JavaScript" type="text/javascript">
+    <@script>
       var form = document.${formName};
       form.${focusFieldName}.focus();
       <#-- enable the validation plugin for all generated forms
@@ -163,17 +163,17 @@ not "current" context (too intrusive in current renderer design). still relies o
       if (jQuery(form).find(".required").size() > 0) {
         jQuery(form).validate();
       }
-    </script><#lt/>
+    </@script><#lt/>
   </#if>
   <#if containerId?has_content && hasRequiredField?has_content>
-    <script type="text/javascript">
+    <@script>
       jQuery("#${containerId}").validate({
         submitHandler:
           function(form) {
             form.submit();
           }
       });
-    </script>
+    </@script>
   </#if>
   <#global htmlFormRenderFormInfo = {}>
 </#macro>

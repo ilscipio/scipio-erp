@@ -45,7 +45,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderContainerBegin id style autoUpdateLink autoUpdateInterval>
   <#if autoUpdateLink?has_content>
-    <script type="text/javascript">ajaxUpdateAreaPeriodic('${id}', '${autoUpdateLink}', '', '${autoUpdateInterval}');</script>
+    <@script>ajaxUpdateAreaPeriodic('${id}', '${autoUpdateLink}', '', '${autoUpdateInterval}');</@script>
   </#if>
   <#-- Cato: save grid sizes (if any) -->
   <#local dummy = saveCurrentContainerSizesFromStyleStr(style)>
@@ -109,7 +109,7 @@ not "current" context (too intrusive in current renderer design). still relies o
         <a href="javascript:void(0);" id="${uniqueItemName}_link" 
         <#if style?has_content>class="${style}"</#if>>
         <#if text?has_content>${text}</#if></a>
-        <script type="text/javascript">
+        <@script>
             function getRequestData () {
                 var data =  {
                     <#list parameterList as parameter>
@@ -138,7 +138,7 @@ not "current" context (too intrusive in current renderer design). still relies o
                          });
                  }
             });
-        </script>
+        </@script>
     </#if>
 </#macro>
 
@@ -248,7 +248,7 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#local columnKey = portalPageId+columnSeqId>
   <#--
   <#local columnKeyFields = '<input name="portalPageId" value="' + portalPageId + '" type="hidden"/><input name="columnSeqId" value="' + columnSeqId + '" type="hidden"/>'>
-  <script type="text/javascript">
+  <@script>
     if (typeof SORTABLE_COLUMN_LIST != "undefined") {
       if (SORTABLE_COLUMN_LIST == null) {
         SORTABLE_COLUMN_LIST = "#portalColumn_${columnSeqId}";
@@ -256,7 +256,7 @@ not "current" context (too intrusive in current renderer design). still relies o
         SORTABLE_COLUMN_LIST += ", #portalColumn_${columnSeqId}";
       }
     }
-  </script>
+  </@script>
   <td class="portal-column<#if confMode == "true">-config</#if> connectedSortable" style="vertical-align: top; <#if width?has_content> width:${width};</#if>" id="portalColumn_${columnSeqId}">
   -->
     

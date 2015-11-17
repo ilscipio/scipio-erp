@@ -21,7 +21,7 @@ under the License.
 
 <div id="${chartId}Div" style="width:600px;height:300px;"></div>
 
-<script type="text/javascript">
+<@script>
   jQuery(document).ready( function() {
      /* Code Example: How should a chart Data Object look like */
     /*var d1 = [[0, Math.ceil(Math.random()*40)]];
@@ -100,4 +100,4 @@ under the License.
     }
 
   });
-</script>
+</@script>

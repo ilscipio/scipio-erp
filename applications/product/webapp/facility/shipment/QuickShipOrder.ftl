@@ -16,12 +16,12 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script language="JavaScript" type="text/javascript">
+<@script>
 // function called from ShipmentScaleApplet when a weight is read
 function setWeight(weight) {
   document.weightForm.weight.value = weight;
 }
-</script>
+</@script>
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 <#macro menuContent menuArgs={}>
@@ -114,9 +114,9 @@ function setWeight(weight) {
             </@row>
             </@fields>
             </form>
-            <script language="JavaScript" type="text/javascript">
+            <@script>
               document.routeForm.carrierPartyId.focus();
-            </script>
+            </@script>
           <#else>
             <#-- display the links for label/packing slip -->
             <#assign allDone = "yes">
@@ -150,9 +150,9 @@ function setWeight(weight) {
                   <a href="javascript:document.weightForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductSetWeight}</a>
               </@field>
           </form>
-          <script language="JavaScript" type="text/javascript">
+          <@script>
             document.weightForm.weight.focus();
-          </script>
+          </@script>
           <#-- todo embed the applet
           <applet code="ShipmentScaleApplet.class" codebase="/images/" name="Package Weight Reader" width="0" height="0" MAYSCRIPT>
             <param name="serialPort" value="com1">
@@ -186,9 +186,9 @@ function setWeight(weight) {
             <a href="javascript:document.selectOrderForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductShipOrder}</a>
         </@field>
     </form>
-    <script language="JavaScript" type="text/javascript">
+    <@script>
         document.selectOrderForm.orderId.focus();
-    </script>
+    </@script>
     </@section>
   </#if>
 </@section>

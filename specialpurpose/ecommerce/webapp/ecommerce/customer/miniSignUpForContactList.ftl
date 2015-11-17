@@ -27,7 +27,7 @@ under the License.
   </select>
 </#macro>
 
-<script type="text/javascript" language="JavaScript">
+<@script>
     function unsubscribe() {
         var form = document.getElementById("signUpForContactListForm");
         form.action = "<@ofbizUrl>unsubscribeContactListParty</@ofbizUrl>"
@@ -40,7 +40,7 @@ under the License.
         document.getElementById("statusId").value = "CLPT_UNSUBS_PENDING";
         form.submit();
     }
-</script>
+</@script>
 
 <@section title="${uiLabelMap.EcommerceSignUpForContactList}" id="miniSignUpForContactList" class="+screenlet">
   <#if sessionAttributes.autoName?has_content>

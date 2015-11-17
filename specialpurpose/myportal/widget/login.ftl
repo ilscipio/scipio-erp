@@ -94,11 +94,11 @@ under the License.
 </@cell>
 </@row>
 
-<script language="JavaScript" type="text/javascript">
+<@script>
   document.loginform.JavaScriptEnabled.value = "Y";
   <#if focusName>
     document.loginform.USERNAME.focus();
   <#else>
     document.loginform.PASSWORD.focus();
   </#if>
-</script>
+</@script>

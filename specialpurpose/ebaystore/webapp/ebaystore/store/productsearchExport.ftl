@@ -62,7 +62,7 @@ under the License.
         background-color:#FFF;
     }
 </style>
-<script language="JavaScript" type="text/javascript">
+<@script>
 
      function retrieveEbayCategoryByParent(url,cateId,productStoreId,id){
         if (cateId.match('true')){
@@ -191,7 +191,7 @@ under the License.
             }
         }
     }
-</script>
+</@script>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
     <@menuitem type="link" href=makeOfbizUrl("clearExpListing?productStoreId=${productStoreId!}") text="Clear Listing" />
@@ -499,7 +499,7 @@ under the License.
                                                         <script language="javascript" src="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!"en"}.js</@ofbizContentUrl>" type="text/javascript"></script><#rt/>
                                                         </#if>
                                                         <link href="<@ofbizContentUrl>/images/jquery/plugins/elrte-1.3/css/elrte.min.css</@ofbizContentUrl>" rel="stylesheet" type="text/css">
-                                                        <script language="javascript" type="text/javascript">
+                                                        <@script>
                                                                 var opts = {
                                                                     cssClass : 'el-rte',
                                                                     lang     : '${language}',
@@ -507,13 +507,13 @@ under the License.
                                                                     doctype  : '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">', //'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN">',
                                                                     cssfiles : ['/images/jquery/plugins/elrte-1.3/css/elrte-inner.css']
                                                                 }
-                                                        </script>
+                                                        </@script>
                                                         <textarea id="description" name="description" style="width:800px; height:300px">
                                                             <#if item.getDescription()??>description<#else>${item.getDescription()!}</#if>
                                                         </textarea>
-                                                        <script type="text/javascript">
+                                                        <@script>
                                                               jQuery('#description').elrte(opts);
-                                                        </script>
+                                                        </@script>
                                                     </@td></@tr>
                                                  </@table>
                                             </@td>
@@ -548,11 +548,11 @@ under the License.
                                                     <@tr>
                                                         <@td></@td>
                                                         <@td valign="top">
-                                                            <script type="text/javascript">
+                                                            <@script>
                                                               function popUpImg(){
                                                                 //popUp(document.getElementById('themeImg').src, 'themeImgBig', '400', '550');
                                                               }
-                                                            </script>
+                                                            </@script>
                                                             <a id="themeImgUrl" href="javascript:popUpImg();"><img hspace="5" height="120" border="0" align="top" width="100" id="themeImg" name="themeImg" src="http://pics.ebay.com/aw/pics/vit/None2_sample_100x120.gif" alt="" /></a>
                                                             <br /><div style="height:120px"></div>
                                                         </@td>

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign contentURL = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("url.properties", "content.url.prefix.standard")>
-<script type="text/javascript">
+<@script>
 $(document).ready(function(){
     var form = document.ImageShare;
     var protocol = document.location.protocol;
@@ -55,4 +55,4 @@ $(document).ready(function(){
     }
 });
 
-</script>
+</@script>

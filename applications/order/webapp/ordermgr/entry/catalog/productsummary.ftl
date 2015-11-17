@@ -83,13 +83,13 @@ ${virtualJavaScript!}
             </@cell>
           </@row>
         </div>
-        <script type="text/javascript">
+        <@script>
           jQuery("#${productInfoLinkId}").hover(function() {
                   jQuery("#${productDetailId}").fadeIn("slow");
               }, function () {
                   jQuery("#${productDetailId}").fadeOut("fast");
               });
-        </script>
+        </@script>
         <div class="productbuy">
           <#-- check to see if introductionDate hasn't passed yet -->
           <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>

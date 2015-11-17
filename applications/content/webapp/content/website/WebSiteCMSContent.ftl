@@ -19,7 +19,7 @@
   under the License.
   -->
 
-<script type="text/javascript">
+<@script>
     jQuery(document).ready(function() {
         // override elRTE save action to make "save" toolbar button work
         elRTE.prototype.save = function() {
@@ -77,7 +77,7 @@
         var typeValue = selectObject.options[selectObject.selectedIndex].value;
         callDocument(true, contentId, '', typeValue);
     }
-</script>
+</@script>
 
 <#-- cms menu bar -->
 <div id="cmsmenu" style="margin-bottom: 8px;">

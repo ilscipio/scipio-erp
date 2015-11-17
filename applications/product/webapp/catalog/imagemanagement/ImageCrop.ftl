@@ -19,7 +19,7 @@ under the License.
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/imagemanagement/sizzle.min.js</@ofbizContentUrl>"></script>
 <script language="javascript" type="text/javascript" src="<@ofbizContentUrl>/images/imagemanagement/jquery.Jcrop.min.js</@ofbizContentUrl>"></script>
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/imagemanagement/jquery.Jcrop.css</@ofbizContentUrl>" type="text/css" />
-<script type="text/javascript">
+<@script>
 jQuery.noConflict();
 jQuery(document).ready(function(){
     jQuery('td.cropbox img').Jcrop({
@@ -59,4 +59,4 @@ function showPreview(coords){
         });
     }
 }
-</script>
+</@script>

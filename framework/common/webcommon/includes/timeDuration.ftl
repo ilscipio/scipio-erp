@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script language="JavaScript" type="text/javascript">
+<@script>
   function setTimeDuration() {
     var years = window.document.getElementsByName("years")[0].value;
     var weeks = window.document.getElementsByName("weeks")[0].value;
@@ -35,7 +35,7 @@ under the License.
     duration += millis == null ? 0 : millis;
     set_duration_value(duration);
   }
-</script>
+</@script>
 <form name="TimeDuration" action="javascript:setTimeDuration()">
   <table cellspacing="0" class="basic-table">
     <tr>

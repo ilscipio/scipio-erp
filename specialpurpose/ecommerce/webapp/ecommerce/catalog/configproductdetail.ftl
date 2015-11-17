@@ -374,7 +374,7 @@ function getConfigDetails(event) {
       </div>
       <#-- Prefill first select box (virtual products only) -->
       <#if variantTree?? && 0 < variantTree.size()>
-        <script language="JavaScript" type="text/javascript">eval("list" + "${featureOrderFirst}" + "()");</script>
+        <@script>eval("list" + "${featureOrderFirst}" + "()");</@script>
       </#if>
 
       <#-- Swatches (virtual products only) -->

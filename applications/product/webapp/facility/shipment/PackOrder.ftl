@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
+<@script>
     function clearLine(facilityId, orderId, orderItemSeqId, productId, shipGroupSeqId, inventoryItemId, packageSeqId) {
         document.clearPackLineForm.facilityId.value = facilityId;
         document.clearPackLineForm.orderId.value = orderId;
@@ -28,7 +28,7 @@ under the License.
         document.clearPackLineForm.packageSeqId.value = packageSeqId;
         document.clearPackLineForm.submit();
     }
-</script>
+</@script>
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
     <#assign showInput = requestParameters.showInput?default("Y")>
@@ -482,13 +482,13 @@ under the License.
   </#if>
 
   <#if orderId?has_content>
-    <script language="javascript" type="text/javascript">
+    <@script>
       document.singlePackForm.productId.focus();
-    </script>
+    </@script>
   <#else>
-    <script language="javascript" type="text/javascript">
+    <@script>
       document.selectOrderForm.orderId.focus();
-    </script>
+    </@script>
   </#if>
 <#else>
   <@alert type="error">${uiLabelMap.ProductFacilityViewPermissionError}</@alert>

@@ -18,13 +18,13 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script type="text/javascript" language="javascript">
+<@script>
 function call_fieldlookup4(rootForumId, parentForumId ) {
     var obj_lookupwindow = window.open("addSubSite?rootForumId=" + rootForumId + "&amp;parentForumId=" + parentForumId, 'FieldLookup', 'width=500,height=250,scrollbars=yes,status=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
     obj_lookupwindow.opener = window;
     obj_lookupwindow.focus();
 }
-</script>
+</@script>
 
 
 <#--
@@ -264,13 +264,13 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
   </@tr>
 </@table>
 
-<script type="text/javascript" language="javascript">
+<@script>
 function call_fieldlookup3(view_name) {
         window.target = document.siteRoleForm.partyId_o_${rowCount - 1};
     var obj_lookupwindow = window.open(view_name,'FieldLookup', 'width=700,height=550,scrollbars=yes,status=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
     obj_lookupwindow.opener = window;
     obj_lookupwindow.focus();
 }
-</script>
+</@script>
 
 </#macro>

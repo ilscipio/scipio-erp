@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if asm_multipleSelect??> <#-- we check only this var and suppose the others are also present -->
-<script type="text/javascript">
+<@script>
 jQuery(document).ready(function() {
     multiple = jQuery("#${asm_multipleSelect!}");
 
@@ -49,7 +49,7 @@ jQuery(document).ready(function() {
     selectMultipleRelatedValues('${asm_requestName}', '${asm_paramKey}', '${asm_relatedField}', '${asm_multipleSelect}', '${asm_type}', typeValue, '${asm_responseName}');
   </#if>
   });  
-</script>
+</@script>
 
 <style type="text/css">
 <#-- Cato: FIXME: this greaks grid 

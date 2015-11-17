@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script type="text/javascript">
+<@script>
 jQuery(document).ready(function() {
     if (jQuery('#${dependentForm}').length) {
       jQuery('#${dependentForm}_${mainId}').change(function(e, data) {
@@ -28,4 +28,4 @@ jQuery(document).ready(function() {
       </#if>
     }
 })
-</script>
+</@script>

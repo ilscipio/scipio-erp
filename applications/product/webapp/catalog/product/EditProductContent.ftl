@@ -17,14 +17,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if product??>
-<script language="JavaScript" type="text/javascript">
+<@script>
     function insertNowTimestamp(field) {
         eval('document.productForm.' + field + '.value="${nowTimestampString}";');
     };
     function insertImageName(type,nameValue) {
         eval('document.productForm.' + type + 'ImageUrl.value=nameValue;');
     };
-</script>
+</@script>
 
     <#if fileType?has_content>
     <@heading>${uiLabelMap.ProductResultOfImageUpload}</@heading>
@@ -139,12 +139,12 @@ under the License.
                 <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action!}"/>
             </@field>
         </form>
-        <script language="JavaScript" type="text/javascript">
+        <@script>
             function setUploadUrl(newUrl) {
                 var toExec = 'document.imageUploadForm.action="' + newUrl + '";';
                 eval(toExec);
             };
-        </script>
+        </@script>
     </@section>
     
     <@section title="${uiLabelMap.ProductUploadImage}">

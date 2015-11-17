@@ -46,7 +46,7 @@ or empty string (signifies use defaults).
   <#if fullPath?is_boolean><#local fullPath = fullPath?c><#elseif !fullPath?has_content><#local fullPath = "false"></#if>
   <#if secure?is_boolean><#local secure = secure?c><#elseif !secure?has_content><#local secure = "false"></#if>
   <#if encode?is_boolean><#local encode = encode?c><#elseif !encode?has_content><#local encode = "true"></#if>
-  <#local res><@ofbizUrl fullPath=fullPath secure=secure encode=encode>${uri}</@ofbizUrl></#local>
+  <#local res><@ofbizUrl fullPath=fullPath secure=secure encode=encode>${StringUtil.wrapString(uri)}</@ofbizUrl></#local>
   <#return res>
 </#function>
 
@@ -57,7 +57,7 @@ or empty string (signifies use defaults).
 Function version of the @ofbizContentUrl macro.
 -->
 <#function makeOfbizContentUrl uri variant="">
-  <#local res><@ofbizContentUrl variant=variant>${uri}</@ofbizContentUrl></#local>
+  <#local res><@ofbizContentUrl variant=variant>${StringUtil.wrapString(uri)}</@ofbizContentUrl></#local>
   <#return res>
 </#function>
 
@@ -75,6 +75,7 @@ The following URI forms are currently interpreted and transformed:
                  ofbizUrl://myRequest;fullPath=false;secure=false;encode=true?param1=val1
 -->
 <#function interpretRequestUri uri>
+  <#local uri = StringUtil.wrapString(uri)?string>
   <#if uri?starts_with("ofbizUrl://")>
     <#local uriDesc = Static["org.ofbiz.webapp.control.RequestDescriptor"].fromUriStringRepr(request!, response!, uri)>
     <#if uriDesc.getType() == "ofbizUrl">

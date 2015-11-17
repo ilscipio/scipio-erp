@@ -74,13 +74,13 @@ under the License.
     <#list layoutSettings.javaScripts as javaScript>
       <#if javaScriptsSet.contains(javaScript)>
         <#assign nothing = javaScriptsSet.remove(javaScript)/>
-        <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
+        <@script src=makeOfbizContentUrl(javaScript) />
       </#if>
     </#list>
   </#if>
   <#if layoutSettings.VT_HDR_JAVASCRIPT?has_content>
     <#list layoutSettings.VT_HDR_JAVASCRIPT as javaScript>
-      <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
+      <@script src=makeOfbizContentUrl(javaScript) />
     </#list>
   </#if>
   ${layoutSettings.extraHead!}

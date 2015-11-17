@@ -186,7 +186,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <#list layoutSettings.VT_TOP_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
+                <@script src=makeOfbizContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -197,7 +197,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <#list layoutSettings.VT_PRIO_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
+                <@script src=makeOfbizContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -208,7 +208,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <#list layoutSettings.javaScripts as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
+                <@script src=makeOfbizContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>
@@ -217,7 +217,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <#list layoutSettings.VT_HDR_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
+                <@script src=makeOfbizContentUrl(javaScript) />
             </#if>
         </#list>
     </#if>

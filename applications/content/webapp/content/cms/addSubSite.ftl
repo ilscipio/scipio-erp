@@ -18,7 +18,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script type="text/javascript">
+<@script>
 function submit_add() {
     window.close();
     document.addSubSite.submit();
@@ -26,7 +26,7 @@ function submit_add() {
 function win_cancel() {
     window.close();
 }
-</script>
+</@script>
 
 <@section>
 <form name="addSubSite" method="post" action="<@ofbizUrl>postNewSubSite?rootForumId=${requestParameters.rootForumId}</@ofbizUrl>">

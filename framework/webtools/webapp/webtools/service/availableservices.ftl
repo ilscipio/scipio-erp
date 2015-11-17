@@ -149,7 +149,7 @@ under the License.
     <#-- If service has ECA's -->
     <#if ecaMapList?? && ecaMapList?has_content>
       <#-- add the javascript for modalpopup's -->
-      <script type="text/javascript">
+      <@script>
           function detailsPopup(viewName){
               var lookupWinSettings = 'top=50,left=50,width=600,height=300,scrollbars=auto,status=no,resizable=no,dependent=yes,alwaysRaised=yes';
               var params = '';
@@ -157,7 +157,7 @@ under the License.
               if(lookupWin.opener == null) lookupWin.opener = self;
               lookupWin.focus();
           }
-      </script>
+      </@script>
 <@row>
    <@cell>
           <@heading>${uiLabelMap.WebtoolsServiceECA}</@heading>

@@ -18,7 +18,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<script type="text/javascript">
+<@script>
 function call_fieldlookup3(view_name) {
     var obj_lookupwindow = window.open(view_name + "?webSitePublishPoint=" + webSitePublishPoint,'FieldLookup', 'width=700,height=550,scrollbars=yes,status=no,top='+my+',left='+mx+',dependent=yes,alwaysRaised=yes');
     obj_lookupwindow.opener = window;
@@ -52,7 +52,7 @@ function call_fieldlookup3(view_name) {
         document.forms.siteRoleForm.submit();
     }
 
-</script>
+</@script>
 
 <#-- ============================================================= -->
 

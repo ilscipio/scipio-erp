@@ -226,11 +226,11 @@ so for now we have to split the screens in half and rely on the menu widget rend
     </#if>
     <#if lastParameters??><#assign parametersURL = "&amp;" + lastParameters></#if>
     <#if layoutSettings.WEB_ANALYTICS?has_content>
-      <script type="text/javascript">
+      <@script inline=true>
         <#list layoutSettings.WEB_ANALYTICS as webAnalyticsConfig>
           ${StringUtil.wrapString(webAnalyticsConfig.webAnalyticsCode!)}
         </#list>
-      </script>
+      </@script>
     </#if>
 </head>
 <#if layoutSettings.headerImageLinkUrl??>

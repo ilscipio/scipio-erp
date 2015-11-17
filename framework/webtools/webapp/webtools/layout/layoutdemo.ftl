@@ -189,9 +189,9 @@
     <@heading attribs=makeMagTargetAttribMap("misc") id="misc">Misc</@heading>
     <@progress value=5 id="test"/>
     <#-- simple animation test -->
-    <script>
-    $('#test_meter').css({"width": "78%"});
-    </script>
+    <@script>
+      $('#test_meter').css({"width": "78%"});
+    </@script>
 </@section>
 
 <@section title="Tables">

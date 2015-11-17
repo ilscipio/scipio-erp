@@ -18,7 +18,7 @@
   -->
 <script type="text/javascript" src="<@ofbizContentUrl>/images/jquery/plugins/jsTree/jquery.jstree.js</@ofbizContentUrl>"></script>
 
-<script type="application/javascript">
+<@script>
 <#-- some labels are not unescaped in the JSON object so we have to do this manuely -->
 function unescapeHtmlText(text) {
     return jQuery('<div />').html(text).text()
@@ -220,7 +220,7 @@ jQuery(document).ready(createTree());
         });
     }
 
-</script>
+</@script>
 
 <style>
 <#if tabButtonItem?has_content>

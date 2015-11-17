@@ -20233,6 +20233,8 @@
         <value xml:lang="zh">添加账单账户角色</value>
         <value xml:lang="zh_TW">增加帳單帳戶角色</value>
     </property>
+    
+    <!-- Cato: New Billing Account labels -->
     <property key="PageTitleListBillingAccountRoles">        
         <value xml:lang="en">Billing Account Role List</value>
     </property>
@@ -20254,6 +20256,7 @@
     <property key="PageTitleListBillingAccountInvoices">        
         <value xml:lang="en">Billing Account Invoice List</value>
     </property>
+    <!--  -->
     
     <property key="PageTitleAddGlAccount">
         <value xml:lang="en">Add Gl Account</value>

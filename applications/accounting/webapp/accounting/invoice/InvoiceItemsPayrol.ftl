@@ -20,59 +20,33 @@ under the License.
 -->
 <form method="post" action="createInvoiceItemPayrol">
 	<input type="hidden" name="invoiceId" value="${invoice.invoiceId}" />
-	<@table type="data-complex" class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
-		<#if PayrolGroup?has_content>
-			<#list PayrolGroup as payrolGroup>
-				<@thead>
-					<@tr class="header-row">
-   	 					<@th>
-    						[${payrolGroup.description}]
-    					</@th>
-					    <@th>&nbsp;</@th>
-					    <@th>&nbsp;</@th>
-					    <@th>&nbsp;</@th>
-					    <@th>&nbsp;</@th>
-					</@tr>
-					<@tr class="header-row">
-    					<@th align="center">Description</@th>
-    					<@th align="center">Quantity</@th>
-    					<@th width="10px" align="center">Amount</@th>
-    					<@th>&nbsp;</@th>
-   						<@th>&nbsp;</@th>
-					</@tr>
-				</@thead>
-	    		<#if PayrolList?has_content>
-	        		<#list PayrolList as payrolList>
-	            		<#if payrolList.parentTypeId! == payrolGroup.invoiceItemTypeId!>
-							<@tr>
-							    <@td class="align-right">
-							            ${payrolList.description} :
-							    </@td>
-							    <@td><input type="text" size=10 name="${payrolList.invoiceItemTypeId}_Quantity"/></@td>
-							    <@td><input type="text" size=10 name="${payrolList.invoiceItemTypeId}_Amount"/></@td>
-							    <@td>&nbsp;</@td>
-							    <@td>&nbsp;</@td>
-							</@tr>
-	            		</#if>
-	        		</#list>
-	    		</#if>
-			</#list>
-		</#if>
-		<@tfoot>
-			<@tr class="header-row">
-				<@td>&nbsp;</@td>
-				<@td>&nbsp;</@td>
-				<@td>&nbsp;</@td>
-				<@td>&nbsp;</@td>
-				<@td>&nbsp;</@td>
-			</@tr>
-			<@tr>
-			    <@td class="align-right"><b>Add all values : </b></@td>
-			    <@td align="center"><input type="submit" value="Add" /></@td>
-			    <@td>&nbsp;</@td>
-			    <@td>&nbsp;</@td>
-			    <@td>&nbsp;</@td>
-			</@tr>
-		</@tfoot>
-	</@table>
+	<@row>
+		<#list PayrolGroup as payrolGroup>			
+			<@cell columns="4">
+				<@section title="${payrolGroup.description}">
+					<#if PayrolGroup?has_content>
+						<@row>
+							<@cell columns="6"><strong>Description</strong></@cell>
+							<@cell columns="3"><strong>Quantity</strong></@cell>
+							<@cell columns="3" last=true><strong>Amount</strong></@cell>
+						</@row>
+			    		<#if PayrolList?has_content>
+			        		<#list PayrolList as payrolList>
+			            		<#if payrolList.parentTypeId! == payrolGroup.invoiceItemTypeId!>
+									<@row>
+									    <@cell columns="6">${payrolList.description}</@cell>
+									    <@cell columns="3"><@field type="input" size=10 name="${payrolList.invoiceItemTypeId}_Quantity"/></@cell>
+									    <@cell columns="3" last=true><@field type="input" size=10 name="${payrolList.invoiceItemTypeId}_Amount"/></@cell>							    
+									</@row>
+			            		</#if>
+			        		</#list>
+			    		</#if>
+					</#if>
+				</@section>
+			</@cell>
+		</#list>
+	</@row>
+	<@field type="submitarea" label="${uiLabelMap.CommonAdd}">
+		<input type="submit" value="Add" />		
+	</@field>
 </form>

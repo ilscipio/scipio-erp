@@ -55,9 +55,9 @@ under the License.
                                     <condition><not><if-empty field="parameters.invoiceId"/></not></condition>
                                     <widgets>
                                         <include-menu name="InvoiceSubTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                                        <container style="leftclear">
+                                        <!-- <container style="leftclear">
                                             <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${invoice.description} [${invoiceId}]  ${${extraFunctionName}}"/>
-                                        </container>
+                                        </container> -->
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>
@@ -436,8 +436,7 @@ under the License.
 
     <screen name="EditInvoiceItems">
         <section>
-            <actions>
-                <property-map resource="AccountingEntityLabels" map-name="uiLabelMap" global="true"/>
+            <actions>                
                 <set field="viewIndex" from-field="parameters.viewIndex"/>
                 <set field="viewSize" from-field="parameters.viewSize"/>
                 <set field="titleProperty" value="PageTitleListInvoices"/>
@@ -460,7 +459,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonInvoiceDecorator" location="${parameters.invoiceDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingInvoiceItemAdd}">
+                        <screenlet title="${uiLabelMap.AccountingInvoiceItemAdd} - ${uiLabelMap.AccountingInvoice}: ${invoiceId}">
                             <section>
                                 <condition>
                                     <not><if-compare field="invoice.invoiceTypeId" operator="equals" value="PAYROL_INVOICE"/></not>

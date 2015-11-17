@@ -364,9 +364,9 @@ not "current" context (too intrusive in current renderer design). still relies o
   </#if>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
-      <#local innerClasses><#if style?has_content>${style}<#else>${styles.grid_small!}8<#if isLarge>  ${styles.grid_large!}9</#if></#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}"</#local>
+      <#local innerClasses><#if style?has_content>${style}<#else>${styles.grid_small!}8<#if isLarge>  ${styles.grid_large!}9</#if></#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}</#local>
   <#else>
-      <#local innerClasses><#if style?has_content>${style}<#else>${styles.grid_small!}12<#if isLarge>  ${styles.grid_large!}12</#if></#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}"</#local>
+      <#local innerClasses><#if style?has_content>${style}<#else>${styles.grid_small!}12<#if isLarge>  ${styles.grid_large!}12</#if></#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}</#local>
   </#if>
         <#-- Cato: save grid sizes (if any) for widgets -->
         <#local dummy = saveCurrentContainerSizesFromStyleStr(innerClasses)>

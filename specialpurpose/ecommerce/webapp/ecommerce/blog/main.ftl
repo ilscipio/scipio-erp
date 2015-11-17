@@ -22,7 +22,7 @@ under the License.
 <head>
     <title>Main</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <script src="<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>" type="text/javascript"></script>
+    <@script src=makeOfbizContentUrl("/images/selectall.js") output=true />
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/ecommerce/images/blog.css</@ofbizContentUrl>' type='text/css'>

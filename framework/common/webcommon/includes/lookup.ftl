@@ -33,7 +33,7 @@ under the License.
     }
     initJQuery();
     </@script>
-    <script src="<@ofbizContentUrl>/images/selectall.js</@ofbizContentUrl>" type="text/javascript"></script>
+    <@script src=makeOfbizContentUrl("/images/selectall.js") output=true />
     <#if layoutSettings.javaScripts?has_content>
         <#--layoutSettings.javaScripts is a list of java scripts. -->
         <#-- use a Set to make sure each javascript is declared only once, but iterate the list to maintain the correct order -->
@@ -41,7 +41,7 @@ under the License.
         <#list layoutSettings.javaScripts as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <script src="<@ofbizContentUrl>${StringUtil.wrapString(javaScript)}</@ofbizContentUrl>" type="text/javascript"></script>
+                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") output=true />
             </#if>
         </#list>
     </#if>

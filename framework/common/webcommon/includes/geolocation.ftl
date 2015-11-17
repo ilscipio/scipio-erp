@@ -40,7 +40,7 @@ under the License.
         <div id="${id}" style="border:1px solid #979797; background-color:#e5e3df; width:${geoChart.width}; height:${geoChart.height}; margin:2em auto;">
           <div style="padding:1em; color:gray;">${uiLabelMap.CommonLoading}</div>
         </div>
-        <script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
+        <@script src="https://maps.googleapis.com/maps/api/js?sensor=false" />
       </#if>        
 
       <#-- ================================= Here we go with different types of maps renderer ======================================-->

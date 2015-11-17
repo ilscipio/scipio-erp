@@ -1,4 +1,5 @@
 
+<#-- TODO: could remove output=true later and let accumulate in theme footer -->
 <@script output=true>
 
     <#-- Common Ofbiz URIs for use in javascript -->

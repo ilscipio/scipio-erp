@@ -27,6 +27,7 @@ under the License.
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 -->
 <@htmlHeadOpen />
+  <@scripts output=true>
   <title><#if title?has_content>${title}<#elseif titleProperty?has_content>${uiLabelMap.get(titleProperty)}</#if>: ${(productStore.storeName)!}</title>
   <#if layoutSettings.VT_SHORTCUT_ICON?has_content>
     <#assign shortcutIcon = layoutSettings.VT_SHORTCUT_ICON.get(0)/>
@@ -73,13 +74,13 @@ under the License.
     <#list layoutSettings.javaScripts as javaScript>
       <#if javaScriptsSet.contains(javaScript)>
         <#assign nothing = javaScriptsSet.remove(javaScript)/>
-        <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") output=true />
+        <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
       </#if>
     </#list>
   </#if>
   <#if layoutSettings.VT_HDR_JAVASCRIPT?has_content>
     <#list layoutSettings.VT_HDR_JAVASCRIPT as javaScript>
-      <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") output=true />
+      <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
     </#list>
   </#if>
   ${layoutSettings.extraHead!}
@@ -106,4 +107,5 @@ under the License.
     </#list>
     </@script>
   </#if>
+  </@scripts>
 </head>

@@ -26,16 +26,18 @@ under the License.
 </#if>
 
 <head>
+  <@scripts output=true>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>${(decoratedContent.subcontent.title.render)!"CMS Site Generic Title (Set subcontent 'title' on your content!)"}</title>
     <link rel="shortcut icon" href="/images/ofbiz.ico" />
-    <@script src="/images/fieldlookup.js" output=true />
-    <@script src="/images/selectall.js" output=true />
+    <@script src="/images/fieldlookup.js" />
+    <@script src="/images/selectall.js" />
     <link rel="stylesheet" href="/images/ecommain.css" type="text/css"/>
     <link rel="stylesheet" href="/ecommerce/images/blog.css" type="text/css"/>
     <link rel="stylesheet" href="/content/images/contentForum.css" type="text/css"/>
 
     <meta name="description" content="${(decoratedContent.subcontent.metaDescription.render)!}"/>
     <meta name="keywords" content="${(decoratedContent.subcontent.metaKeywords.render)!}"/>
+  </@scripts>
 </head>
 <body>

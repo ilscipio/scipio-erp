@@ -20,6 +20,7 @@ under the License.
 <html xmlns="http://www.w3.org/1999/xhtml">
 <#-- <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> <html> -->
 <head>
+  <@scripts output=true>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <title><#if title?has_content>${title}<#elseif titleProperty?has_content>${uiLabelMap.get(titleProperty)}</#if>: ${(productStore.storeName)!}</title>
   <#if layoutSettings.shortcutIcon?has_content>
@@ -28,7 +29,7 @@ under the License.
   <#if layoutSettings.javaScripts?has_content>
     <#--layoutSettings.javaScripts is a list of java scripts. -->
     <#list layoutSettings.javaScripts as javaScript>
-      <@script src=makeOfbizContentUrl("${javaScript}") output=true />
+      <@script src=makeOfbizContentUrl("${javaScript}") />
     </#list>
   </#if>
   <#if layoutSettings.styleSheets?has_content>
@@ -52,5 +53,6 @@ under the License.
   <#if metaKeywords??>
     <meta name="keywords" content="${metaKeywords}"/>
   </#if>
+  </@scripts>
 </head>
 <body>

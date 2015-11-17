@@ -20,9 +20,10 @@ under the License.
 <#assign initialLocale = locale.toString()>
 <html>
 <head>
+  <@scripts output=true>
     <title>Main</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <@script src=makeOfbizContentUrl("/images/selectall.js") output=true />
+    <@script src=makeOfbizContentUrl("/images/selectall.js") />
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>' type='text/css'>
     <link rel='stylesheet' href='<@ofbizContentUrl>/ecommerce/images/blog.css</@ofbizContentUrl>' type='text/css'>
@@ -35,6 +36,7 @@ under the License.
         <link rel="stylesheet" href="<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>" type="text/css"/>
         <link rel="stylesheet" href="<@ofbizContentUrl>/images/tabstyles.css</@ofbizContentUrl>" type="text/css"/>
     </#if>
+  </@scripts>
 </head>
 <body>
 <@table border="0" width="100%" cellspacing="0" cellpadding="0" class="+headerboxoutside"> <#-- orig: class="headerboxoutside" -->

@@ -23,6 +23,7 @@ under the License.
 </#if>
 <html lang="${docLangAttr}" dir="${langDir}" xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <@scripts output=true>
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>${applicationTitle!}</title>
@@ -31,15 +32,16 @@ under the License.
         <#list layoutSettings.javaScripts as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") output=true />
+                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
             </#if>
         </#list>
     </#if>
     <#if layoutSettings.VT_HDR_JAVASCRIPT?has_content>
         <#list layoutSettings.VT_HDR_JAVASCRIPT as javaScript>
-            <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") output=true />
+            <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
         </#list>
     </#if>
+    </@scripts>
   </head>
   <body>
     <div data-role="header">

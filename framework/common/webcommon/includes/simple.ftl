@@ -17,6 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@htmlHeadOpen />
+  <@scripts output=true>
     <title>${layoutSettings.companyName!}: <#if (page.titleProperty)?has_content>${uiLabelMap[page.titleProperty]}<#else>${(page.title)!}</#if></title>
     <#if layoutSettings.shortcutIcon?has_content>
       <link rel="shortcut icon" href="<@ofbizContentUrl>${layoutSettings.shortcutIcon}</@ofbizContentUrl>" />
@@ -24,7 +25,7 @@ under the License.
     <#if layoutSettings.javaScripts?has_content>
         <#--layoutSettings.javaScripts is a list of java scripts. -->
         <#list layoutSettings.javaScripts as javaScript>
-            <@script src=makeOfbizContentUrl("${javaScript}") output=true />
+            <@script src=makeOfbizContentUrl("${javaScript}") />
         </#list>
     </#if>
     <#if layoutSettings.styleSheets?has_content>
@@ -41,6 +42,7 @@ under the License.
             <link rel="stylesheet" href="<@ofbizContentUrl>${styleSheet}</@ofbizContentUrl>" type="text/css"/>
         </#list>
     </#if>
+  </@scripts>
 </head>
 
 <body id="column-container" style="background: white;">

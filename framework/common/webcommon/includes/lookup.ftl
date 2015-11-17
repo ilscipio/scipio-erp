@@ -17,9 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@htmlHeadOpen />
+  <@scripts output=true>
     <title>${title!}</title>
     <#-- the trick "<scr" + "ipt below is because browsers should not parse the contents of CDATA elements, but apparently they do. -->
-    <@script output=true>
+    <@script>
     var jQueryLibLoaded = false;
     function initJQuery() {
         if (typeof(jQuery) == 'undefined') {
@@ -33,7 +34,7 @@ under the License.
     }
     initJQuery();
     </@script>
-    <@script src=makeOfbizContentUrl("/images/selectall.js") output=true />
+    <@script src=makeOfbizContentUrl("/images/selectall.js") />
     <#if layoutSettings.javaScripts?has_content>
         <#--layoutSettings.javaScripts is a list of java scripts. -->
         <#-- use a Set to make sure each javascript is declared only once, but iterate the list to maintain the correct order -->
@@ -41,7 +42,7 @@ under the License.
         <#list layoutSettings.javaScripts as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") output=true />
+                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
             </#if>
         </#list>
     </#if>
@@ -71,7 +72,7 @@ under the License.
         </#list>
     </#if>
 
-    <@script output=true>
+    <@script>
         // This code inserts the value lookedup by a popup window back into the associated form element
         var re_id = new RegExp('id=(\\d+)');
         var num_id = (re_id.exec(String(window.location))
@@ -96,5 +97,6 @@ under the License.
             }
          }
     </@script>
+  </@scripts>
 </head>
 <body>

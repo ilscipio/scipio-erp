@@ -723,21 +723,21 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 <#macro chart type="pie" library="foundation" title="">
     <#global chartLibrary = library!"foundation"/>
     <#local nestedContent><#nested><#t></#local>
-    <#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
-    <#local fieldIdNum = fieldIdNum + 1 />
-    <#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
+    <#local chartIdNum = getRequestVar("catoChartIdNum")!0>
+    <#local chartIdNum = chartIdNum + 1 />
+    <#local dummy = setRequestVar("catoChartIdNum", chartIdNum)>
     <#if chartLibrary=="foundation">
       <@row>
         <@cell columns=3>    
-        <ul data-${type!}-id="chart_${renderSeqNumber!}_${fieldIdNum!}" class="${styles.chart_legend!}">
+        <ul data-${type!}-id="chart_${renderSeqNumber!}_${chartIdNum!}" class="${styles.chart_legend!}">
             <#nested/>
             <#--<#if !nestedContent?has_content><@chartdata value="0" title=""/></#if>-->
         </ul>
         </@cell>
-        <@cell columns=9><div id="chart_${renderSeqNumber!}_${fieldIdNum!}" style="height:300px;"></div></@cell>
+        <@cell columns=9><div id="chart_${renderSeqNumber!}_${chartIdNum!}" style="height:300px;"></div></@cell>
       </@row>
     <#else>
-        <#global chartId = "chart_${renderSeqNumber!}_${fieldIdNum!}"/>
+        <#global chartId = "chart_${renderSeqNumber!}_${chartIdNum!}"/>
         <#global chartType = type/>
         <canvas id="${chartId!}" class="${styles.grid_large!}12 chart-data" height="300" style="height:300px;"></canvas>
         <@script>
@@ -789,7 +789,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
                     </#if>
                     };
-                var ctx_${renderSeqNumber!}_${fieldIdNum!} = $('#${chartId!}').get(0).getContext("2d");
+                var ctx_${renderSeqNumber!}_${chartIdNum!} = $('#${chartId!}').get(0).getContext("2d");
                 <#if type=="pie">
                 var data = [];
                 <#else>
@@ -809,7 +809,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                             ]
                     };
                 </#if>
-                var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${fieldIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
+                var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${chartIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
                 <#nested/>
             });
         </@script>

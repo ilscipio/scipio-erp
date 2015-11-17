@@ -20251,6 +20251,9 @@
     <property key="PageTitleListBillingAccountOrders">        
         <value xml:lang="en">Billing Account Order List</value>
     </property>
+    <property key="PageTitleListBillingAccountInvoices">        
+        <value xml:lang="en">Billing Account Invoice List</value>
+    </property>
     
     <property key="PageTitleAddGlAccount">
         <value xml:lang="en">Add Gl Account</value>

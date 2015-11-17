@@ -195,10 +195,7 @@ under the License.
                 <parameter param-name="agreementId"/>
                 <parameter param-name="agreementItemSeqId"/>
             </hyperlink>
-        </field>
-        <!-- <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
-            <display-entity entity-name="RoleType" description="${description}"/>
-        </field> -->
+        </field>       
         <field name="roleTypeId" title="${uiLabelMap.CommonRole}">
          <display-entity entity-name="RoleType" description="${description}"/>
         </field>
@@ -349,7 +346,7 @@ under the License.
         </field>
     </form>
     <form name="ListBillingAccountOrders" type="list" list-name="orderPaymentPreferencesList" paginate-target="BillingAccountOrders"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">    
         <field name="billingAccountId"><hidden/></field>
         <field name="orderId" title="${uiLabelMap.CommonOrder}" widget-style="${styles.link_default}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}" also-hidden="false">

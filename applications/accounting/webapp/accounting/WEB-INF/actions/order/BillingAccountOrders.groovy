@@ -17,6 +17,7 @@
  * under the License.
  */
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.util.EntityUtil;
 import javolution.util.FastMap;
@@ -33,8 +34,10 @@ if (billingAccountId) {
                 orderBillingAccMap.putAll(orderBillingAcc);
                 orderId = orderBillingAcc.orderId;
                 orderBillingAccMap.orderId = orderId;
+				Debug.log("orderBillingAccMap ==============> " + orderBillingAccMap);
+				orderPaymentPreferencesList.add(orderBillingAccMap);
             }
-            orderPaymentPreferencesList.add(orderBillingAccMap);
+            
         }
         context.orderPaymentPreferencesList = orderPaymentPreferencesList;
     }

@@ -199,10 +199,12 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonBillingAccountDecorator" location="${parameters.billingAccountDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet id="BillingAccountInvoicePanel" title="${uiLabelMap.AccountingFindInvoices}" collapsible="true">
+                        <screenlet title="${uiLabelMap.AccountingFindInvoices}">
                             <include-form name="lookupInvoicesStatus" location="component://accounting/widget/InvoiceForms.xml"/>
                         </screenlet>
-                        <include-form name="ListBillingAccountInvoices" location="component://accounting/widget/BillingAccountForms.xml"/>
+                        <screenlet title="${uiLabelMap.PageTitleListBillingAccountInvoices} - ${uiLabelMap.AccountingAccountId} ${billingAccount.billingAccountId}">
+                        	<include-form name="ListBillingAccountInvoices" location="component://accounting/widget/BillingAccountForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

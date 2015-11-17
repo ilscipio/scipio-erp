@@ -48,7 +48,7 @@ Optional scripts include modifier. Modifies the @script calls within it.
 Not associated with any HTML element.
 
   * Usage Example *  
-    <@scripts output=true>
+    <@scripts output=true> <#- guarantees the @script calls will output content to page at this location ->
       <@script>
         jQuery(document).ready(function() {
             alert("Page loaded.");

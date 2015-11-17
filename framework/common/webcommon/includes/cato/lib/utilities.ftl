@@ -52,6 +52,17 @@ or empty string (signifies use defaults).
 
 <#-- 
 *************
+* makeOfbizContentUrl
+************
+Function version of the @ofbizContentUrl macro.
+-->
+<#function makeOfbizContentUrl uri variant="">
+  <#local res><@ofbizContentUrl variant=variant>${uri}</@ofbizContentUrl></#local>
+  <#return res>
+</#function>
+
+<#-- 
+*************
 * interpretRequestUri
 ************
 Interprets the given request URI/URL resource and transforms into a valid URL if and as needed.

@@ -42,6 +42,39 @@ IMPL NOTE: Beware of whitespace.
 
 <#-- 
 *************
+* Scripts
+************
+Optional scripts include modifier. Modifies the @script calls within it.
+Not associated with any HTML element.
+
+  * Usage Example *  
+    <@scripts inline=true>
+      <@script>
+        jQuery(document).ready(function() {
+            alert("Page loaded.");
+        });
+      </@script>
+      <@script>
+        jQuery(document).ready(function() {
+            alert("Test.");
+        });
+      </@script>      
+    </@scripts>         
+                    
+  * Parameters *
+    scriptType/inline/cdata/wrapIf    = defaults for child @script calls (see @script)
+-->
+<#macro scripts inlineArgs...>
+  <#if !inlineArgs?is_hash>
+    <#local inlineArgs = {}>
+  </#if>
+  <#local dummy = setRequestVar("catoScriptsInfo", inlineArgs)>
+  <#nested>
+  <#local dummy = setRequestVar("catoScriptsInfo", {})>
+</#macro>
+
+<#-- 
+*************
 * Script
 ************
 Inline script wrapper. By default, makes a javascript block.
@@ -58,7 +91,7 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
                     
   * Parameters *
     type            = script type identifier (default "text/javascript")
-    language        = language identifier (deprecated in HTML - avoid)
+    language        = deprecated by HTML - ignored by macro
     src             = source (if no nested content)
     inline          = if true, the script must be inlined in the markup where the macro is used
                       and should never be delegated. in most cases this should be omitted,
@@ -66,16 +99,24 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
                       if not specified or "", cato decides what to do with them (inline or accumulate at bottom of page).
                       TODO: code to accumulate at footer.
 -->
-<#macro script type="text/javascript" language="" src="" ofbizContentSrc="" inline="" cdata=true wrapIf=true>
+<#macro script inlineArgs...>
+  <#if !inlineArgs?is_hash>
+    <#local inlineArgs = {}>
+  </#if>
+  <#local scriptsInfo = getRequestVar("catoScriptsInfo")!{}>
+  <#local type = inlineArgs.type!scriptsInfo.scriptType!"text/javascript">
+  <#local src = inlineArgs.src!"">
+  <#local inline = inlineArgs.inline!scriptsInfo.inline!"">
+  <#local cdata = inlineArgs.cdata!scriptsInfo.cdata!true>
+  <#local wrapIf = inlineArgs.wrapIf!scriptsInfo.wrapIf!true>
+
   <#local open = wrapIf>
   <#local close = wrapIf>
-  <#if ofbizContentSrc?has_content>
-    <script type="${type}"<#if language?has_content> language="${language}"</#if> src="<@ofbizContentUrl>${ofbizContentSrc}</@ofbizContentUrl>"></script>
-  <#elseif src?has_content>
-    <script type="${type}"<#if language?has_content> language="${language}"</#if> src="${src}"></script>
+  <#if src?has_content>
+    <script type="${type}" src="${src}"></script>
   <#else>
     <#if open>
-      <script type="${type}"<#if language?has_content> language="${language}"</#if>>
+      <script type="${type}">
       <#if cdata>//<![CDATA[</#if>
     </#if>
         <#nested>

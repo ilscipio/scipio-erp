@@ -22,8 +22,7 @@ under the License.
 
 <#-- virtual product javascript -->
 ${virtualJavaScript!}
-<script language="JavaScript" type="text/javascript">
-<!--
+<@script>
     var detailImageUrl = null;
     function setAddProductId(name) {
         document.addform.add_product_id.value = name;
@@ -278,8 +277,7 @@ ${virtualJavaScript!}
         }
         setVariantPrice(variantId);
     }
- //-->
- </script>
+ </@script>
 
 <div id="productdetail">
 

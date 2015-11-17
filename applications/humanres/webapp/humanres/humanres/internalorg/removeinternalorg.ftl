@@ -20,15 +20,13 @@ under the License.
 <#if partyGroup?has_content>
     <#assign partyname = partyGroup.groupName!/>
 </#if>
-<script type="text/javascript">
-    <!--
+<@script>
     var answer = confirm ("Are you sure you want to remove '<#if partyname??>${partyname}<#else>${parameters.partyId!}</#if>'?")
     if (answer)
        document.removeInternalOrg.submit();
     else
        window.close();
-    // -->
-</script>
+</@script>
 <div id="rmvinternalorg" title="Remove Internal Organization">
     <form name="removeInternalOrg" method="post" action="<@ofbizUrl>removeInternalOrg</@ofbizUrl>">
         <input type="hidden" name="partyId" value="${parameters.partyId!}"/>

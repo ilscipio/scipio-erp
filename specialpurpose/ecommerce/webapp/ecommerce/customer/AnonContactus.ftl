@@ -21,16 +21,14 @@ under the License.
     <div class="screenlet-title-bar">
         <h3>${uiLabelMap.CommonContactUs}</h3>
     </div>
-    <script type="text/javascript" language="JavaScript">
-    <!--
+    <@script>
         function reloadCaptcha(fieldName) {
             var captchaUri = "<@ofbizUrl>captcha.jpg?captchaCodeId=" + fieldName + "&amp;unique=_PLACEHOLDER_</@ofbizUrl>";
             var unique = Date.now();
             captchaUri = captchaUri.replace("_PLACEHOLDER_", unique);
             document.getElementById(fieldName).src = captchaUri;
         }
-    //-->
-    </script>
+    </@script>
     <div class="screenlet-body">
         <form id="contactForm" method="post" action="<@ofbizUrl>submitAnonContact</@ofbizUrl>">
             <input type="hidden" name="partyIdFrom" value="${(userLogin.partyId)!}" />

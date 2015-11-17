@@ -19,8 +19,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
-<!--
+<@script>
 function toggleInvoiceId(master) {
     var form = document.listSalesInvoices;
     var invoices = form.elements.length;
@@ -73,9 +72,7 @@ function enableSubmitButton() {
         jQuery('#submitButton').attr('disabled', true);
     }
 }
-
--->
-</script>
+</@script>
 
 <#if invoices?has_content >
   <form name="listSalesInvoices" id="listSalesInvoices" method="post">

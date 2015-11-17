@@ -17,8 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
-<!--
+<@script>
     var clicked = 0;
     function processOrder() {
         if (clicked == 0) {
@@ -31,8 +30,7 @@ under the License.
             showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.YoureOrderIsBeingProcessed}");
         }
     }
-// -->
-</script>
+</@script>
 
 <@heading level=1>${uiLabelMap.OrderFinalCheckoutReview}</@heading>
 <#if !isDemoStore?? && isDemoStore><p>${uiLabelMap.OrderDemoFrontNote}.</p></#if>

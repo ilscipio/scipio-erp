@@ -17,8 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 ${virtualJavaScript!}
-<script type="text/javascript">
-<!--
+<@script>
     function displayProductVirtualId(variantId, virtualProductId, pForm) {
         if(variantId){
             pForm.product_id.value = variantId;
@@ -49,8 +48,7 @@ ${virtualJavaScript!}
             priceElem.appendChild(priceTxt);
         }
     }
-//-->
-</script>
+</@script>
 <#if product??>
     <#-- variable setup -->
     <#if backendPath?default("N") == "Y">

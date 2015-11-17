@@ -34,13 +34,11 @@ under the License.
 -->
 
 
-<script type="text/javascript">
-<!--
+<@script>
   function markAsAccepted() {
     document.Labels.action = "<@ofbizUrl>BatchUpdateShipmentRouteSegments?facilityId=${parameters.facilityId}</@ofbizUrl>";
     document.Labels.submit();
   }
-//-->
-</script>
+</@script>
 
 <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.ProductMarkAsAccepted}" onclick="javascript:markAsAccepted()"/>

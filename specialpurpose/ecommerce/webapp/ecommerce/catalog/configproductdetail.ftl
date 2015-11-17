@@ -23,8 +23,7 @@ under the License.
 
 <#-- virtual product javascript -->
 ${virtualJavaScript!}
-<script language="JavaScript" type="text/javascript">
-<!--
+<@script>
     var detailImageUrl = null;
      function setAddProductId(name) {
         document.addform.add_product_id.value = name;
@@ -132,11 +131,9 @@ ${virtualJavaScript!}
             toggleAmt(checkAmtReq(sku));
         }
     }
- //-->
- </script>
+ </@script>
 
-<script language="JavaScript" type="text/javascript">
-<!--
+<@script>
 
 jQuery(document).ready(function () {
     jQuery('#configFormId').change(getConfigDetails)
@@ -156,9 +153,7 @@ function getConfigDetails(event) {
             }
         });
 }
-
--->
-</script>
+</@script>
 
 <div id="productdetail">
 

@@ -96,16 +96,14 @@ under the License.
                         <@td>Code Captcha</@td>
                         <@td><img id="captchaImage" src="<@ofbizUrl>captcha.jpg?captchaCodeId=captchaImage&amp;unique=${nowTimestamp.getTime()}</@ofbizUrl>" alt="" /></@td>
                     </@tr>
-                    <script type="text/javascript" language="JavaScript">
-                    <!--
+                    <@script>
                         function reloadCaptcha(fieldName) {
                             var captchaUri = "<@ofbizUrl>captcha.jpg?captchaCodeId=" + fieldName + "&amp;unique=_PLACEHOLDER_</@ofbizUrl>";
                             var unique = Date.now();
                             captchaUri = captchaUri.replace("_PLACEHOLDER_", unique);
                             document.getElementById(fieldName).src = captchaUri;
                         }
-                    //-->
-                    </script>
+                    </@script>
                     <@tr>
                         <@td> </@td>
                         <@td>

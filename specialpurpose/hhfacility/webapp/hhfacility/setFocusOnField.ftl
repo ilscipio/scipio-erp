@@ -17,9 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<script language="JavaScript" type="text/javascript">
-<!--
+<@script>
     focusField = "${focusField}"
-//-->
-</script>
+</@script>
 

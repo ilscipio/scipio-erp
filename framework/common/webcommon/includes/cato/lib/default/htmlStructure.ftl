@@ -247,8 +247,7 @@ Since this is very foundation specific, this function may be dropped in future i
         <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>>
             <#nested>
         </div>
-        <script type="text/javascript">
-        //<![CDATA[
+        <@script>
          $(function() {
             $('#${id}').freetile({
                 selector: '.${styles.tile_wrap!}'
@@ -262,8 +261,7 @@ Since this is very foundation specific, this function may be dropped in future i
             }).disable();
             -->
          });
-        //]]>
-        </script>
+        </@script>
     <#else>
         <#-- this never takes effect
         <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">-->

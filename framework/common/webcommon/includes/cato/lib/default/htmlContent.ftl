@@ -144,6 +144,79 @@ Maps an Ofbiz form widget type to a @table macro type.
 
 <#-- 
 *************
+* Responsive Table Script
+************
+Creates a responsive tables script (script only - no markup).
+    
+  * Parameters *
+    tableId             = id of table
+    tableType           = table type
+    tableStyleName      = optimization: table style name (usually based on table type)
+                          can be omitted and will determine automatically from table type
+    responsive          = if true, will rely on the jquery plugin datatables.js (www.datatables.net) to generate responsive table. 
+                          Can be combined with fixed column type.
+                          if explicitly set to false, will disable responsive regardless of defaults.
+                          default is dependent on table type (global styles).
+    responsiveOptions   = a map of options passed directly to responsive tables
+    responsiveDefaults  = if true, responsive defaults are looked up, and any option in responsiveOptions overrides the defaults
+                          per-option; if false, no defaults are used and only 
+                          responsiveOptions, fixedColumnsLeft and fixedColumnsRight are used. 
+                          default is true.
+    scrollable          = if true, guarantees table will be scrollable horizontally.
+                          implementation of scrollable depends on macro and global styles (by default, uses responsive).
+                          if explicitly set to false, prevents scrolling.
+                          default is dependent on table type (global styles).
+                          (convenience and abstractive option; avoids having to specify responsive options; currently alias for responsiveOptions.scrollX)
+    fixedColumnsLeft    = int value; number of columns that are fixed on the left-hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.leftColumns)
+    fixedColumnsRight   = int value; number of columns that are fixed on the right hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns) 
+-->
+<#macro tableResponsiveScript tableId="" tableType="" tableStyleName="" responsive="" scrollable="" responsiveOptions={} responsiveDefaults="" fixedColumnsLeft=0 fixedColumnsRight=0 htmlwrap=false>
+  <#if !(responsive?is_boolean && responsive == false)>
+    <#if !tableStyleName?has_content>
+      <#local tableStyleName = tableType?replace("-","_")>
+      <#if (!tableStyleName?has_content) || (!(styles["table_" + tableStyleName]!false)?is_string)>
+        <#local tableStyleName = "default">
+      </#if>
+    </#if>
+
+    <#-- defaults -->
+    <#if !responsiveDefaults>
+      <#local respOpts = {}>
+    <#elseif responsive?is_boolean && responsive == true>
+      <#local respOpts = styles["table_" + tableStyleName + "_responsive_options"]!styles["table_default_responsive_options"]!{}>
+    <#elseif scrollable?is_boolean && scrollable == true>
+      <#local respOpts = styles["table_" + tableStyleName + "_scrollable_options"]!styles["table_default_scrollable_options"]!{}>    
+    <#else>
+      <#local respOpts = {}>
+    </#if>
+
+    <#-- aliases/abstractions -->
+    <#if (fixedColumnsLeft > 0) || (fixedColumnsRight > 0)>
+      <#local respOpts = respOpts + { "fixedColumns" : {
+          "leftColumns": fixedColumnsLeft!0,
+          "rightColumns": fixedColumnsRight!0
+        }
+      }>
+    </#if>
+    <#if scrollable?is_boolean>
+      <#local respOpts = respOpts + {"scrollX": scrollable}>
+    </#if>
+
+    <#-- manual overrides -->
+    <#if responsiveOptions?has_content>
+      <#local respOpts = respOpts + responsiveOptions>
+    </#if>
+    
+    <@script wrapIf=htmlwrap>
+      $(document).ready(function() {
+          $('#${tableId}').DataTable(<@objectAsScript lang="js" object=respOpts />);
+      } );
+    </@script>
+  </#if>
+</#macro>
+
+<#-- 
+*************
 * Table
 ************
 Helps define an HTML table. Required wrapper for all @table sub-element macros.
@@ -210,24 +283,11 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     [inlineAttribs...]    = other legacy <table attributes and values, inlined
     
     * Responsive Tables *
-    responsive          = if true, will rely on the jquery plugin datatables.js (www.datatables.net) to generate responsive table. 
-                          Can be combined with fixed column type.
-                          if explicitly set to false, will disable responsive regardless of defaults.
-                          default is dependent on table type (global styles).
-    responsiveOptions   = a map of options passed directly to responsive tables
-    responsiveDefaults  = if true, responsive defaults are looked up, and any option in responsiveOptions overrides the defaults
-                          per-option; if false, no defaults are used and only 
-                          responsiveOptions, fixedColumnsLeft and fixedColumnsRight are used. 
-                          default is true.
-    scrollable          = if true, guarantees table will be scrollable horizontally.
-                          implementation of scrollable depends on macro and global styles (by default, uses responsive).
-                          if explicitly set to false, prevents scrolling.
-                          default is dependent on table type (global styles).
-                          (convenience and abstractive option; avoids having to specify responsive options; currently alias for responsiveOptions.scrollX)
-    fixedColumnsLeft    = int value; number of columns that are fixed on the left-hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.leftColumns)
-    fixedColumnsRight   = int value; number of columns that are fixed on the right hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns)             
+    responsive/responsiveOptions/
+    responsiveDefaults/scrollable/
+    fixedColumnsLeft/fixedColumnsRight  = see @tableResponsiveScript macro for descriptions
 -->
-<#macro table type="" class="" id="" cellspacing=true responsive="" scrollable="" responsiveOptions={} responsiveDefaults="" autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false fixedColumnsLeft=0 fixedColumnsRight=0 attribs={} inlineAttribs...>
+<#macro table type="" class="" id="" cellspacing=true responsive="" scrollable="" responsiveOptions={} responsiveDefaults="" fixedColumnsLeft=0 fixedColumnsRight=0 autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
   <#local tableIdNum = getRequestVar("catoTableIdNum")!0>
   <#local tableIdNum = tableIdNum + 1 />
   <#local dummy = setRequestVar("catoTableIdNum", tableIdNum)>
@@ -273,6 +333,8 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     <#if !responsiveDefaults?is_boolean>
       <#local responsiveDefaults = true>
     </#if>
+    <#-- NOTE: there's currently some duplication between catoCurrentTableInfo and catoCurrentTableStack below; do not confuse
+            (this was written before the stack functions were fully written) -->
     <#local catoCurrentTableInfo = {"type": type, "styleName": styleName, "autoAltRows": autoAltRows,
       "inheritAltRows": inheritAltRows, "parentRowAlt": prevCurrentRowAlt, "useFootAltRows": useFootAltRows}>
     <#local dummy = setRequestVar("catoCurrentTableInfo", catoCurrentTableInfo)!>
@@ -297,13 +359,19 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     <#-- note: this var may be empty string (none) -->
     <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", prevCurrentRowAlt)!>
     <#local style = "">
+    <#local useResponsive = ((responsive?is_boolean && responsive == true) || responsiveOptions?has_content || (scrollable?is_boolean && scrollable == true))
+      && !(responsive?is_boolean && responsive == false)>
     <#-- need to save values on a stack if open-only! -->
     <#if !close>
+      <#-- TODO? this stack push is duplicating catoCurrentTableInfo above;
+           could instead always push a stack and have child elems use readRequestStack instead of
+           catoCurrentTableInfo; but requires change all the macros, and as-is this optimizes
+           for FTLs somewhat, though also more error-prone... -->
       <#local dummy = pushRequestStack("catoCurrentTableStack", 
           {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevRowAltFlag":prevRowAltFlag, 
            "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, 
            "type":type, "id":id, "tableIdNum":tableIdNum, "styleName":styleName,
-           "responsive":responsive, "scrollable":scrollable, "responsiveOptions":responsiveOptions,
+           "useResponsive":useResponsive, "responsive":responsive, "scrollable":scrollable, "responsiveOptions":responsiveOptions,
            "responsiveDefaults":responsiveDefaults, "fixedColumnsLeft":fixedColumnsLeft, "fixedColumnsRight":fixedColumnsRight
            })>
     </#if>
@@ -324,6 +392,7 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
       <#local id = stackValues.id>
       <#local tableIdNum = stackValues.tableIdNum>
       <#local styleName = stackValues.styleName>
+      <#local useResponsive = stackValues.useResponsive>
       <#local responsive = stackValues.responsive>
       <#local scrollable = stackValues.scrollable>
       <#local responsiveOptions = stackValues.responsiveOptions>
@@ -333,41 +402,10 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     </#if>
     </table>
     <#-- DEV NOTE: WARN: any vars used below here must have been preserved through stackValues above -->
-    <#if ((responsive?is_boolean && responsive == true) || responsiveOptions?has_content || (scrollable?is_boolean && scrollable == true))
-      && !(responsive?is_boolean && responsive == false)>
-      <#-- defaults -->
-      <#if !responsiveDefaults>
-        <#local respOpts = {}>
-      <#elseif responsive?is_boolean && responsive == true>
-        <#local respOpts = styles["table_" + styleName + "_responsive_options"]!styles["table_default_responsive_options"]!{}>
-      <#elseif scrollable?is_boolean && scrollable == true>
-        <#local respOpts = styles["table_" + styleName + "_scrollable_options"]!styles["table_default_scrollable_options"]!{}>    
-      <#else>
-        <#local respOpts = {}>
-      </#if>
-
-      <#-- aliases/abstractions -->
-      <#if (fixedColumnsLeft > 0) || (fixedColumnsRight > 0)>
-        <#local respOpts = respOpts + { "fixedColumns" : {
-            "leftColumns": fixedColumnsLeft!0,
-            "rightColumns": fixedColumnsRight!0
-          }
-        }>
-      </#if>
-      <#if scrollable?is_boolean>
-        <#local respOpts = respOpts + {"scrollX": scrollable}>
-      </#if>
-
-      <#-- manual overrides -->
-      <#if responsiveOptions?has_content>
-        <#local respOpts = respOpts + responsiveOptions>
-      </#if>
-      
-      <@script>
-        $(document).ready(function() {
-            $('#${id}').DataTable(<@objectAsScript lang="js" object=respOpts />);
-        } );
-      </@script>
+    <#if useResponsive>
+      <@tableResponsiveScript tableId=id tableType=type tableStyleName=styleName responsive=responsive scrollable=scrollable 
+        responsiveOptions=responsiveOptions responsiveDefaults=responsiveDefaults 
+        fixedColumnsLeft=fixedColumnsLeft fixedColumnsRight=fixedColumnsRight htmlwrap=true />
     </#if>
 
     <#local dummy = setRequestVar("catoCurrentTableInfo", prevTableInfo)!>
@@ -702,8 +740,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
         <#global chartId = "chart_${renderSeqNumber!}_${fieldIdNum!}"/>
         <#global chartType = type/>
         <canvas id="${chartId!}" class="${styles.grid_large!}12 chart-data" height="300" style="height:300px;"></canvas>
-        <script type="text/javascript">
-        //<![CDATA[
+        <@script>
             $(function(){
                 var chartDataEl = $('.chart-data:first-of-type');
                 var chartData = chartDataEl.sassToJs({pseudoEl:":before", cssProperty: "content"});
@@ -775,8 +812,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                 var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${fieldIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
                 <#nested/>
             });
-        //]]>
-        </script>
+        </@script>
     </#if>
 </#macro>
 

@@ -35,9 +35,9 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#local class = addClassArg(class, "has-tip tip-right")>
   </#if>
   <#if mask?has_content && mask>
-    <script type="text/javascript">
+    <@script>
       jQuery(function($){jQuery("#${id}").mask("${mask!}");});
-    </script>
+    </@script>
   </#if>
   <input type="text" name="${name?default("")?html}"<#t/>
     <#if tooltip?has_content> 
@@ -95,7 +95,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       <script language="javascript" src="/images/jquery/plugins/elrte-1.3/js/i18n/elrte.${language!"en"}.js" type="text/javascript"></script><#rt/>
     </#if>
     <link href="/images/jquery/plugins/elrte-1.3/css/elrte.min.css" rel="stylesheet" type="text/css">
-    <script language="javascript" type="text/javascript">
+    <@script>
       var opts = {
          cssClass : 'el-rte',
          lang     : '${language!"en"}',
@@ -104,7 +104,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
          cssfiles : ['/images/jquery/plugins/elrte-1.3/css/elrte-inner.css']
       }
       jQuery('#${id?default("")}').elrte(opts);
-    </script>
+    </@script>
   </#if>
   -->
 </#macro>
@@ -162,7 +162,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
           <span class="postfix"><i class="${styles.icon!} ${styles.icon_calendar!}"></i></span>
         </div>
       <#if dateType != "time">
-        <script type="text/javascript">
+        <@script>
             $(function() {
 
                 var dateI18nToNorm = function(date) {
@@ -196,7 +196,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
                 </#if>
                 ${dateElemJs}.fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
             });
-        </script>
+        </@script>
       </#if>
   </div>
 </#macro>
@@ -237,7 +237,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
           </select><#rt/>
         </div>
       <#if dateType != "time">
-        <script type="text/javascript">
+        <@script>
             $(function() {
                 var oldDate = "";
                 var onFDatePopup = function(ev) {
@@ -256,7 +256,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
                 </#if>
                 ${dateElemJs}.fdatepicker(${fdatepickerOptions}).on('changeDate', onFDateChange).on('show', onFDatePopup);
             });
-        </script>
+        </@script>
       </#if>
   </div>
 </#macro>
@@ -355,23 +355,23 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     </select>
   <#if otherFieldName?has_content>
     <noscript><input type='text' name='${otherFieldName}' /></noscript>
-    <script type='text/javascript' language='JavaScript'><!--
+    <@script>
       disa = ' disabled';
       if(other_choice(document.${formName}.${fieldName}))
         disa = '';
       document.write("<input type='text' name='${otherFieldName}' value='${otherValue?js_string}' size='${otherFieldSize}'"+disa+" onfocus='check_choice(document.${formName}.${fieldName})' />");
       if(disa && document.styleSheets)
       document.${formName}.${otherFieldName}.styles.visibility  = 'hidden';
-    //--></script>
+    </@script>
   </#if>
 
   <#if ajaxEnabled>
-    <script language="JavaScript" type="text/javascript">
+    <@script>
       ajaxAutoCompleteDropDown();
       jQuery(function() {
         jQuery("#${id}").combobox();
       });
-    </script>
+    </@script>
   </#if>
 </#macro>
 
@@ -422,13 +422,13 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     </#if>
   </#if>
   <#if ajaxEnabled?has_content && ajaxEnabled>
-    <script type="text/javascript">
+    <@script>
       jQuery(document).ready(function(){
         if (!jQuery('form[name="${formName}"]').length) {
           alert("Developer: for lookups to work you must provide a form name!")
         }
       });
-    </script>
+    </@script>
   </#if>
   <span class="field-lookup">
     <#if size?has_content && size=="0">
@@ -467,7 +467,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
           </#if>
         </#if>
       </#if>
-      <script type="text/javascript">
+      <@script>
         jQuery(document).ready(function(){
           var options = {
             requestUrl : "${fieldFormName}",
@@ -504,7 +504,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
           };
           new Lookup(options).init();
         });
-      </script>
+      </@script>
     </#if>
     <#if readonly?has_content && readonly>
       <a id="${id}_clear" 
@@ -522,7 +522,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#if ajaxUrl?index_of("_LAST_VIEW_NAME_") < 0>
       <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
     </#if>
-    <script language="JavaScript" type="text/javascript">ajaxAutoCompleter('${ajaxUrl}', ${showDescription}, ${defaultMinLength!2}, ${defaultDelay!300});</script><#t/>
+    <@script>ajaxAutoCompleter('${ajaxUrl}', ${showDescription}, ${defaultMinLength!2}, ${defaultDelay!300});</@script><#t/>
   </#if>
 </#macro>
 
@@ -873,9 +873,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       </span><#lt/>
     </#if>
     <#if inPlaceEditorUrl?has_content && idName?has_content>
-      <script language="JavaScript" type="text/javascript"><#lt/>
-        ajaxInPlaceEditDisplayField('cc_${idName}', '${inPlaceEditorUrl}', ${inPlaceEditorParams});<#lt/>
-      </script><#lt/>
+      <@script>ajaxInPlaceEditDisplayField('cc_${idName}', '${inPlaceEditorUrl}', ${inPlaceEditorParams});</@script>
     </#if>-->
   </#if>
   <#-- TODO: better tooltips -->

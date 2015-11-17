@@ -47,6 +47,8 @@ IMPL NOTE: Beware of whitespace.
 Inline script wrapper. By default, makes a javascript block.
 DEV NOTE: In future, could be used to collect scripts for inclusion at end of page.
 
+NOTE: Unlike others this macro explicitly currently cannot support openOnly/closeOnly structure (only wrapIf).
+
   * Usage Example *  
     <@script>
         jQuery(document).ready(function() {
@@ -61,16 +63,22 @@ DEV NOTE: In future, could be used to collect scripts for inclusion at end of pa
     forceInline     = if true, the script must be inlined in the markup where the macro is used
                       and should never be delegated. in most cases this should be omitted.
 -->
-<#macro script type="text/javascript" language="" src="" ofbizContentSrc="" forceInline=false>
+<#macro script type="text/javascript" language="" src="" ofbizContentSrc="" forceInline=false cdata=true wrapIf=true>
+  <#local open = wrapIf>
+  <#local close = wrapIf>
   <#if ofbizContentSrc?has_content>
     <script type="${type}"<#if language?has_content> language="${language}"</#if> src="<@ofbizContentUrl>${ofbizContentSrc}</@ofbizContentUrl>"></script>
   <#elseif src?has_content>
     <script type="${type}"<#if language?has_content> language="${language}"</#if> src="${src}"></script>
   <#else>
+    <#if open>
     <script type="${type}"<#if language?has_content> language="${language}"</#if>>
-    //<![CDATA[
+    <#if cdata>//<![CDATA[</#if>
+    </#if>
       <#nested>
-    //]]>
+    <#if close>
+    <#if cdata>//]]></#if>
     </script>
+    </#if>
   </#if>
 </#macro>

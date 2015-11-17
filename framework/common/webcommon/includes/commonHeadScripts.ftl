@@ -1,6 +1,5 @@
 
-<script language="JavaScript" type="text/javascript">
-<!-- //
+<@script inline=true>
 
     <#-- Common Ofbiz URIs for use in javascript -->
     <@requireScriptOfbizUrl uri="getJSONuiLabelArray" />
@@ -26,5 +25,4 @@
   </#if>  
   
 
-// -->
-</script>
+</@script>

@@ -519,7 +519,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
   <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
   <#if requiredScriptOfbizUrls?is_boolean || !requiredScriptOfbizUrls.contains(uri)>
     <#if inline?is_boolean && inline == true>
-      <@script wrapIf=htmlwrap>
+      <@script wrapIf=htmlwrap inline=inline>
         <#if requiredScriptOfbizUrls?is_boolean>
           if (typeof variable === 'undefined') {
               var commonOfbizUrls = {};
@@ -541,21 +541,16 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 <#macro includeRecordedScriptOfbizUrls htmlwrap=false>
   <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
   <#if !requiredScriptOfbizUrls?is_boolean || (!requiredScriptOfbizUrls.isEmpty())>
-    <#if htmlwrap>
-<script language="JavaScript" type="text/javascript">
-<!-- //
-    </#if>
-    if (typeof variable === 'undefined') {
-        var commonOfbizUrls = {};
-    }
+    <@script inline=true wrapIf=htmlwrap>
 
-    <#list requiredScriptOfbizUrls as uri>
-    commonOfbizUrls["${uri}"] = "<@ofbizUrl>${uri}</@ofbizUrl>";
-    </#list>
-    <#if htmlwrap>
-// -->
-</script>
-    </#if>
+      if (typeof variable === 'undefined') {
+          var commonOfbizUrls = {};
+      }
+  
+      <#list requiredScriptOfbizUrls as uri>
+      commonOfbizUrls["${uri}"] = "<@ofbizUrl>${uri}</@ofbizUrl>";
+      </#list>
+    </@script>
   </#if>
 </#macro>
 

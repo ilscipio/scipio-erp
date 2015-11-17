@@ -1,8 +1,6 @@
 
-<script language="JavaScript" type="text/javascript">
-<!-- //
+<@script inline=true>
 
     <@includeRecordedScriptOfbizUrls />
 
-// -->
-</script>
+</@script>

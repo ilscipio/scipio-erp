@@ -58,7 +58,7 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
                     
   * Parameters *
     type            = script type identifier (default "text/javascript")
-    language        = language identifier (deprecated - avoid)
+    language        = language identifier (deprecated in HTML - avoid)
     src             = source (if no nested content)
     inline          = if true, the script must be inlined in the markup where the macro is used
                       and should never be delegated. in most cases this should be omitted,
@@ -75,13 +75,13 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
     <script type="${type}"<#if language?has_content> language="${language}"</#if> src="${src}"></script>
   <#else>
     <#if open>
-    <script type="${type}"<#if language?has_content> language="${language}"</#if>>
-    <#if cdata>//<![CDATA[</#if>
+      <script type="${type}"<#if language?has_content> language="${language}"</#if>>
+      <#if cdata>//<![CDATA[</#if>
     </#if>
-      <#nested>
+        <#nested>
     <#if close>
-    <#if cdata>//]]></#if>
-    </script>
+      <#if cdata>//]]></#if>
+      </script>
     </#if>
   </#if>
 </#macro>

@@ -22,9 +22,6 @@ under the License.
       <#if (listSize > 10)>
         <a href="/ordermgr/control/orderlist?viewIndex=${state.getViewIndex() + 1}&amp;viewSize=${state.getViewSize()}&amp;filterDate=${filterDate!}">${uiLabelMap.CommonMore}</a>
       </#if>
-      <#if orderHeaderList?has_content> 
-        1-${orderHeaderList.size()} ${uiLabelMap.CommonOf} ${state.getSize()}
-      </#if>
 
     <#if orderHeaderList?has_content>
       <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
@@ -64,6 +61,11 @@ under the License.
           </@tr>
         </#list>
       </@table>
+      <@row>
+        <@cell class="+${styles.text_right}">
+          <span>1-${orderHeaderList.size()} ${uiLabelMap.CommonOf} ${state.getSize()}</span>
+        </@cell>
+      </@row>
     <#else>
       <@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg>
     </#if>

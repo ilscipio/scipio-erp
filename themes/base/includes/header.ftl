@@ -144,6 +144,8 @@ so for now we have to split the screens in half and rely on the menu widget rend
     </#if>
 </#macro>
 
+  <@scripts output=true> <#-- ensure @script elems here will always output -->
+
     <title>${layoutSettings.companyName}: <#if (page.titleProperty)?has_content>${uiLabelMap[page.titleProperty]}<#else>${(page.title)!}</#if></title>
     
     <#if layoutSettings.shortcutIcon?has_content>
@@ -184,7 +186,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <#list layoutSettings.VT_TOP_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") output=true />
+                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
             </#if>
         </#list>
     </#if>
@@ -195,7 +197,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <#list layoutSettings.VT_PRIO_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") output=true />
+                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
             </#if>
         </#list>
     </#if>
@@ -206,7 +208,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <#list layoutSettings.javaScripts as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") output=true />
+                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
             </#if>
         </#list>
     </#if>
@@ -215,7 +217,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <#list layoutSettings.VT_HDR_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
-                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") output=true />
+                <@script src=makeOfbizContentUrl("${StringUtil.wrapString(javaScript)}") />
             </#if>
         </#list>
     </#if>
@@ -226,12 +228,14 @@ so for now we have to split the screens in half and rely on the menu widget rend
     </#if>
     <#if lastParameters??><#assign parametersURL = "&amp;" + lastParameters></#if>
     <#if layoutSettings.WEB_ANALYTICS?has_content>
-      <@script output=true>
+      <@script>
         <#list layoutSettings.WEB_ANALYTICS as webAnalyticsConfig>
           ${StringUtil.wrapString(webAnalyticsConfig.webAnalyticsCode!)}
         </#list>
       </@script>
     </#if>
+
+  </@scripts>
 </head>
 <#if layoutSettings.headerImageLinkUrl??>
   <#assign logoLinkURL = "${layoutSettings.headerImageLinkUrl}">

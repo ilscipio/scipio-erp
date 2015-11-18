@@ -18,45 +18,13 @@ under the License.
 -->
 <#if asm_listField??> <#-- we check only this var and suppose the others are also present -->
     <#list asm_listField as row>
-        <#if row.asm_multipleSelect??>
-        <@script>
-        jQuery(document).ready(function() {
-            multiple = jQuery("#${row.asm_multipleSelect!}");
-        
-          <#if row.asm_title??>
-            // set the dropdown "title" if??
-            multiple.attr('title', '${row.asm_title}');
-          </#if>
-          
-            <#-- Cato: get options from styles -->
-            <#assign defaultAsmSelectOpts = {
-              "addItemTarget": 'top',
-              "sortable": row.asm_sortable!false,
-              "removeLabel": uiLabelMap.CommonRemove!'Remove'
-              <#--, "debugMode": true -->
-            }>
-            // use asmSelect in Widget Forms
-            multiple.asmSelect(<@objectAsScript lang="js" object=(defaultAsmSelectOpts + styles.field_select_asmselect!{}) />);
-              
-          <#if row.asm_relatedField??> <#-- can be used without related field -->
-            // track possible relatedField changes
-            // on initial focus (focus-field-name must be asm_relatedField) or if the field value changes, select related multi values. 
-            typeValue = jQuery('#${row.asm_typeField}').val();
-            jQuery("#${row.asm_relatedField}").one('focus', function() {
-              selectMultipleRelatedValues('${row.asm_requestName}', '${row.asm_paramKey}', '${row.asm_relatedField}', '${row.asm_multipleSelect}', '${row.asm_type}', typeValue, '${row.asm_responseName}');
-            });
-            jQuery("#${row.asm_relatedField}").change(function() {
-              selectMultipleRelatedValues('${row.asm_requestName}', '${row.asm_paramKey}', '${row.asm_relatedField}', '${row.asm_multipleSelect}', '${row.asm_type}', typeValue, '${row.asm_responseName}');
-            });
-            selectMultipleRelatedValues('${row.asm_requestName}', '${row.asm_paramKey}', '${row.asm_relatedField}', '${row.asm_multipleSelect}', '${row.asm_type}', typeValue, '${row.asm_responseName}');
-          </#if>
-          });  
-        </@script>
-        
-        </#if>
+      <#-- Cato: we've taken this over in macro form so more reusable -->
+      <@asmSelectScript id=row.asm_multipleSelect!"" title=row.asm_title!"" sortable=row.asm_sortable!false formId=asm_multipleSelectForm!""
+        relatedFieldId=row.asm_relatedField!"" relatedTypeName=row.asm_type!"" relatedTypeFieldId=row.asm_typeField!""
+        paramKey=row.asm_paramKey!"" requestName=row.asm_requestName!"" responseName=row.asm_responseName!"" />
     </#list>
-    <style type="text/css">
     <#-- Cato: FIXME: this greaks grid 
+    <style type="text/css">
     #${asm_multipleSelectForm} {
         width: ${asm_formSize!700}px; 
         position: relative;
@@ -65,6 +33,6 @@ under the License.
     .asmListItem {
       width: ${asm_asmListItemPercentOfForm!95}%; 
     }
-    -->
     </style>
+    -->
 </#if>

@@ -12,6 +12,45 @@
 
 <#-- 
 *************
+* Form
+************
+An HTML form element.
+
+  * Usage Example *  
+    <@form name="myform">
+      <@fields>
+        <input type="hidden" ... />
+        <@field ... />
+        <@field ... />
+      </@fields>
+    </@form>            
+                    
+  * Parameters *
+    type                = [input|display], default input
+                          DEV NOTE: "display" is special for time being, probably rare or unused;
+                                    maybe it should cause to omit <form> element
+    class               = classes on form element itself 
+    attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
+    inlineAttribs       = other attributes for HTML <form> element
+-->
+<#macro form type="input" name="" id="" class="" openOnly=false closeOnly=false wrapIf=true attribs={} inlineAttribs...>
+  <#local attribs = concatMaps(attribs, inlineAttribs)>
+  <#local open = wrapIf && !closeOnly>
+  <#local close = wrapIf && !openOnly>
+  <#if open>
+    <#local formInfo = {"type":type, "name":name, "id":id}>
+    <#local dummy = pushRequestStack("catoCurrentFormInfo", formInfo)>
+    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "name", "id"]/></#if>>
+  </#if>
+      <#nested>
+  <#if close>
+    </form>
+    <#local dummy = popRequestStack("catoCurrentFormInfo")>
+  </#if>
+</#macro>
+
+<#-- 
+*************
 * Progress Script
 ************
 Generates script data and markup needed to make an instance to initialize upload progress 
@@ -147,40 +186,63 @@ TODO: document better if needed
 
 <#-- 
 *************
-* Form
+* asmSelectScript
 ************
-An HTML form element.
-
-  * Usage Example *  
-    <@form name="myform">
-      <@fields>
-        <input type="hidden" ... />
-        <@field ... />
-        <@field ... />
-      </@fields>
-    </@form>            
+Generates script data and markup needed to turn a multiple-select form field into
+dynamic jquery asmselect.
                     
   * Parameters *
-    type                = [input|display], default input
-                          DEV NOTE: "display" is special for time being, probably rare or unused;
-                                    maybe it should cause to omit <form> element
-    class               = classes on form element itself 
-    attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
-    inlineAttribs       = other attributes for HTML <form> element
+    * general *
+    id                  = select elem id
+    title               = select title
+    sortable            = boolean
+    formId              = form ID
+    relatedFieldId      = related field ID (optional)
+    
+    * needed only if relatedFieldId specified *
+    relatedTypeName       = related type, name
+    relatedTypeFieldId    = related type field ID
+    paramKey              = param key 
+    requestName           = request name
+    responseName          = response name
 -->
-<#macro form type="input" name="" id="" class="" openOnly=false closeOnly=false wrapIf=true attribs={} inlineAttribs...>
-  <#local attribs = concatMaps(attribs, inlineAttribs)>
-  <#local open = wrapIf && !closeOnly>
-  <#local close = wrapIf && !openOnly>
-  <#if open>
-    <#local formInfo = {"type":type, "name":name, "id":id}>
-    <#local dummy = pushRequestStack("catoCurrentFormInfo", formInfo)>
-    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "name", "id"]/></#if>>
-  </#if>
-      <#nested>
-  <#if close>
-    </form>
-    <#local dummy = popRequestStack("catoCurrentFormInfo")>
+<#macro asmSelectScript id="" title="" sortable=false formId="" relatedFieldId="" relatedTypeName="" relatedTypeFieldId=""
+  paramKey="" requestName="" responseName="">
+  <#-- MIGRATED FROM component://common/webcommon/includes/setMultipleSelectJs.ftl -->
+  <#if id?has_content>
+  <@script>
+  jQuery(document).ready(function() {
+      multiple = jQuery("#${id!}");
+  
+    <#if title?has_content>
+      // set the dropdown "title" if??
+      multiple.attr('title', '${title}');
+    </#if>
+    
+      <#-- Cato: get options from styles -->
+      <#assign defaultAsmSelectOpts = {
+        "addItemTarget": 'top',
+        "sortable": sortable!false,
+        "removeLabel": uiLabelMap.CommonRemove
+        <#--, debugMode: true-->
+      }>
+      // use asmSelect in Widget Forms
+      multiple.asmSelect(<@objectAsScript lang="js" object=(defaultAsmSelectOpts + styles.field_select_asmselect!{}) />);
+        
+    <#if relatedFieldId?has_content> <#-- can be used without related field -->
+      // track possible relatedField changes
+      // on initial focus (focus-field-name must be relatedFieldId) or if the field value changes, select related multi values. 
+      typeValue = jQuery('#${relatedTypeFieldId}').val();
+      jQuery("#${relatedFieldId}").one('focus', function() {
+        selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+      });
+      jQuery("#${relatedFieldId}").change(function() {
+        selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+      });
+      selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+    </#if>
+    });  
+  </@script>
   </#if>
 </#macro>
 
@@ -504,7 +566,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     text            = display text (also value for submitType=="submit")                
     href            = href for submitType=="link"  
     src             = image url for submitType=="image"    
-    confirmMsg      = confirmation message            
+    confirmMsg      = confirmation message          
+    progressOptions = same as for submitarea, but only works if this is a top-level submit
                       
     * reset *
     text            = label to show on reset button

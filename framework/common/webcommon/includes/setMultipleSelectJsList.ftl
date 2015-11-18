@@ -16,6 +16,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+<#-- Cato: prevent double-includes -->
+<#assign asm_included = getRequestVar("asm_included")!false>
+<#if !asm_included>
+
 <#if asm_listField??> <#-- we check only this var and suppose the others are also present -->
     <#list asm_listField as row>
         <#if row.asm_multipleSelect??>
@@ -67,4 +72,7 @@ under the License.
     }
     -->
     </style>
+</#if>
+
+  <#assign dummy = setRequestVar("asm_included", true)>
 </#if>

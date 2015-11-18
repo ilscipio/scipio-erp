@@ -16,6 +16,11 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+<#-- Cato: prevent double-includes -->
+<#assign asm_included = getRequestVar("asm_included")!false>
+<#if !asm_included>
+
 <#if asm_multipleSelect??> <#-- we check only this var and suppose the others are also present -->
 <@script>
 jQuery(document).ready(function() {
@@ -63,4 +68,7 @@ jQuery(document).ready(function() {
 }
 -->
 </style>
+</#if>
+
+  <#assign dummy = setRequestVar("asm_included", true)>
 </#if>

@@ -185,7 +185,7 @@ Creates a responsive tables script (script only - no markup).
   <#local responsiveDefaults = args.responsiveDefaults!true>
   <#local fixedColumnsLeft = args.fixedColumnsLeft!0>
   <#local fixedColumnsRight = args.fixedColumnsRight!0>
-  <#local htmlwrap = args.htmlwrap!false>
+  <#local htmlwrap = args.htmlwrap!true>
   
   <#if !(responsive?is_boolean && responsive == false) && tableId?has_content>
     <#if !tableStyleName?has_content>

@@ -516,66 +516,6 @@ IMPL NOTE: it's part of this function's interface that any of the arguments for 
 
 <#-- 
 *************
-* requireScriptOfbizUrl
-************
-This informs the decorator that the given ofbiz URI must be made available to javascript
-code through the getOfbizUrl(url) JS function.
-
-the screen/ftl has to communicate to the decorator which URIs it needs to use, so
-this is one such mechanism (other option: layoutSettings? TODO? any way is messy).
-                    
-Ideally this shouldn't needed and getOfbizUrl should just work, but URLs are generated
-dynamic using controller request defs and can't predict URL patterns unless rewrite
-@ofbizUrl in JS.  
-         
-  * Parameters *
-    url             = controller request uri
-    output          = if true, the include must be output in the markup where the macro is used
-                      and should never be delegated. in most cases this should be omitted.  
-                      DEV NOTE: if not specified, "" or false for now simply accumulates the names  
-                          and will be included by decorator in footer.
--->
-<#macro requireScriptOfbizUrl uri htmlwrap=false output="">
-  <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
-  <#if requiredScriptOfbizUrls?is_boolean || !requiredScriptOfbizUrls.contains(uri)>
-    <#if output?is_boolean && output == true>
-      <@script htmlwrap=htmlwrap output=output>
-        <#if requiredScriptOfbizUrls?is_boolean>
-          if (typeof variable === 'undefined') {
-              var commonOfbizUrls = {};
-          }
-        </#if>
-        commonOfbizUrls["${uri}"] = "<@ofbizUrl>${uri}</@ofbizUrl>";
-      </@script>
-    <#else>
-      <#if requiredScriptOfbizUrls?is_boolean>
-        <#local requiredScriptOfbizUrls = Static["org.ofbiz.base.util.UtilMisc"].toSet(uri)>
-      <#else>
-        <#local dummy = requiredScriptOfbizUrls.add(uri)!>
-      </#if>
-      <#local dummy = setRequestVar("requiredScriptOfbizUrls", requiredScriptOfbizUrls)>
-    </#if>
-  </#if>
-</#macro>
-
-<#macro includeRecordedScriptOfbizUrls htmlwrap=false>
-  <#local requiredScriptOfbizUrls = getRequestVar("requiredScriptOfbizUrls")!false>
-  <#if !requiredScriptOfbizUrls?is_boolean || (!requiredScriptOfbizUrls.isEmpty())>
-    <@script output=true htmlwrap=htmlwrap>
-
-      if (typeof variable === 'undefined') {
-          var commonOfbizUrls = {};
-      }
-  
-      <#list requiredScriptOfbizUrls as uri>
-      commonOfbizUrls["${uri}"] = "<@ofbizUrl>${uri}</@ofbizUrl>";
-      </#list>
-    </@script>
-  </#if>
-</#macro>
-
-<#-- 
-*************
 * getCurrentSectionLevel
 ************
 Gets current @section level. 

@@ -68,13 +68,13 @@ TODO: document better if needed
                         submitHook - one of: "formSubmit" (default), "validate" (jquery validate), "none" (caller does manually) 
                         validateObjScript - if submitHook is "validate", add this script text to jquery validate({...}) object body.
                       see CatoUploadProgress javascript class for avaiable options.
-    htmlwrap        = if true, wrap in <script> elem (default false)
+    htmlwrap        = if true, wrap in @script (default true)
 -->
 <#macro progressScript args={} inlineArgs...>
   <#local args = concatMaps(args, inlineArgs)>
   <#local enabled = args.enabled!true>
   <#if enabled>
-  <#local htmlwrap = args.htmlwrap!false>
+  <#local htmlwrap = args.htmlwrap!htmlwrap>
   <#local progressOptions = args.progressOptions!{}>
   <#if progressOptions?has_content && progressOptions.formSel?has_content>
     <@script htmlwrap=htmlwrap>
@@ -216,6 +216,7 @@ IMPL NOTE: this must support legacy ofbiz parameters.
     asmSelectOptions    = optional, a map of overriding options to pass to asmselect
     asmSelectDefaults   = boolean, default true, if false will not include any defaults and use asmSelectOptions only
     relatedFieldId      = related field ID (optional)
+    htmlwrap            = if true, wrap in @script (default true)
     
     * needed only if relatedFieldId specified *
     relatedTypeName       = related type, name
@@ -241,10 +242,11 @@ IMPL NOTE: this must support legacy ofbiz parameters.
   <#local paramKey = args.paramKey!"">
   <#local requestName = args.requestName!"">
   <#local responseName = args.responseName!"">
+  <#local htmlwrap = args.htmlwrap!true>
   
   <#-- MIGRATED FROM component://common/webcommon/includes/setMultipleSelectJs.ftl -->
   <#if id?has_content>
-  <@script>
+  <@script htmlwrap=htmlwrap>
   jQuery(document).ready(function() {
       multiple = jQuery("#${id!}");
   

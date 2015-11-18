@@ -474,6 +474,14 @@ an FTL wrapper, which wrecks all subsequent type checks. And others.
 
 TODO? This is currently inefficient; but must guarantee immutability.
     Note currently forced to implement in FTL (not java transform) if want to exploit "+" operator.
+    
+IMPL NOTE: it's part of this function's interface that any of the arguments for which ?has_content is false,
+    will not be used. this covers the cases where non-map types are passed as well ("", [], etc.).
+    sometimes an empty non-map type will be passed, should be considered valid.
+    shouldn't need to check for non-empty non-map types however, those are all clear coding errors.
+    e.g., this is used at beginning of macros that take inlineArgs... or inlineAttribs...
+    they count on this method to handle empty sequence case.
+    they also depend on this for the toSimple=true conversion.
 -->
 <#function concatMaps first second toSimple=true>
   <#if first?has_content>

@@ -127,28 +127,27 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     htmlWrap        = wrapping HTML element (ul|div|span, default: ul)
 -->
 <#macro menu args={} inlineArgs...>
-  <#if !inlineArgs?is_hash>
-    <#local inlineArgs = {}>
-  </#if>
-  <#local args = toSimpleMap(args)> <#-- DEV NOTE: make sure always do this from now on here... -->
-  <#local type = inlineArgs.type!args.type!"generic">
-  <#local inlineItems = inlineArgs.inlineItems!args.inlineItems!false>
-  <#if inlineArgs.class??>
+  <#-- class arg needs special handling here to support extended "+" logic (mostly for section menu defs) -->
+  <#local args = toSimpleMap(args)> <#-- DEV NOTE: this MUST be called here (or through concatMaps) to handle .class key properly -->
+  <#if inlineArgs?has_content && inlineArgs.class??> <#-- DEV NOTE: do not remove ?has_content check here -->
     <#local class = combineClassArgs(args.class!"", inlineArgs.class)>
   <#else>
     <#local class = args.class!"">
   </#if>
-  <#local id = inlineArgs.id!args.id!"">
-  <#local style = inlineArgs.style!args.style!"">
-  <#local attribs = inlineArgs.attribs!args.attribs!"">
-  <#local items = inlineArgs.items!args.items!true>
-  <#local preItems = inlineArgs.preItems!args.preItems!true>
-  <#local postItems = inlineArgs.postItems!args.postItems!true>
-  <#local sort = inlineArgs.sort!args.sort!false>
-  <#local sortBy = inlineArgs.sortBy!args.sortBy!"">
-  <#local sortDesc = inlineArgs.sortDesc!args.sortDesc!false>
-  <#local nestedFirst = inlineArgs.nestedFirst!args.nestedFirst!false>
-  <#local htmlWrap  = inlineArgs.htmlWrap!args.htmlWrap!true/>
+  <#local args = concatMaps(args, inlineArgs)> <#-- DEV NOTE: this takes care of case where inlineArgs is empty sequence (but NOT non-empty sequence) -->
+  <#local type = args.type!"generic">
+  <#local inlineItems = args.inlineItems!false>
+  <#local id = args.id!"">
+  <#local style = args.style!"">
+  <#local attribs = args.attribs!"">
+  <#local items = args.items!true>
+  <#local preItems = args.preItems!true>
+  <#local postItems = args.postItems!true>
+  <#local sort = args.sort!false>
+  <#local sortBy = args.sortBy!"">
+  <#local sortDesc = args.sortDesc!false>
+  <#local nestedFirst = args.nestedFirst!false>
+  <#local htmlWrap  = args.htmlWrap!true/>
 
   <#if htmlWrap?is_boolean>
     <#local htmlWrap = htmlWrap?string("ul", "")>
@@ -262,40 +261,39 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     inlineItem      = boolean, if true, generate only items, not menu container
 -->
 <#macro menuitem args={} inlineArgs...>
-  <#if !inlineArgs?is_hash>
-    <#local inlineArgs = {}>
-  </#if>
-  <#local args = toSimpleMap(args)> <#-- DEV NOTE: make sure always do this from now on here... -->
-  <#local type = inlineArgs.type!args.type!"generic">
-  <#if inlineArgs.class??>
+  <#-- class args need special handling here to support extended "+" logic (mostly for section menu defs) -->
+  <#local args = toSimpleMap(args)> <#-- DEV NOTE: this MUST be called here (or through concatMaps) to handle .class key properly -->
+  <#if inlineArgs?has_content && inlineArgs.class??> <#-- DEV NOTE: do not remove ?has_content check here -->
     <#local class = combineClassArgs(args.class!"", inlineArgs.class)>
   <#else>
     <#local class = args.class!"">
   </#if>
-  <#local id = inlineArgs.id!args.id!"">
-  <#local style = inlineArgs.style!args.style!"">
-  <#local attribs = inlineArgs.attribs!args.attribs!"">
-  <#if inlineArgs.contentClass??>
+  <#if inlineArgs?has_content && inlineArgs.contentClass??>
     <#local contentClass = combineClassArgs(args.contentClass!"", inlineArgs.contentClass)>
   <#else>
     <#local contentClass = args.contentClass!"">
   </#if>
-  <#local contentId = inlineArgs.contentId!args.contentId!"">
-  <#local contentStyle = inlineArgs.contentStyle!args.contentStyle!"">
-  <#local contentAttribs = inlineArgs.contentAttribs!args.contentAttribs!"">
-  <#local text = inlineArgs.text!args.text!"">
-  <#local href = inlineArgs.href!args.href!true>
-  <#local onClick = inlineArgs.onClick!args.onClick!"">
-  <#local disabled = inlineArgs.disabled!args.disabled!false>
-  <#local selected = inlineArgs.selected!args.selected!false>
-  <#local active = inlineArgs.active!args.active!false>
-  <#local target = inlineArgs.target!args.target!"">
-  <#local nestedContent = inlineArgs.nestedContent!args.nestedContent!true>
-  <#local nestedMenu = inlineArgs.nestedMenu!args.nestedMenu!false>
-  <#local wrapNested = inlineArgs.wrapNested!args.wrapNested!false>
-  <#local nestedFirst = inlineArgs.nestedFirst!args.nestedFirst!false>
-  <#local htmlWrap  = inlineArgs.htmlWrap!args.htmlWrap!true/>
-  <#local inlineItem = inlineArgs.inlineItem!args.inlineItem!false>
+  <#local args = concatMaps(args, inlineArgs)> <#-- DEV NOTE: this takes care of case where inlineArgs is empty sequence (but NOT non-empty sequence) -->
+  <#local type = args.type!"generic">
+  <#local id = args.id!"">
+  <#local style = args.style!"">
+  <#local attribs = args.attribs!"">
+  <#local contentId = args.contentId!"">
+  <#local contentStyle = args.contentStyle!"">
+  <#local contentAttribs = args.contentAttribs!"">
+  <#local text = args.text!"">
+  <#local href = args.href!true>
+  <#local onClick = args.onClick!"">
+  <#local disabled = args.disabled!false>
+  <#local selected = args.selected!false>
+  <#local active = args.active!false>
+  <#local target = args.target!"">
+  <#local nestedContent = args.nestedContent!true>
+  <#local nestedMenu = args.nestedMenu!false>
+  <#local wrapNested = args.wrapNested!false>
+  <#local nestedFirst = args.nestedFirst!false>
+  <#local htmlWrap  = args.htmlWrap!true>
+  <#local inlineItem = args.inlineItem!false>
 
   <#local menuType = (catoCurrentMenuInfo.type)!"">
   <#local menuStyleName = (catoCurrentMenuInfo.styleName)!"">

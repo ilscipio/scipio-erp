@@ -64,11 +64,9 @@ Not associated with any HTML element.
   * Parameters *
     scriptType/output/cdata/htmlwrap  = defaults for child @script calls (see @script)
 -->
-<#macro scripts inlineArgs...>
-  <#if !inlineArgs?is_hash>
-    <#local inlineArgs = {}>
-  </#if>
-  <#local dummy = setRequestVar("catoScriptsInfo", inlineArgs)>
+<#macro scripts args={} inlineArgs...>
+  <#local args = concatMaps(args, inlineArgs)>
+  <#local dummy = setRequestVar("catoScriptsInfo", args)>
   <#nested>
   <#local dummy = setRequestVar("catoScriptsInfo", {})>
 </#macro>
@@ -101,19 +99,17 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
     htmlwrap        = boolean, default true, if false don't include HTML wrapper (or cdata)
     cdata           = boolean, default true, if false don't include CDATA guard
 -->
-<#macro script inlineArgs...>
-  <#if !inlineArgs?is_hash>
-    <#local inlineArgs = {}>
-  </#if>
+<#macro script args={} inlineArgs...>
+  <#local args = concatMaps(args, inlineArgs)>
   <#local scriptsInfo = getRequestVar("catoScriptsInfo")!{}>
-  <#local type = inlineArgs.type!scriptsInfo.scriptType!"text/javascript">
-  <#local src = inlineArgs.src!"">
-  <#local output = inlineArgs.output!scriptsInfo.output!"">
+  <#local type = args.type!scriptsInfo.scriptType!"text/javascript">
+  <#local src = args.src!"">
+  <#local output = args.output!scriptsInfo.output!"">
   <#if src?has_content>
     <script type="${type}" src="${src}"></script>
   <#else>
-    <#local cdata = inlineArgs.cdata!scriptsInfo.cdata!true>
-    <#local htmlwrap = inlineArgs.htmlwrap!scriptsInfo.htmlwrap!true>
+    <#local cdata = args.cdata!scriptsInfo.cdata!true>
+    <#local htmlwrap = args.htmlwrap!scriptsInfo.htmlwrap!true>
     <#if htmlwrap>
       <script type="${type}">
       <#if cdata>//<![CDATA[</#if>

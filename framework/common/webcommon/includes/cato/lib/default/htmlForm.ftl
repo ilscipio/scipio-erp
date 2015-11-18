@@ -62,13 +62,21 @@ for getFileUploadProgressStatus AJAX calls.
 TODO: document better if needed
                     
   * Parameters *
-    options = elem IDs and options passed to CatoUploadProgress javascript class
-              in addition, supports: 
-                submitHook - one of: "formSubmit" (default), "validate" (jquery validate), "none" (caller does manually) 
-                validateObjScript - if submitHook is "validate", add this script text to jquery validate({...}) object body.
+    enabled         = boolean, default true (helper macro arg)
+    progressOptions = elem IDs and options passed to CatoUploadProgress javascript class
+                      in addition, supports: 
+                        submitHook - one of: "formSubmit" (default), "validate" (jquery validate), "none" (caller does manually) 
+                        validateObjScript - if submitHook is "validate", add this script text to jquery validate({...}) object body.
+                      see CatoUploadProgress javascript class for avaiable options.
+    htmlwrap        = if true, wrap in <script> elem (default false)
 -->
-<#macro progressScript options={} htmlwrap=false>
-  <#if options?has_content && options.formSel?has_content>
+<#macro progressScript args={} inlineArgs...>
+  <#local args = concatMaps(args, inlineArgs)>
+  <#local enabled = args.enabled!true>
+  <#if enabled>
+  <#local htmlwrap = args.htmlwrap!false>
+  <#local progressOptions = args.progressOptions!{}>
+  <#if progressOptions?has_content && progressOptions.formSel?has_content>
     <@script htmlwrap=htmlwrap>
     
     <#-- This belongs here, but due to Ofbiz bug, moved to commonScripts.ftl
@@ -79,26 +87,26 @@ TODO: document better if needed
         var uploadProgress = null;
     
         jQuery(document).ready(function() {
-          <#if options.successRedirectUrl??>
+          <#if progressOptions.successRedirectUrl??>
             <#-- shouldn't have &amp; in script tag... but code may escape and should support... -->
-            <#local options = concatMaps(options, {"successRedirectUrl":options.successRedirectUrl?replace("&amp;", "&")})>
+            <#local progressOptions = concatMaps(progressOptions, {"successRedirectUrl":progressOptions.successRedirectUrl?replace("&amp;", "&")})>
           </#if>
-            uploadProgress = new CatoUploadProgress(<@objectAsScript lang="js" object=options />);
+            uploadProgress = new CatoUploadProgress(<@objectAsScript lang="js" object=progressOptions />);
             uploadProgress.reset();
         });
         
-      <#if (options.submitHook!) == "validate">
-        jQuery("${options.formSel}").validate({
+      <#if (progressOptions.submitHook!) == "validate">
+        jQuery("${progressOptions.formSel}").validate({
             submitHandler: function(form) {
                 var goodToGo = uploadProgress.initUpload();
                 if (goodToGo) {
                     form.submit();
                 }
             },
-            ${options.validateObjScript!""}
+            ${progressOptions.validateObjScript!""}
         });
-      <#elseif (options.submitHook!) != "none" >
-        jQuery("${options.formSel}").submit(function(event) {
+      <#elseif (progressOptions.submitHook!) != "none" >
+        jQuery("${progressOptions.formSel}").submit(function(event) {
             var goodToGo = uploadProgress.initUpload();
             if (!goodToGo) {
                 event.preventDefault();
@@ -108,6 +116,7 @@ TODO: document better if needed
     })();
     
     </@script>
+  </#if>
   </#if>
 </#macro>
 
@@ -138,11 +147,14 @@ TODO: document better if needed
     containerClass = classes added only on container
     showValue      = Display value inside bar
     wrapClass      = classes on outer wrapper only
-    progressOptions = if present, attaches progress bar to an upload form with javascript-based progress and 
-                      attaches results to page using elem IDs and options in this map - 
-                      see CatoUploadProgress javascript class for options; mostly same
+    progressArgs      = if present, attaches progress bar to an upload form with javascript-based progress and 
+                        attaches results to page using elem IDs and options specified via these arguments,
+                        which are passed to @progress macro (see @progress macro for supported options)
+    progressOptions   = convenience parameter; same as passing:
+                        progressArgs={"enabled":true, "progressOptions":progressOptions}
 -->
-<#macro progress value=0 id="" type="" class="" showValue=false containerClass="" progressOptions={}>
+<#macro progress value=0 id="" type="" class="" showValue=false containerClass="" progressArgs={} progressOptions={}>
+  <#local progressOptions = progressArgs.progressOptions!progressOptions>
   <#local explicitId = id?has_content>
   <#if !id?has_content>
     <#local id = (progressOptions.progBarId)!"">
@@ -169,7 +181,8 @@ TODO: document better if needed
     <#if explicitId>
       <#local opts = concatMaps(opts, {"progBarId":"${id}"})>
     </#if>
-    <@progressScript options=opts htmlwrap=true />
+    <#-- inlines always override args map -->
+    <@progressScript progressOptions=opts htmlwrap=true args=progressArgs />
   </#if>
 </#macro>
 
@@ -593,15 +606,18 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     
     * submitarea *
     <#nested>       = button(s) (<@field type="submit"> or manual <input>, <a>, <button>) to include
-    progressOptions = if this is an upload form, specify progress upload options, enables progress next to buttons. 
+    progressArgs    = if this is an upload form, arguments to pass to @progress macro. 
                       see @progress[Script] macro[s]. should specify formSel, (progBarId and/or progTextBoxId), and others.
+    progressOptions = convenience parameter; same as passing:
+                      progressArgs={"enabled":true, "progressOptions":progressOptions}      
                       
     * submit *
     submitType      = [submit|link|button|image], default submit (<input type="submit">)  
     text            = display text (also value for submitType=="submit")                
     href            = href for submitType=="link"  
     src             = image url for submitType=="image"    
-    confirmMsg      = confirmation message          
+    confirmMsg      = confirmation message     
+    progressArgs    = same as for submitarea, but only works if this is a top-level submit     
     progressOptions = same as for submitarea, but only works if this is a top-level submit
                       
     * reset *
@@ -616,7 +632,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#macro field type="" label="" labelDetail="" name="" value="" valueType="" currentValue="" defaultValue="" class="" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked=false collapse="" tooltip="" columns="" norows=false nocells=false container=""
-        fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=false autocomplete=true progressOptions={} 
+        fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=false autocomplete=true progressArgs={} progressOptions={} 
         labelType="" labelLayout="" labelArea="" description=""
         submitType="input" text="" href="" src="" confirmMsg="" inlineItems="" 
         selected=false allowEmpty=false currentFirst=false currentDescription="" noCurrentSelectedKey=""
@@ -929,10 +945,10 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         </#if>
         <@field_submit_widget buttonType=buttonType class=class alert=alert formName=formName name=name event="" 
           action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" text=text description=description showProgress=false 
-          onClick=onClick href=href inputType=inputType disabled=disabled progressOptions=progressOptions />
+          onClick=onClick href=href inputType=inputType disabled=disabled progressArgs=progressArgs progressOptions=progressOptions />
         <#break>
       <#case "submitarea">
-        <@field_submitarea_widget progressOptions=progressOptions><#nested></@field_submitarea_widget>
+        <@field_submitarea_widget progressArgs=progressArgs progressOptions=progressOptions><#nested></@field_submitarea_widget>
         <#break>
       <#case "hidden">                    
         <@field_hidden_widget name=name value=value id=id event="onClick" action=onClick />

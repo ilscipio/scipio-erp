@@ -654,20 +654,26 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     buttonType    = [text-link|image|button], default button - logical button type (based on ofbiz form widget types)
     inputType     = the low-level <input> type attrib (within/depends on buttonType) -->
 <#macro field_submit_widget buttonType="" class="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
-    containerId="" ajaxUrl="" text="" description="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions={} id="">   
+    containerId="" ajaxUrl="" text="" description="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressArgs={} progressOptions={} id="">   
   <#if disabled>
     <#local class = addClassArg(class, styles.disabled!)>
   </#if>
-  <#if !progressOptions?has_content> <#-- note this could be a string -->
-    <#local progressOptions = {}>
+  <#if progressArgs?has_content> <#-- note progressArgs or progressOptions could be empty strings -->
+    <#if !progressArgs.progressOptions?? && progressOptions?has_content>
+      <#local progressArgs = progressArgs + {"progressOptions":progressOptions}>
+    </#if>
+  <#elseif progressOptions?has_content>
+    <#local progressArgs = {"progressOptions":progressOptions}>
+  <#else>
+    <#local progressArgs = {}>
   </#if>
   <@field_submit_markup_widget buttonType=buttonType class=class alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation 
-    containerId=containerId ajaxUrl=ajaxUrl text=text description=description fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressOptions=progressOptions id=id><#nested></@field_submit_markup_widget>
+    containerId=containerId ajaxUrl=ajaxUrl text=text description=description fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressArgs=progressArgs id=id><#nested></@field_submit_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_submit_markup_widget buttonType="" class="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
-    containerId="" ajaxUrl="" text="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressOptions={} id="" extraArgs...>
+    containerId="" ajaxUrl="" text="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressArgs={} id="" extraArgs...>
   <#-- Cato: to omit button (show progress only), we use empty title hack " " similar to what ofbiz does with hyperlinks with no label -->
   <#if (buttonType == "text-link" || buttonType != "image") && !(text?trim?has_content)>
     <#local buttonMarkup = "">
@@ -696,31 +702,38 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       </#if>
     </#local>
   </#if>
-  <#if progressOptions?has_content>
-      <@field_submitarea_markup_widget_progress progressOptions=progressOptions>${buttonMarkup}</@field_submitarea_markup_widget_progress>
+  <#if progressArgs?has_content && ((progressArgs.enabled!true) != false)>
+      <@field_submitarea_markup_widget_progress progressArgs=progressArgs>${buttonMarkup}</@field_submitarea_markup_widget_progress>
   <#else>
       ${buttonMarkup}
   </#if>
 </#macro>
 
-<#macro field_submitarea_widget progressOptions="">
-  <#if !progressOptions?has_content> <#-- note this could be a string -->
-    <#local progressOptions = {}>
+<#macro field_submitarea_widget progressArgs={} progressOptions="">
+  <#if progressArgs?has_content> <#-- note progressArgs or progressOptions could be empty strings -->
+    <#if !progressArgs.progressOptions?? && progressOptions?has_content>
+      <#local progressArgs = progressArgs + {"progressOptions":progressOptions}>
+    </#if>
+  <#elseif progressOptions?has_content>
+    <#local progressArgs = {"progressOptions":progressOptions}>
+  <#else>
+    <#local progressArgs = {}>
   </#if>
-  <@field_submitarea_markup_widget progressOptions=progressOptions><#nested></@field_submitarea_markup_widget>
+  <@field_submitarea_markup_widget progressArgs=progressArgs><#nested></@field_submitarea_markup_widget>
 </#macro>
 
 <#-- submitarea widget markup - theme override -->
-<#macro field_submitarea_markup_widget progressOptions={} extraArgs...>
-  <#if progressOptions?has_content>
-      <@field_submitarea_markup_widget_progress progressOptions=progressOptions><#nested></@field_submitarea_markup_widget_progress>
+<#macro field_submitarea_markup_widget progressArgs={} extraArgs...>
+  <#if progressArgs?has_content && ((progressArgs.enabled!true) != false)>
+      <@field_submitarea_markup_widget_progress progressArgs=progressArgs><#nested></@field_submitarea_markup_widget_progress>
   <#else>
       <#nested>
   </#if>
 </#macro>
 
 <#-- submitarea widget progress markup - theme override -->
-<#macro field_submitarea_markup_widget_progress progressOptions={} extraArgs...>
+<#macro field_submitarea_markup_widget_progress progressArgs={} extraArgs...>
+  <#local progressOptions = progressArgs.progressOptions!{}>
   <#local nestedContent><#nested></#local>
   <#local rowClass>submit-progress-row<#if nestedContent?has_content> has-submit-button<#else> no-submit-button</#if></#local>
   <@row class=("+" + rowClass)>
@@ -745,7 +758,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
        <#local subclasses = "${styles.grid_small!}9 ${styles.grid_large!}10 ${styles.grid_end!}">
        <@cell class=subclasses id=progressOptions.progTextBoxId>
        </@cell>
-       <@progressScript options=progressOptions htmlwrap=true />
+       <@progressScript progressArgs=progressArgs htmlwrap=true />
     </#if>
   </@row>
 </#macro>

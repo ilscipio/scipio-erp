@@ -150,6 +150,7 @@ Maps an Ofbiz form widget type to a @table macro type.
 Creates a responsive tables script (script only - no markup).
     
   * Parameters *
+    enabled             = true/false, default true (helper macro arg)
     tableId             = id of table
     tableType           = table type
     tableStyleName      = optimization: table style name (usually based on table type)
@@ -173,6 +174,8 @@ Creates a responsive tables script (script only - no markup).
 -->
 <#macro tableResponsiveScript args={} inlineArgs...>
   <#local args = concatMaps(args, inlineArgs)>
+  <#local enabled = args.enabled!true>
+  <#if enabled>
   <#local tableId = args.tableId!"">
   <#local tableType = args.tableType!"">
   <#local tableStyleName = args.tableStyleName!"">
@@ -225,6 +228,7 @@ Creates a responsive tables script (script only - no markup).
           $('#${tableId}').DataTable(<@objectAsScript lang="js" object=respOpts />);
       } );
     </@script>
+  </#if>
   </#if>
 </#macro>
 

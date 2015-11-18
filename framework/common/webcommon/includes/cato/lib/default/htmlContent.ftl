@@ -40,6 +40,10 @@
 -->
 <#macro heading elemType=true level="" relLevel="" class="" id="" levelClassPrefix=true consumeLevel="" 
     containerElemType=false containerClass="" containerId="" attribs={} inlineAttribs...>
+  <#if !inlineAttribs?is_hash>
+    <#local inlineAttribs = {}>
+  </#if>
+  <#local attribs = toSimpleMap(attribs)> <#-- DEV NOTE: make sure always do this from now on here... -->
   <#if !level?has_content>
     <#local level = getCurrentHeadingLevel()>
   </#if>
@@ -170,8 +174,24 @@ Creates a responsive tables script (script only - no markup).
     fixedColumnsLeft    = int value; number of columns that are fixed on the left-hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.leftColumns)
     fixedColumnsRight   = int value; number of columns that are fixed on the right hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns) 
 -->
-<#macro tableResponsiveScript tableId="" tableType="" tableStyleName="" responsive="" scrollable="" responsiveOptions={} responsiveDefaults="" fixedColumnsLeft=0 fixedColumnsRight=0 htmlwrap=false>
-  <#if !(responsive?is_boolean && responsive == false)>
+<#macro tableResponsiveScript args={} inlineArgs...>
+  <#if !inlineArgs?is_hash>
+    <#local inlineArgs = {}>
+  </#if>
+  <#local args = toSimpleMap(args)>
+  
+  <#local tableId = inlineArgs.tableId!args.tableId!"">
+  <#local tableType = inlineArgs.tableType!args.tableType!"">
+  <#local tableStyleName = inlineArgs.tableStyleName!args.tableStyleName!"">
+  <#local responsive = inlineArgs.responsive!args.responsive!"">
+  <#local scrollable = inlineArgs.scrollable!args.scrollable!"">
+  <#local responsiveOptions = inlineArgs.responsiveOptions!args.responsiveOptions!{}>
+  <#local responsiveDefaults = inlineArgs.responsiveDefaults!args.responsiveDefaults!true>
+  <#local fixedColumnsLeft = inlineArgs.fixedColumnsLeft!args.fixedColumnsLeft!0>
+  <#local fixedColumnsRight = inlineArgs.fixedColumnsRight!args.fixedColumnsRight!0>
+  <#local htmlwrap = inlineArgs.htmlwrap!args.htmlwrap!false>
+  
+  <#if !(responsive?is_boolean && responsive == false) && tableId?has_content>
     <#if !tableStyleName?has_content>
       <#local tableStyleName = tableType?replace("-","_")>
       <#if (!tableStyleName?has_content) || (!(styles["table_" + tableStyleName]!false)?is_string)>
@@ -220,6 +240,9 @@ Creates a responsive tables script (script only - no markup).
 * Table
 ************
 Helps define an HTML table. Required wrapper for all @table sub-element macros.
+
+TODO?: @table macros were made before push/popRequestStack was fully realized, so may be
+    overcomplicated at the moment.
 
   * Usage Example *  
     <@table type="data-list" id="my-table">
@@ -287,17 +310,25 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
     responsiveDefaults/scrollable/
     fixedColumnsLeft/fixedColumnsRight  = see @tableResponsiveScript macro for descriptions
 -->
-<#macro table type="" class="" id="" cellspacing=true responsive="" scrollable="" responsiveOptions={} responsiveDefaults="" fixedColumnsLeft=0 fixedColumnsRight=0 autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local tableIdNum = getRequestVar("catoTableIdNum")!0>
-  <#local tableIdNum = tableIdNum + 1 />
-  <#local dummy = setRequestVar("catoTableIdNum", tableIdNum)>
-  <#if !id?has_content><#local id="table_"+tableIdNum/></#if>
-  <#if !type?has_content>
-    <#local type = "generic">
+<#macro table type="" class="" id="" cellspacing=true responsive="" scrollable="" responsiveOptions={} responsiveDefaults="" 
+  fixedColumnsLeft=0 fixedColumnsRight=0 autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false 
+  wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+  <#if !inlineAttribs?is_hash>
+    <#local inlineAttribs = {}>
   </#if>
+  <#local attribs = toSimpleMap(attribs)>
   <#local open = wrapIf && !closeOnly>
   <#local close = wrapIf && !openOnly>
   <#if open>
+    <#local tableIdNum = getRequestVar("catoTableIdNum")!0>
+    <#local tableIdNum = tableIdNum + 1 />
+    <#local dummy = setRequestVar("catoTableIdNum", tableIdNum)>
+    <#if !id?has_content>
+      <#local id="table_"+tableIdNum/>
+    </#if>
+    <#if !type?has_content>
+      <#local type = "generic">
+    </#if>
     <#-- save previous globals, for nesting -->
     <#local prevTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
     <#local prevSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
@@ -370,44 +401,55 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
       <#local dummy = pushRequestStack("catoCurrentTableStack", 
           {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevRowAltFlag":prevRowAltFlag, 
            "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, 
-           "type":type, "id":id, "tableIdNum":tableIdNum, "styleName":styleName,
+           "type":type, "id":id, "tableIdNum":tableIdNum, "styleName":styleName, "class":class, "cellspacing":cellspacing,
            "useResponsive":useResponsive, "responsive":responsive, "scrollable":scrollable, "responsiveOptions":responsiveOptions,
            "responsiveDefaults":responsiveDefaults, "fixedColumnsLeft":fixedColumnsLeft, "fixedColumnsRight":fixedColumnsRight
            })>
     </#if>
-    <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
-      <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "cellspacing"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
-  </#if>
-      <#nested>
+  <#elseif close>
+    <#local stackValues = popRequestStack("catoCurrentTableStack")!{}>
+    <#local prevTableInfo = stackValues.prevTableInfo>
+    <#local prevSectionInfo = stackValues.prevSectionInfo>
+    <#local prevRowAltFlag = stackValues.prevRowAltFlag>
+    <#local prevCurrentRowAlt = stackValues.prevCurrentRowAlt>
+    <#local prevLastRowAlt = stackValues.prevLastRowAlt>
+    <#local type = stackValues.type>
+    <#local id = stackValues.id>
+    <#local tableIdNum = stackValues.tableIdNum>
+    <#local styleName = stackValues.styleName>
+    <#local class = stackValues.class>
+    <#local cellspacing = stackValues.cellspacing>
+    <#local useResponsive = stackValues.useResponsive>
+    <#local responsive = stackValues.responsive>
+    <#local scrollable = stackValues.scrollable>
+    <#local responsiveOptions = stackValues.responsiveOptions>
+    <#local responsiveDefaults = stackValues.responsiveDefaults>
+    <#local fixedColumnsLeft = stackValues.fixedColumnsLeft>
+    <#local fixedColumnsRight = stackValues.fixedColumnsRight>  
+  <#else>
+    <#-- needed so no undefined vars -->
+    <#local styleName = "">
+    <#local cellspacing = "">
+    <#local useResponsive = false>
+  </#if>     
+  <#-- having this as map simplifies the args the markup has to pass along, much easier -->
+  <#local responsiveArgs = {
+    "tableId" : id,
+    "tableType" : type,
+    "tableStyleName" : styleName,
+    "responsive" : responsive,
+    "scrollable" : scrollable,
+    "responsiveOptions" : responsiveOptions,
+    "responsiveDefaults" : responsiveDefaults,
+    "fixedColumnsLeft" : fixedColumnsLeft,
+    "fixedColumnsRight" : fixedColumnsRight
+  }>
+  <@table_markup open=open close=close type=type styleName=styleName class=class id=id cellspacing=cellspacing 
+      useResponsive=useResponsive responsiveArgs=responsiveArgs autoAltRows=autoAltRows firstRowAlt=firstRowAlt 
+      inheritAltRows=inheritAltRows useFootAltRows=useFootAltRows attribs=concatMaps(attribs, inlineAttribs)>
+    <#nested>
+  </@table_markup>
   <#if close>
-    <#-- need to get values back from stack if close-only! -->
-    <#if !open>
-      <#local stackValues = popRequestStack("catoCurrentTableStack")!{}>
-      <#local prevTableInfo = stackValues.prevTableInfo>
-      <#local prevSectionInfo = stackValues.prevSectionInfo>
-      <#local prevRowAltFlag = stackValues.prevRowAltFlag>
-      <#local prevCurrentRowAlt = stackValues.prevCurrentRowAlt>
-      <#local prevLastRowAlt = stackValues.prevLastRowAlt>
-      <#local type = stackValues.type>
-      <#local id = stackValues.id>
-      <#local tableIdNum = stackValues.tableIdNum>
-      <#local styleName = stackValues.styleName>
-      <#local useResponsive = stackValues.useResponsive>
-      <#local responsive = stackValues.responsive>
-      <#local scrollable = stackValues.scrollable>
-      <#local responsiveOptions = stackValues.responsiveOptions>
-      <#local responsiveDefaults = stackValues.responsiveDefaults>
-      <#local fixedColumnsLeft = stackValues.fixedColumnsLeft>
-      <#local fixedColumnsRight = stackValues.fixedColumnsRight>      
-    </#if>
-    </table>
-    <#-- DEV NOTE: WARN: any vars used below here must have been preserved through stackValues above -->
-    <#if useResponsive>
-      <@tableResponsiveScript tableId=id tableType=type tableStyleName=styleName responsive=responsive scrollable=scrollable 
-        responsiveOptions=responsiveOptions responsiveDefaults=responsiveDefaults 
-        fixedColumnsLeft=fixedColumnsLeft fixedColumnsRight=fixedColumnsRight htmlwrap=true />
-    </#if>
-
     <#local dummy = setRequestVar("catoCurrentTableInfo", prevTableInfo)!>
     <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevSectionInfo)!>
     <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", prevRowAltFlag)!>
@@ -416,7 +458,27 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
   </#if>
 </#macro>
 
+<#-- @table main markup - theme override -->
+<#macro table_markup type="" styleName="" class="" id="" cellspacing="" useResponsive=false responsiveArgs={} 
+  autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false open=true close=true attribs={} extraArgs...>
+  <#if open>
+    <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
+      <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id", "cellspacing"]/></#if>>  
+  </#if>
+      <#nested>
+  <#if close>
+    </table>
+    <#if useResponsive>
+      <@tableResponsiveScript args=responsiveArgs htmlwrap=true />
+    </#if>  
+  </#if>
+</#macro>
+
 <#macro thead class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+  <#if !inlineAttribs?is_hash>
+    <#local inlineAttribs = {}>
+  </#if>
+  <#local attribs = toSimpleMap(attribs)>
   <#local open = wrapIf && !closeOnly>
   <#local close = wrapIf && !openOnly>
   <#if open>
@@ -428,7 +490,7 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
       <#local dummy = pushRequestStack("catoCurrentTableHeadStack", 
           {"prevTableSectionInfo":prevTableSectionInfo})>
     </#if>
-    <thead<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+    <thead<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=concatMaps(attribs, inlineAttribs) exclude=["class", "id"]/></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -443,6 +505,10 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
 </#macro>
 
 <#macro tbody class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+  <#if !inlineAttribs?is_hash>
+    <#local inlineAttribs = {}>
+  </#if>
+  <#local attribs = toSimpleMap(attribs)>
   <#local open = wrapIf && !closeOnly>
   <#local close = wrapIf && !openOnly>
   <#if open>
@@ -454,7 +520,7 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
       <#local dummy = pushRequestStack("catoCurrentTableBodyStack", 
           {"prevTableSectionInfo":prevTableSectionInfo})>
     </#if>
-    <tbody<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+    <tbody<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=concatMaps(attribs, inlineAttribs) exclude=["class", "id"]/></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -469,6 +535,10 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
 </#macro>
 
 <#macro tfoot class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+  <#if !inlineAttribs?is_hash>
+    <#local inlineAttribs = {}>
+  </#if>
+  <#local attribs = toSimpleMap(attribs)>
   <#local open = wrapIf && !closeOnly>
   <#local close = wrapIf && !openOnly>
   <#if open>
@@ -480,7 +550,7 @@ Helps define an HTML table. Required wrapper for all @table sub-element macros.
       <#local dummy = pushRequestStack("catoCurrentTableFootStack", 
           {"prevTableSectionInfo":prevTableSectionInfo})>
     </#if>
-    <tfoot<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+    <tfoot<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=concatMaps(attribs, inlineAttribs) exclude=["class", "id"]/></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -532,6 +602,10 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     [inlineAttribs...]    = other legacy <tr attributes and values, inlined
 -->
 <#macro tr type="" class="" id="" useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+  <#if !inlineAttribs?is_hash>
+    <#local inlineAttribs = {}>
+  </#if>
+  <#local attribs = toSimpleMap(attribs)>
   <#local open = wrapIf && !closeOnly>
   <#local close = wrapIf && !openOnly>
   <#local catoCurrentTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
@@ -579,7 +653,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     <#if selected?is_boolean && selected == true>
       <#local class = addClassArg(class, styles.row_selected!)>
     </#if>
-    <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+    <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=concatMaps(attribs, inlineAttribs) exclude=["class", "id"]/></#if>>
   </#if>    
       <#nested>
   <#if close>
@@ -622,23 +696,31 @@ Helps define table cells.
     [inlineAttribs...]    = other legacy <th and <td attributes and values
 -->
 <#macro th class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+  <#if !inlineAttribs?is_hash>
+    <#local inlineAttribs = {}>
+  </#if>
+  <#local attribs = toSimpleMap(attribs)>
   <#local open = wrapIf && !closeOnly>
   <#local close = wrapIf && !openOnly>
-  <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></th></#if>
+  <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=concatMaps(attribs, inlineAttribs) exclude=["class", "id"]/></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
 <#macro td class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+  <#if !inlineAttribs?is_hash>
+    <#local inlineAttribs = {}>
+  </#if>
+  <#local attribs = toSimpleMap(attribs)>
   <#local open = wrapIf && !closeOnly>
   <#local close = wrapIf && !openOnly>
-  <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>></#if><#nested><#if close></td></#if>
+  <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=concatMaps(attribs, inlineAttribs) exclude=["class", "id"]/></#if>></#if><#nested><#if close></td></#if>
 </#macro>
 
 <#-- 
 *************
 * Table Row Class Attribute String
 ************
-Helps build common data/table row class string (odd, even, etc.). Common pattern.
-In general, use @table, @tr macros instead.
+Helps build common data/table row class string (odd, even, etc.). Common pattern (in stock Ofbiz templates).
+Usage discouraged: use @table, @tr macros instead.
 
   * Usage Example *  
     <tr<@tableRowClassAttribStr class="myClass" alt=false/>>

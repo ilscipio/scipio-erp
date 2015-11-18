@@ -58,8 +58,6 @@ javascript anim for a form, with progress bar and/or text.
 
 Server-side upload event for the form must register a FileUploadProgressListener in session
 for getFileUploadProgressStatus AJAX calls.
-
-TODO: document better if needed
                     
   * Parameters *
     enabled         = boolean, default true (helper macro arg)
@@ -67,7 +65,7 @@ TODO: document better if needed
                       in addition, supports: 
                         submitHook - one of: "formSubmit" (default), "validate" (jquery validate), "none" (caller does manually) 
                         validateObjScript - if submitHook is "validate", add this script text to jquery validate({...}) object body.
-                      see CatoUploadProgress javascript class for avaiable options.
+                      see CatoUploadProgress javascript class for available options.
     htmlwrap        = if true, wrap in @script (default true)
 -->
 <#macro progressScript args={} inlineArgs...>
@@ -79,9 +77,7 @@ TODO: document better if needed
   <#if progressOptions?has_content && progressOptions.formSel?has_content>
     <@script htmlwrap=htmlwrap>
     
-    <#-- This belongs here, but due to Ofbiz bug, moved to commonScripts.ftl
-    <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" />
-    -->
+      <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" htmlwrap=false/>
     
     (function() {
         var uploadProgress = null;

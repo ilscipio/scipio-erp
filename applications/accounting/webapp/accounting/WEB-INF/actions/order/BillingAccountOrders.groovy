@@ -39,6 +39,6 @@ if (billingAccountId) {
             }
             
         }
-        context.orderPaymentPreferencesList = orderPaymentPreferencesList;
     }
+	context.orderPaymentPreferencesList = orderPaymentPreferencesList;
 }

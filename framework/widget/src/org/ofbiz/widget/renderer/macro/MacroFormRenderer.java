@@ -3248,7 +3248,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
 		Appendable postMultiFormWriter = wholeFormContext != null ? (Appendable) wholeFormContext.get("postMultiFormWriter") : null;
 		if (postMultiFormWriter == null) {
 			postMultiFormWriter = new StringWriter();
-			wholeFormContext.put("postMultiFormWriter", postMultiFormWriter);
+			if (wholeFormContext != null)
+				wholeFormContext.put("postMultiFormWriter", postMultiFormWriter);
 		}
 		WidgetWorker.makeHiddenFormSubmitForm(postMultiFormWriter, modelForm.getTarget(context, modelForm.getTargetType()), modelForm.getTargetType(), modelForm.getTargetWindow(), parameterMap, request, response, modelForm, context);
     }

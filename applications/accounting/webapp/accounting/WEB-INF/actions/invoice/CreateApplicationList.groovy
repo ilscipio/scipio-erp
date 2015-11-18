@@ -74,4 +74,4 @@ invoice.getRelated("InvoiceItem", null, null, false).each { item ->
         invoiceApplications.add(itemmap);
     }
 }
-if (invoiceApplications) context.invoiceApplications = invoiceApplications;
+context.invoiceApplications = invoiceApplications;

@@ -445,8 +445,8 @@ under the License.
         </field>
     </form>
 
-    <form name="EditInvoiceApplications" type="list" list-name="invoiceApplications" default-entity-name="InvoiceItem" use-row-submit="true" target="updateInvoiceApplication" title="Apply payments to invoices" separate-columns="false"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+    <form name="EditInvoiceApplications" type="multi" list-name="invoiceApplications" default-entity-name="InvoiceItem" use-row-submit="false" target="updateInvoiceApplication" title="Apply payments to invoices" separate-columns="true"
+        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <field name="statusId"><hidden/></field>
         <field name="paymentApplicationId"><hidden/></field>
         <field name="invoiceItemSeqId"><display/></field>
@@ -458,7 +458,7 @@ under the License.
         <field name="billingAccountId"><hidden/></field>
         <field name="amountToApply"><text size="10" disabled="true"/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
-        <field name="removeAction" title=" " widget-style="${styles.link_action}" use-when="paymentApplicationId!=null">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}" use-when="paymentApplicationId!=null">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceApplication">
                 <parameter param-name="paymentApplicationId"/>
                 <parameter param-name="invoiceId"/>
@@ -570,7 +570,7 @@ under the License.
 
         <field name="invoiceId"><hidden/></field>
 
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}">
             <hyperlink target="unlinkInvoiceFromTimeEntry" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="timeEntryId"/>
                 <parameter param-name="invoiceId"/>

@@ -190,13 +190,18 @@ TODO: document better if needed
 ************
 Generates script data and markup needed to turn a multiple-select form field into
 dynamic jquery asmselect.
+IMPL NOTE: this must support legacy ofbiz parameters.
                     
   * Parameters *
     * general *
+    enabled             = boolean true/false, default true (helper for macro args)
     id                  = select elem id
     title               = select title
     sortable            = boolean
     formId              = form ID
+    formName            = form name
+    asmSelectOptions    = optional, a map of overriding options to pass to asmselect
+    asmSelectDefaults   = boolean, default true, if false will not include any defaults and use asmSelectOptions only
     relatedFieldId      = related field ID (optional)
     
     * needed only if relatedFieldId specified *
@@ -206,28 +211,52 @@ dynamic jquery asmselect.
     requestName           = request name
     responseName          = response name
 -->
-<#macro asmSelectScript id="" title="" sortable=false formId="" relatedFieldId="" relatedTypeName="" relatedTypeFieldId=""
-  paramKey="" requestName="" responseName="">
+<#macro asmSelectScript args={} inlineArgs...>
+  <#local args = concatMaps(args, inlineArgs)>
+  <#local enabled = args.enabled!true>
+  <#if enabled>
+  <#local id = args.id!"">
+  <#local title = args.title!false>
+  <#local sortable = args.sortable!false>
+  <#local formId = args.formId!"">
+  <#local formName = args.formName!"">
+  <#local asmSelectOptions = args.asmSelectOptions!{}>
+  <#local asmSelectDefaults = args.asmSelectDefaults!true>
+  <#local relatedFieldId = args.relatedFieldId!"">
+  <#local relatedTypeName = args.relatedTypeName!"">
+  <#local relatedTypeFieldId = args.relatedTypeFieldId!"">
+  <#local paramKey = args.paramKey!"">
+  <#local requestName = args.requestName!"">
+  <#local responseName = args.responseName!"">
+  
   <#-- MIGRATED FROM component://common/webcommon/includes/setMultipleSelectJs.ftl -->
   <#if id?has_content>
   <@script>
   jQuery(document).ready(function() {
       multiple = jQuery("#${id!}");
   
-    <#if title?has_content>
+    <#if !(title?is_boolean && title == false)>
+      <#if title?is_boolean>
+        <#local title = "">
+      </#if>
       // set the dropdown "title" if??
       multiple.attr('title', '${title}');
     </#if>
     
-      <#-- Cato: get options from styles -->
-      <#assign defaultAsmSelectOpts = {
-        "addItemTarget": 'top',
-        "sortable": sortable!false,
-        "removeLabel": uiLabelMap.CommonRemove
-        <#--, debugMode: true-->
-      }>
+      <#if asmSelectDefaults>
+        <#-- Cato: get options from styles -->
+        <#local defaultAsmSelectOpts = {
+          "addItemTarget": 'top',
+          "sortable": sortable!false,
+          "removeLabel": uiLabelMap.CommonRemove
+          <#--, debugMode: true-->
+        }>
+        <#local asmSelectOpts = defaultAsmSelectOpts + styles.field_select_asmselect!{} + asmSelectOptions>
+      <#else>
+        <#local asmSelectOpts = asmSelectOptions>
+      </#if>
       // use asmSelect in Widget Forms
-      multiple.asmSelect(<@objectAsScript lang="js" object=(defaultAsmSelectOpts + styles.field_select_asmselect!{}) />);
+      multiple.asmSelect(<@objectAsScript lang="js" object=asmSelectOpts />);
         
     <#if relatedFieldId?has_content> <#-- can be used without related field -->
       // track possible relatedField changes
@@ -243,6 +272,7 @@ dynamic jquery asmselect.
     </#if>
     });  
   </@script>
+  </#if>
   </#if>
 </#macro>
 
@@ -524,6 +554,11 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                       by default, this is based on whether the items arg is specified or not (NOT whether
                       there is any nested content or not).
                       if specifying both items arg AND #nested content (discouraged), this should be manually set to true.
+    asmSelectArgs   = optional map of args passed to @asmSelectScript to transform a multiple type select into
+                      a jquery asmselect. usually only valid if multiple is true.
+    formName        = name of form containing the field
+    formId          = id of form containing the field
+    title           = title attribute of <select> element
     
     * option *
     text            = option label (can also specify as #nested)
@@ -585,7 +620,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         labelType="" labelLayout="" labelArea="" description=""
         submitType="input" text="" href="" src="" confirmMsg="" inlineItems="" 
         selected=false allowEmpty=false currentFirst=false currentDescription="" noCurrentSelectedKey=""
-        manualItems="" manualItemsOnly="">
+        manualItems="" manualItemsOnly="" asmSelectArgs={} title="">
   <#if !type?has_content>
     <#local type = "generic">
   </#if>
@@ -807,7 +842,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                                 alert=alert 
                                 id=id 
                                 multiple=multiple
-                                formName=""
+                                formName=formName
+                                formId=formId
                                 otherFieldName="" 
                                 event="onClick" 
                                 action=onClick  
@@ -832,10 +868,13 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                                 partialChars=""
                                 ignoreCase=""
                                 fullSearch=""
+                                title=title
                                 tooltip=tooltip
+                                description=description
                                 manualItems=manualItems
                                 manualItemsOnly=manualItemsOnly
-                                currentDescription=currentDescription><#nested></@field_select_widget>
+                                currentDescription=currentDescription
+                                asmSelectArgs=asmSelectArgs><#nested></@field_select_widget>
         <#break>
       <#case "option">
         <@field_option_widget value=value text=text selected=selected><#nested></@field_option_widget>

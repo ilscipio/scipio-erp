@@ -262,11 +262,11 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 </#macro>
 
 <#-- migrated from @renderDropDownField form widget macro -->
-<#macro field_select_widget name="" class="" alert="" id="" multiple="" formName="" otherFieldName="" size="" currentFirst="" 
+<#macro field_select_widget name="" class="" alert="" id="" multiple="" formName="" formId="" otherFieldName="" size="" currentFirst="" 
     currentValue="" currentDescription="" allowEmpty="" options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" noCurrentSelectedKey="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
-    ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false 
-    collapse=false fieldTitleBlank=false inlineSelected=true>
+    ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false title="" tooltip="" description="" manualItems=false manualItemsOnly=false 
+    collapse=false fieldTitleBlank=false inlineSelected=true asmSelectArgs={}>
   <#if !multiple?is_boolean>
     <#if multiple == "true" || multiple == "multiple" || multiple == "Y">
       <#local multiple = true>
@@ -315,25 +315,26 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       </#list>
     </#if>
   </#if>
-  <@field_select_markup_widget name=name class=class alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size currentFirst=currentFirst 
+  <@field_select_markup_widget name=name class=class alert=alert id=id multiple=multiple formName=formName formId=formId otherFieldName=otherFieldName size=size currentFirst=currentFirst 
     currentValue=currentValue currentDescription=currentDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize 
     dDFCurrent=dDFCurrent noCurrentSelectedKey=noCurrentSelectedKey ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars 
-    ignoreCase=ignoreCase fullSearch=fullSearch event=event action=action ajaxEnabled=ajaxEnabled tooltip=tooltip manualItems=manualItems manualItemsOnly=manualItemsOnly 
-    collapse=collapse fieldTitleBlank=fieldTitleBlank inlineSelected=inlineSelected><#nested></@field_select_markup_widget>
+    ignoreCase=ignoreCase fullSearch=fullSearch event=event action=action ajaxEnabled=ajaxEnabled title=title tooltip=tooltip description=description manualItems=manualItems manualItemsOnly=manualItemsOnly 
+    collapse=collapse fieldTitleBlank=fieldTitleBlank inlineSelected=inlineSelected asmSelectArgs=asmSelectArgs><#nested></@field_select_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_select_markup_widget name="" class="" alert="" id="" multiple=false formName="" otherFieldName="" size="" currentFirst=false 
+<#macro field_select_markup_widget name="" class="" alert="" id="" multiple=false formName="" formId="" otherFieldName="" size="" currentFirst=false 
     currentValue="" currentDescription="" allowEmpty=true options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" noCurrentSelectedKey="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
-    ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false 
-    collapse=false fieldTitleBlank=false inlineSelected=true extraArgs...>
+    ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false title="" tooltip="" description="" manualItems=false manualItemsOnly=false 
+    collapse=false fieldTitleBlank=false inlineSelected=true asmSelectArgs={} extraArgs...>
 
     <#if tooltip?has_content>
       <#local class = addClassArg(class, "has-tip tip-right")>
     </#if>
     <select name="${name!""}<#rt/>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if multiple> multiple="multiple"</#if><#if (otherFieldSize > 0)> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if event?has_content> ${event}="${action}"</#if><#--<#if size?has_content> size="${size}"</#if>-->
-    <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>>
+    <#if title?has_content> title="${title}"<#elseif tooltip?has_content> title="${tooltip}"</#if>
+    <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true"</#if><#rt/>>
     <#if !manualItemsOnly>  
       <#if currentFirst && currentValue?has_content && !multiple>
         <option selected="selected" value="${currentValue}">${currentDescription}</option><#rt/>
@@ -372,6 +373,21 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
         jQuery("#${id}").combobox();
       });
     </@script>
+  </#if>
+  <#if asmSelectArgs?has_content>
+    <#local asmtitle = asmSelectArgs.title!"">
+    <#if !asmtitle?has_content>
+      <#if title?has_content>
+        <#local asmtitle = title>
+      <#elseif description?has_content>
+        <#local asmtitle = description>
+      <#elseif tooltip?has_content>
+        <#local asmtitle = tooltip>
+      <#else>
+        <#local asmtitle = ""> <#-- otherwise will show 'undefined' -->
+      </#if>
+    </#if>
+    <@asmSelectScript id=id formName=formName formId=formId title=asmtitle args=asmSelectArgs />
   </#if>
 </#macro>
 

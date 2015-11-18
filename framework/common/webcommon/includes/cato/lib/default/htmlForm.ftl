@@ -33,10 +33,10 @@ An HTML form element.
     attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
     inlineAttribs       = other attributes for HTML <form> element
 -->
-<#macro form type="input" name="" id="" class="" openOnly=false closeOnly=false wrapIf=true attribs={} inlineAttribs...>
+<#macro form type="input" name="" id="" class="" openOnly=false closeOnly=false nestedOnly=false attribs={} inlineAttribs...>
   <#local attribs = concatMaps(attribs, inlineAttribs)>
-  <#local open = wrapIf && !closeOnly>
-  <#local close = wrapIf && !openOnly>
+  <#local open = !(nestedOnly || closeOnly)>
+  <#local close = !(nestedOnly || openOnly)>
   <#if open>
     <#local formInfo = {"type":type, "name":name, "id":id}>
     <#local dummy = pushRequestStack("catoCurrentFormInfo", formInfo)>
@@ -309,17 +309,17 @@ A visible fieldset, including the HTML element.
     title           = fieldset-title
     collapsed       = show/hide the fieldset
 -->
-<#macro fieldset id="" title="" class="" containerClass="" collapsed=false openOnly=false closeOnly=false wrapIf=true>
-    <@fieldset_core class=class containerClass=containerClass id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="" openOnly=openOnly closeOnly=closeOnly wrapIf=wrapIf>
+<#macro fieldset id="" title="" class="" containerClass="" collapsed=false openOnly=false closeOnly=false nestedOnly=false>
+    <@fieldset_core class=class containerClass=containerClass id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="" openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly>
         <#nested />
     </@fieldset_core>
 </#macro>
 
 <#-- DEV NOTE: see @section_core for details on pattern 
      migrated from @renderFieldGroupOpen/Close form widget macro -->
-<#macro fieldset_core class="" containerClass="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false openOnly=false closeOnly=false wrapIf=true>
-  <#local open = wrapIf && !closeOnly>
-  <#local close = wrapIf && !openOnly>
+<#macro fieldset_core class="" containerClass="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false openOnly=false closeOnly=false nestedOnly=false>
+  <#local open = !(nestedOnly || closeOnly)>
+  <#local close = !(nestedOnly || openOnly)>
   <@fieldset_markup open=open close=close class=class containerClass=containerClass id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible><#nested></@fieldset_markup>
 </#macro>
 

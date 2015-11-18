@@ -78,7 +78,7 @@ under the License.
       </#if>
       class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">
 
-      <@table wrapIf=(numCol?int > 1)>
+      <@table nestedOnly=!(numCol?int > 1)>
 
         <#list productIds as productId>
           <#if (numCol?int == 1)>

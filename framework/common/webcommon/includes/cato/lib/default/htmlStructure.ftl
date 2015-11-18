@@ -25,9 +25,9 @@
     alt             = boolean, if true alternate row (odd), if false regular (even)
     selected        = boolean, if true row is marked selected
 -->
-<#macro row class="" id="" collapse=false norows=false alt="" selected="" openOnly=false closeOnly=false wrapIf=true>
-  <#local open = wrapIf && !closeOnly && !norows>
-  <#local close = wrapIf && !openOnly && !norows>
+<#macro row class="" id="" collapse=false norows=false alt="" selected="" openOnly=false closeOnly=false nestedOnly=false>
+  <#local open = !(nestedOnly || closeOnly || norows)>
+  <#local close = !(nestedOnly || openOnly || norows)>
   <#if open>
       <#if alt?is_boolean>
         <#local class = addClassArg(class, alt?string(styles.row_alt!, styles.row_reg!))>
@@ -101,9 +101,9 @@
     largeOffset     = specific offset for large columns
     last            = boolean, usually optional, if true indicate last cell in row 
 -->
-<#macro cell columns=-1 small=-1 medium=-1 large=-1 offset=-1 smallOffset=-1 mediumOffset=-1 largeOffset=-1 class="" id="" collapse=false nocells=false last=false openOnly=false closeOnly=false wrapIf=true>
-  <#local open = wrapIf && !closeOnly && !nocells>
-  <#local close = wrapIf && !openOnly && !nocells>
+<#macro cell columns=-1 small=-1 medium=-1 large=-1 offset=-1 smallOffset=-1 mediumOffset=-1 largeOffset=-1 class="" id="" collapse=false nocells=false last=false openOnly=false closeOnly=false nestedOnly=false>
+  <#local open = !(nestedOnly || closeOnly || nocells)>
+  <#local close = !(nestedOnly || openOnly || nocells)>
   <#if open>
     <#local columns = columns?number>
     <#local small = small?number>
@@ -391,9 +391,9 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 -->
 <#macro section type="" id="" title="" class="" padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" 
     menuContent="" menuClass="" menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="" 
-    openOnly=false closeOnly=false wrapIf=true>
-  <#local open = wrapIf && !closeOnly>
-  <#local close = wrapIf && !openOnly>
+    openOnly=false closeOnly=false nestedOnly=false>
+  <#local open = !(nestedOnly || closeOnly)>
+  <#local close = !(nestedOnly || openOnly)>
   <#if open>
       <#if !type?has_content>
           <#local type = "generic">
@@ -415,7 +415,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     fromScreenDef=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
     forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel 
     relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass 
-    openOnly=openOnly closeOnly=closeOnly wrapIf=wrapIf><#nested /></@section_core>
+    openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly><#nested /></@section_core>
 </#macro>
 
 <#-- Core implementation of @section. 
@@ -428,9 +428,9 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     hasContent        = hint to say there will be content; workaround for not being able to assume that all browsers have the CSS support to check if content present -->
 <#macro section_core id="" title="" class="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuContent="" showMore=true collapsed=false 
     javaScriptEnabled=true fromScreenDef=false menuClass="" menuId="" menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="" titleContainerStyle="" titleConsumeLevel=true 
-    autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" openOnly=false closeOnly=false wrapIf=true>
-  <#local open = wrapIf && !closeOnly>
-  <#local close = wrapIf && !openOnly>
+    autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" openOnly=false closeOnly=false nestedOnly=false>
+  <#local open = !(nestedOnly || closeOnly)>
+  <#local close = !(nestedOnly || openOnly)>
   <#if open>
   <#-- level logic begin -->
       <#-- note: request obj only available because of macro renderer initial context mod -->

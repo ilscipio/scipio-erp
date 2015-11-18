@@ -78,7 +78,7 @@ Not associated with any HTML element.
 Inline script wrapper. By default, makes a javascript block.
 DEV NOTE: In future, could be used to collect scripts for inclusion at end of page.
 
-NOTE: Unlike others this macro explicitly currently cannot support openOnly/closeOnly structure (only wrapIf).
+NOTE: Unlike others this macro explicitly currently cannot support openOnly/closeOnly structure (only htmlwrap).
 
   * Usage Example *  
     <@script>
@@ -97,7 +97,7 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
                       if not specified or "", cato decides what to do with them (output or accumulate at bottom of page).
                       TODO: code to accumulate at footer.
     htmlwrap        = boolean, default true, if false don't include HTML wrapper (or cdata)
-    cdata           = boolean, default true, if false don't include CDATA guard
+    cdata           = boolean, default true, if false don't include CDATA guard (only used if htmlwrap true)
 -->
 <#macro script args={} inlineArgs...>
   <#local args = concatMaps(args, inlineArgs)>

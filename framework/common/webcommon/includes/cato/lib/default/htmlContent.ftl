@@ -298,7 +298,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
     useFootAltRoots = whether use alt row logic in foot or not
     cellspacing     = cellspacing, defaults specified in styles hash, set to "" to prevent setting.
-    wrapIf/openOnly/closeOnly = advanced structure control, for esoteric cases
+    nestedOnly/openOnly/closeOnly = advanced structure control, for esoteric cases
     attribs         = hash of other legacy <table attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <table attributes and values, inlined
     
@@ -309,10 +309,10 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 -->
 <#macro table type="" class="" id="" cellspacing=true responsive="" scrollable="" responsiveOptions={} responsiveDefaults="" 
   fixedColumnsLeft=0 fixedColumnsRight=0 autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false 
-  wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+  nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
   <#local attribs = concatMaps(attribs, inlineAttribs)>
-  <#local open = wrapIf && !closeOnly>
-  <#local close = wrapIf && !openOnly>
+  <#local open = !(nestedOnly || closeOnly)>
+  <#local close = !(nestedOnly || openOnly)>
   <#if open>
     <#local tableIdNum = getRequestVar("catoTableIdNum")!0>
     <#local tableIdNum = tableIdNum + 1 />
@@ -468,10 +468,10 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   </#if>
 </#macro>
 
-<#macro thead class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro thead class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
   <#local attribs = concatMaps(attribs, inlineAttribs)>
-  <#local open = wrapIf && !closeOnly>
-  <#local close = wrapIf && !openOnly>
+  <#local open = !(nestedOnly || closeOnly)>
+  <#local close = !(nestedOnly || openOnly)>
   <#if open>
     <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
     <#local catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
@@ -495,10 +495,10 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   </#if>
 </#macro>
 
-<#macro tbody class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro tbody class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
   <#local attribs = concatMaps(attribs, inlineAttribs)>
-  <#local open = wrapIf && !closeOnly>
-  <#local close = wrapIf && !openOnly>
+  <#local open = !(nestedOnly || closeOnly)>
+  <#local close = !(nestedOnly || openOnly)>
   <#if open>
     <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
     <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
@@ -522,10 +522,10 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   </#if>
 </#macro>
 
-<#macro tfoot class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro tfoot class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
   <#local attribs = concatMaps(attribs, inlineAttribs)>
-  <#local open = wrapIf && !closeOnly>
-  <#local close = wrapIf && !openOnly>
+  <#local open = !(nestedOnly || closeOnly)>
+  <#local close = !(nestedOnly || openOnly)>
   <#if open>
     <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
     <#local catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
@@ -582,14 +582,14 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     groupParent     = boolean, nested tables only, if specified, considers row logically grouped with parent row;
                       sets alt to exact same as parent row
     selected        = boolean, if specified and true marked as selected
-    wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (should omit nested for openOnly/closeOnly)
+    nestedOnly/openOnly/CloseOnly = advanced structure control, for esoteric cases (should omit nested for openOnly/closeOnly)
     attribs               = hash of other legacy <tr attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <tr attributes and values, inlined
 -->
-<#macro tr type="" class="" id="" useAlt="" alt="" groupLast="" groupParent="" selected="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro tr type="" class="" id="" useAlt="" alt="" groupLast="" groupParent="" selected="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
   <#local attribs = concatMaps(attribs, inlineAttribs)>
-  <#local open = wrapIf && !closeOnly>
-  <#local close = wrapIf && !openOnly>
+  <#local open = !(nestedOnly || closeOnly)>
+  <#local close = !(nestedOnly || openOnly)>
   <#local catoCurrentTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
   <#local catoCurrentTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
   <#local catoCurrentTableRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag")!false>
@@ -673,21 +673,21 @@ Helps define table cells.
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     id              = cell id
-    wrapIf/openOnly/CloseOnly = advanced structure control, for esoteric cases (should omit nested for openOnly/closeOnly)
+    nestedOnly/openOnly/CloseOnly = advanced structure control, for esoteric cases (should omit nested for openOnly/closeOnly)
     attribs               = hash of other legacy <th and <td attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <th and <td attributes and values
 -->
-<#macro th class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro th class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
   <#local attribs = concatMaps(attribs, inlineAttribs)>
-  <#local open = wrapIf && !closeOnly>
-  <#local close = wrapIf && !openOnly>
+  <#local open = !(nestedOnly || closeOnly)>
+  <#local close = !(nestedOnly || openOnly)>
   <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
-<#macro td class="" id="" wrapIf=true openOnly=false closeOnly=false attribs={} inlineAttribs...>
+<#macro td class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
   <#local attribs = concatMaps(attribs, inlineAttribs)>
-  <#local open = wrapIf && !closeOnly>
-  <#local close = wrapIf && !openOnly>
+  <#local open = !(nestedOnly || closeOnly)>
+  <#local close = !(nestedOnly || openOnly)>
   <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if>></#if><#nested><#if close></td></#if>
 </#macro>
 

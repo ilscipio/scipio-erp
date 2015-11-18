@@ -127,6 +127,9 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     htmlWrap        = wrapping HTML element (ul|div|span, default: ul)
 -->
 <#macro menu args={} inlineArgs...>
+  <#if !inlineArgs?is_hash>
+    <#local inlineArgs = {}>
+  </#if>
   <#local args = toSimpleMap(args)> <#-- DEV NOTE: make sure always do this from now on here... -->
   <#local type = inlineArgs.type!args.type!"generic">
   <#local inlineItems = inlineArgs.inlineItems!args.inlineItems!false>
@@ -259,6 +262,9 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     inlineItem      = boolean, if true, generate only items, not menu container
 -->
 <#macro menuitem args={} inlineArgs...>
+  <#if !inlineArgs?is_hash>
+    <#local inlineArgs = {}>
+  </#if>
   <#local args = toSimpleMap(args)> <#-- DEV NOTE: make sure always do this from now on here... -->
   <#local type = inlineArgs.type!args.type!"generic">
   <#if inlineArgs.class??>

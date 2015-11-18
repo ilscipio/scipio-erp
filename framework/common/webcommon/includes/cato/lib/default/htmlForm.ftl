@@ -168,13 +168,17 @@ An HTML form element.
     attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
     inlineAttribs       = other attributes for HTML <form> element
 -->
-<#macro form type="input" name="" id="" class="" attribs={} openOnly=false closeOnly=false wrapIf=true inlineAttribs...>
+<#macro form type="input" name="" id="" class="" openOnly=false closeOnly=false wrapIf=true attribs={} inlineAttribs...>
+  <#if !inlineAttribs?is_hash>
+    <#local inlineAttribs = {}>
+  </#if>
+  <#local attribs = toSimpleMap(attribs)> <#-- DEV NOTE: make sure always do this from now on here... -->
   <#local open = wrapIf && !closeOnly>
   <#local close = wrapIf && !openOnly>
   <#if open>
     <#local formInfo = {"type":type, "name":name, "id":id}>
     <#local dummy = pushRequestStack("catoCurrentFormInfo", formInfo)>
-    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "name", "id"]/></#if><#if inlineAttribs?has_content><@elemAttribStr attribs=inlineAttribs /></#if>>
+    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@elemAttribStr attribs=concatMaps(attribs, inlineAttribs) exclude=["class", "name", "id"]/></#if>>
   </#if>
       <#nested>
   <#if close>

@@ -475,14 +475,14 @@ under the License.
         <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
         <field name="applyAction"  title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action}">
-            <submit button-type="button"/>
+            <submit button-type="button" />
         </field>
     </form>
 
     <form name="ListPaymentsNotApplied" type="list" list-name="payments" target="updateInvoiceApplication" title=""
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="false" separate-columns="true">
         <field name="invoiceId"><hidden/></field>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_default}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_default}" >
             <hyperlink target="paymentOverview" description="[${paymentId}]">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -517,7 +517,7 @@ under the License.
         <field name="percentage" widget-area-style="amount" title-area-style="align-right"><display/></field>
         <field name="datetimePerformed"><display/></field>
         <field name="removeAction" widget-style="${styles.link_action}">
-           <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceRole">
+           <hyperlink title="${uiLabelMap.CommonRemove}" description="${uiLabelMap.CommonRemove}" target="removeInvoiceRole">
                 <parameter param-name="invoiceId"/>
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>

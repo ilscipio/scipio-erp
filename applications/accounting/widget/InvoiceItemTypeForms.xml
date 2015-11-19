@@ -25,7 +25,7 @@ under the License.
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
      <form name="ListInvoiceItemType" type="list" target="updateInvoiceItemType" list-name="invoiceItemTypes"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="editInvoiceItemType">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="editInvoiceItemType" separate-columns="true">
         <field name="invoiceItemTypeId"><display/></field>
         <field name="description"><display/></field>
         <field name="defaultGlAccountId" title="${uiLabelMap.ProductGlAccount}" parameter-name="defaultGlAccountId">

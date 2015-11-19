@@ -794,7 +794,7 @@
     </menu>
 
     <menu name="InvoiceTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="find" title="${uiLabelMap.CommonFind}">
+        <menu-item name="find" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingInvoices}">
             <link target="findInvoices" />
         </menu-item>
         <menu-item name="invoiceOverview" title="${uiLabelMap.AccountingInvoiceOverview}">
@@ -807,7 +807,7 @@
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>
-        <menu-item name="listInvoiceItems" title="${uiLabelMap.CommonItems}">
+        <menu-item name="listInvoiceItems" title="${uiLabelMap.AccountingInvoice} ${uiLabelMap.CommonItems}">
             <condition>
                 <and>
                     <not>
@@ -839,7 +839,7 @@
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>
-        <menu-item name="invoiceRoles" title="${uiLabelMap.CommonParties}">
+        <menu-item name="invoiceRoles" title="${uiLabelMap.PartyRoles}">
             <condition>
                 <and>
                     <not>
@@ -851,7 +851,7 @@
                 <parameter param-name="invoiceId" from-field="invoice.invoiceId" />
             </link>
         </menu-item>
-        <menu-item name="editInvoiceApplications" title="${uiLabelMap.AccountingApplications}">
+        <menu-item name="editInvoiceApplications" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingApplications}">
             <condition>
                 <and>
                     <not>

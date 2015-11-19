@@ -55,7 +55,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="" fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_checkbox_widget items=items id=id class=className alert=alert allChecked=allChecked currentValue=currentValue name=name event=event action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank />
+  <@field_checkbox_widget items=items id=id class=className alert=alert allChecked=allChecked currentValue=currentValue name=name event=event action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true />
   <#-- old
   <#list items as item>
     <div class="switch small">
@@ -72,9 +72,9 @@ not "current" context (too intrusive in current renderer design). still relies o
   -->
 </#macro>
 
-<#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action tooltip="" fieldTitleBlank=false>
+<#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action tooltip="" fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_radio_widget items=items class=className alert=alert currentValue=currentValue defaultValue=noCurrentSelectedKey name=name event=event action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank />
+  <@field_radio_widget items=items class=className alert=alert currentValue=currentValue defaultValue=noCurrentSelectedKey name=name event=event action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true />
 </#macro>
 
 <#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false id="">

@@ -41,8 +41,8 @@ under the License.
 </#macro>
 
 <#macro renderTooltip tooltip tooltipStyle></#macro>
-<#macro renderCheckField items className alert id allChecked currentValue name event action></#macro>
-<#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event ation></#macro>
+<#macro renderCheckField items className alert id allChecked currentValue name event action fieldType="" fieldTitleBlank=false></#macro>
+<#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action fieldType="" fieldTitleBlank=false></#macro>
 
 <#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false id=""></#macro>
 <#macro renderResetField className alert name title></#macro>

@@ -241,19 +241,11 @@ function submitFindForm(val){
           <@field type="input" label="${uiLabelMap.OrderAddressVerification}" name="gatewayAvsResult" value="${requestParameters.gatewayAvsResult!}"/>
           <@field type="input" label="${uiLabelMap.OrderScore}" name="gatewayScoreResult" value="${requestParameters.gatewayScoreResult!}"/>
           
-        <@fields type="default-nolabels"> <#-- no label area for these -->
-          <@row collapse=false>
-              <@cell columns=4>
-                  <@field type="checkbox" name="filterInventoryProblems" currentValue="Y" checked=requestParameters.filterInventoryProblems!"N" label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterInventoryProblems}"/> 
-              </@cell>
-              <@cell columns=4>
-                  <@field type="checkbox" name="filterPOsOpenPastTheirETA" currentValue="Y" checked=requestParameters.filterPOsOpenPastTheirETA!"N" label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsOpenPastTheirETA}"/> 
-              </@cell>
-              <@cell columns=4>
-                  <@field type="checkbox" name="filterPOsWithRejectedItems" currentValue="Y" checked=requestParameters.filterPOsWithRejectedItems!"N" label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsWithRejectedItems}"/> 
-              </@cell>
-          </@row>
-        </@fields>
+          <@field type="generic" label="${uiLabelMap.CommonFilter}" inlineItems=false> <#-- NOTE: inlineItems setting propagates to child elements here -->
+              <@field type="checkbox" name="filterInventoryProblems" value="Y" checked=requestParameters.filterInventoryProblems!"N" label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterInventoryProblems}" /> 
+              <@field type="checkbox" name="filterPOsOpenPastTheirETA" value="Y" checked=requestParameters.filterPOsOpenPastTheirETA!"N" label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsOpenPastTheirETA}" /> 
+              <@field type="checkbox" name="filterPOsWithRejectedItems" value="Y" checked=requestParameters.filterPOsWithRejectedItems!"N" label="${uiLabelMap.OrderFilterOn} ${uiLabelMap.OrderFilterPOs} ${uiLabelMap.OrderFilterPOsWithRejectedItems}" /> 
+          </@field>
 
           <@field type="select" label="${uiLabelMap.OrderShipToCountry}" name="countryGeoId">
               <#if requestParameters.countryGeoId?has_content>

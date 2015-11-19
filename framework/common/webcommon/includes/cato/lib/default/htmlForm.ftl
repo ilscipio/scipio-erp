@@ -402,16 +402,17 @@ or even multiple per fieldset.
                       NOTE: This is weaker than labelArea arg of @field macro, but stronger than other args of this macro.
     labelAreaExceptions = string of space-delimited @field type names or list of names, defaults specified in styles variables based on fields type  
     formName            = the form name the child fields should assume  
-    formId              = the form ID the child fields should assume             
+    formId              = the form ID the child fields should assume   
+    inlineItems     = change default for @field inlineItems parameter (true/false)     
 -->
-<#macro fields type="default" labelType="" labelLayout="" labelArea="" labelAreaExceptions=true formName="" formId="">
-    <#local fieldsInfo = makeFieldsInfo(type, labelType, labelLayout, labelArea, labelAreaExceptions, formName, formId)>
+<#macro fields type="default" labelType="" labelLayout="" labelArea="" labelAreaExceptions=true formName="" formId="" inlineItems="">
+    <#local fieldsInfo = makeFieldsInfo(type, labelType, labelLayout, labelArea, labelAreaExceptions, formName, formId, inlineItems)>
     <#local dummy = pushRequestStack("catoCurrentFieldsInfo", fieldsInfo)>
     <#nested>
     <#local dummy = popRequestStack("catoCurrentFieldsInfo")>
 </#macro>
 
-<#function makeFieldsInfo type labelType="" labelLayout="" labelArea="" labelAreaExceptions=true formName="" formId="">
+<#function makeFieldsInfo type labelType="" labelLayout="" labelArea="" labelAreaExceptions=true formName="" formId="" inlineItems="">
     <#local stylesType = type?replace("-","_")>
     <#local stylesPrefix = "fields_" + stylesType + "_">
     <#if !styles[stylesPrefix + "labeltype"]??>
@@ -450,7 +451,8 @@ or even multiple per fieldset.
       </#if>
     </#if>
     <#return {"type":type, "labelType":labelType, "labelLayout":labelLayout, 
-        "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, "formName":formName, "formId":formId}>
+        "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, "formName":formName, "formId":formId,
+        "inlineItems":inlineItems}>
 </#function>
 
 <#-- 
@@ -549,14 +551,14 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     * select *
     multiple        = allow multiple select true/false
     items           = if specified, generates options from list of maps; 
-                      list of {"key": value, "description": label, "selected": true/false} maps
+                      list of {"value": (value), "description": (label), "selected": (true/false)} maps
                       NOTE: selected is currently ignored for non-multiple (uses currentValue instead)
                       if items list not specified, manual #nested content options can be specified instead.
     allowEmpty      = default false; if true, will add an empty option
     currentValue    = currently selected value/key (only for non-multiple)
     currentFirst    = default false; if true (and multiple false), will add a "first" item with current value selected, if there is one
     currentDescription    = if currentFirst true, this is used as first's description if specified
-    noCurrentSelectedKey  = optional selected option value for when none otherwise selected
+    defaultValue          = optional selected option value for when none otherwise selected
     manualItemsOnly = optional boolean hint caller may specify to say that this select should
                       contain exclusively manually generated items. 
                       by default, this is based on whether the items arg is specified or not.
@@ -580,21 +582,38 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     formName        = The name of the form that contains the lookup field.
     fieldForName    = Contains the lookup window form name.
     
-    * Checkbox *
+    * Checkbox (single mode) *
     value           = Y/N
-    checked         = checked (true/false)
+    currentValue    = current value, used to check if should be checked
+    checked         = override checked state (true/false/"") - if set to boolean, overrides currentValue logic
+    
+    * Checkbox (multi mode) *
+    items           = if specified, multiple-items checkbox field generated; 
+                      list of {"value": (value), "description": (label), "tooltip": (tooltip), "event": "onclick", "action": (event-js), "checked": (true/false)} maps
+                      NOTE: use of "checked" attrib is discouraged; is a manual override (both true and false override); prefer setting currentValue on macro
+                      DEV NOTE: the names in this map cannot be changed easily; legacy ofbiz macro support
+    inlineItems     = if true (default), radio items are many per line; if false, one per line
+                      note this takes effect whether single-item or multiple-item radio.
+                      the default can be overridden on a parent @field or @fields element.
+    currentValue    = current value, determines checked; this can be single-value string or sequence of value strings
+    defaultValue    = default value, determines checked (convenience option; used when currentValue empty; can also be sequence)
+    allChecked      = true/false/"", convenience option (explicit false sets all to unchecked; leave empty "" for no setting)
     
     * radio (single mode) *
     value           = Y/N, only used if single radio item mode (items not specified)
-    checked         = determines if checked (true/false)
+    currentValue    = current value, used to check if should be checked
+    checked         = override checked state (true/false/"") - if set to boolean, overrides currentValue logic
     
     * radio (multi mode) *
     items           = if specified, multiple-items radio generated; 
-                      list of {"key": value, "description": label, "event": html-dom-event-attrib, "action": event-js} maps
+                      list of {"value": (value), "description": (label), "tooltip": (tooltip), "event": "onclick", "action": (event-js), "checked": (true/false)} maps
+                      NOTE: use of "checked" attrib is discouraged; is a manual override (both true and false override); prefer setting currentValue on macro
+                      DEV NOTE: the names in this map cannot be changed easily; legacy ofbiz macro support
     inlineItems     = if true (default), radio items are many per line; if false, one per line
                       note this takes effect whether single-item or multiple-item radio.
+                      the default can be overridden on a parent @field or @fields element.
     currentValue    = current value, determines checked
-    defaultValue    = default value, determines checked
+    defaultValue    = default value, determines checked (convenience option; used when currentValue empty)
     
     * file *
     autocomplete    = true/false, default true (false to prevent)
@@ -629,12 +648,12 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 -->
 <#macro field type="" label="" labelDetail="" name="" value="" valueType="" currentValue="" defaultValue="" class="" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
-        cols="50" dateType="date" multiple="" checked=false collapse="" tooltip="" columns="" norows=false nocells=false container=""
+        cols="50" dateType="date" multiple="" checked="" collapse="" tooltip="" columns="" norows=false nocells=false container=""
         fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=false autocomplete=true progressArgs={} progressOptions={} 
         labelType="" labelLayout="" labelArea="" description=""
         submitType="input" text="" href="" src="" confirmMsg="" inlineItems="" 
-        selected=false allowEmpty=false currentFirst=false currentDescription="" noCurrentSelectedKey=""
-        manualItems="" manualItemsOnly="" asmSelectArgs={} title="">
+        selected=false allowEmpty=false currentFirst=false currentDescription=""
+        manualItems="" manualItemsOnly="" asmSelectArgs={} title="" allChecked="">
   <#if !type?has_content>
     <#local type = "generic">
   </#if>
@@ -670,16 +689,21 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   
   <#local formInfo = readRequestStack("catoCurrentFormInfo")!{}>
   
-  <#-- this field's info (popped at end) -->
-  <#local dummy = pushRequestStack("catoCurrentFieldInfo", 
-      {"type":type})>
+  <#-- get custom default for inlineItems -->
+  <#if !inlineItems?has_content>
+    <#if parentFieldInfo.inlineItems?has_content>
+      <#local inlineItems = parentFieldInfo.inlineItems>
+    <#elseif fieldsInfo.inlineItems?has_content>
+      <#local inlineItems = fieldsInfo.inlineItems>
+    </#if>
+  </#if>
   
   <#-- get form name and id -->
   <#if !formName?has_content>
     <#if fieldsInfo.formName?has_content>
       <#local formName = fieldsInfo.formName>
     <#elseif formInfo.name?has_content>
-      <#local formName = formInfo.formName>
+      <#local formName = formInfo.name>
     </#if>
   </#if>
   <#if !formId?has_content>
@@ -689,6 +713,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
       <#local formId = formInfo.id>
     </#if>
   </#if>
+
   
   <#-- fieldIdNum will always increment throughout the page 
        now stored in request attributes so survived screens.render though still accessible as a global -->
@@ -771,6 +796,11 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#local useLabelArea = (labelArea?is_boolean && labelArea == true) || 
            (!(labelArea?is_boolean && labelArea == false) && (labelAreaDefault))>
   
+  
+  <#-- push this field's info (popped at end) -->
+  <#local dummy = pushRequestStack("catoCurrentFieldInfo", 
+      {"type":type, "inlineItems":inlineItems})>
+  
   <#-- main markup begin -->
   <#local labelAreaContent = "">
   <#local inlineLabel = "">
@@ -780,6 +810,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
       <#-- if there's no label area, label was not used up, so label arg becomes an inline label (used on radio and checkbox) -->
       <#local inlineLabel = label>
   </#if>
+      
   <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize labelArea=useLabelArea labelType=effLabelType labelLayout=effLabelLayout labelAreaContent=labelAreaContent collapse=collapse norows=norows nocells=nocells container=container>
     <#switch type>
       <#case "input">
@@ -790,7 +821,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                               textSize=size 
                               maxlength=maxlength 
                               id=id 
-                              event="onClick" 
+                              event="onclick" 
                               action=onClick 
                               disabled=disabled
                               readonly=readonly 
@@ -859,7 +890,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                                 formName=formName
                                 formId=formId
                                 otherFieldName="" 
-                                event="onClick" 
+                                event="onclick" 
                                 action=onClick  
                                 size=size
                                 currentFirst=currentFirst
@@ -872,7 +903,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                                 otherFieldSize=0 
                                 inlineSelected=!currentFirst
                                 ajaxEnabled=false
-                                noCurrentSelectedKey=noCurrentSelectedKey
+                                defaultValue=defaultValue
                                 ajaxOptions=""
                                 frequency=""
                                 minChars=""
@@ -895,22 +926,50 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         <#break>
       <#case "lookup">
         <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class alert="false" value=value 
-          size=size?string maxlength=maxlength id=id event="onClick" action=onClick />
+          size=size?string maxlength=maxlength id=id event="onclick" action=onClick />
       <#break>
       <#case "checkbox">
-        <#-- TODO: multiple support -->
-        <@field_checkbox_widget id=id currentValue=value checked=checked name=name description=inlineLabel action=action />
+        <#if !items?is_sequence>
+          <#if !checked?is_boolean>
+            <#if checked?has_content>
+              <#if checked == "true" || checked == "Y" || checked == "checked">
+                <#local checked = true>
+              <#else>
+                <#local checked = false>
+              </#if>
+            <#else>
+              <#local checked = "">
+            </#if>
+          </#if>
+          <#local items=[{"value":value, "description":inlineLabel, "tooltip":tooltip, "event":"onclick", "action":onClick, "checked":checked}]/>
+          <@field_checkbox_widget multiMode=false items=items inlineItems=inlineItems id=id class=class alert=alert 
+            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name event="" action="" tooltip="" />
+        <#else>
+          <@field_checkbox_widget multiMode=true items=items inlineItems=inlineItems id=id class=class alert=alert 
+            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name event="onclick" action=onClick tooltip=tooltip />
+        </#if>
         <#break>
       <#case "radio">
         <#if !items?is_sequence>
-            <#-- single radio button item mode -->
-            <#local items=[{"key":value, "description":inlineLabel}]/>
-            <@field_radio_widget multiMode=false items=items inlineItems=inlineItems class=class alert=alert 
-              currentValue=(checked?string(value,"")) noCurrentSelectedKey="" name=name event="" action="" tooltip=tooltip />
+          <#-- single radio button item mode -->
+          <#if !checked?is_boolean>
+            <#if checked?has_content>
+              <#if checked == "true" || checked == "Y" || checked == "checked">
+                <#local checked = true>
+              <#else>
+                <#local checked = false>
+              </#if>
+            <#else>
+              <#local checked = "">
+            </#if>
+          </#if>
+          <#local items=[{"key":value, "description":inlineLabel, "tooltip":tooltip, "event":"onclick", "action":onClick, "checked":checked}]/>
+          <@field_radio_widget multiMode=false items=items inlineItems=inlineItems class=class alert=alert 
+            currentValue=currentValue defaultValue=defaultValue name=name event="" action="" tooltip="" />
         <#else>
-            <#-- multi radio button item mode -->
-            <@field_radio_widget multiMode=true items=items inlineItems=inlineItems class=class alert=alert 
-              currentValue=currentValue noCurrentSelectedKey=defaultValue name=name event="" action="" tooltip=tooltip />
+          <#-- multi radio button item mode -->
+          <@field_radio_widget multiMode=true items=items inlineItems=inlineItems class=class alert=alert 
+            currentValue=currentValue defaultValue=defaultValue name=name event="onclick" action=onClick tooltip=tooltip />
         </#if>
         <#break>
       <#case "file">
@@ -949,7 +1008,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         <@field_submitarea_widget progressArgs=progressArgs progressOptions=progressOptions><#nested></@field_submitarea_widget>
         <#break>
       <#case "hidden">                    
-        <@field_hidden_widget name=name value=value id=id event="onClick" action=onClick />
+        <@field_hidden_widget name=name value=value id=id event="onclick" action=onClick />
         <#break>        
       <#case "display">
         <#-- TODO? may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 

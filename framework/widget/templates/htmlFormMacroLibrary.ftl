@@ -50,16 +50,13 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderDropDownField name className alert id multiple formName otherFieldName size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false collapse=false fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_select_widget name=name class=className alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size currentFirst=firstInList currentValue=currentValue currentDescription=explicitDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize dDFCurrent=dDFCurrent inlineSelected=(dDFCurrent?has_content && "selected" == dDFCurrent) noCurrentSelectedKey=noCurrentSelectedKey ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars ignoreCase=ignoreCase fullSearch=fullSearch event=event action=action ajaxEnabled=ajaxEnabled tooltip=tooltip manualItems=manualItems manualItemsOnly=manualItemsOnly collapse=collapse fieldTitleBlank=fieldTitleBlank />
-</#macro>
-
-<#-- FIXME: this macro was added in cato; should remove; should merge with renderCheckField and field_checkbox_widget -->
-<#macro renderCheckBox id="" checked=false currentValue="N" name="" action="" tooltip="" fieldType="" fieldTitleBlank=false>
-  <#-- delegate to cato libs -->
-  <@field_checkbox_widget id=id checked=checked currentValue=currentValue name=name action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank />
+  <@field_select_widget name=name class=className alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size currentFirst=firstInList currentValue=currentValue currentDescription=explicitDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize dDFCurrent=dDFCurrent inlineSelected=(dDFCurrent?has_content && "selected" == dDFCurrent) defaultValue=noCurrentSelectedKey ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars ignoreCase=ignoreCase fullSearch=fullSearch event=event action=action ajaxEnabled=ajaxEnabled tooltip=tooltip manualItems=manualItems manualItemsOnly=manualItemsOnly collapse=collapse fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="" fieldType="" fieldTitleBlank=false>
+  <#-- delegate to cato libs -->
+  <@field_checkbox_widget items=items id=id class=className alert=alert allChecked=allChecked currentValue=currentValue name=name event=event action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank />
+  <#-- old
   <#list items as item>
     <div class="switch small">
     <span <@renderClass className alert />><#rt/>
@@ -72,11 +69,12 @@ not "current" context (too intrusive in current renderer design). still relies o
     </span>
     </div>
   </#list>
+  -->
 </#macro>
 
-<#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action tooltip="">
+<#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action tooltip="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_radio_widget items=items class=className alert=alert currentValue=currentValue noCurrentSelectedKey=noCurrentSelectedKey name=name event=event action=action tooltip=tooltip />
+  <@field_radio_widget items=items class=className alert=alert currentValue=currentValue defaultValue=noCurrentSelectedKey name=name event=event action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false id="">

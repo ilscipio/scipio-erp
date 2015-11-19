@@ -264,7 +264,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- migrated from @renderDropDownField form widget macro -->
 <#macro field_select_widget name="" class="" alert="" id="" multiple="" formName="" formId="" otherFieldName="" size="" currentFirst="" 
     currentValue="" currentDescription="" allowEmpty="" options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
-    dDFCurrent="" noCurrentSelectedKey="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
+    dDFCurrent="" defaultValue="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
     ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false title="" tooltip="" description="" manualItems=false manualItemsOnly=false 
     collapse=false fieldTitleBlank=false inlineSelected=true asmSelectArgs={}>
   <#if !multiple?is_boolean>
@@ -317,7 +317,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   </#if>
   <@field_select_markup_widget name=name class=class alert=alert id=id multiple=multiple formName=formName formId=formId otherFieldName=otherFieldName size=size currentFirst=currentFirst 
     currentValue=currentValue currentDescription=currentDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize 
-    dDFCurrent=dDFCurrent noCurrentSelectedKey=noCurrentSelectedKey ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars 
+    dDFCurrent=dDFCurrent defaultValue=defaultValue ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars 
     ignoreCase=ignoreCase fullSearch=fullSearch event=event action=action ajaxEnabled=ajaxEnabled title=title tooltip=tooltip description=description manualItems=manualItems manualItemsOnly=manualItemsOnly 
     collapse=collapse fieldTitleBlank=fieldTitleBlank inlineSelected=inlineSelected asmSelectArgs=asmSelectArgs><#nested></@field_select_markup_widget>
 </#macro>
@@ -325,7 +325,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- field markup - theme override -->
 <#macro field_select_markup_widget name="" class="" alert="" id="" multiple=false formName="" formId="" otherFieldName="" size="" currentFirst=false 
     currentValue="" currentDescription="" allowEmpty=true options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
-    dDFCurrent="" noCurrentSelectedKey="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
+    dDFCurrent="" defaultValue="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
     ignoreCase="" fullSearch="" event="" action="" ajaxEnabled=false title="" tooltip="" description="" manualItems=false manualItemsOnly=false 
     collapse=false fieldTitleBlank=false inlineSelected=true asmSelectArgs={} extraArgs...>
 
@@ -344,11 +344,13 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
         <option value="">&nbsp;</option>
       </#if>
       <#list options as item>
+        <#-- Cato: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
+        <#local itemValue = item.value!item.key!>
         <#local itemMarkedSelected = item.selected?? && ((item.selected?is_boolean && item.selected == true) || (!item.selected?is_boolean && item.selected?has_content))>
         <#if multiple>
-          <option<#if currentValue?has_content && itemMarkedSelected> selected="selected"<#elseif !currentValue?has_content && noCurrentSelectedKey?has_content && noCurrentSelectedKey == (item.key!"")> selected="selected"</#if> value="${item.key}">${item.description!}</option><#rt/>
+          <option<#if currentValue?has_content && itemMarkedSelected> selected="selected"<#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${itemValue}">${item.description!}</option><#rt/>
         <#else>
-          <option<#if currentValue?has_content && currentValue == (item.key!"") && inlineSelected> selected="selected"<#elseif !currentValue?has_content && noCurrentSelectedKey?has_content && noCurrentSelectedKey == (item.key!"")> selected="selected"</#if> value="${item.key!}">${item.description!}</option><#rt/>
+          <option<#if currentValue?has_content && currentValue == itemValue && inlineSelected> selected="selected"<#elseif !currentValue?has_content && defaultValue?has_content && defaultValue == itemValue> selected="selected"</#if> value="${itemValue}">${item.description!}</option><#rt/>
         </#if>
       </#list>
     </#if>
@@ -542,45 +544,103 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   </#if>
 </#macro>
 
-<#-- migrated from @renderCheckBox form widget macro 
+<#-- migrated from @renderCheckField (@renderCheckBox) form widget macro 
     FIXME: this should be merged with renderCheckField, this was never an official ofbiz macro... -->
-<#macro field_checkbox_widget id="" checked=false currentValue="N" name="" description="" action="" tooltip="" fieldTitleBlank=false>
-  <@field_checkbox_markup_widget id=id checked=checked currentValue=currentValue name=name description=description action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank><#nested></@field_checkbox_markup_widget>
-</#macro>
-
-<#-- field markup - theme override -->
-<#macro field_checkbox_markup_widget id="" checked=false currentValue="N" name="" description="" action="" tooltip="" fieldTitleBlank=false extraArgs...>
-  <div class="switch small">
-    <#local class = "">
-    <#local alert = false>
-    <#if tooltip?has_content>
-      <#local class = addClassArg(class, "has-tip tip-right")>
-    </#if>
-    <input type="checkbox"<@fieldClassAttribStr class=class alert=alert /> id="<#if id?has_content>${id}<#else>${name!}</#if>"<#rt/>
-      <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
-      <#if (checked?is_boolean && checked) || (checked?is_string && checked == "Y")> checked="checked"
-      <#elseif currentValue?has_content && currentValue=="Y"> checked="checked"</#if> 
-      name="${name!""?html}" value="${currentValue!}"<#if action?has_content> onClick="${action}"</#if>/><#rt/>
-    <label<#if id?has_content> for="${id}"</#if>></label>
-    <#-- FIXME?: this explodes when put in <label> above... no idea why... -->
-    <#if description?has_content>${description}</#if>
-  </div>
-</#macro>
-
-<#-- migrated from @renderRadioField form widget macro -->
-<#macro field_radio_widget items="" class="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="" multiMode=true inlineItems="">
+<#macro field_checkbox_widget items=[] id="" class="" alert="" allChecked="" currentValue="" defaultValue="" name="" event="" action="" tooltip="" fieldTitleBlank=false multiMode=true inlineItems="">
+  <#if !items?has_content>
+    <#local items = []> <#-- ensure list -->
+  </#if>
   <#if !inlineItems?is_boolean>
     <#if inlineItems?has_content>
       <#-- do conversion to boolean so markup doesn't have to; but don't impose a default -->
       <#local inlineItems = inlineItems?boolean>
     </#if>
   </#if>
-  <@field_radio_markup_widget items=items class=class alert=alert currentValue=currentValue noCurrentSelectedKey=noCurrentSelectedKey name=name 
-    event=event action=action tooltip=tooltip multiMode=multiMode inlineItems=inlineItems><#nested></@field_radio_markup_widget>
+  <#if !allChecked?is_boolean>
+    <#if allChecked?has_content>
+      <#if allChecked == "Y" || allChecked == "true" || allChecked == "checked">
+        <#local allChecked = true>
+      <#else>
+        <#local allChecked = false>
+      </#if>
+    <#else>
+      <#local allChecked = "">
+    </#if>
+  </#if>
+  <#if currentValue?has_content>
+    <#if !currentValue?is_sequence>
+      <#local currentValue = [currentValue]> <#-- supports string arg for legacy -->
+    </#if>
+  <#else>
+    <#local currentValue = []>
+  </#if>
+  <#if defaultValue?has_content>
+    <#if !defaultValue?is_sequence>
+      <#local defaultValue = [defaultValue]> <#-- supports string arg for legacy -->
+    </#if>
+  <#else>
+    <#local defaultValue = []>
+  </#if>
+  <@field_checkbox_markup_widget items=items id=id class=class alert=alert allChecked=allChecked 
+    currentValue=currentValue defaultValue=defaultValue name=name event=event action=action tooltip=tooltip multiMode=multiMode fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems><#nested></@field_checkbox_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_radio_markup_widget items="" class="" alert="" currentValue="" noCurrentSelectedKey="" name="" event="" action="" tooltip="" multiMode=true inlineItems="" extraArgs...>
+<#macro field_checkbox_markup_widget items=[] id="" class="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" event="" action="" tooltip="" fieldTitleBlank=false multiMode=true inlineItems="" extraArgs...>
+  <#if !inlineItems?is_boolean>
+    <#local inlineItems = true>
+  </#if>
+
+  <#if multiMode>
+    <div<@fieldClassAttribStr class=class alert=alert />>
+    <#local class = ""> <#-- in multi mode, classes only on parent for now (?) -->
+  </#if>
+  <#list items as item>
+    <#local itemValue = item.value!"">
+    <#if inlineItems>
+      <#local class = addClassArg(class, "checkbox-item-inline")>
+    <#else>
+      <#local class = addClassArg(class, "checkbox-item-noninline")>
+    </#if>
+    <#local class = addClassArgDefault(class, "${styles.switch} ${styles.small}")>
+    <span<@fieldClassAttribStr class=class alert=alert />>
+      <#local class = "">
+      <#local alert = false>
+      <#if tooltip?has_content>
+        <#local class = addClassArg(class, "has-tip tip-right")>
+      </#if>
+      <input type="checkbox"<#if (item_index == 0) && id?has_content> id="${id}"</#if><#rt/>
+        <#if item.tooltip?has_content || tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="<#if item.tooltip?has_content>${item.tooltip}<#else>${tooltip!}</#if>"</#if><#rt/>
+        <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif allChecked?has_content><#if allChecked> checked="checked"</#if>
+        <#elseif currentValue?has_content && currentValue?seq_contains(itemValue)> checked="checked"
+        <#elseif defaultValue?has_content && defaultValue?seq_contains(itemValue)> checked="checked"</#if> 
+        name="${name?html}" value="${itemValue?html}"
+        <#if item.event?has_content && item.action?has_content> ${item.event}="${item.action}"<#elseif event?has_content && action?has_content> ${event}="${action}"</#if>/><#rt/>
+      <label<#if id?has_content> for="${id}"</#if>></label>
+      <#-- FIXME?: description destroys field if put inside <label> above... also <label> has to be separate from input (not parent)... ? -->
+      <#if item.description?has_content><span class="checkbox-label-local">${item.description}</span></#if>
+      <br class="checkbox-item-separator" /> <#-- controlled via css with display:none; TODO? maybe there's a better way -->
+    </span>
+  </#list>
+  <#if multiMode>
+    </div>
+  </#if>
+</#macro>
+
+<#-- migrated from @renderRadioField form widget macro -->
+<#macro field_radio_widget items="" class="" alert="" currentValue="" defaultValue="" name="" event="" action="" tooltip="" multiMode=true inlineItems="" fieldTitleBlank=false>
+  <#if !inlineItems?is_boolean>
+    <#if inlineItems?has_content>
+      <#-- do conversion to boolean so markup doesn't have to; but don't impose a default -->
+      <#local inlineItems = inlineItems?boolean>
+    </#if>
+  </#if>
+  <@field_radio_markup_widget items=items class=class alert=alert currentValue=currentValue defaultValue=defaultValue name=name 
+    event=event action=action tooltip=tooltip multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank><#nested></@field_radio_markup_widget>
+</#macro>
+
+<#-- field markup - theme override -->
+<#macro field_radio_markup_widget items="" class="" alert="" currentValue="" defaultValue="" name="" event="" action="" tooltip="" multiMode=true inlineItems="" fieldTitleBlank=false extraArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -598,12 +658,14 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#local class = addClassArg(class, "has-tip tip-right")>
   </#if>
   <#list items as item>
+    <#-- Cato: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
+    <#local itemValue = item.value!item.key!>
     <span<@fieldClassAttribStr class=class alert=alert />><#rt/>
-      <input type="radio"<#if currentValue?has_content><#if currentValue==item.key> checked="checked"</#if>
-        <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
-        <#elseif noCurrentSelectedKey?has_content && noCurrentSelectedKey == item.key> checked="checked"</#if> 
-        name="${name!""?html}" value="${item.key!""?html}"<#if item.event?has_content> ${item.event}="${item.action!}"<#elseif event?has_content> ${event}="${action!}"</#if>/><#rt/>
-      ${item.description}
+      <input type="radio"<#if item.tooltip?has_content || tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="<#if item.tooltip?has_content>${item.tooltip}<#else>${tooltip!}</#if>"</#if><#rt/>
+        <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif currentValue?has_content><#if currentValue==itemValue> checked="checked"</#if>
+        <#elseif defaultValue?has_content && defaultValue == itemValue> checked="checked"</#if> 
+        name="${name?html}" value="${itemValue!""?html}"<#if item.event?has_content && item.action?has_content> ${item.event}="${item.action}"<#elseif event?has_content && action?has_content> ${event}="${action}"</#if>/><#rt/>
+      <#if item.description?has_content><span class="radio-label-local">${item.description}</span></#if>
       <br class="radio-item-separator" /> <#-- controlled via css with display:none; TODO? maybe there's a better way -->
     </span>
   </#list>

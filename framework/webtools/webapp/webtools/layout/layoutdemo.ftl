@@ -438,19 +438,44 @@
   <#-- TODO: submitarea -> submit (but not to remove submitarea; still important) -->
 
   <@section title="Default form fields (with label area)">
+    <@form name="form1">
     <@fields type="default"> <#-- note: @fields currently optional for type="default"-->
       <@field type="input" name="input1" label="Input 1" />
       <@field type="input" name="input2" label="Input 2" />
       <@field type="display">Display value</@field>
       <@field type="input" name="input3" label="Input 3" />
+
       <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
-      <@field type="checkbox" name="checkbox1" label="Checkbox 1" value="Y" />
+      <@field type="radio" name="radio2" label="Radio 2" value="Y" checked=true/>
       <#assign items = [
-        {"key":"val1", "description":"Value 1"},
-        {"key":"val2", "description":"Value 2"},
-        {"key":"val3", "description":"Value 3"},
-        {"key":"val4", "description":"Value 4"},
-        {"key":"val5", "description":"Value 5"}
+        {"value":"val1", "description":"Option 1"}
+        {"value":"val2", "description":"Option 2"}
+        {"value":"val3", "description":"Option 3"}
+      ]>
+      <@field type="radio" name="radio3" label="Radio 3 (multi)" items=items currentValue="val1"/>
+      <@field type="radio" name="radio4" label="Radio 4" value="Y" currentValue="Y" />
+      <@field type="radio" name="radio5" label="Radio 5" value="Y" currentValue="N" />
+      <@field type="radio" name="radio6" label="Radio 6" value="Y" defaultValue="Y" />
+      <@field type="radio" name="radio7" label="Radio 7" value="Y" defaultValue="N" />
+      <@field type="checkbox" name="checkbox1" label="Checkbox 1" value="Y" />
+      <@field type="checkbox" name="checkbox2" label="Checkbox 2" value="Y" checked=true/>
+      <#assign items = [
+        {"value":"val1", "description":"Option 1"}
+        {"value":"val2", "description":"Option 2"}
+        {"value":"val3", "description":"Option 3"}
+      ]>
+      <@field type="checkbox" name="checkbox3" label="Checkbox 3 (multi)" items=items currentValue=["val2", "val3"]/>
+      <@field type="checkbox" name="checkbox4" label="Checkbox 4" value="Y" currentValue="Y" />
+      <@field type="checkbox" name="checkbox5" label="Checkbox 5" value="Y" currentValue="N" />
+      <@field type="checkbox" name="checkbox6" label="Checkbox 6" value="Y" defaultValue="Y" />
+      <@field type="checkbox" name="checkbox7" label="Checkbox 7" value="Y" defaultValue="N" />
+
+      <#assign items = [
+        {"value":"val1", "description":"Value 1"},
+        {"value":"val2", "description":"Value 2"},
+        {"value":"val3", "description":"Value 3"},
+        {"value":"val4", "description":"Value 4"},
+        {"value":"val5", "description":"Value 5"}
       ]>
       <@field type="select" items=items name="select1" label="Select 1" currentValue="val2" />
       <@field type="select" items=items name="select1" label="Select 2" currentValue="val2" currentFirst=true currentDescription="THE FIRST"/>
@@ -458,11 +483,11 @@
       <@field type="select" items=items name="select1" label="Select 3" currentValue="val2" allowEmpty=true />
       <@field type="select" items=items name="select1" label="Select 3" allowEmpty=true />
       <#assign items = [
-        {"key":"val1", "description":"Value 1"},
-        {"key":"val2", "description":"Value 2"},
-        {"key":"val3", "description":"Value 3", "selected":true},
-        {"key":"val4", "description":"Value 4"},
-        {"key":"val5", "description":"Value 5", "selected":true}
+        {"value":"val1", "description":"Value 1"},
+        {"value":"val2", "description":"Value 2"},
+        {"value":"val3", "description":"Value 3", "selected":true},
+        {"value":"val4", "description":"Value 4"},
+        {"value":"val5", "description":"Value 5", "selected":true}
       ]>
       <@field type="select" items=items name="select1" label="Select 4 (multiple)" currentValue="val3" multiple="multiple" />
       <@field type="select" items=items name="select1" label="Select 4 (multiple - asmselect - default)" currentValue="val3" multiple="multiple" asmSelectArgs={"enabled":true} title="Multiple values to choose from"/>
@@ -470,21 +495,43 @@
         asmSelectArgs={"enabled":true, "title":"Select one of these custom values", "asmSelectOptions":{"addItemTarget":"bottom", "sortable":true}}/>
       <@field type="submit" submitType="submit" text="Submit" disabled=true />
     </@fields>
+    </@form>
   </@section>
 
   <@section title="Default form fields (without label area)">
+    <@form name="form2">
     <@fields type="default-nolabels">
       <@field type="input" name="input1"/>
       <@field type="input" name="input2" />
       <@field type="display">Display value</@field>
       <@field type="input" name="input3"/>
+
       <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
+      <@field type="radio" name="radio2" label="Radio 2" value="Y" checked=true/>
+      <#assign items = [
+        {"value":"val1", "description":"Option 1"}
+        {"value":"val2", "description":"Option 2"}
+        {"value":"val3", "description":"Option 3"}
+      ]>
+      <@field type="radio" name="radio3" label="Radio 3 (multi)" items=items currentValue="val1"/>
       <@field type="checkbox" name="checkbox1" label="Checkbox 1" value="Y" />
+      <@field type="checkbox" name="checkbox2" label="Checkbox 2" value="Y" checked=true/>
+      <@field type="checkbox" name="checkbox3" label="Checkbox 3 (multi)" items=items currentValue=["val2", "val3"]/>
+      <#assign items = [
+        {"value":"val1", "description":"Value 1"},
+        {"value":"val2", "description":"Value 2"},
+        {"value":"val3", "description":"Value 3"},
+        {"value":"val4", "description":"Value 4"},
+        {"value":"val5", "description":"Value 5"}
+      ]>
+      
       <@field type="submit" submitType="button" text="Submit" disabled=true />
     </@fields>
+    </@form>
   </@section>
 
   <@section title="Default form fields (with label area) with parent/child fields">
+    <@form name="form3">
       <@field type="generic" label="Multi-fields">
         <@field type="input" name="input1"/>
         <@field type="display">Child display value</@field>
@@ -502,15 +549,17 @@
       </@field>
       <@field type="generic" label="Select many">
         <@field type="checkbox" name="checkbox1" label="Checkbox 1-a" value="val1" />
-        <@field type="checkbox" name="checkbox1" label="Checkbox 1-b" value="val2" />
+        <@field type="checkbox" name="checkbox1" label="Checkbox 1-b" value="val2" checked=true />
       </@field>
       <@field type="generic">
         <@field type="radio" name="radio2" label="Radio 2-a" value="val1" />
         <@field type="radio" name="radio2" label="Radio 2-b" value="val2" />
       </@field>
+    </@form>
   </@section>
 
   <@section title="Custom arranged form fields">
+    <@form name="form4">
     <@fields type="generic">
       <@row>
         <@cell columns=6>
@@ -545,6 +594,7 @@
         </@cell>
       </@row>          
     </@fields>
+    </@form>
   </@section>
 
 </@section>

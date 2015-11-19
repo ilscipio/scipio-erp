@@ -964,11 +964,11 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
             </#if>
           </#if>
           <#local items=[{"key":value, "description":inlineLabel, "tooltip":tooltip, "event":"onclick", "action":onClick, "checked":checked}]/>
-          <@field_radio_widget multiMode=false items=items inlineItems=inlineItems class=class alert=alert 
+          <@field_radio_widget multiMode=false items=items inlineItems=inlineItems id=id class=class alert=alert 
             currentValue=currentValue defaultValue=defaultValue name=name event="" action="" tooltip="" />
         <#else>
           <#-- multi radio button item mode -->
-          <@field_radio_widget multiMode=true items=items inlineItems=inlineItems class=class alert=alert 
+          <@field_radio_widget multiMode=true items=items inlineItems=inlineItems id=id class=class alert=alert 
             currentValue=currentValue defaultValue=defaultValue name=name event="onclick" action=onClick tooltip=tooltip />
         </#if>
         <#break>

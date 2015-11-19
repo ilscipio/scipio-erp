@@ -585,42 +585,60 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     currentValue=currentValue defaultValue=defaultValue name=name event=event action=action tooltip=tooltip multiMode=multiMode fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems><#nested></@field_checkbox_markup_widget>
 </#macro>
 
-<#-- field markup - theme override -->
+<#-- field markup - theme override 
+     FIXME: the styling for these is strange, can't get it to work no matter what -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" event="" action="" tooltip="" fieldTitleBlank=false multiMode=true inlineItems="" extraArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
 
   <#if multiMode>
-    <div<@fieldClassAttribStr class=class alert=alert />>
+    <div<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}_multi"</#if>>
     <#local class = ""> <#-- in multi mode, classes only on parent for now (?) -->
   </#if>
+
+  <#if inlineItems>
+    <#local inlineClass = "checkbox-item-inline">
+  <#else>
+    <#local inlineClass = "checkbox-item-noninline">
+  </#if>
+  <#local class = addClassArg(class, "checkbox-item")>
+  <#local class = addClassArg(class, inlineClass)>
+  <#local class = addClassArgDefault(class, "${styles.switch} ${styles.small}")>
+
+  <#-- Cato: must have id on each elem or else the foundation switches break 
+       The first item receives the exact id passed to macro because this is what original ofbiz macros expect
+       (and is logical for single items at least). -->
+  <#local currentId = id>
   <#list items as item>
     <#local itemValue = item.value!"">
-    <#if inlineItems>
-      <#local class = addClassArg(class, "checkbox-item-inline")>
-    <#else>
-      <#local class = addClassArg(class, "checkbox-item-noninline")>
+    <#local itemClass = class>
+    <#local itemAlert = alert>
+    
+    <#local inputClass = "">
+    <#local inputAlert = false>
+    <#if item.tooltip?has_content || tooltip?has_content>
+      <#local inputClass = addClassArg(inputClass, "has-tip tip-right")>
     </#if>
-    <#local class = addClassArgDefault(class, "${styles.switch} ${styles.small}")>
-    <span<@fieldClassAttribStr class=class alert=alert />>
-      <#local class = "">
-      <#local alert = false>
-      <#if tooltip?has_content>
-        <#local class = addClassArg(class, "has-tip tip-right")>
-      </#if>
-      <input type="checkbox"<#if (item_index == 0) && id?has_content> id="${id}"</#if><#rt/>
+    <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if>>
+      <input type="checkbox"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#if currentId?has_content> id="${currentId}"</#if><#rt/>
         <#if item.tooltip?has_content || tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="<#if item.tooltip?has_content>${item.tooltip}<#else>${tooltip!}</#if>"</#if><#rt/>
         <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif allChecked?has_content><#if allChecked> checked="checked"</#if>
         <#elseif currentValue?has_content && currentValue?seq_contains(itemValue)> checked="checked"
         <#elseif defaultValue?has_content && defaultValue?seq_contains(itemValue)> checked="checked"</#if> 
         name="${name?html}" value="${itemValue?html}"
         <#if item.event?has_content && item.action?has_content> ${item.event}="${item.action}"<#elseif event?has_content && action?has_content> ${event}="${action}"</#if>/><#rt/>
-      <label<#if id?has_content> for="${id}"</#if>></label>
+      <label<#if currentId?has_content> for="${currentId}"</#if>></label>
       <#-- FIXME?: description destroys field if put inside <label> above... also <label> has to be separate from input (not parent)... ? -->
       <#if item.description?has_content><span class="checkbox-label-local">${item.description}</span></#if>
-      <br class="checkbox-item-separator" /> <#-- controlled via css with display:none; TODO? maybe there's a better way -->
     </span>
+    <#local sepClass = "">
+    <#local sepClass = addClassArg(sepClass, "checkbox-item-separator")>
+    <#local sepClass = addClassArg(sepClass, inlineClass)>
+    <br<@fieldClassAttribStr class=sepClass /> /> <#-- controlled via css with display:none; TODO? maybe there's a better way -->
+    <#if id?has_content>
+      <#local currentId = id + "_" + (item_index + 2)?string>
+    </#if>
   </#list>
   <#if multiMode>
     </div>
@@ -628,46 +646,66 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 </#macro>
 
 <#-- migrated from @renderRadioField form widget macro -->
-<#macro field_radio_widget items="" class="" alert="" currentValue="" defaultValue="" name="" event="" action="" tooltip="" multiMode=true inlineItems="" fieldTitleBlank=false>
+<#macro field_radio_widget items="" id="" class="" alert="" currentValue="" defaultValue="" name="" event="" action="" tooltip="" multiMode=true inlineItems="" fieldTitleBlank=false>
   <#if !inlineItems?is_boolean>
     <#if inlineItems?has_content>
       <#-- do conversion to boolean so markup doesn't have to; but don't impose a default -->
       <#local inlineItems = inlineItems?boolean>
     </#if>
   </#if>
-  <@field_radio_markup_widget items=items class=class alert=alert currentValue=currentValue defaultValue=defaultValue name=name 
+  <@field_radio_markup_widget items=items id=id class=class alert=alert currentValue=currentValue defaultValue=defaultValue name=name 
     event=event action=action tooltip=tooltip multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank><#nested></@field_radio_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_radio_markup_widget items="" class="" alert="" currentValue="" defaultValue="" name="" event="" action="" tooltip="" multiMode=true inlineItems="" fieldTitleBlank=false extraArgs...>
+<#macro field_radio_markup_widget items="" id="" class="" alert="" currentValue="" defaultValue="" name="" event="" action="" tooltip="" multiMode=true inlineItems="" fieldTitleBlank=false extraArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
 
   <#if multiMode>
-    <div<@fieldClassAttribStr class=class alert=alert />>
+    <div<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}_multi"</#if>>
     <#local class = ""> <#-- in multi mode, classes only on parent for now (?) -->
   </#if>
   <#if inlineItems>
-    <#local class = addClassArg(class, "radio-item-inline")>
+    <#local inlineClass = "radio-item-inline">
   <#else>
-    <#local class = addClassArg(class, "radio-item-noninline")>
+    <#local inlineClass = "radio-item-noninline">
   </#if>
+
+  <#local class = addClassArg(class, "radio-item")>
+  <#local class = addClassArg(class, inlineClass)>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, "has-tip tip-right")>
   </#if>
+  <#local currentId = id>
   <#list items as item>
     <#-- Cato: NOTE: this macro must support both item.value and legacy item.key. Here they are the same thing. -->
     <#local itemValue = item.value!item.key!>
-    <span<@fieldClassAttribStr class=class alert=alert />><#rt/>
-      <input type="radio"<#if item.tooltip?has_content || tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="<#if item.tooltip?has_content>${item.tooltip}<#else>${tooltip!}</#if>"</#if><#rt/>
+    <#local itemClass = class>
+    <#local itemAlert = alert>
+    
+    <#local inputClass = "">
+    <#local inputAlert = false>
+    <#if item.tooltip?has_content || tooltip?has_content>
+      <#local inputClass = addClassArg(inputClass, "has-tip tip-right")>
+    </#if>
+    <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if>><#rt/>
+      <input type="radio"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#if currentId?has_content> id="${currentId}"</#if><#if item.tooltip?has_content || tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="<#if item.tooltip?has_content>${item.tooltip}<#else>${tooltip!}</#if>"</#if><#rt/>
         <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif currentValue?has_content><#if currentValue==itemValue> checked="checked"</#if>
         <#elseif defaultValue?has_content && defaultValue == itemValue> checked="checked"</#if> 
         name="${name?html}" value="${itemValue!""?html}"<#if item.event?has_content && item.action?has_content> ${item.event}="${item.action}"<#elseif event?has_content && action?has_content> ${event}="${action}"</#if>/><#rt/>
-      <#if item.description?has_content><span class="radio-label-local">${item.description}</span></#if>
-      <br class="radio-item-separator" /> <#-- controlled via css with display:none; TODO? maybe there's a better way -->
+      <#if item.description?has_content>
+        <label class="radio-label-local"<#if currentId?has_content> for="${currentId}"</#if>>${item.description}</span>
+      </#if>
     </span>
+    <#local sepClass = "">
+    <#local sepClass = addClassArg(sepClass, "radio-item-separator")>
+    <#local sepClass = addClassArg(sepClass, inlineClass)>
+    <br<@fieldClassAttribStr class=sepClass /> /> <#-- controlled via css with display:none; TODO? maybe there's a better way -->
+    <#if id?has_content>
+      <#local currentId = id + "_" + (item_index + 2)?string>
+    </#if>    
   </#list>
   <#if multiMode>
     </div>

@@ -450,9 +450,10 @@
       <#assign items = [
         {"value":"val1", "description":"Option 1"}
         {"value":"val2", "description":"Option 2"}
-        {"value":"val3", "description":"Option 3"}
+        {"value":"val3", "description":"Option 3", "tooltip":"this is radio option 3"}
       ]>
-      <@field type="radio" name="radio3" label="Radio 3 (multi)" items=items currentValue="val1"/>
+      <@field type="radio" name="radio3a" label="Radio 3a (multi - inline)" items=items currentValue="val2" inlineItems=true tooltip="these are radios"/>
+      <@field type="radio" name="radio3b" label="Radio 3b (multi - one per line)" items=items currentValue="val2" inlineItems=false tooltip="these are radios"/>
       <@field type="radio" name="radio4" label="Radio 4" value="Y" currentValue="Y" />
       <@field type="radio" name="radio5" label="Radio 5" value="Y" currentValue="N" />
       <@field type="radio" name="radio6" label="Radio 6" value="Y" defaultValue="Y" />
@@ -462,9 +463,10 @@
       <#assign items = [
         {"value":"val1", "description":"Option 1"}
         {"value":"val2", "description":"Option 2"}
-        {"value":"val3", "description":"Option 3"}
+        {"value":"val3", "description":"Option 3", "tooltip":"this is checkbox option 3"}
       ]>
-      <@field type="checkbox" name="checkbox3" label="Checkbox 3 (multi)" items=items currentValue=["val2", "val3"]/>
+      <@field type="checkbox" name="checkbox3a" label="Checkbox 3a (multi - inline)" items=items currentValue=["val2", "val3"] inlineItems=true tooltip="these are checkboxes"/>
+      <@field type="checkbox" name="checkbox3b" label="Checkbox 3b (multi - one per line)" items=items currentValue=["val2", "val3"] inlineItems=false tooltip="these are checkboxes"/>
       <@field type="checkbox" name="checkbox4" label="Checkbox 4" value="Y" currentValue="Y" />
       <@field type="checkbox" name="checkbox5" label="Checkbox 5" value="Y" currentValue="N" />
       <@field type="checkbox" name="checkbox6" label="Checkbox 6" value="Y" defaultValue="Y" />

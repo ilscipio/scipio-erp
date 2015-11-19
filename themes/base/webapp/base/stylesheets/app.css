@@ -9930,12 +9930,12 @@ div.scrollable-table-container > table {
 }
 
 /* line 355, ../scss/_base.scss */
-.radio-item-inline .radio-item-separator {
+.radio-item-inline.radio-item-separator {
   display: none;
 }
 
 /* line 359, ../scss/_base.scss */
-.checkbox-item-inline .checkbox-item-separator {
+.checkbox-item-inline.checkbox-item-separator {
   display: none;
 }
 

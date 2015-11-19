@@ -9934,7 +9934,12 @@ div.scrollable-table-container > table {
   display: none;
 }
 
-/* line 360, ../scss/_base.scss */
+/* line 359, ../scss/_base.scss */
+.checkbox-item-inline .checkbox-item-separator {
+  display: none;
+}
+
+/* line 364, ../scss/_base.scss */
 .asmListItemRemove {
   margin-left: 1rem;
 }

@@ -55,6 +55,7 @@
     "icon_tenant" : "fi-cloud",
     "icon_error" : "fi-alert",
     "heading_level_prefix" : "heading-level-",  
+    "switch" : "switch",
     
   <#-- Menus 
        menu_xxx classes are looked up by the @menu and @menuitem macros as defaults for each menu type. --> 

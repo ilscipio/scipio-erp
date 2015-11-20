@@ -495,7 +495,7 @@
       <@field type="select" items=items name="select1" label="Select 4 (multiple - asmselect - default)" currentValue="val3" multiple="multiple" asmSelectArgs={"enabled":true} title="Multiple values to choose from"/>
       <@field type="select" items=items name="select1" label="Select 4 (multiple - asmselect - custom - sortable)" currentValue="val3" multiple="multiple" 
         asmSelectArgs={"enabled":true, "title":"Select one of these custom values", "asmSelectOptions":{"addItemTarget":"bottom", "sortable":true}}/>
-      <@field type="submit" submitType="submit" text="Submit" disabled=true />
+      <@field type="submit" submitType="submit" text="Submit" onClick="alert('submitted!'); return false;" />
     </@fields>
     </@form>
   </@section>
@@ -527,7 +527,7 @@
         {"value":"val5", "description":"Value 5"}
       ]>
       
-      <@field type="submit" submitType="button" text="Submit" disabled=true />
+      <@field type="submit" submitType="button" text="Submit" event="onclick" action="alert('submitted!');" />
     </@fields>
     </@form>
   </@section>

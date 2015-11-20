@@ -77,7 +77,7 @@ not "current" context (too intrusive in current renderer design). still relies o
   <@field_radio_widget items=items class=className alert=alert currentValue=currentValue defaultValue=noCurrentSelectedKey name=name event=event action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true />
 </#macro>
 
-<#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false id="">
+<#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" inputType="" disabled=false id="">
   <#local progressOptions = "">
     <#if !(showProgress?is_boolean && showProgress == false) && 
        ((showProgress?is_boolean && showProgress == true) ||
@@ -111,7 +111,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     </#if>
 
   <#-- delegate to cato libs -->
-  <@field_submit_widget buttonType=buttonType class=className alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation containerId=containerId ajaxUrl=ajaxUrl text=title description=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressOptions=progressOptions id=id/>
+  <@field_submit_widget buttonType=buttonType class=className alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation containerId=containerId ajaxUrl=ajaxUrl text=title description=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href inputType=inputType disabled=disabled progressOptions=progressOptions id=id/>
 </#macro>
 
 <#macro renderResetField className alert name title="" fieldType="" fieldTitleBlank=false>

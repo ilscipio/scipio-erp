@@ -754,7 +754,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     buttonType    = [text-link|image|button], default button - logical button type (based on ofbiz form widget types)
     inputType     = the low-level <input> type attrib (within/depends on buttonType) -->
 <#macro field_submit_widget buttonType="" class="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
-    containerId="" ajaxUrl="" text="" description="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressArgs={} progressOptions={} id="">   
+    containerId="" ajaxUrl="" text="" description="" fieldTitleBlank=false showProgress="" href="" inputType="" disabled=false progressArgs={} progressOptions={} id="">   
   <#if disabled>
     <#local class = addClassArg(class, styles.disabled!)>
   </#if>
@@ -768,12 +768,12 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#local progressArgs = {}>
   </#if>
   <@field_submit_markup_widget buttonType=buttonType class=class alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation 
-    containerId=containerId ajaxUrl=ajaxUrl text=text description=description fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href onClick=onClick inputType=inputType disabled=disabled progressArgs=progressArgs id=id><#nested></@field_submit_markup_widget>
+    containerId=containerId ajaxUrl=ajaxUrl text=text description=description fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href inputType=inputType disabled=disabled progressArgs=progressArgs id=id><#nested></@field_submit_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_submit_markup_widget buttonType="" class="" alert="" formName="" name="" event="" action="" imgSrc="" confirmation="" 
-    containerId="" ajaxUrl="" text="" fieldTitleBlank=false showProgress="" href="" onClick="" inputType="" disabled=false progressArgs={} id="" extraArgs...>
+    containerId="" ajaxUrl="" text="" fieldTitleBlank=false showProgress="" href="" inputType="" disabled=false progressArgs={} id="" extraArgs...>
   <#-- Cato: to omit button (show progress only), we use empty title hack " " similar to what ofbiz does with hyperlinks with no label -->
   <#if (buttonType == "text-link" || buttonType != "image") && !(text?trim?has_content)>
     <#local buttonMarkup = "">
@@ -781,19 +781,19 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#local buttonMarkup>
       <#if buttonType == "text-link">
         <#local class = addClassArgDefault(class, styles.button_default!)>
-        <a<@fieldClassAttribStr class=class alert=alert />href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if><#if id?has_content> id="${id}"<#else> id="noId"</#if>><#if text?has_content>${text}</#if></a>
+        <a<@fieldClassAttribStr class=class alert=alert />href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if event?has_content && action?has_content> ${event}="${action}"<#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if><#if id?has_content> id="${id}"<#else> id="noId"</#if>><#if text?has_content>${text}</#if></a>
       <#elseif buttonType == "image">
         <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if id?has_content> id="${id}"</#if>
-        <#if description?has_content> alt="${description}"</#if><#if event?has_content> ${event}="${action}"</#if>
+        <#if description?has_content> alt="${description}"</#if>
         <#if disabled> disabled="disabled"<#else>
-          <#if onClick?has_content> onclick="${onClick}"<#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
+          <#if event?has_content && action?has_content> ${event}="${action}"<#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
         </#if>/>
       <#else>
         <#local class = addClassArgDefault(class, styles.button_default!)>
         <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if>
-        <#if name?has_content> name="${name}"</#if><#if text?has_content> value="${text}"</#if><#if event?has_content> ${event}="${action}"</#if>
+        <#if name?has_content> name="${name}"</#if><#if text?has_content> value="${text}"</#if>
         <#if disabled> disabled="disabled"<#else>
-          <#if onClick?has_content> onclick="${onClick}"<#else>
+          <#if event?has_content && action?has_content> ${event}="${action}"<#else>
             <#if containerId?has_content> onclick="<#if confirmation?has_content>if (confirm('${confirmation?js_string}')) </#if>ajaxSubmitFormUpdateAreas('${containerId}', '${ajaxUrl}')"<#else>
             <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if>
             </#if>

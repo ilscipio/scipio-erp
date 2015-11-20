@@ -526,6 +526,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     maxlength       = maxLength
     id              = field id
     onClick         = JS Event
+    event/action    = alternative JS event to onClick (overridden by onClick)
     disabled        = field disabled
     placeholder     = field placeholder
     alert           = adds additional css alert class
@@ -653,7 +654,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         labelType="" labelLayout="" labelArea="" description=""
         submitType="input" text="" href="" src="" confirmMsg="" inlineItems="" 
         selected=false allowEmpty=false currentFirst=false currentDescription=""
-        manualItems="" manualItemsOnly="" asmSelectArgs={} title="" allChecked="">
+        manualItems="" manualItemsOnly="" asmSelectArgs={} title="" allChecked="" event="" action="">
   <#if !type?has_content>
     <#local type = "generic">
   </#if>
@@ -669,6 +670,14 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#if description?has_content>
       <#local tooltip = description>
     </#if>
+  </#if>
+  <#if onClick?has_content>
+    <#local event = "onclick">
+    <#local action = onClick>
+  <#else>
+    <#if !event?has_content && action?has_content>
+      <#local event = "onclick"> <#-- default is onclick -->
+    </#if>  
   </#if>
   
   <#-- parent @fields group elem info (if any; may be omitted) -->
@@ -821,8 +830,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                               textSize=size 
                               maxlength=maxlength 
                               id=id 
-                              event="onclick" 
-                              action=onClick 
+                              event=event 
+                              action=action 
                               disabled=disabled
                               readonly=readonly 
                               clientAutocomplete="" 
@@ -890,8 +899,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                                 formName=formName
                                 formId=formId
                                 otherFieldName="" 
-                                event="onclick" 
-                                action=onClick  
+                                event=event 
+                                action=action  
                                 size=size
                                 currentFirst=currentFirst
                                 currentValue=currentValue 
@@ -926,7 +935,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         <#break>
       <#case "lookup">
         <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class alert="false" value=value 
-          size=size?string maxlength=maxlength id=id event="onclick" action=onClick />
+          size=size?string maxlength=maxlength id=id event=event action=action />
       <#break>
       <#case "checkbox">
         <#if !items?is_sequence>
@@ -941,12 +950,12 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
               <#local checked = "">
             </#if>
           </#if>
-          <#local items=[{"value":value, "description":inlineLabel, "tooltip":tooltip, "event":"onclick", "action":onClick, "checked":checked}]/>
+          <#local items=[{"value":value, "description":inlineLabel, "tooltip":tooltip, "event":event, "action":action, "checked":checked}]/>
           <@field_checkbox_widget multiMode=false items=items inlineItems=inlineItems id=id class=class alert=alert 
             currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name event="" action="" tooltip="" />
         <#else>
           <@field_checkbox_widget multiMode=true items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name event="onclick" action=onClick tooltip=tooltip />
+            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name event=event action=action tooltip=tooltip />
         </#if>
         <#break>
       <#case "radio">
@@ -963,13 +972,13 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
               <#local checked = "">
             </#if>
           </#if>
-          <#local items=[{"key":value, "description":inlineLabel, "tooltip":tooltip, "event":"onclick", "action":onClick, "checked":checked}]/>
+          <#local items=[{"key":value, "description":inlineLabel, "tooltip":tooltip, "event":event, "action":action, "checked":checked}]/>
           <@field_radio_widget multiMode=false items=items inlineItems=inlineItems id=id class=class alert=alert 
             currentValue=currentValue defaultValue=defaultValue name=name event="" action="" tooltip="" />
         <#else>
           <#-- multi radio button item mode -->
           <@field_radio_widget multiMode=true items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue name=name event="onclick" action=onClick tooltip=tooltip />
+            currentValue=currentValue defaultValue=defaultValue name=name event=event action=action tooltip=tooltip />
         </#if>
         <#break>
       <#case "file">
@@ -1000,15 +1009,15 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         <#if inputType == "submit" && !text?has_content && value?has_content>
           <#local text = value>
         </#if>
-        <@field_submit_widget buttonType=buttonType class=class alert=alert formName=formName name=name event="" 
-          action="" imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" text=text description=description showProgress=false 
-          onClick=onClick href=href inputType=inputType disabled=disabled progressArgs=progressArgs progressOptions=progressOptions />
+        <@field_submit_widget buttonType=buttonType class=class alert=alert formName=formName name=name event=event 
+          action=action imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" text=text description=description showProgress=false 
+          href=href inputType=inputType disabled=disabled progressArgs=progressArgs progressOptions=progressOptions />
         <#break>
       <#case "submitarea">
         <@field_submitarea_widget progressArgs=progressArgs progressOptions=progressOptions><#nested></@field_submitarea_widget>
         <#break>
       <#case "hidden">                    
-        <@field_hidden_widget name=name value=value id=id event="onclick" action=onClick />
+        <@field_hidden_widget name=name value=value id=id event=event action=action />
         <#break>        
       <#case "display">
         <#-- TODO? may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 

@@ -18,9 +18,10 @@ under the License.
 -->
 <#assign logo><img src="<@ofbizContentUrl>/images/feather-tiny.png</@ofbizContentUrl>"/></#assign>
 
-<div class="${styles.grid_large!}3 ${styles.grid_large!}centered ${styles.grid_cell!} login-box" id="login">
+<@row>
+  <@cell class="${styles.grid_large!}3 ${styles.grid_large!}centered login-box" last=true id="login">
     <div id="login-box-title">
-        <h1>${logo} ${uiLabelMap.CommonRegistered!}</h1>
+        <@heading level=1>${logo} ${uiLabelMap.CommonRegistered!}</@heading>
     </div>
     <@section id="login-box-content">
             <@panel>
@@ -48,4 +49,5 @@ under the License.
               </form>
             </@panel>
     </@section>
-</div>
+  </@cell>
+</@row>

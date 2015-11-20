@@ -19,9 +19,10 @@ under the License.
 <#assign errorMessage = requestAttributes._ERROR_MESSAGE_!>
 <#if requestAttributes.errorMessageList?has_content><#assign errorMessageList=requestAttributes.errorMessageList></#if>
 
-<div class="${styles.grid_large!}centered ${styles.grid_cell}" id="error">
-<@section>
-    <h1><i class="${styles.icon!} ${styles.icon_error!}" style="font-size: 4rem;"></i>  ${label('PageTitleError')!}</h1>
+<@row>
+  <@cell class="${styles.grid_large!}10 ${styles.grid_large!}centered" last=true id="error">
+  <@section>
+    <@heading level=1><i class="${styles.icon!} ${styles.icon_error!}" style="font-size: 4rem;"></i> ${label('PageTitleError')!}</@heading>
 
         ${label('CommonFollowingErrorsOccurred')}
         <#if errorMessage?has_content>
@@ -35,5 +36,6 @@ under the License.
                         </ol>
         </#if>
 
-</@section>
-</div>
+  </@section>
+  </@cell>
+</@row>

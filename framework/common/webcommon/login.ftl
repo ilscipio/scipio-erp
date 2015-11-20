@@ -27,20 +27,21 @@ under the License.
   <#assign focusName = true>
 </#if>
 
-<div class="${styles.grid_large!}centered ${styles.grid_cell!} ${styles.login_wrap!}" id="login">
-<div id="login-box-title" class="${styles.login_header!}">
-    <h1>${logo} ${uiLabelMap.CommonLogin!}</h1>
-</div>
+<@row>
+<@cell class="${styles.grid_large!}centered ${styles.login_wrap!}" last=true id="login">
+  <div id="login-box-title" class="${styles.login_header!}">
+    <@heading level=1>${logo} ${uiLabelMap.CommonLogin!}</@heading>
+  </div>
 
-<@section id="login-box-content">
-  <#if uiLabelMap.WebtoolsForSomethingInteresting?has_content 
+  <@section id="login-box-content">
+    <#if uiLabelMap.WebtoolsForSomethingInteresting?has_content 
        && uiLabelMap.WebtoolsForSomethingInteresting != "WebtoolsForSomethingInteresting">
-  <@alert type="info">
-      ${uiLabelMap.WebtoolsForSomethingInteresting}
-  </@alert>
-  </#if>
+      <@alert type="info">
+        ${uiLabelMap.WebtoolsForSomethingInteresting}
+      </@alert>
+    </#if>
 
-     <div class="${styles.login_body!}">
+    <div class="${styles.login_body!}">
       <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
        <#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
        <#assign labelPassword><i class="${styles.icon!} ${styles.icon_password!}"></i></#assign>
@@ -70,8 +71,10 @@ under the License.
       </form>
     </div>
 
-</@section>
-</div>
+  </@section>
+</@cell>
+</@row>
+
 <@script>
   document.loginform.JavaScriptEnabled.value = "Y";
   <#if focusName>

@@ -20,7 +20,8 @@ under the License.
 <#assign username = requestParameters.USERNAME?default((sessionAttributes.autoUserLogin.userLoginId)?default(""))>
 <#assign tenantId = requestParameters.userTenantId!>
 
-<div class="${styles.grid_large!}3 ${styles.grid_large!}centered ${styles.grid_cell!} login-box" id="login">
+<@row>
+<@cell class="${styles.grid_large!}3 ${styles.grid_large!}centered login-box" last=true id="login">
   <div id="login-box-title">
     <@heading level=1>${uiLabelMap.CommonPasswordChange}</@heading>
   </div>
@@ -54,6 +55,8 @@ under the License.
       </@table>
     </form>
 </@section>
+</@cell>
+</@row>
 
 <@script>
   document.loginform.PASSWORD.focus();

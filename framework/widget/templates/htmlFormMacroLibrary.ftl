@@ -35,7 +35,12 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderTextField name className alert value textSize maxlength id event="" action="" disabled=false ajaxUrl="" ajaxEnabled=false mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_input_widget name=name class=className alert=alert value=value textSize=textSize maxlength=maxlength id=id event=event action=action disabled=disabled ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank />
+  <#if event?has_content>
+    <#local events = {event:action}>
+  <#else>
+    <#local events = {}>
+  </#if>
+  <@field_input_widget name=name class=className alert=alert value=value textSize=textSize maxlength=maxlength id=id events=events disabled=disabled ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#macro renderTextareaField name className alert cols rows id readonly value visualEditorEnable=true buttons="" language="" tooltip="" title="" fieldType="" fieldTitleBlank=false collapse=false fieldType="" fieldTitleBlank=false>
@@ -45,17 +50,32 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderDateTimeField name className title value size maxlength id dateType shortDateInput timeDropdownParamName defaultDateTimeString localizedIconTitle timeDropdown timeHourName classString hour1 hour2 timeMinutesName minutes isTwelveHour ampmName amSelected pmSelected compositeType formName alert=false mask="" event="" action="" step="" timeValues="" tooltip=""collapse=false fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_datetime_widget name=name class=className title=title value=value size=size maxlength=maxlength id=id dateType=dateType shortDateInput=shortDateInput timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName alert=alert mask=mask event=event action=action step=step timeValues=timeValues tooltip=tooltip fieldTitleBlank=fieldTitleBlank />
+  <#if event?has_content>
+    <#local events = {event:action}>
+  <#else>
+    <#local events = {}>
+  </#if>
+  <@field_datetime_widget name=name class=className title=title value=value size=size maxlength=maxlength id=id dateType=dateType shortDateInput=shortDateInput timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#macro renderDropDownField name className alert id multiple formName otherFieldName size firstInList currentValue explicitDescription allowEmpty options fieldName otherFieldName otherValue otherFieldSize dDFCurrent noCurrentSelectedKey ajaxOptions frequency minChars choices autoSelect partialSearch partialChars ignoreCase fullSearch event="" action="" ajaxEnabled=false tooltip="" manualItems=false manualItemsOnly=false collapse=false fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_select_widget name=name class=className alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size currentFirst=firstInList currentValue=currentValue currentDescription=explicitDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize dDFCurrent=dDFCurrent inlineSelected=(dDFCurrent?has_content && "selected" == dDFCurrent) defaultValue=noCurrentSelectedKey ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars ignoreCase=ignoreCase fullSearch=fullSearch event=event action=action ajaxEnabled=ajaxEnabled tooltip=tooltip manualItems=manualItems manualItemsOnly=manualItemsOnly collapse=collapse fieldTitleBlank=fieldTitleBlank />
+  <#if event?has_content>
+    <#local events = {event:action}>
+  <#else>
+    <#local events = {}>
+  </#if>
+  <@field_select_widget name=name class=className alert=alert id=id multiple=multiple formName=formName otherFieldName=otherFieldName size=size currentFirst=firstInList currentValue=currentValue currentDescription=explicitDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize dDFCurrent=dDFCurrent inlineSelected=(dDFCurrent?has_content && "selected" == dDFCurrent) defaultValue=noCurrentSelectedKey ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars ignoreCase=ignoreCase fullSearch=fullSearch events=events ajaxEnabled=ajaxEnabled tooltip=tooltip manualItems=manualItems manualItemsOnly=manualItemsOnly collapse=collapse fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#macro renderCheckField items className alert id allChecked currentValue name event action tooltip="" fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_checkbox_widget items=items id=id class=className alert=alert allChecked=allChecked currentValue=currentValue name=name event=event action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true />
+  <#if event?has_content>
+    <#local events = {event:action}>
+  <#else>
+    <#local events = {}>
+  </#if>
+  <@field_checkbox_widget items=items id=id class=className alert=alert allChecked=allChecked currentValue=currentValue name=name events=events tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true />
   <#-- old
   <#list items as item>
     <div class="switch small">
@@ -74,7 +94,12 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderRadioField items className alert currentValue noCurrentSelectedKey name event action tooltip="" fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_radio_widget items=items class=className alert=alert currentValue=currentValue defaultValue=noCurrentSelectedKey name=name event=event action=action tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true />
+  <#if event?has_content>
+    <#local events = {event:action}>
+  <#else>
+    <#local events = {}>
+  </#if>
+  <@field_radio_widget items=items class=className alert=alert currentValue=currentValue defaultValue=noCurrentSelectedKey name=name events=events tooltip=tooltip fieldTitleBlank=fieldTitleBlank multiMode=true />
 </#macro>
 
 <#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" inputType="" disabled=false id="">
@@ -111,7 +136,12 @@ not "current" context (too intrusive in current renderer design). still relies o
     </#if>
 
   <#-- delegate to cato libs -->
-  <@field_submit_widget buttonType=buttonType class=className alert=alert formName=formName name=name event=event action=action imgSrc=imgSrc confirmation=confirmation containerId=containerId ajaxUrl=ajaxUrl text=title description=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href inputType=inputType disabled=disabled progressOptions=progressOptions id=id/>
+  <#if event?has_content>
+    <#local events = {event:action}>
+  <#else>
+    <#local events = {}>
+  </#if>
+  <@field_submit_widget buttonType=buttonType class=className alert=alert formName=formName name=name events=events imgSrc=imgSrc confirmation=confirmation containerId=containerId ajaxUrl=ajaxUrl text=title description=title fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href inputType=inputType disabled=disabled progressOptions=progressOptions id=id/>
 </#macro>
 
 <#macro renderResetField className alert name title="" fieldType="" fieldTitleBlank=false>
@@ -121,7 +151,12 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderHiddenField name value id event action>
   <#-- delegate to cato libs -->
-  <@field_hidden_widget name=name value=value id=id event=event action=action />
+  <#if event?has_content>
+    <#local events = {event:action}>
+  <#else>
+    <#local events = {}>
+  </#if>
+  <@field_hidden_widget name=name value=value id=id events=events />
 </#macro>
 
 <#macro renderIgnoredField></#macro>
@@ -427,7 +462,12 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 -->
 <#macro renderLookupField name formName fieldFormName className="" alert="false" value="" size="" maxlength="" id="" event="" action="" readonly=false autocomplete="" descriptionFieldName="" targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" lastViewName="main"  title="" fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
-  <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=className alert=alert value=value size=size maxlength=maxlength id=id event=event action=action readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width height=height position=position fadeBackground=fadeBackground clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed lastViewName=lastViewName  title=title fieldTitleBlank=fieldTitleBlank />
+  <#if event?has_content>
+    <#local events = {event:action}>
+  <#else>
+    <#local events = {}>
+  </#if>
+  <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=className alert=alert value=value size=size maxlength=maxlength id=id events=events readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width height=height position=position fadeBackground=fadeBackground clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed lastViewName=lastViewName  title=title fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#-- Cato: new params: paginate, forcePost, viewIndexFirst, listItemsOnly, paginateToggle*

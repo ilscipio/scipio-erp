@@ -527,7 +527,7 @@
         {"value":"val5", "description":"Value 5"}
       ]>
       
-      <@field type="submit" submitType="button" text="Submit" event="onclick" action="alert('submitted!');" />
+      <@field type="submit" submitType="button" text="Submit" events={"click": "alert('submitted!');"} />
     </@fields>
     </@form>
   </@section>

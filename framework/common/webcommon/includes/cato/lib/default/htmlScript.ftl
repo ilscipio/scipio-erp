@@ -183,7 +183,6 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
   </#if>
 </#macro>
 
-
 <#-- 
 *************
 * elemEventAttribStr

@@ -8,6 +8,40 @@
 *
 -->
 
+<#-- 
+*************
+* Container
+************
+Simple container (whether used as grid element or not); basically macro version of HTML div element.
+This serves to add various hooks that may be needed around regular containers.
+For grid usage, @row/@cell should be preferred.
+
+Currently, this will scan classes for @cell-related grid sizes. this macro should always be
+used instead of div if the div contains grid size classes (but conversely, @cell should then be preferred 
+to this one.
+                    
+  * Parameters *
+    class                 = css classes (supports prefixed/extended syntax, but normally no classes will be added)
+    attribs/inlineAttribs = other attributes for div; attribs map needed for attribs with dashes in names.
+-->
+<#macro container class="" openOnly=false closeOnly=false nestedOnly=false attribs={} inlineAttribs...>
+  <#local attribs = concatMaps(attribs, inlineAttribs)>
+  <#local open = !(nestedOnly || closeOnly)>
+  <#local close = !(nestedOnly || openOnly)>
+  <#if open>
+    <#-- NOTE: currently, no stack needed; simple -->
+    <#-- save grid sizes (can simply assume this is a cell; saveCurrentContainerSizesFromStyleStr will be okay with it) -->
+    <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
+    <div<@compiledClassAttribStr class=class /><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class"]/></#if>>
+  </#if>
+      <#nested>
+  <#if close>
+    </div>
+    <#-- pop grid sizes -->
+    <#local dummy = unsetCurrentContainerSizes()>
+  </#if>
+</#macro>
+
 <#--
 *************
 * Row
@@ -189,30 +223,32 @@ DEV NOTE: TODO: these should be general enough to work for both foundation and b
   <#local small = maxSize>
   <#-- beginning of list is outermost container -->
   <#list sizesList as sizes>
-    <#-- need to use same logic as framework when figuring out defaultSize... e.g., small has priority... 
-        assuming all max sizes are same simplifies this -->
-    <#local defaultSize = maxSize>
-    
-    <#if sizes.small??>
-      <#local defaultSize = sizes.small>
-      <#local small = small * (sizes.small / maxSize)>
-    <#-- always 1 
-    <#else>
-      <#local small = small * (defaultSize / maxSize)>-->
-    </#if>
-
-    <#if sizes.medium??>
-      <#local defaultSize = sizes.medium>
-      <#local medium = medium * (sizes.medium / maxSize)>
-    <#else>
-      <#local medium = medium * (defaultSize / maxSize)>
-    </#if>
+    <#if sizes?has_content> <#-- these may be empty; simplifies pushing/popping down the line -->
+      <#-- need to use same logic as framework when figuring out defaultSize... e.g., small has priority... 
+          assuming all max sizes are same simplifies this -->
+      <#local defaultSize = maxSize>
       
-    <#if sizes.large??>
-      <#local large = large * (sizes.large / maxSize)>    
-    <#else>
-      <#local large = large * (defaultSize / maxSize)>
-    </#if>  
+      <#if sizes.small??>
+        <#local defaultSize = sizes.small>
+        <#local small = small * (sizes.small / maxSize)>
+      <#-- always 1 
+      <#else>
+        <#local small = small * (defaultSize / maxSize)>-->
+      </#if>
+  
+      <#if sizes.medium??>
+        <#local defaultSize = sizes.medium>
+        <#local medium = medium * (sizes.medium / maxSize)>
+      <#else>
+        <#local medium = medium * (defaultSize / maxSize)>
+      </#if>
+        
+      <#if sizes.large??>
+        <#local large = large * (sizes.large / maxSize)>    
+      <#else>
+        <#local large = large * (defaultSize / maxSize)>
+      </#if> 
+    </#if> 
   </#list>
   <#return {"large":large, "medium":medium, "small":small}>
 </#function>

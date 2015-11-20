@@ -47,15 +47,12 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#if autoUpdateLink?has_content>
     <@script>ajaxUpdateAreaPeriodic('${id}', '${autoUpdateLink}', '', '${autoUpdateInterval}');</@script>
   </#if>
-  <#-- Cato: save grid sizes (if any) for simple low-level container -->
-  <#local dummy = saveCurrentContainerSizesFromStyleStr(style)>
-  <div<#if style?has_content> class="${style}"</#if><#if id?has_content> id="${id}"</#if>>
+  <#-- Cato: delegate to cato libs -->
+  <@container openOnly=true class=style id=id />
 </#macro>
 
 <#macro renderContainerEnd>
-  </div>
-  <#-- Cato: pop the grid sizes -->
-  <#local dummy = unsetCurrentContainerSizes()>
+  <@container closeOnly=true />
 </#macro>
 
 <#macro renderContentBegin editRequest enableEditValue editContainerStyle><#if editRequest?has_content && enableEditValue == "true"><div class=${editContainerStyle}></#if></#macro>

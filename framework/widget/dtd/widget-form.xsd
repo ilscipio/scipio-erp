@@ -330,9 +330,9 @@ under the License.
                 <xs:annotation>
                     <xs:documentation>Cato: Upload forms only: action to take when upload succeeds. Whole string is context-expanded. Format and values are:
                         none - stay on current page (progress will indicate success)
-                        reload - reload current page
                         redirect;[options];[ofbizUrl] - redirect to the specified controller request. e.g. "redirect;;myRequest?param1=value1&amp;amp;param2=${myMap.value2}"
                                                         options are: fullPath=[true|false],secure=[true|false],encode=[true|false]. e.g. "redirect;secure=true,fullPath=true;main"
+                        reload - reload current page (note: this should be avoided as in many cases the current implementation causes problems with Ofbiz navigation)
                     </xs:documentation>
                 </xs:annotation>
             </xs:attribute>

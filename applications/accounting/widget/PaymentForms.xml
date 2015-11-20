@@ -27,8 +27,8 @@ under the License.
     <form name="FindPayments" type="single" target="findPayments"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="paymentId" title="${uiLabelMap.CommonId}"><text-find ignore-case="true"/></field>
-        <field name="comments"><text-find ignore-case="true"/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonId}" position="1"><text-find ignore-case="true"/></field>
+        <field name="comments" position="2"><text-find ignore-case="true"/></field>
         <field name="paymentTypeId" title="${uiLabelMap.CommonType}" position="1">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="PaymentType">
@@ -47,8 +47,8 @@ under the License.
         <field position="1" name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
         <field position="2" name="partyIdTo"><lookup target-form-name="LookupPartyName"/></field>
         <field position="1" name="amount"><text/></field>
-        <field name="paymentRefNum"><text-find ignore-case="true"/></field>
-        <field name="paymentGatewayResponseId"><text/></field>
+        <field name="paymentRefNum" position="2"><text-find ignore-case="true"/></field>
+        <field name="paymentGatewayResponseId" position="2"><text/></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     
@@ -165,12 +165,12 @@ under the License.
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
-        <field position="1" name="createAction" widget-style="${styles.link_action}">
+        <field position="1" name="createAction" widget-style="${styles.link_action}" title="${uiLabelMap.CommonCreate}">
             <submit button-type="button"/>
         </field>
     </form>
     <form name="NewPaymentIn" type="single" target="createPayment" default-map-name="payment"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row" default-table-style="${styles.table_basic}" >
         <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
@@ -201,7 +201,7 @@ under the License.
         <field name="overrideGlAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
         <field name="amount" title="${uiLabelMap.CommonAmount}" position="1"><text/></field>
         <field name="comments" position="2"><text size="70"/></field>
-        <field name="finAccountId">
+        <field name="finAccountId" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="FinAccount" description="${finAccountName} [${finAccountId}]" filter-by-date="true">
                     <entity-constraint name="finAccountTypeId" value="BANK_ACCOUNT"/>
@@ -212,7 +212,7 @@ under the License.
         </field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
-        <field position="1" name="createAction" widget-style="${styles.link_action}">
+        <field position="1" name="createAction" widget-style="${styles.link_action}" title="${uiLabelMap.CommonCreate}">
             <submit button-type="button"/>
         </field>
     </form>

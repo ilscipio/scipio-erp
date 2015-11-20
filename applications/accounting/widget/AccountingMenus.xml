@@ -1416,7 +1416,7 @@
     </menu>
 
     <menu name="PaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="findPayment" title="${uiLabelMap.CommonFind}">
+        <menu-item name="findPayment" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingInvoicePayments}">
             <link target="findPayments" />
         </menu-item>
         <menu-item name="paymentOverview" title="${uiLabelMap.AccountingPaymentTabOverview}">
@@ -1442,7 +1442,7 @@
                 <parameter param-name="paymentId" from-field="payment.paymentId" />
             </link>
         </menu-item>
-        <menu-item name="editPaymentApplications" title="${uiLabelMap.AccountingPaymentTabApplications}">
+        <menu-item name="editPaymentApplications" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingPaymentTabApplications}">
             <condition>
                 <and>
                     <not>

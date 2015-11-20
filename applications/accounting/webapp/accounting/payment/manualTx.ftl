@@ -50,16 +50,20 @@ under the License.
 			<@field type="display" label="${uiLabelMap.AccountingTransactionType}">${currentTx.get("description",locale)}</@field>
 			<input type="hidden" name="transactionType" value="${currentTx.enumId}" />
 		<#else>
-			<!-- TODO: Clarify how to handle JS events -->
-            <#-- @field type="select" name="transactionType" onchange="javascript:document.manualTxForm.submit();" -->
-            ${uiLabelMap.AccountingTransactionType}
-           	<select name="transactionType" onchange="javascript:document.manualTxForm.submit();"> 
-            	<#-- the select one option is so the list will fire on any seletion -->
-              	<option value="Select one">${uiLabelMap.CommonSelectOne}</option>
-              	<#list paymentSettings as setting>
-                	<option value="${setting.enumId}">${setting.get("description",locale)}</option>
-             	 </#list>
-            </select>
+			<!-- TODO: Clarify how to handle JS events -->            
+            <#-- @field type="select" name="transactionType" onchange="javascript:document.manualTxForm.submit();" title="${uiLabelMap.AccountingTransactionType}" -->
+            <@row>
+	            <@cell small=3 large=2>${uiLabelMap.AccountingTransactionType}</@cell>
+	            <@cell small=9 large=10>
+	           	<select name="transactionType" onchange="javascript:document.manualTxForm.submit();"> 
+	            	<#-- the select one option is so the list will fire on any seletion -->
+	              	<option value="Select one">${uiLabelMap.CommonSelectOne}</option>
+	              	<#list paymentSettings as setting>
+	                	<option value="${setting.enumId}">${setting.get("description",locale)}</option>
+	             	 </#list>
+	            </select>
+	            </@cell>
+            </@row>
             <#-- /@field -->
 		</#if>
 

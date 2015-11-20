@@ -142,14 +142,18 @@ under the License.
     </form>
 
 	<form name="invoiceItems" list-name="invItemAndOrdItems" target="" title="" type="list" separate-columns="true" paginate-target="invoiceOverview"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_data_list} hover-bar" attribs="{'tableArgs':{'fixedColumnsLeft':2, 'fixedColumnsRight':1}}">
         <row-actions>
             <set field="quantity" value="${groovy: quantity ?: 1}" type="BigDecimal"/>
             <set field="total" value="${groovy: quantity * amount ?: 0}" type="BigDecimal"/>
         </row-actions>
         <auto-fields-entity entity-name="InvoiceItem" default-field-type="display"/>
         <field name="invoiceId"><hidden/></field>
-        <field name="invoiceItemSeqId"><display/></field>
+         <field name="invoiceItemSeqId" widget-style="${styles.link_default}">
+           <hyperlink target="listInvoiceItems" description="${invoiceItemSeqId}">
+                <parameter param-name="invoiceId"/>               
+            </hyperlink>
+        </field>    
         <field name="invoiceItemTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="InvoiceItemType"/></field>
         <field name="productId" title="${uiLabelMap.CommonProduct}" widget-style="linktext ${styles.link_default}">
             <hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${productId}">
@@ -351,12 +355,7 @@ under the License.
        <field name="invoiceId"><hidden/></field>
        <field name="uomId"><hidden/></field>
        <field name="taxableFlag"><hidden/></field>
-       <field name="invoiceItemSeqId" widget-style="${styles.link_default}">
-           <hyperlink target="listInvoiceItems" description="${invoiceItemSeqId}">
-                <parameter param-name="invoiceId"/>
-                <parameter param-name="invoiceItemSeqId"/>
-            </hyperlink>
-        </field>
+       <field name="invoiceItemSeqId" ><display also-hidden="true"/></field>
        <field name="quantity"><text size="10"/></field>
        <field name="invoiceItemTypeId">
            <drop-down allow-empty="false">

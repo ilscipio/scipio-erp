@@ -28,9 +28,7 @@ under the License.
          location in parameters.invoiceDecoratorLocation -->
     <screen name="CommonInvoiceDecorator">
         <section>
-            <actions>
-                <property-map resource="AccountingUiLabels" map-name="uiLabelMap" global="true"/>
-                <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
+            <actions>                
                 <set field="headerItem" value="invoices"/>
             </actions>
             <widgets>
@@ -223,33 +221,29 @@ under the License.
                                     </link>
                                     <include-form name="invoiceHeader" location="component://accounting/widget/InvoiceForms.xml"/>
                                 </screenlet>
-                                <container style="${styles.grid_large}6">
-                                    <screenlet title="${uiLabelMap.CommonStatus}" navigation-form-name="ListInvoiceStatus">
-                                        <include-form name="ListInvoiceStatus" location="component://accounting/widget/InvoiceForms.xml"/>
-                                    </screenlet>
-                                    <screenlet title="${uiLabelMap.AccountingAppliedPayments} ${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}"
-                                        navigation-form-name="ListInvoiceApplications">
-                                        <link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}" style="${styles.button_default}">
+                               
+                                <screenlet title="${uiLabelMap.CommonStatus}" navigation-form-name="ListInvoiceStatus">
+                                    <include-form name="ListInvoiceStatus" location="component://accounting/widget/InvoiceForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.AccountingAppliedPayments} ${appliedAmount?currency(${invoice.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${invoice.currencyUomId})}"
+                                    navigation-form-name="ListInvoiceApplications">
+                                    <link target="editInvoiceApplications" text="${uiLabelMap.CommonUpdate}" style="${styles.button_default}">
+                                        <parameter param-name="invoiceId"/>
+                                    </link>
+                                    <include-form name="ListInvoiceApplications" location="component://accounting/widget/InvoiceForms.xml"/>
+                                </screenlet>                                
+                                <screenlet title="${uiLabelMap.AccountingInvoiceRoles}" navigation-form-name="invoiceRoles">
+                                    <container>
+                                        <link target="invoiceRoles" text="${uiLabelMap.CommonUpdate}" style="${styles.button_default}">
                                             <parameter param-name="invoiceId"/>
                                         </link>
-                                        <include-form name="ListInvoiceApplications" location="component://accounting/widget/InvoiceForms.xml"/>
-                                    </screenlet>
-                                </container>
-                                <container style="${styles.grid_large}6">
-                                    <screenlet title="${uiLabelMap.AccountingInvoiceRoles}" navigation-form-name="invoiceRoles">
-                                        <container>
-                                            <link target="invoiceRoles" text="${uiLabelMap.CommonUpdate}" style="${styles.button_default}">
-                                                <parameter param-name="invoiceId"/>
-                                            </link>
-                                        </container>
-                                        <include-form name="invoiceRoles" location="component://accounting/widget/InvoiceForms.xml"/>
-                                    </screenlet>
-                                    <screenlet title="${uiLabelMap.PartyTerms}">
-                                        <include-form name="ListInvoiceTerms" location="component://accounting/widget/InvoiceForms.xml"/>
-                                        <include-form name="ListInvoicePaymentInfo" location="component://accounting/widget/InvoiceForms.xml"/>
-                                    </screenlet>
-                                </container>
-                                <container style="clear"/>
+                                    </container>
+                                    <include-form name="invoiceRoles" location="component://accounting/widget/InvoiceForms.xml"/>
+                                </screenlet>
+                                <screenlet title="${uiLabelMap.PartyTerms}">
+                                    <include-form name="ListInvoiceTerms" location="component://accounting/widget/InvoiceForms.xml"/>
+                                    <include-form name="ListInvoicePaymentInfo" location="component://accounting/widget/InvoiceForms.xml"/>
+                                </screenlet>                                
                                 <screenlet title="${uiLabelMap.AccountingInvoiceItems}" navigation-form-name="invoiceItems">
                                     <link target="listInvoiceItems" text="${uiLabelMap.CommonUpdate}" style="${styles.button_default}">
                                         <parameter param-name="invoiceId"/>

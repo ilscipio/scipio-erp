@@ -159,6 +159,9 @@ to this one.
     <#if last>
       <#local class = addClassArg(class, styles.grid_end!)>
     </#if>
+    <#if collapse>
+      <#local class = addClassArg(class, styles.collapse!)>
+    </#if>
     <#-- save grid sizes -->
     <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
   <#else>
@@ -173,7 +176,7 @@ to this one.
 </#macro>
 
 <#-- @cell container markup - theme override -->
-<#macro cell_markup open=true close=true class="" id="" last=false extraArgs...>
+<#macro cell_markup open=true close=true class="" id="" last=false collapse=false extraArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt>
   </#if>

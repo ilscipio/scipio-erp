@@ -281,19 +281,15 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderFormatFieldRowOpen collapse=false style="" positions="">
   <#global renderFormatFieldRow_gridUsed = 0>
-  <div class="${styles.grid_row!} form-field-row">
-    <#-- Cato: save grid sizes (if any) for widgets -->
-    <#local rowCellClasses><#if style?has_content>${style}<#else>${styles.grid_large!}12</#if> ${styles.grid_cell!}</#local>
-    <#local dummy = saveCurrentContainerSizesFromStyleStr(rowCellClasses)>
-    <div class="${rowCellClasses}">
-      <div class="${styles.grid_row!}<#if collapse> ${styles.collapse!}</#if>">
+  <@row openOnly=true class="+form-field-row" />
+    <#local rowCellClasses><#if style?has_content>${style}<#else>${styles.grid_large!}12</#if></#local>
+    <@cell openOnly=true class=rowCellClasses />
+      <@row openOnly=true collapse=collapse />
 </#macro>
 <#macro renderFormatFieldRowClose>
-      </div>
-    </div>
-    <#-- Cato: pop the grid sizes -->
-    <#local dummy = unsetCurrentContainerSizes()>      
-  </div>
+      <@row closeOnly=true />
+    <@cell closeOnly=true />
+  <@row closeOnly=true />
 </#macro>
 
 <#function isFieldTypeAction fieldType fieldTitleBlank>

@@ -47,7 +47,7 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#if autoUpdateLink?has_content>
     <@script>ajaxUpdateAreaPeriodic('${id}', '${autoUpdateLink}', '', '${autoUpdateInterval}');</@script>
   </#if>
-  <#-- Cato: save grid sizes (if any) -->
+  <#-- Cato: save grid sizes (if any) for simple low-level container -->
   <#local dummy = saveCurrentContainerSizesFromStyleStr(style)>
   <div<#if style?has_content> class="${style}"</#if><#if id?has_content> id="${id}"</#if>>
 </#macro>
@@ -182,22 +182,17 @@ not "current" context (too intrusive in current renderer design). still relies o
     </form>
   </#if>
   -->
-  <div class="${styles.grid_row!}">
-    <#local cellClasses = "${styles.grid_large!}12 ${styles.grid_cell!}">
-    <#-- Cato: save grid sizes (if any) -->
-    <#local dummy = saveCurrentContainerSizesFromStyleStr(cellClasses)>  
-    <div class="${cellClasses}">  
-      <div class="${styles.grid_row!}">
+  <@row openOnly=true />
+    <@cell openOnly=true /> 
+      <@row openOnly=true />
         <#-- for now, make each column a huge cell 
              (can't use grid any other way without rewriting portal page render order?) -->
 </#macro>
 
 <#macro renderPortalPageEnd>
-      </div>
-    </div>
-    <#-- Cato: pop the grid sizes -->
-    <#local dummy = unsetCurrentContainerSizes()>       
-  </div>
+      <@row closeOnly=true />
+    <@cell closeOnly=true />
+  <@row closeOnly=true />
 </#macro>
 
 <#function getPortalPageWidthPercent widthHint>
@@ -267,10 +262,8 @@ not "current" context (too intrusive in current renderer design). still relies o
     </#if>
     
     <#-- Column: columnCount: ${columnCount}, columnIndex: ${columnIndex}, portalPageGridUsed: ${portalPageGridUsed}, width: ${width} --> 
-    <#local portalPageClasses = "${styles.grid_large!}${columnSize} ${styles.grid_cell!}${endClassStr}">
-    <#-- Cato: save grid sizes (if any) -->
-    <#local dummy = saveCurrentContainerSizesFromStyleStr(portalPageClasses)>
-    <div class="${portalPageClasses}">
+    <#local portalPageClasses = "${styles.grid_large!}${columnSize}${endClassStr}">
+    <@cell openOnly=true class=portalPageClasses />
     <#if confMode == "true">
       <div class="portal-column-config-title-bar">
         <ul>
@@ -299,9 +292,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderPortalPageColumnEnd>
-    </div>
-    <#-- Cato: pop the grid sizes -->
-    <#local dummy = unsetCurrentContainerSizes()>    
+    <@cell closeOnly=true /> 
 </#macro>
 
 <#macro renderPortalPagePortletBegin originalPortalPageId portalPageId portalPortletId portletSeqId prevPortletId="" prevPortletSeqId="" nextPortletId="" nextPortletSeqId="" columnSeqId="" prevColumnSeqId="" nextColumnSeqId="" confMode="false" delPortletHint="Remove this portlet" editAttribute="false" editAttributeHint="Edit portlet parameters" width="auto" columnCount=1 columnIndex=0>

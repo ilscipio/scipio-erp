@@ -103,37 +103,38 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderSubmitField buttonType className alert formName name event action imgSrc confirmation containerId ajaxUrl title fieldType="" fieldTitleBlank=false showProgress="" href="" inputType="" disabled=false id="">
+  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
   <#local progressOptions = "">
-    <#if !(showProgress?is_boolean && showProgress == false) && 
-       ((showProgress?is_boolean && showProgress == true) ||
-        ((htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true))>
-      <#local baseId = htmlFormRenderFormInfo.name!"" + "_catouplprogform">       
-      <#local progressOptions = {
-        "formSel" : "form[name=${htmlFormRenderFormInfo.name}]",
-        "progBarId" : "${baseId}_progbar",
-        "progTextBoxId" : "${baseId}_textbox",
-        
-        "expectedResultContainerSel" : "#main-content",
-        "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
-        "errorResultAddWrapper" : false
-      }>
-      <#local action = htmlFormRenderFormInfo.progressSuccessAction!"">
-      <#if action?starts_with("redirect;")>
-        <#local progressOptions = concatMaps(progressOptions, { "successRedirectUrl" : action?substring("redirect;"?length) })>
-      <#elseif action == "reload" || action?starts_with("reload:")>
-        <#-- FIXME: js-based reload doesn't work right in too many cases (e.g. when just came back to screen from
-             switching visual theme and try to upload; url is something unrelated to page) -->
-        <#local progressOptions = concatMaps(progressOptions, { "successReloadWindow" : true })>
-      </#if>
+  <#if !(showProgress?is_boolean && showProgress == false) && 
+     ((showProgress?is_boolean && showProgress == true) ||
+      ((htmlFormRenderFormInfo.formType)! == "upload" && (htmlFormRenderFormInfo.showProgress)! == true))>
+    <#local baseId = htmlFormRenderFormInfo.name!"" + "_catouplprogform">       
+    <#local progressOptions = {
+      "formSel" : "form[name=${htmlFormRenderFormInfo.name}]",
+      "progBarId" : "${baseId}_progbar",
+      "progTextBoxId" : "${baseId}_textbox",
       
-      <#if htmlFormRenderFormInfo.progressOptions?has_content>
-        <#-- json is valid freemarker map -->
-        <#local addOpts = ("{" + htmlFormRenderFormInfo.progressOptions + "}")?eval>
-        <#if addOpts?has_content>
-          <#local progressOptions = progressOptions + addOpts>  
-        </#if>
+      "expectedResultContainerSel" : "#main-content",
+      "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
+      "errorResultAddWrapper" : false
+    }>
+    <#local action = htmlFormRenderFormInfo.progressSuccessAction!"">
+    <#if action?starts_with("redirect;")>
+      <#local progressOptions = concatMaps(progressOptions, { "successRedirectUrl" : action?substring("redirect;"?length) })>
+    <#elseif action == "reload" || action?starts_with("reload:")>
+      <#-- FIXME: js-based reload doesn't work right in too many cases (e.g. when just came back to screen from
+           switching visual theme and try to upload; url is something unrelated to page) -->
+      <#local progressOptions = concatMaps(progressOptions, { "successReloadWindow" : true })>
+    </#if>
+    
+    <#if htmlFormRenderFormInfo.progressOptions?has_content>
+      <#-- json is valid freemarker map -->
+      <#local addOpts = ("{" + htmlFormRenderFormInfo.progressOptions + "}")?eval>
+      <#if addOpts?has_content>
+        <#local progressOptions = progressOptions + addOpts>  
       </#if>
     </#if>
+  </#if>
 
   <#-- delegate to cato libs -->
   <#if event?has_content>
@@ -174,8 +175,8 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit showProgress=false progressOptions="" progressSuccessAction="" attribs={}>
   <!-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
-  <#-- TODO: should use set/getRequestVar for htmlFormRenderFormInfo instead of #global -->
-  <#global htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressOptions" : StringUtil.wrapString(progressOptions), "progressSuccessAction" : StringUtil.wrapString(progressSuccessAction), "attribs":attribs}>
+  <#local htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressOptions" : StringUtil.wrapString(progressOptions), "progressSuccessAction" : StringUtil.wrapString(progressSuccessAction), "attribs":attribs}>
+  <#local dummy = setRequestVar("htmlFormRenderFormInfo", htmlFormRenderFormInfo)>
   <form method="post" action="${linkUrl}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if><#if containerId?has_content> id="${containerId}"</#if> class=<#if containerStyle?has_content>"${containerStyle}"<#else>"basic-form"</#if> onsubmit="javascript:submitFormDisableSubmits(this); <#if !useRowSubmit>submitRowForm(this);</#if>"<#if autocomplete?has_content> autocomplete="${autocomplete}"</#if> name="${name}"><#lt/>
     <#if useRowSubmit?has_content && useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>
@@ -210,13 +211,20 @@ not "current" context (too intrusive in current renderer design). still relies o
       });
     </@script>
   </#if>
-  <#global htmlFormRenderFormInfo = {}>
+  <#local dummy = setRequestVar("htmlFormRenderFormInfo", {})>
 </#macro>
 <#macro renderMultiFormClose>
   </form><#lt/>
 </#macro>
 
 <#macro renderFormatListWrapperOpen formName style columnStyles formType="" attribs={}>
+  <#-- Cato: this may be called without a corresponding call to renderFormOpen, so may need to set form info here -->
+  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
+  <#if !htmlFormRenderFormInfo?has_content>
+    <#local htmlFormRenderFormInfo = { "name" : formName, "formType" : formType, "attribs":attribs, "setByListWrapper":true }>
+    <#local dummy = setRequestVar("htmlFormRenderFormInfo", htmlFormRenderFormInfo)>
+  </#if>
+
   <!-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
   <#local styleSet = splitStyleNamesToSet(style)>
   <#-- Cato: support setting and removing responsive/scrollable settings from widget table via style attribute -->
@@ -251,6 +259,11 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#macro renderFormatListWrapperClose formName>
   <#local stackValues = popRequestStack("renderFormatListWrapperStack")!{}>
   <@table closeOnly=true />
+  <#-- Cato: unset form info, but only if it was the list wrapper that set it -->
+  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
+  <#if (htmlFormRenderFormInfo.setByListWrapper!false) == true>
+    <#local dummy = setRequestVar("htmlFormRenderFormInfo", {})>
+  </#if>
 </#macro>
 
 <#macro renderFormatHeaderRowOpen style>

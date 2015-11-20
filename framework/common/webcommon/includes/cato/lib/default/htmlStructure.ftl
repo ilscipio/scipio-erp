@@ -77,11 +77,11 @@ to this one.
     <#-- WARN: has no memory when closeOnly... -->
     <#local classes = "">
   </#if>
-  <@row_markup open=open close=close class=class collapse=collapse id=id alt=alt selected=selected><#nested /></@row_markup>
+  <@row_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class collapse=collapse id=id alt=alt selected=selected><#nested /></@row_markup>
 </#macro>
 
 <#-- @row container markup - theme override -->
-<#macro row_markup open=true close=true class="" collapse=false id="" alt="" selected="" extraArgs...>
+<#macro row_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" collapse=false id="" alt="" selected="" extraArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt/>
   </#if>
@@ -168,7 +168,7 @@ to this one.
     <#-- WARN: has no memory when closeOnly... -->
     <#local class = "">
   </#if>
-  <@cell_markup open=open close=close class=class id=id last=last><#nested></@cell_markup>
+  <@cell_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id last=last><#nested></@cell_markup>
   <#if close>
     <#-- pop grid sizes -->
     <#local dummy = unsetCurrentContainerSizes()>
@@ -176,7 +176,7 @@ to this one.
 </#macro>
 
 <#-- @cell container markup - theme override -->
-<#macro cell_markup open=true close=true class="" id="" last=false collapse=false extraArgs...>
+<#macro cell_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" last=false collapse=false extraArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt>
   </#if>
@@ -727,7 +727,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
       </#if>
   
       <#-- DEV NOTE: when adding params to this call, remember to update the stack above as well! -->
-      <@section_markup_container open=open close=close sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup class=class innerClass=innerClass
+      <@section_markup_container open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup class=class innerClass=innerClass
         contentFlagClasses=contentFlagClasses id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId collapsible=collapsible saveCollapsed=saveCollapsed 
         expandToolTip=expandToolTip collapseToolTip=collapseToolTip padded=padded showMore=showMore fullUrlString=fullUrlString
         javaScriptEnabled=javaScriptEnabled fromScreenDef=fromScreenDef hasContent=hasContent menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu forceEmptyMenu=forceEmptyMenu>
@@ -789,7 +789,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 </#function>
 
 <#-- @section container markup - theme override -->
-<#macro section_markup_container open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" class="" outerClass="" 
+<#macro section_markup_container open=true close=true openOnly=false closeOnly=false nestedOnly=false sectionLevel=1 headingLevel=1 menuTitleContent="" class="" outerClass="" 
     innerClass="" contentFlagClasses="" id="" title="" collapsed=false collapsibleAreaId="" collapsible=false saveCollapsed=true 
     expandToolTip=true collapseToolTip=true padded=false showMore=true fullUrlString=""
     javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false extraArgs...>

@@ -438,7 +438,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     "fixedColumnsLeft" : fixedColumnsLeft,
     "fixedColumnsRight" : fixedColumnsRight
   }>
-  <@table_markup open=open close=close type=type styleName=styleName class=class id=id cellspacing=cellspacing 
+  <@table_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly type=type styleName=styleName class=class id=id cellspacing=cellspacing 
       useResponsive=useResponsive responsiveArgs=responsiveArgs autoAltRows=autoAltRows firstRowAlt=firstRowAlt 
       inheritAltRows=inheritAltRows useFootAltRows=useFootAltRows attribs=attribs excludeAttribs=["class", "id", "cellspacing"]>
     <#nested>
@@ -453,8 +453,8 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 </#macro>
 
 <#-- @table main markup - theme override -->
-<#macro table_markup type="" styleName="" class="" id="" cellspacing="" useResponsive=false responsiveArgs={} 
-  autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false open=true close=true attribs={} excludeAttribs=[] extraArgs...>
+<#macro table_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false type="" styleName="" class="" id="" cellspacing="" useResponsive=false responsiveArgs={} 
+  autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs={} excludeAttribs=[] extraArgs...>
   <#if open>
     <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
       <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>  

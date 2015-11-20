@@ -320,16 +320,29 @@ A visible fieldset, including the HTML element.
 <#macro fieldset_core class="" containerClass="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false openOnly=false closeOnly=false nestedOnly=false>
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
-  <@fieldset_markup open=open close=close class=class containerClass=containerClass id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible><#nested></@fieldset_markup>
+  <#if id?has_content>
+    <#local containerId = "${id}_wrapper">
+  <#else>
+    <#local containerId = "">
+  </#if>
+  <#-- TODO: open/close stack -->
+  <@fieldset_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class containerClass=containerClass id=id containerId=containerId title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible><#nested></@fieldset_markup>
 </#macro>
 
 <#-- @fieldset main markup - theme override -->
-<#macro fieldset_markup open=true close=true class="" containerClass="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false extraArgs...>
+<#macro fieldset_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" containerClass="" id="" containerId="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false extraArgs...>
   <#if open>
+    <#local containerClass = addClassArg(containerClass, "fieldgroup")>
+    <#if collapsible || collapsed>
+      <#local containerClass = addClassArg(containerClass, "toggleField")>
+      <#if collapsed>
+        <#local containerClass = addClassArg(containerClass, styles.collapsed)>
+      </#if>
+    </#if>
     <#local classes = compileClassArg(class)>
     <#local containerClasses = compileClassArg(containerClass, "${styles.grid_large!}12")>
-    <div class="${styles.grid_row!}">
-      <div class="fieldgroup ${styles.grid_cell!}<#if containerClasses?has_content> ${containerClasses}</#if><#if collapsible || collapsed> toggleField<#if collapsed> ${styles.collapsed!}</#if></#if>"<#if id?has_content> id="${id}_wrapper"</#if>>
+    <@row openOnly=true />
+      <@cell openOnly=true class=containerClasses id=containerId />
         <fieldset<#if classes?has_content> class="${classes!}"</#if><#if id?has_content> id="${id}"</#if>>
       <#--<#if collapsible>
         <ul>
@@ -352,8 +365,8 @@ A visible fieldset, including the HTML element.
           <#nested>
   <#if close>
         </fieldset>
-      </div>
-    </div>
+      <@cell closeOnly=true />
+    <@row closeOnly=true />
   </#if>
 </#macro>
 

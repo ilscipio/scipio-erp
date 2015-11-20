@@ -313,7 +313,7 @@ public final class WidgetWorker {
 				writer.append("\t\tvar id = $(\"[id^=" + rowSubmitField.getIdName() + "]\");\r\n");
 				writer.append("\t\t$(id).click(function(e) {\r\n");
 				writer.append("\t\te.preventDefault();\r\n");				
-				writer.append("\t\t\t$(this).parents(\"tr\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");
+				writer.append("\t\t\t$(this).parents(\"form\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");
 				// TODO: Determine what's better in terms of SEO and/or valid markup and tidiness, clone elements into the form or create new hidden form items.
 //				writer.append("\t\t\tconsole.log(\"element ======> \" + $(e).attr(\"name\"));\r\n");
 //				writer.append("var hiddenField = $(\"<input></input>\")\r\n");

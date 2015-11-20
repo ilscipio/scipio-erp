@@ -802,13 +802,12 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     </#if>
     <div<@compiledClassAttribStr class=outerClass />>
         <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
-        <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
-            <#local class = addClassArg(class, "section-screenlet-container ${styles.grid_cell!}")>
+        <@row openOnly=true id=id />
+            <#local class = addClassArg(class, "section-screenlet-container")>
             <#local class = addClassArg(class, contentFlagClasses)>
             <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
-            <#-- save grid sizes -->
-            <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
-            <div<@compiledClassAttribStr class=class />>
+            <#-- NOTE: this is same as calling class=("=" + compileClassArg(class)) to override non-essential @cell class defaults -->
+            <@cell openOnly=true class=compileClassArg(class) />
                 ${menuTitleContent}
                 <#-- note: may need to keep this div free of foundation grid classes (for margins collapse?) -->
                 <#local innerClass = addClassArg(innerClass, "section-screenlet-content")>
@@ -818,10 +817,8 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#nested>
   <#if close>
                 </div>
-            </div>
-            <#-- pop the grid sizes -->
-            <#local dummy = unsetCurrentContainerSizes()>
-        </div>
+            <@cell closeOnly=true />
+        <@row closeOnly=true />
     </div>
   </#if>
 </#macro>

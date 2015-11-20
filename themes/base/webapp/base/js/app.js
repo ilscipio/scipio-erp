@@ -92,7 +92,7 @@ function CatoUploadProgress(options) {
     
     this.successRedirectUrl = options.successRedirectUrl; // optional; if specified, will redirect to this URL on upload success
     this.successSubmitFormSel = options.successSubmitFormSel; // optional; same as successRedirectUrl but submits a form instead
-    this.successReloadWindow = options.successReloadWindow; // optional; same as successRedirectUrl but reloads current page instead
+    this.successReloadWindow = options.successReloadWindow; // optional; same as successRedirectUrl but reloads current page instead (WARN: should usually avoid in Ofbiz screens as causes navigation issues)
     //this.successReplaceWindow = options.successReplaceWindow; // not implemented/possible; optional, default false; if true, upon success will replace this window with contents of iframe
     
     this.preventDoubleUpload = options.preventDoubleUpload; // optional, default true; not sure why would turn this off

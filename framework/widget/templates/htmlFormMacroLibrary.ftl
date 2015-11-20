@@ -210,7 +210,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#-- with "+" (append only), default class will be selected by @table macro -->
     <#local class = "+form-widget-table dark-grid">
   </#if>
-  <@table openOnly=true type=mapOfbizFormTypeToTableType(formType) class=class responsive=responsive scrollable=scrollable />
+  <@table openOnly=true type=mapOfbizFormTypeToTableType(formType) class=class responsive=responsive scrollable=scrollable fixedColumnsLeft=(attribs.tableArgs.fixedColumnsLeft)!0 fixedColumnsRight=(attribs.tableArgs.fixedColumnsRight)!0 />
 </#macro>
 
 <#macro renderFormatListWrapperClose formName>

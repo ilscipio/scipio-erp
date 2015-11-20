@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
@@ -210,6 +212,12 @@ public abstract class ModelForm extends ModelWidget {
     private final Integer defaultPositionSpan;
     
     private final boolean defaultCombineActionFields;
+    
+    /**
+     * Cato: string expression representing a json-like map of extra form attributes.
+     * It is stored without wrapping brackets.
+     */
+    private final FlexibleStringExpander attribsExpr;
     
     /** XML Constructor */
     protected ModelForm(Element formElement, String formLocation, ModelReader entityModelReader, DispatchContext dispatchContext, String defaultType) {
@@ -463,6 +471,25 @@ public abstract class ModelForm extends ModelWidget {
             this.defaultCombineActionFields = parentModel.defaultCombineActionFields;
         } else {
             this.defaultCombineActionFields = "true".equals(defaultCombineActionFields);
+        }
+        
+        // Cato: extra attribs map
+        String attribsExprStr = formElement.getAttribute("attribs");
+        if (attribsExprStr.isEmpty()) {
+            if (parentModel != null) {
+                attribsExpr = parentModel.attribsExpr;
+            }
+            else {
+                attribsExpr = FlexibleStringExpander.getInstance("");
+            }
+        }
+        else {
+            if (parentModel != null) {
+                attribsExpr = FlexibleStringExpander.getInstance(concatMapExpr(parentModel.attribsExpr.getOriginal(), attribsExprStr));
+            }
+            else {
+                attribsExpr = FlexibleStringExpander.getInstance(stripTrimMapExprDelims(attribsExprStr));
+            }
         }
         
         String clientAutocompleteFields = formElement.getAttribute("client-autocomplete-fields");
@@ -1729,6 +1756,46 @@ public abstract class ModelForm extends ModelWidget {
 
     public void runFormActions(Map<String, Object> context) {
         AbstractModelAction.runSubActions(this.actions, context);
+    }
+    
+    public String getAttribsExpr(Map<String, Object> context) {
+        return "{" + attribsExpr.expandString(context) + "}";
+    }
+    
+    /**
+     * Cato: strips starting "{" and trailing "}" from a JSON-like map expression and trims.
+     */
+    static String stripTrimMapExprDelims(String mapExpr) {
+        if (mapExpr != null) {
+            Matcher m = Pattern.compile("^\\s*\\{\\s*(.*)\\s*\\}\\s*$").matcher(mapExpr);
+            if (m.matches()) {
+                mapExpr = m.group(1);
+            }
+            else {
+                mapExpr = mapExpr.trim();
+            }
+            return mapExpr;
+        }
+        else {
+            return "";
+        }
+    }
+    
+    /**
+     * Cato: combine two map expressions into one map expression.
+     */
+    static String concatMapExpr(String first, String second) {
+        first = stripTrimMapExprDelims(first);
+        second = stripTrimMapExprDelims(second);
+        if (first.isEmpty()) {
+            return second;
+        }
+        else if (second.isEmpty()) {
+            return first;
+        }
+        else {
+            return first + ", " + second;
+        }
     }
 
     public static class AltRowStyle {

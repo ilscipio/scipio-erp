@@ -358,6 +358,12 @@ under the License.
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
+            <xs:attribute type="xs:string" name="attribs">
+                <xs:annotation>
+                    <xs:documentation>Cato: A json-/freemarker-like object (map) of per-form extra attributes passed to the underlying theme implementation (template macros).
+                      Note that if a parent (extended) form already had extra attribs, only top-level attribs will be merged; sub-maps will replace those from parent (shallow merge).</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="grid">

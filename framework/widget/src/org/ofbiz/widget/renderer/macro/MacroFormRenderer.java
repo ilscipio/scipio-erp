@@ -1419,6 +1419,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
         }
         
+        // Cato: extra attribs map (json-like)
+        String attribs = modelForm.getAttribsExpr(context);
+
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormOpen ");
         sr.append(" linkUrl=\"");
@@ -1451,8 +1454,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(progressOptions);
         sr.append("\" progressSuccessAction=\"");
         sr.append(progressSuccessAction);
-        sr.append("\"");
-        sr.append(" />");
+        sr.append("\" attribs=(");
+        sr.append(attribs);
+        sr.append(") />");
         executeMacro(writer, sr.toString());
     }
 
@@ -1572,6 +1576,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         columnStyleList = StringUtil.quoteStrList(columnStyleList);
         String columnStyleListString = StringUtil.join(columnStyleList, ", ");
+        
+        // Cato: extra attribs map (json-like)
+        String attribs = modelForm.getAttribsExpr(context);
+        
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatListWrapperOpen ");
         sr.append(" formName=\"");
@@ -1586,7 +1594,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         // Cato: also pass formType, to remove all ambiguity (so macro doesn't have to assume)
         sr.append("] formType=\"");
         sr.append(modelForm.getType());        
-        sr.append("\" />");
+        sr.append("\" attribs=(");
+        sr.append(attribs);
+        sr.append(") />");
         executeMacro(writer, sr.toString());
 
     }

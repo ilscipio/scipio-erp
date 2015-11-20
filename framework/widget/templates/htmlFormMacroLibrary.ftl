@@ -137,8 +137,10 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderSingleFormFieldTitle></#macro>
 
-<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit showProgress=false progressOptions="" progressSuccessAction="">
-  <#global htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressOptions" : StringUtil.wrapString(progressOptions), "progressSuccessAction" : StringUtil.wrapString(progressSuccessAction)}>
+<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit showProgress=false progressOptions="" progressSuccessAction="" attribs={}>
+  <!-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
+  <#-- TODO: should use set/getRequestVar for htmlFormRenderFormInfo instead of #global -->
+  <#global htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressOptions" : StringUtil.wrapString(progressOptions), "progressSuccessAction" : StringUtil.wrapString(progressSuccessAction), "attribs":attribs}>
   <form method="post" action="${linkUrl}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if><#if containerId?has_content> id="${containerId}"</#if> class=<#if containerStyle?has_content>"${containerStyle}"<#else>"basic-form"</#if> onsubmit="javascript:submitFormDisableSubmits(this); <#if !useRowSubmit>submitRowForm(this);</#if>"<#if autocomplete?has_content> autocomplete="${autocomplete}"</#if> name="${name}"><#lt/>
     <#if useRowSubmit?has_content && useRowSubmit>
       <input type="hidden" name="_useRowSubmit" value="Y"/>
@@ -179,7 +181,8 @@ not "current" context (too intrusive in current renderer design). still relies o
   </form><#lt/>
 </#macro>
 
-<#macro renderFormatListWrapperOpen formName style columnStyles formType="">
+<#macro renderFormatListWrapperOpen formName style columnStyles formType="" attribs={}>
+  <!-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
   <#local styleSet = splitStyleNamesToSet(style)>
   <#-- Cato: support setting and removing responsive/scrollable settings from widget table via style attribute -->
   <#local responsive = ""> <#-- Cato: empty string means table type default takes effect -->

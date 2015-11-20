@@ -19,7 +19,7 @@ under the License.
 
 <#macro renderField text><#if text??>${text?xml}</#if></#macro>
 
-<#macro renderFormatListWrapperOpen formName style columnStyles formType=""><${formName}Export></#macro>
+<#macro renderFormatListWrapperOpen formName style columnStyles formType="" attribs={}><${formName}Export></#macro>
 
 <#macro renderFormatListWrapperClose formName></${formName}Export></#macro>
 
@@ -61,7 +61,7 @@ under the License.
 <#macro renderFieldTitle style title id fieldHelpText="" for=""></#macro>
 <#macro renderSingleFormFieldTitle title></#macro>
     
-<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit showProgress=false progressOptions="" progressSuccessAction=""></#macro>
+<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit showProgress=false progressOptions="" progressSuccessAction="" attribs={}></#macro>
 <#macro renderFormClose focusFieldName formName containerId hasRequiredField></#macro>
 <#macro renderMultiFormClose></#macro>
 

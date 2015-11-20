@@ -1089,10 +1089,18 @@ TODO: implement as transform instead
     alt             = boolean, if true alternate row (odd), if false regular (even)
     selected        = boolean, if true row is marked selected
     exclude         = list of attrib names to skip
+    attribNamePrefix      = add this prefix to attribute names
+    alwaysAddPrefix       = if false, only add prefix if not already has prefix (default true)
+    attribNamePrefixStrip = remove this prefix from all attrib names
+    attribNameSubstitutes = map of attrib names to substitute attrib names. note if this is set, the exclude names
+                            should be the names of the subtitutes, not the input attrib names.
+                            note this is applied after prefix ops are applied.
 -->
-<#macro elemAttribStr attribs includeEmpty=false emptyValToken="" exclude=[]>
+<#macro elemAttribStr attribs includeEmpty=false emptyValToken="" exclude=[] 
+  attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={}>
   <#if attribs?is_hash>
-    <#t>${StringUtil.wrapString(Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].makeElemAttribStr(attribs, includeEmpty, emptyValToken, exclude))}
+    ${StringUtil.wrapString(Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].makeElemAttribStr(attribs, includeEmpty, 
+      emptyValToken, exclude, attribNamePrefix, alwaysAddPrefix, attribNamePrefixStrip, attribNameSubstitutes))}<#t>
   <#elseif attribs?is_string>
     <#t> ${attribs?string}
   </#if>

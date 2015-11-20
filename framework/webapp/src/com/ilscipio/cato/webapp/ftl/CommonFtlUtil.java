@@ -353,7 +353,9 @@ public final class CommonFtlUtil {
      * If emptyValToken non-empty, values matching emptyValToken are treated as empty and 
      * included regardless of includeEmpty setting.
      */
-    public static String makeElemAttribStr(Map<String, Object> attribs, boolean includeEmpty, String emptyValToken, Collection<String> exclude) {
+    public static String makeElemAttribStr(Map<String, Object> attribs, boolean includeEmpty, String emptyValToken, 
+            Collection<String> exclude, String attribNamePrefix, boolean alwaysAddPrefix,
+            String attribNamePrefixStrip, Map<String, String> attribNameSubstitutes) {
         StringBuilder sb = new StringBuilder();
         
         if (emptyValToken == null) {
@@ -367,8 +369,36 @@ public final class CommonFtlUtil {
             exclude = new HashSet<String>(exclude); // faster
         }
         
+        if (attribNameSubstitutes != null && attribNameSubstitutes.isEmpty()) {
+            attribNameSubstitutes = null;
+        }
+        if (attribNamePrefix != null && attribNamePrefix.isEmpty()) {
+            attribNamePrefix = null;
+        }
+        if (attribNamePrefixStrip != null && attribNamePrefixStrip.isEmpty()) {
+            attribNamePrefixStrip = null;
+        }
+        
         for(Map.Entry<String, Object> pair : attribs.entrySet()) {
             String name = pair.getKey();
+            
+            if (attribNamePrefix != null) {
+                if (alwaysAddPrefix || !name.startsWith(attribNamePrefix)) {
+                    name = attribNamePrefix + name;
+                }
+            }
+            if (attribNamePrefixStrip != null) {
+                if (name.startsWith(attribNamePrefixStrip)) {
+                    name = name.substring(attribNamePrefixStrip.length());
+                }
+            }
+            if (attribNameSubstitutes != null) {
+                String newName = attribNameSubstitutes.get(name);
+                if (newName != null) {
+                    name = newName;
+                }
+            }
+ 
             if (!exclude.contains(name)) {
                 Object val = pair.getValue();
                 String valStr = (val != null) ? val.toString() : "";

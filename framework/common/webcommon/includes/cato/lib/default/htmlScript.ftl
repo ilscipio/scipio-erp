@@ -183,3 +183,17 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
   </#if>
 </#macro>
 
+
+<#-- 
+*************
+* elemEventAttribStr
+************
+Prints a string of JS events as HTML elem attribs.
+Accepts attrib names as both "onxxx" and "xxx".
+
+  * Parameters *
+    events    = map of event names to actions
+-->
+<#macro elemEventAttribStr events>
+  <@elemAttribStr attribs=events attribNamePrefix="on" alwaysAddPrefix=false /><#t>
+</#macro>

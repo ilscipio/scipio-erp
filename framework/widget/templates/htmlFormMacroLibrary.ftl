@@ -341,11 +341,10 @@ not "current" context (too intrusive in current renderer design). still relies o
        fieldEntrySize: ${fieldEntrySize!} gridSize: ${gridSize!} -->
   
   <#local fieldEntryTypeClass = "field-entry-type-" + mapOfbizFieldTypeToStyleName(fieldType)>
-  <#local outerClasses><#if style?has_content>${style}<#else>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#if> ${styles.grid_cell!}<#if markLast> ${styles.grid_end!}</#if></#local>
-  <#-- Cato: save grid sizes (if any) -->
-  <#local dummy = saveCurrentContainerSizesFromStyleStr(outerClasses)>
-  <div class="${outerClasses}">
-    <div class="${styles.grid_row!} form-field-entry ${fieldEntryTypeClass}">
+  <#local outerClasses><#if style?has_content>${style}<#else>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#if><#if markLast> ${styles.grid_end!}</#if></#local>
+
+  <@cell openOnly=true class=outerClasses />
+    <@row openOnly=true class="+form-field-entry ${fieldEntryTypeClass}" />
     
   <#-- Cato: get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
   <#local absColSizes = getAbsContainerSizeFactors()>
@@ -365,24 +364,18 @@ not "current" context (too intrusive in current renderer design). still relies o
   </#if>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
-      <#local innerClasses><#if style?has_content>${style}<#else>${styles.grid_small!}8<#if isLarge>  ${styles.grid_large!}9</#if></#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}</#local>
+      <#local innerClasses><#if style?has_content>${style}<#else>${styles.grid_small!}8<#if isLarge> ${styles.grid_large!}9</#if></#if> ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}</#local>
   <#else>
-      <#local innerClasses><#if style?has_content>${style}<#else>${styles.grid_small!}12<#if isLarge>  ${styles.grid_large!}12</#if></#if> ${styles.grid_cell!} ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}</#local>
+      <#local innerClasses><#if style?has_content>${style}<#else>${styles.grid_small!}12<#if isLarge> ${styles.grid_large!}12</#if></#if> ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}</#local>
   </#if>
-        <#-- Cato: save grid sizes (if any) for widgets -->
-        <#local dummy = saveCurrentContainerSizesFromStyleStr(innerClasses)>
-        <div class="${innerClasses}">
+      <@cell openOnly=true class=innerClasses />
 </#macro>
 
 <#macro renderFormatFieldRowWidgetCellClose fieldType="" fieldTitleBlank=false>
-      </div>
-      <#-- Cato: pop the grid sizes -->
-      <#local dummy = unsetCurrentContainerSizes()>  
+      <@cell closeOnly=true />
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-    </div>
-  </div>
-  <#-- Cato: pop the grid sizes -->
-  <#local dummy = unsetCurrentContainerSizes()>  
+    <@row closeOnly=true />
+  <@cell closeOnly=true />
 </#macro>
 
 

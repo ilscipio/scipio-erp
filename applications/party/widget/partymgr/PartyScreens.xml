@@ -904,7 +904,7 @@ under the License.
                         <section>
                             <actions>          
                                 <set field="showProgress" type="Boolean" value="true" /> 
-                                <set field="progressSuccessAction" value="reload" />
+                                <set field="progressSuccessAction" value="redirect;;EditPartyContents?partyId=${parameters.partyId}" />
                                 <set field="progressOptions" value="" />
                             </actions>
                             <widgets>

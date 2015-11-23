@@ -355,7 +355,7 @@ public final class CommonFtlUtil {
      */
     public static String makeElemAttribStr(Map<String, Object> attribs, boolean includeEmpty, String emptyValToken, 
             Collection<String> exclude, String attribNamePrefix, boolean alwaysAddPrefix,
-            String attribNamePrefixStrip, Map<String, String> attribNameSubstitutes) {
+            String attribNamePrefixStrip, Map<String, String> attribNameSubstitutes, boolean camelCaseToDashLowerNames) {
         StringBuilder sb = new StringBuilder();
         
         if (emptyValToken == null) {
@@ -405,6 +405,9 @@ public final class CommonFtlUtil {
                 
                 if (includeEmpty || !valStr.isEmpty()) {
                     sb.append(" ");
+                    if (camelCaseToDashLowerNames) {
+                        name = camelCaseToDashLowerName(name);
+                    }
                     sb.append(name);
                     sb.append("=\"");
                     if (!valStr.equals(emptyValToken)) {
@@ -416,6 +419,11 @@ public final class CommonFtlUtil {
         }
         
         return sb.toString();
+    }
+    
+    public static String camelCaseToDashLowerName(String name) {
+        // TODO: optimize
+        return name.replaceAll("([A-Z])", "-$1").toLowerCase();
     }
     
     @SuppressWarnings("unchecked")

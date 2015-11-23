@@ -6,6 +6,8 @@
 *
 * NOTE: May have implicit dependencies on other parts of Cato API.
 *
+* DEV NOTE: This currently contains some theme- and platform-specific utilites... could have own file, but
+*     this is somewhat generic.
 -->
 
 <#--
@@ -185,14 +187,30 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
 
 <#-- 
 *************
-* elemEventAttribStr
+* commonElemEventAttribStr
 ************
-Prints a string of JS events as HTML elem attribs.
+Prints a string of JS events as HTML element attributes for common macro HTML elements.
 Accepts attrib names as both "onxxx" and "xxx".
 
   * Parameters *
     events    = map of event names to actions
 -->
-<#macro elemEventAttribStr events>
+<#macro commonElemEventAttribStr events>
   <@elemAttribStr attribs=events attribNamePrefix="on" alwaysAddPrefix=false /><#t>
+</#macro>
+
+<#-- 
+*************
+* commonElemAttribStr
+************
+Prints a string of element attributes for common macro HTML elements.
+
+  * Parameters *
+    (see @elemAttribStr; same parameters but defaults different)
+-->
+<#macro commonElemAttribStr attribs includeEmpty=false emptyValToken="" exclude=[] 
+  attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=true>
+  <#t><@elemAttribStr attribs=attribs includeEmpty=includeEmpty emptyValToken=emptyValToken exclude=exclude
+    attribNamePrefix=attribNamePrefix alwaysAddPrefix=alwaysAddPrefix attribNamePrefixStrip=attribNamePrefixStrip 
+    attribNameSubstitutes=attribNameSubstitutes camelCaseToDashLowerNames=camelCaseToDashLowerNames /><#t>
 </#macro>

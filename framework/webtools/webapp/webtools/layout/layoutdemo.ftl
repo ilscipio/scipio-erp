@@ -215,12 +215,12 @@
 
   <@section title="Default tables">
     <@section title="generic table">
-      <@table type="generic">
+      <@table type="generic" attribs={"extra-table-attrib":"some-value"}>
         <@commonTestTableContent />
       </@table>
     </@section>  
     <@section title="data-list table">
-      <@table type="data-list">
+      <@table type="data-list" extraTableAttrib="some-value">
         <@commonTestTableContent />
       </@table>
     </@section>   

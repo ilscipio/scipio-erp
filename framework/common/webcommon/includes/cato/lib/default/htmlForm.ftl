@@ -32,6 +32,7 @@ An HTML form element.
     class               = classes on form element itself 
     attribs             = hash of attributes for HTML <form> element (needed for names with dashes)
     inlineAttribs       = other attributes for HTML <form> element
+                          NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#macro form type="input" name="" id="" class="" openOnly=false closeOnly=false nestedOnly=false attribs={} inlineAttribs...>
   <#local attribs = concatMaps(attribs, inlineAttribs)>
@@ -40,7 +41,7 @@ An HTML form element.
   <#if open>
     <#local formInfo = {"type":type, "name":name, "id":id}>
     <#local dummy = pushRequestStack("catoCurrentFormInfo", formInfo)>
-    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "name", "id"]/></#if>>
+    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "name", "id"]/></#if>>
   </#if>
       <#nested>
   <#if close>

@@ -374,6 +374,16 @@ Escapes the URL's parameter delimiters if they are not already escaped.
     </#if>
 </#function>
 
+<#-- 
+*************
+* camelCaseToDashLowerName
+************
+Converts camelCase to camel-case.
+-->
+<#function camelCaseToDashLowerName name>
+    <#return StringUtil.wrapString(Static['com.ilscipio.cato.webapp.ftl.CommonFtlUtil'].camelCaseToDashLowerName(name))?string>
+</#function>
+
 
 <#-- 
 *************
@@ -1080,7 +1090,8 @@ Now implemented as java transform.
 * elemAttribStr
 ************
 Prints a string of element attributes. (HTML, FO, XML)
-TODO: implement as transform instead
+TODO: implement directly as transform instead.
+NOTE: this is a very generic function; for common implementation, see commonElemAttribStr.
 
   * Parameters *
     attribs         = hash of attribute-value pairs. 
@@ -1095,12 +1106,13 @@ TODO: implement as transform instead
     attribNameSubstitutes = map of attrib names to substitute attrib names. note if this is set, the exclude names
                             should be the names of the subtitutes, not the input attrib names.
                             note this is applied after prefix ops are applied.
+    camelCaseToDashLowerNames = boolean, if true converts attrib names from camelCase to camel-case at the very end.
 -->
 <#macro elemAttribStr attribs includeEmpty=false emptyValToken="" exclude=[] 
-  attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={}>
+  attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=false>
   <#if attribs?is_hash>
-    ${StringUtil.wrapString(Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].makeElemAttribStr(attribs, includeEmpty, 
-      emptyValToken, exclude, attribNamePrefix, alwaysAddPrefix, attribNamePrefixStrip, attribNameSubstitutes))}<#t>
+    <#t>${StringUtil.wrapString(Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].makeElemAttribStr(attribs, includeEmpty, 
+      emptyValToken, exclude, attribNamePrefix, alwaysAddPrefix, attribNamePrefixStrip, attribNameSubstitutes, camelCaseToDashLowerNames))}<#t>
   <#elseif attribs?is_string>
     <#t> ${attribs?string}
   </#if>

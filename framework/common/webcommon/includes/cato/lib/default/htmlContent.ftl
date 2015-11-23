@@ -37,6 +37,7 @@
     containerId       = container id  
     attribs              = hash of other legacy h1-h6 attributes (mainly for those with dash in name)
     [inlineAttribs...]   = other legacy h1-h6 attributes, inlined
+                           NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#macro heading elemType=true level="" relLevel="" class="" id="" levelClassPrefix=true consumeLevel="" 
     containerElemType=false containerClass="" containerId="" attribs={} inlineAttribs...>
@@ -103,7 +104,7 @@
     <${containerElem}<@compiledClassAttribStr class=containerClass /><#if containerId?has_content> id="${containerId}"</#if>>
   </#if>
   <#if elem?has_content><${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
-    <#lt><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if><#nested><#if elem?has_content></${elem}></#if>
+    <#lt><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>></#if><#nested><#if elem?has_content></${elem}></#if>
   <#if containerElem?has_content>
     </${containerElem}>
   </#if>
@@ -301,6 +302,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     nestedOnly/openOnly/closeOnly = advanced structure control, for esoteric cases
     attribs         = hash of other legacy <table attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <table attributes and values, inlined
+                            NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
     
     * Responsive Tables *
     responsive/responsiveOptions/
@@ -457,7 +459,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs={} excludeAttribs=[] extraArgs...>
   <#if open>
     <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
-      <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>  
+      <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>  
   </#if>
       <#nested>
   <#if close>
@@ -481,7 +483,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
       <#local dummy = pushRequestStack("catoCurrentTableHeadStack", 
           {"prevTableSectionInfo":prevTableSectionInfo})>
     </#if>
-    <thead<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if>>
+    <thead<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -508,7 +510,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
       <#local dummy = pushRequestStack("catoCurrentTableBodyStack", 
           {"prevTableSectionInfo":prevTableSectionInfo})>
     </#if>
-    <tbody<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if>>
+    <tbody<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -535,7 +537,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
       <#local dummy = pushRequestStack("catoCurrentTableFootStack", 
           {"prevTableSectionInfo":prevTableSectionInfo})>
     </#if>
-    <tfoot<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if>>
+    <tfoot<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -635,7 +637,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     <#if selected?is_boolean && selected == true>
       <#local class = addClassArg(class, styles.row_selected!)>
     </#if>
-    <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if>>
+    <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>>
   </#if>    
       <#nested>
   <#if close>
@@ -681,14 +683,14 @@ Helps define table cells.
   <#local attribs = concatMaps(attribs, inlineAttribs)>
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
-  <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if>></#if><#nested><#if close></th></#if>
+  <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
 <#macro td class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
   <#local attribs = concatMaps(attribs, inlineAttribs)>
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
-  <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class", "id"]/></#if>></#if><#nested><#if close></td></#if>
+  <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>></#if><#nested><#if close></td></#if>
 </#macro>
 
 <#-- 

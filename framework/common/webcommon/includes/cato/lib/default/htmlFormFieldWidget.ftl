@@ -50,7 +50,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#if disabled?has_content && disabled> disabled="disabled"</#if><#rt/>
     <#if readonly?has_content && readonly> readonly="readonly"</#if><#rt/>
     <#if id?has_content> id="${id}"</#if><#rt/>
-    <#if events?has_content><@elemEventAttribStr events=events /></#if><#rt/>
+    <#if events?has_content><@commonElemEventAttribStr events=events /></#if><#rt/>
     <#if clientAutocomplete?has_content && clientAutocomplete=="false"> autocomplete="off"</#if><#rt/>
     <#if placeholder?has_content> placeholder="${placeholder}"</#if><#rt/>
   /><#t/>
@@ -332,7 +332,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#if tooltip?has_content>
       <#local class = addClassArg(class, "has-tip tip-right")>
     </#if>
-    <select name="${name!""}<#rt/>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if multiple> multiple="multiple"</#if><#if (otherFieldSize > 0)> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if events?has_content><@elemEventAttribStr events=events /></#if><#rt/><#--<#if size?has_content> size="${size}"</#if>-->
+    <select name="${name!""}<#rt/>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if multiple> multiple="multiple"</#if><#if (otherFieldSize > 0)> onchange="process_choice(this,document.${formName}.${otherFieldName})"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if><#rt/><#--<#if size?has_content> size="${size}"</#if>-->
     <#if title?has_content> title="${title}"<#elseif tooltip?has_content> title="${tooltip}"</#if>
     <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true"</#if><#rt/>>
     <#if !manualItemsOnly>  
@@ -454,7 +454,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#else>
       <input type="text"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if>
         <#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if id?has_content> id="${id}"</#if><#rt/>
-        <#if readonly?has_content && readonly> readonly="readonly"</#if><#rt/><#if events?has_content><@elemEventAttribStr events=events /></#if><#rt/><#rt/>
+        <#if readonly?has_content && readonly> readonly="readonly"</#if><#rt/><#if events?has_content><@commonElemEventAttribStr events=events /></#if><#rt/><#rt/>
         <#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/></#if>
     <#if presentation?has_content && descriptionFieldName?has_content && presentation == "window">
       <a href="javascript:call_fieldlookup3(document.${formName?html}.${name?html},document.${formName?html}.${descriptionFieldName},'${fieldFormName}', '${presentation}'<#rt/>
@@ -626,7 +626,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
         <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif allChecked?has_content><#if allChecked> checked="checked"</#if>
         <#elseif currentValue?has_content && currentValue?seq_contains(itemValue)> checked="checked"
         <#elseif defaultValue?has_content && defaultValue?seq_contains(itemValue)> checked="checked"</#if> 
-        name="${name?html}" value="${itemValue?html}"<@elemEventAttribStr events=((events!{}) + (item.events!{})) />/><#rt/>
+        name="${name?html}" value="${itemValue?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#rt/>
       <label<#if currentId?has_content> for="${currentId}"</#if>></label>
       <#-- FIXME?: description destroys field if put inside <label> above... also <label> has to be separate from input (not parent)... ? -->
       <#if item.description?has_content><span class="checkbox-label-local">${item.description}</span></#if>
@@ -693,7 +693,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       <input type="radio"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#if currentId?has_content> id="${currentId}"</#if><#if item.tooltip?has_content || tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="<#if item.tooltip?has_content>${item.tooltip}<#else>${tooltip!}</#if>"</#if><#rt/>
         <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif currentValue?has_content><#if currentValue==itemValue> checked="checked"</#if>
         <#elseif defaultValue?has_content && defaultValue == itemValue> checked="checked"</#if> 
-        name="${name?html}" value="${itemValue!""?html}"<@elemEventAttribStr events=((events!{}) + (item.events!{})) />/><#rt/>
+        name="${name?html}" value="${itemValue!""?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#rt/>
       <#if item.description?has_content>
         <label class="radio-label-local"<#if currentId?has_content> for="${currentId}"</#if>>${item.description}</span>
       </#if>
@@ -780,19 +780,19 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#local buttonMarkup>
       <#if buttonType == "text-link">
         <#local class = addClassArgDefault(class, styles.button_default!)>
-        <a<@fieldClassAttribStr class=class alert=alert />href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if events?has_content><@elemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if><#if id?has_content> id="${id}"<#else> id="noId"</#if>><#if text?has_content>${text}</#if></a>
+        <a<@fieldClassAttribStr class=class alert=alert />href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if><#if id?has_content> id="${id}"<#else> id="noId"</#if>><#if text?has_content>${text}</#if></a>
       <#elseif buttonType == "image">
         <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if id?has_content> id="${id}"</#if>
         <#if description?has_content> alt="${description}"</#if>
         <#if disabled> disabled="disabled"<#else>
-          <#if events?has_content><@elemEventAttribStr events=events /><#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
+          <#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
         </#if>/>
       <#else>
         <#local class = addClassArgDefault(class, styles.button_default!)>
         <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if>
         <#if name?has_content> name="${name}"</#if><#if text?has_content> value="${text}"</#if>
         <#if disabled> disabled="disabled"<#else>
-          <#if events?has_content><@elemEventAttribStr events=events /><#else>
+          <#if events?has_content><@commonElemEventAttribStr events=events /><#else>
             <#if containerId?has_content> onclick="<#if confirmation?has_content>if (confirm('${confirmation?js_string}')) </#if>ajaxSubmitFormUpdateAreas('${containerId}', '${ajaxUrl}')"<#else>
             <#if confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if>
             </#if>
@@ -970,7 +970,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 
 <#-- field markup - theme override -->
 <#macro field_hidden_markup_widget name="" value="" id="" events={} extraArgs...>
-  <input type="hidden" name="${name}"<#if value?has_content> value="${value}"</#if><#if id?has_content> id="${id}"</#if><#if events?has_content><@elemEventAttribStr events=events /></#if>/>
+  <input type="hidden" name="${name}"<#if value?has_content> value="${value}"</#if><#if id?has_content> id="${id}"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if>/>
 </#macro>
 
 <#-- migrated from @renderDisplayField form widget macro -->

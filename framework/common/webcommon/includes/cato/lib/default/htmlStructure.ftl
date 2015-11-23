@@ -23,6 +23,7 @@ to this one.
   * Parameters *
     class                 = css classes (supports prefixed/extended syntax, but normally no classes will be added)
     attribs/inlineAttribs = other attributes for div; attribs map needed for attribs with dashes in names.
+                            NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#macro container class="" openOnly=false closeOnly=false nestedOnly=false attribs={} inlineAttribs...>
   <#local attribs = concatMaps(attribs, inlineAttribs)>
@@ -32,7 +33,7 @@ to this one.
     <#-- NOTE: currently, no stack needed; simple -->
     <#-- save grid sizes (can simply assume this is a cell; saveCurrentContainerSizesFromStyleStr will be okay with it) -->
     <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
-    <div<@compiledClassAttribStr class=class /><#if attribs?has_content><@elemAttribStr attribs=attribs exclude=["class"]/></#if>>
+    <div<@compiledClassAttribStr class=class /><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class"]/></#if>>
   </#if>
       <#nested>
   <#if close>

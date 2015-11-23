@@ -33,11 +33,11 @@ to this one.
     <#-- NOTE: currently, no stack needed; simple -->
     <#-- save grid sizes (can simply assume this is a cell; saveCurrentContainerSizesFromStyleStr will be okay with it) -->
     <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
-    <div<@compiledClassAttribStr class=class /><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class"]/></#if>>
+    <div<@compiledClassAttribStr class=class /><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class"]/></#if>><#rt>
   </#if>
-      <#nested>
+      <#nested><#t>
   <#if close>
-    </div>
+    </div><#lt>
     <#-- pop grid sizes -->
     <#local dummy = unsetCurrentContainerSizes()>
   </#if>

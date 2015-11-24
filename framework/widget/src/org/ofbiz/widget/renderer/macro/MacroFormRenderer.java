@@ -1420,7 +1420,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         
         // Cato: extra attribs map (json-like)
-        String attribs = modelForm.getAttribsExpr(context);
+        String attribs = modelForm.getAttribsExpr().compile(context);
 
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormOpen ");
@@ -1578,7 +1578,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         String columnStyleListString = StringUtil.join(columnStyleList, ", ");
         
         // Cato: extra attribs map (json-like)
-        String attribs = modelForm.getAttribsExpr(context);
+        String attribs = modelForm.getAttribsExpr().compile(context);
         
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatListWrapperOpen ");
@@ -1829,6 +1829,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
     
     public void renderFormatFieldRowTitleCellOpen(Appendable writer, Map<String, Object> context, ModelFormField modelFormField) throws IOException {
         String style = modelFormField.getTitleAreaStyle();
+        
+        // Cato: extra attribs map (json-like)
+        String attribs = modelFormField.getAttribsExpr().compile(context);
+        
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatFieldRowTitleCellOpen ");
         sr.append(" style=\"");
@@ -1837,7 +1841,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         appendPositionParams(sr, context, modelFormField);
         appendFieldInfo(sr, context, modelFormField);
         appendAsterisksParams(sr, context, modelFormField);
-        sr.append(" />");
+        sr.append(" attribs=(");
+        sr.append(attribs);
+        sr.append(") />");
         executeMacro(writer, sr.toString());
     }
 
@@ -1854,6 +1860,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
     public void renderFormatFieldRowWidgetCellOpen(Appendable writer, Map<String, Object> context, ModelFormField modelFormField, int positions, int positionSpan, Integer nextPositionInRow) throws IOException {
         String areaStyle = modelFormField.getWidgetAreaStyle();
+        
+        // Cato: extra attribs map (json-like)
+        String attribs = modelFormField.getAttribsExpr().compile(context);
+        
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormatFieldRowWidgetCellOpen ");
         //sr.append(" positionSpan=");
@@ -1864,7 +1874,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         appendPositionParams(sr, context, modelFormField);
         appendFieldInfo(sr, context, modelFormField);
         appendAsterisksParams(sr, context, modelFormField);
-        sr.append(" />");
+        sr.append(" attribs=(");
+        sr.append(attribs);
+        sr.append(") />");
         executeMacro(writer, sr.toString());
     }
 

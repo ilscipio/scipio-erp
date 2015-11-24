@@ -344,7 +344,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#return (fieldType=="submit" || fieldType=="reset" || (fieldType=="hyperlink" && fieldTitleBlank))>
 </#function>
 
-<#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="">
+<#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={}>
   <#global renderFormatFieldRowTitleCellOpened = true>
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false fieldType="" fieldTitleBlank=false>
@@ -352,7 +352,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderFormatFieldRowSpacerCell></#macro>
-<#macro renderFormatFieldRowWidgetCellOpen collapse=false positionSpan="" style="" positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="">
+<#macro renderFormatFieldRowWidgetCellOpen collapse=false positionSpan="" style="" positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={}>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#-- calculate position grid usage size for this field entry (recalc positionSpan ourselves) -->
   <#--positions: ${positions!} position: ${position!} positionSpan: ${positionSpan!} nextPositionInRow: ${nextPositionInRow!} lastPositionInRow: ${lastPositionInRow!} -->

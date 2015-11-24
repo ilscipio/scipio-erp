@@ -108,6 +108,12 @@ public class ModelFormFieldBuilder {
     private FlexibleStringExpander widgetStyle = FlexibleStringExpander.getInstance("");
     private String parentFormName = "";
     
+    /**
+     * Cato: string expression representing a json-like map of extra form attributes.
+     * It is stored without wrapping brackets.
+     */
+    private AttribsExpression attribsExpr = AttribsExpression.makeAttribsExpr();
+    
     public ModelFormFieldBuilder() {
     }
 
@@ -171,6 +177,8 @@ public class ModelFormFieldBuilder {
         this.widgetAreaStyle = fieldElement.getAttribute("widget-area-style");
         this.widgetStyle = FlexibleStringExpander.getInstance(fieldElement.getAttribute("widget-style"));
         this.parentFormName = fieldElement.getAttribute("form-name");
+        this.attribsExpr = AttribsExpression.makeAttribsExpr(fieldElement.getAttribute("attribs"));
+        
         Element childElement = null;
         List<? extends Element> subElements = UtilXml.childElementList(fieldElement);
         for (Element subElement : subElements) {
@@ -277,6 +285,7 @@ public class ModelFormFieldBuilder {
         this.widgetAreaStyle = modelFormField.getWidgetAreaStyle();
         this.widgetStyle = modelFormField.getWidgetStyle();
         this.parentFormName = modelFormField.getParentFormName();
+        this.attribsExpr = modelFormField.getAttribsExpr();
     }
 
     public ModelFormFieldBuilder(ModelFormFieldBuilder builder) {
@@ -319,6 +328,7 @@ public class ModelFormFieldBuilder {
         this.widgetAreaStyle = builder.getWidgetAreaStyle();
         this.widgetStyle = builder.getWidgetStyle();
         this.parentFormName = builder.getParentFormName();
+        this.attribsExpr = builder.getAttribsExpr();
     }
 
     public ModelFormFieldBuilder addOnChangeUpdateArea(UpdateArea onChangeUpdateArea) {
@@ -493,6 +503,10 @@ public class ModelFormFieldBuilder {
 
     public String getParentFormName() {
         return this.parentFormName;
+    }
+    
+    public AttribsExpression getAttribsExpr() {
+        return attribsExpr;
     }
 
     private boolean induceFieldInfo(ModelForm modelForm, String defaultFieldType, ModelReader entityModelReader, DispatchContext dispatchContext) {
@@ -775,6 +789,9 @@ public class ModelFormFieldBuilder {
             this.onChangeUpdateAreas.addAll(builder.getOnChangeUpdateAreas());
         if (UtilValidate.isNotEmpty(builder.getOnClickUpdateAreas()))
             this.onClickUpdateAreas.addAll(builder.getOnClickUpdateAreas());
+        // Cato: don't forget to merge attribsExpr
+        if (UtilValidate.isNotEmpty(builder.getAttribsExpr()))
+            this.attribsExpr = this.attribsExpr.putAll(builder.getAttribsExpr());
         this.encodeOutput = builder.getEncodeOutput();
         this.position = builder.getPosition();
         this.positionSpan = builder.getPositionSpan();
@@ -973,4 +990,10 @@ public class ModelFormFieldBuilder {
         this.parentFormName = parentFormName;
         return this;
     }
+    
+    public ModelFormFieldBuilder setAttribsExpr(AttribsExpression attribsExpr) {
+        this.attribsExpr = attribsExpr;
+        return this;
+    }
+    
 }

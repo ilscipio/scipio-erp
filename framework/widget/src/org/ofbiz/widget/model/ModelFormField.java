@@ -141,6 +141,12 @@ public class ModelFormField {
     private final FlexibleStringExpander widgetStyle;
     private final String parentFormName;
 
+    /**
+     * Cato: string expression representing a json-like map of extra form attributes.
+     * It is stored without wrapping brackets.
+     */
+    private final AttribsExpression attribsExpr;
+    
     private ModelFormField(ModelFormFieldBuilder builder) {
         this.action = builder.getAction();
         this.attributeName = builder.getAttributeName();
@@ -193,6 +199,7 @@ public class ModelFormField {
         this.widgetAreaStyle = builder.getWidgetAreaStyle();
         this.widgetStyle = builder.getWidgetStyle();
         this.parentFormName = builder.getParentFormName();
+        this.attribsExpr = builder.getAttribsExpr();
     }
 
     public FlexibleStringExpander getAction() {
@@ -708,6 +715,10 @@ public class ModelFormField {
         if (UtilValidate.isNotEmpty(this.parentFormName)) 
             return this.parentFormName;
         return "";
+    }
+    
+    public AttribsExpression getAttribsExpr() {
+        return attribsExpr;
     }
 
     /**

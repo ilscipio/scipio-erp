@@ -217,7 +217,7 @@ public abstract class ModelForm extends ModelWidget {
      * Cato: string expression representing a json-like map of extra form attributes.
      * It is stored without wrapping brackets.
      */
-    private final FlexibleStringExpander attribsExpr;
+    private final AttribsExpression attribsExpr;
     
     /** XML Constructor */
     protected ModelForm(Element formElement, String formLocation, ModelReader entityModelReader, DispatchContext dispatchContext, String defaultType) {
@@ -475,22 +475,7 @@ public abstract class ModelForm extends ModelWidget {
         
         // Cato: extra attribs map
         String attribsExprStr = formElement.getAttribute("attribs");
-        if (attribsExprStr.isEmpty()) {
-            if (parentModel != null) {
-                attribsExpr = parentModel.attribsExpr;
-            }
-            else {
-                attribsExpr = FlexibleStringExpander.getInstance("");
-            }
-        }
-        else {
-            if (parentModel != null) {
-                attribsExpr = FlexibleStringExpander.getInstance(concatMapExpr(parentModel.attribsExpr.getOriginal(), attribsExprStr));
-            }
-            else {
-                attribsExpr = FlexibleStringExpander.getInstance(stripTrimMapExprDelims(attribsExprStr));
-            }
-        }
+        this.attribsExpr = AttribsExpression.makeAttribsExpr(attribsExprStr, (parentModel != null ? parentModel.attribsExpr : null));
         
         String clientAutocompleteFields = formElement.getAttribute("client-autocomplete-fields");
         if (clientAutocompleteFields.isEmpty() && parentModel != null) {
@@ -896,6 +881,8 @@ public abstract class ModelForm extends ModelWidget {
             if (UtilValidate.isNotEmpty(autoFieldsEntity.mapName)) {
                 builder.setMapName(autoFieldsEntity.mapName);
             }
+            // Cato: add extra default attribs
+            builder.setAttribsExpr(autoFieldsEntity.attribsExpr);
             addUpdateField(builder, useWhenFields, fieldBuilderList, fieldBuilderMap);
         }
     }
@@ -937,6 +924,8 @@ public abstract class ModelForm extends ModelWidget {
                                     builder.setMapName(autoFieldsService.mapName);
                                 }
                                 builder.setRequiredField(!modelParam.optional);
+                                // Cato: add extra default attribs
+                                builder.setAttribsExpr(autoFieldsService.attribsExpr);
                                 addUpdateField(builder, useWhenFields, fieldBuilderList, fieldBuilderMap);
                                 // continue to skip creating based on service param
                                 continue;
@@ -1758,46 +1747,10 @@ public abstract class ModelForm extends ModelWidget {
         AbstractModelAction.runSubActions(this.actions, context);
     }
     
-    public String getAttribsExpr(Map<String, Object> context) {
-        return "{" + attribsExpr.expandString(context) + "}";
+    public AttribsExpression getAttribsExpr() {
+        return attribsExpr;
     }
     
-    /**
-     * Cato: strips starting "{" and trailing "}" from a JSON-like map expression and trims.
-     */
-    static String stripTrimMapExprDelims(String mapExpr) {
-        if (mapExpr != null) {
-            Matcher m = Pattern.compile("^\\s*\\{\\s*(.*)\\s*\\}\\s*$").matcher(mapExpr);
-            if (m.matches()) {
-                mapExpr = m.group(1);
-            }
-            else {
-                mapExpr = mapExpr.trim();
-            }
-            return mapExpr;
-        }
-        else {
-            return "";
-        }
-    }
-    
-    /**
-     * Cato: combine two map expressions into one map expression.
-     */
-    static String concatMapExpr(String first, String second) {
-        first = stripTrimMapExprDelims(first);
-        second = stripTrimMapExprDelims(second);
-        if (first.isEmpty()) {
-            return second;
-        }
-        else if (second.isEmpty()) {
-            return first;
-        }
-        else {
-            return first + ", " + second;
-        }
-    }
-
     public static class AltRowStyle {
         public final String useWhen;
         public final String style;
@@ -1834,6 +1787,12 @@ public abstract class ModelForm extends ModelWidget {
         public final String defaultFieldType;
         public final int defaultPosition;
         public final Integer defaultPositionSpan;
+        
+        /**
+         * Cato: string expression representing a json-like map of extra form attributes.
+         * It is stored without wrapping brackets.
+         */
+        private final AttribsExpression attribsExpr;
 
         public AutoFieldsEntity(Element element) {
             this.entityName = element.getAttribute("entity-name");
@@ -1862,6 +1821,8 @@ public abstract class ModelForm extends ModelWidget {
                         + "], using the default of the form renderer", module);
             }
             this.defaultPositionSpan = positionSpan;
+            
+            this.attribsExpr = AttribsExpression.makeAttribsExpr(element.getAttribute("attribs"));
         }
     }
 
@@ -1871,6 +1832,12 @@ public abstract class ModelForm extends ModelWidget {
         public final String defaultFieldType;
         public final int defaultPosition;
         public final Integer defaultPositionSpan;
+        
+        /**
+         * Cato: string expression representing a json-like map of extra form attributes.
+         * It is stored without wrapping brackets.
+         */
+        private final AttribsExpression attribsExpr;
 
         public AutoFieldsService(Element element) {
             this.serviceName = element.getAttribute("service-name");
@@ -1899,6 +1866,8 @@ public abstract class ModelForm extends ModelWidget {
                         + "], using the default of the form renderer", module);
             }
             this.defaultPositionSpan = positionSpan;
+            
+            this.attribsExpr = AttribsExpression.makeAttribsExpr(element.getAttribute("attribs"));
         }
     }
 

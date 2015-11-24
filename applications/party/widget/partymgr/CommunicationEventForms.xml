@@ -876,7 +876,7 @@ under the License.
     </form>
     
     <form name="uploadContent" type="upload" target="uploadAttachFiletoEmail"
-        attribs="{'showProgress':'${showProgress}', 'progressSuccessAction':'${progressSuccessAction}', 'progressOptions':${groovy: context.progressOptions ?: '&quot;&quot;'} }">
+        attribs="{'showProgress':'${showProgress}', 'progressSuccessAction':'${progressSuccessAction}', 'progressOptions':${groovy: context.progressOptions ?: &quot;''&quot;} }">
         <actions>
             <set field="uploadContent_submitAction" from-field="uploadContent_submitAction" default-value="javascript:(document.uploadContent.datetimeStarted.value=document.EditEmail.datetimeStarted.value),(document.uploadContent.partyIdTo.value=document.EditEmail.partyIdTo.value),(document.uploadContent.subject.value=document.EditEmail.subject.value),(document.uploadContent.content.value=document.EditEmail.content.value),(jQuery(document.uploadContent).trigger('submit')),void(0)" />
         </actions>

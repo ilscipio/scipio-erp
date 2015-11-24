@@ -564,7 +564,7 @@ under the License.
 
     <form name="AddPartyContent" target="updatePartyContent" type="upload" default-map-name="content"
         focus-field-name="contentTypeId" header-row-style="header-row" default-table-style="${styles.table_basic}"
-        attribs="{'showProgress':'${showProgress}', 'progressSuccessAction':'${progressSuccessAction}', 'progressOptions':${groovy: context.progressOptions ?: '&quot;&quot;'} }">
+        attribs="{'showProgress':'${showProgress}', 'progressSuccessAction':'${progressSuccessAction}', 'progressOptions':${groovy: context.progressOptions ?: &quot;''&quot;} }">
         <actions>
             <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
                 <field-map field-name="statusId" from-field="content.statusId"/>
@@ -1247,7 +1247,7 @@ under the License.
     </form>
     
     <form name="ImportParty" type="upload" target="uploadParty" title="" 
-        attribs="{'showProgress':'${showProgress}', 'progressSuccessAction':'${progressSuccessAction}', 'progressOptions':${groovy: context.progressOptions ?: '&quot;&quot;'} }">
+        attribs="{'showProgress':'${showProgress}', 'progressSuccessAction':'${progressSuccessAction}', 'progressOptions':${groovy: context.progressOptions ?: &quot;''&quot;} }">
         <field name="uploadedFile"><file/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpload}"><submit button-type="button"/></field>
     </form>

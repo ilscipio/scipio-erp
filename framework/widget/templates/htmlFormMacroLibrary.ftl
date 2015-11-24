@@ -345,6 +345,11 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#function>
 
 <#macro renderFormatFieldRowTitleCellOpen style="" collapse=false positions="" position="" positionSpan="" nextPositionInRow="" lastPositionInRow="" fieldType="" fieldTitleBlank=false requiredField="" requiredStyle="" attribs={}>
+  <!-- extra form field attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
+  <#-- Cato: save common field info
+      NOTE: because of the way these are organized, following macros may need to add extra info to this map. -->
+  <#local htmlFormRenderFieldInfo = { "attribs":attribs }>
+  <#local dummy = setRequestVar("htmlFormRenderFieldInfo", htmlFormRenderFieldInfo)> <#-- unset in renderFormatFieldRowWidgetCellClose -->
   <#global renderFormatFieldRowTitleCellOpened = true>
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false fieldType="" fieldTitleBlank=false>
@@ -420,6 +425,7 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
     <@row closeOnly=true />
   <@cell closeOnly=true />
+  <#local dummy = setRequestVar("htmlFormRenderFieldInfo", {})>
 </#macro>
 
 

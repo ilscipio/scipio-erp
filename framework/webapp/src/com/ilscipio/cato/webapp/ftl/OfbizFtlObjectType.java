@@ -14,6 +14,9 @@ import javolution.util.FastMap;
  * <p>
  * Needed because the standard FTL type names don't cover the special cases caused by
  * bean wrapping of the ofbiz screen context vars. Essentially Ofbiz-specific.
+ * <p>
+ * <em>NOTE</em>: this is mainly needed for maps. Sequences don't suffer from the
+ * same type confusion or they can be examined using the expected type checks (for the most part).
  */
 public enum OfbizFtlObjectType {
     

@@ -27,7 +27,10 @@ import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.SimpleMapModel;
 import freemarker.ext.util.WrapperTemplateModel;
+import freemarker.template.DefaultArrayAdapter;
+import freemarker.template.DefaultListAdapter;
 import freemarker.template.ObjectWrapper;
+import freemarker.template.ObjectWrapperAndUnwrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleSequence;
 import freemarker.template.TemplateCollectionModel;
@@ -40,6 +43,7 @@ import freemarker.template.TemplateModelIterator;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
 import freemarker.template.TemplateTransformModel;
+import freemarker.template.utility.RichObjectWrapper;
 import javolution.util.FastMap;
 
 /**
@@ -1450,6 +1454,55 @@ public final class CommonFtlUtil {
             throw new TemplateModelException("object is not a recognized map type");
         }
     }
+    
+    /**
+     * Supposed to convert to simple sequence.
+     * <p>
+     * DEV NOTE: I stopped writing/testing this when found out most of the problems w.r.t. collections are not
+     * the FTL types this time but the way they're used in Ofbiz templates.
+     * FTL's CollectionModel (subclass of TemplateCollectionModel) is supposed to cover everything and
+     * won't suffer from the same problems maps have.
+     */
+    @SuppressWarnings("unchecked")
+    private static TemplateSequenceModel toSimpleSequence(ObjectWrapper objectWrapper, TemplateModel object) throws TemplateModelException {
+        if (object instanceof TemplateSequenceModel) {
+            return (TemplateSequenceModel) object;
+        }
+        else if (object instanceof WrapperTemplateModel) {
+            WrapperTemplateModel wrapperModel = (WrapperTemplateModel) object;
+            Object wrappedObject = wrapperModel.getWrappedObject();
+            if (wrappedObject instanceof List) {
+                return DefaultListAdapter.adapt((List<Object>) wrappedObject, (RichObjectWrapper) objectWrapper);
+            }
+            else if (wrappedObject instanceof Object[]) {
+                return DefaultArrayAdapter.adapt((Object[]) wrappedObject, (ObjectWrapperAndUnwrapper) objectWrapper);
+            }
+            else if (wrappedObject instanceof Set) {
+                throw new UnsupportedOperationException("Not yet implemented");
+            }
+            else if (wrappedObject instanceof Collection) {
+                throw new UnsupportedOperationException("Not yet implemented");
+            }
+            else if (wrappedObject instanceof Iterable) {
+                throw new UnsupportedOperationException("Not yet implemented");
+            }
+            else {
+                throw new TemplateModelException("Cannot convert bean-wrapped object of type " + (object != null ? object.getClass() : "null") + " to simple sequence"); 
+            }
+        }
+        else if (object instanceof TemplateCollectionModel) {
+            TemplateCollectionModel collModel = (TemplateCollectionModel) object;
+            SimpleSequence res = new SimpleSequence(objectWrapper);
+            TemplateModelIterator it = collModel.iterator();
+            while(it.hasNext()) {
+                res.add(it.next());
+            }
+            return res;
+        }
+        else {
+            throw new TemplateModelException("Cannot convert object of type " + (object != null ? object.getClass() : "null") + " to simple sequence"); 
+        }
+    }    
     
     /**
      * Same as Freemarker's ?is_directive.

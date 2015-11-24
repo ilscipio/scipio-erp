@@ -1416,10 +1416,10 @@
     </menu>
 
     <menu name="PaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="findPayment" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingInvoicePayments}">
+        <menu-item name="findPayment" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingInvoicePayments}" sort-mode="off">
             <link target="findPayments" />
         </menu-item>
-        <menu-item name="paymentOverview" title="${uiLabelMap.AccountingPaymentTabOverview}">
+        <menu-item name="paymentOverview" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingPaymentTabOverview}">
             <condition>
                 <not>
                     <if-empty field="payment.paymentId" />
@@ -1429,7 +1429,7 @@
                 <parameter param-name="paymentId" from-field="payment.paymentId" />
             </link>
         </menu-item>
-        <menu-item name="editPayment" title="${uiLabelMap.AccountingPaymentTabHeader}">
+        <menu-item name="editPayment" title="${uiLabelMap.CommonEdit} ${uiLabelMap.AccountingPayment}">
             <condition>
                 <and>
                     <not>
@@ -1471,7 +1471,7 @@
         <actions>
             <set field="isDisbursement" value="${groovy:if(payment!=void)return org.ofbiz.accounting.util.UtilAccounting.isDisbursement(payment)}" />
         </actions>
-        <menu-item name="createNew" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonPayment}" widget-style="+create">
+        <menu-item name="createNew" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonPayment}" widget-style="+create" >
             <condition>
                 <not>
                     <if-empty field="payment.paymentId" />
@@ -1588,12 +1588,15 @@
     </menu>
 
     <menu name="PaymentGroupTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="PaymentGroupOverview" title="${uiLabelMap.AccountingPaymentTabOverview}">
+    	<menu-item name="findPayment" title="${uiLabelMap.CommonFind} ${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonGroup}" sort-mode="off">
+            <link target="FindPaymentsGroup" />
+        </menu-item>
+        <menu-item name="PaymentGroupOverview" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonGroup} ${uiLabelMap.AccountingPaymentTabOverview}">
             <link target="PaymentGroupOverview">
                 <parameter param-name="paymentGroupId" from-field="paymentGroup.paymentGroupId" />
             </link>
         </menu-item>
-        <menu-item name="EditPaymentGroup" title="${uiLabelMap.CommonGroup}">
+        <menu-item name="EditPaymentGroup" title="${uiLabelMap.CommonEdit} ${uiLabelMap.AccountingPayment} ${uiLabelMap.CommonGroup}">
             <condition>
                 <not>
                     <if-empty field="paymentGroup.paymentGroupId" />
@@ -1603,7 +1606,7 @@
                 <parameter param-name="paymentGroupId" from-field="paymentGroup.paymentGroupId" />
             </link>
         </menu-item>
-        <menu-item name="EditPaymentGroupMember" title="${uiLabelMap.AccountingGroupMembers}">
+        <menu-item name="EditPaymentGroupMember" title="${uiLabelMap.AccountingPayment} ${uiLabelMap.AccountingGroupMembers}">
             <condition>
                 <not>
                     <if-empty field="paymentGroup.paymentGroupId" />

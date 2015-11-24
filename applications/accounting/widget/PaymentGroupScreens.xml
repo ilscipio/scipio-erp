@@ -64,16 +64,28 @@ under the License.
         <section>
             <actions>
                 <set field="titleProperty" value="AccountingEditPaymentGroup"/>
-                <set field="tabButtonItem" value="EditPaymentGroup"/>
-                <set field="paymentGroupId" from-field="parameters.paymentGroupId"/>
+                <set field="tabButtonItem" value="EditPaymentGroup"/>               
                 <entity-one entity-name="PaymentGroup" value-field="paymentGroup"/>
+                <set field="display" type="Boolean" value="false"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPaymentGroupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingPaymentGroup}">
-                            <include-form name="EditPaymentGroup" location="component://accounting/widget/PaymentGroupForms.xml"/>
-                        </screenlet>
+                    	<section>
+                    		<condition>
+                    			<not><if-empty field="paymentGroup"/></not>
+                    		</condition>   
+                    		<widgets>
+                    			 <screenlet title="${uiLabelMap.AccountingPaymentGroup}">
+		                            <include-form name="EditPaymentGroup" location="component://accounting/widget/PaymentGroupForms.xml"/>
+		                        </screenlet>
+                    		</widgets>
+                    		<fail-widgets>
+                    			 <screenlet title="${uiLabelMap.AccountingNewPaymentGroup}">
+		                            <include-form name="AddPaymentGroup" location="component://accounting/widget/PaymentGroupForms.xml"/>
+		                        </screenlet>
+                    		</fail-widgets>
+                    	</section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -125,10 +137,10 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <screenlet name="editPaymentGroup" title="${uiLabelMap.AccountingPaymentGroupOverview}" collapsible="true">
+                                <screenlet name="editPaymentGroup" title="${uiLabelMap.AccountingPaymentGroupHeader} ${uiLabelMap.CommonId}:[${paymentGroupId}]">
                                     <include-form name="EditPaymentGroup" location="component://accounting/widget/PaymentGroupForms.xml"/>
                                 </screenlet>
-                                <screenlet name="paymentGroupMembers" title="${uiLabelMap.AccountingPaymentGroupMembers}" collapsible="true">
+                                <screenlet name="paymentGroupMembers" title="${uiLabelMap.AccountingPaymentGroupMembers}">
                                     <include-form name="PaymentGroupMembers" location="component://accounting/widget/PaymentGroupForms.xml"/>
                                 </screenlet>
                             </widgets>

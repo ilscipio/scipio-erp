@@ -27,8 +27,8 @@ under the License.
     <!-- Payment Group -->
     <form name="FindPaymentGroup" type="single" target="FindPaymentGroup"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
-        <auto-fields-entity entity-name="PaymentGroup" default-field-type="find"/>
-        <field name="paymentGroupId" title="${uiLabelMap.CommonId}"><text-find/></field>
+        <auto-fields-entity entity-name="PaymentGroup" default-field-type="find" default-position="2"/>
+        <field name="paymentGroupId" title="${uiLabelMap.CommonId}" position="1"><text-find/></field>
         <field name="paymentGroupTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="PaymentGroupType" description="${description}">
@@ -57,26 +57,38 @@ under the License.
         </field>
         <field name="paymentGroupName" title="${uiLabelMap.CommonName}"><display description="${paymentGroupName}"/></field>
         <field name="paymentGroupTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="PaymentGroupType"/></field>
-        <field name="depositSlipAction" title=" " widget-style="${styles.link_action}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
+        <field name="depositSlipAction" title="${uiLabelMap.AccountingDepositSlip}" widget-style="${styles.link_action}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
             <hyperlink target="DepositSlip.pdf" target-window="_BLANK" description="${uiLabelMap.AccountingInvoicePDF}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
         </field>
-        <field name="printCheckAction" title=" " widget-style="${styles.link_action}" use-when="${paymentGroupTypeId == 'CHECK_RUN'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
+        <field name="printCheckAction" title="${uiLabelMap.CommonPdf}" widget-style="${styles.link_action}" use-when="${paymentGroupTypeId == 'CHECK_RUN'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
             <hyperlink target="printChecks.pdf" target-window="_BLANK" description="${uiLabelMap.AccountingInvoicePDF}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${paymentGroupMemberAndTransList[0].finAccountTransStatusId != 'FINACT_TRNS_APPROVED'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
+        <field name="deleteAction" title="${uiLabelMap.CommonCancel}" widget-style="${styles.link_action}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${paymentGroupMemberAndTransList[0].finAccountTransStatusId != 'FINACT_TRNS_APPROVED'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
             <hyperlink target="cancelPaymentGroup" description="${uiLabelMap.CommonCancel}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}" use-when="${paymentGroupTypeId == 'CHECK_RUN'} @and ${paymentGroupMemberAndTransList[0].finAccountTransStatusId != 'FINACT_TRNS_APPROVED'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
+        <field name="deleteAction" title="${uiLabelMap.CommonCancel}" widget-style="${styles.link_action}" use-when="${paymentGroupTypeId == 'CHECK_RUN'} @and ${paymentGroupMemberAndTransList[0].finAccountTransStatusId != 'FINACT_TRNS_APPROVED'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
             <hyperlink target="cancelCheckRunPayments" description="${uiLabelMap.CommonCancel}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
         </field>
+    </form>
+    
+    <form name="AddPaymentGroup" type="single" target="createPaymentGroup" title="" default-map-name="paymentGroup">
+        <field name="paymentGroupName" position="1"><text/></field>      
+        <field name="paymentGroupTypeId" title="${uiLabelMap.CommonType}" position="2">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="PaymentGroupType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
     </form>
     
     <form name="EditPaymentGroup" type="single" target="updatePaymentGroup" title="" default-map-name="paymentGroup">
@@ -86,39 +98,36 @@ under the License.
             </entity-and>
             <entity-one entity-name="FinAccount" value-field="finAccount">
                 <field-map field-name="finAccountId" from-field="pmtGrpMembrPaymentAndFinAcctTransList[0].finAccountId"/>
-            </entity-one>            
+            </entity-one>                        
         </actions>
         <alt-target use-when="paymentGroup==null" target="createPaymentGroup"/>
-        <auto-fields-service service-name="updatePaymentGroup"/>
+        <auto-fields-service service-name="updatePaymentGroup" default-position="1"/>
         <field use-when="paymentGroup!=null" name="paymentGroupId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
-        <field use-when="paymentGroup==null @and paymentGroupId==null" name="paymentGroupId"><ignored/></field>
         <field use-when="paymentGroup==null @and paymentGroupId!=null" name="paymentGroupId"><display description="${uiLabelMap.CommonCannotBeFound}: [${paymentGroupId}]" also-hidden="false"/></field>
         <field name="paymentGroupId" use-when="display==true"><display/></field>
         <field name="paymentGroupTypeId" title="${uiLabelMap.CommonType}" position="2">
             <display-entity entity-name="PaymentGroupType" description="${description}"/>
         </field>
-        <field name="paymentGroupTypeId" use-when="paymentGroup==null" title="${uiLabelMap.CommonType}" position="2">
+        <field name="paymentGroupTypeId" use-when="paymentGroup==null" title="${uiLabelMap.CommonType}" position="1">
             <drop-down allow-empty="false">
                 <entity-options entity-name="PaymentGroupType" description="${description}">
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field use-when="finAccount!=null" name="finAccountName" title="${uiLabelMap.FormFieldTitle_finAccountName}">
+        <field use-when="finAccount!=null" name="finAccountName" title="${uiLabelMap.FormFieldTitle_finAccountName}" position="2">
             <display description="${finAccount.finAccountName}" type="text"/>
         </field>
         <field use-when="finAccount!=null" name="ownerPartyId" title="${uiLabelMap.FormFieldTitle_ownerPartyId}" position="2">
             <display description="${finAccount.ownerPartyId}" type="text"/>
         </field>
-        <field name="paymentGroupName" use-when="display==true"><display/></field>
-        <field name="submitAction" use-when="paymentGroup==null" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
-        <field name="submitAction" use-when="paymentGroup!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="submitAction" use-when="display==true"><hidden/></field>
+		<field name="paymentGroupName" use-when="display==true"><display/></field>
+        <field name="submitAction" use-when="paymentGroup!=null @and display==false" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
     </form>
     
     <!-- Payment Group Member -->
     <form name="ListPaymentGroupMember" type="list" list-name="paymentGroupMembers" target="updatePaymentGroupMember"
-            odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row">
+            odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row" separate-columns="true" use-row-submit="false">
         <row-actions>
             <entity-one entity-name="Payment" value-field="payment"/>
             <set field="paymentTypeId" from-field="payment.paymentTypeId"/>
@@ -165,7 +174,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="deleteAction" title="" widget-style="${styles.link_action}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
             <hyperlink target="expirePaymentGroupMember" description="${uiLabelMap.CommonCancel}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
                 <parameter param-name="paymentId"/>

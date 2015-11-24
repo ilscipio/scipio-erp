@@ -11303,6 +11303,9 @@
         <value xml:lang="zh">支付组一览：</value>
         <value xml:lang="zh_TW">支付群組概觀:</value>
     </property>
+    <property key="AccountingPaymentGroupHeader">
+        <value xml:lang="en">Payment Group Header</value>      
+    </property>
     <property key="AccountingPaymentHeader">
         <value xml:lang="ar">رأسية التسديد</value>
         <value xml:lang="de">Zahlungskopf</value>

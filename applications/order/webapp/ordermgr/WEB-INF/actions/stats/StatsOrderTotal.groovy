@@ -29,7 +29,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import org.ofbiz.base.util.cache.UtilCache;
 
 
-contentCache = UtilCache.getOrCreateUtilCache("stats.order", 0, 0, 0, true, false, null);
+contentCache = UtilCache.getOrCreateUtilCache("stats.order", 0, 0, 0, true, false);
 
 
 def begin, end,dailyStats,weeklyStats,monthlyStats;

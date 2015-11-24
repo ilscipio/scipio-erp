@@ -315,28 +315,6 @@ under the License.
                     <xs:documentation>Cato: For list forms, style of alternate text. See widget.properties for renderer-specific defaults.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            
-            <xs:attribute name="show-progress" default="false">
-                <xs:annotation>
-                    <xs:documentation>Cato: Upload forms only: boolean (true/false) show upload progress dynamically. With dynamic progress, a special action is usually needed upon success (see progress-success-action). Value is context-expanded so can be delegated to a variable (e.g. set by screen).</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="xs:string" name="progress-options">
-                <xs:annotation>
-                    <xs:documentation>Cato: Upload forms only: a json object (map) of progress options, without braces, mainly element selectors and IDs (see CatoUploadProgress). context-expanded. e.g. progress-options="'errorResultContainerSel': '#main-alert', 'errorResultAddWrapper': false"</xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            <xs:attribute type="xs:string" name="progress-success-action" default="none">
-                <xs:annotation>
-                    <xs:documentation>Cato: Upload forms only: action to take when upload succeeds. Whole string is context-expanded. Format and values are:
-                        none - stay on current page (progress will indicate success)
-                        redirect;[options];[ofbizUrl] - redirect to the specified controller request. e.g. "redirect;;myRequest?param1=value1&amp;amp;param2=${myMap.value2}"
-                                                        options are: fullPath=[true|false],secure=[true|false],encode=[true|false]. e.g. "redirect;secure=true,fullPath=true;main"
-                        reload - reload current page (note: this should be avoided as in many cases the current implementation causes problems with Ofbiz navigation)
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:attribute>
-            
             <xs:attribute name="positions" type="xs:integer">
                 <xs:annotation>
                     <xs:documentation>Cato: explicit total grid positions to use for this form. Sometimes it's clearer to specify though may be omitted and it will be auto-calculated.</xs:documentation>
@@ -361,7 +339,22 @@ under the License.
             <xs:attribute type="xs:string" name="attribs">
                 <xs:annotation>
                     <xs:documentation>Cato: A json-/freemarker-like object (map) of per-form extra attributes passed to the underlying theme implementation (template macros).
-                      Note that if a parent (extended) form already had extra attribs, only top-level attribs will be merged; sub-maps will replace those from parent (shallow merge).</xs:documentation>
+                      Note that if a parent (extended) form already had extra attribs, only top-level attribs will be merged; sub-maps will replace those from parent (shallow merge).
+                      
+                      The default Cato implementation currently recognizes (but is not limited to) these map entries:
+                      {
+                        'showProgress' : true/false,  // for upload forms only: boolean (or string repr of boolean, 'true/false') show upload progress dynamically. 
+                                                      // With dynamic progress, a special action is usually needed upon success (see progress-success-action).
+                        'progressOptions' : {},       // Upload forms only: a map (or string representing a map, '{}') of progress options, mainly element selectors and IDs (see CatoUploadProgress js class). 
+                                                      // e.g.: { 'errorResultContainerSel': '#main-alert', 'errorResultAddWrapper': false }
+                        'progressSuccessAction' : ""  // Upload forms only: action to take when upload succeeds. Format and values are:
+                                                      // 'none' - stay on current page (progress will indicate success)
+                                                      // 'redirect;[options];[ofbizUrl]' - redirect to the specified controller request. e.g. "redirect;;myRequest?param1=value1&amp;amp;param2=${myMap.value2}"
+                                                      //      options are: fullPath=[true|false],secure=[true|false],encode=[true|false]. 
+                                                      //      e.g. 'redirect;secure=true,fullPath=true;main'
+                                                      // 'reload' - reload current page (note: this should be avoided as in many cases the current implementation causes problems with Ofbiz navigation)
+                      }
+                      </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
         </xs:complexType>

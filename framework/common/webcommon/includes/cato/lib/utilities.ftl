@@ -526,6 +526,37 @@ IMPL NOTE: it's part of this function's interface that any of the arguments for 
 
 <#-- 
 *************
+* evalToSimpleMap
+************
+This is similar to toSimpleMap but if the object is a string, tries to ?eval it to a map.
+Enclosing braces are optional.
+TODO: this should be transform... maybe integrate into toSimpleMap, but then lose type safety,
+and ?eval harder there.
+-->
+<#function evalToSimpleMap object>
+  <#if isObjectType("string", object)>
+    <#local str = object?trim>
+    <#if !str?starts_with("{")>
+      <#local str = "{" + str + "}">
+    </#if>
+    <#return str?eval>
+  <#else>
+    <#return toSimpleMap(object)>
+  </#if>
+</#function>
+
+<#-- 
+*************
+* compileProgressSuccessAction
+************
+widget-related progress success action compile (see widget-form.xsd form element extra "attribs" attrib).
+-->
+<#function compileProgressSuccessAction progressSuccessAction>
+  <#return StringUtil.wrapString(Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].compileProgressSuccessAction(progressSuccessAction))?string>
+</#function>
+
+<#-- 
+*************
 * getCurrentSectionLevel
 ************
 Gets current @section level. 

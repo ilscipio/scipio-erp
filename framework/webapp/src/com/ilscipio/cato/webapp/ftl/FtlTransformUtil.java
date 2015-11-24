@@ -3,6 +3,7 @@ package com.ilscipio.cato.webapp.ftl;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -32,6 +33,11 @@ public final class FtlTransformUtil {
     public static HttpServletRequest getRequest(Environment env) throws TemplateModelException {
         BeanModel req = (BeanModel) env.getVariable("request");
         return (req != null) ? (HttpServletRequest) req.getWrappedObject() : null;
+    }
+    
+    public static HttpServletResponse getResponse(Environment env) throws TemplateModelException {
+        BeanModel req = (BeanModel) env.getVariable("response");
+        return (req != null) ? (HttpServletResponse) req.getWrappedObject() : null;
     }
     
     /**

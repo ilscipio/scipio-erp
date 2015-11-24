@@ -1143,7 +1143,7 @@ under the License.
                                                     <!-- Cato: TODO: redirect may cause form input loss, so leave disabled for now... should use dynamic content replace... -->
                                                     <set field="showProgress" type="Boolean" value="false" /> 
                                                     <set field="progressSuccessAction" value="redirect;;MyCommunicationEvents?partyIdFrom=${partyId}&amp;statusId=COM_PENDING&amp;form=new&amp;my=My&amp;communicationEventTypeId=EMAIL_COMMUNICATION&amp;communicationEventId=${communicationEvent.communicationEventId}&amp;portalPageId=${parameters.portalPageId}" />
-                                                    <set field="progressOptions" value="" />
+                                                    <set field="progressOptions" value="{}" />
                                                     <set field="uploadContent_submitAction" value="javascript:(document.uploadContent.datetimeStarted.value=document.EditEmail.datetimeStarted.value),(document.uploadContent.partyIdTo.value=document.EditEmail.partyIdTo.value),(document.uploadContent.subject.value=document.EditEmail.subject.value),(document.uploadContent.content.value=document.EditEmail.content.value),(jQuery(document.uploadContent).trigger('submit')),void(0)" />
                                                 </actions>
                                                 <widgets>
@@ -1201,7 +1201,7 @@ under the License.
                                                     <!-- Cato: TODO: redirect may cause form input loss, so leave disabled for now... should use dynamic content replace... -->
                                                     <set field="showProgress" type="Boolean" value="false" /> 
                                                     <set field="progressSuccessAction" value="redirect;;MyCommunicationEvents?partyIdFrom=${partyId}&amp;statusId=COM_PENDING&amp;form=new&amp;my=My&amp;communicationEventTypeId=COMMENT_NOTE&amp;communicationEventId=${communicationEvent.communicationEventId}&amp;portalPageId=${parameters.portalPageId}" />
-                                                    <set field="progressOptions" value="" />
+                                                    <set field="progressOptions" value="{}" />
                                                     <set field="uploadContent_submitAction" value="javascript:(document.uploadContent.datetimeStarted.value=document.EditInternalNote.datetimeStarted.value),(document.uploadContent.partyIdTo.value=document.EditInternalNote.partyIdTo.value),(document.uploadContent.subject.value=document.EditInternalNote.subject.value),(document.uploadContent.content.value=document.EditInternalNote.content.value),(jQuery(document.uploadContent).trigger('submit')),void(0)" />
                                                 </actions>
                                                 <widgets>

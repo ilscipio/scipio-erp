@@ -204,10 +204,6 @@ public abstract class ModelForm extends ModelWidget {
     private final FlexibleStringExpander alternateText;
     private final FlexibleStringExpander alternateTextStyle;
     
-    private final FlexibleStringExpander showProgress;
-    private final FlexibleStringExpander progressOptions;
-    private final FlexibleStringExpander progressSuccessAction;
-    
     private final Integer positions;
     private final Integer defaultPositionSpan;
     
@@ -419,22 +415,6 @@ public abstract class ModelForm extends ModelWidget {
             alternateTextStyle = parentModel.alternateTextStyle;
         }
         this.alternateTextStyle = alternateTextStyle;
-        
-        FlexibleStringExpander showProgress = FlexibleStringExpander.getInstance(formElement.getAttribute("show-progress"));
-        if (showProgress.isEmpty() && parentModel != null) {
-            showProgress = parentModel.showProgress;
-        }
-        this.showProgress = showProgress;
-        FlexibleStringExpander progressOptions = FlexibleStringExpander.getInstance(formElement.getAttribute("progress-options"));
-        if (progressOptions.isEmpty() && parentModel != null) {
-            progressOptions = parentModel.progressOptions;
-        }
-        this.progressOptions = progressOptions;
-        FlexibleStringExpander progressSuccessAction = FlexibleStringExpander.getInstance(formElement.getAttribute("progress-success-action"));
-        if (progressSuccessAction.isEmpty() && parentModel != null) {
-            progressSuccessAction = parentModel.progressSuccessAction;
-        }
-        this.progressSuccessAction = progressSuccessAction;
         
         String positionsStr = formElement.getAttribute("positions");
         Integer positions = null;
@@ -1294,48 +1274,6 @@ public abstract class ModelForm extends ModelWidget {
         return val;
     }
     
-
-    public String getShowProgress() {
-        return this.showProgress.getOriginal();
-    }
-
-    public Boolean getShowProgress(Map<String, Object> context) {
-        String showProgStr = this.showProgress.expandString(context);
-        if ("true".equals(showProgStr)) {
-            return Boolean.TRUE;
-        }
-        else if ("false".equals(showProgStr)) {
-            return Boolean.FALSE;
-        }
-        else {
-            return null;
-        }
-    }
-    
-    public boolean isShowProgress(Map<String, Object> context) {
-        Boolean res = getShowProgress(context);
-        if (res == null) {
-            return false;
-        }
-        return res;
-    }
-    
-    public String getProgressOptions() {
-        return this.progressOptions.getOriginal();
-    }
-
-    public String getProgressOptions(Map<String, Object> context) {
-        return this.progressOptions.expandString(context);
-    }
-    
-    public String getProgressSuccessAction() {
-        return this.progressSuccessAction.getOriginal();
-    }
-
-    public String getProgressSuccessAction(Map<String, Object> context) {
-        return this.progressSuccessAction.expandString(context);
-    }
-
     public Integer getPositions() {
         return positions;
     }

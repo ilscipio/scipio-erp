@@ -53,7 +53,7 @@ under the License.
 <#macro renderFieldTitle style title id fieldHelpText="" for=""><@renderField title /></#macro>
 <#macro renderSingleFormFieldTitle></#macro>
 
-<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name useRowSubmit showProgress=false progressOptions="" progressSuccessAction="" attribs={}></#macro>
+<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name useRowSubmit attribs={}></#macro>
 <#macro renderFormClose focusFieldName formName containerId hasRequiredField></#macro>
 <#macro renderMultiFormClose></#macro>
 

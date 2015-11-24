@@ -905,7 +905,7 @@ under the License.
                             <actions>          
                                 <set field="showProgress" type="Boolean" value="true" /> 
                                 <set field="progressSuccessAction" value="redirect;;EditPartyContents?partyId=${parameters.partyId}" />
-                                <set field="progressOptions" value="" />
+                                <set field="progressOptions" value="{}" />
                             </actions>
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleAddPartyContent}">
@@ -1360,7 +1360,7 @@ under the License.
                                         <actions>          
                                             <set field="showProgress" type="Boolean" value="true" /> 
                                             <set field="progressSuccessAction" value="none" /> <!-- success is enough: redirect;;ImportExport -->
-                                            <set field="progressOptions" value="" />
+                                            <set field="progressOptions" value="{}" />
                                         </actions>
                                         <widgets>
                                             <include-form name="ImportParty" location="component://party/widget/partymgr/PartyForms.xml"/>

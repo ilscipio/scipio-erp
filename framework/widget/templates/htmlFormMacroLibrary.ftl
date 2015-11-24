@@ -118,7 +118,11 @@ not "current" context (too intrusive in current renderer design). still relies o
       "errorResultContainerSel" : "#main-${styles.alert_wrap!}",
       "errorResultAddWrapper" : false
     }>
-    <#local action = htmlFormRenderFormInfo.progressSuccessAction!"">
+    <#if htmlFormRenderFormInfo.progressSuccessAction?has_content>
+      <#local action = compileProgressSuccessAction(htmlFormRenderFormInfo.progressSuccessAction)>
+    <#else>
+      <#local action = "">
+    </#if>
     <#if action?starts_with("redirect;")>
       <#local progressOptions = concatMaps(progressOptions, { "successRedirectUrl" : action?substring("redirect;"?length) })>
     <#elseif action == "reload" || action?starts_with("reload:")>
@@ -129,7 +133,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     
     <#if htmlFormRenderFormInfo.progressOptions?has_content>
       <#-- json is valid freemarker map -->
-      <#local addOpts = ("{" + htmlFormRenderFormInfo.progressOptions + "}")?eval>
+      <#local addOpts = evalToSimpleMap(htmlFormRenderFormInfo.progressOptions)>
       <#if addOpts?has_content>
         <#local progressOptions = progressOptions + addOpts>  
       </#if>
@@ -173,9 +177,21 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderSingleFormFieldTitle></#macro>
 
-<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit showProgress=false progressOptions="" progressSuccessAction="" attribs={}>
+<#macro renderFormOpen linkUrl formType targetWindow containerId containerStyle autocomplete name viewIndexField viewSizeField viewIndex viewSize useRowSubmit attribs={}>
+  <#-- showProgress=false progressOptions="" progressSuccessAction=""  -->
   <!-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
-  <#local htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressOptions" : StringUtil.wrapString(progressOptions), "progressSuccessAction" : StringUtil.wrapString(progressSuccessAction), "attribs":attribs}>
+  <#-- Cato process extra attribs -->
+  <#local showProgress = (attribs.showProgress)!false>
+  <#if !showProgress?is_boolean>
+    <#if showProgress?has_content>
+      <#local showProgress = showProgress?boolean>
+    <#else>
+      <#local showProgress = false>
+    </#if>
+  </#if>
+  <#local progressOptions = (attribs.progressOptions)!{}> <#-- NOTE: this may be a string repr of a map! -->
+  <#local progressSuccessAction = (attribs.progressSuccessAction)!"">
+  <#local htmlFormRenderFormInfo = { "name" : name, "formType" : formType, "showProgress" : showProgress, "progressOptions" : progressOptions, "progressSuccessAction" : progressSuccessAction, "attribs":attribs}>
   <#local dummy = setRequestVar("htmlFormRenderFormInfo", htmlFormRenderFormInfo)>
   <form method="post" action="${linkUrl}"<#if formType=="upload"> enctype="multipart/form-data"</#if><#if targetWindow?has_content> target="${targetWindow}"</#if><#if containerId?has_content> id="${containerId}"</#if> class=<#if containerStyle?has_content>"${containerStyle}"<#else>"basic-form"</#if> onsubmit="javascript:submitFormDisableSubmits(this); <#if !useRowSubmit>submitRowForm(this);</#if>"<#if autocomplete?has_content> autocomplete="${autocomplete}"</#if> name="${name}"><#lt/>
     <#if useRowSubmit?has_content && useRowSubmit>

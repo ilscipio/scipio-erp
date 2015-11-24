@@ -345,7 +345,7 @@ under the License.
                       {
                         'showProgress' : true/false,  // for upload forms only: boolean (or string repr of boolean, 'true/false') show upload progress dynamically. 
                                                       // With dynamic progress, a special action is usually needed upon success (see progress-success-action).
-                        'progressOptions' : {},       // Upload forms only: a map (or string representing a map, '{}') of progress options, mainly element selectors and IDs (see CatoUploadProgress js class). 
+                        'progressOptions' : {},       // Upload forms only: a map (or empty string) of progress options, mainly element selectors and IDs (see CatoUploadProgress js class). 
                                                       // e.g.: { 'errorResultContainerSel': '#main-alert', 'errorResultAddWrapper': false }
                         'progressSuccessAction' : ""  // Upload forms only: action to take when upload succeeds. Format and values are:
                                                       // 'none' - stay on current page (progress will indicate success)

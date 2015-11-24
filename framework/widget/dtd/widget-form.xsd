@@ -347,7 +347,7 @@ under the License.
                                                       // With dynamic progress, a special action is usually needed upon success (see progress-success-action).
                         'progressOptions' : {},       // Upload forms only: a map (or empty string) of progress options, mainly element selectors and IDs (see CatoUploadProgress js class). 
                                                       // e.g.: { 'errorResultContainerSel': '#main-alert', 'errorResultAddWrapper': false }
-                        'progressSuccessAction' : ""  // Upload forms only: action to take when upload succeeds. Format and values are:
+                        'progressSuccessAction' : ''  // Upload forms only: action to take when upload succeeds. Format and values are:
                                                       // 'none' - stay on current page (progress will indicate success)
                                                       // 'redirect;[options];[ofbizUrl]' - redirect to the specified controller request. e.g. "redirect;;myRequest?param1=value1&amp;amp;param2=${myMap.value2}"
                                                       //      options are: fullPath=[true|false],secure=[true|false],encode=[true|false]. 

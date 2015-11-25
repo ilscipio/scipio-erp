@@ -1033,8 +1033,13 @@ Now implemented as java transform.
   * Parameters *
     name        = global request stack var name; must be unique 
                   across all known types of contexts (request attribs, screen context, FTL globals)
+    listType    = [copy|orig], default copy.
+                  caller may specify "orig" to avoid a list copy.
+                  WARN: "orig" means the caller must ditch the list as soon as possible, before any
+                      more modifications to the stack; otherwise results will be unpredictable.
+                      It should only be used for optimization.
 
-<#function getRequestStackAsList name>
+<#function getRequestStackAsList name listType>
 - implemented as java transform -
 </#function>
 -->
@@ -1332,6 +1337,7 @@ NOTE: this is generally framework-agnostic and size-key agnostic.
                  but can be anything (the methods in this file do not care).
 -->
 <#function saveCurrentContainerSizes sizes>
+  <#local dummy = pushRequestStack("catoCSFactorsCacheStack", false)>
   <#return pushRequestStack("catoContainerSizesStack", sizes)>
 </#function>
 
@@ -1411,17 +1417,30 @@ IMPL NOTE: For this method to work, the framework-/theme-specific code must over
     function evalAbsContainerSizeFactors.
     ALTERNATIVELY, the framework-/theme-specific code may override getAbsContainerSizeFactors
     if more specific parameters are needed.
-    
-TODO: since this is split from evalAbsContainerSizeFactors, we should be able to cache the values
-    from here (in separate stack?)... evalAbsContainerSizeFactors is costly...
+
+IMPL NOTE: The calculated factors are saved in their own stack and recalculated only when the main stack changes.
+    The cached factors are also passed to evalAbsContainerSizeFactors so it may exploit them, 
+    but evalAbsContainerSizeFactors will never be called if the last container's factors were already
+    calculated (simple optimization). If need to bypass caching for some reason, theme 
+    would have to override getAbsContainerSizeFactors (not recommended).
     
   * Parameters *
     maxSizes     = hash/map of per-key max container sizes OR a single number giving max size
                    for all keys (usually same in most frameworks) OR zero to mean use defaults
 -->
 <#function getAbsContainerSizeFactors maxSizes=0>
-  <#local sizesList = getAllContainerSizes()![]>
-  <#return evalAbsContainerSizeFactors(sizesList, maxSizes)>
+  <#local factors = readRequestStack("catoCSFactorsCacheStack")!false>
+  <#if !factors?is_boolean>
+    <#return factors>
+  <#else>
+    <#-- orig means won't make copy of lists so faster, but lists must be ditched a.s.a.p. 
+         don't do this in getAllContainerSizes -->
+    <#local sizesList = getRequestStackAsList("catoContainerSizesStack", "orig")![]>
+    <#local cachedFactorsList = getRequestStackAsList("catoCSFactorsCacheStack", "orig")![]>
+    <#local factors = evalAbsContainerSizeFactors(sizesList, maxSizes, cachedFactorsList)>
+    <#local dummy = setLastRequestStack("catoCSFactorsCacheStack", factors)>
+    <#return factors>
+  </#if>
 </#function>
 
 <#-- 
@@ -1432,13 +1451,17 @@ This function should be overridden by a framework-specific implementation that e
 size factors 
            
   * Parameters *
-    sizesList     = list of hashes describing all (known) parent and current container sizes
-    maxSizes      = same as getAbsContainerSizeFactors maxSizes
+    sizesList           = list of hashes describing all (known) parent and current container sizes
+                          note that entries may be empty and should be skipped.
+    maxSizes            = same as getAbsContainerSizeFactors maxSizes
+    cachedFactorsList   = list of cached factor results, same size and order as sizesList; each entry
+                          corresponds to the container at same index as the sizes in sizesList.
+                          if an entry is boolean, then a factor was not (yet) calculated for that container.
     
   * Return Value *
     a map/hash of size names to float values.
 -->
-<#function evalAbsContainerSizeFactors sizesList maxSizes=0>
+<#function evalAbsContainerSizeFactors sizesList maxSizes=0 cachedFactorsList=[]>
   <#return {}>
 </#function>
 
@@ -1448,6 +1471,7 @@ size factors
 ************
 -->
 <#function unsetCurrentContainerSizes>
+  <#local dummy = popRequestStack("catoCSFactorsCacheStack")!false>
   <#return popRequestStack("catoContainerSizesStack")!{}>
 </#function>
 

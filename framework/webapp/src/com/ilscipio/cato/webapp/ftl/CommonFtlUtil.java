@@ -1101,13 +1101,22 @@ public final class CommonFtlUtil {
      * Returns copy of request stack as a SimpleSequence.
      */
     public static Object getRequestStackAsList(String name, Environment env) throws TemplateModelException {
+        return getRequestStackAsList(name, TemplateValueTargetType.SIMPLEMODEL, env);
+    }
+    
+    /**
+     * Returns copy of request stack in request copyTargetType.
+     * <strong>WARN</strong>: if copyTargetType is null, no copy is made and unmodifiable list is returned.
+     *      This list must be discarded by caller as soon as possible, before any more changes to the stack.
+     */
+    public static Object getRequestStackAsList(String name, TemplateValueTargetType copyTargetType, Environment env) throws TemplateModelException {
         HttpServletRequest request = FtlTransformUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
             context = FtlTransformUtil.getContext(env);
         }
-        return getRequestStackAsList(name, request, context, env, TemplateValueTargetType.SIMPLEMODEL);
-    }
+        return getRequestStackAsList(name, request, context, env, copyTargetType);
+    }    
     
     /**
      * Returns copy of request stack as a List (elements may still be TemplateModels).

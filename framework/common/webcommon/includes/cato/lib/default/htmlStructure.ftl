@@ -200,6 +200,9 @@ NOTE: extraArgs is in case of interface changes.
 
 DEV NOTE: TODO: these should be general enough to work for both foundation and bootstrap, but
     should be confirmed...
+    
+TODO: evalAbsContainerSizeFactors should delegate to java method for speed (but still need these
+    overrides to be present)
 -->
 
 <#function parseContainerSizesFromStyleStr style extraArgs...>
@@ -211,7 +214,7 @@ DEV NOTE: TODO: these should be general enough to work for both foundation and b
   <#return extractPrefixedStyleNamesWithInt(getPlainClassArgNames(style), catoContainerSizesPrefixMap)>
 </#function>
 
-<#function evalAbsContainerSizeFactors sizesList maxSizes=0 extraArgs...>
+<#function evalAbsContainerSizeFactors sizesList maxSizes=0 cachedFactorsList=[] extraArgs...>
   <#local maxSize = 12>
   <#if maxSizes?is_number>
     <#if (maxSizes > 0)>
@@ -225,9 +228,20 @@ DEV NOTE: TODO: these should be general enough to work for both foundation and b
   <#local large = maxSize>
   <#local medium = maxSize>
   <#local small = maxSize>
-  <#-- beginning of list is outermost container -->
-  <#list sizesList as sizes>
-    <#if sizes?has_content> <#-- these may be empty; simplifies pushing/popping down the line -->
+  <#-- beginning of sizesList is outermost container.
+       to optimize, we will iterate from the INNERMOST container first, which works because the multiplications
+       are commutative and nothing carries over.
+       this way we can exploit the cached factors better (though might add some other overhead).
+  -->
+  <#list sizesList?reverse as sizes>
+    <#local cachedFactors = cachedFactorsList[(cachedFactorsList?size - 1) - sizes_index]>
+    <#if !cachedFactors?is_boolean>
+      <#-- if we find a cached factors we already calculated, we're done early; simply multiply and stop  -->
+      <#local large = large * (cachedFactors.large / maxSize)>
+      <#local medium = medium * (cachedFactors.medium / maxSize)>
+      <#local small = small * (cachedFactors.small / maxSize)>
+      <#break>
+    <#elseif sizes?has_content> <#-- these may be empty; simplifies pushing/popping down the line -->
       <#-- need to use same logic as framework when figuring out defaultSize... e.g., small has priority... 
           assuming all max sizes are same simplifies this -->
       <#local defaultSize = maxSize>

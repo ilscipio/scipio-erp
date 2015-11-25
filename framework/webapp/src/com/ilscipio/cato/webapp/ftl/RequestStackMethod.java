@@ -20,6 +20,8 @@ package com.ilscipio.cato.webapp.ftl;
 
 import java.util.List;
 
+import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.TemplateValueTargetType;
+
 import freemarker.core.Environment;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateMethodModelEx;
@@ -70,16 +72,27 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
     
     @SuppressWarnings("unchecked")
     protected Object execGetAsList(List args) throws TemplateModelException {
-        if (args == null || args.size() != 1) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 1)");
+        if (args == null || args.size() < 1 || args.size() > 2) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
         }
         TemplateModel nameModel = (TemplateModel) args.get(0);
         if (!(nameModel instanceof TemplateScalarModel)) {
             throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
         }
-
+        String stackName = ((TemplateScalarModel) nameModel).getAsString();
+        
+        boolean origList = false;
+        
+        if (args.size() >= 2) {
+            TemplateModel listTypeModel = (TemplateModel) args.get(1);
+            String listType = ((TemplateScalarModel) listTypeModel).getAsString();
+            if ("orig".equals(listType)) {
+                origList = true;
+            }
+        }
+        
         Environment env = FtlTransformUtil.getCurrentEnvironment();
-        Object res = CommonFtlUtil.getRequestStackAsList(((TemplateScalarModel) nameModel).getAsString(), env);
+        Object res = CommonFtlUtil.getRequestStackAsList(stackName, (origList ? null : TemplateValueTargetType.SIMPLEMODEL), env);
         return res;
     }    
     

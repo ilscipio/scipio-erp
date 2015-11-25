@@ -767,6 +767,9 @@ value using simple syntax guaranteed not to crash. e.g
       ...
     </#if>
   </#macro>
+  
+This can also be used for functions, but for functions, the inlineArgs param should always
+be passed an empty hash (functions don't support named parameters).
 
 TODO: may want to rewrite this macro using FTL transform. not sure performance is great.
 TODO?: may want helper booleans to control in/out allArgNames?
@@ -793,6 +796,14 @@ TODO?: may want helper booleans to control in/out allArgNames?
   <#local allArgNames = (args.allArgNames![]) + localArgNames>
   <#return defaultArgs + toSimpleMap(args) + inlineArgs + overrideArgs + 
     { "localArgNames":localArgNames, "allArgNames":allArgNames }>
+</#function>
+
+<#-- a version of mergeArgMaps that only merges maps, nothing else -->
+<#function mergeArgMapsBasic args={} inlineArgs={} defaultArgs={} overrideArgs={}>
+  <#if !inlineArgs?has_content> <#-- necessary to prevent empty sequence -->
+    <#local inlineArgs = {}>
+  </#if>
+  <#return defaultArgs + toSimpleMap(args) + inlineArgs + overrideArgs>
 </#function>
 
 <#-- 

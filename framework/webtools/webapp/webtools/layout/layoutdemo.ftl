@@ -441,7 +441,7 @@
     <@form name="form1">
     <@fields type="default"> <#-- note: @fields currently optional for type="default"-->
       <@field type="input" name="input1" label="Input 1" />
-      <@field type="input" name="input2" label="Input 2" />
+      <@field type="input" name="input2" label="Input 2" postfix=true />
       <@field type="display">Display value</@field>
       <@field type="input" name="input3" label="Input 3" />
 
@@ -504,7 +504,7 @@
     <@form name="form2">
     <@fields type="default-nolabels">
       <@field type="input" name="input1"/>
-      <@field type="input" name="input2" />
+      <@field type="input" name="input2" postfix=true />
       <@field type="display">Display value</@field>
       <@field type="input" name="input3"/>
 

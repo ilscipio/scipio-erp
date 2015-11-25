@@ -1093,8 +1093,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <@row class=rowClass collapse=collapse!false norows=(norows || !container)>
     <#-- TODO: support more label configurations (besides gridarea left) -->
     <#if labelArea && labelType == "gridarea" && labelLayout == "left">
-        <#local defaultLabelAreaClass = getFieldGridLabelArea(columns, columnspostfix, isLarge)/>
-        <#local defaultClass = getFieldGridWidgetArea(columns, columnspostfix, isLarge)/>
+        <#local defaultLabelAreaClass = getFieldGridLabelAreaClasses(columns, columnspostfix, isLarge)/>
+        <#local defaultClass = getFieldGridWidgetAreaClasses(columns, columnspostfix, isLarge)/>
         <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title " + fieldEntryTypeClass)>
         <@cell class=compileClassArg(labelAreaClass, defaultLabelAreaClass) nocells=(nocells || !container)>
             ${labelAreaContent}
@@ -1134,7 +1134,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   </#if>  
 </#macro>
 
-<#function getFieldGridLabelArea columns="" columnspostfix=0 isLarge="">
+<#function getFieldGridLabelAreaClasses columns="" columnspostfix=0 isLarge="">
   <#-- these need to be reusable but styles hash is not enough; may be dynamic -->
   <#if !isLarge?is_boolean>
     <#-- get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
@@ -1150,7 +1150,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#return classes>
 </#function>
 
-<#function getFieldGridWidgetArea columns="" columnspostfix=0 isLarge="">
+<#function getFieldGridWidgetAreaClasses columns="" columnspostfix=0 isLarge="">
   <#if !isLarge?is_boolean>
     <#local absColSizes = getAbsContainerSizeFactors()>
     <#local isLarge = (absColSizes.large > 6)>  

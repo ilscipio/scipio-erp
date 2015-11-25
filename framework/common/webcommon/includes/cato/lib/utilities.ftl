@@ -738,20 +738,22 @@ TODO: doesn't handle dates (ambiguous?)
 ************
 Merges cato macro inlineArgs/args/defaultArgs/overrideArgs maps for macros implementing the 
   <#macro name args={} inlineArgs...>
-pattern.
+pattern, whereby inlineArgs map is merged over the args map, over defaults.
+
 It cannot be used for the 'attribs={} inlineAttribs...' pattern (see mergeAttribMaps). 
 Instead, it can help in implementing that pattern within the 'args={} inlineArgs...' pattern.
 
-This is specific to cato macro patterns and may contain extra handling
-not done by a basic concatMaps method.
+This is specific to cato macro patterns and may contain extra handling besides concatenating maps.
 
-This currently records the macro's static named args as passed in the defaultArgs and overrideArgs maps
+For one, this currently records the macro's static named args as passed in the defaultArgs and overrideArgs maps
 in a list of names with the key "localArgNames" in the resulting map.
 It will also append the names to a list read back from the incoming "args" map with 
 key name "allArgNames", append to it, and return it again as "allArgNames". 
 allArgNames allows arg names to be automatically accumulated
 between delegating/overriding macro calls that make use of mergeArgMaps without
-having to recreate new intermediate maps.
+having to recreate new intermediate maps. allArgNames keep track of all the explicit
+args used by all the macros in a call chain, which can then be used to identify
+the remaining "extra" arguments (analogous to extraArgs in FTL's <#macro extraArgs...>).
 WARN: in some cases allArgNames accumulation and reuse of maps could be undesirable.
     (currently workaround this by using localArgNames only and/or creating new intermediate maps).
 WARN: currently it's possible the result contain duplicate names (is not a set).
@@ -780,6 +782,8 @@ TODO?: may want helper booleans to control in/out allArgNames?
     overrideArgs  = extra macro args that override all others (highest priority). expects a FTL hash only.
                     the names used here also count toward the localArgNames.
                     WARN: if a key is present in this map, it should be omitted from defaultArgs.
+                    NOTE: this map is present for cases where the others are insufficient.
+                        but otherwise should avoid using this map when possible.
 -->
 <#function mergeArgMaps args={} inlineArgs={} defaultArgs={} overrideArgs={}>
   <#if !inlineArgs?has_content> <#-- necessary to prevent empty sequence -->
@@ -797,12 +801,14 @@ TODO?: may want helper booleans to control in/out allArgNames?
 ************
 Merges cato macro attribs/inlineAttribs/defaultAttribs/overrideAttribs maps for macros still implementing the 
   <#macro name arg1="" arg2="" ... argN="" attribs={} inlineAttribs...>
-pattern.
-This pattern is simpler but much less flexible than the 'attribs={} inlineAttribs...' pattern.
+pattern, whereby inlineAttribs map is merged over the attribs map, and these maps only contain extra
+element attributes.
+
+This pattern is simpler but much less flexible than the 'args={} inlineArgs...' pattern.
 They are not interchangeable.
 
   * Parameters *
-    (see mergeArgMaps; analogous)
+    (see mergeArgMaps; parameters are analogous, even though macro implementation may differ)
 -->
 <#function mergeAttribMaps attribs={} inlineAttribs={} defaultAttribs={} overrideAttribs={}>
   <#if !inlineAttribs?has_content> <#-- necessary to prevent empty sequence -->
@@ -810,7 +816,6 @@ They are not interchangeable.
   </#if>
   <#return defaultAttribs + toSimpleMap(attribs) + inlineAttribs + overrideAttribs>
 </#function>
-
 
 <#-- 
 *************

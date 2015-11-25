@@ -67,7 +67,13 @@ Not associated with any HTML element.
     scriptType/output/cdata/htmlwrap  = defaults for child @script calls (see @script)
 -->
 <#macro scripts args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs, {
+    <#-- supported args and default values -->
+    "scriptType" : "text/javascript",
+    "output" : "",
+    "htmlwrap" : true,
+    "cdata" : true
+  })>
   <#local dummy = setRequestVar("catoScriptsInfo", args)>
   <#nested>
   <#local dummy = setRequestVar("catoScriptsInfo", {})>
@@ -102,23 +108,25 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
     cdata           = boolean, default true, if false don't include CDATA guard (only used if htmlwrap true)
 -->
 <#macro script args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs)>
   <#local scriptsInfo = getRequestVar("catoScriptsInfo")!{}>
-  <#local type = args.type!scriptsInfo.scriptType!"text/javascript">
-  <#local src = args.src!"">
-  <#local output = args.output!scriptsInfo.output!"">
-  <#if src?has_content>
-    <script type="${type}" src="${src}"></script>
+  <#local args = mergeArgMaps(args, inlineArgs, {
+    <#-- supported args and default values -->
+    "type" : scriptsInfo.scriptType!"text/javascript",
+    "src" : "",
+    "output" : scriptsInfo.output!"",
+    "htmlwrap" : scriptsInfo.htmlwrap!true,
+    "cdata" : scriptsInfo.cdata!true
+  })>
+  <#if args.src?has_content>
+    <script type="${args.type}" src="${args.src}"></script>
   <#else>
-    <#local cdata = args.cdata!scriptsInfo.cdata!true>
-    <#local htmlwrap = args.htmlwrap!scriptsInfo.htmlwrap!true>
-    <#if htmlwrap>
-      <script type="${type}">
-      <#if cdata>//<![CDATA[</#if>
+    <#if args.htmlwrap>
+      <script type="${args.type}">
+      <#if args.cdata>//<![CDATA[</#if>
     </#if>
         <#nested>
-    <#if htmlwrap>
-      <#if cdata>//]]></#if>
+    <#if args.htmlwrap>
+      <#if args.cdata>//]]></#if>
       </script>
     </#if>
   </#if>

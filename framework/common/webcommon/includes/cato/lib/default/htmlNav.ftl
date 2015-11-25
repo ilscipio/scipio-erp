@@ -134,7 +134,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#else>
     <#local class = args.class!"">
   </#if>
-  <#local args = concatMaps(args, inlineArgs)> <#-- DEV NOTE: this takes care of case where inlineArgs is empty sequence (but NOT non-empty sequence) -->
+  <#local args = mergeArgMaps(args, inlineArgs)> <#-- DEV NOTE: this takes care of case where inlineArgs is empty sequence (but NOT non-empty sequence) -->
   <#local type = args.type!"generic">
   <#local inlineItems = args.inlineItems!false>
   <#local id = args.id!"">
@@ -273,7 +273,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#else>
     <#local contentClass = args.contentClass!"">
   </#if>
-  <#local args = concatMaps(args, inlineArgs)> <#-- DEV NOTE: this takes care of case where inlineArgs is empty sequence (but NOT non-empty sequence) -->
+  <#local args = mergeArgMaps(args, inlineArgs)> <#-- DEV NOTE: this takes care of case where inlineArgs is empty sequence (but NOT non-empty sequence) -->
   <#local type = args.type!"generic">
   <#local id = args.id!"">
   <#local style = args.style!"">

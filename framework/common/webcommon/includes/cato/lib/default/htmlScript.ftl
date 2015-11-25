@@ -67,7 +67,7 @@ Not associated with any HTML element.
     scriptType/output/cdata/htmlwrap  = defaults for child @script calls (see @script)
 -->
 <#macro scripts args={} inlineArgs...>
-  <#local args = concatMaps(args, inlineArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs)>
   <#local dummy = setRequestVar("catoScriptsInfo", args)>
   <#nested>
   <#local dummy = setRequestVar("catoScriptsInfo", {})>
@@ -102,7 +102,7 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
     cdata           = boolean, default true, if false don't include CDATA guard (only used if htmlwrap true)
 -->
 <#macro script args={} inlineArgs...>
-  <#local args = concatMaps(args, inlineArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs)>
   <#local scriptsInfo = getRequestVar("catoScriptsInfo")!{}>
   <#local type = args.type!scriptsInfo.scriptType!"text/javascript">
   <#local src = args.src!"">

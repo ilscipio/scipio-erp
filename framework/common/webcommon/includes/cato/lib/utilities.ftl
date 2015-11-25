@@ -492,6 +492,8 @@ IMPL NOTE: it's part of this function's interface that any of the arguments for 
     e.g., this is used at beginning of macros that take inlineArgs... or inlineAttribs...
     they count on this method to handle empty sequence case.
     they also depend on this for the toSimple=true conversion.
+
+Also see mergeArgMaps.
 -->
 <#function concatMaps first second toSimple=true>
   <#if first?has_content>
@@ -729,6 +731,65 @@ TODO: doesn't handle dates (ambiguous?)
 *************************************
 * Intended to assist implementation of template macros.
 -->
+
+<#-- 
+*************
+* mergeArgMaps
+************
+Merges cato macro inlineArgs/args/defaultArgs/overrideArgs maps for macros supporting the 
+  <#macro name args={} inlineArgs...>
+pattern.
+It cannot be used for the 'attribs={} inlineAttribs...' pattern. Instead, it can help in implementing
+that pattern within the 'args={} inlineArgs...' pattern.
+
+This is specific to cato macro patterns and may contain extra handling
+not done by a basic concatMaps method.
+
+This currently records the macro's static named args as passed in the defaultArgs and overrideArgs maps
+in a list of names with the key "localArgNames" in the resulting map.
+It will also append the names to a list read back from the incoming "args" map with 
+key name "allArgNames", append to it, and return it again as "allArgNames". 
+allArgNames allows arg names to be automatically accumulated
+between delegating/overriding macro calls that make use of mergeArgMaps without
+having to recreate new intermediate maps.
+WARN: in some cases allArgNames accumulation and reuse of maps could be undesirable.
+    (currently workaround this by using localArgNames only and/or creating new intermediate maps).
+WARN: currently it's possible the result contain duplicate names (is not a set).
+TODO: current macros must be translated to exploit this mechanism.
+
+The result is the caller can access any arg names in the resulting map which had a default
+value using simple syntax guaranteed not to crash. e.g
+  <#macro name args={} inlineArgs...>
+    <#local args = mergeArgMaps(inlineArgs, args, {"myParam1":true})>
+    <#if args.myParam1>
+      ...
+    </#if>
+  </#macro>
+
+TODO: may want to rewrite this macro using FTL transform. not sure performance is great.
+TODO?: may want helper booleans to control in/out allArgNames?
+
+  * Parameters *
+    args          = the args map (normal priority). may be any type of map.
+    inlineArgs    = the macro's inline args (high priority). expects either FTL hash or empty sequence (but not non-empty sequence).
+    defaultArgs   = arg defaults (lowest priority).expects an FTL hash only. the key names in this map are also used to
+                    create a list of the known arguments this macro accepts.
+                    as such, even if the macro does not need this map, it should pass it along
+                    with the names of all supported arguments.
+                    the names end up in the resulting map as localArgNames.
+    overrideArgs  = extra macro args that override all others (highest priority). expects a FTL hash only.
+                    the names used here also count toward the localArgNames.
+                    WARN: if a key is present in this map, it should be omitted from defaultArgs.
+-->
+<#function mergeArgMaps args inlineArgs defaultArgs={} overrideArgs={}>
+  <#if !inlineArgs?has_content> <#-- necessary to prevent empty sequence -->
+    <#local inlineArgs = {}>
+  </#if>
+  <#local localArgNames = (defaultArgs?keys) + (overrideArgs?keys)>
+  <#local allArgNames = (args.allArgNames![]) + localArgNames>
+  <#return defaultArgs + toSimpleMap(args) + inlineArgs + overrideArgs + 
+    { "localArgNames":localArgNames, "allArgNames":allArgNames }>
+</#function>
 
 <#-- 
 *************

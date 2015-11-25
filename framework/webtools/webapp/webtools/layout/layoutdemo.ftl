@@ -707,3 +707,22 @@
 
 
 
+<@section title="FTL macro flexible args demo">
+  <#macro argsTestInner args={} inlineArgs...>
+    <#local args = mergeArgMaps(args, inlineArgs, {"innerArg1":"some-value-macro-default", "innerArg2":"some-value-macro-default", "innerArg3":"some-value-macro-default"}, {"innerArg4", "some-value-macro-override"})>
+    <p>Inner macro args: <@objectAsScript lang="raw" escape=false object=args /></p>
+  </#macro>
+
+  <#-- this macro serves no purpose but to delegate to argsTestInner -->
+  <#macro argsTestOuter args={} inlineArgs...>
+    <#local args = mergeArgMaps(args, inlineArgs, {"outerArg1":"some-value-macro-default", "outerArg2":"some-value-macro-default", "outerArg3":"some-value-macro-default",
+      "innerArg2":"some-value-macro-default-from-delegating-macro"}, {"outerArg4", "some-value-macro-override"})>
+    <@argsTestInner args=args />
+  </#macro>
+
+  <#assign args = {"innerArg3":"some-value-from-caller", "extraAttrib1":"some-value-from-caller"}>
+  <@argsTestOuter args=args outerArg2="some-value-from-caller" extraAttrib2="some-value-from-caller"/>
+</@section>
+
+
+

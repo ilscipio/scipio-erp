@@ -174,7 +174,7 @@ Creates a responsive tables script (script only - no markup).
     fixedColumnsRight   = int value; number of columns that are fixed on the right hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns) 
 -->
 <#macro tableResponsiveScript args={} inlineArgs...>
-  <#local args = concatMaps(args, inlineArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs)>
   <#local enabled = args.enabled!true>
   <#if enabled>
   <#local tableId = args.tableId!"">

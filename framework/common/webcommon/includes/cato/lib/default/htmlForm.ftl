@@ -70,7 +70,7 @@ for getFileUploadProgressStatus AJAX calls.
     htmlwrap        = if true, wrap in @script (default true)
 -->
 <#macro progressScript args={} inlineArgs...>
-  <#local args = concatMaps(args, inlineArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs)>
   <#local enabled = args.enabled!true>
   <#if enabled>
   <#local htmlwrap = args.htmlwrap!htmlwrap>
@@ -223,7 +223,7 @@ IMPL NOTE: this must support legacy ofbiz parameters.
     responseName          = response name
 -->
 <#macro asmSelectScript args={} inlineArgs...>
-  <#local args = concatMaps(args, inlineArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs)>
   <#local enabled = args.enabled!true>
   <#if enabled>
   <#local id = args.id!"">

@@ -26,7 +26,7 @@ to this one.
                             NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#macro container class="" openOnly=false closeOnly=false nestedOnly=false attribs={} inlineAttribs...>
-  <#local attribs = concatMaps(attribs, inlineAttribs)>
+  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>

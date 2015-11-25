@@ -736,11 +736,11 @@ TODO: doesn't handle dates (ambiguous?)
 *************
 * mergeArgMaps
 ************
-Merges cato macro inlineArgs/args/defaultArgs/overrideArgs maps for macros supporting the 
+Merges cato macro inlineArgs/args/defaultArgs/overrideArgs maps for macros implementing the 
   <#macro name args={} inlineArgs...>
 pattern.
-It cannot be used for the 'attribs={} inlineAttribs...' pattern. Instead, it can help in implementing
-that pattern within the 'args={} inlineArgs...' pattern.
+It cannot be used for the 'attribs={} inlineAttribs...' pattern (see mergeAttribMaps). 
+Instead, it can help in implementing that pattern within the 'args={} inlineArgs...' pattern.
 
 This is specific to cato macro patterns and may contain extra handling
 not done by a basic concatMaps method.
@@ -781,7 +781,7 @@ TODO?: may want helper booleans to control in/out allArgNames?
                     the names used here also count toward the localArgNames.
                     WARN: if a key is present in this map, it should be omitted from defaultArgs.
 -->
-<#function mergeArgMaps args inlineArgs defaultArgs={} overrideArgs={}>
+<#function mergeArgMaps args={} inlineArgs={} defaultArgs={} overrideArgs={}>
   <#if !inlineArgs?has_content> <#-- necessary to prevent empty sequence -->
     <#local inlineArgs = {}>
   </#if>
@@ -790,6 +790,27 @@ TODO?: may want helper booleans to control in/out allArgNames?
   <#return defaultArgs + toSimpleMap(args) + inlineArgs + overrideArgs + 
     { "localArgNames":localArgNames, "allArgNames":allArgNames }>
 </#function>
+
+<#-- 
+*************
+* mergeAttribMaps
+************
+Merges cato macro attribs/inlineAttribs/defaultAttribs/overrideAttribs maps for macros still implementing the 
+  <#macro name arg1="" arg2="" ... argN="" attribs={} inlineAttribs...>
+pattern.
+This pattern is simpler but much less flexible than the 'attribs={} inlineAttribs...' pattern.
+They are not interchangeable.
+
+  * Parameters *
+    (see mergeArgMaps; analogous)
+-->
+<#function mergeAttribMaps attribs={} inlineAttribs={} defaultAttribs={} overrideAttribs={}>
+  <#if !inlineAttribs?has_content> <#-- necessary to prevent empty sequence -->
+    <#local inlineAttribs = {}>
+  </#if>
+  <#return defaultAttribs + toSimpleMap(attribs) + inlineAttribs + overrideAttribs>
+</#function>
+
 
 <#-- 
 *************

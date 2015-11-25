@@ -35,7 +35,7 @@ An HTML form element.
                           NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#macro form type="input" name="" id="" class="" openOnly=false closeOnly=false nestedOnly=false attribs={} inlineAttribs...>
-  <#local attribs = concatMaps(attribs, inlineAttribs)>
+  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>

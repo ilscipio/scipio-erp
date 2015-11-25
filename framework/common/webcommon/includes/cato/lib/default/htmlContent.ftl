@@ -41,7 +41,7 @@
 -->
 <#macro heading elemType=true level="" relLevel="" class="" id="" levelClassPrefix=true consumeLevel="" 
     containerElemType=false containerClass="" containerId="" attribs={} inlineAttribs...>
-  <#local attribs = concatMaps(attribs, inlineAttribs)>
+  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
   <#if !level?has_content>
     <#local level = getCurrentHeadingLevel()>
   </#if>
@@ -312,7 +312,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 <#macro table type="" class="" id="" cellspacing=true responsive="" scrollable="" responsiveOptions={} responsiveDefaults="" 
   fixedColumnsLeft=0 fixedColumnsRight=0 autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false 
   nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local attribs = concatMaps(attribs, inlineAttribs)>
+  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
@@ -471,7 +471,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 </#macro>
 
 <#macro thead class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local attribs = concatMaps(attribs, inlineAttribs)>
+  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
@@ -498,7 +498,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 </#macro>
 
 <#macro tbody class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local attribs = concatMaps(attribs, inlineAttribs)>
+  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
@@ -525,7 +525,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 </#macro>
 
 <#macro tfoot class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local attribs = concatMaps(attribs, inlineAttribs)>
+  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
@@ -589,7 +589,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     [inlineAttribs...]    = other legacy <tr attributes and values, inlined
 -->
 <#macro tr type="" class="" id="" useAlt="" alt="" groupLast="" groupParent="" selected="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local attribs = concatMaps(attribs, inlineAttribs)>
+  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#local catoCurrentTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
@@ -680,14 +680,14 @@ Helps define table cells.
     [inlineAttribs...]    = other legacy <th and <td attributes and values
 -->
 <#macro th class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local attribs = concatMaps(attribs, inlineAttribs)>
+  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
 <#macro td class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local attribs = concatMaps(attribs, inlineAttribs)>
+  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>></#if><#nested><#if close></td></#if>

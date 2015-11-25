@@ -1067,14 +1067,20 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#local rowClass = "">
   <#local labelAreaClass = "">  
   <#local postfixClass = "">
+  
+  <#-- get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
+  <#local absColSizes = getAbsContainerSizeFactors()>
+  <#-- if parent container is large, then we'll include the large grid sizes; otherwise only want small to apply -->
+  <#local isLarge = (absColSizes.large > 6)>  
+  
   <#if postfix>
       <#local columnspostfix = postfixSize/>
       <#if !collapse?has_content>
           <#local collapse = true/> <#-- explicit collapse param overrides postfix setting, but collapse by default -->
       </#if>
-      <#local defaultClass = "${styles.grid_small!}${12-columnspostfix} ${styles.grid_large!}${12-columnspostfix}"/>
+      <#local defaultClass>${styles.grid_small!}${12-columnspostfix}<#if isLarge> ${styles.grid_large!}${12-columnspostfix}</#if></#local>
   <#else>
-      <#local defaultClass = "${styles.grid_large!}12"/>
+      <#local defaultClass><#if isLarge>${styles.grid_large!}12<#else>${styles.grid_small!}12</#if></#local>
       <#local columnspostfix = 0/>
   </#if>
   <#if !collapse?has_content>
@@ -1087,12 +1093,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <@row class=rowClass collapse=collapse!false norows=(norows || !container)>
     <#-- TODO: support more label configurations (besides gridarea left) -->
     <#if labelArea && labelType == "gridarea" && labelLayout == "left">
-        <#local defaultLabelAreaClass="${styles.grid_small!}3 ${styles.grid_large!}2"/>
-        <#local defaultClass="${styles.grid_small!}${9-columnspostfix} ${styles.grid_large!}${10-columnspostfix}"/>
-        <#if columns?has_content>
-            <#local defaultLabelAreaClass="${styles.grid_small!}${12-columns+1} ${styles.grid_large!}${12-columns}"/>
-            <#local defaultClass="${styles.grid_small!}${columns-columnspostfix-1} ${styles.grid_large!}${columns-columnspostfix}"/>
-        </#if>
+        <#local defaultLabelAreaClass = getFieldGridLabelArea(columns, columnspostfix, isLarge)/>
+        <#local defaultClass = getFieldGridWidgetArea(columns, columnspostfix, isLarge)/>
         <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title " + fieldEntryTypeClass)>
         <@cell class=compileClassArg(labelAreaClass, defaultLabelAreaClass) nocells=(nocells || !container)>
             ${labelAreaContent}
@@ -1106,7 +1108,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         <#nested>
     </@cell>
     <#if postfix && !nocells && container>
-        <#local defaultPostfixClass = "${styles.grid_small!}${postfixSize} ${styles.grid_large!}${postfixSize}">
+        <#local defaultPostfixClass>${styles.grid_small!}${postfixSize}<#if isLarge> ${styles.grid_large!}${postfixSize}</#if></#local>
         <#local postfixClass = addClassArg(postfixClass, "field-entry-postfix " + fieldEntryTypeClass)>
         <@cell class=compileClassArg(postfixClass, defaultPostfixClass)>
             <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
@@ -1131,3 +1133,32 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     ${labelDetail}
   </#if>  
 </#macro>
+
+<#function getFieldGridLabelArea columns="" columnspostfix=0 isLarge="">
+  <#-- these need to be reusable but styles hash is not enough; may be dynamic -->
+  <#if !isLarge?is_boolean>
+    <#-- get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
+    <#local absColSizes = getAbsContainerSizeFactors()>
+    <#-- if parent container is large, then we'll include the large grid sizes; otherwise only want small to apply -->
+    <#local isLarge = (absColSizes.large > 6)>  
+  </#if>
+  <#if columns?has_content>
+    <#local classes>${styles.grid_small!}${12-columns+1}<#if isLarge> ${styles.grid_large!}${12-columns}</#if></#local>
+  <#else>
+    <#local classes>${styles.grid_small!}3<#if isLarge> ${styles.grid_large!}2</#if></#local>
+  </#if>
+  <#return classes>
+</#function>
+
+<#function getFieldGridWidgetArea columns="" columnspostfix=0 isLarge="">
+  <#if !isLarge?is_boolean>
+    <#local absColSizes = getAbsContainerSizeFactors()>
+    <#local isLarge = (absColSizes.large > 6)>  
+  </#if>
+  <#if columns?has_content>
+    <#local classes>${styles.grid_small!}${columns-columnspostfix-1}<#if isLarge> ${styles.grid_large!}${columns-columnspostfix}</#if></#local>
+  <#else>
+    <#local classes>${styles.grid_small!}${9-columnspostfix}<#if isLarge> ${styles.grid_large!}${10-columnspostfix}</#if></#local>
+  </#if>
+  <#return classes>
+</#function>

@@ -20,8 +20,6 @@ package com.ilscipio.cato.webapp.ftl.lang;
 
 import java.util.List;
 
-import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
-
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -44,7 +42,7 @@ public class MapKeysMethod implements TemplateMethodModelEx {
         }
         TemplateModel object = (TemplateModel) args.get(0);
         
-        return CommonFtlUtil.getMapKeys(object);
+        return LangFtlUtil.getMapKeys(object);
     }
     
 }

@@ -21,8 +21,6 @@ package com.ilscipio.cato.webapp.ftl.lang;
 import java.util.List;
 
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
-import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.CurrentFtlVarHandler;
-import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.FtlVarHandler;
 
 import freemarker.core.Environment;
 import freemarker.template.SimpleScalar;
@@ -48,11 +46,11 @@ public class VarsPutAllMethod implements TemplateMethodModelEx {
     @Override
     public Object exec(List args) throws TemplateModelException {
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        return execPutAll(args, new CurrentFtlVarHandler(env), env);
+        return execPutAll(args, new LangFtlUtil.CurrentFtlVarHandler(env), env);
     }
     
     @SuppressWarnings("unchecked")
-    protected Object execPutAll(List args, FtlVarHandler varHandler, Environment env) throws TemplateModelException {
+    protected Object execPutAll(List args, LangFtlUtil.FtlVarHandler varHandler, Environment env) throws TemplateModelException {
         if (args == null || args.size() < 1 || args.size() > 3) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1-3)");
         }
@@ -87,7 +85,7 @@ public class VarsPutAllMethod implements TemplateMethodModelEx {
             }
         }
         
-        CommonFtlUtil.varsPutAll(hashModel, CommonFtlUtil.getAsStringSet(keysModel), include, onlyDirectives, varHandler, env);
+        LangFtlUtil.varsPutAll(hashModel, LangFtlUtil.getAsStringSet(keysModel), include, onlyDirectives, varHandler, env);
         
         return new SimpleScalar("");
     }

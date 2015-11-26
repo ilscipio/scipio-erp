@@ -21,7 +21,6 @@ package com.ilscipio.cato.webapp.ftl.lang;
 import java.util.List;
 
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
-import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.GlobalFtlVarHandler;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateModelException;
@@ -41,7 +40,7 @@ public class GlobalsPutAllMethod extends VarsPutAllMethod {
     @Override
     public Object exec(List args) throws TemplateModelException {
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        return execPutAll(args, new GlobalFtlVarHandler(env), env);
+        return execPutAll(args, new LangFtlUtil.GlobalFtlVarHandler(env), env);
     }
 
 }

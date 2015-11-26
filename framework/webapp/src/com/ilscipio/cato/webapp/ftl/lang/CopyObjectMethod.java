@@ -45,7 +45,7 @@ public class CopyObjectMethod implements TemplateMethodModelEx {
         }
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         TemplateModel object = (TemplateModel) args.get(0);
-        return CommonFtlUtil.copyObject(object, null, env.getObjectWrapper());
+        return LangFtlUtil.copyObject(object, null, env.getObjectWrapper());
     }
     
 }

@@ -53,7 +53,7 @@ public class GetRequestVarMethod implements TemplateMethodModelEx {
         }
 
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        Object res = CommonFtlUtil.getRequestVar(((TemplateScalarModel) nameModel).getAsString(), env);
+        Object res = ContextFtlUtil.getRequestVar(((TemplateScalarModel) nameModel).getAsString(), env);
         
         return res; // NOTE: result gets automatically wrapped by Freemarker on need basis
     }

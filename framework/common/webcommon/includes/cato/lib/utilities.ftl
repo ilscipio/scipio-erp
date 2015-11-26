@@ -196,7 +196,7 @@ where DELIM is specified delimiter (& &amp; , ; etc.)
     paramDelim      = Param delimiter ("&amp;" by default)
 -->
 <#function splitStrParams paramStr paramDelim="&amp;">
-  <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].splitStrParams(paramStr, paramDelim)>
+  <#return Static["com.ilscipio.cato.webapp.ftl.template.TemplateFtlUtil"].splitStrParams(paramStr, paramDelim)>
 <#-- old FTL impl.
   <#local res = {}>
   <#local pairs = paramStr?split(paramDelim)>
@@ -381,7 +381,7 @@ Escapes the URL's parameter delimiters if they are not already escaped.
 Converts camelCase to camel-case.
 -->
 <#function camelCaseToDashLowerName name>
-    <#return StringUtil.wrapString(Static['com.ilscipio.cato.webapp.ftl.CommonFtlUtil'].camelCaseToDashLowerName(name))?string>
+    <#return StringUtil.wrapString(Static["com.ilscipio.cato.webapp.ftl.lang.LangFtlUtil"].camelCaseToDashLowerName(name))?string>
 </#function>
 
 
@@ -505,7 +505,7 @@ Also see mergeArgMaps.
         <#if isObjectType("simplemap", first) && isObjectType("simplemap", second)>
           <#return first + second>
         <#else>
-          <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].concatMaps(first, second)>
+          <#return Static["com.ilscipio.cato.webapp.ftl.lang.LangFtlUtil"].concatMaps(first, second)>
         </#if>
       </#if>
     <#else>
@@ -554,7 +554,7 @@ and ?eval harder there.
 widget-related progress success action compile (see widget-form.xsd form element extra "attribs" attrib).
 -->
 <#function compileProgressSuccessAction progressSuccessAction>
-  <#return StringUtil.wrapString(Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].compileProgressSuccessAction(progressSuccessAction))?string>
+  <#return StringUtil.wrapString(Static["com.ilscipio.cato.webapp.ftl.template.TemplateFtlUtil"].compileProgressSuccessAction(progressSuccessAction))?string>
 </#function>
 
 <#-- 
@@ -1283,7 +1283,7 @@ NOTE: this is a very generic function; for common implementation, see commonElem
 <#macro elemAttribStr attribs includeEmpty=false emptyValToken="" exclude=[] 
   attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=false>
   <#if attribs?is_hash>
-    <#t>${StringUtil.wrapString(Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].makeElemAttribStr(attribs, includeEmpty, 
+    <#t>${StringUtil.wrapString(Static["com.ilscipio.cato.webapp.ftl.template.TemplateFtlUtil"].makeElemAttribStr(attribs, includeEmpty, 
       emptyValToken, exclude, attribNamePrefix, alwaysAddPrefix, attribNamePrefixStrip, attribNameSubstitutes, camelCaseToDashLowerNames))}<#t>
   <#elseif attribs?is_string>
     <#t> ${attribs?string}
@@ -1308,7 +1308,7 @@ a level and relLevel are extracted.
 Note that the class portions may be prefixed with "+" as well for append-not-replace logic.
 -->
 <#function getHeadingElemSpecFromStyleStr styleStr containerStyleStr allowedHeadingElemTypes allowedElemTypes allowedContainerElemTypes cacheId="">
-    <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].getHeadingElemSpecFromStyleStr(styleStr, containerStyleStr,
+    <#return Static["com.ilscipio.cato.webapp.ftl.template.TemplateFtlUtil"].getHeadingElemSpecFromStyleStr(styleStr, containerStyleStr,
         allowedHeadingElemTypes, allowedElemTypes, allowedContainerElemTypes, cacheId)>
 
 <#-- old FTL impl
@@ -1455,7 +1455,7 @@ Helper method that can extract style names by prefix with int value suffix from 
     a hash/map of result names to integer values.
 -->
 <#function extractPrefixedStyleNamesWithInt style prefixMap>
-  <#return Static["com.ilscipio.cato.webapp.ftl.CommonFtlUtil"].extractPrefixedStyleNamesWithInt(style, prefixMap)>
+  <#return Static["com.ilscipio.cato.webapp.ftl.template.TemplateFtlUtil"].extractPrefixedStyleNamesWithInt(style, prefixMap)>
 </#function>
 
 <#-- 

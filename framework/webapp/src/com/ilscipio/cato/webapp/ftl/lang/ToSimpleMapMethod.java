@@ -45,7 +45,7 @@ public class ToSimpleMapMethod implements TemplateMethodModelEx {
         }
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         TemplateModel object = (TemplateModel) args.get(0);
-        return CommonFtlUtil.toSimpleMap(env.getObjectWrapper(), object);
+        return LangFtlUtil.toSimpleMap(env.getObjectWrapper(), object);
     }
     
 }

@@ -21,7 +21,6 @@ package com.ilscipio.cato.webapp.ftl.lang;
 import java.util.List;
 
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
-import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.TemplateValueTargetType;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateHashModel;
@@ -74,8 +73,8 @@ public class CopyMapMethod implements TemplateMethodModelEx {
             }
         }
         
-        return CommonFtlUtil.copyMap(hashModel, CommonFtlUtil.getAsStringSet(keysModel), include, 
-                TemplateValueTargetType.SIMPLEMODEL, env.getObjectWrapper());
+        return LangFtlUtil.copyMap(hashModel, LangFtlUtil.getAsStringSet(keysModel), include, 
+                LangFtlUtil.TemplateValueTargetType.SIMPLEMODEL, env.getObjectWrapper());
     }
     
 }

@@ -35,7 +35,7 @@ import freemarker.template.TemplateScalarModel;
  * <p>
  * Values set by this transform should only be read using {@link GetRequestVarMethod}.
  * 
- * @see com.ilscipio.cato.webapp.ftl.CommonFtlUtil#setRequestVar
+ * @see com.ilscipio.cato.webapp.ftl.context.ContextFtlUtil#setRequestVar
  */
 public class SetRequestVarMethod implements TemplateMethodModelEx {
 
@@ -71,7 +71,7 @@ public class SetRequestVarMethod implements TemplateMethodModelEx {
         }
 
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        CommonFtlUtil.setRequestVar(((TemplateScalarModel) nameModel).getAsString(), valueModel, unwrap, env);
+        ContextFtlUtil.setRequestVar(((TemplateScalarModel) nameModel).getAsString(), valueModel, unwrap, env);
 
         return new SimpleScalar("");
     }

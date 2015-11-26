@@ -1139,7 +1139,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
      TODO: support more columns values -->
 <#function getDefaultFieldGridStyles args={} extraArgs...>
   <#local args = mergeArgMapsBasic(args, {}, {
-    <#-- supported args and default values -->
+    <#-- parameters: defaults -->
     "columns" : "",
     "labelArea" : true,
     "postfix" : false,

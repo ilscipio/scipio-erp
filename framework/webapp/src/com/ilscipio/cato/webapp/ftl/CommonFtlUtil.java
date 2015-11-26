@@ -26,7 +26,6 @@ import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.webapp.control.RequestHandler;
 
 import freemarker.core.Environment;
-import freemarker.core.Macro;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.SimpleMapModel;
@@ -57,6 +56,9 @@ import javolution.util.FastMap;
  * <p>
  * <em>NOTE</em>: This is for common, general-purpose code only (generic utilities). Code that implements
  * template macro markup (e.g. <code>htmlTemplate.ftl</code>) logic belongs in separate class.
+ * <p>
+ * TODO: this file could probably be split up, getting large. maybe FTL lang constructs, transform-related,
+ *    other helpers, etc.
  */
 public final class CommonFtlUtil {
 
@@ -510,7 +512,6 @@ public final class CommonFtlUtil {
         return map;
     }
     
-    @SuppressWarnings("unchecked")
     private static SimpleHash getRequestVarMapFromFtlGlobals(Environment env) {
         // WARN: we violate Freemarker immutability logic by changing SimpleHash after initial creation,
         // but it doesn't really matter since no template should ever read it.
@@ -1523,9 +1524,12 @@ public final class CommonFtlUtil {
      * <em>NOTE:</em> This <em>must</em> have the exact same behavior as Freemarker's ?is_directive.
      *     Please refer to Freemarker source code. 
      *     Unfortunately there is no evident way of reusing their code from here...
+     * <p>
+     * <strong>WARNING:</strong> FIXME: This currently refers to the FTL freemarker.core.Macro class, which is set
+     *     to change at any time. this needs a better solution!!!
      */
     public static boolean isDirective(Object object) {
-        return (object instanceof TemplateTransformModel || object instanceof Macro || object instanceof TemplateDirectiveModel);
+        return (object instanceof TemplateTransformModel || object instanceof freemarker.core.Macro || object instanceof TemplateDirectiveModel);
     }
     
     public static Map<String, Object> extractPrefixedStyleNamesWithInt(String styleStr, Map<String, String> prefixMap) {

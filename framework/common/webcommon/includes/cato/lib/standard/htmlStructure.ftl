@@ -78,6 +78,8 @@ to this one.
     <#-- WARN: has no memory when closeOnly... -->
     <#local classes = "">
   </#if>
+  <#-- NOTE: we pass openOnly/closeOnly/nestedOnly because otherwise markup has to recalculated it when
+       calling some macros. as long as markup macros accep extraArgs... it's not a problem; markup can pick which ones it needs. -->
   <@row_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class collapse=collapse id=id alt=alt selected=selected><#nested /></@row_markup>
 </#macro>
 

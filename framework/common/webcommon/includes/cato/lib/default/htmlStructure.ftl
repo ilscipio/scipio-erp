@@ -292,15 +292,17 @@ Since this is very foundation specific, this function may be dropped in future i
     
 -->
 <#macro grid type="" class="" columns=4>
+    <#-- here, use the number of greater ("page") columns to estimate corresponding grid sizes for heuristics -->
+    <#local dummy = saveCurrentContainerSizes({"large":12/columns, "medium":12/columns, "small":12/columns})>
     <#if type == "tiles" || type == "freetiles">
         <#local freewallNum = getRequestVar("catoFreewallIdNum")!0>
         <#local freewallNum = freewallNum + 1 />
         <#local dummy = setRequestVar("catoFreewallIdNum", freewallNum)>
         <#local id = "freewall_id_${freewallNum!0}">
         <#local class = addClassArg(class, styles.tile_container!)>
-        <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>>
+        <@container class=class id=id>
             <#nested>
-        </div>
+        </@container>
         <@script>
          $(function() {
             $('#${id}').freetile({
@@ -325,10 +327,13 @@ Since this is very foundation specific, this function may be dropped in future i
         <#else>
             <#local class = addClassArgDefault(class, "${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
         </#if>
+        <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
         <ul<@compiledClassAttribStr class=class />>
             <#nested>
         </ul>
+        <#local dummy = unsetCurrentContainerSizes()>
     </#if>
+    <#local dummy = unsetCurrentContainerSizes()>
 </#macro>
 
 <#-- 
@@ -362,6 +367,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <#local class = addClassArg(class, "${styles.tile_wrap!}-${type!}")>
     <#local class = addClassArg(class, "${styles.tile_color!}${color!}")>
     <#local nested><#nested></#local>
+    <#-- TODO: saveCurrentContainerSizes/unsetCurrentContainerSizes -->
     <div<@compiledClassAttribStr class=class /><#if id?has_content>id="${id}" </#if>data-sizex="${calcTileSize("x",type!)}" data-sizey="${calcTileSize("y",type!)}">
         <#if image?has_content><div class="${styles.tile_image!}" style="background-image: url(${image!})"></div></#if>
         <div class="${styles.tile_content!}">

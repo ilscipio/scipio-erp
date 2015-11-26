@@ -1088,6 +1088,22 @@ Now implemented as java transform.
 
 <#-- 
 *************
+* popRequestStack
+************
+Pops a global stack variable in request scope (request attributes, or if no request, globals).
+Now implemented as java transform.
+
+  * Parameters *
+    name        = global request stack var name; must be unique 
+                  across all known types of contexts (request attribs, screen context, FTL globals)
+    
+<#function popRequestStack name>
+- implemented as java transform -
+</#function>
+-->
+
+<#-- 
+*************
 * setLastRequestStack
 ************
 Same as doing popRequestStack + pushRequestStack, but will never fail if stack is empty - will simply
@@ -1138,22 +1154,6 @@ Now implemented as java transform.
                       It should only be used for optimization.
 
 <#function getRequestStackAsList name listType>
-- implemented as java transform -
-</#function>
--->
-
-<#-- 
-*************
-* popRequestStack
-************
-Pops a global stack variable in request scope (request attributes, or if no request, globals).
-Now implemented as java transform.
-
-  * Parameters *
-    name        = global request stack var name; must be unique 
-                  across all known types of contexts (request attribs, screen context, FTL globals)
-    
-<#function popRequestStack name>
 - implemented as java transform -
 </#function>
 -->
@@ -1460,6 +1460,17 @@ IMPL NOTE: For this method to work, the framework-/theme-specific code must over
 
 <#-- 
 *************
+* unsetCurrentContainerSizes
+************
+Required call at container close following a saveCurrentContainerSizesXxx call at container open.
+-->
+<#function unsetCurrentContainerSizes>
+  <#local dummy = popRequestStack("catoCSFactorsCacheStack")!false>
+  <#return popRequestStack("catoContainerSizesStack")!{}>
+</#function>
+
+<#-- 
+*************
 * parseContainerSizesFromStyleStr [PLACEHOLDER]
 ************   
 This function should be overridden by a framework-specific implementation that parses the 
@@ -1562,17 +1573,6 @@ size factors
 <#function evalAbsContainerSizeFactors sizesList maxSizes=0 cachedFactorsList=[]>
   <#return {}>
 </#function>
-
-<#-- 
-*************
-* unsetCurrentContainerSizes
-************
--->
-<#function unsetCurrentContainerSizes>
-  <#local dummy = popRequestStack("catoCSFactorsCacheStack")!false>
-  <#return popRequestStack("catoContainerSizesStack")!{}>
-</#function>
-
 
 <#-- 
 *************************************

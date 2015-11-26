@@ -89,7 +89,8 @@ second is cleaner to express.
 Note that both macros support arguments passed in a hash (or map) using the "args" argument, so the entire menu definition
 can be delegated in infinite ways (even to data prep). The inline args have priority over the hash args, as would be expected.
                   
-FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't need to.                  
+FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't need to.      
+    should use set/getRequestVar and/or stack.            
                     
   * Parameters *
     type            = menu type: [generic|section|section-inline|main|tab|subtab|button|...], default generic (but discouraged; prefer specific)
@@ -134,20 +135,26 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#else>
     <#local class = args.class!"">
   </#if>
-  <#local args = mergeArgMaps(args, inlineArgs)> <#-- DEV NOTE: this takes care of case where inlineArgs is empty sequence (but NOT non-empty sequence) -->
-  <#local type = args.type!"generic">
-  <#local inlineItems = args.inlineItems!false>
-  <#local id = args.id!"">
-  <#local style = args.style!"">
-  <#local attribs = args.attribs!"">
-  <#local items = args.items!true>
-  <#local preItems = args.preItems!true>
-  <#local postItems = args.postItems!true>
-  <#local sort = args.sort!false>
-  <#local sortBy = args.sortBy!"">
-  <#local sortDesc = args.sortDesc!false>
-  <#local nestedFirst = args.nestedFirst!false>
-  <#local htmlWrap  = args.htmlWrap!true/>
+  <#local args = mergeArgMaps(args, inlineArgs, {
+    <#-- parameters: defaults -->
+    "type" : "generic",
+    "inlineItems" : false,
+    "id" : "",
+    "style" : "",
+    "attribs" : "",
+    "items" : true,
+    "preItems" : true,
+    "postItems" : true,
+    "sort" : false,
+    "sortBy" : "",
+    "sortDesc" : false,
+    "nestedFirst" : false,
+    "htmlWrap" : true
+  }, {
+    <#-- parameters: overrides -->
+    "class" : class
+  })>
+  <#local dummy = localsPutAll(args)>
 
   <#if htmlWrap?is_boolean>
     <#local htmlWrap = htmlWrap?string("ul", "")>
@@ -273,27 +280,35 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#else>
     <#local contentClass = args.contentClass!"">
   </#if>
-  <#local args = mergeArgMaps(args, inlineArgs)> <#-- DEV NOTE: this takes care of case where inlineArgs is empty sequence (but NOT non-empty sequence) -->
-  <#local type = args.type!"generic">
-  <#local id = args.id!"">
-  <#local style = args.style!"">
-  <#local attribs = args.attribs!"">
-  <#local contentId = args.contentId!"">
-  <#local contentStyle = args.contentStyle!"">
-  <#local contentAttribs = args.contentAttribs!"">
-  <#local text = args.text!"">
-  <#local href = args.href!true>
-  <#local onClick = args.onClick!"">
-  <#local disabled = args.disabled!false>
-  <#local selected = args.selected!false>
-  <#local active = args.active!false>
-  <#local target = args.target!"">
-  <#local nestedContent = args.nestedContent!true>
-  <#local nestedMenu = args.nestedMenu!false>
-  <#local wrapNested = args.wrapNested!false>
-  <#local nestedFirst = args.nestedFirst!false>
-  <#local htmlWrap  = args.htmlWrap!true>
-  <#local inlineItem = args.inlineItem!false>
+  <#local args = mergeArgMaps(args, inlineArgs, {
+    <#-- parameters: defaults -->
+    "type" : "generic",
+    "id" : "",
+    "style" : "",
+    "attribs" : "",
+    "contentId" : "",
+    "contentStyle" : "",
+    "contentAttribs" : "",
+    "text" : "",
+    "href" : true,
+    "onClick" : "",
+    "disabled" : false,
+    "selected" : false,
+    "active" : false,
+    "target" : "",
+    "nestedContent" : true,
+    "nestedMenu" : false,
+    "wrapNested" : false,
+    "nestedFirst" : false,
+    "htmlWrap" : true,
+    "inlineItem" : false
+  }, {
+    <#-- parameters: overrides -->
+    "class" : class,
+    "contentClass" : contentClass
+  })>
+  <#local dummy = localsPutAll(args)>
+
 
   <#local menuType = (catoCurrentMenuInfo.type)!"">
   <#local menuStyleName = (catoCurrentMenuInfo.styleName)!"">

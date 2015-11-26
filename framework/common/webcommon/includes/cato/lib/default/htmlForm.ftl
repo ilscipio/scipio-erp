@@ -70,50 +70,53 @@ for getFileUploadProgressStatus AJAX calls.
     htmlwrap        = if true, wrap in @script (default true)
 -->
 <#macro progressScript args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs)>
-  <#local enabled = args.enabled!true>
+  <#local args = mergeArgMaps(args, inlineArgs, {
+    <#-- parameters: defaults -->
+    "enabled" : true,
+    "htmlwrap" : true,
+    "progressOptions" : {}
+  })>
+  <#local dummy = localsPutAll(args)>
   <#if enabled>
-  <#local htmlwrap = args.htmlwrap!htmlwrap>
-  <#local progressOptions = args.progressOptions!{}>
-  <#if progressOptions?has_content && progressOptions.formSel?has_content>
-    <@script htmlwrap=htmlwrap>
-    
-      <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" htmlwrap=false/>
-    
-    (function() {
-        var uploadProgress = null;
-    
-        jQuery(document).ready(function() {
-          <#if progressOptions.successRedirectUrl??>
-            <#-- shouldn't have &amp; in script tag... but code may escape and should support... -->
-            <#local progressOptions = concatMaps(progressOptions, {"successRedirectUrl":progressOptions.successRedirectUrl?replace("&amp;", "&")})>
-          </#if>
-            uploadProgress = new CatoUploadProgress(<@objectAsScript lang="js" object=progressOptions />);
-            uploadProgress.reset();
-        });
-        
-      <#if (progressOptions.submitHook!) == "validate">
-        jQuery("${progressOptions.formSel}").validate({
-            submitHandler: function(form) {
-                var goodToGo = uploadProgress.initUpload();
-                if (goodToGo) {
-                    form.submit();
-                }
-            },
-            ${progressOptions.validateObjScript!""}
-        });
-      <#elseif (progressOptions.submitHook!) != "none" >
-        jQuery("${progressOptions.formSel}").submit(function(event) {
-            var goodToGo = uploadProgress.initUpload();
-            if (!goodToGo) {
-                event.preventDefault();
-            }
-        });
-      </#if>
-    })();
-    
-    </@script>
-  </#if>
+    <#if progressOptions?has_content && progressOptions.formSel?has_content>
+      <@script htmlwrap=htmlwrap>
+      
+        <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" htmlwrap=false/>
+      
+      (function() {
+          var uploadProgress = null;
+      
+          jQuery(document).ready(function() {
+            <#if progressOptions.successRedirectUrl??>
+              <#-- shouldn't have &amp; in script tag... but code may escape and should support... -->
+              <#local progressOptions = concatMaps(progressOptions, {"successRedirectUrl":progressOptions.successRedirectUrl?replace("&amp;", "&")})>
+            </#if>
+              uploadProgress = new CatoUploadProgress(<@objectAsScript lang="js" object=progressOptions />);
+              uploadProgress.reset();
+          });
+          
+        <#if (progressOptions.submitHook!) == "validate">
+          jQuery("${progressOptions.formSel}").validate({
+              submitHandler: function(form) {
+                  var goodToGo = uploadProgress.initUpload();
+                  if (goodToGo) {
+                      form.submit();
+                  }
+              },
+              ${progressOptions.validateObjScript!""}
+          });
+        <#elseif (progressOptions.submitHook!) != "none" >
+          jQuery("${progressOptions.formSel}").submit(function(event) {
+              var goodToGo = uploadProgress.initUpload();
+              if (!goodToGo) {
+                  event.preventDefault();
+              }
+          });
+        </#if>
+      })();
+      
+      </@script>
+    </#if>
   </#if>
 </#macro>
 
@@ -223,68 +226,70 @@ IMPL NOTE: this must support legacy ofbiz parameters.
     responseName          = response name
 -->
 <#macro asmSelectScript args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs)>
-  <#local enabled = args.enabled!true>
+  <#local args = mergeArgMaps(args, inlineArgs, {
+    <#-- parameters: defaults -->
+    "enabled" : true,
+    "id" : "",
+    "title" : false,
+    "sortable" : false,
+    "formId" : "",
+    "formName" : "",
+    "asmSelectOptions" : {},
+    "asmSelectDefaults" : true,
+    "relatedFieldId" : "",
+    "relatedTypeName" : "",
+    "relatedTypeFieldId" : "",
+    "paramKey" : "",
+    "requestName" : "",
+    "responseName" : "",
+    "htmlwrap" : true
+  })>
+  <#local dummy = localsPutAll(args)>
   <#if enabled>
-  <#local id = args.id!"">
-  <#local title = args.title!false>
-  <#local sortable = args.sortable!false>
-  <#local formId = args.formId!"">
-  <#local formName = args.formName!"">
-  <#local asmSelectOptions = args.asmSelectOptions!{}>
-  <#local asmSelectDefaults = args.asmSelectDefaults!true>
-  <#local relatedFieldId = args.relatedFieldId!"">
-  <#local relatedTypeName = args.relatedTypeName!"">
-  <#local relatedTypeFieldId = args.relatedTypeFieldId!"">
-  <#local paramKey = args.paramKey!"">
-  <#local requestName = args.requestName!"">
-  <#local responseName = args.responseName!"">
-  <#local htmlwrap = args.htmlwrap!true>
-  
-  <#-- MIGRATED FROM component://common/webcommon/includes/setMultipleSelectJs.ftl -->
-  <#if id?has_content>
-  <@script htmlwrap=htmlwrap>
-  jQuery(document).ready(function() {
-      multiple = jQuery("#${id!}");
-  
-    <#if !(title?is_boolean && title == false)>
-      <#if title?is_boolean>
-        <#local title = "">
-      </#if>
-      // set the dropdown "title" if??
-      multiple.attr('title', '${title}');
-    </#if>
+    <#-- MIGRATED FROM component://common/webcommon/includes/setMultipleSelectJs.ftl -->
+    <#if id?has_content>
+    <@script htmlwrap=htmlwrap>
+    jQuery(document).ready(function() {
+        multiple = jQuery("#${id!}");
     
-      <#if asmSelectDefaults>
-        <#-- Cato: get options from styles -->
-        <#local defaultAsmSelectOpts = {
-          "addItemTarget": 'top',
-          "sortable": sortable!false,
-          "removeLabel": uiLabelMap.CommonRemove
-          <#--, debugMode: true-->
-        }>
-        <#local asmSelectOpts = defaultAsmSelectOpts + styles.field_select_asmselect!{} + asmSelectOptions>
-      <#else>
-        <#local asmSelectOpts = asmSelectOptions>
+      <#if !(title?is_boolean && title == false)>
+        <#if title?is_boolean>
+          <#local title = "">
+        </#if>
+        // set the dropdown "title" if??
+        multiple.attr('title', '${title}');
       </#if>
-      // use asmSelect in Widget Forms
-      multiple.asmSelect(<@objectAsScript lang="js" object=asmSelectOpts />);
-        
-    <#if relatedFieldId?has_content> <#-- can be used without related field -->
-      // track possible relatedField changes
-      // on initial focus (focus-field-name must be relatedFieldId) or if the field value changes, select related multi values. 
-      typeValue = jQuery('#${relatedTypeFieldId}').val();
-      jQuery("#${relatedFieldId}").one('focus', function() {
+      
+        <#if asmSelectDefaults>
+          <#-- Cato: get options from styles -->
+          <#local defaultAsmSelectOpts = {
+            "addItemTarget": 'top',
+            "sortable": sortable!false,
+            "removeLabel": uiLabelMap.CommonRemove
+            <#--, debugMode: true-->
+          }>
+          <#local asmSelectOpts = defaultAsmSelectOpts + styles.field_select_asmselect!{} + asmSelectOptions>
+        <#else>
+          <#local asmSelectOpts = asmSelectOptions>
+        </#if>
+        // use asmSelect in Widget Forms
+        multiple.asmSelect(<@objectAsScript lang="js" object=asmSelectOpts />);
+          
+      <#if relatedFieldId?has_content> <#-- can be used without related field -->
+        // track possible relatedField changes
+        // on initial focus (focus-field-name must be relatedFieldId) or if the field value changes, select related multi values. 
+        typeValue = jQuery('#${relatedTypeFieldId}').val();
+        jQuery("#${relatedFieldId}").one('focus', function() {
+          selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+        });
+        jQuery("#${relatedFieldId}").change(function() {
+          selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+        });
         selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
-      });
-      jQuery("#${relatedFieldId}").change(function() {
-        selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
-      });
-      selectMultipleRelatedValues('${requestName}', '${paramKey}', '${relatedFieldId}', '${id}', '${relatedTypeName}', typeValue, '${responseName}');
+      </#if>
+      });  
+    </@script>
     </#if>
-    });  
-  </@script>
-  </#if>
   </#if>
 </#macro>
 

@@ -481,9 +481,9 @@
       ]>
       <@field type="select" items=items name="select1" label="Select 1" currentValue="val2" />
       <@field type="select" items=items name="select1" label="Select 2" currentValue="val2" currentFirst=true currentDescription="THE FIRST"/>
-      <@field type="select" items=items name="select1" label="Select 2" currentValue="val2" currentFirst=true />
+      <@field type="select" items=items name="select1" label="Select 2 (current first)" currentValue="val2" currentFirst=true />
       <@field type="select" items=items name="select1" label="Select 3" currentValue="val2" allowEmpty=true />
-      <@field type="select" items=items name="select1" label="Select 3" allowEmpty=true />
+      <@field type="select" items=items name="select1" label="Select 3 (allow empty)" allowEmpty=true />
       <#assign items = [
         {"value":"val1", "description":"Value 1"},
         {"value":"val2", "description":"Value 2"},

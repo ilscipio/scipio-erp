@@ -174,62 +174,64 @@ Creates a responsive tables script (script only - no markup).
     fixedColumnsRight   = int value; number of columns that are fixed on the right hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns) 
 -->
 <#macro tableResponsiveScript args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs)>
-  <#local enabled = args.enabled!true>
+  <#local args = mergeArgMaps(args, inlineArgs, {
+    <#-- parameters: defaults -->
+    "enabled" : true,
+    "tableId" : "",
+    "tableType" : "",
+    "tableStyleName" : "",
+    "responsive" : "",
+    "scrollable" : "",
+    "responsiveOptions" : {},
+    "responsiveDefaults" : true,
+    "fixedColumnsLeft" : 0,
+    "fixedColumnsRight" : 0,
+    "htmlwrap" : true
+  })>
+  <#local dummy = localsPutAll(args)>
   <#if enabled>
-  <#local tableId = args.tableId!"">
-  <#local tableType = args.tableType!"">
-  <#local tableStyleName = args.tableStyleName!"">
-  <#local responsive = args.responsive!"">
-  <#local scrollable = args.scrollable!"">
-  <#local responsiveOptions = args.responsiveOptions!{}>
-  <#local responsiveDefaults = args.responsiveDefaults!true>
-  <#local fixedColumnsLeft = args.fixedColumnsLeft!0>
-  <#local fixedColumnsRight = args.fixedColumnsRight!0>
-  <#local htmlwrap = args.htmlwrap!true>
-  
-  <#if !(responsive?is_boolean && responsive == false) && tableId?has_content>
-    <#if !tableStyleName?has_content>
-      <#local tableStyleName = tableType?replace("-","_")>
-      <#if (!tableStyleName?has_content) || (!(styles["table_" + tableStyleName]!false)?is_string)>
-        <#local tableStyleName = "default">
+    <#if !(responsive?is_boolean && responsive == false) && tableId?has_content>
+      <#if !tableStyleName?has_content>
+        <#local tableStyleName = tableType?replace("-","_")>
+        <#if (!tableStyleName?has_content) || (!(styles["table_" + tableStyleName]!false)?is_string)>
+          <#local tableStyleName = "default">
+        </#if>
       </#if>
+  
+      <#-- defaults -->
+      <#if !responsiveDefaults>
+        <#local respOpts = {}>
+      <#elseif responsive?is_boolean && responsive == true>
+        <#local respOpts = styles["table_" + tableStyleName + "_responsive_options"]!styles["table_default_responsive_options"]!{}>
+      <#elseif scrollable?is_boolean && scrollable == true>
+        <#local respOpts = styles["table_" + tableStyleName + "_scrollable_options"]!styles["table_default_scrollable_options"]!{}>    
+      <#else>
+        <#local respOpts = {}>
+      </#if>
+  
+      <#-- aliases/abstractions -->
+      <#if (fixedColumnsLeft > 0) || (fixedColumnsRight > 0)>
+        <#local respOpts = respOpts + { "fixedColumns" : {
+            "leftColumns": fixedColumnsLeft!0,
+            "rightColumns": fixedColumnsRight!0
+          }
+        }>
+      </#if>
+      <#if scrollable?is_boolean>
+        <#local respOpts = respOpts + {"scrollX": scrollable}>
+      </#if>
+  
+      <#-- manual overrides -->
+      <#if responsiveOptions?has_content>
+        <#local respOpts = respOpts + responsiveOptions>
+      </#if>
+      
+      <@script htmlwrap=htmlwrap>
+        $(document).ready(function() {
+            $('#${tableId}').DataTable(<@objectAsScript lang="js" object=respOpts />);
+        } );
+      </@script>
     </#if>
-
-    <#-- defaults -->
-    <#if !responsiveDefaults>
-      <#local respOpts = {}>
-    <#elseif responsive?is_boolean && responsive == true>
-      <#local respOpts = styles["table_" + tableStyleName + "_responsive_options"]!styles["table_default_responsive_options"]!{}>
-    <#elseif scrollable?is_boolean && scrollable == true>
-      <#local respOpts = styles["table_" + tableStyleName + "_scrollable_options"]!styles["table_default_scrollable_options"]!{}>    
-    <#else>
-      <#local respOpts = {}>
-    </#if>
-
-    <#-- aliases/abstractions -->
-    <#if (fixedColumnsLeft > 0) || (fixedColumnsRight > 0)>
-      <#local respOpts = respOpts + { "fixedColumns" : {
-          "leftColumns": fixedColumnsLeft!0,
-          "rightColumns": fixedColumnsRight!0
-        }
-      }>
-    </#if>
-    <#if scrollable?is_boolean>
-      <#local respOpts = respOpts + {"scrollX": scrollable}>
-    </#if>
-
-    <#-- manual overrides -->
-    <#if responsiveOptions?has_content>
-      <#local respOpts = respOpts + responsiveOptions>
-    </#if>
-    
-    <@script htmlwrap=htmlwrap>
-      $(document).ready(function() {
-          $('#${tableId}').DataTable(<@objectAsScript lang="js" object=respOpts />);
-      } );
-    </@script>
-  </#if>
   </#if>
 </#macro>
 

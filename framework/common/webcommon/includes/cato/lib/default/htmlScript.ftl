@@ -68,7 +68,7 @@ Not associated with any HTML element.
 -->
 <#macro scripts args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, {
-    <#-- supported args and default values -->
+    <#-- parameters: defaults -->
     "scriptType" : "text/javascript",
     "output" : "",
     "htmlwrap" : true,
@@ -111,7 +111,7 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
 <#macro script args={} inlineArgs...>
   <#local scriptsInfo = getRequestVar("catoScriptsInfo")!{}>
   <#local args = mergeArgMaps(args, inlineArgs, {
-    <#-- supported args and default values -->
+    <#-- parameters: defaults -->
     "type" : scriptsInfo.scriptType!"text/javascript",
     "src" : "",
     "output" : scriptsInfo.output!"",

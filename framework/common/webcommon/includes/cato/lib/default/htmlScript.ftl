@@ -74,6 +74,7 @@ Not associated with any HTML element.
     "htmlwrap" : true,
     "cdata" : true
   })>
+  <#local dummy = localsPutAll(args)>
   <#local dummy = setRequestVar("catoScriptsInfo", args)>
   <#nested>
   <#local dummy = setRequestVar("catoScriptsInfo", {})>
@@ -117,16 +118,17 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
     "htmlwrap" : scriptsInfo.htmlwrap!true,
     "cdata" : scriptsInfo.cdata!true
   })>
-  <#if args.src?has_content>
-    <script type="${args.type}" src="${args.src}"></script>
+  <#local dummy = localsPutAll(args)>
+  <#if src?has_content>
+    <script type="${type}" src="${src}"></script>
   <#else>
-    <#if args.htmlwrap>
-      <script type="${args.type}">
-      <#if args.cdata>//<![CDATA[</#if>
+    <#if htmlwrap>
+      <script type="${type}">
+      <#if cdata>//<![CDATA[</#if>
     </#if>
         <#nested>
-    <#if args.htmlwrap>
-      <#if args.cdata>//]]></#if>
+    <#if htmlwrap>
+      <#if cdata>//]]></#if>
       </script>
     </#if>
   </#if>

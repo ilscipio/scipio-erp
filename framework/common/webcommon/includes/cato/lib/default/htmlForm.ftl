@@ -1141,12 +1141,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     "postfixSize" : 0,
     "isLarge" : ""
   })>
-
-  <#local columns = args.columns>
-  <#local labelArea = args.labelArea>
-  <#local postfix = args.postfix>
-  <#local postfixSize = args.postfixSize>
-  <#local isLarge = args.isLarge>
+  <#local dummy = localsPutAll(args)> 
   
   <#if !isLarge?is_boolean>
     <#-- get estimate of the current absolute column widths (with all parent containers, as much as possible) -->

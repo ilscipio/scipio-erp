@@ -760,10 +760,18 @@ WARN: currently it's possible the result contain duplicate names (is not a set).
 TODO: current macros must be translated to exploit this mechanism.
 
 The result is the caller can access any arg names in the resulting map which had a default
-value using simple syntax guaranteed not to crash. e.g
+value using simple syntax guaranteed not to cause missing values. e.g
   <#macro name args={} inlineArgs...>
     <#local args = mergeArgMaps(inlineArgs, args, {"myParam1":true})>
     <#if args.myParam1>
+      ...
+    </#if>
+  </#macro>
+OR
+  <#macro name args={} inlineArgs...>
+    <#local args = mergeArgMaps(inlineArgs, args, {"myParam1":true})>
+    <#local dummy = localsPutAll(args)>  
+    <#if myParam1>
       ...
     </#if>
   </#macro>

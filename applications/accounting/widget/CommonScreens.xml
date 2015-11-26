@@ -317,7 +317,7 @@ under the License.
                                 <not><if-empty field="organizationPartyId"/></not>
                             </condition>
                             <widgets>
-                                <include-menu name="PartyTopSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
+                                <include-menu name="OrganizationTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                             </widgets>
                         </section>
                     </decorator-section>

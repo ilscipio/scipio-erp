@@ -32,6 +32,8 @@ import javolution.util.FastList;
 
 import java.sql.Date;
 
+import org.ofbiz.base.util.Debug;
+
 if (!fromDate) {
     return;
 }
@@ -49,6 +51,11 @@ GenericValue lastClosedTimePeriod = null;
 if (lastClosedDate) {
     lastClosedTimePeriod = (GenericValue)lastClosedTimePeriodResult.lastClosedTimePeriod;
 }
+
+
+Debug.log("lastClosedTimePeriodResult =========> " + lastClosedTimePeriodResult);
+Debug.log("findLastClosedDateOutMap ===========> " + context.findLastClosedDateOutMap);
+
 
 // POSTED
 // Posted transactions totals and grand totals

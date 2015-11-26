@@ -987,7 +987,7 @@ under the License.
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSearch}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
-    <form name="ListGlAccountReconciliation" type="multi" use-row-submit="true" target="EditGlReconciliation?organizationPartyId=${organizationPartyId}&amp;tabButtonItem=AccountReconciliation"
+    <form name="ListGlAccountReconciliation" type="multi" use-row-submit="false" target="EditGlReconciliation?organizationPartyId=${organizationPartyId}&amp;tabButtonItem=AccountReconciliation"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <entity-condition entity-name="AcctgTransEntry">
@@ -1023,8 +1023,7 @@ under the License.
                 <parameter param-name="partyId" from-field="organizationPartyId"/>
             </hyperlink>
         </field>
-        <field name="amount" title="${uiLabelMap.CommonAmount}"><display/></field>
-        <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
+        <field name="amount" title="${uiLabelMap.CommonAmount}"><display/></field>        
         <field name="submitAction" title="${uiLabelMap.AccountingCreateAcctRecons}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
     <form name="EditGlReconciliation" type="single" target="updateGlReconciliation?tabButtonItem=${tabButtonItem}" default-map-name="glReconciliation"
@@ -1074,7 +1073,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="2"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSearch}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>

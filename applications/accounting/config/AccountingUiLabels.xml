@@ -216,6 +216,12 @@
         <value xml:lang="zh">账户对账</value>
         <value xml:lang="zh_TW">帳目調節</value>
     </property>
+    <property key="AccountingAcctTransEntryRecon">
+    	<value xml:lang="en">Account Transaction Entry Reconciliations</value>
+    </property>
+     <property key="AccountingAcctGlRecon">
+     	<value xml:lang="en">Account GL Reconciliations</value>
+    </property>
     <property key="AccountingAcctRecons">
         <value xml:lang="de">Kontenabstimmungen</value>
         <value xml:lang="en">Account Reconciliations</value>

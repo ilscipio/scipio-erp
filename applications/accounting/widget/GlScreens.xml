@@ -46,7 +46,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="OrganizationSideBar" />
+                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="OrganizationTabBar" />
                             </widgets>
                             <fail-widgets>
                                 <include-menu location="component://accounting/widget/AccountingMenus.xml" name="AccountingAppSideBar"/>
@@ -54,8 +54,8 @@ under the License.
                         </section>
                     </decorator-section>
                     <decorator-section name="body">
-                        <include-menu location="component://accounting/widget/AccountingMenus.xml" name="OrganizationTabBar" />
-                        <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label>
+                        <!-- <include-menu location="component://accounting/widget/AccountingMenus.xml" name="OrganizationTabBar" /> -->
+                        <!-- <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentOrganization.groupName} [${organizationPartyId}]</label> -->
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
@@ -73,22 +73,43 @@ under the License.
                 <!-- entity-condition entity-name="GlAccountOrganization" list="entityList" use-cache="true" >
                     <condition-expr field-name="glAccountId" operator="greater" value="0"/>
                 </entity-condition -->
+                <set field="partyIds[]" from-field="organizationPartyId"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.AccountingPartyAccountsSummary}">
-                                <include-menu location="component://accounting/widget/AccountingMenus.xml" name="PartyGlShortCuts"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                    	 <container style="${styles.grid_row}">                            
+                                <include-screen name="StatsTransactions" />                            
+                        </container>    
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
     </screen>
+     
+    <screen name="StatsTransactions">
+      <section>
+            <actions> 
+               	<set field="chartType" value="bar"/>
+                <set field="chartValue" value="total"/>
+                <set field="chartData" value="C"/>
+                <set field="chartLibrary" value="foundation"/>
+                <set field="title" value="Total Transactions per Type"/>            
+                <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId" default-value="ACTUAL"/>
+                <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">
+                    <field-map field-name="organizationPartyId" from-field="organizationPartyId"/>
+                </service>
+                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp" default-value="${findLastClosedDateOutMap.lastClosedDate}"/>
+                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>                
+                <script location="component://accounting/webapp/accounting/WEB-INF/actions/accountSummary/StatsAccountSummaryTotal.groovy"/>
+            </actions>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="component://accounting/webapp/accounting/accountSummary/statsTransactionsTotals.ftl"/></html>
+                </platform-specific>
+            </widgets>
+      </section>
+  	</screen>
 
     <screen name="FindAcctgTrans">
         <section>
@@ -510,7 +531,7 @@ under the License.
     <screen name="FindGlAccountReconciliation">
         <section>
             <actions>
-                <set field="titleProperty" value="AccountingAcctRecon"/>
+                <set field="titleProperty" value="AccountingAcctTransEntryRecon"/>
                 <set field="tabButtonItem" value="AccountReconciliation"/>
                 <set field="labelTitleProperty" value="AccountingAcctRecon"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
@@ -519,19 +540,12 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingAcctRecon}">
+                        <screenlet title="${uiLabelMap.CommonSearchOptions}">
                             <include-form name="FindGlAccountReconciliation" location="component://accounting/widget/GlForms.xml"/>
                         </screenlet>
-                        <section>
-                            <condition>
-                                <if-compare field="parameters.performSearch" operator="equals" value="Y"/>
-                            </condition>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.AccountingAcctRecon}">
-                                    <include-form name="ListGlAccountReconciliation" location="component://accounting/widget/GlForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet title="${uiLabelMap.CommonSearchResults}">
+                            <include-form name="ListGlAccountReconciliation" location="component://accounting/widget/GlForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -540,7 +554,7 @@ under the License.
     <screen name="EditGlReconciliation">
         <section>
             <actions>
-                <set field="titleProperty" value="AccountingEditAcctRecon"/>
+                <set field="titleProperty" value="AccountingAcctGlRecon"/>
                 <set field="tabButtonItem" from-field="parameters.tabButtonItem" global="true"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
                 <set field="glReconciliationId" from-field="parameters.glReconciliationId" global="true"/>
@@ -563,7 +577,7 @@ under the License.
     <screen name="FindGlAccountReconciliations">
         <section>
             <actions>
-                <set field="titleProperty" value="AccountingAcctRecons"/>
+                <set field="titleProperty" value="AccountingAcctGlRecon"/>
                 <set field="tabButtonItem" value="AccountReconciliations"/>
                 <set field="labelTitleProperty" value="AccountingAcctRecons"/>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" global="true"/>
@@ -572,19 +586,12 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPartyGlDecorator" location="${parameters.partyGlDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingAcctRecons}">
+                        <screenlet title="${uiLabelMap.CommonSearchOptions}">
                             <include-form name="FindGlAccountReconciliations" location="component://accounting/widget/GlForms.xml"/>
                         </screenlet>
-                        <section>
-                            <condition>
-                                <if-compare field="parameters.performSearch" operator="equals" value="Y"/>
-                            </condition>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.AccountingAcctRecons}">
-                                    <include-form name="ListGlAccountReconciliations" location="component://accounting/widget/GlForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet title="${uiLabelMap.CommonSearchResults}">
+                            <include-form name="ListGlAccountReconciliations" location="component://accounting/widget/GlForms.xml"/>
+                        </screenlet>                     
                     </decorator-section>
                 </decorator-screen>
             </widgets>

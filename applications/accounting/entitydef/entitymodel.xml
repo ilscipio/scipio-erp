@@ -2008,6 +2008,24 @@ under the License.
         <key-map field-name="glAccountId"/>
       </view-link>
     </view-entity>
+    <view-entity entity-name="AcctgTransSums"
+            package-name="org.ofbiz.accounting.ledger"
+            title="Sum of AcctgTrans entity amounts grouped by acctgTransTypeId">
+      <member-entity entity-alias="ATE" entity-name="AcctgTransEntry"/>
+      <member-entity entity-alias="ACT" entity-name="AcctgTrans"/>      
+      <alias entity-alias="ACT" name="glFiscalTypeId" group-by="true"/>
+      <alias entity-alias="ACT" name="acctgTransTypeId" group-by="true"/>
+      <alias entity-alias="ATE" name="debitCreditFlag" group-by="true"/>
+      <alias entity-alias="ATE" name="amount" function="sum"/>
+      <alias entity-alias="ATE" name="organizationPartyId" group-by="false"/>
+      <alias entity-alias="ACT" name="isPosted" group-by="false"/>
+      <alias entity-alias="ACT" name="transactionDate" group-by="false" /> <!-- so we can select the sum by date -->      
+      <view-link entity-alias="ATE" rel-entity-alias="ACT">
+        <key-map field-name="acctgTransId"/>
+      </view-link>      
+    </view-entity>
+    
+    
     <entity entity-name="AcctgTransEntryType"
             package-name="org.ofbiz.accounting.ledger"
             title="Accounting Transaction Entry Type Entity">

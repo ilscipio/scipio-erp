@@ -21,7 +21,6 @@ package com.ilscipio.cato.webapp.ftl.lang;
 import java.util.List;
 
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
-import com.ilscipio.cato.webapp.ftl.TransformFtlUtil;
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.TemplateValueTargetType;
 
 import freemarker.core.Environment;
@@ -63,7 +62,7 @@ public class CopyMapMethod implements TemplateMethodModelEx {
             keysModel = (TemplateModel) args.get(2);
         }
         
-        Environment env = TransformFtlUtil.getCurrentEnvironment();
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
         
         Boolean include = null;
         if (mode != null && !mode.isEmpty()) {

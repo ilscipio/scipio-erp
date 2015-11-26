@@ -21,7 +21,6 @@ package com.ilscipio.cato.webapp.ftl.context;
 import java.util.List;
 
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
-import com.ilscipio.cato.webapp.ftl.TransformFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.SimpleScalar;
@@ -71,7 +70,7 @@ public class SetRequestVarMethod implements TemplateMethodModelEx {
             }
         }
 
-        Environment env = TransformFtlUtil.getCurrentEnvironment();
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
         CommonFtlUtil.setRequestVar(((TemplateScalarModel) nameModel).getAsString(), valueModel, unwrap, env);
 
         return new SimpleScalar("");

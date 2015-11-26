@@ -21,7 +21,6 @@ package com.ilscipio.cato.webapp.ftl.lang;
 import java.util.List;
 
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
-import com.ilscipio.cato.webapp.ftl.TransformFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateMethodModelEx;
@@ -44,7 +43,7 @@ public class CopyObjectMethod implements TemplateMethodModelEx {
         if (args == null || args.size() < 1 || args.size() > 2) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
         }
-        Environment env = TransformFtlUtil.getCurrentEnvironment();
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
         TemplateModel object = (TemplateModel) args.get(0);
         return CommonFtlUtil.copyObject(object, null, env.getObjectWrapper());
     }

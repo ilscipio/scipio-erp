@@ -21,7 +21,6 @@ package com.ilscipio.cato.webapp.ftl.lang;
 import java.util.List;
 
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
-import com.ilscipio.cato.webapp.ftl.TransformFtlUtil;
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.LocalFtlVarHandler;
 
 import freemarker.core.Environment;
@@ -41,7 +40,7 @@ public class LocalsPutAllMethod extends VarsPutAllMethod {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        Environment env = TransformFtlUtil.getCurrentEnvironment();
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
         return execPutAll(args, new LocalFtlVarHandler(env), env);
     }
 

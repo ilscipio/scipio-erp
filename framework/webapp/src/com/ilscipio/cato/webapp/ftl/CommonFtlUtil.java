@@ -23,8 +23,11 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.control.RequestHandler;
 
+import com.ilscipio.cato.webapp.ftl.context.ContextFtlUtil;
+import com.ilscipio.cato.webapp.ftl.lang.LangFtlUtil;
 import com.ilscipio.cato.webapp.ftl.lang.OfbizFtlObjectType;
 
 import freemarker.core.Environment;
@@ -62,7 +65,7 @@ import javolution.util.FastMap;
  * TODO: this file could probably be split up, getting large. maybe FTL lang constructs, transform-related,
  *    other helpers, etc.
  */
-public final class CommonFtlUtil {
+public abstract class CommonFtlUtil {
 
     public static final String module = CommonFtlUtil.class.getName();
     
@@ -93,8 +96,7 @@ public final class CommonFtlUtil {
     
     private static final Set<String> emptyStrSet = new HashSet<String>();
     
-    
-    private CommonFtlUtil() {
+    protected CommonFtlUtil() {
     }
     
     /**
@@ -456,7 +458,7 @@ public final class CommonFtlUtil {
         if (request != null) {
             request.removeAttribute(REQUEST_VAR_MAP_NAME_REQATTRIBS);
         }
-        Map<String, Object> globalContext = TransformFtlUtil.getGlobalContext(context, env);
+        Map<String, Object> globalContext = ContextFtlUtil.getGlobalContext(context, env);
         if (globalContext != null) {
             globalContext.remove(REQUEST_VAR_MAP_NAME_GLOBALCONTEXT);
         }
@@ -482,7 +484,7 @@ public final class CommonFtlUtil {
         if (request != null) {
             request.setAttribute(REQUEST_VAR_MAP_NAME_REQATTRIBS, requestVarMap);
         }
-        Map<String, Object> globalContext = TransformFtlUtil.getGlobalContext(context, env);
+        Map<String, Object> globalContext = ContextFtlUtil.getGlobalContext(context, env);
         if (globalContext != null) {
             globalContext.put(REQUEST_VAR_MAP_NAME_GLOBALCONTEXT, requestVarMap);
         }
@@ -571,7 +573,7 @@ public final class CommonFtlUtil {
             Map<String, Object> context, Environment env) throws TemplateModelException {
         if (request != null) {
             if (unwrap == Boolean.TRUE) {
-                getRequestVarMapFromReqAttribs(request).put(name, TransformFtlUtil.unwrapPermissive(value));
+                getRequestVarMapFromReqAttribs(request).put(name, LangFtlUtil.unwrapPermissive(value));
             }
             else {
                 // by default, don't bother unwrapping anymore (no point since have containing map)
@@ -580,10 +582,10 @@ public final class CommonFtlUtil {
             //Debug.logInfo("setRequestVar: request attrib (name: " + name + ")", module);
         }
         else {
-            Map<String, Object> globalContext = TransformFtlUtil.getGlobalContext(context, env);
+            Map<String, Object> globalContext = ContextFtlUtil.getGlobalContext(context, env);
             if (globalContext != null) {
                 if (unwrap == Boolean.TRUE) {
-                    getRequestVarMapFromGlobalContext(globalContext).put(name, TransformFtlUtil.unwrapPermissive(value));
+                    getRequestVarMapFromGlobalContext(globalContext).put(name, LangFtlUtil.unwrapPermissive(value));
                 }
                 else {
                     // by default, don't bother unwrapping anymore (no point since have containing map)
@@ -604,19 +606,19 @@ public final class CommonFtlUtil {
     }    
     
     public static void setRequestVar(String name, Object value, Boolean unwrap, Environment env) throws TemplateModelException {
-        HttpServletRequest request = TransformFtlUtil.getRequest(env);
+        HttpServletRequest request = ContextFtlUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) { // optimization: don't need to look this up if has request (true in most cases now)
-            context = TransformFtlUtil.getContext(env);
+            context = ContextFtlUtil.getContext(env);
         }
         setRequestVar(name, value, unwrap, request, context, env);
     }
     
     public static void setRequestVar(String name, Object value, Environment env) throws TemplateModelException {
-        HttpServletRequest request = TransformFtlUtil.getRequest(env);
+        HttpServletRequest request = ContextFtlUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) { // optimization: don't need to look this up if has request (true in most cases now)
-            context = TransformFtlUtil.getContext(env);
+            context = ContextFtlUtil.getContext(env);
         }
         setRequestVar(name, value, null, request, context, env);
     }    
@@ -650,7 +652,7 @@ public final class CommonFtlUtil {
             //Debug.logInfo("getRequestVar: request attrib (name: " + name + ")", module);
         }
         else {
-            Map<String, Object> globalContext = TransformFtlUtil.getGlobalContext(context, env);
+            Map<String, Object> globalContext = ContextFtlUtil.getGlobalContext(context, env);
             if (globalContext != null) {    
                 res = getRequestVarMapFromGlobalContext(globalContext).get(name);
                 //Debug.logInfo("getRequestVar: globalContext var (name: " + name + ")", module);
@@ -668,10 +670,10 @@ public final class CommonFtlUtil {
     }
     
     public static Object getRequestVar(String name, Environment env) throws TemplateModelException {
-        HttpServletRequest request = TransformFtlUtil.getRequest(env);
+        HttpServletRequest request = ContextFtlUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
-            context = TransformFtlUtil.getContext(env);
+            context = ContextFtlUtil.getContext(env);
         }
         return getRequestVar(name, request, context, env);
     }
@@ -733,7 +735,7 @@ public final class CommonFtlUtil {
             //Debug.logInfo("pushRequestStack: request attrib (name: " + name + ")", module);
         }
         else {
-            Map<String, Object> globalContext = TransformFtlUtil.getGlobalContext(context, env);
+            Map<String, Object> globalContext = ContextFtlUtil.getGlobalContext(context, env);
             if (globalContext != null) {   
                 Map<String, Object> requestVarMap = getRequestVarMapFromGlobalContext(globalContext);
                 
@@ -812,10 +814,10 @@ public final class CommonFtlUtil {
     
     // FIXME: shouldn't be public
     public static void pushRequestStack(String name, Object value, boolean setLast, Environment env) throws TemplateModelException {
-        HttpServletRequest request = TransformFtlUtil.getRequest(env);
+        HttpServletRequest request = ContextFtlUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
-            context = TransformFtlUtil.getContext(env);
+            context = ContextFtlUtil.getContext(env);
         }
         pushRequestStack(name, value, setLast, request, context, env);
     }
@@ -831,10 +833,10 @@ public final class CommonFtlUtil {
     }
     
     public static void pushRequestStack(String name, Object value, Environment env) throws TemplateModelException {
-        HttpServletRequest request = TransformFtlUtil.getRequest(env);
+        HttpServletRequest request = ContextFtlUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
-            context = TransformFtlUtil.getContext(env);
+            context = ContextFtlUtil.getContext(env);
         }
         pushRequestStack(name, value, false, request, context, env);
     }
@@ -856,10 +858,10 @@ public final class CommonFtlUtil {
     }
     
     public static void setLastRequestStack(String name, Object value, Environment env) throws TemplateModelException {
-        HttpServletRequest request = TransformFtlUtil.getRequest(env);
+        HttpServletRequest request = ContextFtlUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
-            context = TransformFtlUtil.getContext(env);
+            context = ContextFtlUtil.getContext(env);
         }
         pushRequestStack(name, value, true, request, context, env);
     }
@@ -883,10 +885,10 @@ public final class CommonFtlUtil {
     }
     
     public static Object readRequestStack(String name, Environment env) throws TemplateModelException {
-        HttpServletRequest request = TransformFtlUtil.getRequest(env);
+        HttpServletRequest request = ContextFtlUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
-            context = TransformFtlUtil.getContext(env);
+            context = ContextFtlUtil.getContext(env);
         }
         return readRequestStack(name, false, request, context, env);
     }
@@ -919,7 +921,7 @@ public final class CommonFtlUtil {
             //Debug.logInfo((pop ? "pop" : "read") + "RequestStack: request attrib (name: " + name + ")", module);
         }
         else {
-            Map<String, Object> globalContext = TransformFtlUtil.getGlobalContext(context, env);
+            Map<String, Object> globalContext = ContextFtlUtil.getGlobalContext(context, env);
             if (globalContext != null) {   
                 List<Object> stack = null;
                 Object stackObj = getRequestVarMapFromGlobalContext(globalContext).get(name);
@@ -977,10 +979,10 @@ public final class CommonFtlUtil {
     
     // FIXME: shouldn't be public
     public static Object readRequestStack(String name, boolean pop, Environment env) throws TemplateModelException {
-        HttpServletRequest request = TransformFtlUtil.getRequest(env);
+        HttpServletRequest request = ContextFtlUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
-            context = TransformFtlUtil.getContext(env);
+            context = ContextFtlUtil.getContext(env);
         }
         return readRequestStack(name, pop, request, context, env);
     }
@@ -1004,10 +1006,10 @@ public final class CommonFtlUtil {
     }
     
     public static Object popRequestStack(String name, Environment env) throws TemplateModelException {
-        HttpServletRequest request = TransformFtlUtil.getRequest(env);
+        HttpServletRequest request = ContextFtlUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
-            context = TransformFtlUtil.getContext(env);
+            context = ContextFtlUtil.getContext(env);
         }
         return readRequestStack(name, true, request, context, env);
     }
@@ -1060,7 +1062,7 @@ public final class CommonFtlUtil {
             }
         }
         else {
-            Map<String, Object> globalContext = TransformFtlUtil.getGlobalContext(context, env);
+            Map<String, Object> globalContext = ContextFtlUtil.getGlobalContext(context, env);
             if (globalContext != null) {   
                 List<Object> stack = null;
                 Object stackObj = getRequestVarMapFromGlobalContext(globalContext).get(name);
@@ -1117,10 +1119,10 @@ public final class CommonFtlUtil {
      *      This list must be discarded by caller as soon as possible, before any more changes to the stack.
      */
     public static Object getRequestStackAsList(String name, TemplateValueTargetType copyTargetType, Environment env) throws TemplateModelException {
-        HttpServletRequest request = TransformFtlUtil.getRequest(env);
+        HttpServletRequest request = ContextFtlUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
-            context = TransformFtlUtil.getContext(env);
+            context = ContextFtlUtil.getContext(env);
         }
         return getRequestStackAsList(name, request, context, env, copyTargetType);
     }    
@@ -1923,8 +1925,16 @@ public final class CommonFtlUtil {
     }
     
     public static String compileProgressSuccessAction(String progressSuccessAction) throws TemplateModelException {
-        Environment env = TransformFtlUtil.getCurrentEnvironment();
-        return compileProgressSuccessAction(progressSuccessAction, TransformFtlUtil.getRequest(env), TransformFtlUtil.getResponse(env));
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
+        return compileProgressSuccessAction(progressSuccessAction, ContextFtlUtil.getRequest(env), ContextFtlUtil.getResponse(env));
+    }
+
+    public static Environment getCurrentEnvironment() throws TemplateModelException {
+        Environment env = FreeMarkerWorker.getCurrentEnvironment();
+        if (env == null) {
+            throw new TemplateModelException("Missing Freemarker environment");
+        }
+        return env;
     }
     
 }

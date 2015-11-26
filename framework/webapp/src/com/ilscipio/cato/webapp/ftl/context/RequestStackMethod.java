@@ -21,7 +21,6 @@ package com.ilscipio.cato.webapp.ftl.context;
 import java.util.List;
 
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
-import com.ilscipio.cato.webapp.ftl.TransformFtlUtil;
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.TemplateValueTargetType;
 
 import freemarker.core.Environment;
@@ -50,7 +49,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         }
         TemplateModel valueModel = (TemplateModel) args.get(1);
 
-        Environment env = TransformFtlUtil.getCurrentEnvironment();
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
         CommonFtlUtil.pushRequestStack(((TemplateScalarModel) nameModel).getAsString(), valueModel, setLast, env);
         
         return new SimpleScalar("");
@@ -66,7 +65,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
         }
 
-        Environment env = TransformFtlUtil.getCurrentEnvironment();
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
         Object res = CommonFtlUtil.readRequestStack(((TemplateScalarModel) nameModel).getAsString(), pop, env);
  
         return res; // NOTE: result automatically wrapped as needed by freemarker
@@ -93,7 +92,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
             }
         }
         
-        Environment env = TransformFtlUtil.getCurrentEnvironment();
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
         Object res = CommonFtlUtil.getRequestStackAsList(stackName, (origList ? null : TemplateValueTargetType.SIMPLEMODEL), env);
         return res;
     }    

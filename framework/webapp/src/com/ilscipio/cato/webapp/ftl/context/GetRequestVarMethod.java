@@ -21,7 +21,6 @@ package com.ilscipio.cato.webapp.ftl.context;
 import java.util.List;
 
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
-import com.ilscipio.cato.webapp.ftl.TransformFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateMethodModelEx;
@@ -53,7 +52,7 @@ public class GetRequestVarMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
         }
 
-        Environment env = TransformFtlUtil.getCurrentEnvironment();
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
         Object res = CommonFtlUtil.getRequestVar(((TemplateScalarModel) nameModel).getAsString(), env);
         
         return res; // NOTE: result gets automatically wrapped by Freemarker on need basis

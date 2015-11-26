@@ -2,7 +2,7 @@ import org.ofbiz.base.util.template.FreeMarkerWorker;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateScalarModel;
 import org.ofbiz.base.util.*;
-import com.ilscipio.cato.webapp.ftl.FtlTransformUtil;
+import com.ilscipio.cato.webapp.ftl.lang.LangFtlUtil;
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
 
 final module = "getContextCatoStyles.groovy"
@@ -10,7 +10,7 @@ final module = "getContextCatoStyles.groovy"
 setContextCatoStylesAsGlobal = context.setContextCatoStylesAsGlobal
 
 // get the cached variables
-tmplGlobalVars = FtlTransformUtil.unwrapOrNull(CommonFtlUtil.getRequestVar("catoTmplGlobalVars", context.request, context));
+tmplGlobalVars = LangFtlUtil.unwrapOrNull(CommonFtlUtil.getRequestVar("catoTmplGlobalVars", context.request, context));
 
 if (tmplGlobalVars == null) {
     // nothing from cache, so there probably hasn't been a render yet... so we must trigger a dummy FTL render
@@ -21,7 +21,7 @@ if (tmplGlobalVars == null) {
     env = FreeMarkerWorker.renderTemplateFromString("getContextCatoTmplGlobalVarsDummyTemplate", "", ftlContext, sw, useCache)
     
     if (env != null) {
-        tmplGlobalVars = FtlTransformUtil.unwrapOrNull(CommonFtlUtil.getRequestVar("catoTmplGlobalVars", context.request, context));
+        tmplGlobalVars = LangFtlUtil.unwrapOrNull(CommonFtlUtil.getRequestVar("catoTmplGlobalVars", context.request, context));
 
     }
     else {

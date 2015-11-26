@@ -21,7 +21,6 @@ package com.ilscipio.cato.webapp.ftl.lang;
 import java.util.List;
 
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
-import com.ilscipio.cato.webapp.ftl.TransformFtlUtil;
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.CurrentFtlVarHandler;
 import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.FtlVarHandler;
 
@@ -48,7 +47,7 @@ public class VarsPutAllMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        Environment env = TransformFtlUtil.getCurrentEnvironment();
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
         return execPutAll(args, new CurrentFtlVarHandler(env), env);
     }
     

@@ -366,13 +366,13 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <#local class = addClassArg(class, styles.tile_wrap!)>
     <#local class = addClassArg(class, "${styles.tile_wrap!}-${type!}")>
     <#local class = addClassArg(class, "${styles.tile_color!}${color!}")>
-    <#local nested><#nested></#local>
     <#-- TODO: saveCurrentContainerSizes/unsetCurrentContainerSizes -->
     <div<@compiledClassAttribStr class=class /><#if id?has_content>id="${id}" </#if>data-sizex="${calcTileSize("x",type!)}" data-sizey="${calcTileSize("y",type!)}">
         <#if image?has_content><div class="${styles.tile_image!}" style="background-image: url(${image!})"></div></#if>
         <div class="${styles.tile_content!}">
             <#if link?has_content><a href="${link!}"></#if>
             <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>
+            <#local nested><#nested></#local>
             <#if nested?has_content><span class="${styles.tile_overlay!}"><#nested></span></#if>
             <#if title?has_content><span class="${styles.tile_title!}">${title!}</span></#if>
             <#if link?has_content></a></#if>

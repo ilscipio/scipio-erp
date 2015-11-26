@@ -196,15 +196,12 @@ saveCurrentContainerSizes and related utilities lib functions.
 
 NOTE: implementation of evalAbsContainerSizeFactors assumes all max sizes for large/medium/small are the
     same.
-NOTE: extraArgs is in case of interface changes.
+NOTE: extraArgs is in case of interface changes. Not used.
 
 DEV NOTE: TODO: these should be general enough to work for both foundation and bootstrap, but
     should be confirmed...
     
-TODO: evalAbsContainerSizeFactors should delegate to java method for speed (but still need these
-    overrides to be present)
-    
-TODO?: this could also parse style for tile classes and calculate approximate corresponding grid sizes from tiles.
+TODO?: these could also parse style for tile classes and calculate approximate corresponding grid sizes from tiles.
 -->
 <#function parseContainerSizesFromStyleStr style extraArgs...>
   <#if !catoContainerSizesPrefixMap??>
@@ -215,6 +212,7 @@ TODO?: this could also parse style for tile classes and calculate approximate co
   <#return extractPrefixedStyleNamesWithInt(getPlainClassArgNames(style), catoContainerSizesPrefixMap)>
 </#function>
 
+<#-- TODO: reimplement in java in com.ilscipio.cato.webapp.ftl.template.standard.StdTemplateFtlUtil.evalAbsContainerSizeFactors -->
 <#function evalAbsContainerSizeFactors sizesList maxSizes=0 cachedFactorsList=[] extraArgs...>
   <#local maxSize = 12>
   <#if maxSizes?is_number>

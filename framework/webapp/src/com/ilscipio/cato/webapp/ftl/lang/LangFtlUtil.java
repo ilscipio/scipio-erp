@@ -35,6 +35,15 @@ import freemarker.template.TemplateTransformModel;
 import freemarker.template.utility.DeepUnwrap;
 import freemarker.template.utility.RichObjectWrapper;
 
+/**
+ * Cato: Freemarker language utils.
+ * <p>
+ * These should generally not include Ofbiz-specific utils, except in the case
+ * where the Ofbiz-specific code is merely a configuration of Freemarker (e.g.
+ * selected usage of <code>BeansWrapper</code>).
+ *
+ * @see com.ilscipio.cato.webapp.ftl.CommonFtlUtil
+ */
 public abstract class LangFtlUtil {
 
     public static final String module = LangFtlUtil.class.getName();
@@ -641,11 +650,11 @@ public abstract class LangFtlUtil {
      * Same as Freemarker's ?is_directive.
      * <p>
      * <em>NOTE:</em> This <em>must</em> have the exact same behavior as Freemarker's ?is_directive.
-     *     Please refer to Freemarker source code. 
-     *     Unfortunately there is no evident way of reusing their code from here...
+     * Please refer to Freemarker source code. 
+     * Unfortunately there is no evident way of reusing their code from here...
      * <p>
      * <strong>WARNING:</strong> FIXME: This currently refers to the FTL freemarker.core.Macro class, which is set
-     *     to change at any time. this needs a better solution!!!
+     * to change at any time. this needs a better solution!!!
      */
     public static boolean isDirective(Object object) {
         return (object instanceof TemplateTransformModel || object instanceof freemarker.core.Macro || object instanceof TemplateDirectiveModel);

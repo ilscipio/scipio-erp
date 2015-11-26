@@ -31,25 +31,17 @@ import freemarker.template.TemplateModelException;
 import javolution.util.FastMap;
 
 /**
- * Cato: Theme-agnostic templating utilities.
+ * Cato: Theme- and styling-framework-agnostic templating utilities.
  * <p>
- * These utilities should follow similar rules as the utilities defined in:
- * <code>component://common/webcommon/includes/cato/lib/utilities.ftl</code>.
- * They should not contain any theme- or styling-framework-specific code.
- * However, not all of these methods have the same contextual information
- * available, so platform-specific (html, fo, etc.) code may be acceptable for some
- * or where clear variants must be provided as parameters or overloads.
- * <p>
- * Note this class is not meant to be a java facade for <code>utilities.ftl</code>.
- * <em>DEV NOTE:</em> I don't think it's worth maintaining a java facade for the
- * utility classes. <code>utilities.ftl</code> largely provides that for FTL templates and macros
- * and we can simply provide FTL functions or transforms for everything here.
+ * Any theme- or styling-framework-specific code should be placed in a separate package.
+ * 
+ * @see com.ilscipio.cato.webapp.ftl.CommonFtlUtil
  */
 public abstract class TemplateFtlUtil {
 
     public static final String module = TemplateFtlUtil.class.getName();
     
-    public static final UtilCache<String, Map<String, Object>> headingElemSpecFromStyleStrCache = 
+    private static final UtilCache<String, Map<String, Object>> headingElemSpecFromStyleStrCache = 
             UtilCache.createUtilCache("com.ilscipio.cato.webapp.ftl.template.TemplateFtlUtil.headingElemSpecFromStyleStrCache");
     
     /**
@@ -99,6 +91,11 @@ public abstract class TemplateFtlUtil {
         return res;
     }
 
+    /**
+     * Parses a complex style string meant to describe an element notably heading into hash of constituent values.
+     * <p>
+     * Core implementation; never caches.
+     */
     public static Map<String, Object> getHeadingElemSpecFromStyleStr(String styleStr, String containerStyleStr, 
             Object allowedHeadingElemTypes, Object allowedElemTypes, Object allowedContainerElemTypes) {
         String allowedHeadingElemTypesStr = nameListArgToStr(allowedHeadingElemTypes);
@@ -465,6 +462,11 @@ public abstract class TemplateFtlUtil {
         return progressSuccessAction;
     }
 
+    /**
+     * Compiles a progress success action.
+     * <p>
+     * Context-dependent; uses thread environment.
+     */
     public static String compileProgressSuccessAction(String progressSuccessAction) throws TemplateModelException {
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         return compileProgressSuccessAction(progressSuccessAction, ContextFtlUtil.getRequest(env), ContextFtlUtil.getResponse(env));

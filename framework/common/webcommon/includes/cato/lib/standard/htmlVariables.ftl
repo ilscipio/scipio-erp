@@ -167,12 +167,16 @@
     "row_selected" : "selected",
     
   <#-- Text-content-based link styles -->
-    "link_action" : "button tiny",  <#-- action text: "Add", "Remove", "Cancel", etc. -->
-    "link_id" : "button tiny",      <#-- the short ID of a value: "WS10000", "10000", "ORDER_CANCELLED", etc. -->
-    "link_longid" : "button tiny",  <#-- the long ID of a value (more than 20-30 chars): for entities that do not have short IDs -->
-    "link_name" : "button tiny",    <#-- the name of a value: "My Order 23", "Some Value", "Cancelled", etc. -->
-    "link_desc" : "",               <#-- the description of a value; may also be a composition: "My Order 23 (WS10000)", "This is some value", "This means order cancelled", etc. -->
+    "link_action" : "button tiny",  <#-- short action text (1-20 chars): "Add", "Remove", "Cancel", etc. (may not necessarily be a verb. usually static text.) -->
+    "link_longaction" : "",         <#-- a long action text (more than 20-30 chars): "Add Content Repository For Order Removal" -->
+    "link_id" : "button tiny",      <#-- the short ID of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
+    "link_longid" : "button tiny",  <#-- the long ID of a record (more than 20-30 chars); for entities that do not have short IDs: "WS100000000000-ITEM10000000000000" -->
+    "link_name" : "button tiny",    <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
+    "link_desc" : "",               <#-- the description of a record; may also be a composition: "My Order 23 (WS10000)", "This is some value", "This means order cancelled", etc. -->
     "link_url" : "",                <#-- link containing a URL as its text -->
+    "link_date" : "button tiny",    <#-- link containing a date -->
+    "link_number" : "",             <#-- link containing a number (index, etc.) -->
+    "link_value" : "",              <#-- link containing a value of type not previously listed -->
     "link_text" : "",               <#-- link containing any kind of free-form text -->
     "link_image" : "",              <#-- link for an image -->
     "link_default" : "",            <#-- general link -->

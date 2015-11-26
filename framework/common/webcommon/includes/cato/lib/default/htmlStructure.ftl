@@ -203,8 +203,9 @@ DEV NOTE: TODO: these should be general enough to work for both foundation and b
     
 TODO: evalAbsContainerSizeFactors should delegate to java method for speed (but still need these
     overrides to be present)
+    
+TODO?: this could also parse style for tile classes and calculate approximate corresponding grid sizes from tiles.
 -->
-
 <#function parseContainerSizesFromStyleStr style extraArgs...>
   <#if !catoContainerSizesPrefixMap??>
     <#global catoContainerSizesPrefixMap = {
@@ -366,8 +367,15 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <#local class = addClassArg(class, styles.tile_wrap!)>
     <#local class = addClassArg(class, "${styles.tile_wrap!}-${type!}")>
     <#local class = addClassArg(class, "${styles.tile_color!}${color!}")>
-    <#-- TODO: saveCurrentContainerSizes/unsetCurrentContainerSizes -->
-    <div<@compiledClassAttribStr class=class /><#if id?has_content>id="${id}" </#if>data-sizex="${calcTileSize("x",type!)}" data-sizey="${calcTileSize("y",type!)}">
+    <#local dataSizex = calcTileSize("x",type)>
+    <#local dataSizey = calcTileSize("y",type)>
+    <#-- TODO: need to calc-convert tile x-size to approximate grid sizes and pass in large-medium-small below,
+         OR modify parseContainerSizesFromStyleStr to do it automatically from class string (HOWEVER
+         note that parseContainerSizesFromStyleStr would have to call calcTileSize type="x" again, and it's
+         not clear how precise this will be)
+    <#local dummy = saveCurrentContainerSizes({"large":12, "medium":12, "small":12})> -->
+    <#-- NOTE: dataSizex gets automatically translated to data-sizex (FTL: no dashes allowed in arg names) -->
+    <@container class=class id=id dataSizex=dataSizex dataSizey=dataSizey>
         <#if image?has_content><div class="${styles.tile_image!}" style="background-image: url(${image!})"></div></#if>
         <div class="${styles.tile_content!}">
             <#if link?has_content><a href="${link!}"></#if>
@@ -377,16 +385,22 @@ It is loosely based on http://metroui.org.ua/tiles.html
             <#if title?has_content><span class="${styles.tile_title!}">${title!}</span></#if>
             <#if link?has_content></a></#if>
         </div>
-    </div>  
+    </@container>
+    <#--<#local dummy = unsetCurrentContainerSizes()>-->
 </#macro>
 
 <#function calcTileSize type="x" value="normal">
-    <#local tileSizeX={"small":0,"normal":1,"wide":2,"large":2,"big":3,"super":4}/>
-    <#local tileSizeY={"small":0,"normal":1,"wide":1,"large":2,"big":3,"super":4}/>
     <#if type="x">
-        <#return tileSizeX[value]/>
+        <#if !catoTileSizeMapX??>
+          <#-- global: optimization only (doesn't have to be setRequestVar) -->
+          <#global catoTileSizeMapX = {"small":0,"normal":1,"wide":2,"large":2,"big":3,"super":4}/>
+        </#if>
+        <#return catoTileSizeMapX[value]/>
     <#else>
-        <#return tileSizeY[value]/>
+        <#if !catoTileSizeMapY??>
+          <#global catoTileSizeMapY={"small":0,"normal":1,"wide":1,"large":2,"big":3,"super":4}/>
+        </#if>
+        <#return catoTileSizeMapY[value]/>
     </#if>
 </#function>
 

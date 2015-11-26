@@ -551,6 +551,9 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     norows          = render without the rows-container
     nocells         = render without the cells-container
     required        = required input
+    postfix         = boolean true/false, controls whether an extra area is appended after widget area
+    postfixSize     = manual postfix size, in (large) grid columns
+    postfixContent  = manual postfix markup/content - set to boolean false to prevent any content (but not area container)
         
     * input *
     autoCompleteUrl = if autocomplete function exists, specification of url will make it available
@@ -665,7 +668,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#macro field type="" label="" labelDetail="" name="" value="" valueType="" currentValue="" defaultValue="" class="" size=20 maxlength="" id="" onClick="" 
         disabled=false placeholder="" autoCompleteUrl="" mask=false alert="false" readonly=false rows="4" 
         cols="50" dateType="date" multiple="" checked="" collapse="" tooltip="" columns="" norows=false nocells=false container=""
-        fieldFormName="" formName="" formId="" postfix=false postfixSize=1 required=false items=false autocomplete=true progressArgs={} progressOptions={} 
+        fieldFormName="" formName="" formId="" postfix=false postfixSize=1 postfixContent=true required=false items=false autocomplete=true progressArgs={} progressOptions={} 
         labelType="" labelLayout="" labelArea="" description=""
         submitType="input" text="" href="" src="" confirmMsg="" inlineItems="" 
         selected=false allowEmpty=false currentFirst=false currentDescription=""
@@ -831,7 +834,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
       <#local inlineLabel = label>
   </#if>
       
-  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize labelArea=useLabelArea labelType=effLabelType labelLayout=effLabelLayout labelAreaContent=labelAreaContent collapse=collapse norows=norows nocells=nocells container=container>
+  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelLayout=effLabelLayout labelAreaContent=labelAreaContent collapse=collapse norows=norows nocells=nocells container=container>
     <#switch type>
       <#case "input">
         <@field_input_widget name=name 
@@ -1063,7 +1066,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 </#macro>
 
 <#-- @field container markup - theme override -->
-<#macro field_markup_container type="" class="" columns="" postfix=false postfixSize=0 labelArea=true labelType="" labelLayout="" labelAreaContent="" collapse="" norows=false nocells=false container=true extraArgs...>
+<#macro field_markup_container type="" class="" columns="" postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelLayout="" labelAreaContent="" collapse="" norows=false nocells=false container=true extraArgs...>
   <#local rowClass = "">
   <#local labelAreaClass = "">  
   <#local postfixClass = "">
@@ -1100,7 +1103,11 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#if postfix && !nocells && container>
         <#local postfixClass = addClassArg(postfixClass, "field-entry-postfix " + fieldEntryTypeClass)>
         <@cell class=compileClassArg(postfixClass, defaultGridStyles.postfixArea)>
+          <#if (postfixContent?is_boolean && postfixContent == true) || !postfixContent?has_content>
             <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
+          <#elseif !postfixContent?is_boolean> <#-- boolean false means prevent markup -->
+            ${postfixContent}
+          </#if>
         </@cell>
     </#if>
   </@row>

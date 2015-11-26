@@ -506,7 +506,8 @@
       <@field type="input" name="input1"/>
       <@field type="input" name="input2" postfix=true />
       <@field type="display">Display value</@field>
-      <@field type="input" name="input3"/>
+      <#assign postfixContent><span>postfix!</span></#assign>
+      <@field type="input" name="input3" postfix=true postfixContent=postfixContent />
 
       <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
       <@field type="radio" name="radio2" label="Radio 2" value="Y" checked=true/>

@@ -1,6 +1,6 @@
 <#--
 * 
-* Content element HTML template include, default Cato markup.
+* Content element HTML template include, standard Cato markup.
 *
 * Included by htmlTemplate.ftl.
 *

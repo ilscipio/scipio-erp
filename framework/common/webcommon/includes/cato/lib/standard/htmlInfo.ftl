@@ -1,6 +1,6 @@
 <#--
 * 
-* Informational/notification element HTML template include, default Cato markup.
+* Informational/notification element HTML template include, standard Cato markup.
 *
 * Included by htmlTemplate.ftl.
 *

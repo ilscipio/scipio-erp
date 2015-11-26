@@ -1,6 +1,6 @@
 <#--
 * 
-* Form and field HTML template include, default Cato markup.
+* Form and field HTML template include, standard Cato markup.
 *
 * Included by htmlTemplate.ftl.
 *

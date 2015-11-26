@@ -1,6 +1,6 @@
 <#--
 * 
-* Structural code (grid, tile, etc.) HTML template include, default Cato markup.
+* Structural code (grid, tile, etc.) HTML template include, standard Cato markup.
 *
 * Included by htmlTemplate.ftl.
 *

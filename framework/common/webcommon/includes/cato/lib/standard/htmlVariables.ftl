@@ -1,6 +1,6 @@
 <#--
 * 
-* Master HTML templating variables include, default Cato markup.
+* Master HTML templating variables include, standard Cato markup.
 *
 * A set of global variables that define common styling classes, part of standard Cato Freemarker API.
 * Automatically included at all times, unless overridden by properties or themes.

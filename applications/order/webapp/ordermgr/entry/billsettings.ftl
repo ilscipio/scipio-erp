@@ -35,6 +35,23 @@ function makeExpDate() {
 <@section>
     <@row>
         <@cell columns=6>
+
+<#-- Cato: local macro where cells of label and widget areas are inverted and tweaked -->
+<#assign defaultFieldGridStyles = getDefaultFieldGridStyles({"labelArea":true, "postfix":true, "postfixSize":2})>
+<#macro invertedField type="" labelContent="" actionContent="">
+  <@row>
+    <@cell class=addClassArg(defaultFieldGridStyles.labelArea, "${styles.text_right!}")>
+      <#nested>
+    </@cell>
+    <@cell class=defaultFieldGridStyles.widgetArea>
+      ${labelContent}
+    </@cell>  
+    <@cell class=defaultFieldGridStyles.postfixArea>
+      ${actionContent}
+    </@cell>  
+  </@row>
+</#macro>
+
         <#if request.getAttribute("paymentMethodId")?? || ( (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew??)>
          <@menu type="button">
            <@menuitem type="link" href=makeOfbizUrl("setBilling?createNew=Y") text="${uiLabelMap.CommonNew}" />
@@ -43,11 +60,11 @@ function makeExpDate() {
           <#-- initial screen when we have a associated party -->
           <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="payment"/>
-            <@table type="fields"> <#-- orig: class="basic-table" -->
              
               <#if billingAccountList?has_content>
-                <@tr>
-                  <@td class="${styles.grid_large!}3">
+                <#assign labelContent>${uiLabelMap.FormFieldTitle_billingAccountId}</#assign>
+                <#assign actionContent></#assign>
+                <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
                     <select name="billingAccountId">
                       <option value=""></option>
                         <#list billingAccountList as billingAccount>
@@ -60,81 +77,57 @@ function makeExpDate() {
                           <option value="${billingAccount.billingAccountId}" <#if billingAccount.billingAccountId == selectedBillingAccountId?default("")>selected="selected"</#if>>${billingAccount.description?default("")} [${billingAccount.billingAccountId}] Available: <@ofbizCurrency amount=availableAmount isoCode=billingAccount.accountCurrencyUomId/> Limit: <@ofbizCurrency amount=accountLimit isoCode=billingAccount.accountCurrencyUomId/></option>
                         </#list>
                     </select>
-                  </@td>
-                  <@td>${uiLabelMap.FormFieldTitle_billingAccountId}
-                  </@td>
-                  <@td></@td>
-                </@tr>
-                <@tr>
-                  <@td class="${styles.grid_large!}3 ${styles.text_right!}">
+                </@invertedField>
+                <#assign labelContent>${uiLabelMap.OrderBillUpTo}</#assign>
+                <#assign actionContent></#assign>
+                <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
                     <input type="text" size="5" name="billingAccountAmount" value=""/>
-                  </@td>
-                  <@td>
-                    ${uiLabelMap.OrderBillUpTo}
-                  </@td>
-                  <@td></@td>
-                </@tr>
+                </@invertedField>
                 
               </#if>
-              <@tr>
-                <@td class="${styles.grid_large!}3">
+              <#assign labelContent><label for="checkOutPaymentId_EXT_OFFLINE">${uiLabelMap.OrderPaymentOfflineCheckMoney}</label></#assign>
+              <#assign actionContent></#assign>
+              <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
                   <input type="radio" id="checkOutPaymentId_EXT_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_OFFLINE">checked="checked"</#if>/>
-                </@td>
-                <@td>
-                  <label for="checkOutPaymentId_EXT_OFFLINE">${uiLabelMap.OrderPaymentOfflineCheckMoney}</label>
-                </@td>
-                <@td></@td>
-              </@tr>
+              </@invertedField>
              
-              <@tr>
-                <@td class="${styles.grid_large!}3">
+              <#assign labelContent><label for="checkOutPaymentId_EXT_COD">${uiLabelMap.OrderCOD}</label></#assign>
+              <#assign actionContent></#assign>
+              <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
                   <input type="radio" id="checkOutPaymentId_EXT_COD" name="checkOutPaymentId" value="EXT_COD" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_COD">checked="checked"</#if>/>
-                </@td>
-                <@td>
-                  <label for="checkOutPaymentId_EXT_COD">${uiLabelMap.OrderCOD}</label>
-                </@td>
-                <@td></@td>
-              </@tr>
+              </@invertedField>
              
               <#if paymentMethodList?has_content>
                 <#list paymentMethodList as paymentMethod>
                   <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                     <#assign creditCard = paymentMethod.getRelatedOne("CreditCard", false)>
-                    <@tr>
-                      <@td class="${styles.grid_large!}3">
-                        <input type="radio" id="checkOutPaymentId_CREDIT_CARD_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?? && paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if>/>
-                      </@td>
-                      <@td>
+                    <#assign labelContent>
                         <label for="checkOutPaymentId_CREDIT_CARD_${paymentMethod.paymentMethodId}">
                           CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
                           <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                         </label><br/>
-                          
-                          <@field type="input" size="5" maxlength="10" name="securityCode_${paymentMethod.paymentMethodId}" value="" label="CSC" collapse=true tooltip="${uiLabelMap.OrderCardSecurityCode}"/>                          
-                      </@td>
-                      <@td class="${styles.text_right!}"><a href="/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></@td>
-                    </@tr>
+                        <@field type="input" size="5" maxlength="10" name="securityCode_${paymentMethod.paymentMethodId}" value="" label="CSC" collapse=true tooltip="${uiLabelMap.OrderCardSecurityCode}"/>
+                    </#assign>
+                    <#assign actionContent><a href="/partymgr/control/editcreditcard?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></#assign>
+                    <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+                        <input type="radio" id="checkOutPaymentId_CREDIT_CARD_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?? && paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if>/>
+                    </@invertedField>
                   <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                     <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount", false)>
-                    <@tr>
-                      <@td class="${styles.grid_large!}3">
-                        <input type="radio" id="checkOutPaymentId_EFT_ACCOUNT_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?? && paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if>/>
-                      </@td>
-                      <@td>
-                        <label for="checkOutPaymentId_EFT_ACCOUNT_${paymentMethod.paymentMethodId}">
+                    <#assign labelContent><label for="checkOutPaymentId_EFT_ACCOUNT_${paymentMethod.paymentMethodId}">
                           EFT:&nbsp;${eftAccount.bankName!}: ${eftAccount.accountNumber!}
                           <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
-                        </label>
-                      </@td>
-                      <@td class="${styles.text_right!}"><a href="/partymgr/control/editeftaccount?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></@td>
-                    </@tr>
+                        </label></#assign>
+                    <#assign actionContent><a href="/partymgr/control/editeftaccount?party_id=${orderParty.partyId}&amp;paymentMethodId=${paymentMethod.paymentMethodId}" target="_blank" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></#assign>
+                    <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+                        <input type="radio" id="checkOutPaymentId_EFT_ACCOUNT_${paymentMethod.paymentMethodId}" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if checkOutPaymentId?? && paymentMethod.paymentMethodId == checkOutPaymentId>checked="checked"</#if>/>
+                    </@invertedField>
                     
                   </#if>
                 </#list>
               <#else>
-                <div><b>${uiLabelMap.AccountingNoPaymentMethods}</b></div>
+                <@resultMsg>${uiLabelMap.AccountingNoPaymentMethods}</@resultMsg>
               </#if>
-            </@table>
           </form>
         <#elseif paymentMethodType?? || finalizeMode?default("") == "payment">
           <#-- after initial screen; show detailed screens for selected type -->
@@ -170,17 +163,15 @@ function makeExpDate() {
             <input type="hidden" name="contactMechId" value="${postalFields.contactMechId}"/>
           </#if>
 
-          <@table type="fields"> <#-- orig: class="basic-table" -->
             <#if cart.getShippingContactMechId()??>
-            <@tr>
-              <@td width="26%" class="${styles.text_right!}" valign="top">
+            <#assign labelContent>${uiLabelMap.FacilityBillingAddressSameShipping}</#assign>
+            <#assign actionContent></#assign>
+            <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
                 <input type="checkbox" name="useShipAddr" value="Y" onclick="javascript:shipBillAddr();" <#if requestParameters.useShipAddr??>checked="checked"</#if>/>
-              </@td>
-              <@td colspan="2" valign="center">${uiLabelMap.FacilityBillingAddressSameShipping}</@td>
-            </@tr>
-            <@tr type="util">
-              <@td colspan="2"><hr /></@td>
-            </@tr>
+            </@invertedField>
+
+              <hr />
+
             </#if>
 
             <#if orderPerson?has_content>
@@ -195,39 +186,22 @@ function makeExpDate() {
             </#if>
 
             <#-- generic address information -->
-            <@tr>
-              <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.CommonToName}</@td>
-              <@td width="74%">
+            <@field type="generic" label="${uiLabelMap.CommonToName}">
                 <input type="text" size="30" maxlength="60" name="toName" value="${toName}" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>/>
-              </@td>
-            </@tr>
-            <@tr>
-              <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.CommonAttentionName}</@td>
-              <@td width="74%">
+            </@field>
+            <@field type="generic" label="${uiLabelMap.CommonAttentionName}">
                 <input type="text" size="30" maxlength="60" name="attnName" value="${postalFields.attnName!}" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>/>
-              </@td>
-            </@tr>
-            <@tr>
-              <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.CommonAddressLine} 1</@td>
-              <@td width="74%">
+            </@field>
+            <@field type="generic" label="${uiLabelMap.CommonAddressLine} 1" required=true>
                 <input type="text" size="30" maxlength="30" name="address1" value="${postalFields.address1!}" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>/>
-              *</@td>
-            </@tr>
-            <@tr>
-              <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.CommonAddressLine} 2</@td>
-              <@td width="74%">
+            </@field>
+            <@field type="generic" label="${uiLabelMap.CommonAddressLine} 2">
                 <input type="text" size="30" maxlength="30" name="address2" value="${postalFields.address2!}" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>/>
-              </@td>
-            </@tr>
-            <@tr>
-              <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.CommonCity}</@td>
-              <@td width="74%">
+            </@field>
+            <@field type="generic" label="${uiLabelMap.CommonCity}" required=true>
                 <input type="text" size="30" maxlength="30" name="city" value="${postalFields.city!}" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>/>
-              *</@td>
-            </@tr>
-            <@tr>
-              <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.CommonStateProvince}</@td>
-              <@td width="74%">
+            </@field>
+            <@field type="generic" label="${uiLabelMap.CommonStateProvince}">
                 <select name="stateProvinceGeoId" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>>
                   <#if postalFields.stateProvinceGeoId??>
                   <option>${postalFields.stateProvinceGeoId}</option>
@@ -236,17 +210,11 @@ function makeExpDate() {
                   <option value=""></option>
                   ${screens.render("component://common/widget/CommonScreens.xml#states")}
                 </select>
-              </@td>
-            </@tr>
-            <@tr>
-              <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.CommonZipPostalCode}</@td>
-              <@td width="74%">
+            </@field>
+            <@field type="generic" label="${uiLabelMap.CommonZipPostalCode}" required=true>
                 <input type="text" size="12" maxlength="10" name="postalCode" value="${postalFields.postalCode!}" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>/>
-              *</@td>
-            </@tr>
-            <@tr>
-              <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.CommonCountry}</@td>
-              <@td width="74%">
+            </@field>
+            <@field type="generic" label="${uiLabelMap.CommonCountry}" required=true>
                 <select name="countryGeoId" <#if requestParameters.useShipAddr??>disabled="disabled"</#if>>
                   <#if postalFields.countryGeoId??>
                   <option>${postalFields.countryGeoId}</option>
@@ -254,8 +222,7 @@ function makeExpDate() {
                   </#if>
                   ${screens.render("component://common/widget/CommonScreens.xml#countries")}
                 </select>
-              *</@td>
-            </@tr>
+            </@field>
 
             <#-- credit card fields -->
             <#if paymentMethodType == "CC">
@@ -263,19 +230,13 @@ function makeExpDate() {
                 <#assign creditCard = requestParameters>
               </#if>
               <input type="hidden" name="expireDate" value="${creditCard.expireDate!}"/>
-              <@tr type="util">
-                <@td colspan="2"><hr /></@td>
-              </@tr>
+              
+              <hr />
 
-                  <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="middle">${uiLabelMap.AccountingCompanyNameCard}</@td>
-                <@td width="74%">
-                  <input type="text" class='inputBox' size="30" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard!}"/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="middle">${uiLabelMap.AccountingPrefixCard}</@td>
-                <@td width="74%">
+                  <@field type="generic" label="${uiLabelMap.AccountingCompanyNameCard}">
+                      <input type="text" class='inputBox' size="30" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard!}"/>
+                  </@field>
+              <@field type="generic" label="${uiLabelMap.AccountingPrefixCard}">
                   <select name="titleOnCard">
                     <option value="">${uiLabelMap.CommonSelectOne}</option>
                     <option<#if ((creditCard.titleOnCard)?default("") == "Mr.")> checked="checked"</#if>>${uiLabelMap.CommonTitleMr}</option>
@@ -283,29 +244,17 @@ function makeExpDate() {
                     <option<#if ((creditCard.titleOnCard)?default("") == "Ms.")> checked="checked"</#if>>${uiLabelMap.CommonTitleMs}</option>
                     <option<#if ((creditCard.titleOnCard)?default("") == "Dr.")> checked="checked"</#if>>${uiLabelMap.CommonTitleDr}</option>
                    </select>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="middle">${uiLabelMap.AccountingFirstNameCard}</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.AccountingFirstNameCard}" required=true>
                   <input type="text" size="20" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)!}"/>
-                *</@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="middle">${uiLabelMap.AccountingMiddleNameCard}</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.AccountingMiddleNameCard}">
                   <input type="text" size="15" maxlength="60" name="middleNameOnCard" value="${(creditCard.middleNameOnCard)!}"/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="middle">${uiLabelMap.AccountingLastNameCard}</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.AccountingLastNameCard}" required=true>
                   <input type="text" size="20" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)!}"/>
-                *</@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="middle">${uiLabelMap.AccountingSuffixCard}</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.AccountingSuffixCard}">
                   <select name="suffixOnCard">
                     <option value="">${uiLabelMap.CommonSelectOne}</option>
                     <option<#if ((creditCard.suffixOnCard)?default("") == "Jr.")> checked="checked"</#if>>Jr.</option>
@@ -316,12 +265,9 @@ function makeExpDate() {
                     <option<#if ((creditCard.suffixOnCard)?default("") == "IV")> checked="checked"</#if>>IV</option>
                     <option<#if ((creditCard.suffixOnCard)?default("") == "V")> checked="checked"</#if>>V</option>
                   </select>
-                </@td>
-              </@tr>
+              </@field>
 
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.AccountingCardType}</@td>
-                <@td width="74%">
+              <@field type="generic" label="${uiLabelMap.AccountingCardType}" required=true>
                   <select name="cardType">
                     <#if creditCard.cartType??>
                     <option>${creditCard.cardType}</option>
@@ -329,23 +275,12 @@ function makeExpDate() {
                     </#if>
                     ${screens.render("component://common/widget/CommonScreens.xml#cctypes")}
                   </select>
-                *</@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.AccountingCardNumber}</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.AccountingCardNumber}" required=true>
                   <input type="text" size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}"/>
-                *</@td>
-              </@tr>
-              <#--<@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.OrderCardSecurityCode}</@td>
-                <@td width="74%">
-                  <input type="text" size="5" maxlength="10" name="cardSecurityCode" value=""/>
-                </@td>
-              </@tr>-->
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.AccountingExpirationDate}</@td>
-                <@td width="74%">
+              </@field>
+
+              <@field type="generic" label="${uiLabelMap.AccountingExpirationDate}" required=true>
                   <#assign expMonth = "">
                   <#assign expYear = "">
                   <#if creditCard?? && creditCard.expDate??>
@@ -369,14 +304,10 @@ function makeExpDate() {
                     </#if>
                     ${screens.render("component://common/widget/CommonScreens.xml#ccyears")}
                   </select>
-                *</@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.CommonDescription}</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.CommonDescription}">
                   <input type="text" size="20" maxlength="30" name="description" value="${creditCard.description!}"/>
-                </@td>
-              </@tr>
+              </@field>
                 </#if>
 
                 <#-- eft fields -->
@@ -384,63 +315,41 @@ function makeExpDate() {
                   <#if !eftAccount?has_content>
                     <#assign eftAccount = requestParameters>
                   </#if>
-                  <@tr type="util">
-                <@td colspan="2"><hr /></@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.AccountingNameAccount}</@td>
-                <@td width="74%">
+             
+              <hr />
+           
+              <@field type="generic" label="${uiLabelMap.AccountingNameAccount}" required=true>
                   <input type="text" size="30" maxlength="60" name="nameOnAccount" value="${eftAccount.nameOnAccount!}"/>
-                *</@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.AccountingCompanyNameAccount}</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.AccountingCompanyNameAccount}">
                   <input type="text" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccount.companyNameOnAccount!}"/>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.AccountingBankName}</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.AccountingBankName}" required=true>
                   <input type="text" size="30" maxlength="60" name="bankName" value="${eftAccount.bankName!}"/>
-                *</@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.AccountingRoutingNumber}</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.AccountingRoutingNumber}" required=true>
                   <input type="text" size="10" maxlength="30" name="routingNumber" value="${eftAccount.routingNumber!}"/>
-                *</@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.AccountingAccountType}</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.AccountingAccountType}" required=true>
                   <select name="accountType">
                     <option>${eftAccount.accountType!}</option>
                     <option></option>
                     <option>Checking</option>
                     <option>Savings</option>
                   </select>
-                *</@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.AccountingAccountNumber}</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.AccountingAccountNumber}" required=true>
                   <input type="text" size="20" maxlength="40" name="accountNumber" value="${eftAccount.accountNumber!}"/>
-                *</@td>
-              </@tr>
-              <@tr>
-                <@td width="26%" class="${styles.text_right!}" valign="top">${uiLabelMap.CommonDescription}</@td>
-                <@td width="74%">
+              </@field>
+              <@field type="generic" label="${uiLabelMap.CommonDescription}">
                   <input type="text" size="30" maxlength="60" name="description" value="${eftAccount.description!}"/>
-                </@td>
-              </@tr>
+              </@field>
             </#if>
-          </@table>
+
         <#else>
           <#-- initial screen show a list of options -->
 
           <@script>
-
               function setCheckoutPaymentId( selectedValue ) {
                   checkoutForm = document.getElementById('checkoutsetupform');
                   if( selectedValue.match('^EXT_.*') ) {
@@ -454,29 +363,32 @@ function makeExpDate() {
           <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform" id="checkoutsetupform">
             <input type="hidden" name="finalizeMode" value="payment"/>
             <input type="hidden" name="createNew" value="${(requestParameters.createNew)!}"/>
-            <@table type="fields" width="100%" border="0" cellpadding="1" cellspacing="0"> <#-- orig: class="" -->
-              <#if "Y" != requestParameters.createNew?default("")>
-              <@tr>
-                <@td class="${styles.grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="EXT_OFFLINE" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_OFFLINE">checked="checked"</#if> onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/></@td>
-                <@td nowrap="nowrap">${uiLabelMap.OrderPaymentOfflineCheckMoney}</@td>
-              </@tr>
+            
+            <#if "Y" != requestParameters.createNew?default("")>
+              <#assign labelContent>${uiLabelMap.OrderPaymentOfflineCheckMoney}</#assign>
+              <#assign actionContent></#assign>
+              <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+                  <input type="radio" name="paymentMethodTypeAndId" value="EXT_OFFLINE" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_OFFLINE">checked="checked"</#if> onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
+              </@invertedField>
               
-              <@tr>
-                <@td class="${styles.grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="EXT_COD" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_COD">checked="checked"</#if> onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/></@td>
-                <@td nowrap="nowrap">${uiLabelMap.OrderCOD}</@td>
-              </@tr>
+              <#assign labelContent>${uiLabelMap.OrderCOD}</#assign>
+              <#assign actionContent></#assign>
+              <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+                  <input type="radio" name="paymentMethodTypeAndId" value="EXT_COD" <#if checkOutPaymentId?? && checkOutPaymentId == "EXT_COD">checked="checked"</#if> onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
+              </@invertedField>
+            </#if>
+
+              <#assign labelContent>${uiLabelMap.AccountingVisaMastercardAmexDiscover}</#assign>
+              <#assign actionContent></#assign>
+              <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+                  <input type="radio" name="paymentMethodTypeAndId" value="CC" onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
+              </@invertedField>
               
-              </#if>
-              <@tr>
-                <@td class="${styles.grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="CC" onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/></@td>
-                <@td nowrap="nowrap">${uiLabelMap.AccountingVisaMastercardAmexDiscover}</@td>
-              </@tr>
-              
-              <@tr>
-                <@td class="${styles.grid_large!}3" nowrap="nowrap"><input type="radio" name="paymentMethodTypeAndId" value="EFT" onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/></@td>
-                <@td width='50%' nowrap="nowrap">${uiLabelMap.AccountingAHCElectronicCheck}</@td>
-              </@tr>
-            </@table>
+              <#assign labelContent>${uiLabelMap.AccountingAHCElectronicCheck}</#assign>
+              <#assign actionContent></#assign>
+              <@invertedField type="generic" labelContent=labelContent actionContent=actionContent>
+                  <input type="radio" name="paymentMethodTypeAndId" value="EFT" onchange="setCheckoutPaymentId(this.value)" onclick="setCheckoutPaymentId(this.value)"/>
+              </@invertedField>
           </form>
         </#if>
         </@cell>

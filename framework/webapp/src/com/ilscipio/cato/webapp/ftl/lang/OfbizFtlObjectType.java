@@ -1,4 +1,4 @@
-package com.ilscipio.cato.webapp.ftl;
+package com.ilscipio.cato.webapp.ftl.lang;
 
 import java.util.Map;
 

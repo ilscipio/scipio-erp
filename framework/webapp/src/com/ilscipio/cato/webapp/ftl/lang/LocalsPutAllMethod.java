@@ -16,21 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package com.ilscipio.cato.webapp.ftl;
+package com.ilscipio.cato.webapp.ftl.lang;
 
 import java.util.List;
 
+import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
+import com.ilscipio.cato.webapp.ftl.TransformFtlUtil;
+import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.LocalFtlVarHandler;
+
 import freemarker.core.Environment;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * Cato: CopyObjectMethod - Helper method to clone (shallow copy) a map or list.
+ * Cato: LocalsPutAllMethod - Freemarker Method for dumping all values in a map
+ * into FTL locals.
  */
-public class CopyObjectMethod implements TemplateMethodModelEx {
+public class LocalsPutAllMethod extends VarsPutAllMethod {
 
-    public static final String module = CopyObjectMethod.class.getName();
+    public static final String module = LocalsPutAllMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -38,12 +41,8 @@ public class CopyObjectMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        if (args == null || args.size() < 1 || args.size() > 2) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
-        }
         Environment env = TransformFtlUtil.getCurrentEnvironment();
-        TemplateModel object = (TemplateModel) args.get(0);
-        return CommonFtlUtil.copyObject(object, null, env.getObjectWrapper());
+        return execPutAll(args, new LocalFtlVarHandler(env), env);
     }
-    
+
 }

@@ -16,25 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package com.ilscipio.cato.webapp.ftl;
+package com.ilscipio.cato.webapp.ftl.context;
 
 import java.util.List;
 
-import freemarker.core.Environment;
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateScalarModel;
 
 /**
- * Cato: GetRequestVarMethod - Freemarker Method for getting request-scope variables
- * with fallback to globals.
- * <p>
- * Should only be used to read values set by {@link SetRequestVarMethod}.
+ * Cato: ReadRequestStackMethod - Freemarker Method providing support for a stack
+ * structure having request scope, with fallback to globals.
  */
-public class GetRequestVarMethod implements TemplateMethodModelEx {
+public class GetRequestStackAsListMethod extends RequestStackMethod {
 
-    public static final String module = GetRequestVarMethod.class.getName();
+    public static final String module = GetRequestStackAsListMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -42,18 +36,7 @@ public class GetRequestVarMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        if (args == null || args.size() != 1) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 1)");
-        }
-        TemplateModel nameModel = (TemplateModel) args.get(0);
-        if (!(nameModel instanceof TemplateScalarModel)) {
-            throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
-        }
-
-        Environment env = TransformFtlUtil.getCurrentEnvironment();
-        Object res = CommonFtlUtil.getRequestVar(((TemplateScalarModel) nameModel).getAsString(), env);
-        
-        return res; // NOTE: result gets automatically wrapped by Freemarker on need basis
+        return execGetAsList(args);
     }
 
 }

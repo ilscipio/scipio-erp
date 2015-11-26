@@ -16,22 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package com.ilscipio.cato.webapp.ftl;
+package com.ilscipio.cato.webapp.ftl.context;
 
 import java.util.List;
 
-import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.LocalFtlVarHandler;
+import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
+import com.ilscipio.cato.webapp.ftl.TransformFtlUtil;
 
 import freemarker.core.Environment;
+import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
 
 /**
- * Cato: LocalsPutAllMethod - Freemarker Method for dumping all values in a map
- * into FTL locals.
+ * Cato: GetRequestVarMethod - Freemarker Method for getting request-scope variables
+ * with fallback to globals.
+ * <p>
+ * Should only be used to read values set by {@link SetRequestVarMethod}.
  */
-public class LocalsPutAllMethod extends VarsPutAllMethod {
+public class GetRequestVarMethod implements TemplateMethodModelEx {
 
-    public static final String module = LocalsPutAllMethod.class.getName();
+    public static final String module = GetRequestVarMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -39,8 +45,18 @@ public class LocalsPutAllMethod extends VarsPutAllMethod {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
+        if (args == null || args.size() != 1) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 1)");
+        }
+        TemplateModel nameModel = (TemplateModel) args.get(0);
+        if (!(nameModel instanceof TemplateScalarModel)) {
+            throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
+        }
+
         Environment env = TransformFtlUtil.getCurrentEnvironment();
-        return execPutAll(args, new LocalFtlVarHandler(env), env);
+        Object res = CommonFtlUtil.getRequestVar(((TemplateScalarModel) nameModel).getAsString(), env);
+        
+        return res; // NOTE: result gets automatically wrapped by Freemarker on need basis
     }
 
 }

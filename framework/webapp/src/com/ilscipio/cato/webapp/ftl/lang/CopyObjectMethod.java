@@ -16,19 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package com.ilscipio.cato.webapp.ftl;
+package com.ilscipio.cato.webapp.ftl.lang;
 
 import java.util.List;
 
+import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
+import com.ilscipio.cato.webapp.ftl.TransformFtlUtil;
+
+import freemarker.core.Environment;
+import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * Cato: PopRequestStackMethod - Freemarker Method providing support for a stack
- * structure having request scope, with fallback to globals.
+ * Cato: CopyObjectMethod - Helper method to clone (shallow copy) a map or list.
  */
-public class PopRequestStackMethod extends RequestStackMethod {
+public class CopyObjectMethod implements TemplateMethodModelEx {
 
-    public static final String module = PopRequestStackMethod.class.getName();
+    public static final String module = CopyObjectMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -36,7 +41,12 @@ public class PopRequestStackMethod extends RequestStackMethod {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        return execRead(args, true);
+        if (args == null || args.size() < 1 || args.size() > 2) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
+        }
+        Environment env = TransformFtlUtil.getCurrentEnvironment();
+        TemplateModel object = (TemplateModel) args.get(0);
+        return CommonFtlUtil.copyObject(object, null, env.getObjectWrapper());
     }
     
 }

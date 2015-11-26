@@ -25,6 +25,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.webapp.control.RequestHandler;
 
+import com.ilscipio.cato.webapp.ftl.lang.OfbizFtlObjectType;
+
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
@@ -683,9 +685,11 @@ public final class CommonFtlUtil {
      * <p>
      * <strong>Do not access underlying structure directly.</strong>
      * 
+     * FIXME: shouldn't be public
+     * 
      * @see #setRequestVar
      */
-    static void pushRequestStack(String name, Object value, boolean setLast, HttpServletRequest request, 
+    public static void pushRequestStack(String name, Object value, boolean setLast, HttpServletRequest request, 
             Map<String, Object> context, Environment env) throws TemplateModelException {
         // WARNING: currently I don't see any need to wrap OR unwrap the value, no matter how inconsistent
         // it makes the list, so don't do it for performance reasons, but in future it could be needed.
@@ -806,7 +810,8 @@ public final class CommonFtlUtil {
         }
     }
     
-    static void pushRequestStack(String name, Object value, boolean setLast, Environment env) throws TemplateModelException {
+    // FIXME: shouldn't be public
+    public static void pushRequestStack(String name, Object value, boolean setLast, Environment env) throws TemplateModelException {
         HttpServletRequest request = TransformFtlUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
@@ -890,7 +895,8 @@ public final class CommonFtlUtil {
         return readRequestStack(name, false, request, context, null);
     }
     
-    static Object readRequestStack(String name, boolean pop, HttpServletRequest request, 
+    // FIXME: shouldn't be public
+    public static Object readRequestStack(String name, boolean pop, HttpServletRequest request, 
             Map<String, Object> context, Environment env) throws TemplateModelException {
         Object res = null;
 
@@ -969,7 +975,8 @@ public final class CommonFtlUtil {
         return res;
     }
     
-    static Object readRequestStack(String name, boolean pop, Environment env) throws TemplateModelException {
+    // FIXME: shouldn't be public
+    public static Object readRequestStack(String name, boolean pop, Environment env) throws TemplateModelException {
         HttpServletRequest request = TransformFtlUtil.getRequest(env);
         Map<String, Object> context = null;
         if (request == null) {
@@ -1128,7 +1135,7 @@ public final class CommonFtlUtil {
     /**
      * Checks if the given model matches the logical FTL object type.
      * 
-     * @see com.ilscipio.cato.webapp.ftl.OfbizFtlObjectType
+     * @see com.ilscipio.cato.webapp.ftl.lang.OfbizFtlObjectType
      */
     public static boolean isObjectType(String ftlTypeName, TemplateModel object) {
         return OfbizFtlObjectType.isObjectTypeSafe(ftlTypeName, object);

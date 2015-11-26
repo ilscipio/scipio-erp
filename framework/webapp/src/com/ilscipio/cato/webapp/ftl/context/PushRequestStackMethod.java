@@ -16,19 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package com.ilscipio.cato.webapp.ftl;
+package com.ilscipio.cato.webapp.ftl.context;
 
 import java.util.List;
 
 import freemarker.template.TemplateModelException;
 
 /**
- * Cato: ReadRequestStackMethod - Freemarker Method providing support for a stack
+ * Cato: PushRequestStackMethod - Freemarker Method providing support for a stack
  * structure having request scope, with fallback to globals.
  */
-public class GetRequestStackAsListMethod extends RequestStackMethod {
+public class PushRequestStackMethod extends RequestStackMethod {
 
-    public static final String module = GetRequestStackAsListMethod.class.getName();
+    public static final String module = PushRequestStackMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -36,7 +36,7 @@ public class GetRequestStackAsListMethod extends RequestStackMethod {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        return execGetAsList(args);
+        return execPush(args, false);
     }
 
 }

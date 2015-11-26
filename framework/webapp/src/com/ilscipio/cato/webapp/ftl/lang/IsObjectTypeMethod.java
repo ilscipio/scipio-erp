@@ -16,21 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package com.ilscipio.cato.webapp.ftl;
+package com.ilscipio.cato.webapp.ftl.lang;
 
 import java.util.List;
 
-import freemarker.core.Environment;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateScalarModel;
 
 /**
- * Cato: ToSimpleMapMethod -Another workaround for BeansWrapper kludge.
+ * Cato: IsObjectTypeMethod - Freemarker Method to check if variable is strictly a string or map or 
+ * variant of, because ?is_string and ?is_hash are not sufficient for widget context vars.
  */
-public class ToSimpleMapMethod implements TemplateMethodModelEx {
+public class IsObjectTypeMethod implements TemplateMethodModelEx {
 
-    public static final String module = ToSimpleMapMethod.class.getName();
+    public static final String module = IsObjectTypeMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -38,12 +39,13 @@ public class ToSimpleMapMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        if (args == null || args.size() < 1 || args.size() > 2) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
+        if (args == null || args.size() != 2) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 2)");
         }
-        Environment env = TransformFtlUtil.getCurrentEnvironment();
-        TemplateModel object = (TemplateModel) args.get(0);
-        return CommonFtlUtil.toSimpleMap(env.getObjectWrapper(), object);
+        String type = ((TemplateScalarModel) args.get(0)).getAsString();
+        TemplateModel object = (TemplateModel) args.get(1);
+
+        return OfbizFtlObjectType.isObjectTypeSafe(type, object);
     }
     
 }

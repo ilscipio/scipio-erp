@@ -1202,7 +1202,7 @@ Now implemented as java transform.
 *************
 * globalsPutAll
 ************
-Puts all key-value pairs from given map into FTL globals.
+Puts all key-value pairs from given map into FTL globals (#global).
 Now implemented as java transform.
 
   * Parameters *
@@ -1214,6 +1214,36 @@ Now implemented as java transform.
     inExKeys    = optional list or wrapped set of keys to include or exclude           
 
 <#function globalsPutAll map mode="" inExKeys=[]>
+- implemented as java transform -
+</#function>
+-->
+
+<#-- 
+*************
+* varsPutAll
+************
+Puts all key-value pairs from given map into FTL current namespace variables (#assign).
+Now implemented as java transform.
+
+  * Parameters *
+    @see globalsPutAll       
+
+<#function varsPutAll map mode="" inExKeys=[]>
+- implemented as java transform -
+</#function>
+-->
+
+<#-- 
+*************
+* localsPutAll
+************
+Puts all key-value pairs from given map into FTL globals (#local).
+Now implemented as java transform.
+
+  * Parameters *
+    @see globalsPutAll        
+
+<#function localsPutAll map mode="" inExKeys=[]>
 - implemented as java transform -
 </#function>
 -->

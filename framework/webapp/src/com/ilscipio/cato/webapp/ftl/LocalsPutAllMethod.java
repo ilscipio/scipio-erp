@@ -20,18 +20,18 @@ package com.ilscipio.cato.webapp.ftl;
 
 import java.util.List;
 
-import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.GlobalFtlVarHandler;
+import com.ilscipio.cato.webapp.ftl.CommonFtlUtil.LocalFtlVarHandler;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateModelException;
 
 /**
- * Cato: GlobalsPutAllMethod - Freemarker Method for dumping all values in a map
- * into FTL globals.
+ * Cato: LocalsPutAllMethod - Freemarker Method for dumping all values in a map
+ * into FTL locals.
  */
-public class GlobalsPutAllMethod extends VarsPutAllMethod {
+public class LocalsPutAllMethod extends VarsPutAllMethod {
 
-    public static final String module = GlobalsPutAllMethod.class.getName();
+    public static final String module = LocalsPutAllMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -40,7 +40,7 @@ public class GlobalsPutAllMethod extends VarsPutAllMethod {
     @Override
     public Object exec(List args) throws TemplateModelException {
         Environment env = FtlTransformUtil.getCurrentEnvironment();
-        return execPutAll(args, new GlobalFtlVarHandler(env), env);
+        return execPutAll(args, new LocalFtlVarHandler(env), env);
     }
 
 }

@@ -23,7 +23,6 @@ import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
-import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.control.RequestHandler;
 
 import freemarker.core.Environment;
@@ -1668,13 +1667,74 @@ public final class CommonFtlUtil {
         return exKeys;
     }
     
+    public interface FtlVarHandler {
+        void setVariable(String name, TemplateModel model) throws TemplateModelException;
+        TemplateModel getVariable(String name) throws TemplateModelException;
+    }
+    
+    public static class GlobalFtlVarHandler implements FtlVarHandler {
+        private final Environment env;
+
+        public GlobalFtlVarHandler(Environment env) {
+            this.env = env;
+        }
+
+        @Override
+        public void setVariable(String name, TemplateModel model) throws TemplateModelException {
+            env.setGlobalVariable(name, model);
+        }
+
+        @Override
+        public TemplateModel getVariable(String name) throws TemplateModelException {
+            return env.getGlobalVariable(name);
+        }
+    }
+    
+    public static class CurrentFtlVarHandler implements FtlVarHandler {
+        private final Environment env;
+
+        public CurrentFtlVarHandler(Environment env) {
+            this.env = env;
+        }
+
+        @Override
+        public void setVariable(String name, TemplateModel model) throws TemplateModelException {
+            env.setVariable(name, model);
+        }
+
+        @Override
+        public TemplateModel getVariable(String name) throws TemplateModelException {
+            return env.getVariable(name);
+        }
+    }
+    
+    public static class LocalFtlVarHandler implements FtlVarHandler {
+        private final Environment env;
+
+        public LocalFtlVarHandler(Environment env) {
+            this.env = env;
+        }
+
+        @Override
+        public void setVariable(String name, TemplateModel model) throws TemplateModelException {
+            env.setLocalVariable(name, model);
+        }
+
+        @Override
+        public TemplateModel getVariable(String name) throws TemplateModelException {
+            return env.getLocalVariable(name);
+        }
+    }    
     
     /**
-     * Puts all values in hash into FTL globals.
+     * Puts all values in hash into FTL variables, decided by a varHandler.
+     * <p>
+     * TODO: replace tests with a filter class similar to FtlVarHandler.
      * <p>
      * @see #copyMapToSimple(TemplateHashModel, Set, Boolean, ObjectWrapper)
      */
-    public static void globalsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Boolean onlyDirectives, Environment env) throws TemplateModelException {
+    public static void varsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Boolean onlyDirectives, 
+            FtlVarHandler varHandler, Environment env) throws TemplateModelException {
         if (include == Boolean.TRUE) {
             if (inExKeys == null) {
                 inExKeys = new HashSet<String>();
@@ -1683,7 +1743,7 @@ public final class CommonFtlUtil {
                 for(String key : inExKeys) {
                     TemplateModel valueModel = hashModel.get(key);
                     if (CommonFtlUtil.isDirective(valueModel)) {
-                        env.setGlobalVariable(key, valueModel);
+                        varHandler.setVariable(key, valueModel);
                     }
                 }
             }
@@ -1691,7 +1751,7 @@ public final class CommonFtlUtil {
                 for(String key : inExKeys) {
                     TemplateModel valueModel = hashModel.get(key);
                     if (inExKeys.contains(key)) {
-                        env.setGlobalVariable(key, valueModel);
+                        varHandler.setVariable(key, valueModel);
                     }
                 }                
             }
@@ -1708,14 +1768,14 @@ public final class CommonFtlUtil {
                     String key = ((TemplateScalarModel) keysIt.next()).getAsString();
                     TemplateModel valueModel = hashModel.get(key);
                     if (CommonFtlUtil.isDirective(valueModel)) {
-                        env.setGlobalVariable(key, valueModel);
+                        varHandler.setVariable(key, valueModel);
                     }
                 }
             }
             else {
                 while(keysIt.hasNext()) {
                     String key = ((TemplateScalarModel) keysIt.next()).getAsString();
-                    env.setGlobalVariable(key, hashModel.get(key));
+                    varHandler.setVariable(key, hashModel.get(key));
                 }                
             }
         }
@@ -1731,7 +1791,7 @@ public final class CommonFtlUtil {
                     String key = ((TemplateScalarModel) keysIt.next()).getAsString();
                     TemplateModel valueModel = hashModel.get(key);
                     if (!inExKeys.contains(key) && CommonFtlUtil.isDirective(valueModel)) {
-                        env.setGlobalVariable(key, valueModel);
+                        varHandler.setVariable(key, valueModel);
                     }
                 }
             }
@@ -1740,12 +1800,40 @@ public final class CommonFtlUtil {
                     String key = ((TemplateScalarModel) keysIt.next()).getAsString();
                     TemplateModel valueModel = hashModel.get(key);
                     if (!inExKeys.contains(key)) {
-                        env.setGlobalVariable(key, valueModel);
+                        varHandler.setVariable(key, valueModel);
                     }
                 } 
             }
         }
     }
+    
+    /**
+     * Puts all values in hash into FTL globals (#global).
+     * <p>
+     * @see #copyMapToSimple(TemplateHashModel, Set, Boolean, ObjectWrapper)
+     */
+    public static void globalsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Boolean onlyDirectives, Environment env) throws TemplateModelException {
+        varsPutAll(hashModel, inExKeys, include, onlyDirectives, new GlobalFtlVarHandler(env), env);
+    }
+    
+    /**
+     * Puts all values in hash into FTL current namespace vars (#assign).
+     * <p>
+     * @see #copyMapToSimple(TemplateHashModel, Set, Boolean, ObjectWrapper)
+     */
+    public static void varsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Boolean onlyDirectives, Environment env) throws TemplateModelException {
+        varsPutAll(hashModel, inExKeys, include, onlyDirectives, new CurrentFtlVarHandler(env), env);
+    }
+    
+    /**
+     * Puts all values in hash into FTL locals (#local).
+     * <p>
+     * @see #copyMapToSimple(TemplateHashModel, Set, Boolean, ObjectWrapper)
+     */
+    public static void localsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Boolean onlyDirectives, Environment env) throws TemplateModelException {
+        varsPutAll(hashModel, inExKeys, include, onlyDirectives, new LocalFtlVarHandler(env), env);
+    }
+    
     
     /**
      * Compiles a progress success action.

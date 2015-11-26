@@ -212,7 +212,8 @@ TODO?: these could also parse style for tile classes and calculate approximate c
   <#return extractPrefixedStyleNamesWithInt(getPlainClassArgNames(style), catoContainerSizesPrefixMap)>
 </#function>
 
-<#-- TODO: reimplement in java in com.ilscipio.cato.webapp.ftl.template.standard.StdTemplateFtlUtil.evalAbsContainerSizeFactors -->
+<#-- TODO: reimplement in java in com.ilscipio.cato.webapp.ftl.template.standard.StdTemplateFtlUtil.evalAbsContainerSizeFactors 
+        and have this delegate to it -->
 <#function evalAbsContainerSizeFactors sizesList maxSizes=0 cachedFactorsList=[] extraArgs...>
   <#local maxSize = 12>
   <#if maxSizes?is_number>

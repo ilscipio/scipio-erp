@@ -41,7 +41,7 @@ public class CopyObjectMethod implements TemplateMethodModelEx {
         if (args == null || args.size() < 1 || args.size() > 2) {
             throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
         }
-        Environment env = FtlTransformUtil.getCurrentEnvironment();
+        Environment env = TransformFtlUtil.getCurrentEnvironment();
         TemplateModel object = (TemplateModel) args.get(0);
         return CommonFtlUtil.copyObject(object, null, env.getObjectWrapper());
     }

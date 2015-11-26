@@ -61,7 +61,7 @@ public class CopyMapMethod implements TemplateMethodModelEx {
             keysModel = (TemplateModel) args.get(2);
         }
         
-        Environment env = FtlTransformUtil.getCurrentEnvironment();
+        Environment env = TransformFtlUtil.getCurrentEnvironment();
         
         Boolean include = null;
         if (mode != null && !mode.isEmpty()) {

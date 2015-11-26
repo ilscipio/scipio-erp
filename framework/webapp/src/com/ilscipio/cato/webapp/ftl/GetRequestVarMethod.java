@@ -50,7 +50,7 @@ public class GetRequestVarMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
         }
 
-        Environment env = FtlTransformUtil.getCurrentEnvironment();
+        Environment env = TransformFtlUtil.getCurrentEnvironment();
         Object res = CommonFtlUtil.getRequestVar(((TemplateScalarModel) nameModel).getAsString(), env);
         
         return res; // NOTE: result gets automatically wrapped by Freemarker on need basis

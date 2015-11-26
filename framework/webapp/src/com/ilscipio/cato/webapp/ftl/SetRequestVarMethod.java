@@ -68,7 +68,7 @@ public class SetRequestVarMethod implements TemplateMethodModelEx {
             }
         }
 
-        Environment env = FtlTransformUtil.getCurrentEnvironment();
+        Environment env = TransformFtlUtil.getCurrentEnvironment();
         CommonFtlUtil.setRequestVar(((TemplateScalarModel) nameModel).getAsString(), valueModel, unwrap, env);
 
         return new SimpleScalar("");

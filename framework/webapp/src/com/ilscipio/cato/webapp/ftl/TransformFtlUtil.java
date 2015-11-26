@@ -17,9 +17,9 @@ import freemarker.template.utility.DeepUnwrap;
 /**
  * FTL transform utility methods.
  */
-public final class FtlTransformUtil {
+public final class TransformFtlUtil {
 
-    private FtlTransformUtil() {
+    private TransformFtlUtil() {
     }
     
     public static Environment getCurrentEnvironment() throws TemplateModelException {

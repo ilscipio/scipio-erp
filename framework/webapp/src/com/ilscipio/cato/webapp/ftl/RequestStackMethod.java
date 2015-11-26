@@ -48,7 +48,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
         }
         TemplateModel valueModel = (TemplateModel) args.get(1);
 
-        Environment env = FtlTransformUtil.getCurrentEnvironment();
+        Environment env = TransformFtlUtil.getCurrentEnvironment();
         CommonFtlUtil.pushRequestStack(((TemplateScalarModel) nameModel).getAsString(), valueModel, setLast, env);
         
         return new SimpleScalar("");
@@ -64,7 +64,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
             throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
         }
 
-        Environment env = FtlTransformUtil.getCurrentEnvironment();
+        Environment env = TransformFtlUtil.getCurrentEnvironment();
         Object res = CommonFtlUtil.readRequestStack(((TemplateScalarModel) nameModel).getAsString(), pop, env);
  
         return res; // NOTE: result automatically wrapped as needed by freemarker
@@ -91,7 +91,7 @@ public abstract class RequestStackMethod implements TemplateMethodModelEx {
             }
         }
         
-        Environment env = FtlTransformUtil.getCurrentEnvironment();
+        Environment env = TransformFtlUtil.getCurrentEnvironment();
         Object res = CommonFtlUtil.getRequestStackAsList(stackName, (origList ? null : TemplateValueTargetType.SIMPLEMODEL), env);
         return res;
     }    

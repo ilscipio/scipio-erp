@@ -46,7 +46,7 @@ public class VarsPutAllMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        Environment env = FtlTransformUtil.getCurrentEnvironment();
+        Environment env = TransformFtlUtil.getCurrentEnvironment();
         return execPutAll(args, new CurrentFtlVarHandler(env), env);
     }
     

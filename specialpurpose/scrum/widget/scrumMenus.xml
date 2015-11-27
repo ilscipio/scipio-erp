@@ -201,7 +201,7 @@ under the License.
                     <if-service-permission service-name="scrumPermissionCheck" main-action="UPDATE" resource-description="SPRINT"/>
                 </and>
             </condition>
-            <link target="CloseSprint" style="${styles.button_default} delete" confirmation-message="Are you sure to close the sprint ?">
+            <link target="CloseSprint" style="+delete" confirmation-message="Are you sure to close the sprint ?">
                 <parameter param-name="projectId" from-field="parameters.projectId"/>
                 <parameter param-name="sprintId" from-field="parameters.sprintId"/>
             </link>
@@ -515,7 +515,7 @@ under the License.
                     <if-empty field="product.supportDiscontinuationDate"/>
                 </and>
             </condition>
-            <link target="AddProdBacklog" style="${styles.button_default} create">
+            <link target="AddProdBacklog" style="+create">
                 <parameter param-name="productId" from-field="parameters.productId"/>
             </link>
         </menu-item>
@@ -660,7 +660,7 @@ under the License.
                     <if-compare field="hasViewPermission" operator="equals" value="true"/>
                 </and>
             </condition>
-            <link text="Add Product" target="EditProduct" style="${styles.button_default} create"></link>
+            <link text="Add Product" target="EditProduct" style="+create"></link>
         </menu-item>
         <menu-item name="NewProject">
             <condition>
@@ -670,7 +670,7 @@ under the License.
                     <if-empty field="product.supportDiscontinuationDate"/>
                 </and>
             </condition>
-            <link text="New Project" target="newScrumProject" style="${styles.button_default} create">
+            <link text="New Project" target="newScrumProject" style="+create">
                 <parameter param-name="productId" from-field="parameters.productId"/>
             </link>
         </menu-item>
@@ -682,7 +682,7 @@ under the License.
                     <if-empty field="product.supportDiscontinuationDate"/>
                 </and>
             </condition>
-            <link text="Create A Default Task" target="editDefaultTask" style="${styles.button_default} create">
+            <link text="Create A Default Task" target="editDefaultTask" style="+create">
                 <parameter param-name="productId" from-field="product.productId"/>
             </link>
         </menu-item>
@@ -694,7 +694,7 @@ under the License.
                     <if-empty field="product.supportDiscontinuationDate"/>
                 </and>
             </condition>
-            <link text="New Category" target="EditProductBacklogCategory" style="${styles.button_default} create">
+            <link text="New Category" target="EditProductBacklogCategory" style="+create">
                 <parameter param-name="productId" from-field="product.productId"/>
             </link>
         </menu-item>
@@ -707,7 +707,7 @@ under the License.
                     <if-empty field="product.supportDiscontinuationDate"/>
                 </and>
             </condition>
-            <link text="Close Product" style="${styles.button_default} delete" target="updateProduct" request-confirmation="true" confirmation-message="The product and all related stuff(s) will be removed, Do you want to continue?">
+            <link text="Close Product" style="+delete" target="updateProduct" request-confirmation="true" confirmation-message="The product and all related stuff(s) will be removed, Do you want to continue?">
                 <parameter param-name="productId" from-field="parameters.productId"/>
                 <parameter param-name="statusId" value="PRODUCT_CLOSED"/>
                 <parameter param-name="partyId" from-field="productOwnerId"/>
@@ -723,7 +723,7 @@ under the License.
                 <if-empty field="product.supportDiscontinuationDate"/>
             </and>
             </condition>
-            <link target="NewProductEmail" text="${uiLabelMap.ScrumNewEmail}" style="${styles.button_default} create">
+            <link target="NewProductEmail" text="${uiLabelMap.ScrumNewEmail}" style="+create">
                 <parameter param-name="productId" from-field="parameters.productId"/>
             </link>
         </menu-item>
@@ -968,7 +968,7 @@ under the License.
                     <if-service-permission service-name="scrumPermissionCheck" main-action="CREATE" resource-description="SPRINT"/>
                 </and>
             </condition>
-            <link target="AddSprint" style="${styles.button_default} create">
+            <link target="AddSprint" style="+create">
                 <parameter param-name="projectId" from-field="parameters.projectId"/>
             </link>
         </menu-item>
@@ -980,7 +980,7 @@ under the License.
                     <if-service-permission service-name="scrumPermissionCheck" main-action="UPDATE" resource-description="SPRINT"/>
                 </and>
             </condition>
-            <link target="updateScrumProject" request-confirmation="true" confirmation-message="Are you sure you want to close this project?" style="${styles.button_default} delete">
+            <link target="updateScrumProject" request-confirmation="true" confirmation-message="Are you sure you want to close this project?" style="+delete">
                 <parameter param-name="workEffortId" from-field="parameters.workEffortId"/>
                 <parameter param-name="projectId" from-field="parameters.projectId"/>
                 <parameter param-name="currentStatusId" value="SPJ_CLOSED"/>

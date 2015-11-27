@@ -275,7 +275,7 @@
     <menu name="AgreementItemSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
         <menu-item name="NewItem" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonItem}">
-            <link target="EditAgreementItem" style="${styles.button_default}  create">
+            <link target="EditAgreementItem" style="+create">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
         </menu-item>

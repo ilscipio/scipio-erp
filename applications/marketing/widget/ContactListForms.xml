@@ -650,7 +650,7 @@ under the License.
         <field name="webSiteId"><hidden/></field>
         <field name="siteName">
             <display-entity entity-name="WebSite" key-field-name="webSiteId">
-                <sub-hyperlink target="/content/control/EditWebSite" target-type="inter-app" description="[${webSiteId}]" link-style="linktext">
+                <sub-hyperlink target="/content/control/EditWebSite" target-type="inter-app" description="[${webSiteId}]" link-style="${styles.link_id}">
                     <parameter param-name="webSiteId"/>
                 </sub-hyperlink>
             </display-entity></field>

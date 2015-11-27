@@ -74,7 +74,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="maintHistSeqId" widget-style="linktext ${styles.link_default}">
+        <field name="maintHistSeqId" widget-style="${styles.link_id}">
             <hyperlink also-hidden="false" description="${maintHistSeqId}" target="EditFixedAssetMaint">
                 <parameter param-name="fixedAssetId"/>
                 <parameter param-name="maintHistSeqId"/>

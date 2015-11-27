@@ -40,7 +40,7 @@ under the License.
                 <field-map field-name="fixedAssetId" from-field="fixedAssetId"/>
             </service>
         </row-actions>
-        <field name="fixedAssetId" title="${uiLabelMap.CommonId}" widget-style="linktext ${styles.link_default}" sort-field="true">
+        <field name="fixedAssetId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_id}" sort-field="true">
             <hyperlink also-hidden="false" description="${fixedAssetId}" target="EditFixedAsset">
                 <parameter param-name="fixedAssetId"/>
             </hyperlink>

@@ -155,12 +155,12 @@ under the License.
             </hyperlink>
         </field>    
         <field name="invoiceItemTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="InvoiceItemType"/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}" widget-style="linktext ${styles.link_default}">
+        <field name="productId" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_id}">
             <hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${productId}">
                 <parameter param-name="productId"/>
             </hyperlink>
         </field>
-        <field name="orderId" widget-style="linktext ${styles.link_default}">
+        <field name="orderId" widget-style="${styles.link_id}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -207,7 +207,7 @@ under the License.
         <field name="description" encode-output="false"><display/></field>
         <field name="total" widget-area-style="amount"><display type="currency" currency="${invoice.currencyUomId}"/></field>
         <field name="invoiceId"><hidden/></field>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="linktext ${styles.link_default}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_id}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>

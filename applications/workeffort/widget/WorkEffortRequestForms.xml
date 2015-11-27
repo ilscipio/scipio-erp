@@ -70,7 +70,7 @@ under the License.
         <field name="priority"><display/></field>
         <field name="productId"><display/></field>
         <field name="description"><display/></field>
-        <field name="deleteAction" title=" " widget-style="linktext ${styles.link_default}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteWorkEffortRequestItem">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="custRequestId"/>

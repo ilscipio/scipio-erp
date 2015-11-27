@@ -34,7 +34,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="budgetId" widget-style="linktext ${styles.link_default}" sort-field="true">
+        <field name="budgetId" widget-style="${styles.link_id}" sort-field="true">
             <hyperlink also-hidden="false" description="${budgetId}" target="EditBudget">
                 <parameter param-name="budgetId"/>
             </hyperlink>

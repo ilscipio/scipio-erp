@@ -40,7 +40,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="PartyResume" default-field-type="display"/>
-        <field name="resumeId" widget-style="linktext ${styles.link_default}">
+        <field name="resumeId" widget-style="${styles.link_id}">
             <hyperlink also-hidden="false" description="${resumeId}" target="EditPartyResume">
                 <parameter param-name="resumeId"/>
             </hyperlink>

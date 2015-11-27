@@ -117,7 +117,7 @@ under the License.
 
         <field name="webSiteId"><display also-hidden="true"/></field>
         <!--
-        <field name="contentId" title="Content ID" widget-style="linktext ${styles.link_default}">
+        <field name="contentId" title="Content ID" widget-style="${styles.link_action}">
             <hyperlink description="${contentId}" target="EditContent" also-hidden="true">
                 <parameter param-name="contentId"/>
             </hyperlink>
@@ -125,7 +125,7 @@ under the License.
         -->
         <field name="contentId">
             <display-entity entity-name="Content" description="${contentName}" key-field-name="contentId">
-                <sub-hyperlink target="EditContent" description=" [${contentId}]" link-style="linktext">
+                <sub-hyperlink target="EditContent" description="[${contentId}]" link-style="${styles.link_id}">
                     <parameter param-name="contentId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -277,7 +277,7 @@ under the License.
         <field name="webSiteId"><hidden/></field>
         <field name="contactListName">
             <display-entity entity-name="ContactList" description="${contactListName}" key-field-name="contactListId">
-                <sub-hyperlink target="/marketing/control/EditContactList" target-type="inter-app" link-style="linktext" description="[${contactListId}]">
+                <sub-hyperlink target="/marketing/control/EditContactList" target-type="inter-app" link-style="${styles.link_id}" description="[${contactListId}]">
                     <parameter param-name="contactListId"/>
                 </sub-hyperlink>
             </display-entity>

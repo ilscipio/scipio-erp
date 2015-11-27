@@ -166,7 +166,31 @@
     "row_alt" : "odd",
     "row_selected" : "selected",
     
-  <#-- Text-content-based link styles (TODO: WIP) -->
+  <#-- Text-content-based link styles
+    !!! TODO: THIS IS WIP !!!
+  
+    how to decide which style to use on a link:
+      * labeling should be based mainly on the text content of the link, both the literal content and its meaning in context.
+      
+    record identifiers and sorting fields:
+      * if the text is a simple single record (entity) id, name, date, or other record identifier, use link_id, link_name, link_date,
+        or if the text type is not listed, link_value.
+        * if the id is complex or very long (e.g. multiple-field primary key), use link_longid.
+      * if it's a mix of name and id or a description, use link_desc.
+      * simple extraneous characters like brackets around an id should not affect selection.
+      
+    actions and navigation:
+      * any static text intended as a link that means to directly or indirectly change the state of the system or
+        encourage the user to do so should be labeled with link_action.
+        * if the action is very long or complex or contains non-static elements, use link_longaction.
+        * in stock ofbiz, sometimes these were marked with extra css classes such as " create", but inconsistently
+      * if the text implies a navigation link that will not change the state of the system, it probably
+        belongs as a link_nav.
+        * if very long or complex, use link_longnav.
+        * TODO: CLARIFY: "View" actions are somewhat currently ambiguous and many are assigned to link_action
+          instead of link_nav. is not clear where they best fit. possibly may want an extra
+          link_viewaction...
+  -->
     "link_nav" : "button tiny",     <#-- static navigation text without explicit action or implied "view" action, generic, not part of a menu type (see menu_xxx styles above): "Categories" 
                                          sometimes this is ambiguous with link_action (?). if links to an action that will change the state of the system directly or indirectly, should be link_action. 
                                          if simply browsing or view action, link_nav is more appropriate, though many times will fall under another

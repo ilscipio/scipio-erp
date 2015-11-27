@@ -635,7 +635,8 @@ public class ModelMenuItem extends ModelWidget {
                 linkElement.setAttribute("text", parentMenuItem.getTitle().getOriginal());
             }
             if (linkElement.getAttribute("style").isEmpty()) {
-                // Cato: changed this...
+                // Cato: this was changed by us...
+                // WARN: this effectively changed the behavior of menu-item's widget-style for all widgets!
                 //linkElement.setAttribute("style", parentMenuItem.getWidgetStyle());
                 linkElement.setAttribute("style", parentMenuItem.getLinkStyle());
             }

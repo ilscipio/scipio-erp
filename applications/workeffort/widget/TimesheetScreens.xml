@@ -66,7 +66,7 @@ under the License.
                                     <widgets>
                                         <container>
                                             <label style="tableheadtext" text="${uiLabelMap.WorkEffortTimesheet}: ${currentTimesheet.fromDate} ${uiLabelMap.CommonThru} ${currentTimesheet.thruDate} ${currentTimesheet.comments}"/>
-                                            <link target="EditTimesheet" text="${currentTimesheet.timesheetId}" style="${styles.button_default}">
+                                            <link target="EditTimesheet" text="${currentTimesheet.timesheetId}" style="${styles.link_id}">
                                                 <parameter param-name="timesheetId" from-field="currentTimesheet.timesheetId"/>
                                             </link>
                                         </container>
@@ -85,7 +85,7 @@ under the License.
                                                         <section>
                                                             <condition><not><if-empty field="currentTimeEntry.workEffortId"/></not></condition>
                                                             <widgets>
-                                                                <link target="WorkEffortSummary" text="${uiLabelMap.WorkEffortWorkEffort}: ${currentTimeEntry.workEffortId}" style="${styles.button_default}">
+                                                                <link target="WorkEffortSummary" text="${uiLabelMap.WorkEffortWorkEffort}: ${currentTimeEntry.workEffortId}" style="${styles.link_desc}">
                                                                     <parameter param-name="workEffortId" from-field="currentTimeEntry.workEffortId"/>
                                                                 </link>
                                                             </widgets>

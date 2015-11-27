@@ -266,7 +266,7 @@ under the License.
                                 <condition><not><if-empty field="parameters.rootContentId"/></not></condition>
                                 <widgets>
                                     <container>
-                                        <link text="${uiLabelMap.ContentCompDocGoBack} [${parameters.rootContentId}]" target="ViewCompDocInstanceTree" style="${styles.button_default}">
+                                        <link text="${uiLabelMap.ContentCompDocGoBack} [${parameters.rootContentId}]" target="ViewCompDocInstanceTree" style="${styles.link_longaction}">
                                             <parameter param-name="rootContentId" from-field="parameters.rootContentId"/>
                                         </link>
                                     </container>

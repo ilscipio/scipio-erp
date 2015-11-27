@@ -565,7 +565,7 @@ under the License.
                                         </actions>
                                         <widgets>
                                             <container>
-                                                <link text="${uiLabelMap.AccountingCreateAnAccountingTransaction}: ${assetDepreciationResultMap.plannedPastDepreciationTotal}" style="${styles.button_default}" target="CreateAcctgTransAndEntries">
+                                                <link text="${uiLabelMap.AccountingCreateAnAccountingTransaction}: ${assetDepreciationResultMap.plannedPastDepreciationTotal}" style="${styles.link_longaction}" target="CreateAcctgTransAndEntries">
                                                     <parameter param-name="fixedAssetId" from-field="fixedAsset.fixedAssetId"/>
                                                     <parameter param-name="organizationPartyId" from-field="fixedAsset.partyId"/>
                                                     <parameter param-name="acctgTransTypeId" value="DEPRECIATION"/>

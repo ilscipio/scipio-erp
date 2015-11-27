@@ -167,7 +167,8 @@
     "row_selected" : "selected",
     
   <#-- Text-content-based link styles (TODO: WIP) -->
-    "link_nav" : "button tiny",     <#-- a generic standalone navigation link without action, not part of a menu type (see menu_xxx styles above): "Product Page" -->
+    "link_nav" : "button tiny",     <#-- generic standalone navigation link without explicit action (or "view"), not part of a menu type (see menu_xxx styles above): "Product Page" -->
+    "link_longnav" : "",            <#-- very long or complex/non-static nav link: "Product Page: All Products Sorted by Name" -->
     "link_action" : "button tiny",  <#-- short action text (1-20 chars): "Add", "Remove", "Cancel", etc. not necessarily a verb, action often implied. usually static text. -->
     "link_longaction" : "",         <#-- a very long (more than 20-30 chars) or complex/non-static action text: "Add Content Repository For Order Removal: WS100000" -->
     "link_id" : "button tiny",      <#-- the short ID of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->

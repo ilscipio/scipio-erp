@@ -172,7 +172,8 @@
     "link_id" : "button tiny",      <#-- the short ID of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
     "link_longid" : "button tiny",  <#-- the long ID of a record (more than 20-30 chars); for entities that do not have short IDs: "WS100000000000-ITEM10000000000000" -->
     "link_name" : "button tiny",    <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
-    "link_desc" : "",               <#-- the description of a record; may also be a composition: "My Order 23 (WS10000)", "This is some value", "This means order cancelled", etc. -->
+    "link_desc" : "",               <#-- the description of a record; may also be a composition: "My Order 23 (WS10000)", "This is some value", "This means order cancelled", etc. 
+                                         in general, as soon as a link text contains more than one type of value, it should be changed to link_desc. -->
     "link_date" : "button tiny",    <#-- the date of a record (fromDate, thruDate, etc.) -->
     "link_number" : "",             <#-- the number of a record (index, sequence num, etc.) -->
     "link_url" : "",                <#-- link containing a URL as its text -->

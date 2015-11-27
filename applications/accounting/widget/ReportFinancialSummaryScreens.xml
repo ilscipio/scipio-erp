@@ -244,11 +244,11 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.AccountingTrialBalance}">
-                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.button_default}" target="TrialBalanceSearchResultsCsv.csv">
+                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_action}" target="TrialBalanceSearchResultsCsv.csv">
                                         <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
                                         <parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
                                     </link>
-                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.button_default}" target="TrialBalanceSearchResultsPdf.pdf" target-window="_BLANK">
+                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action}" target="TrialBalanceSearchResultsPdf.pdf" target-window="_BLANK">
                                         <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
                                         <parameter param-name="customTimePeriodId" from-field="parameters.customTimePeriodId"/>
                                     </link>
@@ -358,12 +358,12 @@ under the License.
                         <screenlet title="${uiLabelMap.AccountingBalanceSheet}">
                             <include-form name="BalanceSheetParameters" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
-                        <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.button_default}" target="BalanceSheet.csv">
+                        <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_action}" target="BalanceSheet.csv">
                             <parameter param-name="organizationPartyId"/>
                             <parameter param-name="thruDate" from-field="parameters.thruDate"/>
                             <parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId"/>
                         </link>
-                        <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.button_default}" target="BalanceSheet.pdf" target-window="_BLANK">
+                        <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action}" target="BalanceSheet.pdf" target-window="_BLANK">
                             <parameter param-name="organizationPartyId"/>
                             <parameter param-name="thruDate" from-field="parameters.thruDate"/>
                             <parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId"/>
@@ -501,14 +501,14 @@ under the License.
                         <screenlet title="${uiLabelMap.AccountingComparativeBalanceSheet}">
                             <include-form name="ComparativeBalanceSheetParameters" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
-                        <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.button_default}" target="ComparativeBalanceSheet.csv">
+                        <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_action}" target="ComparativeBalanceSheet.csv">
                             <parameter param-name="organizationPartyId"/>
                             <parameter param-name="period1ThruDate"/>
                             <parameter param-name="period1GlFiscalTypeId"/>
                             <parameter param-name="period2ThruDate"/>
                             <parameter param-name="period2GlFiscalTypeId"/>
                         </link>
-                        <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.button_default}" target="ComparativeBalanceSheet.pdf" target-window="_BLANK">
+                        <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action}" target="ComparativeBalanceSheet.pdf" target-window="_BLANK">
                             <parameter param-name="organizationPartyId"/>
                             <parameter param-name="period1ThruDate"/>
                             <parameter param-name="period1GlFiscalTypeId"/>
@@ -707,13 +707,13 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.button_default}" target="TransactionTotalsCsv.csv">
+                                <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_action}" target="TransactionTotalsCsv.csv">
                                     <parameter param-name="fromDate"/>
                                     <parameter param-name="thruDate"/>
                                     <parameter param-name="glFiscalTypeId"/>
                                     <parameter param-name="organizationPartyId"/>
                                 </link>
-                                <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.button_default}" target="TransactionTotalsPdf.pdf" target-window="_BLANK">
+                                <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action}" target="TransactionTotalsPdf.pdf" target-window="_BLANK">
                                     <parameter param-name="fromDate"/>
                                     <parameter param-name="thruDate"/>
                                     <parameter param-name="glFiscalTypeId"/>
@@ -835,13 +835,13 @@ under the License.
                             <include-form name="TransactionSelectionForm" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.AccountingIncomeStatement}">
-                            <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.button_default}" target="IncomeStatementListCsv.csv">
+                            <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_action}" target="IncomeStatementListCsv.csv">
                                 <parameter param-name="fromDate" from-field="fromDate"/>
                                 <parameter param-name="thruDate" from-field="thruDate"/>
                                 <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
                                 <parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId"/>
                             </link>
-                            <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.button_default}" target="IncomeStatementListPdf.pdf" target-window="_BLANK">
+                            <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action}" target="IncomeStatementListPdf.pdf" target-window="_BLANK">
                                 <parameter param-name="fromDate" from-field="fromDate"/>
                                 <parameter param-name="thruDate" from-field="thruDate"/>
                                 <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
@@ -985,7 +985,7 @@ under the License.
                             <include-form name="ComparativeIncomeStatementParameters" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.AccountingComparativeIncomeStatement}">
-                            <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.button_default}" target="ComparativeIncomeStatements.csv">
+                            <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_action}" target="ComparativeIncomeStatements.csv">
                                 <parameter param-name="period1FromDate" from-field="period1FromDate"/>
                                 <parameter param-name="period1ThruDate" from-field="period1ThruDate"/>
                                 <parameter param-name="period1GlFiscalTypeId" from-field="period1GlFiscalTypeId"/>
@@ -995,7 +995,7 @@ under the License.
                                 <parameter param-name="organizationPartyId"/>
                                 <parameter param-name="currencyUomId"/>
                             </link>
-                            <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.button_default}" target="ComparativeIncomeStatements.pdf" target-window="_BLANK">
+                            <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action}" target="ComparativeIncomeStatements.pdf" target-window="_BLANK">
                                 <parameter param-name="period1FromDate" from-field="period1FromDate"/>
                                 <parameter param-name="period1ThruDate" from-field="period1ThruDate"/>
                                 <parameter param-name="period1GlFiscalTypeId" from-field="period1GlFiscalTypeId"/>
@@ -1275,7 +1275,7 @@ under the License.
                                 </and>
                             </condition>
                             <widgets>
-                                <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.button_default}" target="GlAccountBalanceByCostCenter.pdf" target-window="_BLANK">
+                                <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action}" target="GlAccountBalanceByCostCenter.pdf" target-window="_BLANK">
                                     <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
                                     <parameter param-name="fromDate" from-field="parameters.fromDate"/>
                                     <parameter param-name="thruDate" from-field="parameters.thruDate"/>
@@ -1344,13 +1344,13 @@ under the License.
                                         <if-compare field="parameters.showSearchResults" operator="equals" value="Y"/>
                                     </condition>
                                     <widgets>
-                                        <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.button_default}" target="InventoryValuation.pdf" target-window="_BLANK">
+                                        <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action}" target="InventoryValuation.pdf" target-window="_BLANK">
                                             <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
                                             <parameter param-name="facilityId" from-field="parameters.facilityId"/>
                                             <parameter param-name="productId" from-field="parameters.productId"/>
                                             <parameter param-name="thruDate" from-field="parameters.thruDate"/>
                                         </link>
-                                        <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.button_default}" target="InventoryValuation.csv">
+                                        <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_action}" target="InventoryValuation.csv">
                                             <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
                                             <parameter param-name="facilityId" from-field="parameters.facilityId"/>
                                             <parameter param-name="productId" from-field="parameters.productId"/>
@@ -1434,13 +1434,13 @@ under the License.
                             <include-form name="CashFlowStatementParameters" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.AccountingCashFlowStatement}">
-                            <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.button_default}" target="CashFlowStatementListCsv.csv">
+                            <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_action}" target="CashFlowStatementListCsv.csv">
                                 <parameter param-name="fromDate" from-field="fromDate"/>
                                 <parameter param-name="thruDate" from-field="thruDate"/>
                                 <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
                                 <parameter param-name="glFiscalTypeId" from-field="glFiscalTypeId"/>
                             </link>
-                            <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.button_default}" target="CashFlowStatementListPdf.pdf" target-window="_BLANK">
+                            <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action}" target="CashFlowStatementListPdf.pdf" target-window="_BLANK">
                                 <parameter param-name="fromDate" from-field="fromDate"/>
                                 <parameter param-name="thruDate" from-field="thruDate"/>
                                 <parameter param-name="organizationPartyId" from-field="organizationPartyId"/>
@@ -1565,7 +1565,7 @@ under the License.
                             <include-form name="ComparativeCashFlowStatementParameters" location="component://accounting/widget/ReportFinancialSummaryForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.AccountingComparativeCashFlowStatement}">
-                            <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.button_default}" target="ComparativeCashFlowStatement.csv">
+                            <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_action}" target="ComparativeCashFlowStatement.csv">
                                 <parameter param-name="period1FromDate" from-field="period1FromDate"/>
                                 <parameter param-name="period1ThruDate" from-field="period1ThruDate"/>
                                 <parameter param-name="period1GlFiscalTypeId" from-field="period1GlFiscalTypeId"/>
@@ -1575,7 +1575,7 @@ under the License.
                                 <parameter param-name="organizationPartyId"/>
                                 <parameter param-name="currencyUomId"/>
                             </link>
-                            <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.button_default}" target="ComparativeCashFlowStatement.pdf" target-window="_BLANK">
+                            <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action}" target="ComparativeCashFlowStatement.pdf" target-window="_BLANK">
                                 <parameter param-name="period1FromDate" from-field="period1FromDate"/>
                                 <parameter param-name="period1ThruDate" from-field="period1ThruDate"/>
                                 <parameter param-name="period1GlFiscalTypeId" from-field="period1GlFiscalTypeId"/>

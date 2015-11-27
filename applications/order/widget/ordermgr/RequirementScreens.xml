@@ -288,10 +288,10 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListRequirementRoles}">
                             <container>
-                                <link target="EditRequirementRole" text="${uiLabelMap.CommonNew}" style="${styles.button_default}">
+                                <link target="EditRequirementRole" text="${uiLabelMap.CommonNew}" style="${styles.link_action}">
                                     <parameter param-name="requirementId"/>
                                 </link>
-                                <link target="autoAssignRequirementToSupplier" text="${uiLabelMap.OrderAutoAssign}" style="${styles.button_default}">
+                                <link target="autoAssignRequirementToSupplier" text="${uiLabelMap.OrderAutoAssign}" style="${styles.link_action}">
                                     <parameter param-name="requirementId"/>
                                 </link>
                             </container>

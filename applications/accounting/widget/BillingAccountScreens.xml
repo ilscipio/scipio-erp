@@ -81,7 +81,7 @@ under the License.
                                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                             <decorator-section name="menu-bar">
                                                 <container style="button-bar">
-                                                    <link target="EditBillingAccount" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonAccount}" style="${styles.button_default} create"/>
+                                                    <link target="EditBillingAccount" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonAccount}" style="${styles.link_action} create"/>
                                                 </container>
                                             </decorator-section>
                                             <decorator-section name="search-options">
@@ -102,7 +102,7 @@ under the License.
                                     </actions>
                                     <widgets>
                                         <screenlet title="${uiLabelMap.PageTitleFindBillingAccount}">
-                                            <link target="EditBillingAccount" text="${uiLabelMap.CommonNew} " style="${styles.button_default}">
+                                            <link target="EditBillingAccount" text="${uiLabelMap.CommonNew} " style="${styles.link_action}">
                                                 <parameter param-name="partyId" from-field="parameters.partyId"/>
                                                 <parameter param-name="roleTypeId" value="BILL_TO_CUSTOMER"/>
                                             </link>

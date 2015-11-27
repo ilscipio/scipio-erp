@@ -125,7 +125,7 @@ under the License.
                                 <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="CommFindTabBar"/>
                                 <label style="heading" text="${uiLabelMap.PartyPendingCommunicationEvents}"/>
                                 <container>
-                                    <link style="${styles.button_default}" target="ViewCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}">
+                                    <link style="${styles.link_action}" target="ViewCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}">
                                         <parameter param-name="partyId"/>
                                     </link>
                                 </container>
@@ -626,7 +626,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PartyCommWorkEfforts}">
                             <container style="button-bar">
-                                <link style="${styles.button_default}" target="AddCommEventWorkEffort" text="${uiLabelMap.PartyNewCommWorkEffort}">
+                                <link style="${styles.link_action}" target="AddCommEventWorkEffort" text="${uiLabelMap.PartyNewCommWorkEffort}">
                                     <parameter param-name="communicationEventId"/>
                                     <parameter param-name="partyId"/>
                                 </link>

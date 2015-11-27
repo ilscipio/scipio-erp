@@ -110,18 +110,18 @@ under the License.
                                     <widgets>
                                         <label style="h2">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${example.exampleName} [${exampleId}]</label>
                                         <container style="button-bar">
-                                            <link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="${styles.button_default} create">
+                                            <link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="${styles.link_action} create">
                                                 <image url-mode="raw" src="${iconsLocation}/add.png"/>
                                             </link>
-                                            <link target="ExampleReportHtml" text="${uiLabelMap.CommonPrinterFriendly}" style="${styles.button_default}">
+                                            <link target="ExampleReportHtml" text="${uiLabelMap.CommonPrinterFriendly}" style="${styles.link_action}">
                                                 <parameter param-name="exampleId"/>
                                                 <image url-mode="raw" src="${iconsLocation}/printer.png"/>
                                             </link>
-                                            <link target="ExampleReportPdf" text="${uiLabelMap.CommonPdf}" style="${styles.button_default}">
+                                            <link target="ExampleReportPdf" text="${uiLabelMap.CommonPdf}" style="${styles.link_action}">
                                                 <parameter param-name="exampleId"/>
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
                                             </link>
-                                            <link target="help" text="${uiLabelMap.CommonHelp}" style="${styles.button_default}" target-window="_blank">
+                                            <link target="help" text="${uiLabelMap.CommonHelp}" style="${styles.link_action}" target-window="_blank">
                                                 <parameter param-name="topic" value="ExampleEditHelp"/>
                                                 <image url-mode="raw" src="${iconsLocation}/help.png"/>
                                             </link>
@@ -181,7 +181,7 @@ under the License.
                                             <label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${exampleFeature.description} [${exampleFeatureId}]</label>
                                         </container>
                                         <container style="button-bar">
-                                            <link target="EditExampleFeature" text="${uiLabelMap.ExampleNewExampleFeature}" style="${styles.button_default}">
+                                            <link target="EditExampleFeature" text="${uiLabelMap.ExampleNewExampleFeature}" style="${styles.link_action}">
                                                 <image url-mode="raw" src="${iconsLocation}/add.png"/>
                                             </link>
                                         </container>

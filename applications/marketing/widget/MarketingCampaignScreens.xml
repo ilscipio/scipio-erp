@@ -87,7 +87,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container style="button-bar button-style-1">
-                                    <link text="${uiLabelMap.MarketingCampaignCreate}" target="EditMarketingCampaign" style="${styles.button_default} create">
+                                    <link text="${uiLabelMap.MarketingCampaignCreate}" target="EditMarketingCampaign" style="${styles.link_action} create">
                                         <parameter param-name="DONE_PAGE" from-field="donePage" />
                                     </link>
                                 </container>
@@ -116,7 +116,7 @@ under the License.
                             <label text="${uiLabelMap[titleProperty]}" />
                         </container>
                         <container style="button-bar">
-                            <link text="${uiLabelMap.MarketingCampaignCreate}" target="EditMarketingCampaign" style="${styles.button_default} create">
+                            <link text="${uiLabelMap.MarketingCampaignCreate}" target="EditMarketingCampaign" style="${styles.link_action} create">
                                 <parameter param-name="DONE_PAGE" from-field="donePage" />
                             </link>
                         </container>
@@ -172,7 +172,7 @@ under the License.
                             <label text="${uiLabelMap[titleProperty]}" />
                         </container>
                         <container style="button-bar">
-                            <link text="${uiLabelMap.MarketingCampaignRoleCreate}" target="EditMarketingCampaignRoles" style="${styles.button_default} create">
+                            <link text="${uiLabelMap.MarketingCampaignRoleCreate}" target="EditMarketingCampaignRoles" style="${styles.link_action} create">
                                 <parameter param-name="marketingCampaignId" />
                                 <parameter param-name="DONE_PAGE" from-field="donePage" />
                             </link>

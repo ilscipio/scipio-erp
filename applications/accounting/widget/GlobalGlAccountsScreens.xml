@@ -233,8 +233,8 @@ under the License.
                         <include-menu name="GlSettingTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
                         <screenlet title="${uiLabelMap[labelTitleProperty]}">
                             <container style="button-bar">
-                                <link target="ListGlAccountsReport" text="${uiLabelMap.CommonPrint}" style="${styles.button_default}"/>
-                                <link target="ListGlAccountsExport" text="${uiLabelMap.CommonExport}" style="${styles.button_default}"/>
+                                <link target="ListGlAccountsReport" text="${uiLabelMap.CommonPrint}" style="${styles.link_action}"/>
+                                <link target="ListGlAccountsExport" text="${uiLabelMap.CommonExport}" style="${styles.link_action}"/>
                             </container>
                             <include-form name="ListGlAccount" location="component://accounting/widget/GlobalGlAccountsForms.xml"/>
                         </screenlet>

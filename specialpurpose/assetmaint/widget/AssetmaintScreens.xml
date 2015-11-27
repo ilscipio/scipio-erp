@@ -67,7 +67,7 @@
                                             </condition>
                                             <widgets>
                                                 <container style="button-bar">
-                                                    <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.button_default} create"/>
+                                                    <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.link_action} create"/>
                                                 </container>
                                             </widgets>
                                         </section>
@@ -123,10 +123,10 @@
                             <condition><not><if-empty field="maintHistSeqId"/></not></condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.button_default} create">
+                                    <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.link_action} create">
                                         <parameter param-name="fixedAssetId"/>
                                     </link>
-                                    <link target="printFixedAssetMaint.pdf" target-window="_blank" text="${uiLabelMap.CommonPrint}" style="${styles.button_default}">
+                                    <link target="printFixedAssetMaint.pdf" target-window="_blank" text="${uiLabelMap.CommonPrint}" style="${styles.link_action}">
                                         <parameter param-name="fixedAssetId"/>
                                         <parameter param-name="maintHistSeqId"/>
                                     </link>
@@ -158,7 +158,7 @@
                             </condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="EditWorkEfforts" text="${uiLabelMap.AssetMaintParentWorkEffort}" style="${styles.button_default}">
+                                    <link target="EditWorkEfforts" text="${uiLabelMap.AssetMaintParentWorkEffort}" style="${styles.link_action}">
                                         <parameter param-name="workEffortId" from-field="parameters.workEffortIdFrom"/>
                                     </link>
                                 </container>
@@ -187,7 +187,7 @@
                                     </widgets>
                                     <fail-widgets>
                                         <container style="button-bar">
-                                            <link target="EditWorkEfforts" style="${styles.button_default} create"  text="${uiLabelMap.CommonNew}">
+                                            <link target="EditWorkEfforts" style="${styles.link_action} create"  text="${uiLabelMap.CommonNew}">
                                                 <parameter param-name="fixedAssetId" from-field="fixedAssetMaint.fixedAssetId"/>
                                                 <parameter param-name="maintHistSeqId" from-field="fixedAssetMaint.maintHistSeqId"/>
                                                 <parameter param-name="workEffortId"/>
@@ -211,7 +211,7 @@
                                     </widgets>
                                     <fail-widgets>
                                         <container style="button-bar">
-                                            <link target="EditWorkEfforts" style="${styles.button_default} create" text="${uiLabelMap.CommonNew}">
+                                            <link target="EditWorkEfforts" style="${styles.link_action} create" text="${uiLabelMap.CommonNew}">
                                             <parameter param-name="fixedAssetId" from-field="fixedAssetMaint.fixedAssetId"/>
                                             <parameter param-name="maintHistSeqId" from-field="fixedAssetMaint.maintHistSeqId"/>
                                               <parameter param-name="workEffortId"/>

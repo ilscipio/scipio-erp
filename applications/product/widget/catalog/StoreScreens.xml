@@ -119,30 +119,30 @@ under the License.
                     <decorator-section name="body">
                         <container>
                             <label>${uiLabelMap.CommonView}</label>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="${styles.button_default}">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="${styles.link_action}">
                                 <parameter param-name="productStoreId"/>
                             </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonUserEnteredOnly}" style="${styles.button_default}">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonUserEnteredOnly}" style="${styles.link_action}">
                                         <parameter param-name="productStoreId"/>
                                         <parameter param-name="userEntered" value="Y"/>
                                     </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.ProductPromotionImported}" style="${styles.button_default}">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.ProductPromotionImported}" style="${styles.link_action}">
                                         <parameter param-name="productStoreId"/>
                                         <parameter param-name="userEntered" value="N"/>
                                     </link>
                         </container>
                         <container>
                             <label>${uiLabelMap.CommonView} ${uiLabelMap.CommonActiveInactive}</label>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="${styles.button_default}">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="${styles.link_action}">
                                         <parameter param-name="productStoreId"/>
                                         <parameter param-name="activeOnly" value="N"/>
                                     </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonUserEnteredOnly}" style="${styles.button_default}">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonUserEnteredOnly}" style="${styles.link_action}">
                                         <parameter param-name="productStoreId"/>
                                         <parameter param-name="activeOnly" value="N"/>
                                         <parameter param-name="userEntered" value="Y"/>
                                     </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.ProductPromotionImported}" style="${styles.button_default}">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.ProductPromotionImported}" style="${styles.link_action}">
                                         <parameter param-name="productStoreId"/>
                                         <parameter param-name="activeOnly" value="N"/>
                                         <parameter param-name="userEntered" value="N"/>
@@ -454,7 +454,7 @@ under the License.
                 <decorator-screen name="CommonProductStoreDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <link target="/marketing/control/viewSegmentGroup" style="${styles.button_default}" url-mode="inter-app" text="${uiLabelMap.ProductNewSegment}">
+                            <link target="/marketing/control/viewSegmentGroup" style="${styles.link_action}" url-mode="inter-app" text="${uiLabelMap.ProductNewSegment}">
                                 <parameter param-name="productStoreId" from-field="productStoreId"/>
                             </link>
                         </container>

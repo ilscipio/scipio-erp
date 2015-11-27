@@ -31,7 +31,7 @@
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OagisListMessageInfo}">
                             <container>
-                                <link target="EditMessageInfo" text="${uiLabelMap.OagisNewMessageInfo}" style="${styles.button_default}"/>
+                                <link target="EditMessageInfo" text="${uiLabelMap.OagisNewMessageInfo}" style="${styles.link_action}"/>
                             </container>
                             <include-form name="FindMessageInfos" location="component://oagis/widget/forms/MessageInfoForms.xml"/>
                         </screenlet>
@@ -78,7 +78,7 @@
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OagisListMessageErrorInfo}">
                             <container>
-                                <link target="EditMessageErrorInfo" text="${uiLabelMap.OagisNewMessageErrorInfo}" style="${styles.button_default}"/>
+                                <link target="EditMessageErrorInfo" text="${uiLabelMap.OagisNewMessageErrorInfo}" style="${styles.link_action}"/>
                             </container>
                             <include-form name="FindMessageErrorInfos" location="component://oagis/widget/forms/MessageInfoForms.xml"/>
                         </screenlet>

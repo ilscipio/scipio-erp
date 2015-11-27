@@ -121,7 +121,7 @@ under the License.
                                                     name="AgreementItemTabBar" />
                                                 <container style="button-bar">
                                                     <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}"
-                                                        style="${styles.button_default} create" />
+                                                        style="${styles.link_action} create" />
                                                     <include-menu location="component://accounting/widget/AccountingMenus.xml"
                                                         name="AgreementSubTabBar" />
                                                 </container>
@@ -129,7 +129,7 @@ under the License.
                                             <fail-widgets>
                                                 <container style="button-bar">
                                                     <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}"
-                                                        style="${styles.button_default} create" />
+                                                        style="${styles.link_action} create" />
                                                     <include-menu location="component://accounting/widget/AccountingMenus.xml"
                                                         name="AgreementSubTabBar" />
                                                 </container>

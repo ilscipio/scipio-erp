@@ -317,7 +317,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.OrderAddNote}">
                             <container>
-                                <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.button_default}"/>
+                                <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.link_action}"/>
                             </container>
                             <include-form name="OrderNewNote" location="component://order/widget/ordermgr/OrderForms.xml"/>
                         </screenlet>
@@ -484,7 +484,7 @@ under the License.
                         <label style="heading" text="${uiLabelMap.OrderOrderHistory} #${orderId}"/>
                         <screenlet>
                             <container>
-                                <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.button_default}"/>
+                                <link target="orderview?orderId=${orderId}" text="${uiLabelMap.OrderBackToOrder}" style="${styles.link_action}"/>
                             </container>
                             <include-screen name="OrderShipmentMethodHistory"/>
                             <include-screen name="OrderUnitPriceHistory"/>

@@ -259,7 +259,7 @@ under the License.
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <link target="/accounting/control/EditAgreement" url-mode="inter-app" text="${uiLabelMap.PageTitleEditAgreement}" style="${styles.button_default}">
+                            <link target="/accounting/control/EditAgreement" url-mode="inter-app" text="${uiLabelMap.PageTitleEditAgreement}" style="${styles.link_action}">
                                 <parameter param-name="productId"/>
                             </link>
                         </container>
@@ -357,7 +357,7 @@ under the License.
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleEditProductAssetUsage}">
                             <container>
-                                <link target="newFixedAssetProduct" text="${uiLabelMap.PageTitleCreateProductAssetUsage}" style="${styles.button_default}">
+                                <link target="newFixedAssetProduct" text="${uiLabelMap.PageTitleCreateProductAssetUsage}" style="${styles.link_action}">
                                     <parameter param-name="productId"/>
                                 </link>
                             </container>
@@ -384,7 +384,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditProductAssetUsage}">
                             <container>
-                                <link target="newFixedAssetProduct" text="${uiLabelMap.AccountingFixedAssetNew}" style="${styles.button_default}">
+                                <link target="newFixedAssetProduct" text="${uiLabelMap.AccountingFixedAssetNew}" style="${styles.link_action}">
                                     <parameter param-name="productId"/>
                                 </link>
                             </container>
@@ -657,10 +657,10 @@ under the License.
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <link target="forceIndexProductKeywords" text="${uiLabelMap.ProductReInduceKeywords}" style="${styles.button_default}">
+                            <link target="forceIndexProductKeywords" text="${uiLabelMap.ProductReInduceKeywords}" style="${styles.link_action}">
                                 <parameter param-name="productId"/>
                             </link>
-                            <link target="deleteProductKeywords" text="${uiLabelMap.ProductDeleteAllKeywords}" style="${styles.button_default}">
+                            <link target="deleteProductKeywords" text="${uiLabelMap.ProductDeleteAllKeywords}" style="${styles.link_action}">
                                 <parameter param-name="productId"/>
                             </link>
                         </container>
@@ -900,7 +900,7 @@ under the License.
                         <section>
                             <condition><not><if-empty field="supplierProduct"/></not></condition>
                             <widgets>
-                                <link target="EditProductSuppliers" style="${styles.button_default}" text="${uiLabelMap.ProductNewProductSupplier}">
+                                <link target="EditProductSuppliers" style="${styles.link_action}" text="${uiLabelMap.ProductNewProductSupplier}">
                                     <parameter param-name="productId"/>
                                 </link>
                             </widgets>
@@ -1393,7 +1393,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonProductDecorator" location="${parameters.productDecoratorLocation}">
                     <decorator-section name="body">
-                        <link style="${styles.button_default}" target="AddCommEventForProduct" text="${uiLabelMap.CommonNew}">
+                        <link style="${styles.link_action}" target="AddCommEventForProduct" text="${uiLabelMap.CommonNew}">
                             <parameter param-name="productId"/>
                         </link>
                         <screenlet title="${uiLabelMap.PageTitleCommEvents}">

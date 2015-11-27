@@ -201,7 +201,7 @@ under the License.
                     <if-service-permission service-name="scrumPermissionCheck" main-action="UPDATE" resource-description="SPRINT"/>
                 </and>
             </condition>
-            <link target="CloseSprint" style="${styles.button_default} delete" confirmation-message="Are you sure to close the spirnt ?">
+            <link target="CloseSprint" style="${styles.button_default} delete" confirmation-message="Are you sure to close the sprint ?">
                 <parameter param-name="projectId" from-field="parameters.projectId"/>
                 <parameter param-name="sprintId" from-field="parameters.sprintId"/>
             </link>

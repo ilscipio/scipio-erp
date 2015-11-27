@@ -191,7 +191,7 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
-        <field name="addNote" use-when="!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_CANCELLED&quot;)&amp;&amp;!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_COMPLETED&quot;)" widget-style="${styles.button_default}">
+        <field name="addNote" use-when="!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_CANCELLED&quot;)&amp;&amp;!custRequest.get(&quot;statusId&quot;).equals(&quot;CRQ_COMPLETED&quot;)" widget-style="${styles.link_action}">
             <hyperlink description="${uiLabelMap.FormFieldTitle_addNote}" target="requestitemnotes">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>

@@ -1113,7 +1113,7 @@ under the License.
         <field name="partyId"><hidden /></field>
         <field name="partyIdentTypeDesc"><display /></field>
         <field name="idValue"><display /></field>
-        <field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="${styles.button_default}">
+        <field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
              <hyperlink target="deletePartyIdentification" description="${uiLabelMap.CommonDelete}">
                  <parameter param-name="partyId"/>
                  <parameter param-name="partyIdentificationTypeId"/>

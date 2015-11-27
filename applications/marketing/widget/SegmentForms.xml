@@ -67,7 +67,7 @@ under the License.
                 <entity-options entity-name="ProductStore" description="${storeName} [${productStoreId}]">
                     <entity-order-by field-name="storeName"/>
                 </entity-options>
-                <sub-hyperlink target="/catalog/control/EditProductStore" target-type="inter-app" description="${segmentGroup.productStoreId}" link-style="${styles.button_default}">
+                <sub-hyperlink target="/catalog/control/EditProductStore" target-type="inter-app" description="${segmentGroup.productStoreId}" link-style="${styles.link_id}">
                 <parameter param-name="productStoreId" from-field="segmentGroup.productStoreId"/>
             </sub-hyperlink>
             </drop-down>

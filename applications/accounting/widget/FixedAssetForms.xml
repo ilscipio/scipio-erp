@@ -238,7 +238,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="cancel" title=" " widget-style="${styles.button_default}">
+        <field name="cancel" title=" " widget-style="${styles.link_action}">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonCancel}" target="cancelFixedAssetStdCost">
                 <parameter param-name="fixedAssetId"/>
                 <parameter param-name="fixedAssetStdCostTypeId"/>

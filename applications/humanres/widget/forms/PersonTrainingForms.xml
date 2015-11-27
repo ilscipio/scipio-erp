@@ -126,7 +126,7 @@ under the License.
         <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"/>
         <field name="trainingRequestId" widget-style="${styles.link_default}"/>
         <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}"><display description="Update"/></field>
-        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}" use-when="(&quot;${approvalStatus}&quot;.equals(&quot;TRAINING_APPLIED&quot;))||(&quot;${approvalStatus}&quot;.equals(&quot;TRAINING_APPROVED&quot;))">
+        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}" use-when="(&quot;${approvalStatus}&quot;.equals(&quot;TRAINING_APPLIED&quot;))||(&quot;${approvalStatus}&quot;.equals(&quot;TRAINING_APPROVED&quot;))">
             <hyperlink description="${uiLabelMap.CommonUpdate}" target="EditTrainingApprovals">
                 <parameter param-name="partyId"/>
                 <parameter param-name="trainingClassTypeId"/>

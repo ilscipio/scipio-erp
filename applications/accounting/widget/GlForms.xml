@@ -458,12 +458,12 @@ under the License.
         <field name="shipmentId" use-when="shipmentId==null"><display/></field>
         <field name="isPosted"><display/></field>
         <field name="postedDate"><display/></field>
-        <field name="postAcctgTrans" title=" " use-when="&quot;N&quot;.equals(isPosted)" widget-style="${styles.button_default}">
+        <field name="postAcctgTrans" title=" " use-when="&quot;N&quot;.equals(isPosted)" widget-style="${styles.link_action}">
             <hyperlink target="postAcctgTrans" description="${uiLabelMap.AccountingPostTransaction}">
                 <parameter param-name="acctgTransId"/>
             </hyperlink>
         </field>
-        <field name="createTransactionDetailReportPDF" title=" " use-when="${isPosted=='Y'}" widget-style="${styles.button_default}">
+        <field name="createTransactionDetailReportPDF" title=" " use-when="${isPosted=='Y'}" widget-style="${styles.link_action}">
             <hyperlink target="acctgTransDetailReportPdf.pdf" target-window="_BLANK" description="${uiLabelMap.AccountingInvoicePDF}">
                 <parameter param-name="acctgTransId"/>
             </hyperlink>

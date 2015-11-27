@@ -425,19 +425,19 @@ under the License.
         <field name="actualStartDate"><display type="date"/></field>
         <field name="actualCompletionDate"><display type="date"/></field>
         <!-- These links have been commented because they are (partially or totally) broken
-        <field name="editAction" title=" " widget-style="linktext ${styles.button_default}">
+        <field name="editAction" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonEdit}" target="EditWorkEffort">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="DONE_PAGE" value="ListWorkEfforts?${queryStringEncoded"/>
             </hyperlink>
         </field>
-        <field name="childAction" title=" " widget-style="linktext ${styles.button_default}">
+        <field name="childAction" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonEntityChildren}" target="ChildWorkEfforts">
                 <parameter param-name="trail" from-field="workEffortId"/>
                 <parameter param-name="DONE_PAGE" value="ListWorkEfforts?${queryStringEncoded"/>
             </hyperlink>
         </field>
-        <field name="editChildAction" title=" " widget-style="linktext ${styles.button_default}">
+        <field name="editChildAction" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDetail} + ${uiLabelMap.CommonEntityChildren}" target="EditListWorkEfforts">
                 <parameter param-name="trail" from-field="workEffortId"/>
                 <parameter param-name="DONE_PAGE" value="ListWorkEfforts?${queryStringEncoded"/>

@@ -476,7 +476,7 @@
         <field name="productStoreId"><hidden/></field>
         <field name="prodCatalogId" title="${uiLabelMap.ProductCatalogId}">
             <display-entity entity-name="ProdCatalog" description="${catalogName}" also-hidden="true">
-                <sub-hyperlink target="EditProdCatalog" description="${prodCatalogId}" link-style="${styles.button_default}">
+                <sub-hyperlink target="EditProdCatalog" description="${prodCatalogId}" link-style="${styles.link_id}">
                     <parameter param-name="prodCatalogId"/>
                 </sub-hyperlink>
             </display-entity>

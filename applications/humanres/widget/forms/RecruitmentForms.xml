@@ -371,7 +371,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.button_default}">
+        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <hyperlink target="EditApprovalStatus" description="${uiLabelMap.CommonUpdate}" > 
                 <parameter param-name="applicationId"/> 
             </hyperlink>

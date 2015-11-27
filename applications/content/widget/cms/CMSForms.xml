@@ -298,7 +298,7 @@ under the License.
                 <hidden value="${dataResourceTypeId}"/>
         </field>
 <!--
-        <field name="submitContentEdit" title=" " widget-style="${styles.button_default}">
+        <field name="submitContentEdit" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" description="Submit" target="javascript:document.EditAddContent.action='${persistAction}'; document.EditAddContent.submit()" target-type="plain"/>
         </field>
 -->
@@ -426,16 +426,16 @@ under the License.
                 <entity-options description="${description}" entity-name="MetaDataPredicate" key-field-name="metaDataPredicateId"/>
             </drop-down>
         </field>
-        <field name="caFromDate" title="${uiLabelMap.CommonFrom}" widget-style="${styles.button_default}" position="1" use-when="&quot;${caFromDate}&quot;.length()>0">
+        <field name="caFromDate" title="${uiLabelMap.CommonFrom}" widget-style="${styles.link_date}" position="1" use-when="&quot;${caFromDate}&quot;.length()>0">
             <display default-value="${nowTimestamp}"/>
         </field>
-        <field name="caFromDate" title="${uiLabelMap.CommonFrom}" widget-style="${styles.button_default}" position="1" use-when="&quot;${caFromDate}&quot;.length()==0">
+        <field name="caFromDate" title="${uiLabelMap.CommonFrom}" widget-style="${styles.link_date}" position="1" use-when="&quot;${caFromDate}&quot;.length()==0">
             <date-time default-value="${nowTimestamp}"/>
         </field>
-        <field name="caThruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.button_default}" position="2" use-when="&quot;${caThruDate}&quot;.length()>0">
+        <field name="caThruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.link_date}" position="2" use-when="&quot;${caThruDate}&quot;.length()>0">
             <date-time/>
         </field>
-        <field name="caThruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.button_default}" position="2" use-when="&quot;${caThruDate}&quot;.length()==0">
+        <field name="caThruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.link_date}" position="2" use-when="&quot;${caThruDate}&quot;.length()==0">
             <date-time/>
         </field>
         <field name="contentTitle" title="${uiLabelMap.ContentContent}" title-style="h1" map-name="dummy">
@@ -502,14 +502,14 @@ under the License.
         </field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}">
             <lookup target-form-name="LookupDataResource">
-            <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="${styles.button_default}" target-type="intra-app" target="gotoDataResource" description="${uiLabelMap.ContentGoToDataResource}">
+            <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="${styles.link_action}" target-type="intra-app" target="gotoDataResource" description="${uiLabelMap.ContentGoToDataResource}">
                 <parameter param-name="dataResourceId" from-field="currentValue.dataResourceId"/>
             </sub-hyperlink>
 <!--
-            <sub-hyperlink link-style="${styles.button_default}" target-type="intra-app" target="gotoDataResource" description="${uiLabelMap.ContentGoToDataResource}">
+            <sub-hyperlink link-style="${styles.link_action}" target-type="intra-app" target="gotoDataResource" description="${uiLabelMap.ContentGoToDataResource}">
                 <parameter param-name="dataResourceId" from-field="currentValue.dataResourceId"/>
             </sub-hyperlink>
-            <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="${styles.button_default}" target-type="intra-app" target="gotoDataResource" description="${uiLabelMap.ContentGoToDataResource}">
+            <sub-hyperlink use-when="&quot;${currentValue.dataResourceId}&quot;.length()>0" link-style="${styles.link_action}" target-type="intra-app" target="gotoDataResource" description="${uiLabelMap.ContentGoToDataResource}">
                 <parameter param-name="dataResourceId" from-field="currentValue.dataResourceId"/>
             </sub-hyperlink>
 -->

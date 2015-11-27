@@ -927,7 +927,7 @@
                 <parameter param-name="contentId" />
             </hyperlink>
         </field>
-        <field name="removeContent" title=" " widget-style="${styles.button_default}">
+        <field name="removeContent" title=" " widget-style="${styles.link_action}">
             <hyperlink target="removeContentFromProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="contentId" />
@@ -1646,7 +1646,7 @@
         <field name="productId">
             <hidden />
         </field>
-        <field name="editAciton" title=" " widget-style="${styles.button_default}">
+        <field name="editAction" title=" " widget-style="${styles.link_action}">
             <hyperlink description="${uiLabelMap.CommonEdit}" target="showFixedAssetProduct">
                 <parameter param-name="fixedAssetId" />
                 <parameter param-name="productId" />

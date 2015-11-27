@@ -116,7 +116,7 @@ under the License.
                 <parameter param-name="shoppingListId"/>
             </hyperlink>
         </field>
-        <field name="addAllFromList" title=" " widget-style="${styles.button_default}">
+        <field name="addAllFromList" title=" " widget-style="${styles.link_action}">
             <hyperlink target="addAllFromShoppingList" description="${uiLabelMap.OrderQuickAdd}" also-hidden="false">
                 <parameter param-name="shoppingListId"/>
             </hyperlink>
@@ -128,7 +128,7 @@ under the License.
         <field name="productId" title="${uiLabelMap.ProductProduct}">
             <display-entity entity-name="Product" description="${productId} - ${description}"/>
         </field>
-        <field name="addToCart" title=" " widget-style="${styles.button_default}">
+        <field name="addToCart" title=" " widget-style="${styles.link_action}">
             <hyperlink target="additem/editShoppingList" description="${uiLabelMap.CommonAdd} ${quantity} ${uiLabelMap.OrderAddQntToOrder}" also-hidden="false">
                 <parameter param-name="shoppingListId"/>
                 <parameter param-name="shoppingListItemSeqId"/>
@@ -139,12 +139,12 @@ under the License.
         </field>
     </form>
     <form name="AddFromShoppingListAll" type="single" target="">
-        <field name="addAllFromList" title=" " widget-style="${styles.button_default}">
+        <field name="addAllFromList" title=" " widget-style="${styles.link_action}">
             <hyperlink target="addAllFromShoppingList" description="${uiLabelMap.OrderQuickAdd}" also-hidden="false">
                 <parameter param-name="shoppingListId"/>
             </hyperlink>
         </field>
-        <field name="returnToOrderEntry" title=" " widget-style="${styles.button_default}">
+        <field name="returnToOrderEntry" title=" " widget-style="${styles.link_action}">
             <hyperlink target="orderentry" description="${uiLabelMap.OrderOrderReturn}" also-hidden="false"/>
         </field>
     </form>

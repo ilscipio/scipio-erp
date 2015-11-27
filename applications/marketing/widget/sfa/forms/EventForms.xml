@@ -42,7 +42,7 @@ under the License.
                 <parameter param-name="partyId" from-field="assignByPartyName.partyId"/>
             </hyperlink>
         </field>
-        <field name="complete" title="${uiLabelMap.SfaComplete}" widget-style="${styles.button_default}">
+        <field name="complete" title="${uiLabelMap.SfaComplete}" widget-style="${styles.link_action}">
             <hyperlink target="updateWorkEffort" description="${uiLabelMap.SfaComplete}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="currentStatusId" value="CAL_COMPLETED"/>

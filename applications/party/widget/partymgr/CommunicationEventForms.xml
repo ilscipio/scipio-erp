@@ -27,7 +27,7 @@ under the License.
         <field name="my"><hidden value="${my}"/></field>
         <field name="parentCommEventId" position="1">
             <lookup target-form-name="LookupCommEvent">
-                <sub-hyperlink link-style="${styles.button_default}" target="EditCommunicationEvent" description="${uiLabelMap.PartyGoToParent}" use-when="communicationEvent!=null&amp;&amp;communicationEvent.get(&quot;parentCommEventId&quot;)!=null">
+                <sub-hyperlink link-style="${styles.link_action}" target="EditCommunicationEvent" description="${uiLabelMap.PartyGoToParent}" use-when="communicationEvent!=null&amp;&amp;communicationEvent.get(&quot;parentCommEventId&quot;)!=null">
                 <parameter param-name="communicationEventId" from-field="parentCommEventId"/>
             </sub-hyperlink>
             </lookup>
@@ -509,7 +509,7 @@ under the License.
         <field name="delContentDataResource"><hidden value="Y"/></field>
         <field name="partyId"><hidden/></field>
         <field name="communicationEventId"><hidden/></field>
-        <field name="subject" widget-style="${styles.button_default}" widget-area-style="fieldWidth300" sort-field="true">
+        <field name="subject" widget-style="${styles.link_desc}" widget-area-style="fieldWidth300" sort-field="true">
             <hyperlink description="${subject}[${communicationEventId}] " target="${parameters._LAST_VIEW_NAME_}">
                 <parameter param-name="communicationEventId"/>
                 <parameter param-name="partyId"/>
@@ -932,7 +932,7 @@ under the License.
         </row-actions>
         <field name="delContentDataResource"><hidden value="Y"/></field>
         <field name="communicationEventId"><hidden/></field>
-        <field name="subject" widget-style="${styles.button_default}" widget-area-style="fieldWidth300">
+        <field name="subject" widget-style="${styles.link_desc}" widget-area-style="fieldWidth300">
             <hyperlink description="${subject}" target="${parameters._LAST_VIEW_NAME_}" also-hidden="true">
                 <parameter param-name="communicationEventId"/>
                 <parameter param-name="partyId"/>

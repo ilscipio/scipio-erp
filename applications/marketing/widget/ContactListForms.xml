@@ -385,7 +385,7 @@ under the License.
         <!--
         <field name="custRequestId">
             <lookup size="20" target-form-name="/ordermgr/control/LookupCustRequest">
-                <sub-hyperlink target="/ordermgr/control/EditRequest" target-type="inter-app" link-style="${styles.button_default}" description="[Edit]" use-when="communicationEvent!=null&amp;&amp;communicationEvent.get(&quot;custRequestId&quot;)!= null">
+                <sub-hyperlink target="/ordermgr/control/EditRequest" target-type="inter-app" link-style="${styles.link_action}" description="[Edit]" use-when="communicationEvent!=null&amp;&amp;communicationEvent.get(&quot;custRequestId&quot;)!= null">
                 <parameter param-name="custRequestId" from-field="communicationEvent.custRequestId"/>
             </sub-hyperlink>
             </lookup>

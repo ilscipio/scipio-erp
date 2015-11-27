@@ -190,7 +190,7 @@ under the License.
 
     <form name="GlAccountsNavForm" type="single" target="" title="GL Accounts" default-map-name="journal"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
-        <field name="backToAdmin" title=" " widget-style="${styles.button_default}">
+        <field name="backToAdmin" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" description="${uiLabelMap.AccountingBackToAdmin}" target="AdminMain">
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>

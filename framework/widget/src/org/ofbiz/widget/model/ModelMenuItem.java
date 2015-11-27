@@ -635,6 +635,8 @@ public class ModelMenuItem extends ModelWidget {
                 linkElement.setAttribute("text", parentMenuItem.getTitle().getOriginal());
             }
             if (linkElement.getAttribute("style").isEmpty()) {
+                // Cato: changed this...
+                //linkElement.setAttribute("style", parentMenuItem.getWidgetStyle());
                 linkElement.setAttribute("style", parentMenuItem.getLinkStyle());
             }
             this.link = new Link(linkElement);

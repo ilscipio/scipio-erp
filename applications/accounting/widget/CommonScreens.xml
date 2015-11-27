@@ -123,7 +123,7 @@ under the License.
                                                     <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}"
                                                         style="${styles.link_action} create" />
                                                     <include-menu location="component://accounting/widget/AccountingMenus.xml"
-                                                        name="AgreementSubTabBar" />
+                                                        name="AgreementItemSubTabBar" />
                                                 </container>
                                             </widgets>
                                             <fail-widgets>

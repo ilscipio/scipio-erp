@@ -168,12 +168,13 @@
     
   <#-- Text-content-based link styles -->
     "link_action" : "button tiny",  <#-- short action text (1-20 chars): "Add", "Remove", "Cancel", etc. not necessarily a verb, action often implied. usually static text. -->
-    "link_longaction" : "",         <#-- a long action text (more than 20-30 chars): "Add Content Repository For Order Removal" -->
+    "link_longaction" : "",         <#-- a very long (more than 20-30 chars) or complex action text: "Add Content Repository For Order Removal: WS100000" -->
     "link_id" : "button tiny",      <#-- the short ID of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
-    "link_longid" : "button tiny",  <#-- the long ID of a record (more than 20-30 chars); for entities that do not have short IDs: "WS100000000000-ITEM10000000000000" -->
+    "link_longid" : "button tiny",  <#-- the long ID of a record (more than 20-30 chars); for records that do not have short IDs: "WS100000000000-ITEM10000000000000" -->
     "link_name" : "button tiny",    <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
     "link_desc" : "",               <#-- the description of a record; may also be a composition: "My Order 23 (WS10000)", "This is some value", "This means order cancelled", etc. 
-                                         in general, as soon as a link text contains more than one type of value, it should be changed to link_desc. -->
+                                         in general, as soon as a non-action link text contains more than one type of value, it should be changed to link_desc.
+                                         however, if it contains a specific action(s), it may be more appropriate as link_longaction. -->
     "link_date" : "button tiny",    <#-- the date of a record (fromDate, thruDate, etc.) -->
     "link_number" : "",             <#-- the number of a record (index, sequence num, etc.) -->
     "link_url" : "",                <#-- link containing a URL as its text -->

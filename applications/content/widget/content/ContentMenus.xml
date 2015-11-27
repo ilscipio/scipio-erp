@@ -299,10 +299,10 @@ under the License.
         <menu-item name="EditContent" title="${uiLabelMap.CommonCreateNew}" widget-style="+create">
             <link target="EditContent"/>
         </menu-item>
-        <menu-item name="ContentSearchOptions" title="${uiLabelMap.CommonAdvancedSearch}" widget-style="+">
+        <menu-item name="ContentSearchOptions" title="${uiLabelMap.CommonAdvancedSearch}">
             <link target="ContentSearchOptions"/>
         </menu-item>
-        <menu-item name="UpdateContentAllKeywords" title="${uiLabelMap.ContentAutoCreateKeywords}" widget-style="+">
+        <menu-item name="UpdateContentAllKeywords" title="${uiLabelMap.ContentAutoCreateKeywords}">
             <link target="updateContentAllKeywords"/>
         </menu-item>
     </menu>

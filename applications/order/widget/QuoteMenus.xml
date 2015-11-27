@@ -126,7 +126,7 @@ under the License.
                         <if-compare field="quote.statusId" operator="not-equals" value="QUO_ORDERED"/>
                 </and>
             </condition>
-            <link target="EditQuoteItem" text="${uiLabelMap.OrderCreateOrderQuoteItem}" style="${styles.button_default}">
+            <link target="EditQuoteItem" text="${uiLabelMap.OrderCreateOrderQuoteItem}">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
         </menu-item>
@@ -140,7 +140,7 @@ under the License.
                         <if-compare field="quote.statusId" operator="not-equals" value="QUO_ORDERED"/>
                 </and>
             </condition>
-            <link target="EditQuoteTerm" text="" style="${styles.button_default}">
+            <link target="EditQuoteTerm" text="">
                 <parameter param-name="quoteId" from-field="parameters.quoteId"/>
             </link>
         </menu-item>
@@ -154,7 +154,7 @@ under the License.
                         <if-compare field="quote.statusId" operator="not-equals" value="QUO_ORDERED"/>
                 </and>
             </condition>
-            <link target="EditQuoteTermItem" text="" style="${styles.button_default}">
+            <link target="EditQuoteTermItem" text="">
                 <parameter param-name="quoteId" from-field="parameters.quoteId"/>
                 <parameter param-name="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
             </link>

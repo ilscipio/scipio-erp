@@ -147,7 +147,7 @@
             <condition>
                 <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
             </condition>
-            <link target="EditAgreementGeographicalApplic" style="${styles.button_default}">
+            <link target="EditAgreementGeographicalApplic">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
@@ -156,7 +156,7 @@
             <condition>
                 <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
             </condition>
-            <link target="EditAgreementItemFacility" style="${styles.button_default}">
+            <link target="EditAgreementItemFacility">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
@@ -165,7 +165,7 @@
             <condition>
                 <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
             </condition>
-            <link target="EditAgreementItemParty" style="${styles.button_default}">
+            <link target="EditAgreementItemParty">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
@@ -174,7 +174,7 @@
             <condition>
                 <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
             </condition>
-            <link target="EditAgreementItemProduct" style="${styles.button_default}">
+            <link target="EditAgreementItemProduct">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
@@ -183,7 +183,7 @@
             <condition>
                 <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
             </condition>
-            <link target="EditAgreementPromoAppl" style="${styles.button_default}">
+            <link target="EditAgreementPromoAppl">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
@@ -192,7 +192,7 @@
             <condition>
                 <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
             </condition>
-            <link target="EditAgreementItemTerm" style="${styles.button_default}">
+            <link target="EditAgreementItemTerm">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
@@ -259,13 +259,13 @@
             </link>
         </menu-item>
         <menu-item name="FacilitiesReport" title="${uiLabelMap.Facilities}: ${uiLabelMap.CommonPdf}">
-            <link target="ListAgreementItemFacilitiesReport" target-window="_blank" style="${styles.button_default}">
+            <link target="ListAgreementItemFacilitiesReport" target-window="_blank">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
         </menu-item>
         <menu-item name="ProductsReport" title="${uiLabelMap.Products}: ${uiLabelMap.CommonPdf}">
-            <link target="ListAgreementItemProductsReport" target-window="_blank" style="${styles.button_default}">
+            <link target="ListAgreementItemProductsReport" target-window="_blank">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
@@ -283,7 +283,7 @@
             <condition>
                 <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
             </condition>
-            <link target="EditAgreementGeographicalApplic" style="${styles.button_default}">
+            <link target="EditAgreementGeographicalApplic">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
@@ -292,7 +292,7 @@
             <condition>
                 <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
             </condition>
-            <link target="EditAgreementItemFacility" style="${styles.button_default}">
+            <link target="EditAgreementItemFacility">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
@@ -301,7 +301,7 @@
             <condition>
                 <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
             </condition>
-            <link target="EditAgreementItemParty" style="${styles.button_default}">
+            <link target="EditAgreementItemParty">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
@@ -310,7 +310,7 @@
             <condition>
                 <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
             </condition>
-            <link target="EditAgreementItemProduct" style="${styles.button_default}">
+            <link target="EditAgreementItemProduct">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
@@ -319,7 +319,7 @@
             <condition>
                 <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
             </condition>
-            <link target="EditAgreementPromoAppl" style="${styles.button_default}">
+            <link target="EditAgreementPromoAppl">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
@@ -328,7 +328,7 @@
             <condition>
                 <not><if-empty field="agreementItem.agreementItemSeqId"/></not>
             </condition>
-            <link target="EditAgreementItemTerm" style="${styles.button_default}">
+            <link target="EditAgreementItemTerm">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
             </link>
@@ -593,7 +593,7 @@
                     <if-compare field="tabButtonItem2" operator="not-equals" value="Find" />
                 </and>
             </condition>
-            <link target="FindFinAccountReconciliations" style="${styles.button_default}">
+            <link target="FindFinAccountReconciliations">
                 <parameter param-name="finAccountId" />
             </link>
         </menu-item>
@@ -612,7 +612,7 @@
                     </or>
                 </and>
             </condition>
-            <link target="EditFinAccountReconciliations" style="${styles.button_default}">
+            <link target="EditFinAccountReconciliations">
                 <parameter param-name="finAccountId" />
             </link>
         </menu-item>
@@ -1241,7 +1241,7 @@
     <menu name="PartyGlShortCuts" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
         <menu-item name="CreateSalesAcctgTrans">
-            <link target="CreateAcctgTransAndEntries" text="${uiLabelMap.AccountingCreateSalesAcctgTrans}" style="${styles.button_default}">
+            <link target="CreateAcctgTransAndEntries" text="${uiLabelMap.AccountingCreateSalesAcctgTrans}">
                 <parameter param-name="organizationPartyId" />
                 <parameter param-name="debitGlAccountClassId" value="CURRENT_ASSET" />
                 <parameter param-name="creditGlAccountClassId" value="REVENUE" />
@@ -1249,7 +1249,7 @@
             </link>
         </menu-item>
         <menu-item name="CreatePaymentAcctgTrans">
-            <link target="CreateAcctgTransAndEntries" text="${uiLabelMap.AccountingCreatePaymentAcctgTrans}" style="${styles.button_default}">
+            <link target="CreateAcctgTransAndEntries" text="${uiLabelMap.AccountingCreatePaymentAcctgTrans}">
                 <parameter param-name="organizationPartyId" />
                 <parameter param-name="debitGlAccountClassId" value="CASH_EQUIVALENT" />
                 <parameter param-name="creditGlAccountClassId" value="CURRENT_LIABILITY" />
@@ -1257,22 +1257,22 @@
             </link>
         </menu-item>
         <menu-item name="PartyGlUnpostedAcctgTrans">
-            <link text="${uiLabelMap.PageTitleUnpostedTransactions}" style="${styles.button_default}" target="ListUnpostedAcctgTrans">
+            <link text="${uiLabelMap.PageTitleUnpostedTransactions}" target="ListUnpostedAcctgTrans">
                 <parameter param-name="organizationPartyId" />
             </link>
         </menu-item>
         <menu-item name="PartyGlTrianBalance">
-            <link target="TrialBalance" text="${uiLabelMap.AccountingTrialBalance}" style="${styles.button_default}">
+            <link target="TrialBalance" text="${uiLabelMap.AccountingTrialBalance}">
                 <parameter param-name="organizationPartyId" />
             </link>
         </menu-item>
         <menu-item name="PartyIncomeStatement">
-            <link target="IncomeStatement" text="${uiLabelMap.AccountingIncomeStatement}" style="${styles.button_default}">
+            <link target="IncomeStatement" text="${uiLabelMap.AccountingIncomeStatement}">
                 <parameter param-name="organizationPartyId" />
             </link>
         </menu-item>
         <menu-item name="PartyBalanceSheet">
-            <link target="BalanceSheet" text="${uiLabelMap.AccountingBalanceSheet}" style="${styles.button_default}">
+            <link target="BalanceSheet" text="${uiLabelMap.AccountingBalanceSheet}">
                 <parameter param-name="organizationPartyId" />
             </link>
         </menu-item>

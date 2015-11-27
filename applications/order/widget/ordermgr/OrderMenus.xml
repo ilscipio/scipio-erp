@@ -415,7 +415,7 @@ under the License.
                         <not><if-empty field="quote.quoteId"/></not>
                     </and>
             </condition>
-            <link target="EditQuoteTerm" text="" style="${styles.button_default}">
+            <link target="EditQuoteTerm" text="">
                 <parameter param-name="quoteId" from-field="parameters.quoteId"/>
             </link>
         </menu-item>
@@ -426,7 +426,7 @@ under the License.
                         <not><if-empty field="quote.quoteId"/></not>
                     </and>
             </condition>
-            <link target="EditQuoteTermItem" text="" style="${styles.button_default}">
+            <link target="EditQuoteTermItem" text="">
                 <parameter param-name="quoteId" from-field="parameters.quoteId"/>
                 <parameter param-name="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
             </link>

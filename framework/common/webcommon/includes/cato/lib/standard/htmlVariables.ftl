@@ -184,14 +184,13 @@
         encourage the user to do so should be labeled with link_action.
         * if the action is very long or complex or contains non-static elements, use link_longaction.
         * in stock ofbiz, sometimes these were marked with extra css classes such as " create", but inconsistently
-        * TODO: CLARIFY: currently a lot of "View" links are also labeled as link_action. semantically
-          as verbs they seem to fit under link_action, functionally they may be like link_nav, and 
-          for styling purposes it's not clear if they belong more as link_action or link_nav.
-      * if the text implies a navigation link that will not change the state of the system, it probably
-        belongs as a link_nav.
+      * any static text that performs a specific function (but not necessarily changing state of system) such as
+        "Download" or "Export" should also be labeled with link_action.
+      * if the static text implies a navigation link that will not change the state of the system or perform any function, 
+        and simply meant to navigate, it probably belongs as a link_nav.
         * if very long or complex, use link_longnav.
-        * TODO: CLARIFY: "View" actions are somewhat currently ambiguous and many are assigned to link_action
-          instead of link_nav. is not clear where they best fit.
+      * TODO: CLARIFY: if the text is a "View" action, it is mostly ambiguous whether it belongs more 
+        as a link_action or as link_nav. many of them are currently labeled as link_action.
   -->
     "link_nav" : "button tiny",     <#-- static navigation text without explicit action or implied "view" action, generic, not part of a menu type (see menu_xxx styles above): "Categories" 
                                          sometimes this is ambiguous with link_action (?). if links to an action that will change the state of the system directly or indirectly, should be link_action. 

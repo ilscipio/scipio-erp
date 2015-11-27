@@ -162,7 +162,7 @@
                 <condition-expr field-name="workEffortIdFrom" operator="equals" from-field="workEffortId"/>
             </entity-condition>
         </actions>
-        <field name="workEffortName" entry-name="workEffortToName" title="${uiLabelMap.CommonName}" widget-style="${styles.button_default}">
+        <field name="workEffortName" entry-name="workEffortToName" title="${uiLabelMap.CommonName}" widget-style="${styles.link_name}">
             <hyperlink also-hidden="false" description="${workEffortToName}" target="EditWorkEfforts">
                 <parameter param-name="workEffortId" from-field="workEffortIdTo"/>
                 <parameter param-name="workEffortIdFrom" from-field="workEffortId"/>

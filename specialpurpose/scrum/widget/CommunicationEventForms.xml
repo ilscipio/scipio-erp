@@ -44,7 +44,7 @@ under the License.
         <field name="contentMimeTypeId"><hidden value="text/plain"/></field>
         <field name="contactMechPurposeTypeIdFrom"><hidden value="SUPPORT_EMAIL"/></field>
         <field name="content" title="${uiLabelMap.CommonContent}" encode-output="false"><textarea cols="72" rows="15" default-value="${parameters.content}"/></field>
-        <field name="send" title="${uiLabelMap.CommonSend}" position="1" widget-style="${styles.button_default}" 
+        <field name="send" title="${uiLabelMap.CommonSend}" position="1" widget-style="${styles.link_action}" 
             use-when="&quot;${communicationEvent.statusId}&quot;!=&quot;COM_COMPLETE&quot;&amp;&amp;&quot;${communicationEvent.statusId}&quot;!=&quot;COM_IN_PROGRESS&quot;">
             <submit button-type="button"/>
         </field>
@@ -102,7 +102,7 @@ under the License.
         <field name="datetimeStarted"><hidden/></field>
         <field name="my"><hidden value="${my}"/></field>
         <field name="uploadedFile"><file/></field>
-        <field name="send" title=" " widget-style="${styles.button_default}">
+        <field name="send" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.CommonUpload}"
                 target="javascript:
@@ -178,7 +178,7 @@ under the License.
         <field name="custRequestId"><ignored/> </field>
         <field name="productId"><hidden value="${parameters.productId}"/></field>
         <field name="subject" tooltip="Do not remove the &quot;PD#${product.productId}&quot; number"><text size="74" maxlength="255" default-value="PD#${product.productId} - ${product.internalName}"/></field>
-        <field name="send" title=" " position="1" widget-style="${styles.button_default}" 
+        <field name="send" title=" " position="1" widget-style="${styles.link_action}" 
             use-when="&quot;${communicationEvent.statusId}&quot;!=&quot;COM_COMPLETE&quot;&amp;&amp;&quot;${communicationEvent.statusId}&quot;!=&quot;COM_IN_PROGRESS&quot;">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonSend}" target="javascript:(document.EditEmailForProduct.form.value='list'),(document.EditEmailForProduct.statusId.value='COM_IN_PROGRESS'),(document.EditEmailForProduct.submit())"/>
         </field>
@@ -204,7 +204,7 @@ under the License.
         <field name="custRequestId"><ignored/> </field>
         <field name="productId"><hidden value="${parameters.productId}"/></field>
         <field name="partyId"><hidden value="${userLogin.partyId}"/> </field>
-        <field name="send" title=" " widget-style="${styles.button_default}">
+        <field name="send" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.CommonUpload}"
                 target="javascript:

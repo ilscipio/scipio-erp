@@ -39,7 +39,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}" widget-style="${styles.button_default}">
+        <field name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}" widget-style="${styles.link_id}">
             <hyperlink also-hidden="false" description="${exampleFeatureId}" target="EditExampleFeature">
                 <parameter param-name="exampleFeatureId"/>
             </hyperlink>
@@ -82,7 +82,7 @@ under the License.
         <auto-fields-service service-name="updateExampleFeatureAppl"/>
         <field name="exampleId" title="${uiLabelMap.ExampleExample}">
             <display-entity entity-name="Example" description="${exampleName}">
-                <sub-hyperlink target="EditExample" description="${exampleId}" link-style="${styles.button_default}">
+                <sub-hyperlink target="EditExample" description="${exampleId}" link-style="${styles.link_id}">
                     <parameter param-name="exampleId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -161,7 +161,7 @@ under the License.
             </service>
         </actions>
         <!--<auto-fields-entity entity-name="ExampleFeature" default-field-type="display"/>-->
-        <field name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}" widget-style="${styles.button_default}">
+        <field name="exampleFeatureId" title="${uiLabelMap.ExampleExampleFeatureId}" widget-style="${styles.link_id}">
             <hyperlink description="${exampleFeatureId}" also-hidden="false" target-type="plain" target="javascript:set_value('${exampleFeatureId}')"/>
         </field>
         <field name="featureSourceEnumId" title="${uiLabelMap.ExampleFeatureSource}">

@@ -31,7 +31,7 @@ under the License.
 
     <form name="searchList" type="list" target="" list-name="queryResults" paginate-target="/AdminSearch"
           odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="editContent" title=" " widget-style="${styles.button_default}">
+        <field name="editContent" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonEdit}" target="CMSContentEdit">
                 <parameter param-name="contentId"/>
                 <parameter param-name="drDataResourceId" from-field="dataResourceId"/>

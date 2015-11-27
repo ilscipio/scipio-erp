@@ -48,7 +48,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="custRequestId" widget-style="${styles.button_default}" title="Product Backlog Item Id">
+        <field name="custRequestId" widget-style="${styles.link_id}" title="Product Backlog Item Id">
             <hyperlink also-hidden="false" target-type="plain" description="${custRequestId}" target="javascript:set_value('${custRequestId}')"/>
         </field>
         <field name="description" title="Product Backlog Item"><display/></field>

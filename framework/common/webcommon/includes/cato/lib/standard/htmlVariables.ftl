@@ -167,7 +167,7 @@
     "row_selected" : "selected",
     
   <#-- Text-content-based link styles -->
-    "link_action" : "button tiny",  <#-- short action text (1-20 chars): "Add", "Remove", "Cancel", etc. not necessarily a verb. usually static text. -->
+    "link_action" : "button tiny",  <#-- short action text (1-20 chars): "Add", "Remove", "Cancel", etc. not necessarily a verb, action often implied. usually static text. -->
     "link_longaction" : "",         <#-- a long action text (more than 20-30 chars): "Add Content Repository For Order Removal" -->
     "link_id" : "button tiny",      <#-- the short ID of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
     "link_longid" : "button tiny",  <#-- the long ID of a record (more than 20-30 chars); for entities that do not have short IDs: "WS100000000000-ITEM10000000000000" -->

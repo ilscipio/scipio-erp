@@ -375,7 +375,7 @@ under the License.
         <field name="createAction" title=" " widget-style="${styles.link_action}" position="1">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreateNew}" target="AddContent"/>
         </field>
-        <field name="findContent" title=" " widget-style="${styles.button_default}" position="2">
+        <field name="findContent" title=" " widget-style="${styles.link_action}" position="2">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonFind}" target="FindContent"/>
         </field>
        <field name="nodeTrailCsv" map-name="dummy">

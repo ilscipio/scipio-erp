@@ -60,7 +60,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="deleteGoogleCheckoutConfiguration" title="" widget-style="${styles.button_default}">
+        <field name="deleteGoogleCheckoutConfiguration" title="" widget-style="${styles.link_action}">
             <hyperlink target="deleteGoogleCheckoutConfiguration" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productStoreId"/>
             </hyperlink>
@@ -136,7 +136,7 @@ under the License.
                 <entity-options entity-name="ShipmentMethodType" key-field-name="shipmentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>
-        <field name="deleteGoogleCheckoutShippingMethod" title="" widget-style="${styles.button_default}">
+        <field name="deleteGoogleCheckoutShippingMethod" title="" widget-style="${styles.link_action}">
             <hyperlink target="deleteGoogleCheckoutShippingMethod" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="shipmentMethodName"/>
                 <parameter param-name="productStoreId"/>

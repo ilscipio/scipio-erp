@@ -167,9 +167,15 @@
     "row_selected" : "selected",
     
   <#-- Text-content-based link styles (TODO: WIP) -->
-    "link_nav" : "button tiny",     <#-- generic standalone navigation link without explicit action (or "view"), not part of a menu type (see menu_xxx styles above): "Product Page" -->
-    "link_longnav" : "",            <#-- very long or complex/non-static nav link: "Product Page: All Products Sorted by Name" -->
-    "link_action" : "button tiny",  <#-- short action text (1-20 chars): "Add", "Remove", "Cancel", etc. not necessarily a verb, action often implied. usually static text. -->
+    "link_nav" : "button tiny",     <#-- static navigation text without explicit action or implied "view" action, generic, not part of a menu type (see menu_xxx styles above): "Categories" 
+                                         sometimes this is ambiguous with link_action (?). if links to an action that will change the state of the system directly or indirectly, should be link_action. 
+                                         if simply browsing or view action, link_nav is more appropriate, though many times will fall under another
+                                         of the link types (link_id, link_desc, etc.) and is more appropriate as those. when it designates
+                                         a single record, usually more appropriate as one of the other types. -->
+    "link_longnav" : "",            <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
+    "link_action" : "button tiny",  <#-- short action text (1-20 chars): "Add", "Edit", "Remove", "Cancel", etc. not necessarily a verb, action may be implied, but should be an action. usually static text. 
+                                         this may overlap with link_nav, but usually there is one more appropriate than the other.
+                                         if it's a static action like "View", somewhat ambiguous (TODO: clarify) -->
     "link_longaction" : "",         <#-- a very long (more than 20-30 chars) or complex/non-static action text: "Add Content Repository For Order Removal: WS100000" -->
     "link_id" : "button tiny",      <#-- the short ID of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
     "link_longid" : "button tiny",  <#-- the long ID of a record (more than 20-30 chars); for records that do not have short IDs: "WS100000000000-ITEM10000000000000" -->

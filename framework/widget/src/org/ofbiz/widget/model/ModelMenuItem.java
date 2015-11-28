@@ -332,13 +332,9 @@ public class ModelMenuItem extends ModelWidget {
     }
 
     public String getAlignStyle() {
-        if (!this.alignStyle.isEmpty()) {
-            return this.alignStyle;
-        } else if (parentMenuItem != null) {
-            return parentMenuItem.getAlignStyle();
-        } else {
-            return this.modelMenu.getDefaultAlignStyle();
-        }
+        return getStyle("align", this.alignStyle, 
+                parentMenuItem != null ? parentMenuItem.getAlignStyle() : null, 
+                modelMenu.getDefaultAlignStyle());
     }
 
     public FlexibleStringExpander getAssociatedContentId() {
@@ -369,13 +365,9 @@ public class ModelMenuItem extends ModelWidget {
     }
 
     public String getDisabledTitleStyle() {
-        if (!this.disabledTitleStyle.isEmpty()) {
-            return this.disabledTitleStyle;
-        } else if (parentMenuItem != null) {
-            return parentMenuItem.getDisabledTitleStyle();
-        } else {
-            return this.modelMenu.getDefaultDisabledTitleStyle();
-        }
+        return getStyle("disabled", this.disabledTitleStyle, 
+                parentMenuItem != null ? parentMenuItem.getDisabledTitleStyle() : null, 
+                modelMenu.getDefaultDisabledTitleStyle());
     }
 
     public String getDisableIfEmpty() {
@@ -445,13 +437,9 @@ public class ModelMenuItem extends ModelWidget {
     }
 
     public String getSelectedStyle() {
-        if (!this.selectedStyle.isEmpty()) {
-            return this.selectedStyle;
-        } else if (parentMenuItem != null) {
-            return parentMenuItem.getSelectedStyle();
-        } else {
-            return this.modelMenu.getDefaultSelectedStyle();
-        }
+        return getStyle("selected", this.selectedStyle, 
+                parentMenuItem != null ? parentMenuItem.getSelectedStyle() : null, 
+                modelMenu.getDefaultSelectedStyle());
     }
 
     public String getSubMenu() {
@@ -467,13 +455,9 @@ public class ModelMenuItem extends ModelWidget {
     }
 
     public String getTitleStyle() {
-        if (!this.titleStyle.isEmpty()) {
-            return this.titleStyle;
-        } else if (parentMenuItem != null) {
-            return parentMenuItem.getTitleStyle();
-        } else {
-            return this.modelMenu.getDefaultTitleStyle();
-        }
+        return getStyle("title", this.titleStyle, 
+                parentMenuItem != null ? parentMenuItem.getTitleStyle() : null, 
+                modelMenu.getDefaultTitleStyle());
     }
 
     public FlexibleStringExpander getTooltip() {
@@ -489,58 +473,62 @@ public class ModelMenuItem extends ModelWidget {
     }
 
     public String getTooltipStyle() {
-        if (!this.tooltipStyle.isEmpty()) {
-            return this.tooltipStyle;
-        } else if (parentMenuItem != null) {
-            return parentMenuItem.getTooltipStyle();
-        } else {
-            return this.modelMenu.getDefaultTooltipStyle();
-        }
+        return getStyle("tooltip", this.tooltipStyle, 
+                parentMenuItem != null ? parentMenuItem.getTooltipStyle() : null, 
+                modelMenu.getDefaultTooltipStyle());
     }
 
     public String getWidgetStyle() {
-        if (!this.widgetStyle.isEmpty()) {
-            // Cato: support extending styles
-            if (this.widgetStyle.startsWith("+")) {
-                String addStyles = this.widgetStyle.substring(1);
-                String inheritedStyles;
-                if (parentMenuItem != null) {
-                    inheritedStyles = parentMenuItem.getWidgetStyle();
-                } else {
-                    inheritedStyles = this.modelMenu.getDefaultWidgetStyle();
-                }
-                if (inheritedStyles != null && !inheritedStyles.isEmpty()) {
-                    if (!addStyles.isEmpty()) {
-                        return inheritedStyles + (addStyles.startsWith(" ") ? "" : " ") + addStyles;
-                    }
-                    else {
-                        return inheritedStyles;
-                    }
-                }
-                else {
-                    return addStyles;
-                }
-            }
-            else {
-                return this.widgetStyle;
-            }
-        } else if (parentMenuItem != null) {
-            return parentMenuItem.getWidgetStyle();
-        } else {
-            return this.modelMenu.getDefaultWidgetStyle();
-        }
+        return getStyle("widget", this.widgetStyle, 
+                parentMenuItem != null ? parentMenuItem.getWidgetStyle() : null, 
+                modelMenu.getDefaultWidgetStyle());
     }
     
+    /**
+     * Cato: Gets the logical link style. The style on <link> element has priority
+     * over the link-style on <menu-item>.
+     */
     public String getLinkStyle() {
-        if (!this.linkStyle.isEmpty()) {
+        // Check the style directly on the <link> element first
+        String style = this.link.getStyleExdr().getOriginal();
+        // If not there, use link-style on <menu-item>
+        if (style.isEmpty()) {
+            style = this.linkStyle;
+        }
+        return getStyle("link", style, 
+                parentMenuItem != null ? parentMenuItem.getLinkStyle() : null, 
+                modelMenu.getDefaultLinkStyle());
+    }
+    
+    /**
+     * Cato: Gets style.
+     * <p>
+     * TODO?: this could probably cache based on passed name for faster access, but not certain
+     * if safe.
+     */
+    String getStyle(String name, String style, String parentStyle, String defaultStyle) {
+        return buildStyle(style, parentStyle, defaultStyle);
+    }
+    
+    /**
+     * Cato: Builds a style string from current, parent, and default, based on "+"/"="
+     * combination logic.
+     * <p>
+     * NOTE: subtle difference between null and empty string.
+     * <p>
+     * FIXME: this is inefficient in cases where parent style does not need to be visited,
+     * but can't change easily in java.
+     */
+    String buildStyle(String style, String parentStyle, String defaultStyle) {
+        if (!style.isEmpty()) {
             // Cato: support extending styles
-            if (this.linkStyle.startsWith("+")) {
-                String addStyles = this.linkStyle.substring(1);
+            if (style.startsWith("+")) {
+                String addStyles = style.substring(1);
                 String inheritedStyles;
-                if (parentMenuItem != null) {
-                    inheritedStyles = parentMenuItem.getLinkStyle();
+                if (parentStyle != null) {
+                    inheritedStyles = parentStyle;
                 } else {
-                    inheritedStyles = this.modelMenu.getDefaultLinkStyle();
+                    inheritedStyles = defaultStyle;
                 }
                 if (inheritedStyles != null && !inheritedStyles.isEmpty()) {
                     if (!addStyles.isEmpty()) {
@@ -555,12 +543,15 @@ public class ModelMenuItem extends ModelWidget {
                 }
             }
             else {
-                return this.linkStyle;
+                if (style.startsWith("=")) {
+                    style = style.substring(1);
+                }
+                return style;
             }
-        } else if (parentMenuItem != null) {
-            return parentMenuItem.getLinkStyle();
+        } else if (parentStyle != null) {
+            return parentStyle;
         } else {
-            return this.modelMenu.getDefaultLinkStyle();
+            return defaultStyle;
         }
     }
     
@@ -628,7 +619,7 @@ public class ModelMenuItem extends ModelWidget {
     public static class MenuLink {
         private final ModelMenuItem linkMenuItem;
         private final Link link;
-
+        
         public MenuLink(Element linkElement, ModelMenuItem parentMenuItem) {
             this.linkMenuItem = parentMenuItem;
             if (linkElement.getAttribute("text").isEmpty()) {
@@ -636,9 +627,11 @@ public class ModelMenuItem extends ModelWidget {
             }
             if (linkElement.getAttribute("style").isEmpty()) {
                 // Cato: this was changed by us...
-                // WARN: this effectively changed the behavior of menu-item's widget-style for all widgets!
+                // WARN: removing this effectively changed the behavior of menu-item's widget-style for all widgets!
                 //linkElement.setAttribute("style", parentMenuItem.getWidgetStyle());
-                linkElement.setAttribute("style", parentMenuItem.getLinkStyle());
+                // The following was added by us instead of previous line, but we don't need to do this here anymore.
+                // we modify the getter below instead.
+                //linkElement.setAttribute("style", parentMenuItem.getLinkStyle());
             }
             this.link = new Link(linkElement);
         }
@@ -727,7 +720,11 @@ public class ModelMenuItem extends ModelWidget {
         }
 
         public String getStyle(Map<String, Object> context) {
-            return link.getStyle(context);
+            // Cato: use more advanced style inheritance
+            //return link.getStyle(context);
+            // We can simply delegate to the parent menu item. it will fetch back the style from us on its own.
+            // This makes sure getLinkStyle will be logical.
+            return FlexibleStringExpander.expandString(linkMenuItem.getLinkStyle(), context);
         }
 
         public FlexibleStringExpander getStyleExdr() {

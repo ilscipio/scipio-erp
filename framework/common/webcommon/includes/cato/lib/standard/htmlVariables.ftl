@@ -170,16 +170,15 @@
     !!! TODO: THIS IS WIP !!!
   
     how to decide which style to use on a link:
-      * labeling should be based mainly on the text content of the link, both the literal content and its meaning in context.
+      * labelling should be based mainly on the text content of the link, both the literal content and its meaning in context.
       
     record identifiers and sorting fields:
       * if the text is a simple single record (entity) id, name, date, or other record identifier, use link_id, link_name, link_date,
         or if the text type is not listed or cannot be known in advance, link_value.
-        * if the id is complex or very long (e.g. multiple-field primary key), use link_longid.
-        * if the unknown/other value type is complex or very long, use link_longvalue.
-      * if it's a combination of name and id, use link_idname.
-      * if it's a longer mix or a description (other than id + name), use link_desc.
-      * simple extraneous characters like brackets around an id should not affect selection.
+        * if the value is complex or very long (e.g. multiple-field primary key), use the corresponding link_longxxx variant instead.
+      * if it's a combination of name and id, use link_idname (or link_longidname).
+      * if it's a more complex combination or a description (other than id + name), use link_desc.
+      * simple extraneous characters like brackets around an id should (probably?) not affect selection.
       
     actions and navigation:
       * any static text intended as a link that means to directly or indirectly change the state of the system or
@@ -204,18 +203,20 @@
                                          this may overlap with link_nav, but usually there is one more appropriate than the other.
                                          if it's a static action like "View", somewhat ambiguous (TODO: clarify) -->
     "link_longaction" : "",         <#-- a very long (more than 20-30 chars) or complex/non-static action text: "Add Content Repository For Order Removal: WS100000" -->
-    "link_id" : "button tiny",      <#-- the short ID of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
-    "link_longid" : "button tiny",  <#-- the long ID of a record (more than 20-30 chars); for records that do not have short IDs: "WS100000000000-ITEM10000000000000" -->
+    "link_id" : "button tiny",      <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
+    "link_longid" : "",             <#-- the long ID of a record (more than 20-30 chars); for records that do not have single IDs: "WS10000-ITEM10000" -->
     "link_name" : "button tiny",    <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
+    "link_longname" : "",           <#-- the long name of a record: "Mr. Title The Ambassador of Germany", etc. -->
     "link_idname" : "button tiny",  <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
+    "link_longidname" : "",         <#-- long combination of IDs and names: "Mr. John Alberton Smith Junior (ID: 10000) (Group: 20000)" -->
     "link_desc" : "",               <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. 
                                          in general, as soon as a non-action link text contains more than one type of value, and not idname, it should be changed to link_desc.
                                          however, if it contains a specific action(s), it may be more appropriate as link_longaction. -->
     "link_date" : "button tiny",    <#-- the date of a record (fromDate, thruDate, etc.) -->
     "link_number" : "",             <#-- the number of a record (index, sequence num, etc.) -->
     "link_url" : "",                <#-- link containing a URL as its text -->
-    "link_value" : "",              <#-- link containing a value of type not previously listed -->
-    "link_longvalue" : "",          <#-- link containing a value of type not previously listed but that may be long -->
+    "link_value" : "",              <#-- link containing a value of type not previously listed (or cannot be known statically) -->
+    "link_longvalue" : "",          <#-- link containing a value of type not previously listed but that may be long (or cannot be known statically) -->
     "link_text" : "",               <#-- link containing any kind of free-form text -->
     "link_image" : "",              <#-- link for an image -->
     "link_default" : "",            <#-- general link -->

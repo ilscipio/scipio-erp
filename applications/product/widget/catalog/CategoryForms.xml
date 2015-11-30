@@ -163,7 +163,7 @@ under the License.
         <field name="showProductCategoryId"><hidden/></field>
         <field name="productCategoryId" title="${uiLabelMap.ProductCategory}">
             <display-entity entity-name="ProductCategory" description=" " also-hidden="true" cache="true">
-                <sub-hyperlink link-style="${styles.link_desc}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
+                <sub-hyperlink link-style="${styles.link_idname}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
                     <parameter param-name="productCategoryId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -191,7 +191,7 @@ under the License.
         <field name="showProductCategoryId"><hidden/></field>
         <field name="productCategoryId" title="${uiLabelMap.ProductCategory}">
             <display-entity entity-name="ProductCategory" description=" " also-hidden="true" cache="true">
-                <sub-hyperlink link-style="${styles.link_desc}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
+                <sub-hyperlink link-style="${styles.link_idname}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
                     <parameter param-name="productCategoryId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -218,7 +218,7 @@ under the License.
         <field name="productCategoryId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.CommonParty}">
             <display-entity entity-name="PartyNameView" description=" " also-hidden="true" cache="true">
-                <sub-hyperlink link-style="${styles.link_desc}" target="/partymgr/control/viewprofile" target-type="inter-app" target-window="_blank" description="${categoryParty.groupName}${categoryParty.firstName} ${categoryParty.middleInitial} ${categoryParty.lastName}">
+                <sub-hyperlink link-style="${styles.link_longname}" target="/partymgr/control/viewprofile" target-type="inter-app" target-window="_blank" description="${categoryParty.groupName}${categoryParty.firstName} ${categoryParty.middleInitial} ${categoryParty.lastName}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>

@@ -54,7 +54,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="finAccountId" title="${uiLabelMap.CommonName}" widget-style="${styles.link_desc}">
+        <field name="finAccountId" title="${uiLabelMap.CommonName}" widget-style="${styles.link_idname}">
             <hyperlink description="${finAccountName} ${finAccountCode}" target="EditFinAccount">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
@@ -157,7 +157,7 @@ under the License.
             <entity-one value-field="party" entity-name="PartyNameView"/>
         </row-actions>
         <field name="finAccountId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_desc}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_longidname}">
            <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
                 <parameter param-name="partyId"/>
                 <parameter param-name="agreementId"/>

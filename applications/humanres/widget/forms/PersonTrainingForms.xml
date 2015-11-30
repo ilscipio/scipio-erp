@@ -73,7 +73,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="PersonTraining" default-field-type="hidden"/>
-        <field name="partyId" title="${uiLabelMap.FormFieldTitle_employeePartyId}" widget-style="${styles.link_desc}">
+        <field name="partyId" title="${uiLabelMap.FormFieldTitle_employeePartyId}" widget-style="${styles.link_longname}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="${styles.link_id}">
                     <parameter param-name="partyId" from-field="partyId"/>
@@ -109,16 +109,16 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="PersonTraining" default-field-type="display"/>
-        <field name="partyId" title="${uiLabelMap.FormFieldTitle_employeePartyId}" widget-style="${styles.link_desc}">
+        <field name="partyId" title="${uiLabelMap.FormFieldTitle_employeePartyId}" widget-style="${styles.link_longname}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="${styles.link_id}">
                     <parameter param-name="partyId" from-field="partyId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="approverId" widget-style="${styles.link_desc}">
+        <field name="approverId">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverId}" link-style="${styles.link_desc}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${approverId}" link-style="${styles.link_id}">
                     <parameter param-name="partyId" from-field="approverId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -214,7 +214,7 @@ under the License.
         <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"/>
         <field name="approvalStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
         <field name="trainingClassTypeId"><display-entity entity-name="TrainingClassType"/></field>
-        <field name="approverId" widget-style="${styles.link_desc}">
+        <field name="approverId">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
     </form>

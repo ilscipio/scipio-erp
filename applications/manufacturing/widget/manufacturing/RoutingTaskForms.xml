@@ -218,7 +218,7 @@ under the License.
         <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
         <field name="workEffortIdFrom"><hidden/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
-        <field name="workEffortIdTo" title="${uiLabelMap.ManufacturingTaskName}" widget-style="${styles.link_desc}">
+        <field name="workEffortIdTo" title="${uiLabelMap.ManufacturingTaskName}" widget-style="${styles.link_idname}">
             <hyperlink target="EditRoutingTask" description="[${workEffortIdTo}] ${workEffortToName}" also-hidden="false">
                 <parameter param-name="workEffortId" from-field="workEffortIdTo"/>
             </hyperlink>

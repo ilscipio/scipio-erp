@@ -190,7 +190,7 @@ under the License.
         <auto-fields-service service-name="updateWebSiteRole" map-name="webSiteRole"/>
         <field name="webSiteId"><hidden/></field>
         <!-- three possibilities for the Party: person, partyGroup, neither... just print everything and if it's empty, no biggie -->
-        <field name="partyId" widget-style="${styles.link_desc}">
+        <field name="partyId" widget-style="${styles.link_longidname}">
             <hyperlink target-type="inter-app" target="/partymgr/control/viewprofile" description="${person.personalTitle} ${person.firstName} ${person.middleName} ${person.lastName} ${person.suffix} ${partyGroup.groupName} [${webSiteRole.partyId}]">
                 <parameter param-name="partyId" from-field="webSiteRole.partyId"/>
             </hyperlink>

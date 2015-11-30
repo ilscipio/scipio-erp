@@ -32,7 +32,7 @@ under the License.
         <field name="workEffortTypeId"><hidden/></field>
         <field name="deleteAction"><hidden/></field>
         <field name="currentStatusId"><hidden/></field>
-        <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="${styles.link_desc}">
+        <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="${styles.link_idname}">
             <hyperlink also-hidden="false" description="${workEffortName} [${workEffortId}]" target="/workeffort/control/WorkEffortSummary" target-type="inter-app">
                 <parameter param-name="workEffortId"/>
             </hyperlink>

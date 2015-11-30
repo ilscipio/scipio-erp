@@ -227,7 +227,7 @@ under the License.
         default-table-style="${styles.table_basic}" odd-row-style="alternate-row" paginate-target="FindProductConfigItems"
         target="" header-row-style="header-row-2" paginate="true">
         <auto-fields-entity entity-name="ProductConfigOption" default-field-type="display"/>
-        <field name="configItemId" widget-style="${styles.link_desc}" title="${uiLabelMap.ProductConfigItem}">
+        <field name="configItemId" widget-style="${styles.link_idname}" title="${uiLabelMap.ProductConfigItem}">
             <hyperlink target="EditProductConfigOptions" description="${configOptionId} - ${configOptionName}">
                 <parameter param-name="configItemId"/>
                 <parameter param-name="configOptionId"/>
@@ -254,7 +254,7 @@ under the License.
         <auto-fields-service service-name="createProductConfigProduct" default-field-type="display"/>
         <field name="configItemId" ><hidden/></field>
         <field name="configOptionId" ><hidden/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_desc}">
+        <field name="productId" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_idname}">
             <hyperlink target="EditProduct" description="${product.productId} - ${product.productName}">
                 <parameter param-name="productId" from-field="product.productId"/>
             </hyperlink>

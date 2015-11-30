@@ -836,8 +836,8 @@ under the License.
         <field name="timesheetId">
             <lookup size="10" target-form-name="LookupTimesheet">
                 <sub-hyperlink target="EditTimesheet" link-style="${styles.link_longid}" description="${uiLabelMap.WorkEffortTimesheet}:${timesheetId}">
-                <parameter param-name="timesheetId"/>
-            </sub-hyperlink>
+                  <parameter param-name="timesheetId"/>
+                </sub-hyperlink>
             </lookup>
         </field>
 

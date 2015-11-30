@@ -629,7 +629,7 @@
             <set field="fromDate" from-field="listWorkAssignment[0].fromDate"/>
         </row-actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="taskName" title="${uiLabelMap.ScrumTaskName}" widget-style="${styles.link_desc}">
+        <field name="taskName" title="${uiLabelMap.ScrumTaskName}" widget-style="${styles.link_idname}">
             <hyperlink also-hidden="false" description="${taskName} - [${taskId}] " target="taskView">
                 <parameter param-name="taskId" from-field="workEffortId"/>
             </hyperlink>

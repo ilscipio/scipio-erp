@@ -273,12 +273,12 @@
             <entity-one entity-name="PartyAcctgPreference" value-field="partyAcctgPreference"/>
             <entity-one entity-name="PartyGroup" value-field="partyGroup"/>
         </row-actions>
-        <field name="partyId" title="${uiLabelMap.AccountingCompanies}" use-when="partyAcctgPreference==null" widget-style="${styles.link_desc}">
+        <field name="partyId" title="${uiLabelMap.AccountingCompanies}" use-when="partyAcctgPreference==null" widget-style="${styles.link_idname}">
             <hyperlink target="viewprofile" description="${partyGroup.groupName} [${partyId}]">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
-        <field name="partyId" title="${uiLabelMap.AccountingCompanies}" use-when="partyAcctgPreference!=null" widget-style="${styles.link_desc}">
+        <field name="partyId" title="${uiLabelMap.AccountingCompanies}" use-when="partyAcctgPreference!=null" widget-style="${styles.link_idname}">
             <hyperlink target="showMessage" description="${partyGroup.groupName} [${partyId}]">
                 <parameter param-name="partyId"/>
             </hyperlink>

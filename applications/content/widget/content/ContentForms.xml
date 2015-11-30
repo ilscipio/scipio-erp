@@ -227,7 +227,7 @@ under the License.
             <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
         </field>
         <field name="contentName" widget-style="${styles.link_name}"><display/></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}" widget-style="${styles.link_desc}"><display/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
     </form>
     <!-- ContentAssoc forms -->
     <form name="EditContentAssoc" target="updateContentAssoc" title="" type="single"

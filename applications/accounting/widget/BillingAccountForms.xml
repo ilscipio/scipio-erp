@@ -189,7 +189,7 @@ under the License.
             <entity-one value-field="party" entity-name="PartyNameView"/>
         </row-actions>
         <field name="billingAccountId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_desc}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_longidname}">
            <hyperlink also-hidden="true" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
                 <parameter param-name="partyId"/>
                 <parameter param-name="agreementId"/>

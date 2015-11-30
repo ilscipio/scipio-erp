@@ -509,7 +509,7 @@ under the License.
         <field name="delContentDataResource"><hidden value="Y"/></field>
         <field name="partyId"><hidden/></field>
         <field name="communicationEventId"><hidden/></field>
-        <field name="subject" widget-style="${styles.link_desc}" widget-area-style="fieldWidth300" sort-field="true">
+        <field name="subject" widget-style="${styles.link_text}" widget-area-style="fieldWidth300" sort-field="true">
             <hyperlink description="${subject}[${communicationEventId}] " target="${parameters._LAST_VIEW_NAME_}">
                 <parameter param-name="communicationEventId"/>
                 <parameter param-name="partyId"/>
@@ -932,7 +932,7 @@ under the License.
         </row-actions>
         <field name="delContentDataResource"><hidden value="Y"/></field>
         <field name="communicationEventId"><hidden/></field>
-        <field name="subject" widget-style="${styles.link_desc}" widget-area-style="fieldWidth300">
+        <field name="subject" widget-style="${styles.link_text}" widget-area-style="fieldWidth300">
             <hyperlink description="${subject}" target="${parameters._LAST_VIEW_NAME_}" also-hidden="true">
                 <parameter param-name="communicationEventId"/>
                 <parameter param-name="partyId"/>

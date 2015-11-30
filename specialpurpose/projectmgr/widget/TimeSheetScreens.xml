@@ -163,7 +163,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container><link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_action!}"/></container>
+                        <container><link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_action}"/></container>
                         <screenlet title="${uiLabelMap.PageTitleEditTimesheetEntries}">
                             <include-form name="ListTimesheetEntries" location="component://projectmgr/widget/forms/TimeSheetForms.xml"/>
                         </screenlet>
@@ -188,7 +188,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <container><link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_action!}"/></container>
+                        <container><link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_action}"/></container>
                         <screenlet title="${uiLabelMap.PageTitleEditTimesheetRoles}">
                             <include-form name="ListTimesheetRoles" location="component://workeffort/widget/TimesheetForms.xml"/>
                         </screenlet>

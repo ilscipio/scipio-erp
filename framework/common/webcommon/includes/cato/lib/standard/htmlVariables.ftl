@@ -202,7 +202,7 @@
                                          of the link types (link_id, link_desc, etc.) and is more appropriate as those. when it designates
                                          a single record, usually more appropriate as one of the other types. -->
     "link_longnav" : "",            <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
-    "link_action" : "button tiny",  <#-- short action text (1-20 chars): "Add", "Edit", "Remove", "Cancel", etc. not necessarily a verb, action may be implied, but should be an action. usually static text. 
+    "link_action" : "button tiny",  <#-- short action text (1-20 chars): "Add", "Edit", "Remove", "Cancel", "Export as PDF", etc. not necessarily a verb, action may be implied, but should be an action. usually static text. 
                                          this may overlap with link_nav, but usually there is one more appropriate than the other.
                                          if it's a static action like "View", somewhat ambiguous (TODO: clarify) -->
     "link_longaction" : "",         <#-- a very long (more than 20-30 chars) or complex/non-static action text: "Add Content Repository For Order Removal: WS100000" -->

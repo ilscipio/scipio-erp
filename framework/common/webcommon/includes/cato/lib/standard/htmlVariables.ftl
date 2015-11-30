@@ -222,7 +222,9 @@
     "link_longvalue" : "",          <#-- link containing a value of type not previously listed but that may be long (or cannot be known statically) -->
     "link_text" : "",               <#-- link containing any kind of free-form text -->
     "link_image" : "",              <#-- link for an image -->
-    "link_default" : "",            <#-- general link -->
+    "link_default" : "",            <#-- general link, for anything that does not fall into the above types or cannot be determined.
+                                         always use the above types instead where possible.
+                                         usually this will be rarely used and the style here will be left empty. -->
     
   <#-- Colors -->
     "color_green" : "success",

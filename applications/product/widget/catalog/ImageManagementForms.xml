@@ -319,7 +319,7 @@ under the License.
         <field name="description" use-when="${groovy: return context.statusId == 'IM_APPROVED';}" title="${uiLabelMap.ImageManagementCaption}"><text/></field>
         <field name="sequenceNum" use-when="${groovy: return context.statusId == 'IM_APPROVED';}" title="${uiLabelMap.ImageManagementSortOrder}"><text maxlength="2" size="5"/></field>
         <field name="drIsPublic" use-when="${groovy: return context.statusId == 'IM_APPROVED';}" title="${uiLabelMap.ImageManagementPublic}"><check/></field>
-        <field name="defaultImage" use-when="${groovy: return context.statusId == 'IM_APPROVED';}" title="${uiLabelMap.ImageManagementDefaultImage}" widget-style="${styles.link_default}">
+        <field name="defaultImage" use-when="${groovy: return context.statusId == 'IM_APPROVED';}" title="${uiLabelMap.ImageManagementDefaultImage}" widget-style="${styles.link_action}">
             <hyperlink target="setDefaultImage" description="${uiLabelMap.ImageManagementSetDefault}">
                 <parameter param-name="productId"/>
                 <parameter param-name="contentId"/>
@@ -661,7 +661,7 @@ under the License.
             </entity-and>
         </row-actions>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
-        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_default}">
+        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_name}">
             <hyperlink also-hidden="false" target-type="plain" description="${drDataResourceName}" target="javascript:set_value('${contentId}')"/>
         </field>
         <field name="contentId"><display/></field>
@@ -815,7 +815,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
-        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_default}">
+        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_name}">
             <hyperlink also-hidden="false" target-type="plain" description="${drDataResourceName}" target="javascript:set_value('${contentId}')"/>
         </field>
         <field name="contentId"><display/></field>

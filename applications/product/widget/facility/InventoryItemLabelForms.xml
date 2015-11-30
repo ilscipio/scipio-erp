@@ -56,7 +56,7 @@ under the License.
     <form name="ListInventoryItemLabels" type="list" title="" list-name="inventoryItemLabels"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="InventoryItemLabel" default-field-type="display"/>
-        <field name="inventoryItemLabelId" widget-style="${styles.link_default}">
+        <field name="inventoryItemLabelId" widget-style="${styles.link_id}">
             <hyperlink target="EditInventoryItemLabel" description="${inventoryItemLabelId}" also-hidden="true">
                 <parameter param-name="inventoryItemLabelId"/>
             </hyperlink>
@@ -92,11 +92,11 @@ under the License.
         <auto-fields-service service-name="updateInventoryItemLabelAppl"/>
         <field name="inventoryItemLabelId"><hidden/></field>
         <field name="inventoryItemLabelTypeId"><hidden/></field>
-        <field name="inventoryItemId" widget-style="${styles.link_default}">
+        <field name="inventoryItemId">
             <display-entity entity-name="InventoryItem" description="${productId}">
-                <sub-hyperlink target="EditInventoryItem" description="[${inventoryItemId}]">
+                <sub-hyperlink target="EditInventoryItem" description="[${inventoryItemId}]" link-style="${styles.link_id}">
                     <parameter param-name="inventoryItemId"/>
-            </sub-hyperlink>
+                </sub-hyperlink>
             </display-entity>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>

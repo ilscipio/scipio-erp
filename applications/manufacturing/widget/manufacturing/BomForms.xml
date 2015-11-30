@@ -141,7 +141,7 @@ under the License.
     </form>
     <form name="ListBom" type="list" list-name="ListProductBom" odd-row-style="alternate-row"
         default-table-style="${styles.table_basic} hover-bar" paginate-target="FindBom">
-        <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="" widget-style="${styles.link_default}">
+        <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="" widget-style="${styles.link_id}">
             <hyperlink target="EditProductBom" description="${productId}">
                 <parameter param-name="productId"/>
                 <parameter param-name="productAssocTypeId"/>

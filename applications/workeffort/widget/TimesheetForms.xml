@@ -28,7 +28,7 @@ under the License.
             </entity-and>
         </actions>
         <auto-fields-entity entity-name="Timesheet"/>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_default}">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_id}">
             <hyperlink description="${timesheetId}" target="EditTimesheet" also-hidden="false">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -85,7 +85,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="Timesheet"/>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_default}">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_id}">
             <hyperlink description="${timesheetId}" target="EditTimesheet" also-hidden="false">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -133,12 +133,12 @@ under the License.
         <field name="rateTypeId" title="${uiLabelMap.WorkEffortTimesheetRateType}"><display-entity entity-name="RateType"/></field>
         <field name="workEffortId">
             <display-entity entity-name="WorkEffort" description="${workEffortName}">
-                <sub-hyperlink target="WorkEffortSummary" description="${workEffortId}" link-style="${styles.link_default}">
+                <sub-hyperlink target="WorkEffortSummary" description="${workEffortId}" link-style="${styles.link_id}">
                     <parameter param-name="workEffortId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="invoiceId" widget-style="${styles.link_default}">
+        <field name="invoiceId" widget-style="${styles.link_id}">
             <hyperlink target="/accounting/control/invoiceOverview" target-type="inter-app" description="${invoiceId}">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
@@ -223,7 +223,7 @@ under the License.
 
         <field name="workEffortId">
             <lookup size="10" target-form-name="LookupWorkEffort">
-                <sub-hyperlink target="EditWorkEffort" link-style="${styles.link_default}" description="${uiLabelMap.WorkEffortWorkEffort}:${workEffortId}">
+                <sub-hyperlink target="EditWorkEffort" link-style="${styles.link_longid}" description="${uiLabelMap.WorkEffortWorkEffort}:${workEffortId}">
                 <parameter param-name="workEffortId"/>
             </sub-hyperlink>
             </lookup>

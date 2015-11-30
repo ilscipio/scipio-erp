@@ -32,7 +32,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="segmentGroupId" widget-style="${styles.link_default}" title="${uiLabelMap.MarketingSegmentGroupSegmentGroupId}">
+        <field name="segmentGroupId" widget-style="${styles.link_id}" title="${uiLabelMap.MarketingSegmentGroupSegmentGroupId}">
             <hyperlink also-hidden="false" description="${segmentGroupId}" target="viewSegmentGroup">
                 <parameter param-name="segmentGroupId"/>
             </hyperlink>
@@ -161,7 +161,7 @@ under the License.
         <field name="segmentGroupId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" description="${partyId}" link-style="${styles.link_default}" target-type="inter-app">
+                <sub-hyperlink target="/partymgr/control/viewprofile" description="${partyId}" link-style="${styles.link_id}" target-type="inter-app">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>

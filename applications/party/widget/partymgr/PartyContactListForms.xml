@@ -97,7 +97,7 @@ under the License.
         <actions>
             <entity-condition entity-name="ContactList"/>
         </actions>
-        <field name="contactListId" widget-style="${styles.link_action} ${styles.link_default}">
+        <field name="contactListId" widget-style="${styles.link_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${contactListId}" target="javascript:set_value('${contactListId}')"/>
         </field>
         <field name="contactListName"><display/></field>

@@ -33,7 +33,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productPriceRuleId" title="${uiLabelMap.ProductPriceRuleNameId}" widget-style="${styles.link_default}">
+        <field name="productPriceRuleId" title="${uiLabelMap.ProductPriceRuleNameId}" widget-style="${styles.link_desc}">
             <hyperlink target="EditProductPriceRules" description="${ruleName}[${productPriceRuleId}]" >
                 <parameter param-name="productPriceRuleId"/>
             </hyperlink>

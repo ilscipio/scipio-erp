@@ -28,7 +28,7 @@ under the License.
             </entity-and>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="quoteId" widget-style="${styles.link_default}">
+        <field name="quoteId" widget-style="${styles.link_id}">
             <hyperlink description="${quoteId}" target="/ordermgr/control/EditQuote" target-type="inter-app">
                 <parameter param-name="quoteId"/>
             </hyperlink>
@@ -59,12 +59,12 @@ under the License.
             </entity-and>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="quoteId" widget-style="${styles.link_default}">
+        <field name="quoteId" widget-style="${styles.link_id}">
             <hyperlink description="${quoteId}" target="/ordermgr/control/EditQuote" target-type="inter-app">
                 <parameter param-name="quoteId"/>
             </hyperlink>
         </field>
-        <field name="quoteItemSeqId" widget-style="${styles.link_default}">
+        <field name="quoteItemSeqId" widget-style="${styles.link_id}">
             <hyperlink description="${quoteItemSeqId}" target="/ordermgr/control/EditQuoteItem" target-type="inter-app">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="quoteId"/>

@@ -89,7 +89,7 @@ under the License.
         <!-- 
         <auto-fields-entity entity-name="Quote" default-field-type="display"/>
          -->
-        <field name="quoteId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}">
+        <field name="quoteId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_id}">
             <hyperlink also-hidden="false" description="${quoteId}" target="ViewQuote">
                 <parameter param-name="quoteId"/>
             </hyperlink>
@@ -294,13 +294,13 @@ under the License.
         
         <field name="quoteId"><hidden/></field>
         <field name="quoteItemSeqId"><hidden/></field>
-        <field name="quoteItemSeqId" title="${uiLabelMap.CommonSeqNum}" widget-style="${styles.link_default}" use-when="${groovy:isPromo==null}">
+        <field name="quoteItemSeqId" title="${uiLabelMap.CommonSeqNum}" widget-style="${styles.link_id}" use-when="${groovy:isPromo==null}">
             <hyperlink also-hidden="false" description="${quoteItemSeqId}" target="EditQuoteItem">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>
             </hyperlink>
         </field>
-        <field name="quoteItemSeqId" title="${uiLabelMap.CommonSeqNum}" widget-style="${styles.link_default}" use-when="${groovy: 'N'.equals(isPromo)}">
+        <field name="quoteItemSeqId" title="${uiLabelMap.CommonSeqNum}" widget-style="${styles.link_id}" use-when="${groovy: 'N'.equals(isPromo)}">
             <hyperlink also-hidden="false" description="${quoteItemSeqId}" target="EditQuoteItem">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>
@@ -321,7 +321,7 @@ under the License.
         <field name="comments"><hidden/></field>
         <field name="uomId"><hidden/></field>
         <!--<field name="custRequestId"><display description="${custRequestId} - ${custRequestItemSeqId}"/></field>-->
-        <field name="custRequestId" title="${uiLabelMap.OrderRequest}" widget-style="${styles.link_default}">
+        <field name="custRequestId" title="${uiLabelMap.OrderRequest}" widget-style="${styles.link_longid}">
             <hyperlink also-hidden="false" description="${custRequestId} ${custRequestItemSeqId}" target="requestitem">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
@@ -351,7 +351,7 @@ under the License.
     <form name="ListQuoteAttributes" target="" title="" type="list" list-name="quoteAttributes"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ListQuoteAttributes">
         <auto-fields-entity entity-name="QuoteAttribute" default-field-type="display"/>
-        <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}" widget-style="${styles.link_default}">
+        <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}" widget-style="${styles.link_name}">
             <hyperlink also-hidden="false" description="${attrName}" target="EditQuoteAttribute">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="attrName"/>
@@ -370,7 +370,7 @@ under the License.
     <form name="ListQuoteCoefficients" target="" title="" type="list" list-name="quoteCoefficients"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ListQuoteCoefficients">
         <auto-fields-entity entity-name="QuoteCoefficient" default-field-type="display"/>
-        <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoeffName}" widget-style="${styles.link_default}">
+        <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoeffName}" widget-style="${styles.link_name}">
             <hyperlink also-hidden="false" description="${coeffName}" target="EditQuoteCoefficient">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="coeffName"/>
@@ -397,7 +397,7 @@ under the License.
 
     <form name="ManageQuotePrices" title="" type="multi" list-name="quoteItemAndCostInfos" target="autoUpdateQuotePrices?quoteId=${quoteId}" use-row-submit="true"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ManageQuotePrices">
-        <field name="custRequestId" title="${uiLabelMap.OrderRequest}" widget-style="${styles.link_default}">
+        <field name="custRequestId" title="${uiLabelMap.OrderRequest}" widget-style="${styles.link_longid}">
             <hyperlink target-type="inter-app" also-hidden="false" description="${custRequestId}-${custRequestItemSeqId}" target="/workeffort/control/requestitem">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
@@ -405,7 +405,7 @@ under the License.
         </field>
         <field name="custRequestItemSeqId"><hidden/></field>
         <field name="quoteId"><hidden/></field>
-        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="${styles.link_default}">
+        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="${styles.link_id}">
             <hyperlink also-hidden="true" description="${quoteItemSeqId}" target="EditQuoteItem">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>
@@ -427,7 +427,7 @@ under the License.
     <form name="ListQuoteAdjustments" target="" title="" type="list" list-name="quoteAdjustments"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ListQuoteAdjustments">
         <field name="quoteId"><hidden/></field>
-        <field name="quoteAdjustmentId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_default}" use-when="${groovy:productPromoId==null}">
+        <field name="quoteAdjustmentId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_id}" use-when="${groovy:productPromoId==null}">
             <hyperlink also-hidden="false" description="${quoteAdjustmentId}" target="EditQuoteAdjustment">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteAdjustmentId"/>
@@ -644,7 +644,7 @@ under the License.
     
     <form name="ViewQuoteProfit" title="" type="list" list-name="quoteItemAndCostInfos" target=""
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ViewQuoteProfit">
-        <field name="custRequestId" title="${uiLabelMap.OrderRequest}" widget-style="${styles.link_default}">
+        <field name="custRequestId" title="${uiLabelMap.OrderRequest}" widget-style="${styles.link_longid}">
             <hyperlink target-type="inter-app" also-hidden="false" description="${custRequestId}-${custRequestItemSeqId}" target="/workeffort/control/requestitem">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
@@ -652,7 +652,7 @@ under the License.
         </field>
         <field name="custRequestItemSeqId"><hidden/></field>
         <field name="quoteId"><hidden/></field>
-        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="${styles.link_default}">
+        <field name="quoteItemSeqId" title="${uiLabelMap.OrderOrderQuoteItemSeqId}" widget-style="${styles.link_id}">
             <hyperlink also-hidden="true" description="${quoteItemSeqId}" target="EditQuoteItem">
                 <parameter param-name="quoteId"/>
                 <parameter param-name="quoteItemSeqId"/>

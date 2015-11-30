@@ -131,7 +131,7 @@ under the License.
     <form name="OpenOrderItemsList" type="list" list-name="orderItemList"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="OpenOrderItemsReport">
         <field name="orderDate" title="${uiLabelMap.OrderDate}"><display/></field>
-        <field name="orderId" title="${uiLabelMap.OrderOrderId}" widget-style="${styles.link_default}">
+        <field name="orderId" title="${uiLabelMap.OrderOrderId}" widget-style="${styles.link_id}">
             <hyperlink target="orderview" description="${orderId}">
                 <parameter param-name="orderId"/>
             </hyperlink>

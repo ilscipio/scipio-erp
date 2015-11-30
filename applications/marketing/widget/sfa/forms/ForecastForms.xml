@@ -37,7 +37,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="SalesForecast" default-field-type="display"/>
-        <field name="salesForecastId" widget-style="${styles.link_default}">
+        <field name="salesForecastId" widget-style="${styles.link_id}">
             <hyperlink target="EditSalesForecast" description="${salesForecastId}" also-hidden="false">
                 <parameter param-name="salesForecastId"/>
             </hyperlink>

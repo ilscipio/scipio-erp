@@ -142,7 +142,7 @@ under the License.
 	                                <if-compare field="parameters.performSearch" operator="equals" value="Y"/>
 	                            </condition>
 	                            <widgets>
-	                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.button_default}" target="AcctgTransSearchResultsCsv.csv">
+	                                    <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_action}" target="AcctgTransSearchResultsCsv.csv">
 	                                        <parameter param-name="organizationPartyId"/>
 	                                        <parameter param-name="acctgTransId" from-field="parameters.acctgTransId"/>
 	                                        <parameter param-name="productId" from-field="parameters.productId"/>
@@ -157,7 +157,7 @@ under the License.
 	                                        <parameter param-name="fromDate" from-field="parameters.fromDate"/>
 	                                        <parameter param-name="thruDate" from-field="parameters.thruDate"/>
 	                                    </link>
-	                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.button_default}" target="AcctgTransSearchResultPdf.pdf" target-window="_BLANK">
+	                                    <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action}" target="AcctgTransSearchResultPdf.pdf" target-window="_BLANK">
 	                                        <parameter param-name="organizationPartyId"/>
 	                                        <parameter param-name="acctgTransId" from-field="parameters.acctgTransId"/>
 	                                        <parameter param-name="productId" from-field="parameters.productId"/>

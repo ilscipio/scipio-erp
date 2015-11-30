@@ -568,6 +568,10 @@ public class FormRenderer {
         }
 
         if (modelForm.getGroupColumns()) {
+        	if (formPerItem) {
+                formStringRenderer.renderFormOpen(writer, localContext, modelForm);
+            }
+        	
             // do the first part of display and hyperlink fields
             Iterator<ModelFormField> innerDisplayHyperlinkFieldIter = innerDisplayHyperlinkFieldsBegin.iterator();
             while (innerDisplayHyperlinkFieldIter.hasNext()) {
@@ -608,9 +612,7 @@ public class FormRenderer {
             	// Cato: Controls where a cell has been opened already so we don't generate invalid markup (similar to what is done for firsts links rendered above)
             	boolean cellOpen = true;
 
-                if (formPerItem) {
-                    formStringRenderer.renderFormOpen(writer, localContext, modelForm);
-                }
+                
 
                 // do all of the hidden fields...
                 this.renderHiddenIgnoredFields(writer, localContext, formStringRenderer, hiddenIgnoredFieldList);
@@ -634,10 +636,6 @@ public class FormRenderer {
                     }
                 }
 
-                if (formPerItem) {
-                    formStringRenderer.renderFormClose(writer, localContext, modelForm);
-                }
-
                 if (cellOpen)
                 	formStringRenderer.renderFormatItemRowFormCellClose(writer, localContext, modelForm);
             }
@@ -658,6 +656,10 @@ public class FormRenderer {
                     modelFormField.renderFieldString(writer, localContext, formStringRenderer);
                 }
                 formStringRenderer.renderFormatItemRowCellClose(writer, localContext, modelForm, modelFormField);
+            }
+            
+            if (formPerItem) {
+                formStringRenderer.renderFormClose(writer, localContext, modelForm);
             }
         } else {
             // do all of the hidden fields...
@@ -887,7 +889,8 @@ public class FormRenderer {
                         // skip all of the display/hyperlink fields
                         if (fieldInfo.getFieldType() == FieldInfo.DISPLAY
                                 || fieldInfo.getFieldType() == FieldInfo.DISPLAY_ENTITY
-                                || fieldInfo.getFieldType() == FieldInfo.HYPERLINK) {
+                                || fieldInfo.getFieldType() == FieldInfo.HYPERLINK
+                                || fieldInfo.getFieldType() == FieldInfo.SUBMIT) {
                             continue;
                         }
 
@@ -912,7 +915,8 @@ public class FormRenderer {
                         // skip all non-display and non-hyperlink fields
                         if (fieldInfo.getFieldType() != FieldInfo.DISPLAY
                                 && fieldInfo.getFieldType() != FieldInfo.DISPLAY_ENTITY
-                                && fieldInfo.getFieldType() != FieldInfo.HYPERLINK) {
+                                && fieldInfo.getFieldType() != FieldInfo.HYPERLINK
+                                && fieldInfo.getFieldType() != FieldInfo.SUBMIT) {
                             continue;
                         }
 
@@ -926,7 +930,7 @@ public class FormRenderer {
                     }
                           
                     // Cato: Adding submit buttons if use-row-submit flag in the form definition is set to false
-					if ("multi".equals(modelForm.getType())) {
+					if ("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) {
 						Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
 						while (submitFields.hasNext()) {
 							ModelFormField submitField = submitFields.next();

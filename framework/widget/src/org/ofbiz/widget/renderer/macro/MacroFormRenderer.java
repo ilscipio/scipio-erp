@@ -1404,6 +1404,12 @@ public final class MacroFormRenderer implements FormStringRenderer {
                 break;
             }
         }
+        
+        // Cato: when the form doesn't use a specific row for the submit button, render it within the current row being rendered.
+        if (!modelForm.getUseRowSubmit() && modelForm.getType().equals("list")) {        	
+        	makeRowFormSubmit(writer, new HashMap<String, String>(), null, modelForm, this.request, this.response, context);
+        }
+        
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormClose ");
         sr.append(" focusFieldName=\"");

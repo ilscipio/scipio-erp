@@ -358,7 +358,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="maintHistSeqId" widget-style="${styles.link_default}">
+        <field name="maintHistSeqId" widget-style="${styles.link_id}">
             <hyperlink also-hidden="false" description="${maintHistSeqId}" target="EditFixedAssetMaint">
                 <parameter param-name="fixedAssetId"/>
                 <parameter param-name="maintHistSeqId"/>
@@ -440,7 +440,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="scheduleWorkEffortId" widget-style="${styles.link_default}">
+        <field name="scheduleWorkEffortId" widget-style="${styles.link_id}">
             <hyperlink target="/workeffort/control/WorkEffortSummary" also-hidden="false" description="${fixedAssetMaint.scheduleWorkEffortId}" target-type="inter-app">
                 <parameter param-name="workEffortId" from-field="fixedAssetMaint.scheduleWorkEffortId"/>
             </hyperlink>
@@ -471,7 +471,7 @@ under the License.
         <field name="meterValue" title="${uiLabelMap.CommonValue}"><text/></field>
         <field name="readingReasonEnumId" title="${uiLabelMap.CommonReason}"><text size="20"/></field>
         <field name="workEffortId" title="${uiLabelMap.WorkEffort}"><lookup target-form-name="LookupWorkEffort"></lookup></field>
-        <field name="maintHistSeqId" title="${uiLabelMap.AccountingFixedAssetMaint}" widget-style="${styles.link_default}">
+        <field name="maintHistSeqId" title="${uiLabelMap.AccountingFixedAssetMaint}" widget-style="${styles.link_id}">
             <hyperlink target="EditFixedAssetMaint" description="${maintHistSeqId}" also-hidden="false">
                 <parameter param-name="fixedAssetId"/>
                 <parameter param-name="maintHistSeqId"/>
@@ -521,7 +521,7 @@ under the License.
         <auto-fields-entity entity-name="FixedAssetMaintOrder"/>
         <field name="fixedAssetId"><hidden/></field>
         <field name="maintHistSeqId"><hidden/></field>
-        <field name="orderId" widget-style="${styles.link_default}">
+        <field name="orderId" widget-style="${styles.link_id}">
             <hyperlink target="/ordermgr/control/orderview" also-hidden="false" description="${orderId}" target-type="inter-app">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -559,7 +559,7 @@ under the License.
         <field name="fixedAssetId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.CommonParty}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="${styles.link_default}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="${styles.link_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -672,7 +672,7 @@ under the License.
                 <order-by field-name="debitCreditFlag"/>
             </entity-condition>
         </actions>
-        <field name="acctgTransId" widget-style="${styles.link_default}">
+        <field name="acctgTransId" widget-style="${styles.link_id}">
             <hyperlink target="EditAcctgTrans" description="${acctgTransId}" also-hidden="false">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="organizationPartyId"/>

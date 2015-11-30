@@ -33,7 +33,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}" widget-style="${styles.link_default}">
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}" widget-style="${styles.link_id}">
             <hyperlink also-hidden="false" description="${partyId}" target="editVendor">
                 <parameter param-name="partyId"/>
             </hyperlink>

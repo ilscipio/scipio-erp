@@ -240,7 +240,7 @@
         </field>
     </form>
     <form name="PayrollHistoryList" type="list" list-name="payroll" extends="ListInvoices" extends-resource="component://accounting/widget/InvoiceForms.xml" paginate-target="PayrollHistory">
-        <field name="invoiceId" widget-style="${styles.link_default}" sort-field="true">
+        <field name="invoiceId" widget-style="${styles.link_id}" sort-field="true">
             <hyperlink description="${invoiceId}" target="/accounting/control/invoiceOverview" target-type="inter-app">
                 <parameter param-name="invoiceId"/>
             </hyperlink>

@@ -50,7 +50,7 @@ under the License.
                 <field-map field-name="paymentGroupId"/>
             </entity-and>
         </row-actions>
-        <field name="paymentGroupId" title="${uiLabelMap.CommonId} - " widget-style="${styles.link_default}">
+        <field name="paymentGroupId" title="${uiLabelMap.CommonId} - " widget-style="${styles.link_id}">
             <hyperlink description="${paymentGroupId}" target="PaymentGroupOverview">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
@@ -142,7 +142,7 @@ under the License.
             <set field="paymentRefNum" from-field="payment.paymentRefNum"/>
         </row-actions>
         <field name="paymentGroupId"><hidden/></field>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_default}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_id}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -202,7 +202,7 @@ under the License.
             <set field="partyIdFrom" from-field="payment.partyIdFrom"/>
             <set field="partyIdTo" from-field="payment.partyIdTo"/>
         </row-actions>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_default}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_id}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>

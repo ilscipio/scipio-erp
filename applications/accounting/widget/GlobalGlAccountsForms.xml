@@ -37,7 +37,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="GlAccountOrganization" default-field-type="display"/>
-        <field name="glAccountId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_default}">
+        <field name="glAccountId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_id}">
             <hyperlink also-hidden="false" description="${glAccountId}" target="GlAccountNavigate">
                 <parameter param-name="glAccountId"/>
             </hyperlink>
@@ -81,7 +81,7 @@ under the License.
             </service>
             <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
         </actions>
-        <field name="accountCode" title="${uiLabelMap.CommonCode}" widget-style="${styles.link_default}">
+        <field name="accountCode" title="${uiLabelMap.CommonCode}" widget-style="${styles.link_id}">
             <hyperlink also-hidden="false" description="${accountCode}" target="GlAccountNavigate">
                 <parameter param-name="glAccountId"/>
             </hyperlink>
@@ -163,7 +163,7 @@ under the License.
     <!-- this is used to list AcctgTransEntries and can be called either by using an acctgTransId or a glAccountId -->
     <form name="ListAcctgTransEntries" type="list" list-name="entries" default-entity-name="AcctgTransEntry"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="acctgTransId" widget-style="${styles.link_default}">
+        <field name="acctgTransId" widget-style="${styles.link_id}">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="ListAcctgTransEntries">
                 <parameter param-name="acctgTransId"/>
             </hyperlink>
@@ -199,7 +199,7 @@ under the License.
 
     <form name="ListGlReconciliations" type="list" list-name="glReconciliations" default-entity-name="GlReconciliation"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="glReconciliationId" widget-style="${styles.link_default}">
+        <field name="glReconciliationId" widget-style="${styles.link_id}">
            <hyperlink also-hidden="false" description="${glReconciliationId}" target="EditGlReconciliation">
                 <parameter param-name="glReconciliationId"/>
                 <parameter param-name="organizationPartyId"/>
@@ -224,7 +224,7 @@ under the License.
     <form name="ListGlReconciliationEntries" type="list" list-name="glReconciliationEntries" default-entity-name="GlReconciliationEntry"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="glReconciliationId"><display/></field>
-        <field name="acctgTransId" widget-style="${styles.link_default}">
+        <field name="acctgTransId" widget-style="${styles.link_id}">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="ListAcctgTransEntries">
                 <parameter param-name="acctgTransId"/>
             </hyperlink>

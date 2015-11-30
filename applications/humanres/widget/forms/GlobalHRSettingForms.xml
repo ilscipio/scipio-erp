@@ -110,7 +110,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-service service-name="updateEmplPositionType" default-field-type="hidden"/>
-        <field name="emplPositionTypeId" title="${uiLabelMap.HumanResEmplPositionType}" widget-style="${styles.link_default}">
+        <field name="emplPositionTypeId" title="${uiLabelMap.HumanResEmplPositionType}" widget-style="${styles.link_id}">
             <hyperlink also-hidden="false" description="${emplPositionTypeId}" target="EditEmplPositionTypes">
                 <parameter param-name="emplPositionTypeId"/>
             </hyperlink>
@@ -244,7 +244,7 @@ under the License.
             <entity-condition entity-name="TrainingClassType"><order-by field-name="trainingClassTypeId"/></entity-condition>
         </actions>
         <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"><display/></field>
-        <field name="parentTypeId" title="${uiLabelMap.HumanResPreRequisiteSkill}" widget-style="${styles.link_default}"><text/></field>
+        <field name="parentTypeId" title="${uiLabelMap.HumanResPreRequisiteSkill}" widget-style="${styles.link_id}"><text/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text/></field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteTrainingTypes"> 

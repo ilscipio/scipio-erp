@@ -164,7 +164,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="transactionDate"><date-time/></field>
+        <field name="transactionDate" position="1"><date-time/></field>
         <field name="scheduledPostingDate" position="2"><date-time/></field>
         <field name="isPosted" >
             <drop-down allow-empty="true">
@@ -181,9 +181,10 @@ under the License.
                     <entity-order-by field-name="description"/>
                 </entity-options>
             </drop-down>
-        </field>
-        <field name="description"><textarea/></field>
-        <field name="partyId" title="${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName" size="20" maxlength="20"/></field>
+        </field>        
+        <field name="description" position="2"><textarea/></field>
+
+        <field name="partyId" title="${uiLabelMap.CommonParty}" position="1"><lookup target-form-name="LookupPartyName" size="20" maxlength="20"/></field>
         <field name="roleTypeId" title="${uiLabelMap.CommonRole}" position="2">
             <drop-down allow-empty="true">
                 <entity-options entity-name="RoleType" description="${description}">
@@ -191,7 +192,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}">
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" position="1">
             <lookup target-form-name="LookupInvoice" size="20" maxlength="20">
                 <sub-hyperlink target="invoiceOverview?invoiceId=${acctgTrans.invoiceId}" description="${acctgTrans.invoiceId}"/>
             </lookup>
@@ -201,13 +202,13 @@ under the License.
                 <sub-hyperlink target="paymentOverview?paymentId=${acctgTrans.paymentId}" description="${acctgTrans.paymentId}"/>
             </lookup>
         </field>
-        <field name="productId"><lookup target-form-name="LookupProduct" size="20" maxlength="20"/></field>
+        <field name="productId" position="1"><lookup target-form-name="LookupProduct" size="20" maxlength="20"/></field>
         <field name="shipmentId" position="2"><lookup target-form-name="LookupShipment" size="20" maxlength="20"/></field>
-        <field name="inventoryItemId"><text/></field>
+        <field name="inventoryItemId" position="1"><text/></field>
         <field name="physicalInventoryId" position="2"><text/></field>
-        <field name="receiptId"><text/></field>
+        <field name="receiptId" position="1"><text/></field>
         <field name="theirAcctgTransId" position="2"><text/></field>
-        <field name="fixedAssetId">
+        <field name="fixedAssetId" position="1">
             <drop-down allow-empty="true">
                 <entity-options entity-name="FixedAsset" description="${fixedAssetId}">
                     <entity-order-by field-name="fixedAssetId"/>
@@ -218,9 +219,9 @@ under the License.
         <field name="voucherRef" position="1"><text/></field>
         <field name="voucherDate" position="2"><date-time/></field>
         
-        <field name="createdDate"><display/></field>
+        <field name="createdDate" position="1"><display/></field>
         <field name="lastModifiedDate" position="2"><display/></field>
-        <field name="createdByUserLogin"><display/></field>
+        <field name="createdByUserLogin" position="1"><display/></field>
         <field name="lastModifiedByUserLogin" position="2"><display/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
         <sort-order>
@@ -388,10 +389,10 @@ under the License.
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
 
-    <form name="ListAcctgTrans" type="list" title="List Accounting Transactions" list-name="acctgTransList"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <actions>
-            <entity-condition entity-name="AcctgTransAndEntries" list="acctgTransList" distinct="true">
+    <form name="ListAcctgTrans" type="list" title="List Accounting Transactions" list-name="listIt"
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" default-entity-name="AcctgTransAndEntries">
+        <actions>           
+            <entity-condition entity-name="AcctgTransAndEntries" list="listIt" distinct="true">
                 <condition-list>
                     <condition-expr field-name="organizationPartyId" operator="equals" from-field="organizationPartyId"/>
                     <condition-expr field-name="acctgTransTypeId" operator="equals" from-field="parameters.acctgTransTypeId" ignore-if-empty="true"/>
@@ -417,11 +418,10 @@ under the License.
                 <select-field field-name="workEffortId"/>
                 <select-field field-name="shipmentId"/>
                 <select-field field-name="isPosted"/>
-                <select-field field-name="postedDate"/>
+                <select-field field-name="postedDate"/>                
                 <order-by field-name="-transactionDate"/>
             </entity-condition>
         </actions>
-
         <field name="acctgTransId" widget-style="${styles.link_default}">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="EditAcctgTrans">
                 <parameter param-name="acctgTransId"/>
@@ -463,12 +463,12 @@ under the License.
                 <parameter param-name="acctgTransId"/>
             </hyperlink>
         </field>
-        <field name="createTransactionDetailReportPDF" title=" " use-when="${isPosted=='Y'}" widget-style="${styles.link_action}">
+        <field name="createTransactionDetailReportPDF" title="${uiLabelMap.AccountingInvoicePDF}" use-when="${isPosted=='Y'}" widget-style="${styles.link_action}">
             <hyperlink target="acctgTransDetailReportPdf.pdf" target-window="_BLANK" description="${uiLabelMap.AccountingInvoicePDF}">
                 <parameter param-name="acctgTransId"/>
             </hyperlink>
         </field>
-        <field name="postAcctgTrans" title=" " use-when="!&quot;N&quot;.equals(isPosted)"><display/></field>
+        <field name="postAcctgTrans" title="${uiLabelMap.AccountingPostTransaction}" use-when="!&quot;N&quot;.equals(isPosted)"><display/></field>
     </form>
 
     <form name="ListUnpostedAcctgTrans" type="list" title="Unposted Accounting Transactions" list-name="transactions"
@@ -569,12 +569,12 @@ under the License.
         </field>
         <field name="settlementTermId" position="1"><text size="20"/></field>
         <field name="isSummary" position="2"><text size="10"/></field>
-        <field name="description" position="1" entry-name="resetFieldValue"><text size="30"/></field>
+        <field name="description" position="2" entry-name="resetFieldValue"><textarea/></field>
         <field name="createAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}" ><submit button-type="text-link"/></field>
     </form>
     
     <form name="ListAcctgTransEntries" type="list" list-name="acctgTransEntries" default-entity-name="AcctgTransEntry" target="updateAcctgTransEntry"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="false" separate-columns="true">
         <field name="organizationPartyId"><hidden/></field>
         <field name="acctgTransId"><hidden/></field>
         <field name="acctgTransEntrySeqId"><display/></field>
@@ -629,7 +629,7 @@ under the License.
         <field name="origAmount"><display type="currency" currency="${origCurrencyUomId}"/></field>
         <field name="amount" title="${uiLabelMap.CommonAmount}"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="removeAction" title=" " widget-style="${styles.link_action}">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}">
            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteAcctgTransEntry">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="acctgTransEntrySeqId"/>

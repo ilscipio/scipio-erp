@@ -222,6 +222,12 @@
      <property key="AccountingAcctGlRecon">
      	<value xml:lang="en">Account GL Reconciliations</value>
     </property>
+    <property key="AccountingTransactionHeader">
+    	<value xml:lang="en">Transaction Header</value>
+    </property>
+    <property key="AccountingPostTransaction">
+    	<value xml:lang="en">Post Transaction</value>
+    </property>
     <property key="AccountingAcctRecons">
         <value xml:lang="de">Kontenabstimmungen</value>
         <value xml:lang="en">Account Reconciliations</value>

@@ -188,7 +188,7 @@ function setServiceName(selection) {
                   <@tbody>
                     <#list paymentList as payment>
                       <@tr>
-                        <@td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="${styles.link_default!}">${payment.paymentId}</a></@td>
+                        <@td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="${styles.link_id!}">${payment.paymentId}</a></@td>
                         <@td>
                           ${payment.paymentTypeDesc?default(payment.paymentTypeId)}
                         </@td>

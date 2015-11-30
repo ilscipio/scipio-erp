@@ -35,7 +35,7 @@ under the License.
             <#assign listToProduct = assocToProduct.getRelatedOne("MainProduct", true)>
             <#assign curProductAssocType = assocToProduct.getRelatedOne("ProductAssocType", true)>
             <@tr valign="middle">
-                <@td><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="${styles.link_default!}">${(listToProduct.internalName)!} [${(assocToProduct.productId)!}]</a></@td>
+                <@td><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="${styles.link_idname!}">${(listToProduct.internalName)!} [${(assocToProduct.productId)!}]</a></@td>
                 <@td><#if curProductAssocType??> ${(curProductAssocType.get("description",locale))!}<#else> ${(assocToProduct.productAssocTypeId)!}</#if></@td>
                 <@td>${(assocToProduct.getTimestamp("fromDate")?date?string.short!)!}&nbsp;</@td>
                 <@td>${(assocToProduct.getTimestamp("thruDate")?date?string.short!)!}&nbsp;</@td>

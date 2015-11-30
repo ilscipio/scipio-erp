@@ -69,7 +69,7 @@ under the License.
                     <@td>
                         <div>
                         <#if showQuoteManagementLinks?? && quoteItem.isPromo?default("N") == "N" && quote.statusId=="QUO_CREATED">
-                            <a href="<@ofbizUrl>EditQuoteItem?quoteId=${quoteItem.quoteId}&amp;quoteItemSeqId=${quoteItem.quoteItemSeqId}</@ofbizUrl>" class="${styles.link_default!}">${quoteItem.quoteItemSeqId}</a>
+                            <a href="<@ofbizUrl>EditQuoteItem?quoteId=${quoteItem.quoteId}&amp;quoteItemSeqId=${quoteItem.quoteItemSeqId}</@ofbizUrl>" class="${styles.link_id!}">${quoteItem.quoteItemSeqId}</a>
                         <#else>
                             ${quoteItem.quoteItemSeqId}
                         </#if>
@@ -83,7 +83,7 @@ under the License.
                                     
                                     ${quoteItem.productId} - ${(product.internalName)!}
                                   <#else>
-                                    <a href="/catalog/control/EditProduct?productId=${quoteItem.productId!}" class="${styles.link_default!}">
+                                    <a href="/catalog/control/EditProduct?productId=${quoteItem.productId!}" class="${styles.link_action!}">
                                     ${uiLabelMap.ProductCreateProduct}
                                     </a>
                                   </#if>

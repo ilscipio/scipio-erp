@@ -257,7 +257,7 @@ function getFinAccountTransRunningTotalAndBalances() {
 				            <@td class="amount">${finAccountTrans.amount!}</@td>
 			            	<@td>
 				              	<#if finAccountTrans.paymentId?has_content>
-				                	<a href="<@ofbizUrl>paymentOverview?paymentId=${finAccountTrans.paymentId}</@ofbizUrl>" class="${styles.link_default!}">${finAccountTrans.paymentId}</a>
+				                	<a href="<@ofbizUrl>paymentOverview?paymentId=${finAccountTrans.paymentId}</@ofbizUrl>" class="${styles.link_id!}">${finAccountTrans.paymentId}</a>
 				              	</#if>
 			            	</@td>
 				            <@td><#if paymentType?has_content>${paymentType.description!}</#if></@td>

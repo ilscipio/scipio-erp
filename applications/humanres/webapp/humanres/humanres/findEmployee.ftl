@@ -150,19 +150,19 @@ under the License.
             <#assign partyType = partyRow.getRelatedOne("PartyType", false)!>
             <@tr valign="middle">
                 <@td><#if partyRow.getModelEntity().isField("lastName") && lastName?has_content>
-                        <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_default!}">${partyRow.lastName}<#if partyRow.firstName?has_content>, ${partyRow.firstName}</#if></a>
+                        <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_name!}">${partyRow.lastName}<#if partyRow.firstName?has_content>, ${partyRow.firstName}</#if></a>
                     <#elseif partyRow.getModelEntity().isField("groupName") && partyRow.groupName?has_content>
-                        <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_default!}">${partyRow.groupName}</a>
+                        <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_name!}">${partyRow.groupName}</a>
                     <#else>
                         <#assign partyName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(partyRow, true)>
                         <#if partyName?has_content>
-                            <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_default!}">${partyName}</a>
+                            <a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_name!}">${partyName}</a>
                         <#else>
                             (${uiLabelMap.PartyNoNameFound})
                         </#if>
                     </#if>
                 </@td>
-                <@td><a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_default!}">${partyRow.partyId}</a></@td>
+                <@td><a href="<@ofbizUrl>EmployeeProfile?partyId=${partyRow.partyId}</@ofbizUrl>" class="${styles.link_id!}">${partyRow.partyId}</a></@td>
                 <#if extInfo?default("") == "T">
                     <@td>${partyRow.areaCode!}</@td>
                 </#if>

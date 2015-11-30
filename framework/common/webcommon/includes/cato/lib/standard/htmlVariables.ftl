@@ -175,10 +175,13 @@
     record identifiers and sorting fields:
       * if the text is a simple single record (entity) id, name, date, or other record identifier, use link_id, link_name, link_date,
         or if the text type is not listed or cannot be known in advance, link_value.
-        * if the value is complex or very long (e.g. multiple-field primary key), use the corresponding link_longxxx variant instead.
+        * if the value is complex or very long (e.g. multiple-field primary key), or possibly if has introductory words ("Order Item: 1000000"),
+          use the corresponding link_longxxx variant instead.
       * if it's a combination of name and id, use link_idname (or link_longidname).
       * if it's a more complex combination or a description (other than id + name), use link_desc.
-      * simple extraneous characters like brackets around an id should (probably?) not affect selection.
+      * simple extraneous characters like brackets around an id should not affect selection;
+        but introductory words ("Order Item: WS10000") may warrant putting it under the link_longxxx variant.
+        in some cases, extra words means it should go under link_desc.
       
     actions and navigation:
       * any static text intended as a link that means to directly or indirectly change the state of the system or
@@ -204,7 +207,7 @@
                                          if it's a static action like "View", somewhat ambiguous (TODO: clarify) -->
     "link_longaction" : "",         <#-- a very long (more than 20-30 chars) or complex/non-static action text: "Add Content Repository For Order Removal: WS100000" -->
     "link_id" : "button tiny",      <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
-    "link_longid" : "",             <#-- the long ID of a record (more than 20-30 chars); for records that do not have single IDs: "WS10000-ITEM10000" -->
+    "link_longid" : "button tiny",  <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
     "link_name" : "button tiny",    <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
     "link_longname" : "",           <#-- the long name of a record: "Mr. Title The Ambassador of Germany", etc. -->
     "link_idname" : "button tiny",  <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->

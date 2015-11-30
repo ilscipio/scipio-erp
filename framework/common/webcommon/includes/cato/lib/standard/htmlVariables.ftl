@@ -174,8 +174,9 @@
       
     record identifiers and sorting fields:
       * if the text is a simple single record (entity) id, name, date, or other record identifier, use link_id, link_name, link_date,
-        or if the text type is not listed, link_value.
+        or if the text type is not listed or cannot be known in advance, link_value.
         * if the id is complex or very long (e.g. multiple-field primary key), use link_longid.
+        * if the unknown/other value type is complex or very long, use link_longvalue.
       * if it's a mix of name and id or a description, use link_desc.
       * simple extraneous characters like brackets around an id should not affect selection.
       
@@ -212,6 +213,7 @@
     "link_number" : "",             <#-- the number of a record (index, sequence num, etc.) -->
     "link_url" : "",                <#-- link containing a URL as its text -->
     "link_value" : "",              <#-- link containing a value of type not previously listed -->
+    "link_longvalue" : "",          <#-- link containing a value of type not previously listed but that may be long -->
     "link_text" : "",               <#-- link containing any kind of free-form text -->
     "link_image" : "",              <#-- link for an image -->
     "link_default" : "",            <#-- general link -->

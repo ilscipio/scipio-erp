@@ -173,6 +173,7 @@
       * labelling should be based mainly on the text content of the link, both the literal content and its meaning in context.
       
     record identifiers and sorting fields:
+      * if the link is an action and contains a text designating an action in addition to identifier, skip this and jump to "actions and navigation" below
       * if the text is a simple single record (entity) id, name, date, or other record identifier, use link_id, link_name, link_date,
         or if the text type is not listed or cannot be known in advance, link_value.
         * if the value is complex or very long (e.g. multiple-field primary key), or possibly if has introductory words ("Order Item: 1000000"),
@@ -187,11 +188,12 @@
       * any static text intended as a link that means to directly or indirectly change the state of the system or
         encourage the user to do so should be labeled with link_action.
         * if the action is very long or complex or contains non-static elements, use link_longaction.
+          * note link_longaction isn't needed in most cases, just in very long/complex cases.
         * in stock ofbiz, sometimes these were marked with extra css classes such as " create", but inconsistently
       * any static text that performs a specific function (but not necessarily changing state of system) such as
         "Download" or "Export" should also be labeled with link_action.
       * if the static text implies a navigation link that will not change the state of the system or perform any function, 
-        and simply meant to navigate, it probably belongs as a link_nav.
+        and simply meant to navigate, it probably belongs as a link_nav (alternatively: convert to @menu)
         * if very long or complex, use link_longnav.
       * TODO: CLARIFY: if the text is a "View" action, it is mostly ambiguous whether it belongs more 
         as a link_action or as link_nav. many of them are currently labeled as link_action.
@@ -202,7 +204,7 @@
                                          of the link types (link_id, link_desc, etc.) and is more appropriate as those. when it designates
                                          a single record, usually more appropriate as one of the other types. -->
     "link_longnav" : "",            <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
-    "link_action" : "button tiny",  <#-- short action text (1-20 chars): "Add", "Edit", "Remove", "Cancel", "Export as PDF", etc. not necessarily a verb, action may be implied, but should be an action. usually static text. 
+    "link_action" : "button tiny",  <#-- action link: "Add", "Edit", "Remove", "Cancel", "Export as PDF", "Edit: WS10000", etc. not necessarily a verb, action may be implied, but should be an action. usually static text. 
                                          this may overlap with link_nav, but usually there is one more appropriate than the other.
                                          if it's a static action like "View", somewhat ambiguous (TODO: clarify) -->
     "link_longaction" : "",         <#-- a very long (more than 20-30 chars) or complex/non-static action text: "Add Content Repository For Order Removal: WS100000" -->

@@ -177,7 +177,8 @@
         or if the text type is not listed or cannot be known in advance, link_value.
         * if the id is complex or very long (e.g. multiple-field primary key), use link_longid.
         * if the unknown/other value type is complex or very long, use link_longvalue.
-      * if it's a mix of name and id or a description, use link_desc.
+      * if it's a combination of name and id, use link_idname.
+      * if it's a longer mix or a description (other than id + name), use link_desc.
       * simple extraneous characters like brackets around an id should not affect selection.
       
     actions and navigation:
@@ -206,8 +207,9 @@
     "link_id" : "button tiny",      <#-- the short ID of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
     "link_longid" : "button tiny",  <#-- the long ID of a record (more than 20-30 chars); for records that do not have short IDs: "WS100000000000-ITEM10000000000000" -->
     "link_name" : "button tiny",    <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
-    "link_desc" : "",               <#-- the description of a record; may also be a composition: "My Order 23 (WS10000)", "This is some value", "This means order cancelled", etc. 
-                                         in general, as soon as a non-action link text contains more than one type of value, it should be changed to link_desc.
+    "link_idname" : "button tiny",  <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
+    "link_desc" : "",               <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. 
+                                         in general, as soon as a non-action link text contains more than one type of value, and not idname, it should be changed to link_desc.
                                          however, if it contains a specific action(s), it may be more appropriate as link_longaction. -->
     "link_date" : "button tiny",    <#-- the date of a record (fromDate, thruDate, etc.) -->
     "link_number" : "",             <#-- the number of a record (index, sequence num, etc.) -->

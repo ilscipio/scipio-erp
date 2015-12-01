@@ -178,7 +178,8 @@
         or if the text type is not listed or cannot be known in advance, link_value.
         * if the value is complex or very long (e.g. multiple-field primary key), or possibly if has introductory words ("Order Item: 1000000"),
           use the corresponding link_longxxx variant instead.
-      * if it's a combination of name and id, use link_idname (or link_longidname).
+      * if it's a combination of name and id, use link_idname (or link_longidname). however, if it's
+        a name with a default value fallback to id, use link_name (or link_longname).
       * if it's a more complex combination or a description (other than id + name), use link_desc.
       * simple extraneous characters like brackets around an id should not affect selection;
         but introductory words ("Order Item: WS10000") may warrant putting it under the link_longxxx variant.

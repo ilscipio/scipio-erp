@@ -40,7 +40,7 @@ under the License.
       <div id="welcome-message">
         <#if sessionAttributes.autoName?has_content>
           ${uiLabelMap.CommonWelcome}&nbsp;${sessionAttributes.autoName?html}!
-          (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="linktext">${uiLabelMap.CommonClickHere}</a>)
+          (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonClickHere}</a>)
         <#else>
           ${uiLabelMap.CommonWelcome}!
         </#if>

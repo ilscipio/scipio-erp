@@ -51,7 +51,7 @@ under the License.
                                     </a>
                                 </div>
                                 <div class="productbuy">
-                                    <a class="linktext"  style="font-size:12px" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">${productCategory.categoryName!productCategoryId}</a>
+                                    <a class="${styles.link_name!}"  style="font-size:12px" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">${productCategory.categoryName!productCategoryId}</a>
                                 </div>
                                 <div class="productinfo">
                                     <ul>
@@ -60,7 +60,7 @@ under the License.
                                         <#list productCategoryMembers as productCategoryMember>
                                             <#if (i > 2)>
                                                 <#if productCategoryMembers[i]?has_content>
-                                                    <a class="linktext" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">
+                                                    <a class="${styles.link_action!}" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">
                                                         <span>More...</span>
                                                     </a>
                                                 </#if>
@@ -69,7 +69,7 @@ under the License.
                                             <#if productCategoryMember?has_content>
                                                 <#assign product = delegator.findOne("Product", Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", productCategoryMember.productId), false)>
                                                 <li class="browsecategorytext">
-                                                    <a class="linktext" href="<@ofbizCatalogAltUrl productCategoryId="PROMOTIONS" productId="${product.productId}"/>">
+                                                    <a class="${styles.link_name!}" href="<@ofbizCatalogAltUrl productCategoryId="PROMOTIONS" productId="${product.productId}"/>">
                                                         ${product.productName!product.productId}
                                                     </a>
                                                 </li>

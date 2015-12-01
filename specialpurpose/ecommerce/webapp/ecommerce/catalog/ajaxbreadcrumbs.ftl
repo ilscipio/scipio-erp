@@ -20,11 +20,11 @@ under the License.
 <div class="breadcrumbs">
 <#assign isDefaultTheme = !layoutSettings.VT_FTR_TMPLT_LOC?contains("multiflex")>        
 <#if isDefaultTheme>
-  <a href="<@ofbizUrl>main</@ofbizUrl>" class="linktext">${uiLabelMap.CommonMain}</a> &gt;
+  <a href="<@ofbizUrl>main</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonMain}</a> &gt;
 <#else>
   <ul>
     <li>
-      <a href="<@ofbizUrl>main</@ofbizUrl>" class="linktext">${uiLabelMap.CommonMain}</a>
+      <a href="<@ofbizUrl>main</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonMain}</a>
     </li>
 </#if>    
     <#-- Show the category branch -->
@@ -32,7 +32,7 @@ under the License.
         <#list productCategoryTrail as trail>
           <#if !isDefaultTheme>                 
             <li>
-              <a href="<@ofbizCatalogAltUrl productCategoryId=trail.productCategoryId previousCategoryId=trail.parentCategory!""/>" class="linktext">
+              <a href="<@ofbizCatalogAltUrl productCategoryId=trail.productCategoryId previousCategoryId=trail.parentCategory!""/>" class="${styles.link_name!}">
                 <#if trail.title??>
                   ${trail.title}
                 <#else>
@@ -41,7 +41,7 @@ under the License.
               </a>
             </li>
           <#else>
-            <a href="<@ofbizCatalogAltUrl productCategoryId=trail.productCategoryId previousCategoryId=trail.parentCategory!""/>" class="linktext">
+            <a href="<@ofbizCatalogAltUrl productCategoryId=trail.productCategoryId previousCategoryId=trail.parentCategory!""/>" class="${styles.link_name!}">
               <#if trail.title??>
                 ${trail.title} >
               <#else>
@@ -53,7 +53,7 @@ under the License.
     </#if>
     <#if !isDefaultTheme>                 
       <li>
-        <a href="<@ofbizCatalogAltUrl productCategoryId=currentCategoryId previousCategoryId=parameters.parentCategoryStr/>" class="linktext">
+        <a href="<@ofbizCatalogAltUrl productCategoryId=currentCategoryId previousCategoryId=parameters.parentCategoryStr/>" class="${styles.link_name!}">
           <#if currentCategoryName??>
             ${currentCategoryName}
           <#elseif currentCategoryDescription??>
@@ -64,7 +64,7 @@ under the License.
         </a>
       </li>
     <#else>
-      <a href="<@ofbizCatalogAltUrl productCategoryId=currentCategoryId previousCategoryId=parameters.parentCategoryStr/>" class="linktext">
+      <a href="<@ofbizCatalogAltUrl productCategoryId=currentCategoryId previousCategoryId=parameters.parentCategoryStr/>" class="${styles.link_name!}">
         <#if currentCategoryName??>
           ${currentCategoryName}
         <#elseif currentCategoryDescription??>

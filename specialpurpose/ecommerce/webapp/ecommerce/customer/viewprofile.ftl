@@ -161,7 +161,7 @@ under the License.
                       <#if (addr1.indexOf(" ") > 0)>
                         <#assign addressNum = addr1.substring(0, addr1.indexOf(" ")) />
                         <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1) />
-                        <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesAddressLink}" class="linktext">(${uiLabelMap.CommonLookupWhitepages})</a>
+                        <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesAddressLink}" class="${styles.link_action!}">(${uiLabelMap.CommonLookupWhitepages})</a>
                       </#if>
                     </#if>
                   <#else>
@@ -176,8 +176,8 @@ under the License.
                   <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber!}
                   <#if partyContactMech.extension?has_content>ext&nbsp;${partyContactMech.extension}</#if>
                   <#if (!telecomNumber.countryCode?has_content || telecomNumber.countryCode = "011")>
-                    <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="linktext">${uiLabelMap.CommonLookupAnywho}</a>
-                    <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="linktext">${uiLabelMap.CommonLookupWhitepages}</a>
+                    <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="${styles.link_action!}">${uiLabelMap.CommonLookupAnywho}</a>
+                    <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="${styles.link_action!}">${uiLabelMap.CommonLookupWhitepages}</a>
                   </#if>
                 <#else>
                   ${uiLabelMap.PartyPhoneNumberInfoNotFound}.
@@ -185,13 +185,13 @@ under the License.
                 </div>
               <#elseif contactMech.contactMechTypeId! = "EMAIL_ADDRESS">
                   ${contactMech.infoString}
-                  <a href="mailto:${contactMech.infoString}" class="linktext">(${uiLabelMap.PartySendEmail})</a>
+                  <a href="mailto:${contactMech.infoString}" class="${styles.link_action!}">(${uiLabelMap.PartySendEmail})</a>
               <#elseif contactMech.contactMechTypeId! = "WEB_ADDRESS">
                 <div>
                   ${contactMech.infoString}
                   <#assign openAddress = contactMech.infoString! />
                   <#if !openAddress.startsWith("http") && !openAddress.startsWith("HTTP")><#assign openAddress = "http://" + openAddress /></#if>
-                  <a target="_blank" href="${openAddress}" class="linktext">(${uiLabelMap.CommonOpenNewWindow})</a>
+                  <a target="_blank" href="${openAddress}" class="${styles.link_action!}">(${uiLabelMap.CommonOpenNewWindow})</a>
                 </div>
               <#else>
                 ${contactMech.infoString!}

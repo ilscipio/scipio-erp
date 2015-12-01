@@ -51,9 +51,9 @@ under the License.
           <@td align="right" width="1%" nowrap="nowrap" background=background>
             <div class="insideHeaderText">
                 <#if userLogin?has_content>
-                  Logged in as&nbsp;<a href="#" class="linktext">${userLogin.userLoginId}</a>&nbsp;|&nbsp;<a href="<@ofbizUrl>/logoff</@ofbizUrl>" class="linktext">Logout</a>&nbsp;|&nbsp;<a href="#" class="linktext">Help Center</a>
+                  Logged in as&nbsp;<a href="#" class="${styles.link_id!}">${userLogin.userLoginId}</a>&nbsp;|&nbsp;<a href="<@ofbizUrl>/logoff</@ofbizUrl>" class="${styles.link_action!}">Logout</a>&nbsp;|&nbsp;<a href="#" class="${styles.link_action!}">Help Center</a>
                 <#else>
-                  Sign up <a href="#" class="linktext">Now!</a>&nbsp;|&nbsp;<a href="#" class="linktext">Help Center</a>
+                  Sign up <a href="#" class="${styles.link_action!}">Now!</a>&nbsp;|&nbsp;<a href="#" class="${styles.link_action!}">Help Center</a>
                 </#if>
             </div>
             <div style="padding-top: 10px;" class="insideHeaderText">

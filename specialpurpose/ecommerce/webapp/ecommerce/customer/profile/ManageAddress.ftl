@@ -245,7 +245,7 @@ under the License.
                       <#if (addr1.indexOf(" ") > 0)>
                         <#assign addressNum = addr1.substring(0, addr1.indexOf(" ")) />
                         <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1) />
-                        <a target="_blank" href="#" class="linktext">(${uiLabelMap.CommonLookupWhitepages})</a>
+                        <a target="_blank" href="#" class="${styles.link_action!}">(${uiLabelMap.CommonLookupWhitepages})</a>
                       </#if>
                     </#if>
                 </div>

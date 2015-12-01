@@ -215,7 +215,7 @@ function setAlternateGwp(field) {
             <@td>
                 <#if cartLine.getShoppingListId()??>
                   <#assign itemsFromList = true />
-                  <a href="<@ofbizUrl>editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@ofbizUrl>" class="linktext">L</a>&nbsp;&nbsp;
+                  <a href="<@ofbizUrl>editShoppingList?shoppingListId=${cartLine.getShoppingListId()}</@ofbizUrl>" class="${styles.link_action!}">L</a>&nbsp;&nbsp;
                 <#elseif cartLine.getIsPromo()>
                   <#assign promoItems = true />
                   <a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="button">P</a>&nbsp;&nbsp;
@@ -241,7 +241,7 @@ function setAlternateGwp(field) {
                     </#if>
                     <#-- end code to display a small image of the product -->
                     <#-- ${cartLineIndex} - -->
-                    <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="linktext">${cartLine.getProductId()} -
+                    <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_idname!}">${cartLine.getProductId()} -
                     ${cartLine.getName()!}</a> : ${cartLine.getDescription()!}
                     <#-- For configurable products, the selected options are shown -->
                     <#if cartLine.getConfigWrapper()??>
@@ -491,7 +491,7 @@ function setAlternateGwp(field) {
         <#-- show promotions text -->
         <ul>
         <#list productPromos as productPromo>
-            <li><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="linktext">[${uiLabelMap.CommonDetails}]</a>${StringUtil.wrapString(productPromo.promoText!)}</li>
+            <li><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.link_action!}">[${uiLabelMap.CommonDetails}]</a>${StringUtil.wrapString(productPromo.promoText!)}</li>
         </#list>
         </ul>
         <div><a href="<@ofbizUrl>showAllPromotions</@ofbizUrl>" class="button">${uiLabelMap.OrderViewAllPromotions}</a></div>

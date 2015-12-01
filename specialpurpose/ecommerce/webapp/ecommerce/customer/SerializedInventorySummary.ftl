@@ -41,7 +41,7 @@ under the License.
                                 </#if>
                                 <#if product?has_content>
                                     <#assign productName = Static['org.ofbiz.product.product.ProductContentWrapper'].getProductContentAsText(product, 'PRODUCT_NAME', request, "html")!>
-                                    <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" class="linktext">${productName?default(product.productId)}</a>
+                                    <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" class="${styles.link_name!}">${productName?default(product.productId)}</a>
                                 </#if>
                             </#if>
                         </@td>

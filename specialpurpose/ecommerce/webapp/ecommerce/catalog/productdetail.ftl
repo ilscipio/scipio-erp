@@ -345,7 +345,7 @@ ${virtualVariantJavaScript!}
             <#if previousProductId??>
               <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=previousProductId!/>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
             </#if>
-            <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId!/>" class="linktext">${(category.categoryName)?default(category.description)!}</a>
+            <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId!/>" class="${styles.link_name!}">${(category.categoryName)?default(category.description)!}</a>
             <#if nextProductId??>
               &nbsp;|&nbsp;<a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=nextProductId!/>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
             </#if>
@@ -744,7 +744,7 @@ ${virtualVariantJavaScript!}
                     <#if !imageUrl?string?has_content>
                       <#assign imageUrl = "/images/defaultImage.jpg" />
                     </#if>
-                      <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="linktext">${key}</a>
+                      <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_name!}">${key}</a>
                       <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a>
                       <br />
                   </#if>
@@ -792,12 +792,12 @@ ${virtualVariantJavaScript!}
                     <hr />
             </#list>
             <div>
-                <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="linktext">${uiLabelMap.ProductReviewThisProduct}!</a>
+                <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.ProductReviewThisProduct}!</a>
             </div>
           <#else>
             <div>${uiLabelMap.ProductProductNotReviewedYet}.</div>
             <div>
-                <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="linktext">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}</a>
+                <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}</a>
             </div>
         </div>
       </#if>

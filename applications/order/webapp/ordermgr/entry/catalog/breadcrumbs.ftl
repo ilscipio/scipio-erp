@@ -19,11 +19,11 @@ under the License.
 <div class="breadcrumbs">
 <#assign isDefaultTheme = !layoutSettings.VT_FTR_TMPLT_LOC?contains("multiflex")>
 <#if isDefaultTheme>
-  <a href="<@ofbizUrl>main</@ofbizUrl>" class="linktext">${uiLabelMap.CommonMain}</a> &gt;
+  <a href="<@ofbizUrl>main</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonMain}</a> &gt;
 <#else>
   <ul>
     <li>
-      <a href="<@ofbizUrl>main</@ofbizUrl>" class="linktext">${uiLabelMap.CommonMain}</a>
+      <a href="<@ofbizUrl>main</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonMain}</a>
     </li>
 </#if>    
     <#-- Show the category branch -->
@@ -32,7 +32,7 @@ under the License.
          <#if catContentWrappers?? && catContentWrappers[crumb]??>
             <#if !isDefaultTheme>         
               <li>
-                 <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="<#if crumb_has_next>linktext<#else>${styles.button_default!} ${styles.disabled!}</#if>">
+                 <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="${styles.link_name!}<#if !crumb_has_next> ${styles.disabled!}</#if>">
                    <#if catContentWrappers[crumb].get("CATEGORY_NAME", "html")??>
                      ${catContentWrappers[crumb].get("CATEGORY_NAME", "html")}
                    <#elseif catContentWrappers[crumb].get("DESCRIPTION", "html")??>
@@ -43,7 +43,7 @@ under the License.
                  </a>
               </li>
             <#else>  
-               <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="<#if crumb_has_next>linktext<#else>${styles.button_default!} ${styles.disabled!}</#if>">
+               <a href="<@ofbizCatalogUrl currentCategoryId=crumb previousCategoryId=previousCategoryId!""/>" class="${styles.link_name!}<#if !crumb_has_next> ${styles.disabled!}</#if>">
                  <#if catContentWrappers[crumb].get("CATEGORY_NAME", "html")??>
                    ${catContentWrappers[crumb].get("CATEGORY_NAME", "html")}
                  <#elseif catContentWrappers[crumb].get("DESCRIPTION", "html")??>

@@ -289,7 +289,7 @@ ${virtualJavaScript!}
         <#if previousProductId??>
           <a href="<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${previousProductId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
         </#if>
-        <a href="<@ofbizUrl>category/~category_id=${categoryId!}</@ofbizUrl>" class="linktext">${(category.categoryName)?default(category.description)!}</a>
+        <a href="<@ofbizUrl>category/~category_id=${categoryId!}</@ofbizUrl>" class="${styles.link_name!}">${(category.categoryName)?default(category.description)!}</a>
         <#if nextProductId??>
           &nbsp;|&nbsp;<a href="<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${nextProductId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
         </#if>
@@ -612,7 +612,7 @@ ${virtualJavaScript!}
                 <@td align="center" valign="bottom">
                   <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class='cssImgSmall' alt="" /></a>
                   <br />
-                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="linktext ${styles.button_default!}">${key}</a>
+                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_name!}">${key}</a>
                 </@td>
               </#if>
               <#assign indexer = indexer + 1>

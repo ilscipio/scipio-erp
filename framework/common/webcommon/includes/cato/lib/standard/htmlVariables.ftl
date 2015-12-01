@@ -173,7 +173,7 @@
     "row_selected" : "selected",
     
   <#-- Text-content-based link styles
-    !!! TODO: THIS IS WIP !!!
+    !!! TODO: THIS IS WIP AND IMPERFECT/FLAWED !!!
   
     how to decide which style to use on a link:
       * labelling should be based mainly on the text content of the link, both the literal content and its meaning in context.
@@ -207,6 +207,7 @@
         * if very long or complex, use link_longnav.
       * TODO: CLARIFY: if the text is a "View" action, it is mostly ambiguous whether it belongs more 
         as a link_action or as link_nav. many of them are currently labeled as link_action.
+      * TODO: a single link_action may be too generic, may need to specialize it
   -->
     "link_nav" : "button tiny",     <#-- static navigation text without explicit action or implied "view" action, generic, not part of a menu type (see menu_xxx styles above): "Categories" 
                                          sometimes this is ambiguous with link_action (?). if links to an action that will change the state of the system directly or indirectly, should be link_action. 

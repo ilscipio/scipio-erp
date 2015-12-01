@@ -8,10 +8,10 @@
 
 <div ${mtarget("breadcrumbs")} id="breadcrumbs"></div>
 <@nav type="breadcrumbs">
-    <li><a href="#">Home</a></li>
-    <li><a href="#">Features</a></li>
-    <li class="${styles.nav_breadcrumbs_disabled!}"><a href="#">Gene Splicing</a></li>
-    <li class="${styles.nav_breadcrumbs_active!}">Cloning</li>
+    <li class="${styles.nav_breadcrumb!}"><a href="#" class="${styles.nav_breadcrumb_link!}">Home</a></li>
+    <li class="${styles.nav_breadcrumb!}"><a href="#" class="${styles.nav_breadcrumb_link!}">Features</a></li>
+    <li class="${styles.nav_breadcrumb!} ${styles.nav_breadcrumb_disabled!}"><a href="#" class="${styles.nav_breadcrumb_link!}">Gene Splicing</a></li>
+    <li class="${styles.nav_breadcrumb!} ${styles.nav_breadcrumb_active!}">Cloning</li>
 </@nav>
 
 <@section>

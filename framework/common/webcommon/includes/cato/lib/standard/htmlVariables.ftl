@@ -58,7 +58,13 @@
     "switch" : "switch",
     
   <#-- Menus 
-       menu_xxx classes are looked up by the @menu and @menuitem macros as defaults for each menu type. --> 
+       menu_xxx classes are looked up by the @menu and @menuitem macros as defaults for each menu type. 
+       NOTE: currently the disabled/active/selected styles are added in addition to the base styles, 
+          not replacing them; this is contrary to the current menu widgets implementation at the time of this
+          writing, where disabled/active/selected styles replace their base styles.
+          FIXME: we should use same behavior everywhere, but not clear which is more desirable at this time
+              (menu widgets' way of replacing is more flexible, but not necessarily intuitive...)
+       --> 
     <#-- Generic menu types -->
     "menu_generic" : "",  
     "menu_generic_item" : "", 
@@ -329,9 +335,12 @@
     "tile_image" : "tile-image",
 
   <#-- Breadcrumbs -->
-    "nav_breadcrumbs" : "breadcrumbs",
-    "nav_breadcrumbs_disabled" : "unavailable",
-    "nav_breadcrumbs_active" : "current",
+    "nav_breadcrumbs" : "breadcrumbs",                  <#-- breadcrumb container -->
+    "nav_breadcrumb" : "",                              <#-- breadcrumb entry -->
+    <#-- NOTE: currently the active/disabled styles are added in addition to nav_breadcrumb, not replacing them -->
+    "nav_breadcrumb_disabled" : "unavailable",
+    "nav_breadcrumb_active" : "current",
+    "nav_breadcrumb_link" : "",                         <#-- breadcrumb link -->
 
   <#-- Panels -->
     "panel_wrap" : "panel",

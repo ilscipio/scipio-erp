@@ -60,9 +60,9 @@ function addRoutingTask() {
     </@row>
 
         <@field type="submitarea">
-            <a href="javascript:addRoutingTask();" class="${styles.button_default!}">${uiLabelMap.ManufacturingAddExistingRoutingTask}</a>
+            <a href="javascript:addRoutingTask();" class="${styles.link_action!}">${uiLabelMap.ManufacturingAddExistingRoutingTask}</a>
                 &nbsp;-&nbsp;
-            <a href="javascript:copyAndAddRoutingTask();" class="${styles.button_default!}">${uiLabelMap.ManufacturingCopyAndAddRoutingTask}</a>
+            <a href="javascript:copyAndAddRoutingTask();" class="${styles.link_action!}">${uiLabelMap.ManufacturingCopyAndAddRoutingTask}</a>
         </@field>
 </form>
 </#if>

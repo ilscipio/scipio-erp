@@ -54,7 +54,7 @@
               <@td>${alias.aliasTo?default("N/A")}</@td>
               <@td>${alias.contentId?default("N/A")}</@td>
               <@td>${alias.mapKey?default("N/A")}</@td>
-              <@td><a href="javascript:void(0);" onclick="javascript:pathRemove('${webSiteId}', '${alias.pathAlias}', '${contentId}');" class="${styles.button_default!}">Remove</a></@td>
+              <@td><a href="javascript:void(0);" onclick="javascript:pathRemove('${webSiteId}', '${alias.pathAlias}', '${contentId}');" class="${styles.link_action!}">${uiLabelMap.CommonRemove}</a></@td>
             </@tr>
         </#list>
       <#else>

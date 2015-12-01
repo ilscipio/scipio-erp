@@ -45,7 +45,7 @@ under the License.
           </#if>
           <#assign productStore = orderHeader.getRelatedOne("ProductStore", true)! />
           <@tr>
-            <@td><a href="/ordermgr/control/orderview?orderId=${orderHeader.orderId}" class="${styles.button_default!}">${orderHeader.orderId}</a></@td>
+            <@td><a href="/ordermgr/control/orderview?orderId=${orderHeader.orderId}" class="${styles.link_id!}">${orderHeader.orderId}</a></@td>
             <@td>${billTo!}</@td>
             <@td><#if productStore?has_content>${productStore.storeName?default(productStore.productStoreId)}</#if></@td>
             <@td><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orderHeader.currencyUom/></@td>

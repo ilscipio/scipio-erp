@@ -38,7 +38,7 @@ if (imageName != "") {
     <#-- FIXME: bypasses table macro... find another way -->
     jQuery('#ImageCropping tr').append("<td class='label'>${uiLabelMap.CommonPreview}</td><td><div style='width:100px;height:100px;overflow:hidden;'><img src='"+imageUrl+"' id='preview' /></div></td>");
     jQuery('#ImageCropping tbody').append("<tr><td><input type='submit' value='${uiLabelMap.CommonSubmit}' name='submitButton' class='${styles.link_action!}'/></td></tr>");
-    jQuery('#ImageCropping tbody').append("<tr><td><a class="${styles.button_default!}" title=' ' href='/catalog/control/ListImageManage?productId="+productId+"'>${uiLabelMap.CommonCancel}</a></td></tr>");
+    jQuery('#ImageCropping tbody').append("<tr><td><a class="${styles.link_action!}" title=' ' href='/catalog/control/ListImageManage?productId="+productId+"'>${uiLabelMap.CommonCancel}</a></td></tr>");
 }
 
 function showPreview(coords){

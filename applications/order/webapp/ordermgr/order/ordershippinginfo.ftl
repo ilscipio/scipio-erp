@@ -123,15 +123,15 @@ under the License.
                       <div> [${OISG.shipGroupSeqId}] <#if OISG.shipByDate?has_content>, ${uiLabelMap.OrderShipBeforeDate} : ${OISG.shipByDate?date}</#if></div>
                           <#if orderType == "SALES_ORDER">
                               <#list orderShipments as orderShipment>
-                      <div>${uiLabelMap.OrderPlannedInShipment} : </b><a target="facility" href="/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}" class="${styles.button_default!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
+                      <div>${uiLabelMap.OrderPlannedInShipment} : </b><a target="facility" href="/facility/control/ViewShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}" class="${styles.link_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
                               </#list>
                           <#elseif orderType == "PURCHASE_ORDER">
                               <#list orderShipments as orderShipment>
                                   <#if orderShipment.quantity?has_content & orderShipment.quantity!=0.0 >
-                      <div>${uiLabelMap.OrderPlannedInReceive} : </b><a target="facility" href="/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}" class="${styles.button_default!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
+                      <div>${uiLabelMap.OrderPlannedInReceive} : </b><a target="facility" href="/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}" class="${styles.link_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${orderShipment.quantity!}</div>
                                   <#else>
                                       <#assign shipmentItem = orderShipment.getShipmentItem()>
-                      <div>${uiLabelMap.OrderPlannedRejected} : </b><a target="facility" href="/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}" class="${styles.button_default!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${shipmentItem.quantity!}</div>
+                      <div>${uiLabelMap.OrderPlannedRejected} : </b><a target="facility" href="/facility/control/ViewReceiveShipment?shipmentId=${orderShipment.shipmentId!}&externalLoginKey=${externalLoginKey}" class="${styles.link_id!}" style="font-size: xx-small;">${orderShipment.shipmentId!}</a>:${orderShipment.shipmentItemSeqId!} - ${shipmentItem.quantity!}</div>
                                   </#if>
                               </#list>
                           </#if>
@@ -519,14 +519,14 @@ under the License.
                         ${shipGroup.shippingInstructions}
                       </@td>
                       <@td>
-                        <a href="javascript:editInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.button_default!}" id="editInstruction_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonEdit}</a>
+                        <a href="javascript:editInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_action!}" id="editInstruction_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonEdit}</a>
                       </@td>
                     </@tr>
                   </@table>
                 <#else>
-                  <a href="javascript:addInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.button_default!}" id="addInstruction_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonAdd}</a>
+                  <a href="javascript:addInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_action!}" id="addInstruction_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonAdd}</a>
                 </#if>
-                <a href="javascript:saveInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.button_default!}" id="saveInstruction_${shipGroup.shipGroupSeqId}" style="display:none">${uiLabelMap.CommonSave}</a>
+                <a href="javascript:saveInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_action!}" id="saveInstruction_${shipGroup.shipGroupSeqId}" style="display:none">${uiLabelMap.CommonSave}</a>
                 <textarea name="shippingInstructions" id="shippingInstructions_${shipGroup.shipGroupSeqId}" style="display:none" rows="0" cols="0">${shipGroup.shippingInstructions!}</textarea>
               </form>
             <#else>
@@ -551,12 +551,12 @@ under the License.
               <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
               <#if shipGroup.giftMessage?has_content>
                 <label>${shipGroup.giftMessage}</label>
-                <a href="javascript:editGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.button_default!}" id="editGiftMessage_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonEdit}</a>
+                <a href="javascript:editGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_action!}" id="editGiftMessage_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonEdit}</a>
               <#else>
-                <a href="javascript:addGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.button_default!}" id="addGiftMessage_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonAdd}</a>
+                <a href="javascript:addGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_action!}" id="addGiftMessage_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonAdd}</a>
               </#if>
               <textarea name="giftMessage" id="giftMessage_${shipGroup.shipGroupSeqId}" style="display:none" rows="0" cols="0">${shipGroup.giftMessage!}</textarea>
-              <a href="javascript:saveGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.button_default!}" id="saveGiftMessage_${shipGroup.shipGroupSeqId}" style="display:none">${uiLabelMap.CommonSave}</a>
+              <a href="javascript:saveGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_action!}" id="saveGiftMessage_${shipGroup.shipGroupSeqId}" style="display:none">${uiLabelMap.CommonSave}</a>
             </form>
           </@td>
         </@tr>
@@ -655,7 +655,7 @@ under the License.
                     </div>
                <#else>
                    <a href="javascript:document.quickDropShipOrder_${shipGroup_index}.submit();" class="${styles.button_default!}">${uiLabelMap.ProductShipmentQuickComplete}</a>
-                   <a href="javascript:document.createShipment3_${shipGroup.shipGroupSeqId}.submit();" class="${styles.button_default!}">${uiLabelMap.OrderNewDropShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]</a>
+                   <a href="javascript:document.createShipment3_${shipGroup.shipGroupSeqId}.submit();" class="${styles.link_longaction!}">${uiLabelMap.OrderNewDropShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]</a>
                    <form name="quickDropShipOrder_${shipGroup_index}" method="post" action="<@ofbizUrl>quickDropShipOrder</@ofbizUrl>">
                         <input type="hidden" name="orderId" value="${orderId}"/>
                         <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>

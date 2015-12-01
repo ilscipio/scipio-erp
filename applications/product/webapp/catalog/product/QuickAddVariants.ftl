@@ -89,7 +89,7 @@ function clickAll(e) {
                 </@td>
                 <@td>
                     <#list existingVariantProductIds as existingVariantProductId>
-                        <a href="<@ofbizUrl>EditProduct?productId=${existingVariantProductId}</@ofbizUrl>" class="${styles.button_default!}">${existingVariantProductId}</a>
+                        <a href="<@ofbizUrl>EditProduct?productId=${existingVariantProductId}</@ofbizUrl>" class="${styles.link_id!}">${existingVariantProductId}</a>
                     </#list>
                 </@td>
                 <@td align="right">

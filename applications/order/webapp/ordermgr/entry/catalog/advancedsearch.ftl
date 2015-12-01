@@ -86,7 +86,7 @@ under the License.
       </@field>
     </#if>
     <@field type="submitarea">
-        <a href="javascript:document.advtokeywordsearchform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonFind}</a>
+        <a href="javascript:document.advtokeywordsearchform.submit()" class="${styles.link_action!}">${uiLabelMap.CommonFind}</a>
     </@field>
 </@section>
 
@@ -96,15 +96,15 @@ under the License.
     <@section title="${uiLabelMap.OrderLastSearches}...">
 
     <div>
-      <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderClearSearchHistory}</a>
+      <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.OrderClearSearchHistory}</a>
       ${uiLabelMap.OrderClearSearchHistoryNote}
     </div>
     <#list searchOptionsHistoryList as searchOptions>
     <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
         <div>
           <b>${uiLabelMap.CommonSearch} #${searchOptions_index + 1}</b>
-          <a href="<@ofbizUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonSearch}</a>
-          <a href="<@ofbizUrl>setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRefine}</a>
+          <a href="<@ofbizUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonSearch}</a>
+          <a href="<@ofbizUrl>setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonRefine}</a>
         </div>
         <#assign constraintStrings = searchOptions.searchGetConstraintStrings(false, delegator, locale)>
         <#list constraintStrings as constraintString>

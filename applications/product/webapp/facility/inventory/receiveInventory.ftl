@@ -55,10 +55,10 @@ under the License.
                 <input type="hidden" name="purchaseOrderId" value ="${(item.orderId)!}"/>
                 <input type="hidden" name="facilityId" value ="${facilityId!}"/>
                 <@tr>
-                  <@td><a href="<@ofbizUrl>ViewShipment?shipmentId=${item.shipmentId!}</@ofbizUrl>" class="${styles.button_default!}">${item.shipmentId!} ${item.shipmentItemSeqId!}</a></@td>
+                  <@td><a href="<@ofbizUrl>ViewShipment?shipmentId=${item.shipmentId!}</@ofbizUrl>" class="${styles.link_longid!}">${item.shipmentId!} ${item.shipmentItemSeqId!}</a></@td>
                   <@td>${item.receiptId}</@td>
                   <@td>${item.getString("datetimeReceived").toString()}</@td>
-                  <@td><a href="/ordermgr/control/orderview?orderId=${item.orderId}" class="${styles.button_default!}">${item.orderId}</a></@td>
+                  <@td><a href="/ordermgr/control/orderview?orderId=${item.orderId}" class="${styles.link_id!}">${item.orderId}</a></@td>
                   <@td>${item.orderItemSeqId}</@td>
                   <@td>${item.productId?default("Not Found")}</@td>
                   <@td>${item.lotId?default("")}</@td>
@@ -324,7 +324,7 @@ under the License.
                             <#assign product = orderItem.getRelatedOne("Product", true)/>
                             <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}"/>
                             <@td width="45%">
-                                ${orderItem.orderItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.button_default!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a> : ${product.description!}
+                                ${orderItem.orderItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.link_desc!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a> : ${product.description!}
                             </@td>
                           <#else>
                             <@td width="45%">

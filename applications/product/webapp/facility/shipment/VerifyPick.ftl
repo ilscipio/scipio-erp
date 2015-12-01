@@ -26,7 +26,7 @@ under the License.
     <#if shipmentId?has_content>
       <@row>
         <@cell>
-        <span>${uiLabelMap.ProductShipmentId}</span> <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.button_default!}">${shipmentId}</a>
+        <span>${uiLabelMap.ProductShipmentId}</span> <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.link_id!}">${shipmentId}</a>
         </@cell>
       </@row>
       <#if invoiceIds?? && invoiceIds?has_content>

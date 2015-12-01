@@ -113,14 +113,14 @@ under the License.
               <@td><input type="text" name="withSurveyQuestionId" size="5" value="${surveyQuestionAndAppl.withSurveyQuestionId!}"/></@td>
               <@td><input type="text" name="withSurveyOptionSeqId" size="5" value="${surveyQuestionAndAppl.withSurveyOptionSeqId!}"/></@td>
               <@td><input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action!}"/></@td>
-              <@td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}&nbsp;${uiLabelMap.ContentSurveyQuestion}</a></@td>
+              <@td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${surveyQuestionAndAppl.surveyQuestionId}#edit</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonEdit}&nbsp;${uiLabelMap.ContentSurveyQuestion}</a></@td>
               </form>
               <@td>
                 <form id="removeSurveyQuestion_${surveyQuestionAndAppl.surveyQuestionId}" action="<@ofbizUrl>removeSurveyQuestionAppl</@ofbizUrl>" method="post">
                   <input type="hidden" name="surveyId" value="${surveyQuestionAndAppl.surveyId}" />
                   <input type="hidden" name="surveyQuestionId" value="${surveyQuestionAndAppl.surveyQuestionId}" />
                   <input type="hidden" name="fromDate" value="${surveyQuestionAndAppl.fromDate}" />
-                  <a href="javascript:document.getElementById('removeSurveyQuestion_${surveyQuestionAndAppl.surveyQuestionId}').submit();"" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
+                  <a href="javascript:document.getElementById('removeSurveyQuestion_${surveyQuestionAndAppl.surveyQuestionId}').submit();"" class="${styles.link_action!}">${uiLabelMap.CommonRemove}</a>
                 </form>
               </@td>
             </@tr>
@@ -156,7 +156,7 @@ under the License.
               <input type="hidden" name="surveyQuestionId" value="${question.surveyQuestionId}" />
               <input type="hidden" name="surveyQuestionCategoryId" value="${requestParameters.surveyQuestionCategoryId}" />
               <@tr>
-                <@td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${question.surveyQuestionId}&amp;surveyQuestionCategoryId=${requestParameters.surveyQuestionCategoryId}#edit</@ofbizUrl>" class="${styles.button_default!}">${question.surveyQuestionId}</a></@td>
+                <@td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${question.surveyQuestionId}&amp;surveyQuestionCategoryId=${requestParameters.surveyQuestionCategoryId}#edit</@ofbizUrl>" class="${styles.link_id!}">${question.surveyQuestionId}</a></@td>
                 <@td>${question.description!}</@td>
                 <@td>${questionType.get("description",locale)}</@td>
                 <@td>${question.question!}</@td>
@@ -261,13 +261,13 @@ under the License.
         <@tr>
           <@td>${option.description!}</@td>
           <@td>${option.sequenceNum!}</@td>
-          <@td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${option.surveyQuestionId}&amp;surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a></@td>
+          <@td><a href="<@ofbizUrl>EditSurveyQuestions?surveyId=${requestParameters.surveyId}&amp;surveyQuestionId=${option.surveyQuestionId}&amp;surveyOptionSeqId=${option.surveyOptionSeqId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonEdit}</a></@td>
           <@td>
             <form id="deleteSurveyQuestionOption_${option_index}" action="<@ofbizUrl>deleteSurveyQuestionOption</@ofbizUrl>" method="post">
               <input type="hidden" name="surveyId" value="${requestParameters.surveyId}" />
               <input type="hidden" name="surveyQuestionId" value="${option.surveyQuestionId}" />
               <input type="hidden" name="surveyOptionSeqId" value="${option.surveyOptionSeqId}" />
-              <a href="javascript:document.getElementById('deleteSurveyQuestionOption_${option_index}').submit();"" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
+              <a href="javascript:document.getElementById('deleteSurveyQuestionOption_${option_index}').submit();"" class="${styles.link_action!}">${uiLabelMap.CommonRemove}</a>
             </form>
           </@td>
         </@tr>

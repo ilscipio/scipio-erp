@@ -281,7 +281,7 @@ under the License.
             <#assign orderProduct = oiasga.getRelatedOne("OrderItem", false).getRelatedOne("Product", false)!>
             <#assign product = oiasga.getRelatedOne("InventoryItem", false).getRelatedOne("Product", false)!>
             <@tr valign="middle">
-              <@td><a href="/ordermgr/control/orderview?orderId=${oiasga.orderId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${oiasga.orderId}</a></@td>
+              <@td><a href="/ordermgr/control/orderview?orderId=${oiasga.orderId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_id!}" target="_blank">${oiasga.orderId}</a></@td>
               <@td>${header.orderDate?string}</@td>
               <@td>${(channel.description)!}</@td>
               <@td>${oiasga.orderItemSeqId}</@td>

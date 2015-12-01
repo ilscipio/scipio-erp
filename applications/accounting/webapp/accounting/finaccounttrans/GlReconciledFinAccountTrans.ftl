@@ -141,7 +141,7 @@ under the License.
               			<@td><#if status?has_content>${status.description!}</#if></@td>
               			<@td>${finAccountTrans.comments!}</@td>
               			<#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
-                			<@td align="center"><a href="javascript:document.reomveFinAccountTransAssociation_${finAccountTrans.finAccountTransId}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a></@td>
+                			<@td align="center"><a href="javascript:document.reomveFinAccountTransAssociation_${finAccountTrans.finAccountTransId}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonRemove}</a></@td>
               			<#else>
                 			<@td/>
               			</#if>

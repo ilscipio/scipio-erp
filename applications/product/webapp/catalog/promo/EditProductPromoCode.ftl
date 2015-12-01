@@ -49,7 +49,7 @@ under the License.
     
     <@section title="${uiLabelMap.ProductPromoCodeParties}">
             <#list productPromoCodeParties as productPromoCodeParty>
-                <div><a href="<@ofbizUrl>deleteProductPromoCodeParty?productPromoCodeId=${productPromoCodeParty.productPromoCodeId}&amp;partyId=${productPromoCodeParty.partyId}&amp;productPromoId=${productPromoId}</@ofbizUrl>" class="${styles.button_default!}">X</a>&nbsp;${productPromoCodeParty.partyId}</div>
+                <div><a href="<@ofbizUrl>deleteProductPromoCodeParty?productPromoCodeId=${productPromoCodeParty.productPromoCodeId}&amp;partyId=${productPromoCodeParty.partyId}&amp;productPromoId=${productPromoId}</@ofbizUrl>" class="${styles.link_action!}">X</a>&nbsp;${productPromoCodeParty.partyId}</div>
             </#list>
             <div>
                 <form method="post" action="<@ofbizUrl>createProductPromoCodeParty</@ofbizUrl>">

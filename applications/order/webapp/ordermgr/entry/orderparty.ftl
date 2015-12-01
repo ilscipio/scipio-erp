@@ -30,7 +30,7 @@ under the License.
             <form method="post" action="<@ofbizUrl>orderentry</@ofbizUrl>" name="setpartyform">
               <div><input type="text" name="partyId" size='10' value="${partyId!}" /></div>
               <div>
-                <a href="javascript:document.setpartyform.submit();" class="${styles.button_default!}">${uiLabelMap.CommonSet}</a>&nbsp;|&nbsp;<a href="/partymgr/control/findparty" class="${styles.button_default!}">${uiLabelMap.CommonFind}</a><#if partyId?default("_NA_") != "_NA_" && partyId?default("_NA_") != "">&nbsp;|&nbsp;<a href="${customerDetailLink}${partyId}" class="${styles.button_default!}">${uiLabelMap.CommonView}</a></#if>
+                <a href="javascript:document.setpartyform.submit();" class="${styles.link_action!}">${uiLabelMap.CommonSet}</a>&nbsp;|&nbsp;<a href="/partymgr/control/findparty" class="${styles.link_action!}">${uiLabelMap.CommonFind}</a><#if partyId?default("_NA_") != "_NA_" && partyId?default("_NA_") != "">&nbsp;|&nbsp;<a href="${customerDetailLink}${partyId}" class="${styles.link_action!}">${uiLabelMap.CommonView}</a></#if>
               </div>
             </form>
           </@td>

@@ -22,7 +22,7 @@ under the License.
         <ul>
         <#-- show promotions text -->
         <#list productPromosAllShowable as productPromo>
-            <li><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonDetails}</a>${StringUtil.wrapString(productPromo.promoText!)}</li>
+            <li><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonDetails}</a>${StringUtil.wrapString(productPromo.promoText!)}</li>
         </#list>
         </ul>
     </div>

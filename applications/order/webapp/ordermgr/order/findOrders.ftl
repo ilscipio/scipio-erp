@@ -456,7 +456,7 @@ document.lookuporder.orderId.focus();
               <@td>${orderHeader.getString("orderDate")!}</@td>
               <@td>
                 <#if partyId != "_NA_">
-                  <a href="${customerDetailLink}${partyId}" class="${styles.button_default!}">${partyId}</a>
+                  <a href="${customerDetailLink}${partyId}" class="${styles.link_id!}">${partyId}</a>
                 <#else>
                   ${uiLabelMap.CommonNA}
                 </#if>

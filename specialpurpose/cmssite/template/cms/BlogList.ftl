@@ -22,7 +22,7 @@ under the License.
   <@row>
     <@cell>
     <i><b>${blog.contentName}</b></i>
-    <a href="ViewArticle?articleContentId=${blog.contentId}&amp;blogContentId=${blogContentId}" class="${styles.button_default!}">[${blog.contentId}]</a><br />
+    <a href="ViewArticle?articleContentId=${blog.contentId}&amp;blogContentId=${blogContentId}" class="${styles.link_id!}">[${blog.contentId}]</a><br />
     <@renderSubContentCache subContentId=blog.contentId mapKey="SUMMARY"/>
     </@cell>
   </@row>

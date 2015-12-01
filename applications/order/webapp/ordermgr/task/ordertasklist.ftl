@@ -67,7 +67,7 @@ under the License.
                             <#assign statusItem = orderHeaderAndRole.getRelatedOne("StatusItem", true)>
                             <#assign placingParty = orh.getPlacingParty()!>
                             <@tr valign="middle">
-                              <@td><a href="<@ofbizUrl>orderview?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class='${styles.button_default!}'>${orderHeaderAndRole.orderId}</a></@td>
+                              <@td><a href="<@ofbizUrl>orderview?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class="${styles.link_id!}">${orderHeaderAndRole.orderId}</a></@td>
                               <@td>
                                   <#assign partyId = "_NA_">
                                   <#if placingParty?has_content>
@@ -239,7 +239,7 @@ under the License.
                                   <#if task.wepaPartyId == "_NA_">
                                     <div>N/A</div>
                                   <#else>
-                                    <a href="${customerDetailLink}${task.wepaPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="${styles.button_default!}">${task.wepaPartyId}</a>
+                                    <a href="${customerDetailLink}${task.wepaPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="${styles.link_id!}">${task.wepaPartyId}</a>
                                   </#if>
                                 </@td>
                                 <@td>${Static["org.ofbiz.order.task.TaskWorker"].getRoleDescription(task)}</@td>

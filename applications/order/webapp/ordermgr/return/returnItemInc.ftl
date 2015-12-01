@@ -19,7 +19,7 @@ under the License.
 <#assign sectionTitle>
     <@row>
         <@cell small=10>
-            <@heading>${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></@heading>
+            <@heading>${uiLabelMap.OrderReturnFromOrder} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_id!}">${orderId}</a></@heading>
         </@cell>
         <@cell small=2>
             <span>${uiLabelMap.CommonSelectAll}</span>&nbsp;
@@ -179,7 +179,7 @@ under the License.
   
   
 <#if returnableItems?has_content>
-  <#assign sectionTitle>${uiLabelMap.OrderReturnAdjustments} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></#assign>
+  <#assign sectionTitle>${uiLabelMap.OrderReturnAdjustments} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_id!}">${orderId}</a></#assign>
   <@section title=sectionTitle>
     <#if orderHeaderAdjustments?has_content>
       <@table type="data-list">
@@ -231,7 +231,7 @@ under the License.
         <input type="hidden" name="returnItemTypeId_o_${rowCount}" value="RET_MAN_ADJ"/>
         <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="_NA_"/>
         
-  <#assign sectionTitle>${uiLabelMap.OrderReturnManualAdjustment} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.button_default!}">${orderId}</a></#assign>
+  <#assign sectionTitle>${uiLabelMap.OrderReturnManualAdjustment} ${uiLabelMap.CommonNbr} <a href="<@ofbizUrl>orderview?orderId=${orderId}</@ofbizUrl>" class="${styles.link_id!}">${orderId}</a></#assign>
   <@section title=sectionTitle>
         <@table type="data-list">
           <@thead>

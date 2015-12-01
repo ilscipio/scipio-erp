@@ -81,8 +81,8 @@ under the License.
         <#list foundLocations as location>
         <#assign locationTypeEnum = location.getRelatedOne("TypeEnumeration", true)!>
         <@tr valign="middle">
-            <@td><a href="<@ofbizUrl>EditFacility?facilityId=${(location.facilityId)!}</@ofbizUrl>" class="${styles.button_default!}">${(location.facilityId)!}</a></@td>
-            <@td><a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.button_default!}">${(location.locationSeqId)!}</a></@td>
+            <@td><a href="<@ofbizUrl>EditFacility?facilityId=${(location.facilityId)!}</@ofbizUrl>" class="${styles.link_id!}">${(location.facilityId)!}</a></@td>
+            <@td><a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.link_id!}">${(location.locationSeqId)!}</a></@td>
             <@td>${(locationTypeEnum.get("description",locale))?default(location.locationTypeEnumId!)}</@td>
             <@td>${(location.areaId)!}</@td>
             <@td>${(location.aisleId)!}</@td>
@@ -92,9 +92,9 @@ under the License.
             <@td class="button-col">
               <a href="<@ofbizUrl>EditInventoryItem?facilityId=${(location.facilityId)!}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewInventoryItem}</a>
               <#if itemId??>
-                <a href="<@ofbizUrl>UpdateInventoryItem?inventoryItemId=${itemId}&facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductSetItem} ${itemId}</a>
+                <a href="<@ofbizUrl>UpdateInventoryItem?inventoryItemId=${itemId}&facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.ProductSetItem} ${itemId}</a>
               </#if>
-              <a href="<@ofbizUrl>EditFacilityLocation?facilityId=${(location.facilityId)!}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
+              <a href="<@ofbizUrl>EditFacilityLocation?facilityId=${(location.facilityId)!}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonEdit}</a>
             </@td>
         </@tr>
         </#list>

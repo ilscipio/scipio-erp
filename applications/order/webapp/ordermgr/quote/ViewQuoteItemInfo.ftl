@@ -88,7 +88,7 @@ under the License.
                                     </a>
                                   </#if>
                             <#else>
-                                <a href="<@ofbizUrl>product?product_id=${quoteItem.productId!}</@ofbizUrl>" class="${styles.button_default!}">${quoteItem.productId!}</a>
+                                <a href="<@ofbizUrl>product?product_id=${quoteItem.productId!}</@ofbizUrl>" class="${styles.link_id!}">${quoteItem.productId!}</a>
                             </#if>
                         </@td>
                     <@td class="amount">${quoteItem.quantity!}</@td>

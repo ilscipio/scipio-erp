@@ -511,7 +511,7 @@ function callMetaInfo(contentId) {
 
 <div id="subsites"></div>
 <#if (!subsites?has_content)>
-    <a href="javascript:void(0);" class="${styles.button_default!}">${uiLabelMap.ContentWebSiteAddTree}</a>
+    <a href="javascript:void(0);" class="${styles.link_action!}">${uiLabelMap.ContentWebSiteAddTree}</a>
 </#if>
 <div>
     ${uiLabelMap.ContentWebSiteMenus}
@@ -523,7 +523,7 @@ function callMetaInfo(contentId) {
 
 <div id="menus"></div>
 <#if (!menus?has_content)>
-    <a href="javascript:void(0);" class="${styles.button_default!}">${uiLabelMap.ContentWebSiteAddMenu}</a>
+    <a href="javascript:void(0);" class="${styles.link_action!}">${uiLabelMap.ContentWebSiteAddMenu}</a>
 </#if>
 
 <div>&nbsp;</div>
@@ -538,5 +538,5 @@ function callMetaInfo(contentId) {
 <div>&nbsp;</div>
 <div id="errors"></div>
 <#if (!errors?has_content)>
-    <a href="javascript:void(0);" class="${styles.button_default!}">${uiLabelMap.ContentWebSiteAddError}</a>
+    <a href="javascript:void(0);" class="${styles.link_action!}">${uiLabelMap.ContentWebSiteAddError}</a>
 </#if>

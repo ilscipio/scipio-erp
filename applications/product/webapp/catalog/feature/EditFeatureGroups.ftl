@@ -29,7 +29,7 @@ under the License.
         <@tbody>
           <#list productFeatureGroups as productFeatureGroup>
             <@tr valign="middle">
-                <@td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.button_default!}">${productFeatureGroup.productFeatureGroupId}</a></@td>
+                <@td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.link_id!}">${productFeatureGroup.productFeatureGroupId}</a></@td>
                 <@td>
                     <form method='post' action='<@ofbizUrl>UpdateProductFeatureGroup</@ofbizUrl>'>
                     <input type='hidden' name="productFeatureGroupId" value="${productFeatureGroup.productFeatureGroupId}" />

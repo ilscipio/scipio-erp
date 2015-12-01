@@ -54,7 +54,7 @@ under the License.
             <#list orderShipments as orderShipment>
                 <@tr valign="middle" alt=alt_row>
                     <@td>&nbsp;</@td>
-                    <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${orderShipment.orderId!}" class="${styles.button_default!}">${orderShipment.orderId!}</a> ${orderShipment.orderItemSeqId!}</@td>
+                    <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${orderShipment.orderId!}" class="${styles.link_id!}">${orderShipment.orderId!}</a> ${orderShipment.orderItemSeqId!}</@td>
                     <@td>&nbsp;</@td>
                     <@td>${orderShipment.quantity!}</@td>
                     <@td>&nbsp;</@td>

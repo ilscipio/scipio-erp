@@ -192,7 +192,7 @@ under the License.
                       </#if>
                     </select>
                   </@td>
-                  <@td align="right"><a href="javascript:document.weightPackageForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductNextPackage}</a></@td>
+                  <@td align="right"><a href="javascript:document.weightPackageForm.submit()" class="${styles.link_action!}">${uiLabelMap.ProductNextPackage}</a></@td>
                 </@tr>
               </form>
             </@table>

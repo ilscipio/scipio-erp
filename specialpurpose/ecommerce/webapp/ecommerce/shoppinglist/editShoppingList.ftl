@@ -69,13 +69,13 @@ under the License.
         <#-- End Page Select Drop-Down -->
         
         <#if (viewIndex?int > 1)>
-            <a href="javascript: void(0);" onclick="callDocumentByPaginate('${shoppingListId!}~${viewSize}~${viewIndex?int - 1}');" class="${styles.button_default!}">${uiLabelMap.CommonPrevious}</a> |
+            <a href="javascript: void(0);" onclick="callDocumentByPaginate('${shoppingListId!}~${viewSize}~${viewIndex?int - 1}');" class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a> |
         </#if>
         <#if ((listSize?int - viewSize?int) > 0)>
             <span>${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
         </#if>
         <#if highIndex?int < listSize?int>
-         | <a href="javascript: void(0);" onclick="callDocumentByPaginate('${shoppingListId!}~${viewSize}~${viewIndex?int + 1}');" class="${styles.button_default!}">${uiLabelMap.CommonNext}</a>
+         | <a href="javascript: void(0);" onclick="callDocumentByPaginate('${shoppingListId!}~${viewSize}~${viewIndex?int + 1}');" class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
         </#if>
     </div>
 </#if>

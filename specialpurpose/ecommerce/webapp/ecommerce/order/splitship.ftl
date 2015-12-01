@@ -65,7 +65,7 @@ function submitForm(form, mode, value) {
                   <@td>
                     <div>
                       <span class="tabletext">${uiLabelMap.CommonAdd}:</span>
-                      <a href="javascript:submitForm(document.editgroupform${groupIdx}, 'NA', '');" class="${styles.button_default!}">${uiLabelMap.PartyAddNewAddress}</a>
+                      <a href="javascript:submitForm(document.editgroupform${groupIdx}, 'NA', '');" class="${styles.link_action!}">${uiLabelMap.PartyAddNewAddress}</a>
                     </div>
                     <div>
                       <#assign selectedContactMechId = cart.getShippingContactMechId(groupIdx)?default("")>
@@ -235,10 +235,10 @@ function submitForm(form, mode, value) {
 <@table>
   <@tr valign="top">
     <@td>
-      &nbsp;<a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
+      &nbsp;<a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
     </@td>
     <@td align="right">
-      <a href="<@ofbizUrl>view/checkoutpayment</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonContinue}</a>
+      <a href="<@ofbizUrl>view/checkoutpayment</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonContinue}</a>
     </@td>
   </@tr>
 </@table>

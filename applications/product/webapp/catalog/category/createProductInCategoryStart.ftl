@@ -69,7 +69,7 @@ under the License.
                     <input type="text" name="averageCost" size="8"/>
                 </@field>
                 <@field type="submitarea">
-                    <a href="javascript:document.createProductInCategoryCheckExistingForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductCheckExisting}</a>
+                    <a href="javascript:document.createProductInCategoryCheckExistingForm.submit()" class="${styles.link_action!}">${uiLabelMap.ProductCheckExisting}</a>
                 </@field>
         </form>
 </@section>

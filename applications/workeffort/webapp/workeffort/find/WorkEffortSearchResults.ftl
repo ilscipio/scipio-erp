@@ -18,10 +18,10 @@ under the License.
 -->
 <@section title="${uiLabelMap.WorkEffortSearchWorkEfforts}, ${uiLabelMap.ProductSearchFor}:">
     <#list searchConstraintStrings as searchConstraintString>
-        <div>&nbsp;<a href="<@ofbizUrl>WorkEffortSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.button_default!}">X</a>&nbsp;${searchConstraintString}</div>
+        <div>&nbsp;<a href="<@ofbizUrl>WorkEffortSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_action!}">X</a>&nbsp;${searchConstraintString}</div>
     </#list>
     <div><span>${uiLabelMap.CommonSortedBy}</span> ${searchSortOrderString}</div>
-    <div><a href="<@ofbizUrl>WorkEffortSearchOptions</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRefineSearch}</a></div>
+    <div><a href="<@ofbizUrl>WorkEffortSearchOptions</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonRefineSearch}</a></div>
 
     <#if !workEffortIds?has_content>
       <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>

@@ -65,7 +65,7 @@ function submitForm(form, mode, value) {
                   <@td>
                     <div>
                       <span class="tabletext">${uiLabelMap.CommonAdd}:</span>
-                      <a href="javascript:submitForm(document.editgroupform${groupIdx}, 'NA', '');" class="${styles.button_default!}">${uiLabelMap.PartyAddNewAddress}</a>
+                      <a href="javascript:submitForm(document.editgroupform${groupIdx}, 'NA', '');" class="${styles.link_action!}">${uiLabelMap.PartyAddNewAddress}</a>
                     </div>
                     <div>
                       <#assign selectedContactMechId = cart.getShippingContactMechId(groupIdx)?default("")>

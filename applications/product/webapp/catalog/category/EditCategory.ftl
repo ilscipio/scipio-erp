@@ -32,7 +32,7 @@ function insertImageName(type,nameValue) {
             <div>${uiLabelMap.ProductTheFileOnYourComputer}: <b>${clientFileName!}</b></div>
             <div>${uiLabelMap.ProductServerFileName}: <b>${fileNameToUse!}</b></div>
             <div>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath!}</b></div>
-            <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>" class="${styles.button_default!}">${imageUrl!}</a></b></div>
+            <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>" class="${styles.link_url!}">${imageUrl!}</a></b></div>
         </#if>
     </@section>
 </#if>
@@ -121,9 +121,9 @@ function insertImageName(type,nameValue) {
                         <#if productCategory?has_content>
                             <div>
                             ${uiLabelMap.ProductInsertDefaultImageUrl}:
-                            <a href="javascript:insertImageName('category','${imageNameCategory}.jpg');" class="${styles.button_default!}">.jpg</a>
-                            <a href="javascript:insertImageName('category','${imageNameCategory}.gif');" class="${styles.button_default!}">.gif</a>
-                            <a href="javascript:insertImageName('category','');" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
+                            <a href="javascript:insertImageName('category','${imageNameCategory}.jpg');" class="${styles.link_action!}">.jpg</a>
+                            <a href="javascript:insertImageName('category','${imageNameCategory}.gif');" class="${styles.link_action!}">.gif</a>
+                            <a href="javascript:insertImageName('category','');" class="${styles.link_action!}">${uiLabelMap.CommonClear}</a>
                             </div>
                         </#if>
                 </@field>
@@ -139,9 +139,9 @@ function insertImageName(type,nameValue) {
                         <#if productCategory?has_content>
                             <div>
                                 ${uiLabelMap.ProductInsertDefaultImageUrl}:
-                                <a href="javascript:insertImageName('linkOne','${imageNameLinkOne}.jpg');" class="${styles.button_default!}">.jpg</a>
-                                <a href="javascript:insertImageName('linkOne','${imageNameLinkOne}.gif');" class="${styles.button_default!}">.gif</a>
-                                <a href="javascript:insertImageName('linkOne','');" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
+                                <a href="javascript:insertImageName('linkOne','${imageNameLinkOne}.jpg');" class="${styles.link_action!}">.jpg</a>
+                                <a href="javascript:insertImageName('linkOne','${imageNameLinkOne}.gif');" class="${styles.link_action!}">.gif</a>
+                                <a href="javascript:insertImageName('linkOne','');" class="${styles.link_action!}">${uiLabelMap.CommonClear}</a>
                             </div>
                         </#if>
                 </@field>
@@ -159,9 +159,9 @@ function insertImageName(type,nameValue) {
                         <#if productCategory?has_content>
                             <div>
                                 ${uiLabelMap.ProductInsertDefaultImageUrl}:
-                                <a href="javascript:insertImageName('linkTwo','${imageNameLinkTwo}.jpg');" class="${styles.button_default!}">.jpg</a>
-                                <a href="javascript:insertImageName('linkTwo','${imageNameLinkTwo}.gif');" class="${styles.button_default!}">.gif</a>
-                                <a href="javascript:insertImageName('linkTwo','');" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
+                                <a href="javascript:insertImageName('linkTwo','${imageNameLinkTwo}.jpg');" class="${styles.link_action!}">.jpg</a>
+                                <a href="javascript:insertImageName('linkTwo','${imageNameLinkTwo}.gif');" class="${styles.link_action!}">.gif</a>
+                                <a href="javascript:insertImageName('linkTwo','');" class="${styles.link_action!}">${uiLabelMap.CommonClear}</a>
                             </div>
                         </#if>
                 </@field>

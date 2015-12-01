@@ -51,7 +51,7 @@ under the License.
             <@tr>
                 <@td>${product.internalName?default("-no internal name-")} [${product.productId}]</@td>
                 <@td>${product.productName?default("-no name-")} [${product.productId}]</@td>
-                <@td width="10%"><a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.ProductThisIsIt}]</a></@td>
+                <@td width="10%"><a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.link_action!}">[${uiLabelMap.ProductThisIsIt}]</a></@td>
             </@tr>
           </#list>
           </@tbody>

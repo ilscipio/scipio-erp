@@ -56,6 +56,7 @@
     "icon_error" : "fi-alert",
     "heading_level_prefix" : "heading-level-",  
     "switch" : "switch",
+    "dropdown" : "dropdown",
     
   <#-- Menus 
        menu_xxx classes are looked up by the @menu and @menuitem macros as defaults for each menu type. 
@@ -172,7 +173,7 @@
     "row_alt" : "odd",
     "row_selected" : "selected",
     
-  <#-- Text-content-based link styles
+  <#-- Standalone link styles (includes links in tables)
     !!! TODO: THIS IS WIP AND IMPERFECT/FLAWED !!!
   
     how to decide which style to use on a link:
@@ -181,22 +182,10 @@
         kind of link it should want based on what's here. in theory this just means we don't have enough categories yet or
         they're not generalized enough yet.
       
-    record identifiers and sorting fields:
-      * if the link is an action and contains a text designating an action in addition to identifier, skip this and jump to "actions and navigation" below
-      * if the text is a simple single record (entity) id, name, date, or other record identifier, use link_id, link_name, link_date,
-        or if the text type is not listed or cannot be known in advance, link_value.
-        * if the value is complex or very long (e.g. multiple-field primary key), or possibly if has introductory words ("Order Item: 1000000"),
-          use the corresponding link_longxxx variant instead.
-      * if it's a combination of name and id, use link_idname (or link_longidname). however, if it's
-        a name with a default value fallback to id, use link_name (or link_longname).
-      * if it's a more complex combination or a description (other than id + name), use link_desc.
-      * simple extraneous characters like brackets around an id should not affect selection;
-        but introductory words ("Order Item: WS10000") may warrant putting it under the link_longxxx variant.
-        in some cases, extra words means it should go under link_desc.
-      
     actions and navigation:
       * any static text intended as a link that means to directly or indirectly change the state of the system or
-        encourage the user to do so should be labeled with link_action.
+        encourage the user to do so should be labeled with link_action. also any static text that shows
+        an action but appended with an ID falls here. if it's just an ID or name alone, falls under "record identifiers and sorting fields" below.
         * if the action is very long or complex or contains non-static elements, use link_longaction.
           * note link_longaction isn't needed in most cases, just in very long/complex cases.
         * in stock ofbiz, sometimes these were marked with extra css classes such as " create", but inconsistently
@@ -208,17 +197,29 @@
       * TODO: CLARIFY: if the text is a "View" action, it is mostly ambiguous whether it belongs more 
         as a link_action or as link_nav. many of them are currently labeled as link_action.
       * TODO: a single link_action may be too generic, may need to specialize it
+      
+    record identifiers and sorting fields:
+      * if the text is a simple single record (entity) id, name, date, or other record identifier, use link_id, link_name, link_date,
+        or if the text type is not listed or cannot be known in advance, link_value.
+        * if the value is complex or very long (e.g. multiple-field primary key), or possibly if has introductory words ("Order Item: 1000000"),
+          use the corresponding link_longxxx variant instead.
+      * if it's a combination of name and id, use link_idname (or link_longidname). however, if it's
+        a name with a default value fallback to id, use link_name (or link_longname).
+      * if it's a more complex combination or a description (other than id + name), use link_desc.
+      * simple extraneous characters like brackets around an id should not affect selection;
+        but introductory words ("Order Item: WS10000") may warrant putting it under the link_longxxx variant.
+        in some cases, extra words means it should go under link_desc.
   -->
+    "link_action" : "button tiny",  <#-- action link: "Add", "Edit", "Remove", "Cancel", "Export as PDF", "Edit: WS10000", etc. not necessarily a verb, action may be implied, but should be an action. usually static text. 
+                                         this may overlap with link_nav, but usually there is one more appropriate than the other.
+                                         if it's a static action like "View", somewhat ambiguous (TODO: clarify) -->
+    "link_longaction" : "",         <#-- a very long (more than 20-30 chars) or complex/non-static action text: "Add Content Repository For Order Removal: WS100000" -->
     "link_nav" : "button tiny",     <#-- static navigation text without explicit action or implied "view" action, generic, not part of a menu type (see menu_xxx styles above): "Categories" 
                                          sometimes this is ambiguous with link_action (?). if links to an action that will change the state of the system directly or indirectly, should be link_action. 
                                          if simply browsing or view action, link_nav is more appropriate, though many times will fall under another
                                          of the link types (link_id, link_desc, etc.) and is more appropriate as those. when it designates
                                          a single record, usually more appropriate as one of the other types. -->
     "link_longnav" : "",            <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
-    "link_action" : "button tiny",  <#-- action link: "Add", "Edit", "Remove", "Cancel", "Export as PDF", "Edit: WS10000", etc. not necessarily a verb, action may be implied, but should be an action. usually static text. 
-                                         this may overlap with link_nav, but usually there is one more appropriate than the other.
-                                         if it's a static action like "View", somewhat ambiguous (TODO: clarify) -->
-    "link_longaction" : "",         <#-- a very long (more than 20-30 chars) or complex/non-static action text: "Add Content Repository For Order Removal: WS100000" -->
     "link_id" : "button tiny",      <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
     "link_longid" : "button tiny",  <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
     "link_name" : "button tiny",    <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->

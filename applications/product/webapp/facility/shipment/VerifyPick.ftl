@@ -203,7 +203,7 @@ under the License.
                   <@td>${orderItemSeqId!}</@td>
                   <@td>${product.productId?default("N/A")}</@td>
                   <@td>
-                    <a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${(product.internalName)!}</a>
+                    <a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_name!}" target="_blank">${(product.internalName)!}</a>
                   </@td>
                   <@td>
                     <select name="geo_${rowKey}">
@@ -315,7 +315,7 @@ under the License.
               </#list>
             </@table>
             <div align="right">
-              <a href="javascript:document.completePickForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductComplete}</a>
+              <a href="javascript:document.completePickForm.submit()" class="${styles.link_action!}">${uiLabelMap.ProductComplete}</a>
             </div>
         </@section>
       </#if>

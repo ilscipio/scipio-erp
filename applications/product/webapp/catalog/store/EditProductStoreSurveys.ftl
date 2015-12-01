@@ -45,7 +45,7 @@ under the License.
                   <form name="deleteProductStoreSurveyAppl_${storeSurvey_index}" method="post" action="<@ofbizUrl>deleteProductStoreSurveyAppl</@ofbizUrl>">
                     <input type="hidden" name="productStoreId" value="${productStoreId}" />
                     <input type="hidden" name="productStoreSurveyId" value="${storeSurvey.productStoreSurveyId}" />
-                    <a href="javascript:document.deleteProductStoreSurveyAppl_${storeSurvey_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.deleteProductStoreSurveyAppl_${storeSurvey_index}.submit()" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a>
                   </form>
                 </@td>
               </@tr>

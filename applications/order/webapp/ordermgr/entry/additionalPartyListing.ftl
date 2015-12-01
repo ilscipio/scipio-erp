@@ -44,7 +44,7 @@ under the License.
                   </#if>
               </@td>
               <@td class="+${styles.text_right!}">
-                <a href="<@ofbizUrl>removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
+                <a href="<@ofbizUrl>removeAdditionalParty?additionalRoleTypeId=${role}&additionalPartyId=${party}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonRemove}</a>
               </@td>
             </@tr>
           </#list>

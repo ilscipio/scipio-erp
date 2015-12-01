@@ -123,7 +123,7 @@ under the License.
         <@cell>
           <@row class="prefix-radius">
             <@cell>
-              <input type="submit" value="${uiLabelMap.CommonFind}" class="${styles.button_default!}"/>
+              <input type="submit" value="${uiLabelMap.CommonFind}" class="${styles.link_action!}"/>
             </@cell>
           </@row>
         </@cell>

@@ -58,10 +58,10 @@ under the License.
                     <@td>${paymentSetting.paymentConfiguration!}</@td>
                     <@td nowrap="nowrap">&nbsp;
                         <#if security.hasEntityPermission("PAYPROC", "_UPDATE", session)>
-                        <a href="<@ofbizUrl>paysetup?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.button_default!}">Edit</a>&nbsp;
+                        <a href="<@ofbizUrl>paysetup?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonEdit}</a>&nbsp;
                         </#if>
                         <#if security.hasEntityPermission("PAYPROC", "_DELETE", session)>
-                        <a href="<@ofbizUrl>removeWebSitePaymentSetting?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.button_default!}">Remove</a>&nbsp;
+                        <a href="<@ofbizUrl>removeWebSitePaymentSetting?webSiteId=${paymentSetting.webSiteId!}&amp;paymentMethodTypeId=${paymentSetting.paymentMethodTypeId!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonRemove}</a>&nbsp;
                         </#if>
                       </@td>
                   </@tr>

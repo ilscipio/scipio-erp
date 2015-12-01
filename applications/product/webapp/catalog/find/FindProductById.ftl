@@ -19,7 +19,7 @@ under the License.
 
 <@section title="${uiLabelMap.ProductFindProductWithIdValue}">
         <form name="idsearchform" method="post" action="<@ofbizUrl>FindProductById</@ofbizUrl>">
-          <span>${uiLabelMap.CommonId} ${uiLabelMap.CommonValue}:</span> <input type="text" name="idValue" size="20" maxlength="50" value="${idValue!}" />&nbsp;<a href="javascript:document.idsearchform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonFind}</a>
+          <span>${uiLabelMap.CommonId} ${uiLabelMap.CommonValue}:</span> <input type="text" name="idValue" size="20" maxlength="50" value="${idValue!}" />&nbsp;<a href="javascript:document.idsearchform.submit()" class="${styles.link_action!}">${uiLabelMap.CommonFind}</a>
         </form>
         
         <p>${uiLabelMap.ProductSearchResultsWithIdValue}: ${idValue!}</p>
@@ -34,7 +34,7 @@ under the License.
                 </@td>
                 <@td>&nbsp;&nbsp;</@td>
                 <@td>
-                    <a href="<@ofbizUrl>EditProduct?productId=${idProduct.productId}</@ofbizUrl>" class="${styles.button_default!}">${(idProduct.internalName)!}</a>
+                    <a href="<@ofbizUrl>EditProduct?productId=${idProduct.productId}</@ofbizUrl>" class="${styles.link_name!}">${(idProduct.internalName)!}</a>
                     (${uiLabelMap.ProductSearchResultsFound})
                 </@td>
             </@tr>
@@ -48,7 +48,7 @@ under the License.
                     </@td>
                     <@td>&nbsp;&nbsp;</@td>
                     <@td>
-                        <a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.button_default!}">${(product.internalName)!}</a>
+                        <a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.link_name!}">${(product.internalName)!}</a>
                         (${uiLabelMap.ProductSearchResultsFound} ${goodIdentificationType.get("description",locale)?default(goodIdentification.goodIdentificationTypeId)}.)
                     </@td>
                 </@tr>

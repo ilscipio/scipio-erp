@@ -130,7 +130,7 @@ under the License.
                             <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                             <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                             <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                            <a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.CommonUpdate}]</a>
+                            <a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="${styles.link_action!}">[${uiLabelMap.CommonUpdate}]</a>
                         </@td>
                       </@tr>
                     </#list>
@@ -140,7 +140,7 @@ under the License.
               <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
               <@tr>
                 <@td colspan="6" align="right">
-                  <a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.OrderReturnSelectedItems}</a>
+                  <a href="javascript:document.selectAllForm.submit();" class="${styles.link_action!}">${uiLabelMap.OrderReturnSelectedItems}</a>
                 </@td>
               </@tr>
             <#else>

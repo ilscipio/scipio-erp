@@ -170,7 +170,7 @@ function submitForm(form, mode, value) {
                       </#list>
                     </b>
                   </div>
-                  <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.PartyProfile}</a>.</div>
+                  <div>${uiLabelMap.OrderUpdateEmailAddress} <a href="<@ofbizUrl>viewprofile?DONE_PAGE=checkoutoptions</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.PartyProfile}</a>.</div>
                   <br />
                   <div>${uiLabelMap.OrderCommaSeperatedEmailAddresses}:</div>
                   <input type="text" class="inputBox" size="30" name="order_additional_emails" value="${shoppingCart.getOrderAdditionalEmails()!}"/>

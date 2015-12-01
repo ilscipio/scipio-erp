@@ -779,7 +779,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <#else>
     <#local buttonMarkup>
       <#if buttonType == "text-link">
-        <#local class = addClassArgDefault(class, styles.button_default!)>
+        <#local class = addClassArgDefault(class, styles.link_action!)>
         <#-- FIXME: this static method of disabling links means the link loses information and not easily toggleable -->
         <#if disabled>
           <#local href = "javascript:void(0)">
@@ -792,7 +792,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
           <#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
         </#if>/>
       <#else>
-        <#local class = addClassArgDefault(class, styles.button_default!)>
+        <#local class = addClassArgDefault(class, styles.link_action!)>
         <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if>
         <#if name?has_content> name="${name}"</#if><#if text?has_content> value="${text}"</#if>
         <#if disabled> disabled="disabled"<#else>

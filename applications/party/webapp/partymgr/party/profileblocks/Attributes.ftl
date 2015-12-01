@@ -44,7 +44,7 @@ under the License.
                 ${attr.attrValue!}
               </@td>
               <@td class="button-col">
-                <a href="<@ofbizUrl>editPartyAttribute?partyId=${partyId!}&attrName=${attr.attrName!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
+                <a href="<@ofbizUrl>editPartyAttribute?partyId=${partyId!}&attrName=${attr.attrName!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonEdit}</a>
               </@td>
             </@tr>
           </#list>

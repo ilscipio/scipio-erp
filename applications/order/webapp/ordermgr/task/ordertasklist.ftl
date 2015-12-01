@@ -95,7 +95,7 @@ under the License.
                               <@td align="right"><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orderHeaderAndRole.currencyUom!/></@td>
                               <@td width="1">&nbsp;&nbsp;</@td>
                               <@td align='right'>
-                                <a href="<@ofbizUrl>OrderDeliveryScheduleInfo?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class='${styles.button_default!}'>Schedule&nbsp;Delivery</a>
+                                <a href="<@ofbizUrl>OrderDeliveryScheduleInfo?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class="${styles.link_action!}">Schedule&nbsp;Delivery</a>
                               </@td>
                             </@tr>
                           </#list>
@@ -128,13 +128,13 @@ under the License.
                             <@tr valign="middle">
                               <@td>
                                 <#assign orderStr = "orderId=" + task.orderId + "&amp;partyId=" + userLogin.partyId + "&amp;roleTypeId=" + task.roleTypeId + "&amp;workEffortId=" + task.workEffortId + "&amp;fromDate=" + task.get("fromDate").toString()>
-                                <a href="<@ofbizUrl>orderview?${orderStr}</@ofbizUrl>" class="${styles.button_default!}">
+                                <a href="<@ofbizUrl>orderview?${orderStr}</@ofbizUrl>" class="${styles.link_id!}">
                                   ${task.orderId}
                                 </a>
                               </@td>
                               <@td>
                                   <#if task.customerPartyId??>
-                                    <a href="${customerDetailLink}${task.customerPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="${styles.button_default!}">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
+                                    <a href="${customerDetailLink}${task.customerPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="${styles.link_name!}">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
                                   <#else>
                                     N/A
                                   </#if>
@@ -154,7 +154,7 @@ under the License.
                               </@td>
                               <@td>${task.priority?default("0")}</@td>
                               <@td>
-                                <a href="/workeffort/control/activity?workEffortId=${task.workEffortId}${StringUtil.wrapString(externalKeyParam)}" target="workeffort" class="${styles.button_default!}">
+                                <a href="/workeffort/control/activity?workEffortId=${task.workEffortId}${StringUtil.wrapString(externalKeyParam)}" target="workeffort" class="${styles.link_name!}">
                                   ${Static["org.ofbiz.order.task.TaskWorker"].getPrettyStatus(task)}
                                 </a>
                               </@td>
@@ -211,13 +211,13 @@ under the License.
                               </#if>
                               <@tr valign="middle">
                                 <@td>
-                                  <a href="javascript:viewOrder(document.F${task.workEffortId});" class="${styles.button_default!}">
+                                  <a href="javascript:viewOrder(document.F${task.workEffortId});" class="${styles.link_id!}">
                                     ${task.orderId}
                                   </a>
                                 </@td>
                                 <@td>
                                   <#if task.customerPartyId??>
-                                  <a href="${customerDetailLink}${task.customerPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="${styles.button_default!}">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
+                                  <a href="${customerDetailLink}${task.customerPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="${styles.link_name!}">${Static["org.ofbiz.order.task.TaskWorker"].getCustomerName(task)}</a>
                                   <#else>
                                   &nbsp;
                                   </#if>
@@ -245,7 +245,7 @@ under the License.
                                 <@td>${Static["org.ofbiz.order.task.TaskWorker"].getRoleDescription(task)}</@td>
                                 <@td>${task.priority?default("0")}</@td>
                                 <@td>
-                                  <a href="/workeffort/control/activity?workEffortId=${task.workEffortId}" target="workeffort" class="${styles.button_default!}">
+                                  <a href="/workeffort/control/activity?workEffortId=${task.workEffortId}" target="workeffort" class="${styles.link_name!}">
                                     ${Static["org.ofbiz.order.task.TaskWorker"].getPrettyStatus(task)}
                                   </a>
                                 </@td>

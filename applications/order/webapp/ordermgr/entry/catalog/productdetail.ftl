@@ -458,13 +458,13 @@ ${virtualJavaScript!}
             <div id="addCart1" style="display:none;>
               <span style="white-space: nowrap;"><b>${uiLabelMap.CommonQuantity}:</b></span>&nbsp;
               <input type="text" size="5" name="quantity" value="1"/>
-              <a href="javascript:javascript:addItem();" class="${styles.button_default!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+              <a href="javascript:javascript:addItem();" class="${styles.link_action!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
               &nbsp;
             </div>
             <div id="addCart2" style="display:block;>
               <span style="white-space: nowrap;"><b>${uiLabelMap.CommonQuantity}:</b></span>&nbsp;
               <input type="text" size="5" value="1" disabled="disabled"/>
-              <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");" class="${styles.button_default!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+              <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");" class="${styles.link_action!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
               &nbsp;
             </div>
           </#if>
@@ -547,7 +547,7 @@ ${virtualJavaScript!}
                 <input type="text" size="5" name="quantity" value="1"<#if product.isVirtual!?upper_case == "Y"> disabled="disabled"</#if>/>
             </#if>
             <#-- This calls addItem() so that variants of virtual products cant be added before distinguishing features are selected, it should not be changed to additemSubmit() -->
-            <a href="javascript:addItem()" class="${styles.button_default!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>&nbsp;
+            <a href="javascript:addItem()" class="${styles.link_action!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>&nbsp;
           </#if>
           <#if requestParameters.category_id??>
             <input type="hidden" name="category_id" value="${requestParameters.category_id}"/>
@@ -578,10 +578,10 @@ ${virtualJavaScript!}
               <input type="text" size="5" name="quantity" value="1"/>
               <input type="hidden" name="reservStartStr" value= ""/>
           </#if>
-          <a href="javascript:addShoplistSubmit();" class="${styles.button_default!}">${uiLabelMap.OrderAddToShoppingList}</a>
+          <a href="javascript:addShoplistSubmit();" class="${styles.link_action!}">${uiLabelMap.OrderAddToShoppingList}</a>
         </form>
       <#else> <br />
-        ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonBeLogged}</a>
+        ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonBeLogged}</a>
         ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.&nbsp;
       </#if>
       </div>
@@ -657,7 +657,7 @@ ${virtualJavaScript!}
     <div class="productsummary-container">
     <#list assocProducts as productAssoc>
         <div>
-          <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo!}</@ofbizUrl>" class="${styles.button_default!}">
+          <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo!}</@ofbizUrl>" class="${styles.link_id!}">
             ${productAssoc.productIdTo!}
           </a>
           - <b>${productAssoc.reason!}</b>

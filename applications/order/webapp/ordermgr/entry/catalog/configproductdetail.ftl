@@ -175,7 +175,7 @@ function getConfigDetails() {
         <#if previousProductId??>
           <a href='<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${previousProductId!}</@ofbizUrl>' class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
         </#if>
-        <a href="<@ofbizUrl>category/~category_id=${categoryId!}</@ofbizUrl>" class="${styles.button_default!}">${(category.categoryName)?default(category.description)!}</a>
+        <a href="<@ofbizUrl>category/~category_id=${categoryId!}</@ofbizUrl>" class="${styles.link_name!}">${(category.categoryName)?default(category.description)!}</a>
         <#if nextProductId??>
           &nbsp;|&nbsp;<a href='<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${nextProductId!}</@ofbizUrl>' class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
         </#if>
@@ -338,7 +338,7 @@ function getConfigDetails() {
               <div>[${uiLabelMap.EcommerceProductNotConfigured}]&nbsp;
               <input type="text" size="5" name="quantity" value="0" disabled="disabled" /></div>
             <#else>
-              <a href="javascript:addItem()" class="${styles.button_default!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>&nbsp;
+              <a href="javascript:addItem()" class="${styles.link_action!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>&nbsp;
               <input type="text" size="5" name="quantity" value="1" />
             </#if>
           </#if>
@@ -365,10 +365,10 @@ function getConfigDetails() {
           </select>
           &nbsp;&nbsp;
           <input type="text" size="5" name="quantity" value="1" />
-          <a href="javascript:document.addToShoppingList.submit();" class="${styles.button_default!}">[${uiLabelMap.OrderAddToShoppingList}]</a>
+          <a href="javascript:document.addToShoppingList.submit();" class="${styles.link_action!}">[${uiLabelMap.OrderAddToShoppingList}]</a>
         </form>
       <#else> <br />
-        ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonBeLogged}</a>
+        ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonBeLogged}</a>
         ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.&nbsp;
       </#if>
       </div>
@@ -397,9 +397,9 @@ function getConfigDetails() {
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
                 <@td align="center" valign="bottom">
-                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class='cssImgStandard' alt="" /></a>
+                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_image!}"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class="cssImgStandard" alt="" /></a>
                   <br />
-                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.button_default!}">${key}</a>
+                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_name!}">${key}</a>
                 </@td>
               </#if>
               <#assign indexer = indexer + 1>
@@ -435,7 +435,7 @@ function getConfigDetails() {
         <@table type="fields" cellspacing=""> <#-- orig: class="" -->
           <@tr>
             <@td>
-                <a href="javascript:verifyConfig();" class="${styles.button_default!}">${uiLabelMap.OrderVerifyConfiguration}</a>
+                <a href="javascript:verifyConfig();" class="${styles.link_action!}">${uiLabelMap.OrderVerifyConfiguration}</a>
             </@td>
           </@tr>
           <@tr type="util"><@td><hr /></@td></@tr>
@@ -450,14 +450,14 @@ function getConfigDetails() {
                 <div>${question.description!}</div>
                 <#assign instructions = question.content.get("INSTRUCTIONS")!>
                 <#if instructions?has_content>
-                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${instructions}");" class="${styles.button_default!}">Instructions</a>
+                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${instructions}");" class="${styles.link_action!}">Instructions</a>
                 </#if>
                 <#assign image = question.content.get("IMAGE_URL", "url")!>
                 <#if image?has_content>
                   <img src='<@ofbizContentUrl>${contentPathPrefix!}${image!}</@ofbizContentUrl>' vspace='5' hspace='5' class='cssImgSmall' align='left' alt="" />
                 </#if>
               <#else>
-                <div><a href='#${question.getConfigItem().getString("configItemId")}' class="${styles.button_default!}">Details</a></div>
+                <div><a href='#${question.getConfigItem().getString("configItemId")}' class="${styles.link_action!}">Details</a></div>
               </#if>
             </@td>
           </@tr>
@@ -615,7 +615,7 @@ function getConfigDetails() {
     <@tr type="util"><@td><hr /></@td></@tr>
     <#list assocProducts as productAssoc>
       <@tr><@td>
-          <a href='<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo!}</@ofbizUrl>' class="${styles.button_default!}">
+          <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo!}</@ofbizUrl>" class="${styles.link_id!}">
             ${productAssoc.productIdTo!}
           </a>
           - <b>${productAssoc.reason!}</b>

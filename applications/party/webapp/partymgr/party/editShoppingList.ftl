@@ -43,7 +43,7 @@ under the License.
             </select>
         </@field>
         <@field type="submitarea">
-            <a href="javascript:document.selectShoppingList.submit();" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
+            <a href="javascript:document.selectShoppingList.submit();" class="${styles.link_action!}">${uiLabelMap.CommonEdit}</a>
         </@field>
         </@fields>
       </form>
@@ -112,7 +112,7 @@ under the License.
         </@field>
         <#if shoppingList.listName?default("") != "auto-save">
           <@field type="submitarea">
-              <a href="javascript:document.updateList.submit();" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
+              <a href="javascript:document.updateList.submit();" class="${styles.link_action!}">${uiLabelMap.CommonSave}</a>
           </@field>
         </#if>
     </form>

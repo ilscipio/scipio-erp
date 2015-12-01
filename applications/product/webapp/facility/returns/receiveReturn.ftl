@@ -121,7 +121,7 @@ under the License.
                             <@td width="45%">
                                 ${returnItem.returnItemSeqId}:&nbsp;<b>${orderItemType.get("description",locale)}</b> : ${orderItem.itemDescription!}&nbsp;&nbsp;
                                 <input type="text" size="12" name="productId_o_${rowCount}" />
-                                <a href="/catalog/control/EditProduct?${StringUtil.wrapString(externalKeyParam)}" target="catalog" class="${styles.button_default!}">${uiLabelMap.ProductCreateProduct}</a>
+                                <a href="/catalog/control/EditProduct?${StringUtil.wrapString(externalKeyParam)}" target="catalog" class="${styles.link_action!}">${uiLabelMap.ProductCreateProduct}</a>
                             </@td>
                           <#else>
                             <@td width="45%">
@@ -219,13 +219,13 @@ under the License.
                   </@tr>
                   <@tr>
                     <@td colspan="2" align="right">
-                      <a href="<@ofbizUrl>ReceiveReturn?facilityId=${requestParameters.facilityId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductReturnToReceiving}</a>
+                      <a href="<@ofbizUrl>ReceiveReturn?facilityId=${requestParameters.facilityId!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.ProductReturnToReceiving}</a>
                     </@td>
                   </@tr>
                 <#else>
                   <@tr>
                     <@td colspan="2" align="right">
-                      <a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductReceiveSelectedProduct}</a>
+                      <a href="javascript:document.selectAllForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductReceiveSelectedProduct}</a>
                     </@td>
                   </@tr>
                 </#if>
@@ -245,7 +245,7 @@ under the License.
                   <input type="text" name="returnId" size="20" maxlength="20" value="${requestParameters.returnId!}" />
               </@field>
               <@field type="submitarea">
-                  <a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductReceiveProduct}</a>
+                  <a href="javascript:document.selectAllForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductReceiveProduct}</a>
               </@field>
           </form>
           </@section>

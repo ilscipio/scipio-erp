@@ -86,7 +86,7 @@ under the License.
                         <textarea name="comments${suffix}" rows="2" cols="40">${(productCategoryMember.comments)!}</textarea>
                     </@td>
                     <@td align="center">
-                      <a href="javascript:document.deleteProductFromCategory_o_${rowCount}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
+                      <a href="javascript:document.deleteProductFromCategory_o_${rowCount}.submit()" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a>
                     </@td>
                   </@tr>
                   <@tr valign="middle" groupLast=true>

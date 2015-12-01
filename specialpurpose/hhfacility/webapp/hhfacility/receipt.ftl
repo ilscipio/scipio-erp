@@ -21,7 +21,7 @@ under the License.
 
 <div data-role="content">
     <ul data-role="listview">
-        <li><a accesskey="1" href="<@ofbizUrl>/poreceipt?facilityId=${facility.facilityId!}</@ofbizUrl>" class="${styles.button_default!}">PO Receipt</a></li>
-        <li><a accesskey="2" href="<@ofbizUrl>/productreceipt?facilityId=${facility.facilityId!}</@ofbizUrl>" class="${styles.button_default!}">Product Receipt</a></li>
+        <li><a accesskey="1" href="<@ofbizUrl>/poreceipt?facilityId=${facility.facilityId!}</@ofbizUrl>" class="${styles.link_nav!}">PO Receipt</a></li>
+        <li><a accesskey="2" href="<@ofbizUrl>/productreceipt?facilityId=${facility.facilityId!}</@ofbizUrl>" class="${styles.link_nav!}">Product Receipt</a></li>
     </ul>
 </div>

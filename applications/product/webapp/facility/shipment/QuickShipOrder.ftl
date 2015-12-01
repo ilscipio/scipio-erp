@@ -76,7 +76,7 @@ function setWeight(weight) {
               </@cell>
               <@cell columns=3>
                 <@field type="submitarea">
-                    <a href="javascript:document.routeForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductConfirmShipmentUps}</a>
+                    <a href="javascript:document.routeForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductConfirmShipmentUps}</a>
                 </@field>
               </@cell>
             </@row>
@@ -98,7 +98,7 @@ function setWeight(weight) {
               </@cell>
               <@cell columns=3>
                 <@field type="submitarea">
-                    <a href="<@ofbizUrl>quickShipOrder?facilityId=${facilityId}&amp;shipmentId=${shipmentId}&amp;reweigh=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductReWeighPackage}</a>
+                    <a href="<@ofbizUrl>quickShipOrder?facilityId=${facilityId}&amp;shipmentId=${shipmentId}&amp;reweigh=Y</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.ProductReWeighPackage}</a>
                 </@field>
               </@cell>
             </@row>
@@ -121,8 +121,8 @@ function setWeight(weight) {
             <#-- display the links for label/packing slip -->
             <#assign allDone = "yes">
             <center>
-              <a href="<@ofbizUrl>viewShipmentPackageRouteSegLabelImage?shipmentId=${requestParameters.shipmentId}&amp;shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}&amp;shipmentPackageSeqId=00001</@ofbizUrl>" target="_blank" class="${styles.button_default!}">${uiLabelMap.ProductShippingLabel}</a><br />
-              <a href="<@ofbizUrl>ShipmentManifest.pdf?shipmentId=${requestParameters.shipmentId}&amp;shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}</@ofbizUrl>" target="_blank" class="${styles.button_default!}">${uiLabelMap.ProductPackingSlip}</a>
+              <a href="<@ofbizUrl>viewShipmentPackageRouteSegLabelImage?shipmentId=${requestParameters.shipmentId}&amp;shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}&amp;shipmentPackageSeqId=00001</@ofbizUrl>" target="_blank" class="${styles.link_action!}">${uiLabelMap.ProductShippingLabel}</a><br />
+              <a href="<@ofbizUrl>ShipmentManifest.pdf?shipmentId=${requestParameters.shipmentId}&amp;shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}</@ofbizUrl>" target="_blank" class="${styles.link_action!}">${uiLabelMap.ProductPackingSlip}</a>
             </center>
           </#if>
           </@section>
@@ -147,7 +147,7 @@ function setWeight(weight) {
               </@field>
               <@field type="submitarea">
                   <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.weightForm.submit();"/>
-                  <a href="javascript:document.weightForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductSetWeight}</a>
+                  <a href="javascript:document.weightForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductSetWeight}</a>
               </@field>
           </form>
           <@script>
@@ -183,7 +183,7 @@ function setWeight(weight) {
         </@field>
         <@field type="submitarea">
             <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.selectOrderForm.submit();" />
-            <a href="javascript:document.selectOrderForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductShipOrder}</a>
+            <a href="javascript:document.selectOrderForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductShipOrder}</a>
         </@field>
     </form>
     <@script>

@@ -24,7 +24,7 @@ under the License.
                   <input type="hidden" name="productPromoCodeId" value="${productPromoCodeEmail.productPromoCodeId}"/>                
                   <input type="hidden" name="emailAddress" value="${productPromoCodeEmail.emailAddress}"/>                
                   <input type="hidden" name="productPromoId" value="${productPromoId}"/>                
-                  <a href="javascript:document.deleteProductPromoCodeEmail_${productPromoCodeEmail_index}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>&nbsp;${productPromoCodeEmail.emailAddress}
+                  <a href="javascript:document.deleteProductPromoCodeEmail_${productPromoCodeEmail_index}.submit()" class="${styles.link_action!}">${uiLabelMap.CommonRemove}</a>&nbsp;${productPromoCodeEmail.emailAddress}
                 </form>
               </div>                
             </#list>

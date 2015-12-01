@@ -55,7 +55,7 @@ under the License.
           </#if>
           </@td>
        <#if (adjEditable)>
-         <@td align='right'><a href='javascript:document.removeReturnAdjustment_${rowCountForAdjRemove}.submit()' class='${styles.button_default!}'>${uiLabelMap.CommonRemove}</a></@td>
+         <@td align='right'><a href='javascript:document.removeReturnAdjustment_${rowCountForAdjRemove}.submit()' class='${styles.link_action!}'>${uiLabelMap.CommonRemove}</a></@td>
        <#else>
        <@td>&nbsp;</@td>
        </#if>
@@ -262,7 +262,7 @@ under the License.
                 </@td>
                 </#if>
                 <#if returnHeader.statusId == "RETURN_REQUESTED" || returnHeader.statusId == "SUP_RETURN_REQUESTED">
-                  <@td align='right'><a href='javascript:document.removeReturnItem_${item_index}.submit()' class='${styles.button_default!}'>${uiLabelMap.CommonRemove}</a></@td>
+                  <@td align='right'><a href='javascript:document.removeReturnItem_${item_index}.submit()' class='${styles.link_action!}'>${uiLabelMap.CommonRemove}</a></@td>
                 <#else>
                   <@td>&nbsp;</@td>
                 </#if>
@@ -360,7 +360,7 @@ under the License.
               </@field>
             </#if>
             <@field type="submitarea">
-                <a href="javascript:document.returnItems.submit();" class="${styles.button_default!}">${uiLabelMap.OrderReturnLoadItems}</a>
+                <a href="javascript:document.returnItems.submit();" class="${styles.link_action!}">${uiLabelMap.OrderReturnLoadItems}</a>
             </@field>
         </form>
         </@section>

@@ -61,8 +61,8 @@ function toggleBillingAccount(box) {
             <@table type="fields" width="100%" border="0" cellpadding="1" cellspacing="0"> <#-- orig: class="" -->
               <@tr>
                 <@td colspan="2">
-                  <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderSplitShipment}</a>
-                  <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="${styles.button_default!}">${uiLabelMap.PartyAddNewAddress}</a>
+                  <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.OrderSplitShipment}</a>
+                  <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="${styles.link_action!}">${uiLabelMap.PartyAddNewAddress}</a>
                   <#if (cart.getShipGroupSize() > 1)>
                     <div style="color: red;">${uiLabelMap.OrderNOTEMultipleShipmentsExist}</div>
                   </#if>
@@ -86,7 +86,7 @@ function toggleBillingAccount(box) {
                          <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                          <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                          <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                         <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
+                         <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.link_action!}">${uiLabelMap.CommonUpdate}</a>
                        </@td>
                    </@tr>
                    <@tr type="util"><@td colspan="2"><hr /></@td></@tr>

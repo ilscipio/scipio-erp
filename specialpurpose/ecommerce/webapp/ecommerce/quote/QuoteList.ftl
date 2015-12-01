@@ -65,7 +65,7 @@ under the License.
                     </@td>
                     <@td width="10">&nbsp;</@td>
                     <@td align="right">
-                        <a href="<@ofbizUrl>ViewQuote?quoteId=${quote.quoteId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonView}</a>
+                        <a href="<@ofbizUrl>ViewQuote?quoteId=${quote.quoteId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonView}</a>
                     </@td>
                     <@td width="10">&nbsp;</@td>
                 </@tr>

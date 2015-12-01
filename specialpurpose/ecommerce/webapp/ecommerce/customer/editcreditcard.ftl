@@ -41,7 +41,7 @@ under the License.
            <@td>&nbsp;</@td>
            <@td>
         <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
-        <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.button_default!}">
+        <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_action!}">
           [Create New Address]</a>&nbsp;&nbsp;
         -->
              <@table width="100%" border="0" cellpadding="1">

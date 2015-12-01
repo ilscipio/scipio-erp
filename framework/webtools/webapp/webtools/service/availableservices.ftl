@@ -29,7 +29,7 @@ under the License.
     <@section title="${uiLabelMap.WebtoolsServiceWSDL} - ${uiLabelMap.WebtoolsService} ${selectedServiceMap.serviceName}">
         <@code type="html">${selectedServiceMap.wsdl}</@code>
         <br />
-        <a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonBack}</a>
+        <a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonBack}</a>
     </@section>
 
   <#else>

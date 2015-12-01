@@ -99,7 +99,7 @@ under the License.
               </#list>
             </select>
             &nbsp;&nbsp;
-            <a href="javascript:document.selectShoppingList.submit();" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
+            <a href="javascript:document.selectShoppingList.submit();" class="${styles.link_action!}">${uiLabelMap.CommonEdit}</a>
           </form>
         <#else>
           <div>${uiLabelMap.EcommerceNoShoppingListsCreate}.</div>
@@ -197,7 +197,7 @@ under the License.
               <@tr>
                 <@td><div class="tableheadtext">&nbsp;</div></@td>
                 <@td>
-                  <a href="javascript:document.updateList.submit();" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
+                  <a href="javascript:document.updateList.submit();" class="${styles.link_action!}">${uiLabelMap.CommonSave}</a>
                 </@td>
               </@tr>
             </@table>
@@ -324,10 +324,10 @@ under the License.
               <@tr type="util"><@td colspan="9"><hr /></@td></@tr>
               <@tr>
                 <@td align="right" colspan="9">
-                    <a href="javascript:document.reorderinfo.submit();" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
-                    <a href="<@ofbizUrl>editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&amp;contactMechPurposeTypeId=SHIPPING_LOCATION&amp;DONE_PAGE=editShoppingList</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.PartyAddNewAddress}</a>
-                    <a href="<@ofbizUrl>editcreditcard?DONE_PAGE=editShoppingList</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceNewCreditCard}</a>
-                    <a href="<@ofbizUrl>editeftaccount?DONE_PAGE=editShoppingList</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceNewEFTAccount}</a>
+                    <a href="javascript:document.reorderinfo.submit();" class="${styles.link_action!}">${uiLabelMap.CommonSave}</a>
+                    <a href="<@ofbizUrl>editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&amp;contactMechPurposeTypeId=SHIPPING_LOCATION&amp;DONE_PAGE=editShoppingList</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.PartyAddNewAddress}</a>
+                    <a href="<@ofbizUrl>editcreditcard?DONE_PAGE=editShoppingList</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.EcommerceNewCreditCard}</a>
+                    <a href="<@ofbizUrl>editeftaccount?DONE_PAGE=editShoppingList</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.EcommerceNewEFTAccount}</a>
                 </@td>
               </@tr>
               <#if shoppingList.isActive?default("N") == "Y">
@@ -393,8 +393,8 @@ under the License.
                 <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=totalPrice isoCode=currencyUomId/>
                 </@td>
                 <@td align="right">
-                  <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceGoToList}</a>
-                  <a href="<@ofbizUrl>addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.EcommerceAddListToCart}</a>
+                  <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.EcommerceGoToList}</a>
+                  <a href="<@ofbizUrl>addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.EcommerceAddListToCart}</a>
                 </@td>
               </@tr>
             </form>
@@ -491,8 +491,8 @@ under the License.
                     <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=totalPrice isoCode=currencyUomId/>
                     </@td>
                     <@td align="right">
-                        <a href="#" onclick="javascript:TimestampSubmit(listform_${shoppingListItem.shoppingListItemSeqId});" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
-                        <a href="<@ofbizUrl>removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&amp;shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonRemove}</a>
+                        <a href="#" onclick="javascript:TimestampSubmit(listform_${shoppingListItem.shoppingListItemSeqId});" class="${styles.link_action!}">${uiLabelMap.CommonUpdate}</a>
+                        <a href="<@ofbizUrl>removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&amp;shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonRemove}</a>
                       <#if isVirtual && productVariantAssocs?has_content>
                         <#assign replaceItemAction = "/replaceShoppingListItem/" + requestAttributes._CURRENT_VIEW_!>
                         <#assign addToCartAction = "/additem/" + requestAttributes._CURRENT_VIEW_!>
@@ -511,12 +511,12 @@ under the License.
                               </#list>
                           </select>
                           <br />
-                          <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${replaceItemAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="${styles.button_default!}">${uiLabelMap.EcommerceReplaceWithVariation}</a>
+                          <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${replaceItemAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="${styles.link_action!}">${uiLabelMap.EcommerceReplaceWithVariation}</a>
                           <br />
-                          <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${addToCartAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.EcommerceVariationToCart}</a>
+                          <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${addToCartAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.EcommerceVariationToCart}</a>
                         </form>
                       <#else>
-                        <a href="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if>?shoppingListId=${shoppingListItem.shoppingListId}&amp;shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}&amp;quantity=${shoppingListItem.quantity}&amp;reservStart=${shoppingListItem.reservStart!}&amp;reservPersons=${shoppingListItem.reservPersons!}&amp;reservLength=${shoppingListItem.reservLength!}&amp;configId=${shoppingListItem.configId!}&amp;add_product_id=${shoppingListItem.productId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.OrderToCart}</a>
+                        <a href="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if>?shoppingListId=${shoppingListItem.shoppingListId}&amp;shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}&amp;quantity=${shoppingListItem.quantity}&amp;reservStart=${shoppingListItem.reservStart!}&amp;reservPersons=${shoppingListItem.reservPersons!}&amp;reservLength=${shoppingListItem.reservLength!}&amp;configId=${shoppingListItem.configId!}&amp;add_product_id=${shoppingListItem.productId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.OrderToCart}</a>
                       </#if>
                     </@td>
                   </@tr>

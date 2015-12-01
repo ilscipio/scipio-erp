@@ -67,7 +67,7 @@ under the License.
                   <@td>${item.quantityAccepted?string.number}</@td>
                   <@td>
                     <#if (item.quantityAccepted?int > 0 || item.quantityRejected?int > 0)>
-                      <a href="javascript:document.cancelReceivedItemsForm_${item_index}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonCancel}</a>
+                      <a href="javascript:document.cancelReceivedItemsForm_${item_index}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonCancel}</a>
                     </#if>
                   </@td>
                 </@tr>
@@ -104,7 +104,7 @@ under the License.
                   <b>${requestParameters.productId!}</b>
               </@field>
               <@field type="generic" label="${uiLabelMap.ProductProductName}">
-                  <a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.button_default!}">${product.internalName!}</a>
+                  <a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.link_name!}">${product.internalName!}</a>
               </@field>
               <@field type="generic" label="${uiLabelMap.ProductProductDescription}">
                   ${product.description!}
@@ -143,7 +143,7 @@ under the License.
               </@field>
               <@field type="generic" label="${uiLabelMap.ProductDateReceived}">
                   <input type="text" name="datetimeReceived" size="24" value="${nowTimestamp}" />
-                  <#-- <a href="#" onclick="setNow("datetimeReceived")" class="${styles.button_default!}">[Now]</a> -->
+                  <#-- <a href="#" onclick="setNow("datetimeReceived")" class="${styles.link_action!}">[Now]</a> -->
               </@field>
               
               
@@ -250,7 +250,7 @@ under the License.
                 </@td>
               </@tr>
               <@tr>
-                <@td>&nbsp;<a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductReceiveSelectedShipment}</a></@td>
+                <@td>&nbsp;<a href="javascript:document.selectAllForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductReceiveSelectedShipment}</a></@td>
               </@tr>
             </@table>
           </form>
@@ -330,7 +330,7 @@ under the License.
                             <@td width="45%">
                                 <b>${orderItemType.get("description",locale)}</b> : ${orderItem.itemDescription!}&nbsp;&nbsp;
                                 <input type="text" size="12" name="productId_o_${rowCount}"/>
-                                <a href="/catalog/control/EditProduct?${StringUtil.wrapString(externalKeyParam)}" target="catalog" class="${styles.button_default!}">${uiLabelMap.ProductCreateProduct}</a>
+                                <a href="/catalog/control/EditProduct?${StringUtil.wrapString(externalKeyParam)}" target="catalog" class="${styles.link_action!}">${uiLabelMap.ProductCreateProduct}</a>
                             </@td>
                           </#if>
                           <@td align="right">${uiLabelMap.ProductLocation}:</@td>
@@ -450,13 +450,13 @@ under the License.
                   </@tr>
                   <@tr>
                     <@td colspan="2" align="right">
-                      <a href="<@ofbizUrl>ReceiveInventory?facilityId=${requestParameters.facilityId!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductReturnToReceiving}</a>
+                      <a href="<@ofbizUrl>ReceiveInventory?facilityId=${requestParameters.facilityId!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.ProductReturnToReceiving}</a>
                     </@td>
                   </@tr>
                 <#else>
                   <@tr>
                     <@td colspan="2" align="right">
-                      <a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductReceiveSelectedProduct}</a>
+                      <a href="javascript:document.selectAllForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductReceiveSelectedProduct}</a>
                     </@td>
                   </@tr>
                 </#if>
@@ -479,7 +479,7 @@ under the License.
                   <@htmlTemplate.lookupField value="${requestParameters.productId!}" formName="selectAllForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
               </@field>
               <@field type="submitarea">
-                  <a href="javascript:document.selectAllForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductReceiveProduct}</a>
+                  <a href="javascript:document.selectAllForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductReceiveProduct}</a>
               </@field>
           </form>
           </@section>

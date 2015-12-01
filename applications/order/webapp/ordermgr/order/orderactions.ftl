@@ -35,7 +35,7 @@
                         </#list>
                       </select>
                       </form>
-                      <a href="javascript:document.receivePurchaseOrderForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonReceive}</a>
+                      <a href="javascript:document.receivePurchaseOrderForm.submit()" class="${styles.link_action!}">${uiLabelMap.CommonReceive}</a>
                   </@menuitem>
               <#else>
                   <@menuitem type="generic">
@@ -48,7 +48,7 @@
                         </#list>
                       </select>
                     </form>
-                    <a href="javascript:document.receiveInventoryForm.submit()" class="${styles.button_default!}">${uiLabelMap.OrderQuickReceivePurchaseOrder}</a>
+                    <a href="javascript:document.receiveInventoryForm.submit()" class="${styles.link_action!}">${uiLabelMap.OrderQuickReceivePurchaseOrder}</a>
                   </@menuitem>
                   <@menuitem type="generic">
                     <form name="partialReceiveInventoryForm" action="/facility/control/ReceiveInventory" method="post">
@@ -61,7 +61,7 @@
                          </#list>
                        </select>
                     </form>
-                    <a href="javascript:document.partialReceiveInventoryForm.submit()" class="${styles.button_default!}">${uiLabelMap.CommonReceive}</a>
+                    <a href="javascript:document.partialReceiveInventoryForm.submit()" class="${styles.link_action!}">${uiLabelMap.CommonReceive}</a>
                   </@menuitem>
               </#if>
               

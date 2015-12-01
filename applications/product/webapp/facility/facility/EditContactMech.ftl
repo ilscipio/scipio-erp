@@ -49,7 +49,7 @@ under the License.
       </@cell>
       <@cell columns=3>
         <@field type="submitarea">
-            <a href="javascript:document.createcontactmechform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonCreate}</a>
+            <a href="javascript:document.createcontactmechform.submit()" class="${styles.link_action!}">${uiLabelMap.CommonCreate}</a>
         </@field>
       </@cell>
     </@row>
@@ -99,7 +99,7 @@ under the License.
                       </#if>
                       (${uiLabelMap.CommonSince}: ${facilityContactMechPurpose.fromDate})
                       <#if facilityContactMechPurpose.thruDate?has_content>(${uiLabelMap.CommonExpires}: ${facilityContactMechPurpose.thruDate.toString()}</#if>
-                      <a href="javascript:document.getElementById('deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}').submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a>
+                      <a href="javascript:document.getElementById('deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}').submit();" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a>
                   
                     <form id="deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}" method="post" action="<@ofbizUrl>deleteFacilityContactMechPurpose</@ofbizUrl>">
                       <input type="hidden" name="facilityId" value="${facilityId!}" />
@@ -125,7 +125,7 @@ under the License.
                         <option value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.get("description",locale)}</option>
                       </#list>
                     </select>
-                    &nbsp;<a href='javascript:document.newpurposeform.submit()' class="${styles.button_default!}">${uiLabelMap.PartyAddPurpose}</a>
+                    &nbsp;<a href='javascript:document.newpurposeform.submit()' class="${styles.link_action!}">${uiLabelMap.PartyAddPurpose}</a>
                   </form>
                 </@td>
               </@tr>
@@ -201,7 +201,7 @@ under the License.
     </@field>
   </#if>
     <@field type="submitarea">
-        <a href="javascript:document.editcontactmechform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
+        <a href="javascript:document.editcontactmechform.submit()" class="${styles.link_action!}">${uiLabelMap.CommonSave}</a>
     </@field>
   </form>
   </#if>

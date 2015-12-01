@@ -35,7 +35,7 @@ When you click on the User Login ID,the system will login to the Scrum Component
     </@tr>
     <@tr>
         <@td>
-        <a href="/scrum/control/main?USERNAME=scrumadmin&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Scrum Admin</a><br/>
+        <a href="/scrum/control/main?USERNAME=scrumadmin&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.link_nav!}">Scrum Admin</a><br/>
         </@td>
         <@td>
             <b>Scrum Admin</b><br/>
@@ -44,7 +44,7 @@ When you click on the User Login ID,the system will login to the Scrum Component
     </@tr>
     <@tr>
         <@td>
-        <a href="/scrum/control/main?USERNAME=scrummaster&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Scrum Master</@td>
+        <a href="/scrum/control/main?USERNAME=scrummaster&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.link_nav!}">Scrum Master</@td>
         <@td>
             <b>Scrum Master</b><br/>
             The Scrummaster can create the project and sprint and will put the product backlog into the sprint,<br/>
@@ -53,8 +53,8 @@ When you click on the User Login ID,the system will login to the Scrum Component
     </@tr>
     <@tr>
         <@td>
-        <a href="/scrum/control/main?USERNAME=productowner&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Product Owner</a><br/>
-        <a href="/scrum/control/main?USERNAME=productowner2&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Product Owner2</a><br/>
+        <a href="/scrum/control/main?USERNAME=productowner&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.link_nav!}">Product Owner</a><br/>
+        <a href="/scrum/control/main?USERNAME=productowner2&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.link_nav!}">Product Owner2</a><br/>
         </@td>
         <@td>
             <b>Product Owner</b><br/>
@@ -64,10 +64,10 @@ When you click on the User Login ID,the system will login to the Scrum Component
     </@tr>
     <@tr>
         <@td>
-        <a href="/scrum/control/main?USERNAME=scrumteam1&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Scrumteam1</a><br/>
-        <a href="/scrum/control/main?USERNAME=scrumteam2&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Scrumteam2</a><br/>
-        <a href="/scrum/control/main?USERNAME=scrumteam3&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Scrumteam3</a><br/>
-        <a href="/scrum/control/main?USERNAME=scrumteam4&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Scrumteam4</a><br/>
+        <a href="/scrum/control/main?USERNAME=scrumteam1&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.link_nav!}">Scrumteam1</a><br/>
+        <a href="/scrum/control/main?USERNAME=scrumteam2&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.link_nav!}">Scrumteam2</a><br/>
+        <a href="/scrum/control/main?USERNAME=scrumteam3&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.link_nav!}">Scrumteam3</a><br/>
+        <a href="/scrum/control/main?USERNAME=scrumteam4&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.link_nav!}">Scrumteam4</a><br/>
         </@td>
         <@td>
             <b>Scrumteam</b><br/>
@@ -77,7 +77,7 @@ When you click on the User Login ID,the system will login to the Scrum Component
     </@tr>
     <@tr>
         <@td>
-        <a href="/scrum/control/main?USERNAME=testadmin&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">Testadmin</a>
+        <a href="/scrum/control/main?USERNAME=testadmin&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.link_nav!}">Testadmin</a>
         </@td>
         <@td>
             <b>Opentest</b><br/>
@@ -88,7 +88,7 @@ When you click on the User Login ID,the system will login to the Scrum Component
     </@tr>
     <@tr>
         <@td>
-        <a href="/scrum/control/main?USERNAME=DemoStakeholder&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.button_default!}">DemoStakeholder</a>
+        <a href="/scrum/control/main?USERNAME=DemoStakeholder&PASSWORD=ofbiz&JavaScriptEnabled=Y" class="${styles.link_nav!}">DemoStakeholder</a>
         </@td>
         <@td>
             <b>The Stakeholder</b><br/>

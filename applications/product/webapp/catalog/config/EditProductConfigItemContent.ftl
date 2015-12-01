@@ -33,7 +33,7 @@ function insertImageName(size,nameValue) {
         <div>${uiLabelMap.ProductTheFileOnYourComputer}: <b>${clientFileName!}</b></div>
         <div>${uiLabelMap.ProductServerFileName}: <b>${fileNameToUse!}</b></div>
         <div>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath!}</b></div>
-        <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>" class="${styles.button_default!}">${imageUrl!}</a></b></div>
+        <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>" class="${styles.link_url!}">${imageUrl!}</a></b></div>
     </#if>
   </@section>
 </#if>
@@ -96,9 +96,9 @@ function insertImageName(size,nameValue) {
                     <#if configItemId?has_content>
                         <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                        <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="${styles.button_default!}">.jpg</a>
-                        <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="${styles.button_default!}">.gif</a>
-                        <a href="javascript:insertImageName('small','');" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
+                        <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="${styles.link_action!}">.jpg</a>
+                        <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="${styles.link_action!}">.gif</a>
+                        <a href="javascript:insertImageName('small','');" class="${styles.link_action!}">${uiLabelMap.CommonClear}</a>
                         </div>
                     </#if>
                 </@field>

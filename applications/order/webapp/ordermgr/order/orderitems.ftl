@@ -82,14 +82,14 @@ under the License.
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"})/>
                                         <#if downloadContents?has_content>
                                             <#list downloadContents as downloadContent>
-                                                <a href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" class="${styles.button_default!}" target="_blank">${uiLabelMap.ContentDownload}</a>&nbsp;
+                                                <a href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" class="${styles.link_action!}" target="_blank">${uiLabelMap.ContentDownload}</a>&nbsp;
                                             </#list>
                                         </#if>
-                                        <a href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
-                                        <a href="/ecommerce/control/product?product_id=${productId}" class="${styles.button_default!}" target="_blank">${uiLabelMap.OrderEcommerce}</a>
+                                        <a href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
+                                        <a href="/ecommerce/control/product?product_id=${productId}" class="${styles.link_nav!}" target="_blank">${uiLabelMap.OrderEcommerce}</a>
                                         <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
                                             <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>"
-                                               target="_orderImage" class="${styles.button_default!}">${uiLabelMap.OrderViewImage}</a>
+                                               target="_orderImage" class="${styles.link_action!}">${uiLabelMap.OrderViewImage}</a>
                                         </#if>
                                     </div>
                                 </@td>
@@ -104,7 +104,7 @@ under the License.
                                    
                                             <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
                                                 
-                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}.submit()" class="${styles.button_default!}">${uiLabelMap.OrderApproveOrder}</a>
+                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}.submit()" class="${styles.link_action!}">${uiLabelMap.OrderApproveOrder}</a>
                                                     <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
                                                         <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
                                                         <input type="hidden" name="orderId" value="${orderId!}"/>

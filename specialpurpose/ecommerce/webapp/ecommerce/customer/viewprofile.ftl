@@ -131,13 +131,13 @@ under the License.
                   <#if contactMechPurposeType??>
                     ${contactMechPurposeType.get("description",locale)}
                     <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (profiledefs.defaultShipAddr)?default("") == contactMech.contactMechId>
-                      <span class="${styles.button_default!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
+                      <span class="${styles.link_action!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
                     <#elseif contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION">
                       <form name="defaultShippingAddressForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
                         <input type="hidden" name="productStoreId" value="${productStoreId}" />
                         <input type="hidden" name="defaultShipAddr" value="${contactMech.contactMechId}" />
                         <input type="hidden" name="partyId" value="${party.partyId}" />
-                        <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="button" />
+                        <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_action!}" />
                       </form>
                     </#if>
                   <#else>
@@ -306,13 +306,13 @@ under the License.
                 </@td>
                 <@td align="right" valign="top">
                   <#if (profiledefs.defaultPayMeth)?default("") == paymentMethod.paymentMethodId>
-                    <span class="${styles.button_default!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
+                    <span class="${styles.link_action!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
                   <#else>
                     <form name="defaultPaymentMethodForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
                       <input type="hidden" name="productStoreId" value="${productStoreId}" />
                       <input type="hidden" name="defaultPayMeth" value="${paymentMethod.paymentMethodId}" />
                       <input type="hidden" name="partyId" value="${party.partyId}" />
-                      <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="button" />
+                      <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_action!}" />
                     </form>
                   </#if>
                 </@td>

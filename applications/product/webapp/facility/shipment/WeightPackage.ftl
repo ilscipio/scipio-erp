@@ -48,7 +48,7 @@ under the License.
               <div>
                 <span>${uiLabelMap.ProductPackage}</span> ${(shipmentPackageRouteSeg.shipmentPackageSeqId)!}
                 <#if shipmentPackageRouteSeg.labelImage??>
-                  <a href="javascript:document.viewShipmentPackageRouteSegLabelImageForm_${shipmentPackageRouteSeg_index}.submit();" class="${styles.button_default!}">${uiLabelMap.ProductViewLabelImage}</a>
+                  <a href="javascript:document.viewShipmentPackageRouteSegLabelImageForm_${shipmentPackageRouteSeg_index}.submit();" class="${styles.link_action!}">${uiLabelMap.ProductViewLabelImage}</a>
                 </#if>
               </div>
             </form>
@@ -65,8 +65,8 @@ under the License.
                   <input type="text" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?default("00001")}"/>
               </@field>
               <@field type="submitarea">
-                  <a href="javascript:document.selectOrderForm.action='<@ofbizUrl>PackOrder</@ofbizUrl>';document.selectOrderForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductPackOrder}</a>
-                  <a href="javascript:document.selectOrderForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductWeighPackageOnly}</a>
+                  <a href="javascript:document.selectOrderForm.action='<@ofbizUrl>PackOrder</@ofbizUrl>';document.selectOrderForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductPackOrder}</a>
+                  <a href="javascript:document.selectOrderForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductWeighPackageOnly}</a>
               </@field>
           </form>
           </@section>
@@ -79,8 +79,8 @@ under the License.
                   <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
               </@field>
               <@field type="submitarea">
-                  <a href="javascript:document.selectPicklistBinForm.action='<@ofbizUrl>PackOrder</@ofbizUrl>';document.selectPicklistBinForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductPackOrder}</a>
-                  <a href="javascript:document.selectPicklistBinForm.submit();" class="${styles.button_default!}">${uiLabelMap.ProductWeighPackageOnly}</a>
+                  <a href="javascript:document.selectPicklistBinForm.action='<@ofbizUrl>PackOrder</@ofbizUrl>';document.selectPicklistBinForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductPackOrder}</a>
+                  <a href="javascript:document.selectPicklistBinForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductWeighPackageOnly}</a>
               </@field>
           </form>
           </@section>
@@ -135,15 +135,15 @@ under the License.
                           </#if>
                         </select>
                       </@td>
-                      <@td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit()" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a></@td>
-                      <@td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.action='<@ofbizUrl>deletePackedLine</@ofbizUrl>';document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit();" class="${styles.button_default!}">${uiLabelMap.CommonDelete}</a></@td>
+                      <@td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit()" class="${styles.link_action!}">${uiLabelMap.CommonUpdate}</a></@td>
+                      <@td align="right"><a href="javascript:document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.action='<@ofbizUrl>deletePackedLine</@ofbizUrl>';document.updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a></@td>
                     </@tr>
                   </form>
                 </#list>
                 </@tbody>
               </@table>
               <div align="right">
-                <a href="javascript:document.completePackageForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductComplete}</a>
+                <a href="javascript:document.completePackageForm.submit()" class="${styles.link_action!}">${uiLabelMap.ProductComplete}</a>
               </div>
               <form name="completePackageForm" method ="post" action="<@ofbizUrl>completePackage</@ofbizUrl>">
                 <input type="hidden" name="orderId" value="${orderId!}"/>
@@ -244,7 +244,7 @@ under the License.
               </@tbody>
             </@table>
             <div align="right">
-              <a href="javascript:document.completePackForm.submit()" class="${styles.button_default!}">${uiLabelMap.ProductComplete}</a>
+              <a href="javascript:document.completePackForm.submit()" class="${styles.link_action!}">${uiLabelMap.ProductComplete}</a>
             </div>
             </@section>
           </#if>
@@ -265,9 +265,9 @@ under the License.
           <input type="hidden" name="facilityId" value="${(facility.facilityId)!}"/>
         </form>
         <div>
-          <a href="javascript:document.shipNowForm.submit()" class="${styles.button_default!}">${uiLabelMap.FacilityShip} ${uiLabelMap.CommonNow}</a>
+          <a href="javascript:document.shipNowForm.submit()" class="${styles.link_action!}">${uiLabelMap.FacilityShip} ${uiLabelMap.CommonNow}</a>
           &nbsp;
-          <a href="javascript:document.holdShipmentForm.submit()" class="${styles.button_default!}">${uiLabelMap.FacilityHoldShipment}</a>
+          <a href="javascript:document.holdShipmentForm.submit()" class="${styles.link_action!}">${uiLabelMap.FacilityHoldShipment}</a>
         </div>
     </@section>
   </#if>

@@ -47,10 +47,10 @@ under the License.
               </@td>
               <@td class="button-col">
                 <#if security.hasEntityPermission("PARTYMGR", "_CREATE", session)>
-                  <a href="<@ofbizUrl>ProfileEditUserLogin?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonEdit}</a>
+                  <a href="<@ofbizUrl>ProfileEditUserLogin?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonEdit}</a>
                 </#if>
                 <#if security.hasEntityPermission("SECURITY", "_VIEW", session)>
-                  <a href="<@ofbizUrl>ProfileEditUserLoginSecurityGroups?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.SecurityGroups}</a>
+                  <a href="<@ofbizUrl>ProfileEditUserLoginSecurityGroups?partyId=${party.partyId}&amp;userLoginId=${userUserLogin.userLoginId}</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.SecurityGroups}</a>
                 </#if>
               </@td>
             </@tr>

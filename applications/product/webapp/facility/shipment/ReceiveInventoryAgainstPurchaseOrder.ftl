@@ -180,7 +180,7 @@ under the License.
                                     </select>
                                 </@td>
                                 <@td align="right">
-                                    <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;productId=${product.productId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClear}</a>
+                                    <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;productId=${product.productId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonClear}</a>
                                 </@td>
                                 <@td align="right">
                                   <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'orderItemData_tableRow_${rowCount}');" />
@@ -193,7 +193,7 @@ under the License.
                       <@tfoot>
                         <@tr>
                             <@td colspan="11" align="right">
-                                <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;clearAll=Y</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClearAll}</a>
+                                <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;clearAll=Y</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonClearAll}</a>
                             </@td>
                             <@td align="right">
                                 <a class="${styles.link_action!}" href="javascript:populateQuantities(${rowCount - 1});document.selectAllForm.submit();">${uiLabelMap.ProductReceiveItem}</a>

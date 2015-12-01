@@ -64,7 +64,7 @@ under the License.
     </#if>
     <#if userLogin??>
         <li class="divider"></li>
-        <li class="active"><a href="<@ofbizUrl>logout</@ofbizUrl>" <#--class="alert ${styles.button_default!}"-->>${uiLabelMap.CommonLogout}</a></li>
+        <li class="active"><a href="<@ofbizUrl>logout</@ofbizUrl>"<#-- class="alert ${styles.link_nav!}"-->>${uiLabelMap.CommonLogout}</a></li>
     </#if>
 </#macro>
 

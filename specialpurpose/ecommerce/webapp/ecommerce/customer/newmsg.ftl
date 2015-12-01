@@ -56,7 +56,7 @@ under the License.
           </@tr>
           <@tr>
             <@td align="right"><div class="tableheadtext">${uiLabelMap.CommonFrom}:</div></@td>
-            <@td>&nbsp;${sessionAttributes.autoName!} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClickHere}</a>)</@td>
+            <@td>&nbsp;${sessionAttributes.autoName!} [${userLogin.partyId}] (${uiLabelMap.CommonNotYou}?&nbsp;<a href="<@ofbizUrl>autoLogout</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonClickHere}</a>)</@td>
           </@tr>
           <#if partyIdTo?has_content>
             <#assign partyToName = Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, partyIdTo, true)>

@@ -19,8 +19,8 @@ under the License.
 
 <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
   <@section title="${uiLabelMap.OrderReceiveOfflinePayments}">
-      <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonBack}</a>
-      <a href="javascript:document.paysetupform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
+      <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonBack}</a>
+      <a href="javascript:document.paysetupform.submit()" class="${styles.link_action!}">${uiLabelMap.CommonSave}</a>
 
       <form method="post" action="<@ofbizUrl>receiveOfflinePayments/${donePage}</@ofbizUrl>" name="paysetupform">
         <#if requestParameters.workEffortId??>
@@ -75,8 +75,8 @@ under the License.
         </#if>
       </form>
 
-      <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonBack}</a>
-      <a href="javascript:document.paysetupform.submit()" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
+      <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonBack}</a>
+      <a href="javascript:document.paysetupform.submit()" class="${styles.link_action!}">${uiLabelMap.CommonSave}</a>
   
   </@section>
 <#else>

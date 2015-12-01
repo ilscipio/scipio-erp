@@ -113,7 +113,7 @@ function lookupShipments() {
               </@field>
               
               <@field type="submitarea">
-                  <a href="javascript:lookupShipments();" class="${styles.button_default!}">${uiLabelMap.ProductFindShipment}</a>
+                  <a href="javascript:lookupShipments();" class="${styles.link_action!}">${uiLabelMap.ProductFindShipment}</a>
               </@field>
         </form>
 </@section>
@@ -155,7 +155,7 @@ function lookupShipments() {
               <@td>${(destinationFacility.facilityName)!} [${shipment.destinationFacilityId!}]</@td>
               <@td><span style="white-space: nowrap;">${(shipment.estimatedShipDate.toString())!}</span></@td>
               <@td align="right">
-                <a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonView}</a>
+                <a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonView}</a>
               </@td>
             </@tr>
           </#list>

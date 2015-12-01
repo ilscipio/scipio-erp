@@ -44,7 +44,7 @@ under the License.
         <@td>${(workEffort.estimatedStartDate.toString())!}</@td>
         <@td>${workEffort.priority!}</@td>
         <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}</@td>
-        <@td><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.button_default!}">${workEffort.workEffortName}</a></@td>
+        <@td><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.link_name!}">${workEffort.workEffortName}</a></@td>
         <@td class="button-col"><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.link_id!}">${workEffort.workEffortId}</a></@td>
       </@tr>
     </#list>
@@ -76,7 +76,7 @@ under the License.
           <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId")), true).get("description",locale))!}</@td>
           <#-- <@td>${workEffort.partyId}</@td> -->
           <@td>${workEffort.roleTypeId}</@td>
-          <@td><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.button_default!}">${workEffort.workEffortName}</a></@td>
+          <@td><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.link_name!}">${workEffort.workEffortName}</a></@td>
           <@td class="button-col"><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.link_id!}">${workEffort.workEffortId}</a></@td>
         </@tr>
       </#list>
@@ -108,7 +108,7 @@ under the License.
           <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId")), true).get("description",locale))!}</@td>
           <#-- <@td>${workEffort.partyId}</@td> -->
           <@td>${workEffort.roleTypeId}</@td>
-          <@td><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.button_default!}">${workEffort.workEffortName}</a></@td>
+          <@td><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.link_name!}">${workEffort.workEffortName}</a></@td>
           <@td class="button-col"><a href="/workeffort/control/acceptRoleAssignment?workEffortId=${workEffort.workEffortId}&amp;partyId=${workEffort.partyId}&amp;roleTypeId=${workEffort.roleTypeId}&amp;fromDate=${workEffort.fromDate.toString()}" class="${styles.link_action!}">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></@td>
         </@tr>
       </#list>
@@ -140,7 +140,7 @@ under the License.
           <@td>${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("statusId")), true).get("description",locale))!}</@td>
           <@td>${workEffort.groupPartyId}</@td>
           <#-- <@td>${workEffort.roleTypeId}</@td> -->
-          <@td><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.button_default!}">${workEffort.workEffortName}</a></@td>
+          <@td><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.link_name!}">${workEffort.workEffortName}</a></@td>
           <@td class="button-col"><a href="/workeffort/control/acceptassignment?workEffortId=${workEffort.workEffortId}&amp;partyId=${workEffort.partyId}&amp;roleTypeId=${workEffort.roleTypeId}&amp;fromDate=${workEffort.fromDate}" class="${styles.link_action!}">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></@td>
         </@tr>
       </#list>

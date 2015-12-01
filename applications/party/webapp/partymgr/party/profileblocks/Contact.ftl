@@ -67,7 +67,7 @@ under the License.
                       <#if contactMechPurposeType?has_content>
                         <#assign popUptitle = contactMechPurposeType.get("description", locale) + uiLabelMap.CommonGeoLocation>
                       </#if>
-                      <a href="javascript:popUp('<@ofbizUrl>GetPartyGeoLocation?geoPointId=${postalAddress.geoPointId}&partyId=${partyId}</@ofbizUrl>', '${popUptitle!}', '450', '550')" class="${styles.button_default!}">${uiLabelMap.CommonGeoLocation}</a>
+                      <a href="javascript:popUp('<@ofbizUrl>GetPartyGeoLocation?geoPointId=${postalAddress.geoPointId}&partyId=${partyId}</@ofbizUrl>', '${popUptitle!}', '450', '550')" class="${styles.link_action!}">${uiLabelMap.CommonGeoLocation}</a>
                     </#if>
                   </#if>
                 <#elseif "TELECOM_NUMBER" = contactMech.contactMechTypeId>
@@ -78,8 +78,8 @@ under the License.
                       <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode?default("000")}-</#if><#if telecomNumber.contactNumber?has_content>${telecomNumber.contactNumber?default("000-0000")}</#if>
                       <#if partyContactMech.extension?has_content>${uiLabelMap.PartyContactExt}&nbsp;${partyContactMech.extension}</#if>
                         <#if !telecomNumber.countryCode?has_content || telecomNumber.countryCode = "011">
-                          <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="${styles.button_default!}">${uiLabelMap.CommonLookupAnywho}</a>
-                          <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="${styles.button_default!}">${uiLabelMap.CommonLookupWhitepages}</a>
+                          <a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="${styles.link_action!}">${uiLabelMap.CommonLookupAnywho}</a>
+                          <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="${styles.link_action!}">${uiLabelMap.CommonLookupWhitepages}</a>
                         </#if>
                     </div>
                   </#if>
@@ -103,7 +103,7 @@ under the License.
                     ${contactMech.infoString!}
                     <#assign openAddress = contactMech.infoString?default("")>
                     <#if !openAddress?starts_with("http") && !openAddress?starts_with("HTTP")><#assign openAddress = "http://" + openAddress></#if>
-                    <a target="_blank" href="${openAddress}" class="${styles.button_default!}">${uiLabelMap.CommonOpenPageNewWindow}</a>
+                    <a target="_blank" href="${openAddress}" class="${styles.link_action!}">${uiLabelMap.CommonOpenPageNewWindow}</a>
                   </div>
                 <#else>
                   <div>${contactMech.infoString!}</div>
@@ -128,7 +128,7 @@ under the License.
               <@td><b>(${partyContactMech.allowSolicitation!})</b></@td>
               <@td class="button-col">
                 <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session) || userLogin.partyId == partyId>
-                  <a href="<@ofbizUrl>editcontactmech?partyId=${partyId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonUpdate}</a>
+                  <a href="<@ofbizUrl>editcontactmech?partyId=${partyId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonUpdate}</a>
                 </#if>
                 <#if security.hasEntityPermission("PARTYMGR", "_DELETE", session) || userLogin.partyId == partyId>
                   <form name="partyDeleteContact" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>" onsubmit="javascript:submitFormDisableSubmits(this)">

@@ -25,7 +25,7 @@ under the License.
   </span>
   <span class="name">
     <div>
-      <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" class="${styles.button_default!}">${productContentWrapper.get("PRODUCT_NAME", "html")!}</a>
+      <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" class="${styles.link_name!}">${productContentWrapper.get("PRODUCT_NAME", "html")!}</a>
     </div>
   </span>
   <span class="listPrice">
@@ -56,7 +56,7 @@ under the License.
     <#-- check to see if the product is a virtual product -->
     <#elseif product.isVirtual?default("N") == "Y">
       <div>
-        <a href="<@ofbizUrl>product?<#if categoryId??>category_id=${categoryId}&amp;</#if>product_id=${product.productId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.OrderChooseVariations}...</a>
+        <a href="<@ofbizUrl>product?<#if categoryId??>category_id=${categoryId}&amp;</#if>product_id=${product.productId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.OrderChooseVariations}...</a>
       </div>
     <#else>
       <div>

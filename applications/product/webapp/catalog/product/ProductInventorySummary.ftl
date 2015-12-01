@@ -59,7 +59,7 @@ under the License.
                     <#assign outgoingQuantityTotal = manufacturingOutQuantitySummary.estimatedQuantityTotal!>
                     <@tr valign="middle">
                         <@td>${(facility.facilityName)!} [${facilityId?default("[No Facility]")}]
-                        <a href="/facility/control/ReceiveInventory?facilityId=${facilityId}&amp;productId=${productId}&amp;externLoginKey=${externalLoginKey}" class="${styles.button_default!}">${uiLabelMap.ProductInventoryReceive}</a></@td>
+                        <a href="/facility/control/ReceiveInventory?facilityId=${facilityId}&amp;productId=${productId}&amp;externLoginKey=${externalLoginKey}" class="${styles.link_action!}">${uiLabelMap.ProductInventoryReceive}</a></@td>
                         <@td><#if totalAvailableToPromise??>${totalAvailableToPromise}<#else>&nbsp;</#if></@td>
                         <@td><#if totalQuantityOnHand??>${totalQuantityOnHand}<#else>&nbsp;</#if></@td>
                         <#if isMarketingPackage == "true">

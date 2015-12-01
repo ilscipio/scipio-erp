@@ -37,7 +37,7 @@ under the License.
                     <input type="submit" value="${uiLabelMap.CommonUpdate}" />
                     </form>
                 </@td>
-                <@td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.button_default!}">${uiLabelMap.ProductFeatureGroupAppls}</a></@td>
+                <@td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.link_nav!}">${uiLabelMap.ProductFeatureGroupAppls}</a></@td>
             </@tr>
           </#list>
         </@tbody>

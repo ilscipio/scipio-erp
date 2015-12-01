@@ -84,11 +84,11 @@ under the License.
         <#if requestParameters.VIEW_INDEX??><input type='hidden' name='VIEW_INDEX' value='${requestParameters.VIEW_INDEX}'/></#if>
         <#if requestParameters.SEARCH_STRING??><input type='hidden' name='SEARCH_STRING' value='${requestParameters.SEARCH_STRING}'/></#if>
         <#if requestParameters.SEARCH_CATEGORY_ID??><input type='hidden' name='SEARCH_CATEGORY_ID' value='${requestParameters.SEARCH_CATEGORY_ID}'/></#if>
-        <a href="javascript:document.thecategoryform.submit()" class="${styles.button_default!}"><span style="white-space: nowrap;">${uiLabelMap.ProductAddProductsUsingDefaultQuantities}</span></a>
+        <a href="javascript:document.thecategoryform.submit()" class="${styles.link_longaction!}"><span style="white-space: nowrap;">${uiLabelMap.ProductAddProductsUsingDefaultQuantities}</span></a>
       </form>
     </#if>
     <#if searchInCategory?default("Y") == "Y">
-        <a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${productCategory.productCategoryId}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductSearchInCategory}</a>
+        <a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${productCategory.productCategoryId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.ProductSearchInCategory}</a>
     </#if>
     <#assign longDescription = categoryContentWrapper.get("LONG_DESCRIPTION", "html")!/>
     <#assign categoryImageUrl = categoryContentWrapper.get("CATEGORY_IMAGE_URL", "url")!/>

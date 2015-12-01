@@ -33,7 +33,7 @@ under the License.
       </div>
       <#if autoUserLogin?has_content>
         <div>
-          (${uiLabelMap.CommonNot}&nbsp;${autoUserLogin.userLoginId}?&nbsp;<a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonClickHere}</a>)
+          (${uiLabelMap.CommonNot}&nbsp;${autoUserLogin.userLoginId}?&nbsp;<a href="<@ofbizUrl>${autoLogoutUrl}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonClickHere}</a>)
         </div>
       </#if>
       <div>

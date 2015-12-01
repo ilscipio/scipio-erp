@@ -107,7 +107,7 @@ under the License.
                     <@tr>
                         <@td> </@td>
                         <@td>
-                            <a href="javascript:reloadCaptcha('captchaImage');" class="${styles.button_default!}">${uiLabelMap.CommonReloadCaptchaCode}</a>
+                            <a href="javascript:reloadCaptcha('captchaImage');" class="${styles.link_action!}">${uiLabelMap.CommonReloadCaptchaCode}</a>
                         </@td>
                     </@tr>
                     <@tr>

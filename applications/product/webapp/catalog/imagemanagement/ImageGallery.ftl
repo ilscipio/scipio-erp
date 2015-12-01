@@ -36,8 +36,8 @@ under the License.
                                 <@td align="center"><a href="<@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl>" target="_blank"><img src="<@ofbizContentUrl>${(productImage.productImageThumb)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a></@td>
                             </@tr>
                             <@tr valign="middle">
-                                <#-- <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productContentAndInfo.contentId}&amp;dataResourceId=${productContentAndInfo.dataResourceId}&amp;seoUrl=/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}','' ,500,500);" class="${styles.button_default!}">${uiLabelMap.ImageManagementShare}</a></@td> -->
-                                <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productImage.contentId}&amp;dataResourceId=${productImage.dataResourceId}','' ,500,500);" class="${styles.button_default!}">${uiLabelMap.ImageManagementShare}</a></@td>
+                                <#-- <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productContentAndInfo.contentId}&amp;dataResourceId=${productContentAndInfo.dataResourceId}&amp;seoUrl=/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}','' ,500,500);" class="${styles.link_action!}">${uiLabelMap.ImageManagementShare}</a></@td> -->
+                                <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productImage.contentId}&amp;dataResourceId=${productImage.dataResourceId}','' ,500,500);" class="${styles.link_action!}">${uiLabelMap.ImageManagementShare}</a></@td>
                             </@tr>
                         </@tbody>
                     </@table>
@@ -54,8 +54,8 @@ under the License.
                                 <@td align="center"><a href="<@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl>" target="_blank"><img src="<@ofbizContentUrl>${(productImage.productImageThumb)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a></@td>
                             </@tr>
                             <@tr valign="middle">
-                                <#-- <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productContentAndInfo.contentId}&amp;dataResourceId=${productContentAndInfo.dataResourceId}&amp;seoUrl=/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}','' ,500,500);" class="${styles.button_default!}">${uiLabelMap.ImageManagementShare}</a></@td> -->
-                                <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productImage.contentId}&amp;dataResourceId=${productImage.dataResourceId}','' ,500,500);" class="${styles.button_default!}">${uiLabelMap.ImageManagementShare}</a></@td>
+                                <#-- <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productContentAndInfo.contentId}&amp;dataResourceId=${productContentAndInfo.dataResourceId}&amp;seoUrl=/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}','' ,500,500);" class="${styles.link_action!}">${uiLabelMap.ImageManagementShare}</a></@td> -->
+                                <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productImage.contentId}&amp;dataResourceId=${productImage.dataResourceId}','' ,500,500);" class="${styles.link_action!}">${uiLabelMap.ImageManagementShare}</a></@td>
                             </@tr>
                         </@tbody>
                     </@table>

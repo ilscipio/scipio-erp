@@ -260,7 +260,7 @@ under the License.
                                 <@td>
                                         <input type="text" readonly="readonly" name="itemFee" value="${request.getAttribute("itemFee")!}"/>
                                         <!-- itemlisting buttons bar -->
-                                        <a href="#" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>updateProductExportDetail</@ofbizUrl>';document.ProductsExportToEbay.submit();" class="${styles.button_default!}">${uiLabelMap.CommonSave}</a>
+                                        <a href="#" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>updateProductExportDetail</@ofbizUrl>';document.ProductsExportToEbay.submit();" class="${styles.link_action!}">${uiLabelMap.CommonSave}</a>
                                     <#-- request.setAttribute("isSaved")-->
                                     <#if isSaved?? && isSaved=="Y">
                                         <a href="#" class="${styles.link_action!}" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>verifyItemBeforeAddAndExportToEbay</@ofbizUrl>';document.ProductsExportToEbay.submit();">Verifly Item</a>
@@ -812,8 +812,8 @@ under the License.
         <@table type="fields" cellspacing="0"> <#- orig: class="basic-table" ->
             <@tr>
                 <@td align="center" colspan="2">
-                    <a href="#" class="${styles.button_default!}">${uiLabelMap.EbayExportToEbay}</a>
-                    <a href="#" class="${styles.button_default!}">VeriflyItem</a>
+                    <a href="#" class="${styles.link_action!}">${uiLabelMap.EbayExportToEbay}</a>
+                    <a href="#" class="${styles.link_action!}">Verify Item</a>
                 
     </#if-->
 </form>

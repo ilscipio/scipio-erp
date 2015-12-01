@@ -136,8 +136,8 @@ function setAlternateGwp(field) {
 <div>
     <div>
         <div>
-            <div class="${styles.button_default!} ${styles.disabled!}">
-              <#--<a href="<@ofbizUrl>main</@ofbizUrl>" class="${styles.button_default!}">[${uiLabelMap.EcommerceContinueShopping}]</a>-->
+            <div>
+              <#--<a href="<@ofbizUrl>main</@ofbizUrl>" class="${styles.link_action!}">[${uiLabelMap.EcommerceContinueShopping}]</a>-->
               <#if (shoppingCartSize > 0)>
                 <a href="javascript:document.cartform.submit();" class="submenutext">${uiLabelMap.EcommerceRecalculateCart}</a>
                 <a href="<@ofbizUrl>emptycart</@ofbizUrl>" class="submenutext">${uiLabelMap.EcommerceEmptyCart}</a>

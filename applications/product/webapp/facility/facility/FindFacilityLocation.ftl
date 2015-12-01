@@ -90,7 +90,7 @@ under the License.
             <@td>${(location.levelId)!}</@td>
             <@td>${(location.positionId)!}</@td>
             <@td class="button-col">
-              <a href="<@ofbizUrl>EditInventoryItem?facilityId=${(location.facilityId)!}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.ProductNewInventoryItem}</a>
+              <a href="<@ofbizUrl>EditInventoryItem?facilityId=${(location.facilityId)!}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.ProductNewInventoryItem}</a>
               <#if itemId??>
                 <a href="<@ofbizUrl>UpdateInventoryItem?inventoryItemId=${itemId}&facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.ProductSetItem} ${itemId}</a>
               </#if>

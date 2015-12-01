@@ -209,7 +209,7 @@ function ShowTab(lname) {
                     <@td>&nbsp;</@td>
                     <@td>
                       <input type="submit" name="Update" value="${button}" />
-                      <a href="<@ofbizUrl>ViewGeneric?${curFindString}</@ofbizUrl>" class="${styles.button_default!}">${uiLabelMap.CommonCancel}</a>
+                      <a href="<@ofbizUrl>ViewGeneric?${curFindString}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonCancel}</a>
                     </@td>
                   </@tr>
                 </@tfoot>

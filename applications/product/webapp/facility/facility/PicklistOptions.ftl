@@ -43,7 +43,7 @@ under the License.
         <input type="text" size="4" name="maxNumberOfOrders" value="50"/>    
     </@field>      
     <@field type="submitarea">
-      <input type="submit" value="Submit" class="${styles.button_default!}" align='right'/>
+      <input type="submit" value="Submit" class="${styles.link_action!}" align='right'/>
     </@field>
     </div>
   </form>
@@ -129,23 +129,23 @@ under the License.
                 <@td>
                   ${viewGroupDetailForm}
                   <#if groupName1?has_content>
-                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.button_default!}">${groupName1}</a>
+                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.link_name!}">${groupName1}</a>
                   </#if>
                 </@td>
                 <@td>
                   <#if groupName2?has_content>
-                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.button_default!}">${groupName2}</a>
+                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.link_name!}">${groupName2}</a>
                   </#if>
                 </@td>
                 <@td>
                   <#if groupName3?has_content>
-                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.button_default!}">${groupName3}</a>
+                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.link_name!}">${groupName3}</a>
                   </#if>
                 </@td>
               <#else>
                 <@td>
                   ${viewGroupDetailForm}
-                  <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.button_default!}">${groupName!}</a>
+                  <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.link_name!}">${groupName!}</a>
                 </@td>
               </#if>
             <@td>
@@ -286,9 +286,9 @@ under the License.
               <@td>${(channel.description)!}</@td>
               <@td>${oiasga.orderItemSeqId}</@td>
               <@td>
-                <a href="/catalog/control/EditProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${(orderProduct.internalName)!}</a>
+                <a href="/catalog/control/EditProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_name!}" target="_blank">${(orderProduct.internalName)!}</a>
                 <#if orderProduct.productId != product.productId>
-                  &nbsp;[<a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.button_default!}" target="_blank">${(product.internalName)!}</a>]
+                  &nbsp;[<a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_name!}" target="_blank">${(product.internalName)!}</a>]
                 </#if>
               </@td>
               <@td>${oiasga.shipGroupSeqId}</@td>

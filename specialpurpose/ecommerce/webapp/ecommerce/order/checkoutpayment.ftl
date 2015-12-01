@@ -262,6 +262,6 @@ $(document).ready(function(){
 </form>
 
 <div>
-  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'CS', '');" class="${styles.button_default!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
-  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'DN', '');" class="${styles.button_default!}">${uiLabelMap.OrderContinueToFinalOrderReview}</a>
+  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'CS', '');" class="${styles.link_action!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
+  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'DN', '');" class="${styles.link_action!}">${uiLabelMap.OrderContinueToFinalOrderReview}</a>
 </div>

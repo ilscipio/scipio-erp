@@ -171,6 +171,9 @@
   
     how to decide which style to use on a link:
       * labelling should be based mainly on the text content of the link, both the literal content and its meaning in context.
+      * note that currently sometimes in templates this selection logic reverses and it's more the template that has to choose what
+        kind of link it should want based on what's here. in theory this just means we don't have enough categories yet or
+        they're not generalized enough yet.
       
     record identifiers and sorting fields:
       * if the link is an action and contains a text designating an action in addition to identifier, skip this and jump to "actions and navigation" below

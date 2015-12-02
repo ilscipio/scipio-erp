@@ -109,7 +109,9 @@
     <@"<#global '${name}'=.main['${name}']>"?interpret />
   </#if>
 </#list> -->
-<#assign dummy = globalsPutAll(.main, "ed", catoOrigMainNsNamesSet)>
+<#-- don't include only directives anymore - make everything global; may need vars -->
+<#--<#assign dummy = globalsPutAll(.main, "ed", catoOrigMainNsNamesSet)>-->
+<#assign dummy = globalsPutAll(.main, "e", catoOrigMainNsNamesSet)>
 
 <#-- compatibility mode: define styles hash entries as individual style_ vars
 <#list mapKeys(styles) as name>

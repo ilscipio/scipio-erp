@@ -814,6 +814,23 @@ TODO?: may want helper booleans to control in/out allArgNames?
   <#return defaultArgs + toSimpleMap(args) + inlineArgs + overrideArgs>
 </#function>
 
+<#function mergeArgMapsToLocals args={} inlineArgs={} defaultArgs={} overrideArgs={}>
+  <#-- TODO: WRITE THIS AS A TRANSFORM - CANNOT BE IMPLEMENTED IN FTL
+  this should be equivalent to doing:
+    <#local args = mergeArgMaps(args, inlineArgs, defaultArgs, overrideArgs)>
+    <#local dummy = localsPutAll(args)>   
+  in the caller. but the localsPutAll part cannot be written in an FTL function.
+  the other problem is can't exploit FTL hash concat from transforms.
+  note this would still also need to return the args map, as well as dump it in locals.
+  if could be done as one step, probably would help performance of these heavy functions.
+   -->
+</#function>
+
+<#-- a version of mergeArgMaps that only merges maps, nothing else -->
+<#function mergeArgMapsBasicToLocals args={} inlineArgs={} defaultArgs={} overrideArgs={}>
+  <#-- TODO: basic version of mergeArgMapsToLocals -->
+</#function>
+
 <#-- 
 *************
 * mergeAttribMaps

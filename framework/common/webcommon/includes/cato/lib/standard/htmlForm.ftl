@@ -679,8 +679,10 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
         "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "events":{} }>
 <#macro field args={} inlineArgs...> 
+  <#-- TODO: the following calls should be combined into a mergeArgMapsToLocals method, but
+      it is not currently possible. see mergeArgMapsToLocals in utilities.ftl. -->
   <#local args = mergeArgMaps(args, inlineArgs, fieldArgDefaultsCatoStd)>
-  <#local dummy = localsPutAll(args)>   
+  <#local dummy = localsPutAll(args)>
         
   <#if !type?has_content>
     <#local type = "generic">

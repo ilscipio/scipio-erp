@@ -404,20 +404,32 @@ or even multiple per fieldset.
     </@field>
     
   * Parameters *
-    type            = [default|default-nolabels|generic], default default. the type of fields arrangement.
+    type            = [default|default-nolabels|default-compact|generic], default default. the type of fields arrangement.
                       default: default cato field arrangement. this is the type assumed when no @fields element is present.
                           currently, it mostly influences the label area (present for all @field types except submit).
                       default-nolabels: default cato field arrangement for common sets of fields with no labels.
                           it expects that @field entries won't be passed any labels.
+                      default-compact: default cato field arrangement for fields that are in limited space.
+                          by default, this means the labels will be arranged vertically with the fields.
                       generic: generic field arrangement of no specific pattern. means field arrangement is custom and field macro should not
                           make any assumptions except where a default is required. caller determines arrangement/layout/label type/etc.
-    labelType       = [gridarea|none], defaults specified in styles variables based on fields type. override for type of the field labels themselves.
-                      gridarea: a grid area reserved for label.
+    labelType       = [horizontal|vertical|none], defaults specified in styles variables based on fields type. override for type of the field labels themselves.
+                      horizontal: a label area added to the left (or potentially to the right) a field, horizontally. 
+                          the implementation decides how to do this.
+                          DEV NOTE: previously this was called "gridarea". but in the bootstrap code, this no longer makes sense.
+                              It would be perfectly valid for us to add an extra type here called "gridarea" that specifically requires
+                              a grid (TODO?). "horizontal" simply delegates the choice to the implementation.
+                      vertical: a label area added before (or potentially after) a field, vertically. 
+                          the implementation decides how to do this.
                       none: no labels or label areas. expects the @field macro won't be passed any.
-    labelLayout     = [left|right|none], defaults specified in styles variables based on fields type. override for layout/positioning of the labels.
+                      TODO: we should have types here that specifically request that either "gridarea" or "inline" are used for markup:
+                          gridarea-horizontal, gridarea-vertical, inline-horizontal, inline-vertical
+                          The current implementation is unspecific.
+    labelPosition   = [left|right|top|bottom|none], defaults specified in styles variables based on fields type. override for layout/positioning of the labels.
+                      some values only make sense for some arrangements.
     labelArea       = boolean, defaults specified in styles variables based on fields type. overrides whether fields are expected to have a label area or not, mainly when label omitted. 
                       logic is influenced by other arguments.
-                      NOTE: This does not determine label area type (gridarea, etc.); only labelType does that (in current code).
+                      NOTE: This does not determine label area type (horizontal, etc.); only labelType does that (in current code).
                           They are decoupled. This only controls presence of it.
                       NOTE: This is weaker than labelArea arg of @field macro, but stronger than other args of this macro.
     labelAreaExceptions = string of space-delimited @field type names or list of names, defaults specified in styles variables based on fields type  
@@ -425,14 +437,14 @@ or even multiple per fieldset.
     formId              = the form ID the child fields should assume   
     inlineItems     = change default for @field inlineItems parameter (true/false)     
 -->
-<#macro fields type="default" labelType="" labelLayout="" labelArea="" labelAreaExceptions=true formName="" formId="" inlineItems="">
-    <#local fieldsInfo = makeFieldsInfo(type, labelType, labelLayout, labelArea, labelAreaExceptions, formName, formId, inlineItems)>
+<#macro fields type="default" labelType="" labelPosition="" labelArea="" labelAreaExceptions=true formName="" formId="" inlineItems="">
+    <#local fieldsInfo = makeFieldsInfo(type, labelType, labelPosition, labelArea, labelAreaExceptions, formName, formId, inlineItems)>
     <#local dummy = pushRequestStack("catoCurrentFieldsInfo", fieldsInfo)>
     <#nested>
     <#local dummy = popRequestStack("catoCurrentFieldsInfo")>
 </#macro>
 
-<#function makeFieldsInfo type labelType="" labelLayout="" labelArea="" labelAreaExceptions=true formName="" formId="" inlineItems="">
+<#function makeFieldsInfo type labelType="" labelPosition="" labelArea="" labelAreaExceptions=true formName="" formId="" inlineItems="">
     <#local stylesType = type?replace("-","_")>
     <#local stylesPrefix = "fields_" + stylesType + "_">
     <#if !styles[stylesPrefix + "labeltype"]??>
@@ -447,13 +459,13 @@ or even multiple per fieldset.
       </#if>
     </#if>
     <#if !labelType?has_content>
-      <#local labelType = styles[stylesPrefix + "labeltype"]!"gridarea">
+      <#local labelType = styles[stylesPrefix + "labeltype"]!"horizontal">
     </#if>
-    <#if !labelLayout?has_content>
-      <#local labelLayout = styles[stylesPrefix + "labellayout"]!"left">
+    <#if !labelPosition?has_content>
+      <#local labelPosition = styles[stylesPrefix + "labelposition"]!"left">
     </#if>
     <#if !labelArea?is_boolean>
-      <#local labelArea = (labelType != "none" && labelLayout != "none")>
+      <#local labelArea = (labelType != "none" && labelPosition != "none")>
     </#if>
 
     <#if !labelAreaExceptions?is_sequence && !labelAreaExceptions?is_string>
@@ -470,7 +482,7 @@ or even multiple per fieldset.
         <#local labelAreaExceptions = []>
       </#if>
     </#if>
-    <#return {"type":type, "labelType":labelType, "labelLayout":labelLayout, 
+    <#return {"type":type, "labelType":labelType, "labelPosition":labelPosition, 
         "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, "formName":formName, "formId":formId,
         "inlineItems":inlineItems}>
 </#function>
@@ -524,15 +536,15 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                       NOTE: Presence of label arg does not guarantee a label will be shown; this is controlled
                           by labelArea (and labelType) and its defaults, optionally coming from @fields container.
                           For generic parent fields, label type must be specified explicitly, e.g.
-                            <@fields type="generic"><@field labelType="gridarea" label="mylabel">...</@fields> 
+                            <@fields type="generic"><@field labelType="horizontal" label="mylabel">...</@fields> 
                       NOTE: label area behavior may also be influenced by containing macros such as @fields
     labelDetail     = extra content (HTML) inserted with (after) label
     labelType       = explicit label type (see @fields)
-    labelLayout     = explicit label layout (see @fields)
+    labelPosition     = explicit label layout (see @fields)
     labelArea       = boolean, default empty string (use @fields type default).
                       if true, forces a label area.
                       if false, prevents a label area.
-                      NOTE: This does not determine label area type (gridarea, etc.); only labelType does that (in current code).
+                      NOTE: This does not determine label area type (horizontal, etc.); only labelType does that (in current code).
                           They are decoupled. This only controls presence of it.
     tooltip         = Small field description - to be displayed to the customer
     description     = alternative to tooltip
@@ -677,7 +689,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
     "cols":"50", "dateType":"date", "multiple":"", "checked":"", "collapse":"", "tooltip":"", "columns":"", "norows":false, "nocells":false, "container":"",
     "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":1, "postfixContent":true, "required":false, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
-    "labelType":"", "labelLayout":"", "labelArea":"", "description":"",
+    "labelType":"", "labelPosition":"", "labelArea":"", "description":"",
     "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
     "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
     "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "events":{} 
@@ -792,14 +804,14 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   
   <#-- label area logic
       TODO: right now most of the fieldsInfo parameters are not fully exploited.
-          assumes labelType=="gridarea" (unless "none" which influences labelArea) and 
-          labelLayout="left" (unless "none" which influences labelArea). 
+          assumes labelType=="horizontal" (unless "none" which influences labelArea) and 
+          labelPosition="left" (unless "none" which influences labelArea). 
       NOTE: labelArea boolean logic does not determine "label type" or "label area type"; 
           only controls presence of. so labelArea logic and usage anywhere should not change
           if new label (area) type were to be added (e.g. on top instead of side by side). -->
   <#if labelArea?is_boolean>
     <#local labelAreaDefault = labelArea>
-  <#elseif labelType == "none" || labelLayout == "none">
+  <#elseif labelType == "none" || labelPosition == "none">
     <#local labelAreaDefault = false>
   <#elseif isChildField>
     <#-- based on current usage, a child field should never really have a label area by default (requires explicit)... -->
@@ -818,10 +830,10 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#else>
     <#local effLabelType = (fieldsInfo.labelType)!"">
   </#if>
-  <#if labelLayout?has_content>
-    <#local effLabelLayout = labelLayout>
+  <#if labelPosition?has_content>
+    <#local effLabelPosition = labelPosition>
   <#else>
-    <#local effLabelLayout = (fieldsInfo.labelLayout)!"">
+    <#local effLabelPosition = (fieldsInfo.labelPosition)!"">
   </#if>
   
   <#-- NOTE: I've changed
@@ -843,13 +855,13 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#local labelAreaContent = "">
   <#local inlineLabel = "">
   <#if useLabelArea>
-      <#local labelAreaContent><@field_markup_labelarea labelType=effLabelType labelLayout=effLabelLayout label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
+      <#local labelAreaContent><@field_markup_labelarea labelType=effLabelType labelPosition=effLabelPosition label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
   <#else>
       <#-- if there's no label area, label was not used up, so label arg becomes an inline label (used on radio and checkbox) -->
       <#local inlineLabel = label>
   </#if>
       
-  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelLayout=effLabelLayout labelAreaContent=labelAreaContent collapse=collapse norows=norows nocells=nocells container=container>
+  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent collapse=collapse norows=norows nocells=nocells container=container>
     <#switch type>
       <#case "input">
         <@field_input_widget name=name 
@@ -1083,7 +1095,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#-- @field container markup - theme override 
     labelContent is generated by field_markup_labelarea.
     #nested is the actual field widget (<input>, <select>, etc.). -->
-<#macro field_markup_container type="" class="" columns="" postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelLayout="" labelAreaContent="" collapse="" norows=false nocells=false container=true extraArgs...>
+<#macro field_markup_container type="" class="" columns="" postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelAreaContent="" collapse="" norows=false nocells=false container=true extraArgs...>
   <#local rowClass = "">
   <#local labelAreaClass = "">  
   <#local postfixClass = "">
@@ -1097,28 +1109,58 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
       <#local collapse = false/>
   </#if>
 
-  <#local defaultGridStyles = getDefaultFieldGridStyles({"columns":columns, "labelArea":labelArea, "postfix":postfix, "postfixSize":postfixSize })>
+  <#local labelInRow = (labelType != "vertical")>
+
+  <#local defaultGridStyles = getDefaultFieldGridStyles({"columns":columns, "labelArea":labelArea, 
+    "labelInRow":labelInRow, "postfix":postfix, "postfixSize":postfixSize })>
 
   <#local fieldEntryTypeClass = "field-entry-type-" + mapCatoFieldTypeToStyleName(type)>
-  
+  <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title " + fieldEntryTypeClass)>
+  <#local class = addClassArg(class, "field-entry-widget " + fieldEntryTypeClass)>
+  <#local postfixClass = addClassArg(postfixClass, "field-entry-postfix " + fieldEntryTypeClass)>
+
   <#local rowClass = addClassArg(rowClass, "form-field-entry " + fieldEntryTypeClass)>
   <@row class=rowClass collapse=collapse!false norows=(norows || !container)>
-    <#-- TODO: support more label configurations (besides gridarea left) -->
-    <#if labelArea && labelType == "gridarea" && labelLayout == "left">
-        <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title " + fieldEntryTypeClass)>
+    <#if labelType == "vertical">
+      <@cell>
+        <#if labelArea && labelPosition == "top">
+          <@row collapse=collapse!false norows=(norows || !container)>
+            <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title-top")>
+            <@cell class=compileClassArg(labelAreaClass, defaultGridStyles.labelArea) nocells=(nocells || !container)>
+              ${labelAreaContent}        
+            </@cell>
+          </@row>
+        </#if>
+          <@row collapse=collapse!false norows=(norows || !container)>
+            <@cell class=compileClassArg(class, defaultGridStyles.widgetArea) nocells=(nocells || !container)>
+              <#nested>
+            </@cell>
+            <#if postfix && !nocells && container>
+              <@cell class=compileClassArg(postfixClass, defaultGridStyles.postfixArea)>
+                <#if (postfixContent?is_boolean && postfixContent == true) || !postfixContent?has_content>
+                  <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
+                <#elseif !postfixContent?is_boolean> <#-- boolean false means prevent markup -->
+                  ${postfixContent}
+                </#if>
+              </@cell>
+            </#if>
+          </@row>
+      </@cell>
+    <#else> <#-- elseif labelType == "horizontal" -->
+      <#-- TODO: support more label configurations (besides horizontal left) -->
+      <#if labelArea && labelPosition == "left">
+        <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title-left")>
         <@cell class=compileClassArg(labelAreaClass, defaultGridStyles.labelArea) nocells=(nocells || !container)>
             ${labelAreaContent}
         </@cell>
-    </#if>
-    <#local class = addClassArg(class, "field-entry-widget " + fieldEntryTypeClass)>
-    <#-- NOTE: here this is the same as doing 
-           class=("=" + compileClassArg(class, defaultGridStyles.widgetArea))
-         as we know the compiled class will never be empty. -->
-    <@cell class=compileClassArg(class, defaultGridStyles.widgetArea) nocells=(nocells || !container)>
+      </#if>
+      <#-- NOTE: here this is the same as doing 
+             class=("=" + compileClassArg(class, defaultGridStyles.widgetArea))
+           as we know the compiled class will never be empty. -->
+      <@cell class=compileClassArg(class, defaultGridStyles.widgetArea) nocells=(nocells || !container)>
         <#nested>
-    </@cell>
-    <#if postfix && !nocells && container>
-        <#local postfixClass = addClassArg(postfixClass, "field-entry-postfix " + fieldEntryTypeClass)>
+      </@cell>
+      <#if postfix && !nocells && container>
         <@cell class=compileClassArg(postfixClass, defaultGridStyles.postfixArea)>
           <#if (postfixContent?is_boolean && postfixContent == true) || !postfixContent?has_content>
             <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
@@ -1126,13 +1168,14 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
             ${postfixContent}
           </#if>
         </@cell>
+      </#if>
     </#if>
   </@row>
 </#macro>
 
 <#-- @field label area markup - theme override 
     This generates labelContent passed to @field_markup_container. -->
-<#macro field_markup_labelarea labelType="" labelLayout="" label="" labelDetail="" fieldType="" fieldId="" collapse="" required=false extraArgs...>
+<#macro field_markup_labelarea labelType="" labelPosition="" label="" labelDetail="" fieldType="" fieldId="" collapse="" required=false extraArgs...>
   <#if !collapse?has_content>
       <#local collapse = false/>
   </#if>
@@ -1155,9 +1198,11 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#-- parameters: defaults -->
     "columns" : "",
     "labelArea" : true,
+    "labelInRow" : true,
     "postfix" : false,
     "postfixSize" : 0,
-    "isLarge" : ""
+    "isLarge" : "",
+    "labelSmallColDiff" : 1
   })>
   <#local dummy = localsPutAll(args)> 
   
@@ -1174,17 +1219,22 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#local columnspostfix = 0/>
   </#if>
   <#if !columns?has_content>
-    <#if labelArea>
+    <#if labelArea && labelInRow>
       <#local columns = 10>
     <#else>
       <#local columns = 12>
     </#if>
   </#if>
   <#local columns = columns - columnspostfix>
-  <#local columnslabelarea = 12 - columnspostfix - columns>
+  
+  <#if labelInRow>
+    <#local columnslabelarea = 12 - columnspostfix - columns>
+  <#else>
+    <#local columnslabelarea = 12>
+  </#if>
 
-  <#local defaultLabelAreaClass><#if labelArea>${styles.grid_small!}${columnslabelarea+1}<#if isLarge> ${styles.grid_large!}${columnslabelarea}</#if></#if></#local>
-  <#local defaultWidgetAreaClass><#if labelArea>${styles.grid_small!}${columns-1}<#else>${styles.grid_small!}${columns}</#if><#if isLarge> ${styles.grid_large!}${columns}</#if></#local>
+  <#local defaultLabelAreaClass><#if labelArea>${styles.grid_small!}<#if labelInRow>${columnslabelarea + labelSmallColDiff}<#else>${columnslabelarea}</#if><#if isLarge> ${styles.grid_large!}${columnslabelarea}</#if></#if></#local>
+  <#local defaultWidgetAreaClass><#if labelArea && labelInRow>${styles.grid_small!}${columns - labelSmallColDiff}<#else>${styles.grid_small!}${columns}</#if><#if isLarge> ${styles.grid_large!}${columns}</#if></#local>
   <#local defaultPostfixClass><#if postfix>${styles.grid_small!}${columnspostfix}<#if isLarge> ${styles.grid_large!}${columnspostfix}</#if></#if></#local>
   
   <#return {

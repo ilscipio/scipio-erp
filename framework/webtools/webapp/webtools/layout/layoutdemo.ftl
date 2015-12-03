@@ -561,6 +561,18 @@
     </@form>
   </@section>
 
+  <@section title="Default compact form fields (label area at top, for cramped forms, e.g. inside list/multi tables)">
+    <@form name="form5">
+    <@fields type="default-compact">
+      <@field type="input" name="input1" label="Input 1" />
+      <@field type="input" name="input2" label="Input 2" postfix=true />
+      <@field type="display">Display value</@field>
+      <@field type="input" name="input3" label="Input 3" />
+      <@field type="submit" submitType="button" text="Submit" events={"click": "alert('submitted!');"} />
+    </@fields>
+    </@form>
+  </@section>
+
   <@section title="Custom arranged form fields">
     <@form name="form4">
     <@fields type="generic">

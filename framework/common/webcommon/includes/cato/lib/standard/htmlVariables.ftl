@@ -390,28 +390,36 @@
   <#-- Fields 
        fields_xxx classes and settings are looked up by the @fields and @field macros as defaults for
        fields type and field type. -->
-    "fields_wrap" : "collapse",
-    "fields_label" : "prefix",
-    "fields_default_labeltype" : "gridarea",
-    "fields_default_labellayout" : "left",
+    <#-- fields type-based styles -->
+    "fields_default_labeltype" : "horizontal",
+    "fields_default_labelposition" : "left",
     "fields_default_labelarea" : true,
     "fields_default_labelareaexceptions" : "submit submitarea",
 
     "fields_default_nolabels_labeltype" : "none",
-    "fields_default_nolabels_labellayout" : "none",
+    "fields_default_nolabels_labelposition" : "none",
     "fields_default_nolabels_labelarea" : false,
     "fields_default_nolabels_labelareaexceptions" : "", 
 
-    "fields_generic_labeltype" : "gridarea",
-    "fields_generic_labellayout" : "left",
+    "fields_default_compact_labeltype" : "vertical",
+    "fields_default_compact_labelposition" : "top",
+    "fields_default_compact_labelarea" : true, 
+    "fields_default_compact_labelareaexceptions" : "", 
+
+    "fields_generic_labeltype" : "horizontal",
+    "fields_generic_labelposition" : "left",
     "fields_generic_labelarea" : false,
     "fields_generic_labelareaexceptions" : "", 
 
-  <#-- Field type style name maps
-       These map cato and ofbiz field types to style names to represent the fields in CSS, so they can be unified.
-       For any entries not specified, "default" entry is consulted.
-       The boolean true means use the cato or ofbiz type name as style name.
-       Note these names are not full CSS style names, but prefixes or suffixes. -->
+    <#-- misc field styles -->
+    "fields_wrap" : "collapse",
+    "fields_label" : "prefix",
+
+    <#-- Field type style name maps
+        These map cato and ofbiz field types to style names to represent the fields in CSS, so they can be unified.
+        For any entries not specified, "default" entry is consulted.
+        The boolean true means use the cato or ofbiz type name as style name.
+        Note these names are not full CSS style names, but prefixes or suffixes. -->
     "field_type_stylenames_cato" : {
         "default": true
     },
@@ -440,14 +448,14 @@
         "default": "other"
     },
     
-  <#-- Form type to @table type maps -->
+    <#-- Form type to @table type maps -->
     "form_type_tabletypes_ofbiz" : {
         "list": "data-list",
         "multi": "data-list-multiform",
         "default": "generic"
     },
     
-  <#-- Field select element multiple-select classes (jQuery asmselect) -->
+    <#-- Field select element multiple-select classes (jQuery asmselect) -->
     "field_select_asmselect" : {
       "containerClass" : "asmContainer",            <#-- Class for container that wraps this widget -->
       "selectClass" : "asmSelect",                  <#-- Class for the newly created <select> -->

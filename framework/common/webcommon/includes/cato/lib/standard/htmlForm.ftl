@@ -928,6 +928,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                               tooltip=tooltip><#nested></@field_textarea_widget>
         <#break>
       <#case "datetime">
+        <#-- FIXME: I somehow broke the inlined date label that used to show up...
+             probably should be within @field_datetime_markup_widget -->
         <#if dateType == "date"><#local shortDateInput=true/><#else><#local shortDateInput=false/></#if>
         <@field_datetime_widget name=name 
                               class=class 

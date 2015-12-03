@@ -597,7 +597,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     cols            = number of columns
     
     * dateTime *
-    dateType        = type of datetime [date,time] (default: date)
+    dateType        = [date-time|date|time] (default: date-time) type of datetime
+                      note: date-time is equivalent to "timestamp" in form widgets
     
     * select *
     multiple        = allow multiple select true/false
@@ -701,7 +702,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#-- parameters: defaults -->
     "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", "onClick":"", 
     "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
-    "cols":"50", "dateType":"date", "multiple":"", "checked":"", "collapse":"", "tooltip":"", "columns":"", "norows":false, "nocells":false, "container":"",
+    "cols":"50", "dateType":"date-time", "multiple":"", "checked":"", "collapse":"", "tooltip":"", "columns":"", "norows":false, "nocells":false, "container":"",
     "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":1, "postfixContent":true, "required":false, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
     "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "description":"",
     "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
@@ -928,9 +929,14 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                               tooltip=tooltip><#nested></@field_textarea_widget>
         <#break>
       <#case "datetime">
-        <#-- FIXME: I somehow broke the inlined date label that used to show up...
-             probably should be within @field_datetime_markup_widget -->
-        <#if dateType == "date"><#local shortDateInput=true/><#else><#local shortDateInput=false/></#if>
+        <#if dateType == "date">
+          <#local shortDateInput=true/>
+        <#elseif dateType == "time">
+          <#local shortDateInput=false/>
+        <#else> <#-- "date-time" -->
+          <#local dateType = "timestamp">
+          <#local shortDateInput=false/>
+        </#if>
         <@field_datetime_widget name=name 
                               class=class 
                               alert=alert 

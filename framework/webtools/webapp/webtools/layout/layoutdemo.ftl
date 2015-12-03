@@ -445,6 +445,9 @@
       <@field type="display">Display value</@field>
       <@field type="input" name="input3" label="Input 3" />
 
+      <@field type="datetime" label="Date 1" name="date1" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datetime" label="Date 2" name="date2" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+
       <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
       <@field type="radio" name="radio2" label="Radio 2" value="Y" checked=true/>
       <#assign items = [
@@ -509,6 +512,9 @@
       <#assign postfixContent><span>postfix!</span></#assign>
       <@field type="input" name="input3" postfix=true postfixContent=postfixContent />
 
+      <@field type="datetime" label="Date 1" name="date1" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datetime" label="Date 2" name="date2" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+
       <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
       <@field type="radio" name="radio2" label="Radio 2" value="Y" checked=true/>
       <#assign items = [
@@ -542,10 +548,7 @@
       </@field>
       <@field type="input" name="input3" label="Regular field" />
       <@field type="display">Regular display field</@field>
-      <@field type="submitarea">
-        <@field type="submit" submitType="link" text="Save" disabled=true />
-        <@field type="submit" submitType="link" text="Cancel" disabled=true />
-      </@field>
+
       <@field type="generic" label="Select one">
         <@field type="radio" name="radio1" label="Radio 1-a" value="val1" />
         <@field type="radio" name="radio1" label="Radio 1-b" value="val2" />
@@ -557,6 +560,14 @@
       <@field type="generic">
         <@field type="radio" name="radio2" label="Radio 2-a" value="val1" />
         <@field type="radio" name="radio2" label="Radio 2-b" value="val2" />
+      </@field>
+      <@field type="generic" label="Dates">
+        <@field type="datetime" label="Date 1" name="date1" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+        <@field type="datetime" label="Date 2" name="date2" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+      </@field>
+      <@field type="submitarea">
+        <@field type="submit" submitType="link" text="Save" disabled=true />
+        <@field type="submit" submitType="link" text="Cancel" disabled=true />
       </@field>
     </@form>
   </@section>
@@ -575,6 +586,8 @@
       <@field type="checkbox" name="checkbox1" label="Checkbox 1" value="val2" />
       <@field type="checkbox" name="checkbox1" label="Checkbox 2" value="val2" />
       <@field type="submit" submitType="button" text="Submit" events={"click": "alert('submitted!');"} />
+      <@field type="datetime" label="Date 1" name="date1" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datetime" label="Date 2" name="date2" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
     </@fields>
     </@form>
       </@cell>

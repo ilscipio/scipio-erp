@@ -303,29 +303,31 @@ public final class WidgetWorker {
 	public static void makeHiddenFormSubmitForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap,
 			HttpServletRequest request, HttpServletResponse response, ModelForm modelForm, Map<String, Object> context) throws IOException {
 		List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
-    	String hiddenFormName = makeLinkHiddenFormName(context, modelForm, "submitForm" + modelForm.getItemIndexSeparator() + new Random().nextInt(Integer.MAX_VALUE));    	
+     	String hiddenFormName = makeLinkHiddenFormName(context, modelForm, "submitForm" + modelForm.getItemIndexSeparator() + new Random().nextInt(Integer.MAX_VALUE));    	
 		if (rowSubmitFields != null) {
 			writer.append("<script type=\"text/javascript\">\r\n");
 			writer.append("jQuery(document).ready(function() {\r\n");			
 			writer.append("\tvar submitForm = $(\"form[name=" + hiddenFormName + "]\");\r\n");
 			writer.append("\tif (submitForm) {\r\n");
 			for (ModelFormField rowSubmitField : rowSubmitFields) {
-				writer.append("\t\tvar id = $(\"[id^=" + rowSubmitField.getIdName() + "]\");\r\n");
+				writer.append("\t\tvar id = $(\"[id^=" + rowSubmitField.getCurrentContainerId(context) + "]\");\r\n");
 				writer.append("\t\t$(id).click(function(e) {\r\n");
 				writer.append("\t\te.preventDefault();\r\n");				
-				writer.append("\t\t\t$(this).parents(\"form\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");
+				writer.append("\t\t\t$(this).parents(\"tr\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");
 				// TODO: Determine what's better in terms of SEO and/or valid markup and tidiness, clone elements into the form or create new hidden form items.
-//				writer.append("\t\t\tconsole.log(\"element ======> \" + $(e).attr(\"name\"));\r\n");
-//				writer.append("var hiddenField = $(\"<input></input>\")\r\n");
-//				writer.append("$(hiddenField).attr(\"type\", \"hidden\");\r\n");//				 
-//				writer.append("$(hiddenField).attr(\"name\", \"" + rowSubmitField.getParameterName(context) + "\");\r\n");
-//				writer.append("$(hiddenField).attr(\"value\", $(\"input[name=" + rowSubmitField.getParameterName(context) + "]\").val());\r\n");
-//				writer.append("$(form).append($(hiddenField));\r\n");				
-				writer.append("\t\t\t$(submitForm).append($(e).clone());\r\n");
+				writer.append("\t\t\tif ($(submitForm).find(\"#" + rowSubmitField.getCurrentContainerId(context) + "\")2qqq1q1cd12<4<er2<q	) {"); // Prevents duplicated fields
+				writer.append("\t\t\t\tconsole.log(\"element ======> \" + $(e).attr(\"name\") + \"   value =======> \" + $(e).val());\r\n");
+				writer.append("\t\t\t\tvar hiddenField = $(\"<input></input>\")\r\n");
+				writer.append("\t\t\t\t$(hiddenField).attr(\"type\", \"hidden\");\r\n");		 
+				writer.append("\t\t\t\t$(hiddenField).attr(\"name\", $(e).attr(\"name\"));\r\n");
+				writer.append("\t\t\t\t$(hiddenField).attr(\"value\", $(e).val());\r\n");
+				writer.append("\t\t\t\t$(submitForm).append($(hiddenField));\r\n");			
+				writer.append("\t\t\t}");
+//				writer.append("\t\t\t$(submitForm).append($(e).clone());\r\n");
 				writer.append("\t\t\t});\r\n");
-				writer.append("\t\t\t$(submitForm).children().hide();\r\n");	
+//				writer.append("\t\t\t$(submitForm).children().hide();\r\n");	
 				writer.append("\t\t\tsubmitForm.submit();\r\n");
-//				writer.append("\t\t\tconsole.log(\"submitForm ==========> \" + $(submitForm).html());");
+				writer.append("\t\t\tconsole.log(\"submitForm ==========> \" + $(submitForm).html());");
 				writer.append("\t\t});\r\n");
 			}
 			writer.append("\t} else {\r\n");

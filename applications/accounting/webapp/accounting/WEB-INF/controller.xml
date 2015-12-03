@@ -627,7 +627,7 @@ under the License.
     </request-map>
     <request-map uri="EditAcctgTrans">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="EditAcctgTrans"/>
+        <response name="success" type="view" value="EditAcctgTrans" save-current-view="true"/>
     </request-map>
     <request-map uri="ListUnpostedAcctgTrans">
         <security https="true" auth="true"/>
@@ -665,7 +665,7 @@ under the License.
     <request-map uri="updateAcctgTransEntry">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateAcctgTransEntry"/>
-        <response name="success" type="view" value="EditAcctgTrans"/>
+        <response name="success" type="view-last" value="EditAcctgTrans"/>
         <response name="error" type="view" value="EditAcctgTrans"/>
     </request-map>
     <request-map uri="deleteAcctgTransEntry">

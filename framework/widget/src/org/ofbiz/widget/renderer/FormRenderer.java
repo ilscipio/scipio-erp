@@ -83,11 +83,12 @@ public class FormRenderer {
         if (UtilValidate.isEmpty(formName)) {
             formName = modelForm.getName();
         }
-        if (itemIndex != null && "list".equals(modelForm.getType())) {
-            return formName + modelForm.getItemIndexSeparator() + itemIndex.intValue();
-        } else {
+        //Cato: No need this anymore since we are enclosing the entire list with a single form as done for the multi type
+//        if (itemIndex != null && "list".equals(modelForm.getType())) {
+//            return formName + modelForm.getItemIndexSeparator() + itemIndex.intValue();
+//        } else {
             return formName;
-        }
+//        }
     }
 
     public static String getFocusFieldName(ModelForm modelForm, Map<String, Object> context) {
@@ -554,7 +555,7 @@ public class FormRenderer {
             numOfColumnsToSpan = 1;
         }
 
-        // render row formatting open        
+        // render row formatting open
         formStringRenderer.renderFormatItemRowOpen(writer, localContext, modelForm);
         Iterator<ModelFormField> innerDisplayHyperlinkFieldsBeginIter = innerDisplayHyperlinkFieldsBegin.iterator();
         Map<String, Integer> fieldCount = new HashMap<String, Integer>();
@@ -568,10 +569,6 @@ public class FormRenderer {
         }
 
         if (modelForm.getGroupColumns()) {
-        	if (formPerItem) {
-                formStringRenderer.renderFormOpen(writer, localContext, modelForm);
-            }
-        	
             // do the first part of display and hyperlink fields
             Iterator<ModelFormField> innerDisplayHyperlinkFieldIter = innerDisplayHyperlinkFieldsBegin.iterator();
             while (innerDisplayHyperlinkFieldIter.hasNext()) {
@@ -611,8 +608,9 @@ public class FormRenderer {
             	formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm); // TODO: colspan
             	// Cato: Controls where a cell has been opened already so we don't generate invalid markup (similar to what is done for firsts links rendered above)
             	boolean cellOpen = true;
-
-                
+            	
+//            	if (formPerItem)
+//                    formStringRenderer.renderFormOpen(writer, localContext, modelForm);
 
                 // do all of the hidden fields...
                 this.renderHiddenIgnoredFields(writer, localContext, formStringRenderer, hiddenIgnoredFieldList);
@@ -636,6 +634,9 @@ public class FormRenderer {
                     }
                 }
 
+//                if (formPerItem)
+//                    formStringRenderer.renderFormClose(writer, localContext, modelForm);
+
                 if (cellOpen)
                 	formStringRenderer.renderFormatItemRowFormCellClose(writer, localContext, modelForm);
             }
@@ -656,10 +657,6 @@ public class FormRenderer {
                     modelFormField.renderFieldString(writer, localContext, formStringRenderer);
                 }
                 formStringRenderer.renderFormatItemRowCellClose(writer, localContext, modelForm, modelFormField);
-            }
-            
-            if (formPerItem) {
-                formStringRenderer.renderFormClose(writer, localContext, modelForm);
             }
         } else {
             // do all of the hidden fields...
@@ -737,9 +734,13 @@ public class FormRenderer {
         if (modelForm.isOverridenListSize()) {
             lowIndex = 0;
             highIndex = ((Integer) context.get("viewSize")).intValue();
-        }
-
+        }        
+        
         if (iter != null) {
+        	// Cato: Opening here the form for list type
+//            if (modelForm.getType().equals("list") && modelForm.getGroupColumns() && formPerItem)        	
+//            	formStringRenderer.renderFormOpen(writer, context, modelForm);
+
             
             listFormHandler.notifyHasList();
             
@@ -976,6 +977,10 @@ public class FormRenderer {
                     Debug.logError(e, "Error closing list form render EntityListIterator: " + e.toString(), module);
                 }
             }
+            
+//            if (modelForm.getType().equals("list") && modelForm.getSeparateColumns() && formPerItem)
+//            	formStringRenderer.renderFormClose(writer, context, modelForm);
+            
         }
     }
 
@@ -1098,6 +1103,8 @@ public class FormRenderer {
         RenderListFormHandler listFormHandler = new RenderListFormHandler(writer, context);
         listFormHandler.renderInit();
         
+        formStringRenderer.renderFormOpen(writer, context, modelForm);
+        
         // render list/tabular type forms
 
         // prepare the items iterator and compute the pagination parameters
@@ -1109,6 +1116,9 @@ public class FormRenderer {
         this.renderItemRows(writer, context, formStringRenderer, true, numOfColumns, listFormHandler);
 
         listFormHandler.renderTableClose();
+        
+        formStringRenderer.renderFormClose(writer, context, modelForm);            
+        
         listFormHandler.renderFinalize();
     }
 

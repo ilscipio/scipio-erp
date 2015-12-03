@@ -1406,7 +1406,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         
         // Cato: when the form doesn't use a specific row for the submit button, render it within the current row being rendered.
-        if (!modelForm.getUseRowSubmit() && modelForm.getType().equals("list")) {        	
+        if (!modelForm.getUseRowSubmit() && modelForm.getType().equals("list")) {
         	makeRowFormSubmit(writer, new HashMap<String, String>(), null, modelForm, this.request, this.response, context);
         }
         
@@ -1422,6 +1422,15 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(hasRequiredField);
         sr.append("\" />");
         executeMacro(writer, sr.toString());
+        
+        // Cato: same as the multi type form, I think this is the cleanest way to do it
+        // see if there is anything that needs to be added outside of the list-form
+        Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
+        Appendable postMultiFormWriter = wholeFormContext != null ? (Appendable) wholeFormContext.get("postMultiFormWriter") : null;
+        if (postMultiFormWriter != null) {
+            writer.append(postMultiFormWriter.toString());
+        }
+
         if (modelForm instanceof ModelSingleForm) {
             renderEndingBoundaryComment(writer, "Form Widget - Form Element", modelForm);
         } else {
@@ -2179,7 +2188,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
             autoCompleterTarget = autoCompleterTarget + "ajaxLookup=Y";
             updateAreas = new LinkedList<ModelForm.UpdateArea>();
-            updateAreas.add(new ModelForm.UpdateArea("change", id, autoCompleterTarget));
+            //Cato: ugly hack but seems to work for now, so the lookup field can find the proper field
+            String updateAreaId = id;
+            if (modelFormField.getModelForm().getType().equals("list"))
+            	updateAreaId = name;
+            updateAreas.add(new ModelForm.UpdateArea("change", updateAreaId, autoCompleterTarget));
         }
         boolean ajaxEnabled = UtilValidate.isNotEmpty(updateAreas) && this.javaScriptEnabled;
         String autocomplete = "";
@@ -2263,7 +2276,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("\" alert=\"");
         sr.append(alert);
         sr.append("\" name=\"");
-        sr.append(name);
+//        if (modelForm.getType().equals("list"))
+//        	sr.append(id);
+//        else
+        	sr.append(name);
         sr.append("\" value=\"");
         sr.append(value);
         sr.append("\" size=\"");

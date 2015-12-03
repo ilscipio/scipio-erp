@@ -722,7 +722,7 @@ public abstract class ModelForm extends ModelWidget {
         for (Element fieldElement : UtilXml.childElementList(formElement, "field")) {
             ModelFormFieldBuilder builder = new ModelFormFieldBuilder(fieldElement, this, entityModelReader, dispatchContext);
             FieldInfo fieldInfo = builder.getFieldInfo();
-            if (thisType.equals("multi") && fieldInfo instanceof ModelFormField.SubmitField) {
+            if ((thisType.equals("list") || thisType.equals("multi")) && fieldInfo instanceof ModelFormField.SubmitField) {
                 multiSubmitBuilders.add(builder);
             } else {
                 addUpdateField(builder, useWhenFields, fieldBuilderList, fieldBuilderMap);

@@ -121,6 +121,11 @@
     "menu_default_item_submit" : "",  
     
   <#-- Data and Tables -->  
+    <#-- 
+      NOTES:
+        * currently, despite settings here, responsive tables will automatically be disabled for tables that have no header. see @table.
+    -->
+  
     <#-- table type-based styles 
          used for default table class and attribute lookups by the @table macro, based on table type. -->
     "table_generic" : "",    <#-- represents free-form <table>. probably should have no class (let template decide). -->

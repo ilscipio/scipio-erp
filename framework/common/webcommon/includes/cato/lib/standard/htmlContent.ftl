@@ -296,6 +296,11 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
                       where type is the table type above. if the given hash entry does not exist, the default is instead determined by:
                       styles["table_default"]
     id              = table id
+    hasHeader       = boolean, this is a hint to indicate that table is expected to have a header, normally a <@thead>
+                      element. @table will try to figure this out on its own, but in some cases it may not be possible
+                      or not possible to know in advance, in which case caller must specify this flag.
+                      currently this affects the following:
+                        responsive tables
     autoAltRows     = defaults specified in styles hash, but otherwise false
     firstRowAlt     = default false
     inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
@@ -310,8 +315,12 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     responsive/responsiveOptions/
     responsiveDefaults/scrollable/
     fixedColumnsLeft/fixedColumnsRight  = see @tableResponsiveScript macro for descriptions
+                                          NOTE: @table (default @table_markup) will automatically disable
+                                              responsive on tables that have no @thead element and hasHeader=true is not specified.
+                                              responsive tables break when no header.
+                                              in other words, responsive tables required a <@thead> element.
 -->
-<#macro table type="" class="" id="" cellspacing=true responsive="" scrollable="" responsiveOptions={} responsiveDefaults="" 
+<#macro table type="" class="" id="" hasHeader="" cellspacing=true responsive="" scrollable="" responsiveOptions={} responsiveDefaults="" 
   fixedColumnsLeft=0 fixedColumnsRight=0 autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false 
   nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
   <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
@@ -329,6 +338,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     </#if>
     <#-- save previous globals, for nesting -->
     <#local prevTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
+    <#local prevHasHeaderFlag = getRequestVar("catoCurrentTableHasHeader")!"">
     <#local prevSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
     <#local prevRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag")!""> <#-- used to keep track of state (always boolean) -->
     <#local prevCurrentRowAlt = getRequestVar("catoCurrentTableCurrentRowAlt")!""> <#-- the actual alt value of current row (may be empty) -->
@@ -369,6 +379,8 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     <#local dummy = setRequestVar("catoCurrentTableInfo", catoCurrentTableInfo)!>
     <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
     <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
+    <#-- also set in @thead -->
+    <#local dummy = setRequestVar("catoCurrentTableHasHeader", hasHeader)!>
     <#-- note: catoCurrentTableRowAltFlag should always be boolean
          note: catoCurrentTableCurrentRowAlt probably doesn't need to be set here, but playing it safe -->
     <#if firstRowAlt?is_boolean>
@@ -396,8 +408,9 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
            could instead always push a stack and have child elems use readRequestStack instead of
            catoCurrentTableInfo; but requires change all the macros, and as-is this optimizes
            for FTLs somewhat, though also more error-prone... -->
+      <#local prevHasHeaderFlag = getRequestVar("catoCurrentTableHasHeader")!"">
       <#local dummy = pushRequestStack("catoCurrentTableStack", 
-          {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevRowAltFlag":prevRowAltFlag, 
+          {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevHasHeaderFlag":prevHasHeaderFlag, "prevRowAltFlag":prevRowAltFlag, 
            "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, 
            "type":type, "id":id, "tableIdNum":tableIdNum, "styleName":styleName, "class":class, "cellspacing":cellspacing,
            "useResponsive":useResponsive, "responsive":responsive, "scrollable":scrollable, "responsiveOptions":responsiveOptions,
@@ -408,6 +421,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     <#local stackValues = popRequestStack("catoCurrentTableStack")!{}>
     <#local prevTableInfo = stackValues.prevTableInfo>
     <#local prevSectionInfo = stackValues.prevSectionInfo>
+    <#local prevHasHeaderFlag = stackValues.prevHasHeaderFlag>
     <#local prevRowAltFlag = stackValues.prevRowAltFlag>
     <#local prevCurrentRowAlt = stackValues.prevCurrentRowAlt>
     <#local prevLastRowAlt = stackValues.prevLastRowAlt>
@@ -450,6 +464,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#if close>
     <#local dummy = setRequestVar("catoCurrentTableInfo", prevTableInfo)!>
     <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevSectionInfo)!>
+    <#local dummy = setRequestVar("catoCurrentTableHasHeader", prevHasHeaderFlag)!>
     <#local dummy = setRequestVar("catoCurrentTableRowAltFlag", prevRowAltFlag)!>
     <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", prevCurrentRowAlt)!>
     <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", prevLastRowAlt)!>
@@ -467,7 +482,12 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#if close>
     </table>
     <#if useResponsive>
-      <@tableResponsiveScript args=responsiveArgs htmlwrap=true />
+      <#-- Responsive tables bug workaround: responsive tables break if table has no header, 
+          so only enable if a header was present during rendering -->
+      <#local tableHasHeader = getRequestVar("catoCurrentTableHasHeader")!"">
+      <#if tableHasHeader?is_boolean && tableHasHeader == true>
+        <@tableResponsiveScript args=responsiveArgs htmlwrap=true />
+      </#if>
     </#if>  
   </#if>
 </#macro>
@@ -477,6 +497,8 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
+    <#-- inform the parent table (and anything else) that this table has a header -->
+    <#local dummy = setRequestVar("catoCurrentTableHasHeader", true)!>
     <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
     <#local catoCurrentTableSectionInfo = {"type": "head", "cellElem": "th"}>
     <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>

@@ -26,8 +26,7 @@ under the License.
   </#macro>
   <@section id="partyUserLogins" title="${uiLabelMap.PartyUserName}" menuContent=menuContent>
       <#if userLogins?has_content>
-        <#-- Cato: FIXME: responsive makes jquery responsive tables crash, ? -->
-        <@table type="data-list" cellspacing="0" responsive=false> <#-- orig: class="basic-table" -->
+        <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
           <@tbody>
           <#list userLogins as userUserLogin>
             <@tr>

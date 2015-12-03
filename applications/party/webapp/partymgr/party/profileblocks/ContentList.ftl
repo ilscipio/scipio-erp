@@ -19,8 +19,7 @@ under the License.
 
   <@section id="partyContentList">
       <#if partyContent?has_content>
-        <#-- Cato: FIXME: responsive makes jquery responsive tables crash, ? -->
-        <@table type="data-list" responsive=false cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
           <@tbody>
           <#list partyContent as pContent>
             <#assign content = pContent.getRelatedOne("Content", false)>

@@ -127,7 +127,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
                       usually use only one of alternatives but versatile.
     htmlWrap        = wrapping HTML element (ul|div|span, default: ul)
 -->
-<#assign menuArgDefaultsCatoStd = {
+<#assign menuDefaultArgsCatoStd = {
     <#-- parameters: defaults -->
     "type" : "generic",
     "class" : "",
@@ -152,7 +152,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#else>
     <#local class = args.class!"">
   </#if>
-  <#local args = mergeArgMaps(args, inlineArgs, menuArgDefaultsCatoStd, {
+  <#local args = mergeArgMaps(args, inlineArgs, menuDefaultArgsCatoStd, {
     <#-- parameters: overrides -->
     "class" : class
   })>
@@ -269,7 +269,8 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     htmlWrap        = wrapping HTML element (li|span|div, default: li)
     inlineItem      = boolean, if true, generate only items, not menu container
 -->
-<#assign menuitemArgDefaultsCatoStd = {
+<#assign menuitemDefaultArgsCatoStd = {
+    <#-- parameters: defaults -->
     "type" : "generic",
     "class" : "",
     "contentClass", "",
@@ -306,7 +307,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#else>
     <#local contentClass = args.contentClass!"">
   </#if>
-  <#local args = mergeArgMaps(args, inlineArgs, menuitemArgDefaultsCatoStd, {
+  <#local args = mergeArgMaps(args, inlineArgs, menuitemDefaultArgsCatoStd, {
     <#-- parameters: overrides -->
     "class" : class,
     "contentClass" : contentClass

@@ -69,18 +69,18 @@ for getFileUploadProgressStatus AJAX calls.
                       see CatoUploadProgress javascript class for available options.
     htmlwrap        = if true, wrap in @script (default true)
 -->
-<#macro progressScript args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, {
+<#assign progressScriptDefaultArgsCatoStd = {
     <#-- parameters: defaults -->
     "enabled" : true,
     "htmlwrap" : true,
     "progressOptions" : {}
-  })>
+}>
+<#macro progressScript args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, progressScriptDefaultArgsCatoStd)>
   <#local dummy = localsPutAll(args)>
   <#if enabled>
     <#if progressOptions?has_content && progressOptions.formSel?has_content>
       <@script htmlwrap=htmlwrap>
-      
         <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" htmlwrap=false/>
       
       (function() {
@@ -225,8 +225,7 @@ IMPL NOTE: this must support legacy ofbiz parameters.
     requestName           = request name
     responseName          = response name
 -->
-<#macro asmSelectScript args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, {
+<#assign asmSelectScriptDefaultArgsCatoStd = {
     <#-- parameters: defaults -->
     "enabled" : true,
     "id" : "",
@@ -243,7 +242,9 @@ IMPL NOTE: this must support legacy ofbiz parameters.
     "requestName" : "",
     "responseName" : "",
     "htmlwrap" : true
-  })>
+}>
+<#macro asmSelectScript args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, asmSelectScriptDefaultArgsCatoStd)>
   <#local dummy = localsPutAll(args)>
   <#if enabled>
     <#-- MIGRATED FROM component://common/webcommon/includes/setMultipleSelectJs.ftl -->
@@ -670,18 +671,21 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     value           = display value or image URL
     description     = for image type: image alt
 -->
-<#assign fieldArgDefaultsCatoStd = { "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", "onClick":"", 
-        "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
-        "cols":"50", "dateType":"date", "multiple":"", "checked":"", "collapse":"", "tooltip":"", "columns":"", "norows":false, "nocells":false, "container":"",
-        "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":1, "postfixContent":true, "required":false, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
-        "labelType":"", "labelLayout":"", "labelArea":"", "description":"",
-        "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
-        "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
-        "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "events":{} }>
+<#assign fieldDefaultArgsCatoStd = {
+    <#-- parameters: defaults -->
+    "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", "onClick":"", 
+    "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
+    "cols":"50", "dateType":"date", "multiple":"", "checked":"", "collapse":"", "tooltip":"", "columns":"", "norows":false, "nocells":false, "container":"",
+    "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":1, "postfixContent":true, "required":false, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
+    "labelType":"", "labelLayout":"", "labelArea":"", "description":"",
+    "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
+    "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
+    "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "events":{} 
+}>
 <#macro field args={} inlineArgs...> 
   <#-- TODO: the following calls should be combined into a mergeArgMapsToLocals method, but
       it is not currently possible. see mergeArgMapsToLocals in utilities.ftl. -->
-  <#local args = mergeArgMaps(args, inlineArgs, fieldArgDefaultsCatoStd)>
+  <#local args = mergeArgMaps(args, inlineArgs, fieldDefaultArgsCatoStd)>
   <#local dummy = localsPutAll(args)>
         
   <#if !type?has_content>

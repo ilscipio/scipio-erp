@@ -66,14 +66,15 @@ Not associated with any HTML element.
   * Parameters *
     scriptType/output/cdata/htmlwrap  = defaults for child @script calls (see @script)
 -->
-<#macro scripts args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, {
+<#assign scriptsDefaultArgsCatoStd = {
     <#-- parameters: defaults -->
     "scriptType" : "text/javascript",
     "output" : "",
     "htmlwrap" : true,
     "cdata" : true
-  })>
+}>
+<#macro scripts args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, scriptsDefaultArgsCatoStd)>
   <#local dummy = localsPutAll(args)>
   <#local dummy = setRequestVar("catoScriptsInfo", args)>
   <#nested>
@@ -108,16 +109,26 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
     htmlwrap        = boolean, default true, if false don't include HTML wrapper (or cdata)
     cdata           = boolean, default true, if false don't include CDATA guard (only used if htmlwrap true)
 -->
+<#assign scriptDefaultArgsCatoStd = {
+    <#-- parameters: defaults -->
+    "type" : "text/javascript",
+    "src" : "",
+    "output" : "",
+    "htmlwrap" : true,
+    "cdata" : true
+}>
 <#macro script args={} inlineArgs...>
   <#local scriptsInfo = getRequestVar("catoScriptsInfo")!{}>
-  <#local args = mergeArgMaps(args, inlineArgs, {
+  <#-- this uses complex defaults from parent @scripts elem, so have to do something different -->
+  <#local argDefaults = {
     <#-- parameters: defaults -->
-    "type" : scriptsInfo.scriptType!"text/javascript",
+    "type" : scriptsInfo.scriptType!scriptDefaultArgsCatoStd.type,
     "src" : "",
-    "output" : scriptsInfo.output!"",
-    "htmlwrap" : scriptsInfo.htmlwrap!true,
-    "cdata" : scriptsInfo.cdata!true
-  })>
+    "output" : scriptsInfo.output!scriptDefaultArgsCatoStd.output,
+    "htmlwrap" : scriptsInfo.htmlwrap!scriptDefaultArgsCatoStd.htmlwrap,
+    "cdata" : scriptsInfo.cdata!scriptDefaultArgsCatoStd.cdata
+  }>
+  <#local args = mergeArgMaps(args, inlineArgs, argDefaults)>
   <#local dummy = localsPutAll(args)>
   <#if src?has_content>
     <script type="${type}" src="${src}"></script>

@@ -173,8 +173,7 @@ Creates a responsive tables script (script only - no markup).
     fixedColumnsLeft    = int value; number of columns that are fixed on the left-hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.leftColumns)
     fixedColumnsRight   = int value; number of columns that are fixed on the right hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns) 
 -->
-<#macro tableResponsiveScript args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, {
+<#assign tableResponsiveScriptDefaultArgsCatoStd = {
     <#-- parameters: defaults -->
     "enabled" : true,
     "tableId" : "",
@@ -187,7 +186,9 @@ Creates a responsive tables script (script only - no markup).
     "fixedColumnsLeft" : 0,
     "fixedColumnsRight" : 0,
     "htmlwrap" : true
-  })>
+}>
+<#macro tableResponsiveScript args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, tableResponsiveScriptDefaultArgsCatoStd)>
   <#local dummy = localsPutAll(args)>
   <#if enabled>
     <#if !(responsive?is_boolean && responsive == false) && tableId?has_content>

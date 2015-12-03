@@ -871,6 +871,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#local labelAreaConsumeLabel = (labelArea?is_boolean && labelArea == true) || 
            (!(labelArea?is_boolean && labelArea == false) && (labelAreaDefault))>
   
+  <#local origLabel = label>
   <#local inlineLabel = "">
   <#if !labelAreaConsumeLabel>
     <#-- if there's no label area or if it's not set to receive the label, 
@@ -931,7 +932,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
         <@field_datetime_widget name=name 
                               class=class 
                               alert=alert 
-                              title=label 
+                              title=origLabel 
                               value=value 
                               size=size 
                               maxlength=maxlength 

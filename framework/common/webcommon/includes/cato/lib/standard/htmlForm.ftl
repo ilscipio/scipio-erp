@@ -433,18 +433,23 @@ or even multiple per fieldset.
                           They are decoupled. This only controls presence of it.
                       NOTE: This is weaker than labelArea arg of @field macro, but stronger than other args of this macro.
     labelAreaExceptions = string of space-delimited @field type names or list of names, defaults specified in styles variables based on fields type  
+    labelAreaRequireContent = boolean, if true, the label area will only be included if label or labelDetail have content.
+                              this is generally independent of labelArea boolean and other settings. 
+                              NOTE: This will not affect
+                              the fallback logic of labels to inline labels (a.k.a. whether the label area "consumes" the label for itself),
+                              otherwise that would mean labels would always be forced into the label area and never inline.
     formName            = the form name the child fields should assume  
     formId              = the form ID the child fields should assume   
     inlineItems     = change default for @field inlineItems parameter (true/false)     
 -->
-<#macro fields type="default" labelType="" labelPosition="" labelArea="" labelAreaExceptions=true formName="" formId="" inlineItems="">
+<#macro fields type="default" labelType="" labelPosition="" labelArea="" labelAreaExceptions=true labelAreaRequireContent="" formName="" formId="" inlineItems="">
     <#local fieldsInfo = makeFieldsInfo(type, labelType, labelPosition, labelArea, labelAreaExceptions, formName, formId, inlineItems)>
     <#local dummy = pushRequestStack("catoCurrentFieldsInfo", fieldsInfo)>
     <#nested>
     <#local dummy = popRequestStack("catoCurrentFieldsInfo")>
 </#macro>
 
-<#function makeFieldsInfo type labelType="" labelPosition="" labelArea="" labelAreaExceptions=true formName="" formId="" inlineItems="">
+<#function makeFieldsInfo type labelType="" labelPosition="" labelArea="" labelAreaExceptions=true labelAreaRequireContent="" formName="" formId="" inlineItems="">
     <#local stylesType = type?replace("-","_")>
     <#local stylesPrefix = "fields_" + stylesType + "_">
     <#if !styles[stylesPrefix + "labeltype"]??>
@@ -482,9 +487,15 @@ or even multiple per fieldset.
         <#local labelAreaExceptions = []>
       </#if>
     </#if>
+
+    <#if !labelAreaRequireContent?is_boolean>
+      <#local labelAreaRequireContent = styles[stylesPrefix + "labelarearequirecontent"]!"">
+    </#if>
+
     <#return {"type":type, "labelType":labelType, "labelPosition":labelPosition, 
-        "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, "formName":formName, "formId":formId,
-        "inlineItems":inlineItems}>
+        "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, 
+        "labelAreaRequireContent":labelAreaRequireContent, 
+        "formName":formName, "formId":formId, "inlineItems":inlineItems}>
 </#function>
 
 <#-- 
@@ -540,12 +551,15 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                       NOTE: label area behavior may also be influenced by containing macros such as @fields
     labelDetail     = extra content (HTML) inserted with (after) label
     labelType       = explicit label type (see @fields)
-    labelPosition     = explicit label layout (see @fields)
+    labelPosition   = explicit label layout (see @fields)
     labelArea       = boolean, default empty string (use @fields type default).
                       if true, forces a label area.
                       if false, prevents a label area.
                       NOTE: This does not determine label area type (horizontal, etc.); only labelType does that (in current code).
                           They are decoupled. This only controls presence of it.
+    labelAreaRequireContent = boolean, if true, the label area will only be included if label or labelDetail have content.
+                              by default, this is empty string (use @fields type default), and if no styles defaults,
+                              default is false.
     tooltip         = Small field description - to be displayed to the customer
     description     = alternative to tooltip
     name            = field name
@@ -689,7 +703,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
     "cols":"50", "dateType":"date", "multiple":"", "checked":"", "collapse":"", "tooltip":"", "columns":"", "norows":false, "nocells":false, "container":"",
     "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":1, "postfixContent":true, "required":false, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
-    "labelType":"", "labelPosition":"", "labelArea":"", "description":"",
+    "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "description":"",
     "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
     "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
     "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "events":{} 
@@ -835,17 +849,40 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#else>
     <#local effLabelPosition = (fieldsInfo.labelPosition)!"">
   </#if>
+
+  <#if !labelAreaRequireContent?is_boolean>
+    <#local labelAreaRequireContent = (fieldsInfo.labelAreaRequireContent)!false>
+    <#if !labelAreaRequireContent?is_boolean>
+      <#local labelAreaRequireContent = false>
+    </#if>
+  </#if>
   
-  <#-- NOTE: I've changed
-      (label?has_content || labelDetail?has_content || labelAreaDefault)
-      to
-      (labelAreaDefault)
-      because this gives caller more control over label and simplifies logic; and label presence alone 
-      can't determine well what kind of label gets used (label area or inline) unless adding more per-field checks.
-      this way, if label area present, it "consumes" the label; otherwise it becomes an inlineLabel (or potentially something else first).  -->
-  <#local useLabelArea = (labelArea?is_boolean && labelArea == true) || 
+  <#-- The way this now works is that labelArea boolean is the master control, and 
+      by default, presence of label or labelDetail (with ?has_content) does NOT influence if label area
+      will be present or not.
+      
+      It is now this way so that the code has the ability to "consume" (show) the label if a label
+      area is present; if there's no label area, the label is passed down to the input widget as inlineLabel.
+      This is needed for radio, checkbox and probably others later.
+      
+      There is another labelAreaRequireContent control that is separate from the consumation logic.
+      In our default setup we want it set to false, but can be changed in styles and calls.
+      -->
+  <#local labelAreaConsumeLabel = (labelArea?is_boolean && labelArea == true) || 
            (!(labelArea?is_boolean && labelArea == false) && (labelAreaDefault))>
   
+  <#local inlineLabel = "">
+  <#if !labelAreaConsumeLabel>
+    <#-- if there's no label area or if it's not set to receive the label, 
+        label was not used up, so label arg becomes an inline label (used on radio and checkbox) -->
+    <#local inlineLabel = label>
+    <#local label = "">
+  </#if>
+
+  <#-- NOTE: labelAreaRequireContent should not affect consume logic above -->
+  <#local useLabelArea = (labelArea?is_boolean && labelArea == true) || 
+    (!(labelArea?is_boolean && labelArea == false) && 
+      (!labelAreaRequireContent || (label?has_content || labelDetail?has_content)) && (labelAreaDefault))>
   
   <#-- push this field's info (popped at end) -->
   <#local dummy = pushRequestStack("catoCurrentFieldInfo", 
@@ -853,12 +890,8 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   
   <#-- main markup begin -->
   <#local labelAreaContent = "">
-  <#local inlineLabel = "">
   <#if useLabelArea>
       <#local labelAreaContent><@field_markup_labelarea labelType=effLabelType labelPosition=effLabelPosition label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
-  <#else>
-      <#-- if there's no label area, label was not used up, so label arg becomes an inline label (used on radio and checkbox) -->
-      <#local inlineLabel = label>
   </#if>
       
   <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent collapse=collapse norows=norows nocells=nocells container=container>

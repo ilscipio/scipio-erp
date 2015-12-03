@@ -437,7 +437,7 @@
 <@section title="Fields">
   <#-- TODO: submitarea -> submit (but not to remove submitarea; still important) -->
 
-  <@section title="Default form fields (with label area)">
+  <@section title="Default form fields (with label area)"> <#-- see styles.fields_default_xxx -->
     <@form name="form1">
     <@fields type="default"> <#-- note: @fields currently optional for type="default"-->
       <@field type="input" name="input1" label="Input 1" />
@@ -502,7 +502,7 @@
 
   <@section title="Default form fields (without label area)">
     <@form name="form2">
-    <@fields type="default-nolabels">
+    <@fields type="default-nolabels"> <#-- see styles.fields_default_nolabels_xxx -->
       <@field type="input" name="input1"/>
       <@field type="input" name="input2" postfix=true />
       <@field type="display">Display value</@field>
@@ -534,7 +534,7 @@
   </@section>
 
   <@section title="Default form fields (with label area) with parent/child fields">
-    <@form name="form3">
+    <@form name="form3"> <#-- see styles.fields_default_xxx -->
       <@field type="generic" label="Multi-fields">
         <@field type="input" name="input1"/>
         <@field type="display">Child display value</@field>
@@ -561,21 +561,29 @@
     </@form>
   </@section>
 
-  <@section title="Default compact form fields (label area at top, for cramped forms, e.g. inside list/multi tables)">
-    <@form name="form5">
-    <@fields type="default-compact">
+  <@section title="Default compact form fields (label area at top, for cramped forms)">
+    <@row>
+      <@cell small=4 last=true>
+    <@form name="form4">
+    <@fields type="default-compact"> <#-- see styles.fields_default_compact_xxx -->
       <@field type="input" name="input1" label="Input 1" />
       <@field type="input" name="input2" label="Input 2" postfix=true />
       <@field type="display">Display value</@field>
       <@field type="input" name="input3" label="Input 3" />
+      <@field type="input" name="input4" label="Input 4" labelDetail="[extra label detail]" />
+      <@field type="radio" name="radio1" label="Radio 1" value="val2" />
+      <@field type="checkbox" name="checkbox1" label="Checkbox 1" value="val2" />
+      <@field type="checkbox" name="checkbox1" label="Checkbox 2" value="val2" />
       <@field type="submit" submitType="button" text="Submit" events={"click": "alert('submitted!');"} />
     </@fields>
     </@form>
+      </@cell>
+    </@row>
   </@section>
 
   <@section title="Custom arranged form fields">
-    <@form name="form4">
-    <@fields type="generic">
+    <@form name="form5">
+    <@fields type="generic"> <#-- see styles.fields_generic_xxx -->
       <@row>
         <@cell columns=6>
           <@field type="input" name="input1" label="Input 1 and 2" labelArea=true />

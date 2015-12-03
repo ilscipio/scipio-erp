@@ -395,21 +395,25 @@
     "fields_default_labelposition" : "left",
     "fields_default_labelarea" : true,
     "fields_default_labelareaexceptions" : "submit submitarea",
+    "fields_default_labelarearequirecontent" : false,
 
     "fields_default_nolabels_labeltype" : "none",
     "fields_default_nolabels_labelposition" : "none",
     "fields_default_nolabels_labelarea" : false,
     "fields_default_nolabels_labelareaexceptions" : "", 
+    "fields_default_nolabels_labelarearequirecontent" : false,
 
     "fields_default_compact_labeltype" : "vertical",
     "fields_default_compact_labelposition" : "top",
     "fields_default_compact_labelarea" : true, 
-    "fields_default_compact_labelareaexceptions" : "", 
+    "fields_default_compact_labelareaexceptions" : "radio checkbox", <#-- having label on top of checkbox or radio is really ugly; let the label inline itself for these -->
+    "fields_default_compact_labelarearequirecontent" : true,
 
     "fields_generic_labeltype" : "horizontal",
     "fields_generic_labelposition" : "left",
     "fields_generic_labelarea" : false,
     "fields_generic_labelareaexceptions" : "", 
+    "fields_generic_labelarearequirecontent" : false, 
 
     <#-- misc field styles -->
     "fields_wrap" : "collapse",

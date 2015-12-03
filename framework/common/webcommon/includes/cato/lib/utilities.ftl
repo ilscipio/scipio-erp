@@ -756,7 +756,8 @@ args used by all the macros in a call chain, which can then be used to identify
 the remaining "extra" arguments (analogous to extraArgs in FTL's <#macro extraArgs...>).
 WARN: in some cases allArgNames accumulation and reuse of maps could be undesirable.
     (currently workaround this by using localArgNames only and/or creating new intermediate maps).
-WARN: currently it's possible the result contain duplicate names (is not a set).
+NOTE: currently the result may often contain duplicate names (is not a set). 
+    This is normal and should not be changed; code that uses these lists may make a Set if needed.
 TODO: current macros must be translated to exploit this mechanism.
 
 The result is the caller can access any arg names in the resulting map which had a default
@@ -779,7 +780,7 @@ OR
 This can also be used for functions, but for functions, the inlineArgs param should always
 be passed an empty hash (functions don't support named parameters).
 
-TODO: may want to rewrite this macro using FTL transform. not sure performance is great.
+TODO: rewrite this macro using FTL transform; also see @mergeArgMapsToLocals below
 TODO?: may want helper booleans to control in/out allArgNames?
 
   * Parameters *
@@ -792,7 +793,9 @@ TODO?: may want helper booleans to control in/out allArgNames?
                     the names end up in the resulting map as localArgNames.
     overrideArgs  = extra macro args that override all others (highest priority). expects a FTL hash only.
                     the names used here also count toward the localArgNames.
-                    WARN: if a key is present in this map, it should be omitted from defaultArgs.
+                    NOTE: if a key is present in both defaultArgs and overrideArgs, it will result in
+                        two names added to localArgNames/allArgNames. The code that finally uses
+                        those lists should make a Set if it needs to.
                     NOTE: this map is present for cases where the others are insufficient.
                         but otherwise should avoid using this map when possible.
 -->

@@ -127,17 +127,10 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
                       usually use only one of alternatives but versatile.
     htmlWrap        = wrapping HTML element (ul|div|span, default: ul)
 -->
-<#macro menu args={} inlineArgs...>
-  <#-- class arg needs special handling here to support extended "+" logic (mostly for section menu defs) -->
-  <#local args = toSimpleMap(args)> <#-- DEV NOTE: this MUST be called here (or through concatMaps) to handle .class key properly -->
-  <#if inlineArgs?has_content && inlineArgs.class??> <#-- DEV NOTE: do not remove ?has_content check here -->
-    <#local class = combineClassArgs(args.class!"", inlineArgs.class)>
-  <#else>
-    <#local class = args.class!"">
-  </#if>
-  <#local args = mergeArgMaps(args, inlineArgs, {
+<#assign menuArgDefaultsCatoStd = {
     <#-- parameters: defaults -->
     "type" : "generic",
+    "class" : "",
     "inlineItems" : false,
     "id" : "",
     "style" : "",
@@ -150,7 +143,16 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     "sortDesc" : false,
     "nestedFirst" : false,
     "htmlWrap" : true
-  }, {
+}>
+<#macro menu args={} inlineArgs...>
+  <#-- class arg needs special handling here to support extended "+" logic (mostly for section menu defs) -->
+  <#local args = toSimpleMap(args)> <#-- DEV NOTE: this MUST be called here (or through concatMaps) to handle .class key properly -->
+  <#if inlineArgs?has_content && inlineArgs.class??> <#-- DEV NOTE: do not remove ?has_content check here -->
+    <#local class = combineClassArgs(args.class!"", inlineArgs.class)>
+  <#else>
+    <#local class = args.class!"">
+  </#if>
+  <#local args = mergeArgMaps(args, inlineArgs, menuArgDefaultsCatoStd, {
     <#-- parameters: overrides -->
     "class" : class
   })>
@@ -267,22 +269,10 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     htmlWrap        = wrapping HTML element (li|span|div, default: li)
     inlineItem      = boolean, if true, generate only items, not menu container
 -->
-<#macro menuitem args={} inlineArgs...>
-  <#-- class args need special handling here to support extended "+" logic (mostly for section menu defs) -->
-  <#local args = toSimpleMap(args)> <#-- DEV NOTE: this MUST be called here (or through concatMaps) to handle .class key properly -->
-  <#if inlineArgs?has_content && inlineArgs.class??> <#-- DEV NOTE: do not remove ?has_content check here -->
-    <#local class = combineClassArgs(args.class!"", inlineArgs.class)>
-  <#else>
-    <#local class = args.class!"">
-  </#if>
-  <#if inlineArgs?has_content && inlineArgs.contentClass??>
-    <#local contentClass = combineClassArgs(args.contentClass!"", inlineArgs.contentClass)>
-  <#else>
-    <#local contentClass = args.contentClass!"">
-  </#if>
-  <#local args = mergeArgMaps(args, inlineArgs, {
-    <#-- parameters: defaults -->
+<#assign menuitemArgDefaultsCatoStd = {
     "type" : "generic",
+    "class" : "",
+    "contentClass", "",
     "id" : "",
     "style" : "",
     "attribs" : "",
@@ -302,7 +292,21 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     "nestedFirst" : false,
     "htmlWrap" : true,
     "inlineItem" : false
-  }, {
+}>
+<#macro menuitem args={} inlineArgs...>
+  <#-- class args need special handling here to support extended "+" logic (mostly for section menu defs) -->
+  <#local args = toSimpleMap(args)> <#-- DEV NOTE: this MUST be called here (or through concatMaps) to handle .class key properly -->
+  <#if inlineArgs?has_content && inlineArgs.class??> <#-- DEV NOTE: do not remove ?has_content check here -->
+    <#local class = combineClassArgs(args.class!"", inlineArgs.class)>
+  <#else>
+    <#local class = args.class!"">
+  </#if>
+  <#if inlineArgs?has_content && inlineArgs.contentClass??>
+    <#local contentClass = combineClassArgs(args.contentClass!"", inlineArgs.contentClass)>
+  <#else>
+    <#local contentClass = args.contentClass!"">
+  </#if>
+  <#local args = mergeArgMaps(args, inlineArgs, menuitemArgDefaultsCatoStd, {
     <#-- parameters: overrides -->
     "class" : class,
     "contentClass" : contentClass

@@ -464,9 +464,14 @@ menu item element must override this and provide a proper check.
    paginateToggle  = if true, include a control to toggle pagination on/off 
                      (specify current state with paginateOn and tweak using paginateToggle* arguments)
 -->
-<#macro paginate mode="single" type="default" layout="default" noResultsMode="default" paginateOn=true url="" class="" viewIndex=0 listSize=0 viewSize=1 altParam=false 
-    forcePost=false paramStr="" viewIndexFirst=0 showCount=true countMsg=""
-    paginateToggle=false paginateToggleString="" paginateToggleOnValue="Y" paginateToggleOffValue="N">
+<#assign paginateDefaultArgsCatoStd = {
+    "mode":"single", "type":"default", "layout":"default", "noResultsMode":"default", "paginateOn":true, "url":"", "class":"", "viewIndex":0, "listSize":0, "viewSize":1, "altParam":false, 
+    "forcePost":false, "paramStr":"", "viewIndexFirst":0, "showCount":true, "countMsg":"",
+    "paginateToggle":false, "paginateToggleString":"", "paginateToggleOnValue":"Y", "paginateToggleOffValue":"N"
+}>
+<#macro paginate args={} inlineArgs...>
+    <#local args = mergeArgMaps(args, inlineArgs, paginateDefaultArgsCatoStd)>
+    <#local dummy = localsPutAll(args)>
 
     <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
     <#if (!viewSize?is_number)>
@@ -601,16 +606,21 @@ menu item element must override this and provide a proper check.
     listItemsOnly   = only show core paginate items, no container
     paginateToggle  = if true, include a control to toggle pagination on or off
 -->
-<#macro paginate_core paginateClass="" paginateFirstClass="" viewIndex=1 highIndex=0 listSize=0 viewSize=1 
-    ajaxEnabled=false javaScriptEnabled=false ajaxFirstUrl="" firstUrl="" 
-    paginateFirstLabel="" paginatePreviousClass="" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" 
-    pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying="" 
-    paginateNextClass="" ajaxNextUrl="" nextUrl="" paginateNextLabel="" paginateLastClass="" ajaxLastUrl="" 
-    lastUrl="" paginateLastLabel="" paginateViewSizeLabel="" 
-    paginate=true forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false ajaxPaginateOnUrl="" 
-    paginateOnUrl="" paginateOnClass="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffClass="" 
-    paginateOffLabel="">
-    
+<#assign paginate_coreDefaultArgsCatoStd = {
+"paginateClass":"", "paginateFirstClass":"", "viewIndex":1, "highIndex":0, "listSize":0, "viewSize":1, 
+    "ajaxEnabled":false, "javaScriptEnabled":false, "ajaxFirstUrl":"", "firstUrl":"", 
+    "paginateFirstLabel":"", "paginatePreviousClass":"", "ajaxPreviousUrl":"", "previousUrl":"", "paginatePreviousLabel":"", 
+    "pageLabel":"", "ajaxSelectUrl":"", "selectUrl":"", "ajaxSelectSizeUrl":"", "selectSizeUrl":"", "commonDisplaying":"", 
+    "paginateNextClass":"", "ajaxNextUrl":"", "nextUrl":"", "paginateNextLabel":"", "paginateLastClass":"", "ajaxLastUrl":"", 
+    "lastUrl":"", "paginateLastLabel":"", "paginateViewSizeLabel":"", 
+    "paginate":true, "forcePost":false, "viewIndexFirst":0, "listItemsOnly":false, "paginateToggle":false, "ajaxPaginateOnUrl":"", 
+    "paginateOnUrl":"", "paginateOnClass":"", "paginateOnLabel":"", "ajaxPaginateOffUrl":"", "paginateOffUrl":"", "paginateOffClass":"", 
+    "paginateOffLabel":""
+}>
+<#macro paginate_core args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, paginate_coreDefaultArgsCatoStd)>
+  <#local dummy = localsPutAll(args)>
+  
   <#local availPageSizes = [10, 20, 30, 50, 100, 200]>
   <#local minPageSize = availPageSizes?first>
   <#local viewIndexLast = 0>

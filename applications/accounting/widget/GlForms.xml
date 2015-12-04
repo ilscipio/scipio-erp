@@ -574,7 +574,7 @@ under the License.
     </form>
     
     <form name="ListAcctgTransEntries" type="list" list-name="acctgTransEntries" default-entity-name="AcctgTransEntry" target="updateAcctgTransEntry" 
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="false" separate-columns="true" group-columns="true">
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true" separate-columns="true" group-columns="true">
         <field name="organizationPartyId"><hidden/></field>
         <field name="acctgTransId"><hidden/></field>
         <field name="acctgTransEntrySeqId"><display/></field>

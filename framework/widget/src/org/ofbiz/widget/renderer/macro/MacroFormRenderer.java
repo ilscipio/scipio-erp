@@ -1405,11 +1405,6 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
         }
         
-        // Cato: when the form doesn't use a specific row for the submit button, render it within the current row being rendered.
-        if (!modelForm.getUseRowSubmit() && modelForm.getType().equals("list")) {
-        	makeRowFormSubmit(writer, new HashMap<String, String>(), null, modelForm, this.request, this.response, context);
-        }
-        
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormClose ");
         sr.append(" focusFieldName=\"");
@@ -1460,9 +1455,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
             }
         }
         
-        // Cato: when the form doesn't use a specific row for the submit button, render it within the current row being rendered.
+        // Cato: when the form doesn't use a specific row for the submit button, render it below the main one (one per submit button defined)
         if (!modelForm.getUseRowSubmit()) {        	
-        	makeRowFormSubmit(writer, new HashMap<String, String>(), null, modelForm, this.request, this.response, context);
+        	this.renderSubmitForm(writer, context, modelForm);
         }
         
         StringWriter sr = new StringWriter();
@@ -3198,39 +3193,6 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
 
     }
-    
-    
-    // Cato: 
-    public void makeRowFormSubmit(Appendable writer, Map<String, String> parameterMap, String description, ModelForm modelForm, HttpServletRequest request,
-            HttpServletResponse response, Map<String, Object> context) throws IOException {
-
-		// get the parameterized pagination index and size fields
-		int paginatorNumber = WidgetWorker.getPaginatorNumber(context);
-
-		String viewIndexField = modelForm.getMultiPaginateIndexField(context);
-		String viewSizeField = modelForm.getMultiPaginateSizeField(context);
-		int viewIndex = Paginator.getViewIndex(modelForm, context);
-		int viewSize = Paginator.getViewSize(modelForm, context);
-		if (viewIndexField.equals("viewIndex" + "_" + paginatorNumber)) {
-			viewIndexField = "VIEW_INDEX" + "_" + paginatorNumber;
-		}
-		if (viewSizeField.equals("viewSize" + "_" + paginatorNumber)) {
-			viewSizeField = "VIEW_SIZE" + "_" + paginatorNumber;
-		}
-
-		parameterMap.put(viewIndexField, Integer.toString(viewIndex));
-		parameterMap.put(viewSizeField, Integer.toString(viewSize));
-
-		Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
-		Appendable postMultiFormWriter = wholeFormContext != null ? (Appendable) wholeFormContext.get("postMultiFormWriter") : null;
-		if (postMultiFormWriter == null) {
-			postMultiFormWriter = new StringWriter();
-			if (wholeFormContext != null)
-				wholeFormContext.put("postMultiFormWriter", postMultiFormWriter);
-		}
-		WidgetWorker.makeHiddenFormSubmitForm(postMultiFormWriter, modelForm.getTarget(context, modelForm.getTargetType()), modelForm.getTargetType(), modelForm.getTargetWindow(), parameterMap, request, response, modelForm, context);
-    }
-    
 
     public void makeHyperlinkString(Appendable writer, String linkStyle, String targetType, String target, Map<String, String> parameterMap, String description, String confirmation, ModelFormField modelFormField, HttpServletRequest request, HttpServletResponse response, Map<String, Object> context,
             String targetWindow) throws IOException {
@@ -3394,4 +3356,39 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }
+
+	@Override
+	public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {		
+		// get the parameterized pagination index and size fields
+		int paginatorNumber = WidgetWorker.getPaginatorNumber(context);
+
+		String viewIndexField = modelForm.getMultiPaginateIndexField(context);
+		String viewSizeField = modelForm.getMultiPaginateSizeField(context);
+		int viewIndex = Paginator.getViewIndex(modelForm, context);
+		int viewSize = Paginator.getViewSize(modelForm, context);
+		if (viewIndexField.equals("viewIndex" + "_" + paginatorNumber)) {
+			viewIndexField = "VIEW_INDEX" + "_" + paginatorNumber;
+		}
+		if (viewSizeField.equals("viewSize" + "_" + paginatorNumber)) {
+			viewSizeField = "VIEW_SIZE" + "_" + paginatorNumber;
+		}
+		
+		HashMap<String, String> parameterMap = new HashMap<String, String>();
+		parameterMap.put(viewIndexField, Integer.toString(viewIndex));
+		parameterMap.put(viewSizeField, Integer.toString(viewSize));
+
+		Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
+		Appendable postMultiFormWriter = wholeFormContext != null ? (Appendable) wholeFormContext.get("postMultiFormWriter") : null;
+		if (modelForm.getType().equals("multi")) {		
+			if (postMultiFormWriter == null) {
+				postMultiFormWriter = new StringWriter();
+				if (wholeFormContext != null)
+					wholeFormContext.put("postMultiFormWriter", postMultiFormWriter);
+			}
+		} else {
+			postMultiFormWriter = writer;
+		}
+		WidgetWorker.makeHiddenFormSubmitForm(postMultiFormWriter, modelForm.getTarget(context, modelForm.getTargetType()), modelForm.getTargetType(), modelForm.getTargetWindow(), parameterMap, request, response, modelForm, context);
+	}	
+	
 }

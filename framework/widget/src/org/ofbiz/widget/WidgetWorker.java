@@ -310,29 +310,29 @@ public final class WidgetWorker {
 			writer.append("\tvar submitForm = $(\"form[name=" + hiddenFormName + "]\");\r\n");
 			writer.append("\tif (submitForm) {\r\n");
 			for (ModelFormField rowSubmitField : rowSubmitFields) {
-				writer.append("\t\tvar id = $(\"[id^=" + rowSubmitField.getCurrentContainerId(context) + "]\");\r\n");
+				writer.append("\t\tvar id = $(\"[id^=" + rowSubmitField.getCurrentContainerId(context) + "]\");\r\n");				
 				writer.append("\t\t$(id).click(function(e) {\r\n");
 				writer.append("\t\te.preventDefault();\r\n");				
 				writer.append("\t\t\t$(this).parents(\"tr\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");
 				// TODO: Determine what's better in terms of SEO and/or valid markup and tidiness, clone elements into the form or create new hidden form items.
-				writer.append("\t\t\tif ($(submitForm).find(\"#" + rowSubmitField.getCurrentContainerId(context) + "\")2qqq1q1cd12<4<er2<q	) {"); // Prevents duplicated fields
+				writer.append("\t\t\tif ($(submitForm).find(\"input[name=\" + $(e).attr(\"name\") + \"]\").length <= 0) {\r\n"); // Prevents duplicated fields
 				writer.append("\t\t\t\tconsole.log(\"element ======> \" + $(e).attr(\"name\") + \"   value =======> \" + $(e).val());\r\n");
 				writer.append("\t\t\t\tvar hiddenField = $(\"<input></input>\")\r\n");
 				writer.append("\t\t\t\t$(hiddenField).attr(\"type\", \"hidden\");\r\n");		 
 				writer.append("\t\t\t\t$(hiddenField).attr(\"name\", $(e).attr(\"name\"));\r\n");
 				writer.append("\t\t\t\t$(hiddenField).attr(\"value\", $(e).val());\r\n");
 				writer.append("\t\t\t\t$(submitForm).append($(hiddenField));\r\n");			
-				writer.append("\t\t\t}");
+				writer.append("\t\t\t}\r\n");
 //				writer.append("\t\t\t$(submitForm).append($(e).clone());\r\n");
 				writer.append("\t\t\t});\r\n");
 //				writer.append("\t\t\t$(submitForm).children().hide();\r\n");	
 				writer.append("\t\t\tsubmitForm.submit();\r\n");
-				writer.append("\t\t\tconsole.log(\"submitForm ==========> \" + $(submitForm).html());");
+				writer.append("\t\t\tconsole.log(\"submitForm ==========> \" + $(submitForm).html());\r\n");
 				writer.append("\t\t});\r\n");
 			}
 			writer.append("\t} else {\r\n");
 			writer.append("\t\treturn false;\r\n");
-			writer.append("\t}");
+			writer.append("\t}\r\n");
 			writer.append("});\r\n");
 			writer.append("</script>\r\n");
 		}    	

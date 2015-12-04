@@ -19,7 +19,6 @@
 package org.ofbiz.widget.renderer;
 
 import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -43,9 +42,16 @@ import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.widget.WidgetWorker;
-import org.ofbiz.widget.model.*;
+import org.ofbiz.widget.model.AbstractModelAction;
+import org.ofbiz.widget.model.FieldInfo;
+import org.ofbiz.widget.model.ModelForm;
 import org.ofbiz.widget.model.ModelForm.FieldGroup;
 import org.ofbiz.widget.model.ModelForm.FieldGroupBase;
+import org.ofbiz.widget.model.ModelFormField;
+import org.ofbiz.widget.model.ModelFormField.CheckField;
+import org.ofbiz.widget.model.ModelFormFieldBuilder;
+import org.ofbiz.widget.model.ModelGrid;
+import org.python.modules.newmodule;
 
 /**
  * A form rendering engine.
@@ -83,12 +89,11 @@ public class FormRenderer {
         if (UtilValidate.isEmpty(formName)) {
             formName = modelForm.getName();
         }
-        //Cato: No need this anymore since we are enclosing the entire list with a single form as done for the multi type
-//        if (itemIndex != null && "list".equals(modelForm.getType())) {
-//            return formName + modelForm.getItemIndexSeparator() + itemIndex.intValue();
-//        } else {
+        if (itemIndex != null && "list".equals(modelForm.getType())) {
+            return formName + modelForm.getItemIndexSeparator() + itemIndex.intValue();
+        } else {
             return formName;
-//        }
+        }
     }
 
     public static String getFocusFieldName(ModelForm modelForm, Map<String, Object> context) {
@@ -300,7 +305,7 @@ public class FormRenderer {
         // automatically retrieved by a service or entity definition.
         List<ModelFormField> tempFieldList = new LinkedList<ModelFormField>();
         tempFieldList.addAll(modelForm.getFieldList());        
-        if ("multi".equals(modelForm.getType()) && !modelForm.getUseRowSubmit()) {
+        if (("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) && !modelForm.getUseRowSubmit()) {
         	tempFieldList.addAll(modelForm.getMultiSubmitFields());
         }
         for (int j = 0; j < tempFieldList.size(); j++) {
@@ -398,6 +403,19 @@ public class FormRenderer {
             if (innerFormFields.size() > 0) {
                 numOfColumns++;
             }
+            
+            // Cato: Add an extra column to hold a checkbox for form lists that use an independent row submit. This checkbox will determine which row must be submitted.
+            if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
+            	ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+            	builder.setFieldName("checkbox" +  modelForm.getItemIndexSeparator() + modelForm.getName());
+            	builder.setName("checkbox" +  modelForm.getItemIndexSeparator() + "selectAction");
+            	builder.setModelForm(modelForm);
+            	builder.setTitle("Select");
+            	ModelFormField checkboxFormField = builder.build();
+//            	formStringRenderer.renderCheckField(writer, context, new CheckField(modelFormField));
+            	innerDisplayHyperlinkFieldsEnd.add(checkboxFormField);
+            	numOfColumns++;
+            }
 
             if (maxNumOfColumns < numOfColumns) {
                 maxNumOfColumns = numOfColumns;
@@ -443,8 +461,8 @@ public class FormRenderer {
                     }
                     if (innerFormFields.size() > 0) {
                         // TODO: manage colspan
-                    	if (modelForm.getUseRowSubmit())
-                    		formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
+//                    	if (modelForm.getUseRowSubmit())
+//                    		formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
                         Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
                         while (innerFormFieldsIt.hasNext()) {
                             ModelFormField modelFormField = innerFormFieldsIt.next();
@@ -472,8 +490,8 @@ public class FormRenderer {
                                 }
                             }
                         }
-                        if (modelForm.getUseRowSubmit())
-                        	formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
+//                        if (modelForm.getUseRowSubmit())
+//                        	formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
                     }
                     Iterator<ModelFormField> innerDisplayHyperlinkFieldsEndIt = innerDisplayHyperlinkFieldsEnd.iterator();
                     while (innerDisplayHyperlinkFieldsEndIt.hasNext()) {
@@ -488,6 +506,9 @@ public class FormRenderer {
                         formStringRenderer.renderFieldTitle(writer, context, modelFormField);
                         formStringRenderer.renderFormatHeaderRowCellClose(writer, context, modelForm, modelFormField);
                     }
+                    
+                    
+                    
                 } else {
                     Iterator<ModelFormField> mainFieldListIter = mainFieldList.iterator();
                     while (mainFieldListIter.hasNext()) {
@@ -569,6 +590,24 @@ public class FormRenderer {
         }
 
         if (modelForm.getGroupColumns()) {
+        	
+        	// Cato: Add an extra column to hold a checkbox for form lists that use an independent row submit. This checkbox will determine which row must be submitted.
+            if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
+            	ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+            	builder.setFieldName("checkbox" +  modelForm.getItemIndexSeparator() + modelForm.getName());
+            	builder.setName("checkbox" +  modelForm.getItemIndexSeparator() + "selectAction");
+            	builder.setModelForm(modelForm);
+            	builder.setTitle("Select");
+            	builder.setFieldType("check");
+            	builder.setFieldInfo(new CheckField(builder.build()));
+            	ModelFormField checkFieldForm = builder.build();            	
+            	
+//            	formStringRenderer.renderCheckField(writer, context, new CheckField(modelFormField));
+            	innerDisplayHyperlinkFieldsEnd.add(checkFieldForm);
+            	numOfColumns++;
+            }
+        	
+        	
             // do the first part of display and hyperlink fields
             Iterator<ModelFormField> innerDisplayHyperlinkFieldIter = innerDisplayHyperlinkFieldsBegin.iterator();
             while (innerDisplayHyperlinkFieldIter.hasNext()) {
@@ -608,9 +647,10 @@ public class FormRenderer {
             	formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm); // TODO: colspan
             	// Cato: Controls where a cell has been opened already so we don't generate invalid markup (similar to what is done for firsts links rendered above)
             	boolean cellOpen = true;
-            	
-//            	if (formPerItem)
-//                    formStringRenderer.renderFormOpen(writer, localContext, modelForm);
+
+                if (formPerItem) {
+                    formStringRenderer.renderFormOpen(writer, localContext, modelForm);
+                }
 
                 // do all of the hidden fields...
                 this.renderHiddenIgnoredFields(writer, localContext, formStringRenderer, hiddenIgnoredFieldList);
@@ -634,8 +674,9 @@ public class FormRenderer {
                     }
                 }
 
-//                if (formPerItem)
-//                    formStringRenderer.renderFormClose(writer, localContext, modelForm);
+                if (formPerItem) {
+                    formStringRenderer.renderFormClose(writer, localContext, modelForm);
+                }
 
                 if (cellOpen)
                 	formStringRenderer.renderFormatItemRowFormCellClose(writer, localContext, modelForm);
@@ -658,6 +699,13 @@ public class FormRenderer {
                 }
                 formStringRenderer.renderFormatItemRowCellClose(writer, localContext, modelForm, modelFormField);
             }
+            
+            // Cato: Add an extra column to hold a checkbox for form lists that use an independent row submit. This checkbox will determine which row must be submitted.
+//            if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
+//            	formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm);
+//            	
+//            	formStringRenderer.renderFormatItemRowFormCellClose(writer, localContext, modelForm);
+//            }
         } else {
             // do all of the hidden fields...
             this.renderHiddenIgnoredFields(writer, localContext, formStringRenderer, hiddenIgnoredFieldList);
@@ -734,13 +782,9 @@ public class FormRenderer {
         if (modelForm.isOverridenListSize()) {
             lowIndex = 0;
             highIndex = ((Integer) context.get("viewSize")).intValue();
-        }        
-        
-        if (iter != null) {
-        	// Cato: Opening here the form for list type
-//            if (modelForm.getType().equals("list") && modelForm.getGroupColumns() && formPerItem)        	
-//            	formStringRenderer.renderFormOpen(writer, context, modelForm);
+        }
 
+        if (iter != null) {
             
             listFormHandler.notifyHasList();
             
@@ -977,10 +1021,6 @@ public class FormRenderer {
                     Debug.logError(e, "Error closing list form render EntityListIterator: " + e.toString(), module);
                 }
             }
-            
-//            if (modelForm.getType().equals("list") && modelForm.getSeparateColumns() && formPerItem)
-//            	formStringRenderer.renderFormClose(writer, context, modelForm);
-            
         }
     }
 
@@ -1103,8 +1143,6 @@ public class FormRenderer {
         RenderListFormHandler listFormHandler = new RenderListFormHandler(writer, context);
         listFormHandler.renderInit();
         
-        formStringRenderer.renderFormOpen(writer, context, modelForm);
-        
         // render list/tabular type forms
 
         // prepare the items iterator and compute the pagination parameters
@@ -1114,11 +1152,28 @@ public class FormRenderer {
         
         // ===== render the item rows =====
         this.renderItemRows(writer, context, formStringRenderer, true, numOfColumns, listFormHandler);
+        
+        // Cato: checks whether the form renders a specific submit button or not, if not renders a hidden form at the end of the list of results
+        if (!modelForm.getUseRowSubmit()) {        	
+        	formStringRenderer.renderSubmitForm(writer, context, modelForm);
+        }
+        
+        
 
         listFormHandler.renderTableClose();
         
-        formStringRenderer.renderFormClose(writer, context, modelForm);            
-        
+        // Cato: 
+        if (modelForm.getUseRowSubmit()) {
+        	Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
+            while (submitFields.hasNext()) {
+                ModelFormField submitField = submitFields.next();
+                if (submitField != null && submitField.shouldUse(context)) {                  
+                    if (modelForm.getUseRowSubmit())
+                    	submitField.renderFieldString(writer, context, this.formStringRenderer);
+                  
+                }
+            }
+        }
         listFormHandler.renderFinalize();
     }
 

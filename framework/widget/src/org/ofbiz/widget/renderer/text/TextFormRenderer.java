@@ -303,4 +303,10 @@ public class TextFormRenderer implements FormStringRenderer {
     public void renderAlternateText(Appendable writer, Map<String, Object> context, ModelForm modelForm, boolean wrapperOpened, boolean headerRendered, int numOfColumns) throws IOException {
         // TODO
     }
+
+	@Override
+	public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+		// TODO Auto-generated method stub
+		
+	}
 }

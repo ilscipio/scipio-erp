@@ -397,7 +397,7 @@
     "fields_default_labelareaexceptions" : "submit submitarea",
     "fields_default_labelarearequirecontent" : false,
     <#-- TODO:
-    "fields_default_collapsewheninlinelabel" : "datetime",
+    "fields_default_collapsedinlinelabel" : "datetime",
     -->
 
     "fields_default_nolabels_labeltype" : "none",

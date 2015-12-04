@@ -622,8 +622,13 @@
         <@cell>
           <@field type="radio" name="radio1" label="Radio 1 (with label area)" value="val1" labelArea=true/>
           <@field type="radio" name="radio2" label="Radio 2 (no label area - inlined label)" value="val2" />
+          <#-- Radio with auto-collapsing "pseudo" inline label (rare) - here the inline label, underneath, is auto-implemented
+              using the label area (so radio widget does not receive an inline label): -->
+          <@field type="radio" name="radio3" label="Radio 3" collapsedInlineLabel=true value="val3" />
           <@field type="checkbox" name="checkbox1" label="Checkbox 1 (with label area)" value="val1" labelArea=true/>
           <@field type="checkbox" name="checkbox2" label="Checkbox 2 (no label area - inlined label)" value="val2" />
+          <#-- Checkbox with auto-collapsing "pseudo" inline label (rare): -->
+          <@field type="checkbox" name="checkbox3" label="Checkbox 3" collapsedInlineLabel=true value="val3" />
         </@cell>
       </@row>
       <@row>
@@ -634,8 +639,10 @@
           <#-- for "generic" @fields, needs explicit collapse (see styles hash) -->
           <span>Date with collapsed label:</span>
           <@field type="datetime" name="date4" labelArea=true label="Date 4" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" collapse=true />
-          <span>Date with inlined label (should look same as previous - auto-implements inline label with collapsed label area):</span>
+          <span>Date with inlined label - auto-implements inline label with collapsed label area (should look same as previous):</span>
           <@field type="datetime" name="date5" labelArea=false collapsedInlineLabel=true label="Date 5" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" collapse=true />
+          <span>Date with forced inlined label (should look same as previous):</span>
+          <@field type="datetime" name="date6" inlineLabelArea=true inlineLabel="Date 6" collapsedInlineLabel=true value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" collapse=true />
         </@cell>
       </@row>  
       <@row>

@@ -630,6 +630,8 @@ standard markup.
     labelAreaRequireContent = boolean, if true, the label area will only be included if label or labelDetail have content.
                               by default, this is empty string (use @fields type default), and if no styles defaults,
                               default is false.
+    inlineLabelArea     = manual override for inline label logic. in general can be left to macro. logical default: false (or "").
+    inlineLabel         = manual override for inline label logic. in general can be left to macro. logical default: "" (false on interface).
     tooltip         = Small field description - to be displayed to the customer
     description     = alternative to tooltip
     name            = field name
@@ -785,7 +787,8 @@ standard markup.
     "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"",
     "tooltip":"", "columns":"", "norows":false, "nocells":false, "container":"",
     "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":1, "postfixContent":true, "required":false, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
-    "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "description":"",
+    "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "inlineLabelArea":"", "inlineLabel":false,
+    "description":"",
     "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
     "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
     "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "events":{} 
@@ -957,14 +960,19 @@ standard markup.
            (!(labelArea?is_boolean && labelArea == false) && (labelAreaDefault))>
   
   <#local origLabel = label>
-  <#local useInlineLabel = false>
-  <#local inlineLabel = "">
-  <#if !labelAreaConsumeLabel>
+  <#local effInlineLabel = false>
+  <#if !labelAreaConsumeLabel && !(inlineLabelArea?is_boolean && inlineLabelArea == false)>
     <#-- if there's no label area or if it's not set to receive the label, 
-        label was not used up, so label arg becomes an inline label (used on radio and checkbox) -->
-    <#local useInlineLabel = true>
-    <#local inlineLabel = label>
+        label was not used up, so label arg becomes an inline label (used on radio and checkbox) 
+        - unless caller overrides with his own inline label for whatever reason -->
+    <#if !(inlineLabel?is_boolean && inlineLabel == false)>
+      <#local effInlineLabel = inlineLabel>
+    <#else>
+      <#local effInlineLabel = label>
+    </#if>
     <#local label = "">
+  <#elseif inlineLabelArea?is_boolean && inlineLabelArea == true>
+    <#local effInlineLabel = inlineLabel>
   </#if>
 
   <#-- NOTE: labelAreaRequireContent should not affect consume logic above -->
@@ -973,12 +981,15 @@ standard markup.
       (!labelAreaRequireContent || (label?has_content || labelDetail?has_content)) && (labelAreaDefault))>
   
   <#-- Special case where inlineLabel is re-implemented using actual label area using collapsing. -->
-  <#if useInlineLabel && inlineLabel?has_content && 
+  <#if !(effInlineLabel?is_boolean && effInlineLabel == false) && effInlineLabel?has_content && 
     ((effCollapsedInlineLabel?is_boolean && effCollapsedInlineLabel == true) ||
      (effCollapsedInlineLabel?is_sequence && effCollapsedInlineLabel?seq_contains(type)))>
     <#local useLabelArea = true>
-    <#local label = inlineLabel>
-    <#local inlineLabel = ""> <#-- we're using it, so don't pass it down to widget anymore -->
+    <#local label = effInlineLabel>
+    <#if label?is_boolean>
+      <#local label = "">
+    </#if>
+    <#local effInlineLabel = false> <#-- we're using it, so don't pass it down to widget anymore -->
     <#if !collapse?is_boolean>
       <#local collapse = true>
     </#if>
@@ -1027,7 +1038,8 @@ standard markup.
                               ajaxEnabled="" 
                               mask=mask 
                               placeholder=placeholder 
-                              tooltip=tooltip/>
+                              tooltip=tooltip
+                              inlineLabel=effInlineLabel/>
         <#break>
       <#case "textarea">
         <@field_textarea_widget name=name 
@@ -1039,7 +1051,8 @@ standard markup.
                               readonly=readonly 
                               value=value 
                               placeholder=placeholder
-                              tooltip=tooltip><#nested></@field_textarea_widget>
+                              tooltip=tooltip
+                              inlineLabel=effInlineLabel><#nested></@field_textarea_widget>
         <#break>
       <#case "datetime">
         <#if dateType == "date">
@@ -1076,7 +1089,8 @@ standard markup.
                               pmSelected="" 
                               compositeType="" 
                               formName=""
-                              tooltip=tooltip/>                
+                              tooltip=tooltip
+                              inlineLabel=effInlineLabel/>                
         <#break>
       <#case "select">
         <#if !manualItemsOnly?is_boolean>
@@ -1122,7 +1136,8 @@ standard markup.
                                 manualItems=manualItems
                                 manualItemsOnly=manualItemsOnly
                                 currentDescription=currentDescription
-                                asmSelectArgs=asmSelectArgs><#nested></@field_select_widget>
+                                asmSelectArgs=asmSelectArgs
+                                inlineLabel=effInlineLabel><#nested></@field_select_widget>
         <#break>
       <#case "option">
         <@field_option_widget value=value text=text selected=selected><#nested></@field_option_widget>
@@ -1144,12 +1159,16 @@ standard markup.
               <#local checked = "">
             </#if>
           </#if>
-          <#local items=[{"value":value, "description":inlineLabel, "tooltip":tooltip, "events":events, "checked":checked}]/>
+          <#local description = effInlineLabel>
+          <#if description?is_boolean>
+            <#local description = "">
+          </#if>
+          <#local items=[{"value":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked}]/>
           <@field_checkbox_widget multiMode=false items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" />
+            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel/>
         <#else>
           <@field_checkbox_widget multiMode=true items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip />
+            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel/>
         </#if>
         <#break>
       <#case "radio">
@@ -1166,25 +1185,29 @@ standard markup.
               <#local checked = "">
             </#if>
           </#if>
-          <#local items=[{"key":value, "description":inlineLabel, "tooltip":tooltip, "events":events, "checked":checked}]/>
+          <#local description = effInlineLabel>
+          <#if description?is_boolean>
+            <#local description = "">
+          </#if>
+          <#local items=[{"key":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked}]/>
           <@field_radio_widget multiMode=false items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue name=name tooltip="" />
+            currentValue=currentValue defaultValue=defaultValue name=name tooltip="" inlineLabel=effInlineLabel/>
         <#else>
           <#-- multi radio button item mode -->
           <@field_radio_widget multiMode=true items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip />
+            currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip inlineLabel=effInlineLabel/>
         </#if>
         <#break>
       <#case "file">
         <@field_file_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
-          autocomplete=autocomplete?string("", "off") id=id />
+          autocomplete=autocomplete?string("", "off") id=id inlineLabel=effInlineLabel/>
         <#break>
       <#case "password">
         <@field_password_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
-          id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip/>
+          id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip inlineLabel=effInlineLabel/>
         <#break> 
       <#case "reset">                    
-        <@field_reset_widget class=class alert=alert name=name text=text fieldTitleBlank=false />
+        <@field_reset_widget class=class alert=alert name=name text=text fieldTitleBlank=false inlineLabel=effInlineLabel/>
         <#break>    
       <#case "submit">
         <#if !catoSubmitFieldTypeButtonMap??>
@@ -1205,13 +1228,13 @@ standard markup.
         </#if>
         <@field_submit_widget buttonType=buttonType class=class alert=alert formName=formName name=name events=events 
           imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" text=text description=description showProgress=false 
-          href=href inputType=inputType disabled=disabled progressArgs=progressArgs progressOptions=progressOptions />
+          href=href inputType=inputType disabled=disabled progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel/>
         <#break>
       <#case "submitarea">
-        <@field_submitarea_widget progressArgs=progressArgs progressOptions=progressOptions><#nested></@field_submitarea_widget>
+        <@field_submitarea_widget progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel><#nested></@field_submitarea_widget>
         <#break>
       <#case "hidden">                    
-        <@field_hidden_widget name=name value=value id=id events=events />
+        <@field_hidden_widget name=name value=value id=id events=events inlineLabel=effInlineLabel />
         <#break>        
       <#case "display">
         <#-- TODO? may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 
@@ -1233,13 +1256,13 @@ standard markup.
         </#if>
         <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc 
             title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" 
-            imageAlt=description tooltip=tooltip />
+            imageAlt=description tooltip=tooltip inlineLabel=effInlineLabel />
         <#break> 
       <#default> <#-- "generic", empty or unrecognized -->
         <#if value?has_content>
-            <@field_generic_widget text=value tooltip=tooltip/>
+            <@field_generic_widget text=value tooltip=tooltip inlineLabel=effInlineLabel/>
         <#else>
-            <@field_generic_widget tooltip=tooltip><#nested /></@field_generic_widget>
+            <@field_generic_widget tooltip=tooltip inlineLabel=effInlineLabel><#nested /></@field_generic_widget>
         </#if>
     </#switch>
   </@field_markup_container>

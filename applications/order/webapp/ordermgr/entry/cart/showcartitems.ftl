@@ -183,20 +183,10 @@ under the License.
             <#-- ship before/after date -->
             <@tr>
               <@td colspan="2">
-               <@table type="fields" inheritAltRows=true border="0" cellpadding="0" cellspacing="0" width="100%"> <#-- orig: class="basic-table" -->
-               <@tr>
-                <@td>
-                  ${uiLabelMap.OrderShipAfterDate}
-                    <@htmlTemplate.renderDateTimeField name="shipAfterDate_${cartLineIndex}" value="${cartLine.getShipAfterDate()?default('')}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipAfterDate_${cartLineIndex}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                </@td>
-               </@tr>
-               <@tr>
-                <@td>
-                  ${uiLabelMap.OrderShipBeforeDate}
-                    <@htmlTemplate.renderDateTimeField name="shipBeforeDate_${cartLineIndex}" value="${cartLine.getShipBeforeDate()?default('')}" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipBeforeDate_${cartLineIndex}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                </@td>
-               </@tr>
-               </@table>
+                <@fields type="default-compact">
+                  <@field type="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="shipAfterDate_${cartLineIndex}" value="${cartLine.getShipAfterDate()!''}" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipAfterDate_${cartLineIndex}" dateType="date-time" />
+                  <@field type="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="shipBeforeDate_${cartLineIndex}" value="${cartLine.getShipBeforeDate()!''}" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipBeforeDate_${cartLineIndex}" dateType="date-time" />
+                </@fields>
               </@td>
             </@tr>
 

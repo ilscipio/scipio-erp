@@ -437,9 +437,9 @@
 <@section title="Fields">
   <#-- TODO: submitarea -> submit (but not to remove submitarea; still important) -->
 
-  <@section title="Default form fields (with label area)"> <#-- see styles.fields_default_xxx -->
+  <@section title="Default form fields (with label area) (@fields type=\"default\")">
     <@form name="form1">
-    <@fields type="default"> <#-- note: @fields currently optional for type="default"-->
+    <@fields type="default"> <#-- see styles.fields_default_xxx. note: @fields currently optional for type="default"-->
       <@field type="input" name="input1" label="Input 1" />
       <@field type="input" name="input2" label="Input 2" postfix=true />
       <@field type="display">Display value</@field>
@@ -503,7 +503,7 @@
     </@form>
   </@section>
 
-  <@section title="Default form fields (without label area)">
+  <@section title="Default form fields (without label area) (@fields type=\"default-nolabels\")">
     <@form name="form2">
     <@fields type="default-nolabels"> <#-- see styles.fields_default_nolabels_xxx -->
       <@field type="input" name="input1"/>
@@ -513,7 +513,7 @@
       <@field type="input" name="input3" postfix=true postfixContent=postfixContent />
 
       <@field type="datetime" name="date1" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
-      <@field type="datetime" name="date2" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datetime" name="date2" label="Date 2" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
 
       <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
       <@field type="radio" name="radio2" label="Radio 2" value="Y" checked=true/>
@@ -539,7 +539,7 @@
     </@form>
   </@section>
 
-  <@section title="Default form fields (with label area) with parent/child fields">
+  <@section title="Default form fields (with label area) with parent/child fields (@fields type=\"default\")">
     <@form name="form3"> <#-- see styles.fields_default_xxx -->
       <@field type="generic" label="Multi-fields">
         <@field type="input" name="input1"/>
@@ -572,7 +572,7 @@
     </@form>
   </@section>
 
-  <@section title="Default compact form fields (label area at top, for cramped forms)">
+  <@section title="Default compact form fields (label area at top, for cramped forms) (@fields type=\"default-compact\")">
     <@row>
       <@cell small=4 last=true>
     <@form name="form4">
@@ -594,7 +594,11 @@
     </@row>
   </@section>
 
-  <@section title="Custom arranged form fields">
+  <@section title="Custom arranged form fields (@fields type=\"generic\")">
+    <#-- NOTE: To get labels on custom (@fields group type "generic") fields, 
+        must enable label area manually using labelArea=true. presence of label argument is not enough
+        because label argument may be intended as an inline label (for default arrangements, this is
+        controlled in styles hash as needed, but for generic fields, it should always be left to caller). -->
     <@form name="form5">
     <@fields type="generic"> <#-- see styles.fields_generic_xxx -->
       <@row>
@@ -622,6 +626,18 @@
           <@field type="checkbox" name="checkbox2" label="Checkbox 2 (no label area - inlined label)" value="val2" />
         </@cell>
       </@row>
+      <@row>
+        <@cell offset=6 columns=6>     
+          <@field type="datetime" name="date1" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+          <@field type="datetime" name="date2" labelArea=true value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+          <@field type="datetime" name="date3" labelArea=true label="Date 3" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+          <#-- for "generic" @fields, needs explicit collapse (see styles hash) -->
+          <span>Date with collapsed label:</span>
+          <@field type="datetime" name="date4" labelArea=true label="Date 4" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" collapse=true />
+          <span>Date with inlined label (should look same as previous - auto-implements inline label with collapsed label area):</span>
+          <@field type="datetime" name="date5" labelArea=false collapsedInlineLabel=true label="Date 5" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" collapse=true />
+        </@cell>
+      </@row>  
       <@row>
         <@cell offset=6 columns=6>      
           <@field type="submitarea">

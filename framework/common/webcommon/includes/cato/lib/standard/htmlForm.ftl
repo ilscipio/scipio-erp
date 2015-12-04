@@ -442,14 +442,25 @@ or even multiple per fieldset.
     formId              = the form ID the child fields should assume   
     inlineItems     = change default for @field inlineItems parameter (true/false)     
 -->
-<#macro fields type="default" labelType="" labelPosition="" labelArea="" labelAreaExceptions=true labelAreaRequireContent="" formName="" formId="" inlineItems="">
-    <#local fieldsInfo = makeFieldsInfo(type, labelType, labelPosition, labelArea, labelAreaExceptions, formName, formId, inlineItems)>
+<#assign fieldsDefaultArgsCatoStd = {
+    <#-- parameters: defaults -->
+    "type":"default", "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", 
+    "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":""
+}>
+<#macro fields args={} inlineArgs...>
+    <#--<#local args = mergeArgMapsBasic(args, inlineArgs, fieldsDefaultArgsCatoStd)>
+    <#local dummy = localsPutAll(args)>
+    <#local fieldsInfo = makeFieldsInfo(args)>-->
+    <#local fieldsInfo = makeFieldsInfo(mergeArgMapsBasic(args, inlineArgs))>
     <#local dummy = pushRequestStack("catoCurrentFieldsInfo", fieldsInfo)>
     <#nested>
     <#local dummy = popRequestStack("catoCurrentFieldsInfo")>
 </#macro>
 
-<#function makeFieldsInfo type labelType="" labelPosition="" labelArea="" labelAreaExceptions=true labelAreaRequireContent="" formName="" formId="" inlineItems="">
+<#function makeFieldsInfo args={}>
+    <#local args = mergeArgMapsBasic(args, {}, fieldsDefaultArgsCatoStd)>
+    <#local dummy = localsPutAll(args)>
+    
     <#local stylesType = type?replace("-","_")>
     <#local stylesPrefix = "fields_" + stylesType + "_">
     <#if !styles[stylesPrefix + "labeltype"]??>
@@ -480,7 +491,7 @@ or even multiple per fieldset.
         <#local labelAreaExceptions = styles[stylesPrefix + "labelareaexceptions"]!styles["fields_default_labelareaexceptions"]!"">
       </#if>
     </#if>
-    <#if labelAreaExceptions?is_string>
+    <#if labelAreaExceptions?is_string> <#-- WARN: ?is_string unreliable -->
       <#if labelAreaExceptions?has_content>
         <#local labelAreaExceptions = labelAreaExceptions?split(" ")>
       <#else>
@@ -492,10 +503,26 @@ or even multiple per fieldset.
       <#local labelAreaRequireContent = styles[stylesPrefix + "labelarearequirecontent"]!styles["fields_default_labelarearequirecontent"]!"">
     </#if>
 
+    <#if !collapse?is_boolean>
+      <#local collapse = styles[stylesPrefix + "collapse"]!styles["fields_default_collapse"]!"">
+    </#if>
+    <#if !collapsePostfix?is_boolean>
+      <#local collapsePostfix = styles[stylesPrefix + "collapsepostfix"]!styles["fields_default_collapsepostfix"]!"">
+    </#if>
+    <#if !collapsedInlineLabel?has_content>
+      <#local collapsedInlineLabel = styles[stylesPrefix + "collapsedinlinelabel"]!styles["fields_default_collapsedinlinelabel"]!"">
+    </#if>
+    <#if collapsedInlineLabel?is_string>
+      <#if collapsedInlineLabel?has_content> <#-- WARN: ?is_string unreliable -->
+        <#local collapsedInlineLabel = collapsedInlineLabel?split(" ")>
+      </#if>
+    </#if>
+
     <#return {"type":type, "labelType":labelType, "labelPosition":labelPosition, 
         "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, 
         "labelAreaRequireContent":labelAreaRequireContent, 
-        "formName":formName, "formId":formId, "inlineItems":inlineItems}>
+        "formName":formName, "formId":formId, "inlineItems":inlineItems,
+        "collapse":collapse, "collapsePostfix":collapsePostfix, "collapsedInlineLabel":collapsedInlineLabel}>
 </#function>
 
 <#-- 
@@ -534,8 +561,46 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 *************
 * Field
 ************ 
+A form field input widget with optional label and post-input (postfix) content.
+
+@field can be used as a low-level field control (similar to original Ofbiz
+form widget macros, but with friendlier parameters) and for high-level declarations
+of fields (similar to the actual <field> elements in Ofbiz form widget definitions, but friendlier
+and more configurable). This versaility is the main reason for its implementation complexity.
+
+In the high-level role, the macro takes care of label area logic and alignment
+such that you will not get fields looking out of place even if they have no label,
+giving all the fields in a given form a default uniform look, which can be customized globally.
+
+@field's behavior can be customized for a set of fields using a parent @fields macro invocation
+as well as using the global styles hash (preferred where possible). A set of fields may be grouped under a @fields
+call with a @fields "type" selected, which will give all fields within it a predefined look
+and behavior. This behavior can be set in the global styles hash (preferred) or overridden directly
+in the @fields element.
+
+If no @fields element is used, by default @field will behave the same as if it
+were surrounded by a @fields element with "default" type, which gives all fields a default
+look out of the box.
+
+To use @field as a low-level control, it should be given a parent @fields with "generic" type.
+
+This system can accodomate custom @fields types, but a default set are provided in the cato
+standard markup.
+
   * Usage Example *  
-    <@field attr="" />
+    <@field attr="" /> <#- single field using default look ->
+    
+    <@fields type="default"> <#- single field using default look, same as previous ->
+      <@field attr="" />
+    </@fields>
+
+    <@fields type="default-nolabels"> <#- specific arrangement needed ->
+      <@field attr="" />
+    </@fields>
+    
+    <@fields type="generic"> <#- use @field as low-level control ->
+      <@field attr="" labelArea=true label="My Label" />
+    </@fields>    
     
   * Parameters *
     * General *
@@ -544,7 +609,12 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
                       generic is mostly for grouping multiple sub-fields, but can be used anywhere.
                       (specific field types should be preferred to manually defining content, where possible)
     label           = field label
-                      NOTE: Presence of label arg does not guarantee a label will be shown; this is controlled
+                      for top-level @field elements and and parent fields, normally the label will get consumed
+                      by the label area and shown there. for child fields and some other circumstances, or whenever there is
+                      no label area, the label will instead be passed down as an "inline label" to the input
+                      widget implementation. in some cases, this "inline label" is
+                      re-implemented using the label area - see collapsedInlineLabel parameter.
+                      NOTE: Presence of label arg does not guarantee a label area will be shown; this is controlled
                           by labelArea (and labelType) and its defaults, optionally coming from @fields container.
                           For generic parent fields, label type must be specified explicitly, e.g.
                             <@fields type="generic"><@field labelType="horizontal" label="mylabel">...</@fields> 
@@ -580,8 +650,15 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     mask            = toggles jQuery mask plugin
     size            = size attribute (default: 20)
     collapse        = should the whole field (including label and postfix) be collapsing? (default: false)
-    collapsePostfix = should the postfix collapse with the field input? (default: false)
-                      this will not affect label.
+    collapsePostfix = should the postfix collapse with the field input? (default: true)
+                      this will not affect label unless collapse is also true (in which case this setting is ignored
+                      and the whole field is collapse)
+    collapsedInlineLabel  = this is a special function that will only apply in some cases. 
+                            if this is set to true and the label does not get consumed
+                            by the label area and becomes an inline label, this will cause an auto-implementation
+                            of an inlined label using collapsing (instead of passing the inline label
+                            down to the individual field type widget).
+                            this may be needed for some field types.
     norows          = render without the rows-container
     nocells         = render without the cells-container
     required        = required input
@@ -704,7 +781,9 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#-- parameters: defaults -->
     "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", "onClick":"", 
     "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
-    "cols":"50", "dateType":"date-time", "multiple":"", "checked":"", "collapse":"", "collapseLabel":"", "collapsePostfix":"", "tooltip":"", "columns":"", "norows":false, "nocells":false, "container":"",
+    "cols":"50", "dateType":"date-time", "multiple":"", "checked":"", 
+    "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"",
+    "tooltip":"", "columns":"", "norows":false, "nocells":false, "container":"",
     "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":1, "postfixContent":true, "required":false, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
     "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "description":"",
     "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
@@ -743,7 +822,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#if !fieldsInfo.type??>
     <#if !catoDefaultFieldsInfo?has_content>
       <#-- optimization -->
-      <#global catoDefaultFieldsInfo = makeFieldsInfo("default")>
+      <#global catoDefaultFieldsInfo = makeFieldsInfo({"type":"default"})>
     </#if>
     <#local fieldsInfo = catoDefaultFieldsInfo>
   </#if>
@@ -832,7 +911,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#local labelAreaDefault = false>
   <#else>
     <#local labelAreaDefault = (fieldsInfo.labelArea)!false>
-    <#if (fieldsInfo.labelAreaExceptions)?has_content>
+    <#if (fieldsInfo.labelAreaExceptions)?has_content && (fieldsInfo.labelAreaExceptions)?is_sequence>
       <#if fieldsInfo.labelAreaExceptions?seq_contains(type)>
         <#local labelAreaDefault = !labelAreaDefault>
       </#if>
@@ -848,6 +927,12 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     <#local effLabelPosition = labelPosition>
   <#else>
     <#local effLabelPosition = (fieldsInfo.labelPosition)!"">
+  </#if>
+
+  <#if collapsedInlineLabel?is_boolean>
+    <#local effCollapsedInlineLabel = collapsedInlineLabel>
+  <#else>
+    <#local effCollapsedInlineLabel = (fieldsInfo.collapsedInlineLabel)![]>
   </#if>
 
   <#if !labelAreaRequireContent?is_boolean>
@@ -887,17 +972,28 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
     (!(labelArea?is_boolean && labelArea == false) && 
       (!labelAreaRequireContent || (label?has_content || labelDetail?has_content)) && (labelAreaDefault))>
   
-  <#-- FIXME: datetime is currently a special case where inlineLabel is re-implemented
-      using actual label area. we also enable collapsing if not otherwise set.
-      should rework and unhardcode this somehow or maybe reuse the collapse
-      flag and let caller enable this via collapse flag (but is obscure that way). -->
-  <#if type == "datetime" && useInlineLabel && inlineLabel?has_content>
+  <#-- Special case where inlineLabel is re-implemented using actual label area using collapsing. -->
+  <#if useInlineLabel && inlineLabel?has_content && 
+    ((effCollapsedInlineLabel?is_boolean && effCollapsedInlineLabel == true) ||
+     (effCollapsedInlineLabel?is_sequence && effCollapsedInlineLabel?seq_contains(type)))>
     <#local useLabelArea = true>
-    <#local effLabelType = "horizontal">
-    <#local effLabelPosition = "left">
     <#local label = inlineLabel>
+    <#local inlineLabel = ""> <#-- we're using it, so don't pass it down to widget anymore -->
     <#if !collapse?is_boolean>
       <#local collapse = true>
+    </#if>
+  </#if>
+  
+  <#if !collapse?is_boolean>
+    <#local collapse = (fieldsInfo.collapse)!false>
+    <#if !collapse?is_boolean>
+      <#local collapse = false>
+    </#if>
+  </#if>
+  <#if !collapsePostfix?is_boolean>
+    <#local collapsePostfix = (fieldsInfo.collapsePostfix)!true>
+    <#if !collapsePostfix?is_boolean>
+      <#local collapsePostfix = true>
     </#if>
   </#if>
   
@@ -908,10 +1004,12 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#-- main markup begin -->
   <#local labelAreaContent = "">
   <#if useLabelArea>
-      <#local labelAreaContent><@field_markup_labelarea labelType=effLabelType labelPosition=effLabelPosition label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
+      <#-- NOTE: origArgs is passed because in some cases it may be important for markup to know if the caller manually
+          specified a certain parameter to @field or not - the other logical args don't record this info -->
+      <#local labelAreaContent><@field_markup_labelarea origArgs=args labelType=effLabelType labelPosition=effLabelPosition label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
   </#if>
       
-  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container>
+  <@field_markup_container origArgs=args type=type columns=columns postfix=postfix postfixSize=postfixSize postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container>
     <#switch type>
       <#case "input">
         <@field_input_widget name=name 
@@ -1152,24 +1250,17 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 <#-- @field container markup - theme override 
     labelContent is generated by field_markup_labelarea.
     #nested is the actual field widget (<input>, <select>, etc.). -->
-<#macro field_markup_container type="" class="" columns="" postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelAreaContent="" collapse="" collapseLabel="" collapsePostfix="" norows=false nocells=false container=true extraArgs...>
+<#macro field_markup_container origArgs={} type="" class="" columns="" postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelAreaContent="" collapse="" collapseLabel="" collapsePostfix="" norows=false nocells=false container=true extraArgs...>
   <#local rowClass = "">
   <#local labelAreaClass = "">  
   <#local postfixClass = "">
-  
-  <#if !collapse?has_content>
-      <#local collapse = false/>
-  </#if>
-  <#if !collapsePostfix?has_content>
-    <#local collapsePostfix = postfix/>
-  </#if>
 
   <#local labelInRow = (labelType != "vertical")>
   
   <#-- we may have collapse==false but collapsePostfix==true, in which case
       we may want to collapse the postfix without collapsing the entire thing 
       handle this by making a combined sub-row if needed -->
-  <#local widgetPostfixCombined = (collapsePostfix && !collapse)>
+  <#local widgetPostfixCombined = ((postfix && collapsePostfix) && !collapse)>
 
   <#-- this is separated because some templates need access to the grid sizes to align things, and they
       can't be calculated statically in the styles hash -->
@@ -1193,7 +1284,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
             </@cell>
           </@row>
         </#if>
-          <@row collapse=(collapse || collapsePostfix) norows=(norows || !container)>
+          <@row collapse=(collapse || (postfix && collapsePostfix)) norows=(norows || !container)>
             <@cell class=compileClassArg(class, defaultGridStyles.widgetArea) nocells=(nocells || !container)>
               <#nested>
             </@cell>
@@ -1219,7 +1310,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 
       <#-- need this surrounding cell/row for collapsePostfix (only if true and collapse false) -->
       <@cell class=compileClassArg("", defaultGridStyles.widgetPostfixArea) nestedOnly=!widgetPostfixCombined>
-        <@row nestedOnly=!widgetPostfixCombined collapse=(collapse || collapsePostfix)>
+        <@row nestedOnly=!widgetPostfixCombined collapse=(collapse || (postfix && collapsePostfix))>
           <#-- NOTE: here this is the same as doing 
                  class=("=" + compileClassArg(class, defaultGridStyles.widgetArea))
                as we know the compiled class will never be empty. -->
@@ -1243,10 +1334,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 
 <#-- @field label area markup - theme override 
     This generates labelContent passed to @field_markup_container. -->
-<#macro field_markup_labelarea labelType="" labelPosition="" label="" labelDetail="" fieldType="" fieldId="" collapse="" required=false extraArgs...>
-  <#if !collapse?has_content>
-      <#local collapse = false/>
-  </#if>
+<#macro field_markup_labelarea origArgs={} labelType="" labelPosition="" label="" labelDetail="" fieldType="" fieldId="" collapse="" required=false extraArgs...>
   <#if label?has_content>
     <#if !collapse>
         <label class="form-field-label"<#if fieldId?has_content> for="${fieldId}"</#if>>${label}<#if required> *</#if></label>

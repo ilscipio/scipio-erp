@@ -798,6 +798,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#local class = compileClassArg(class)>-->
     
   <#if !catoFieldNoContainerChildren??>
+    <#-- FIXME: these should be unhardcoded into styles hash -->
     <#global catoFieldNoContainerChildren = {
      <#-- "submit":true -->   <#-- only if parent is submitarea (below) -->
       "radio":true,
@@ -818,9 +819,6 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   </#if>
   
   <#-- label area logic
-      TODO: right now most of the fieldsInfo parameters are not fully exploited.
-          assumes labelType=="horizontal" (unless "none" which influences labelArea) and 
-          labelPosition="left" (unless "none" which influences labelArea). 
       NOTE: labelArea boolean logic does not determine "label type" or "label area type"; 
           only controls presence of. so labelArea logic and usage anywhere should not change
           if new label (area) type were to be added (e.g. on top instead of side by side). -->
@@ -829,7 +827,6 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#elseif labelType == "none" || labelPosition == "none">
     <#local labelAreaDefault = false>
   <#elseif isChildField>
-    <#-- based on current usage, a child field should never really have a label area by default (requires explicit)... -->
     <#local labelAreaDefault = false>
   <#else>
     <#local labelAreaDefault = (fieldsInfo.labelArea)!false>
@@ -873,10 +870,12 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
            (!(labelArea?is_boolean && labelArea == false) && (labelAreaDefault))>
   
   <#local origLabel = label>
+  <#local useInlineLabel = false>
   <#local inlineLabel = "">
   <#if !labelAreaConsumeLabel>
     <#-- if there's no label area or if it's not set to receive the label, 
         label was not used up, so label arg becomes an inline label (used on radio and checkbox) -->
+    <#local useInlineLabel = true>
     <#local inlineLabel = label>
     <#local label = "">
   </#if>
@@ -885,6 +884,20 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#local useLabelArea = (labelArea?is_boolean && labelArea == true) || 
     (!(labelArea?is_boolean && labelArea == false) && 
       (!labelAreaRequireContent || (label?has_content || labelDetail?has_content)) && (labelAreaDefault))>
+  
+  <#-- FIXME: datetime is currently a special case where inlineLabel is re-implemented
+      using actual label area. we also enable collapsing if not otherwise set.
+      should rework and unhardcode this somehow or maybe reuse the collapse
+      flag and let caller enable this via collapse flag (but is obscure that way). -->
+  <#if type == "datetime" && useInlineLabel && inlineLabel?has_content>
+    <#local useLabelArea = true>
+    <#local effLabelType = "horizontal">
+    <#local effLabelPosition = "left">
+    <#local label = inlineLabel>
+    <#if !collapse?is_boolean>
+      <#local collapse = true>
+    </#if>
+  </#if>
   
   <#-- push this field's info (popped at end) -->
   <#local dummy = pushRequestStack("catoCurrentFieldInfo", 

@@ -512,8 +512,8 @@
       <#assign postfixContent><span>postfix!</span></#assign>
       <@field type="input" name="input3" postfix=true postfixContent=postfixContent />
 
-      <@field type="datetime" label="Date 1" name="date1" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
-      <@field type="datetime" label="Date 2" name="date2" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datetime" name="date1" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datetime" name="date2" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
 
       <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
       <@field type="radio" name="radio2" label="Radio 2" value="Y" checked=true/>

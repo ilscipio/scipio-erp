@@ -1157,11 +1157,11 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#local labelAreaClass = "">  
   <#local postfixClass = "">
   
-  <#if !collapsePostfix?has_content>
-      <#local collapsePostfix = true/>
-  </#if>
   <#if !collapse?has_content>
       <#local collapse = false/>
+  </#if>
+  <#if !collapsePostfix?has_content>
+    <#local collapsePostfix = postfix/>
   </#if>
 
   <#local labelInRow = (labelType != "vertical")>
@@ -1169,8 +1169,10 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
   <#-- we may have collapse==false but collapsePostfix==true, in which case
       we may want to collapse the postfix without collapsing the entire thing 
       handle this by making a combined sub-row if needed -->
-  <#local widgetPostfixCombined = ((postfix && collapsePostfix) && !collapse)>
+  <#local widgetPostfixCombined = (collapsePostfix && !collapse)>
 
+  <#-- this is separated because some templates need access to the grid sizes to align things, and they
+      can't be calculated statically in the styles hash -->
   <#local defaultGridStyles = getDefaultFieldGridStyles({"columns":columns, "labelArea":labelArea, 
     "labelInRow":labelInRow, "postfix":postfix, "postfixSize":postfixSize, "widgetPostfixCombined":widgetPostfixCombined })>
 
@@ -1246,7 +1248,7 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
       <#local collapse = false/>
   </#if>
   <#if label?has_content>
-    <#if fieldType=="checkbox" || collapse==false>
+    <#if !collapse>
         <label class="form-field-label"<#if fieldId?has_content> for="${fieldId}"</#if>>${label}<#if required> *</#if></label>
     <#else>
         <span class="${styles.prefix!} form-field-label">${label}<#if required> *</#if></span>

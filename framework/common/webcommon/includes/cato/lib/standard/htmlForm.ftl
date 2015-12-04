@@ -458,16 +458,16 @@ or even multiple per fieldset.
     </#if>
 
     <#if !labelArea?is_boolean>
-      <#local stylesLabelArea = styles[stylesPrefix + "labelarea"]!"">
+      <#local stylesLabelArea = styles[stylesPrefix + "labelarea"]!styles["fields_default_labelarea"]!"">
       <#if stylesLabelArea?is_boolean>
         <#local labelArea = stylesLabelArea>
       </#if>
     </#if>
     <#if !labelType?has_content>
-      <#local labelType = styles[stylesPrefix + "labeltype"]!"horizontal">
+      <#local labelType = styles[stylesPrefix + "labeltype"]!styles["fields_default_labeltype"]!"horizontal">
     </#if>
     <#if !labelPosition?has_content>
-      <#local labelPosition = styles[stylesPrefix + "labelposition"]!"left">
+      <#local labelPosition = styles[stylesPrefix + "labelposition"]!styles["fields_default_labelposition"]!"left">
     </#if>
     <#if !labelArea?is_boolean>
       <#local labelArea = (labelType != "none" && labelPosition != "none")>
@@ -477,7 +477,7 @@ or even multiple per fieldset.
       <#if labelAreaExceptions?is_boolean && labelAreaExceptions == false>
         <#local labelAreaExceptions = []>
       <#else>
-        <#local labelAreaExceptions = styles[stylesPrefix + "labelareaexceptions"]!"">
+        <#local labelAreaExceptions = styles[stylesPrefix + "labelareaexceptions"]!styles["fields_default_labelareaexceptions"]!"">
       </#if>
     </#if>
     <#if labelAreaExceptions?is_string>
@@ -489,7 +489,7 @@ or even multiple per fieldset.
     </#if>
 
     <#if !labelAreaRequireContent?is_boolean>
-      <#local labelAreaRequireContent = styles[stylesPrefix + "labelarearequirecontent"]!"">
+      <#local labelAreaRequireContent = styles[stylesPrefix + "labelarearequirecontent"]!styles["fields_default_labelarearequirecontent"]!"">
     </#if>
 
     <#return {"type":type, "labelType":labelType, "labelPosition":labelPosition, 

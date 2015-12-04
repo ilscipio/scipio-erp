@@ -390,16 +390,17 @@
   <#-- Fields 
        fields_xxx classes and settings are looked up by the @fields and @field macros as defaults for
        fields type and field type. -->
-    <#-- fields type-based styles -->
+    <#-- fields type-based styles 
+        NOTE: fields_default_xxx is also used as a fallback for the more specialized type for any
+            missing individual definitions (same as menu and table defs) 
+            the other ones simply override them. -->
     "fields_default_labeltype" : "horizontal",
     "fields_default_labelposition" : "left",
     "fields_default_labelarea" : true,
     "fields_default_labelareaexceptions" : "submit submitarea",
     "fields_default_labelarearequirecontent" : false,
-    <#-- TODO:
-    "fields_default_collapse" : true|false|"typenames...",
-    "fields_default_autocollapsedinlinelabel" : true|false|"typenames...", -> "datetime"
-    -->
+    "fields_default_collapse" : false,
+    "fields_default_autocollapsedinlinelabel" : "datetime", <#-- can be true, false, or list of type names -->
 
     "fields_default_nolabels_labeltype" : "none",
     "fields_default_nolabels_labelposition" : "none",

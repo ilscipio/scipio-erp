@@ -398,7 +398,7 @@
     "fields_default_labelarearequirecontent" : false,
     <#-- TODO:
     "fields_default_collapse" : true|false|"typenames...",
-    "fields_default_collapseinlinelabel" : true|false|"typenames...", -> "datetime"
+    "fields_default_autocollapsedinlinelabel" : true|false|"typenames...", -> "datetime"
     -->
 
     "fields_default_nolabels_labeltype" : "none",

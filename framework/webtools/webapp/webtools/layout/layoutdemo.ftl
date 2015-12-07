@@ -645,13 +645,19 @@
           <@field type="datetime" name="date6" inlineLabelArea=true inlineLabel="Date 6" collapsedInlineLabel=true value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" collapse=true />
         </@cell>
       </@row>  
-      <@row>
-        <@cell offset=6 columns=6>      
-          <@field type="submitarea">
-            <@field type="submit" submitType="button" text="Submit" disabled=true />
-          </@field>
+      
+      <@row class="+form-field-row"> <#-- ofbiz widget-like markup -->
+        <@cell>    
+          <@row>
+            <@cell columns=4 offset=4>      
+              <@field type="input" name="input4" label="Input 4" labelArea=true />
+            </@cell>
+            <@cell columns=4 last=true>      
+              <@field type="submit" submitType="link" text="Submit" href=false onClick="alert('submitted!');" />
+            </@cell>
+          </@row>   
         </@cell>
-      </@row>          
+      </@row>      
     </@fields>
     </@form>
   </@section>

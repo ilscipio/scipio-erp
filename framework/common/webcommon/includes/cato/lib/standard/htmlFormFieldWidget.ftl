@@ -748,7 +748,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 
 <#-- field markup - theme override -->
 <#macro field_reset_markup_widget class="" alert="" name="" text="" fieldTitleBlank=false inlineLabel=false extraArgs...>
-  <input type="reset"<@fieldClassAttribStr class=class alert=alert />name="${name}"<#if text?has_content> value="${text}"</#if>/>
+  <input type="reset"<@fieldClassAttribStr class=class alert=alert /> name="${name}"<#if text?has_content> value="${text}"</#if>/>
 </#macro>
 
 <#-- migrated from @renderSubmitField form widget macro 
@@ -790,7 +790,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
         <#if disabled>
           <#local href = "javascript:void(0)">
         </#if>
-        <a<@fieldClassAttribStr class=class alert=alert />href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if><#if id?has_content> id="${id}"</#if>><#if text?has_content>${text}</#if></a>
+        <a<@fieldClassAttribStr class=class alert=alert /> href="<#if href?has_content>${href}<#elseif formName?has_content>javascript:document.${formName}.submit()<#else>javascript:void(0)</#if>"<#if disabled> disabled="disabled"<#else><#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content> onclick="return confirm('${confirmation?js_string}');"</#if></#if><#if id?has_content> id="${id}"</#if>><#if text?has_content>${text}</#if></a>
       <#elseif buttonType == "image">
         <input type="<#if inputType?has_content>${inputType}<#else>image</#if>" src="${imgSrc}"<@fieldClassAttribStr class=class alert=alert /><#if name?has_content> name="${name}"</#if><#if id?has_content> id="${id}"</#if>
         <#if description?has_content> alt="${description}"</#if>

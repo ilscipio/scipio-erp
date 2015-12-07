@@ -994,6 +994,12 @@ public class ModelFormField {
             super(fieldSource, FieldInfo.CHECK, modelFormField);
             this.allChecked = FlexibleStringExpander.getInstance("");
         }
+        
+        // Cato: Allow adding options to check fields
+        public CheckField(int fieldSource, ModelFormField modelFormField, List<OptionSource> optionSourceList) {
+            super(fieldSource, FieldInfo.CHECK, optionSourceList);
+            this.allChecked = FlexibleStringExpander.getInstance("");
+        }
 
         public CheckField(ModelFormField modelFormField) {
             super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.CHECK, modelFormField);

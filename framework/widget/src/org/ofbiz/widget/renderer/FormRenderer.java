@@ -48,10 +48,10 @@ import org.ofbiz.widget.model.ModelForm;
 import org.ofbiz.widget.model.ModelForm.FieldGroup;
 import org.ofbiz.widget.model.ModelForm.FieldGroupBase;
 import org.ofbiz.widget.model.ModelFormField;
-import org.ofbiz.widget.model.ModelFormField.CheckField;
+import org.ofbiz.widget.model.ModelFormField.OptionSource;
+import org.ofbiz.widget.model.ModelFormField.SingleOption;
 import org.ofbiz.widget.model.ModelFormFieldBuilder;
 import org.ofbiz.widget.model.ModelGrid;
-import org.python.modules.newmodule;
 
 /**
  * A form rendering engine.
@@ -407,13 +407,13 @@ public class FormRenderer {
             // Cato: Add an extra column to hold a checkbox for form lists that use an independent row submit. This checkbox will determine which row must be submitted.
             if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
             	ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+            	ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null);
             	builder.setFieldName("checkbox" +  modelForm.getItemIndexSeparator() + modelForm.getName());
             	builder.setName("checkbox" +  modelForm.getItemIndexSeparator() + "selectAction");
             	builder.setModelForm(modelForm);
             	builder.setTitle("Select");
-            	ModelFormField checkboxFormField = builder.build();
-//            	formStringRenderer.renderCheckField(writer, context, new CheckField(modelFormField));
-            	innerDisplayHyperlinkFieldsEnd.add(checkboxFormField);
+            	builder.setFieldInfo(checkField);
+            	innerDisplayHyperlinkFieldsEnd.add(builder.build());            	
             	numOfColumns++;
             }
 
@@ -589,24 +589,21 @@ public class FormRenderer {
             }
         }
 
-        if (modelForm.getGroupColumns()) {
-        	
+        if (modelForm.getGroupColumns()) {        	
         	// Cato: Add an extra column to hold a checkbox for form lists that use an independent row submit. This checkbox will determine which row must be submitted.
             if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
             	ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+            	List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
+            	optionSources.add(new SingleOption("Y", " ", null));
+            	ModelFormField.FieldInfoWithOptions checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);
             	builder.setFieldName("checkbox" +  modelForm.getItemIndexSeparator() + modelForm.getName());
             	builder.setName("checkbox" +  modelForm.getItemIndexSeparator() + "selectAction");
             	builder.setModelForm(modelForm);
             	builder.setTitle("Select");
-            	builder.setFieldType("check");
-            	builder.setFieldInfo(new CheckField(builder.build()));
-            	ModelFormField checkFieldForm = builder.build();            	
-            	
-//            	formStringRenderer.renderCheckField(writer, context, new CheckField(modelFormField));
-            	innerDisplayHyperlinkFieldsEnd.add(checkFieldForm);
+            	builder.setFieldInfo(checkField);
+            	innerDisplayHyperlinkFieldsEnd.add(builder.build());            	
             	numOfColumns++;
             }
-        	
         	
             // do the first part of display and hyperlink fields
             Iterator<ModelFormField> innerDisplayHyperlinkFieldIter = innerDisplayHyperlinkFieldsBegin.iterator();
@@ -699,13 +696,6 @@ public class FormRenderer {
                 }
                 formStringRenderer.renderFormatItemRowCellClose(writer, localContext, modelForm, modelFormField);
             }
-            
-            // Cato: Add an extra column to hold a checkbox for form lists that use an independent row submit. This checkbox will determine which row must be submitted.
-//            if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
-//            	formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm);
-//            	
-//            	formStringRenderer.renderFormatItemRowFormCellClose(writer, localContext, modelForm);
-//            }
         } else {
             // do all of the hidden fields...
             this.renderHiddenIgnoredFields(writer, localContext, formStringRenderer, hiddenIgnoredFieldList);

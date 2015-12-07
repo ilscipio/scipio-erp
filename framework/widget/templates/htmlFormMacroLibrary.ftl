@@ -366,6 +366,8 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#local htmlFormRenderFieldInfo = { "attribs":attribs }>
   <#local dummy = setRequestVar("htmlFormRenderFieldInfo", htmlFormRenderFieldInfo)> <#-- unset in renderFormatFieldRowWidgetCellClose -->
   <#global renderFormatFieldRowTitleCellOpened = true>
+  <#global renderFieldTitleCurrentTitle = "">
+  <#global renderFieldTitleCurrentTitleDetail = "">
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false fieldType="" fieldTitleBlank=false>
   <#global renderFormatFieldRowTitleCellOpened = false>
@@ -424,6 +426,7 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#if !isActionField>
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3<#if isLarge> ${styles.grid_large!}2</#if></#if> ${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}">
         <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label" for="<#if id?has_content>${id}<#else>${name!}</#if>">${renderFieldTitleCurrentTitle!} <@renderAsterisksCommon requiredField=requiredField requiredStyle=requiredStyle /></#if><#if collapse></span><#else></label></#if>
+        ${renderFieldTitleCurrentTitleDetail!}
       </div>
   </#if>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
@@ -443,8 +446,8 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#local dummy = setRequestVar("htmlFormRenderFieldInfo", {})>
 </#macro>
 
-
-<#macro renderFormatEmptySpace>&nbsp;</#macro>
+<#-- Cato: only render empty space if not running within title open section -->
+<#macro renderFormatEmptySpace><#if (renderFormatFieldRowTitleCellOpened!false) != true>&nbsp;<#else><#global renderFieldTitleCurrentTitle = "&nbsp;"></#if></#macro>
 
 <#macro renderTextFindField name value defaultOption opEquals opBeginsWith opContains opIsEmpty opNotEqual className alert size maxlength autocomplete titleStyle hideIgnoreCase ignCase ignoreCase title="" fieldType="" fieldTitleBlank=false>
   <#-- delegate to cato libs -->
@@ -546,8 +549,18 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 </#macro>
 
 <#macro renderHyperlinkTitle name title showSelectAll="N">
-  <#if title?has_content>${title}<br /></#if>
-  <#if showSelectAll="Y"><input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, '${name}');"/></#if>
+  <#-- Cato: only render immediately if not falling within title open/close -->
+  <#local titleDetail>
+    <#if showSelectAll="Y"><input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, '${name}');"/></#if>
+  </#local>
+  <#if (renderFormatFieldRowTitleCellOpened!false) != true>
+    <#if title?has_content>${title}<br /></#if>
+    ${titleDetail}
+  <#else>
+    <#--<#global renderFieldTitleCurrentTitle = content>-->
+    <#global renderFieldTitleCurrentTitle = title>
+    <#global renderFieldTitleCurrentTitleDetail = titleDetail>
+  </#if>
 </#macro>
 
 <#macro renderSortField style title linkUrl ajaxEnabled tooltip="">

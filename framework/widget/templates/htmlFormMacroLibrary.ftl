@@ -346,8 +346,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#macro renderFormatFieldRowOpen collapse=false style="" positions="">
   <#global renderFormatFieldRow_gridUsed = 0>
   <@row openOnly=true class="+form-field-row" />
-    <#local rowCellClasses><#if style?has_content>${style}<#else>${styles.grid_large!}12</#if></#local>
-    <@cell openOnly=true class=rowCellClasses />
+    <@cell openOnly=true class=style />
       <@row openOnly=true collapse=collapse />
 </#macro>
 <#macro renderFormatFieldRowClose>

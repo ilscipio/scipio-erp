@@ -28,7 +28,7 @@ under the License.
               <form method="post" action="<@ofbizUrl>forgotPassword${previousParams!}</@ofbizUrl>" name="forgotpassword">
                <@row>
                 <@cell class="auth-plain">
-                  <@row collapse=true class="prefix-radius">
+                  <@row collapse=true class="+prefix-radius">
                     <@cell columns=3>
                       <span class="prefix">${uiLabelMap.CommonUsername}</span>
                     </@cell>

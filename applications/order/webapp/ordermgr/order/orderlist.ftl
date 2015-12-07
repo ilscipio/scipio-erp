@@ -41,7 +41,7 @@ under the License.
         <input type="hidden" name="changeStatusAndTypeState" value="Y" />
        <@row>
         <@cell>
-          <@row class="prefix-radius">
+          <@row class="+prefix-radius">
             <@cell columns=3>
               ${uiLabelMap.CommonStatus}
             </@cell>
@@ -63,7 +63,7 @@ under the License.
       </@row>
       <@row>
         <@cell>
-          <@row class="prefix-radius">
+          <@row class="+prefix-radius">
             <@cell columns=3>
               <span class="">${uiLabelMap.CommonType}</span>
             </@cell>
@@ -80,7 +80,7 @@ under the License.
        </@row>
        <@row>
         <@cell>
-          <@row class="prefix-radius">
+          <@row class="+prefix-radius">
             <@cell columns=3>
               <span class="">${uiLabelMap.CommonFilter}</span>
             </@cell>
@@ -99,7 +99,7 @@ under the License.
        </@row>
        <@row>
         <@cell>
-          <@row class="prefix-radius">
+          <@row class="+prefix-radius">
             <@cell columns=3>
               <span class="">${uiLabelMap.CommonFilter} (${uiLabelMap.OrderFilterPOs})</span>
             </@cell>
@@ -121,7 +121,7 @@ under the License.
        </@row>
        <@row>
         <@cell>
-          <@row class="prefix-radius">
+          <@row class="+prefix-radius">
             <@cell>
               <input type="submit" value="${uiLabelMap.CommonFind}" class="${styles.link_action!}"/>
             </@cell>

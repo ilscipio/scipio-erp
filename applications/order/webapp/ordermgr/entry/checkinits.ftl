@@ -74,18 +74,12 @@ under the License.
         <#else>
           <#assign thisPartyId = requestParameters.partyId!>
         </#if>
-        <@row collapse=false>
-            <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2"><label for="userLoginId_sales">${uiLabelMap.CommonUserLoginId}</label></@cell>
-            <@cell class="${styles.grid_small!}9 ${styles.grid_large!}10">
-              <@htmlTemplate.lookupField value="${parameters.userLogin.userLoginId}" formName="salesentryform" name="userLoginId" id="userLoginId_sales" fieldFormName="LookupUserLoginAndPartyDetails"/>
-            </@cell>
-        </@row>
-        <@row collapse=false>
-            <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2"><label for="partyId">${uiLabelMap.OrderCustomer}</label></@cell>
-            <@cell class="${styles.grid_small!}9 ${styles.grid_large!}10">
-              <@htmlTemplate.lookupField value='${thisPartyId!}' formName="salesentryform" name="partyId" id="partyId" fieldFormName="LookupCustomerName"/>
-            </@cell>
-        </@row>
+        <@field type="generic" label="${uiLabelMap.CommonUserLoginId}" id="userLoginId_sales">
+            <@htmlTemplate.lookupField value="${parameters.userLogin.userLoginId}" formName="salesentryform" name="userLoginId" id="userLoginId_sales" fieldFormName="LookupUserLoginAndPartyDetails"/>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.OrderCustomer}" id="partyId">
+            <@htmlTemplate.lookupField value='${thisPartyId!}' formName="salesentryform" name="partyId" id="partyId" fieldFormName="LookupCustomerName"/>
+        </@field>
       </form>
     </@section>
   </#if>
@@ -120,12 +114,9 @@ under the License.
                 </#if>
             </#list>
         </@field>
-        <@row collapse=false>
-            <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2"><label for="userLoginId_purchase">${uiLabelMap.CommonUserLoginId}</label></@cell>
-            <@cell class="${styles.grid_small!}9 ${styles.grid_large!}10">
-              <@htmlTemplate.lookupField value='${parameters.userLogin.userLoginId}'formName="poentryform" name="userLoginId" id="userLoginId_purchase" fieldFormName="LookupUserLoginAndPartyDetails"/>
-            </@cell>
-        </@row>
+        <@field type="generic" label="${uiLabelMap.CommonUserLoginId}" id="userLoginId_purchase">
+            <@htmlTemplate.lookupField value='${parameters.userLogin.userLoginId}'formName="poentryform" name="userLoginId" id="userLoginId_purchase" fieldFormName="LookupUserLoginAndPartyDetails"/>
+        </@field>
         <@field type="select" label="${uiLabelMap.PartySupplier}" name="supplierPartyId">
             <option value="">${uiLabelMap.OrderSelectSupplier}</option>
             <#list suppliers as supplier>

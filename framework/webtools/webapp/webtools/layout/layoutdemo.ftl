@@ -404,7 +404,7 @@
       </@cell>
     </@row>
     <@row>
-      <@cell class="${styles.grid_large}9">
+      <@cell columns=9>
         In a cell
       </@cell>
     </@row>

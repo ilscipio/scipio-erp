@@ -112,12 +112,9 @@ under the License.
 
 
                          <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderDesiredDeliveryDate}" name="itemDesiredDeliveryDate" value="${value!}" size="25" maxlength="30" id="additem_itemDesiredDeliveryDate" />
-                         <@row>
-                         <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2"></@cell>
-                         <@cell class="${styles.grid_small!}9 ${styles.grid_large!}10">
+                         <@field type="generic">
                             <input type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true"<#if useAsDefaultDesiredDeliveryDate??> checked="checked"</#if>/>&nbsp;${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}
-                         </@cell>
-                         </@row>
+                         </@field>
                           
                          <#--<@field type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true" checked=(useAsDefaultDesiredDeliveryDate??) label="${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}"/>-->
 
@@ -135,12 +132,9 @@ under the License.
                           </@field>
                 </#if>
 
-                    <@row>
-                         <@cell class="${styles.grid_small!}3 ${styles.grid_large!}2"></@cell>
-                         <@cell class="${styles.grid_small!}9 ${styles.grid_large!}10">
-                          <input type="checkbox" name="useAsDefaultComment" value="true" <#if useAsDefaultComment??>checked="checked"</#if> />&nbsp;${uiLabelMap.OrderUseDefaultComment}
-                         </@cell>
-                    </@row>
+                    <@field type="generic">
+                        <input type="checkbox" name="useAsDefaultComment" value="true" <#if useAsDefaultComment??>checked="checked"</#if> />&nbsp;${uiLabelMap.OrderUseDefaultComment}
+                    </@field>
                     <@field type="input" size="25" name="itemComment" value="${defaultComment!}" label="${uiLabelMap.CommonComment}"/>
 
                     <@field type="submitarea">

@@ -28,13 +28,14 @@ under the License.
   </form>
   <form method="post" action="<@ofbizUrl>setAdditionalParty</@ofbizUrl>" name="quickAddPartyForm">
 
-  <#macro partyCheckRow label labelForId>
+  <#assign defaultFieldGridStyles = getDefaultFieldGridStyles({"labelArea":true, "postfix":false})>
+  <#macro partyCheckRow label id>
     <@row>
-      <@cell small=3 class="+${styles.text_right}">
+      <@cell class=addClassArg(defaultFieldGridStyles.labelArea, "${styles.text_right!}")>
         <#nested>
       </@cell>
-      <@cell small=9>
-        <label for="${labelForId}">${label}</label>
+      <@cell class=defaultFieldGridStyles.widgetArea>
+        <label for="${id}">${label}</label>
       </@cell>
     </@row>
   </#macro>
@@ -42,15 +43,15 @@ under the License.
     <@section>
       <@heading>1) ${uiLabelMap.OrderSelectPartyToOrder}</@heading>
 
-      <@partyCheckRow label="${uiLabelMap.CommonPerson}" labelForId="additionalPartyType_Person">
+      <@partyCheckRow label="${uiLabelMap.CommonPerson}" id="additionalPartyType_Person">
         <input type="radio" id="additionalPartyType_Person" name="additionalPartyType" value="Person" onclick="<#if additionalPartyType??>javascript:document.quickAddPartyForm.additionalPartyId.value='';</#if>document.quickAddPartyForm.submit()"<#if (additionalPartyType?? && additionalPartyType == "Person")> checked="checked"</#if> />
       </@partyCheckRow>
 
-      <@partyCheckRow label="${uiLabelMap.CommonGroup}" labelForId="additionalPartyType_Group">
+      <@partyCheckRow label="${uiLabelMap.CommonGroup}" id="additionalPartyType_Group">
         <input type="radio" id="additionalPartyType_Group" name="additionalPartyType" value="Group" onclick="<#if additionalPartyType??>javascript:document.quickAddPartyForm.additionalPartyId.value='';</#if>document.quickAddPartyForm.submit()"<#if additionalPartyType?? && additionalPartyType == "Group"> checked="checked"</#if> />
       </@partyCheckRow>
 
-      <@partyCheckRow label="${uiLabelMap.OrderPartyDontWish}" labelForId="additionalPartyType_None">
+      <@partyCheckRow label="${uiLabelMap.OrderPartyDontWish}" id="additionalPartyType_None">
         <input type="radio" id="additionalPartyType_None" name="additionalPartyType" value="None" onclick="<#if additionalPartyType??>javascript:document.quickAddPartyForm.additionalPartyId.value='';</#if>document.quickAddPartyForm.submit()"<#if !additionalPartyType??> checked="checked"</#if> />
       </@partyCheckRow>
     </@section>

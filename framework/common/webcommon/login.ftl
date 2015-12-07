@@ -28,6 +28,7 @@ under the License.
 </#if>
 
 <@row>
+<#-- NOTE: login_wrap contains grid size -->
 <@cell class="${styles.grid_large!}centered ${styles.login_wrap!}" last=true id="login">
   <div id="login-box-title" class="${styles.login_header!}">
     <@heading level=1>${logo} ${uiLabelMap.CommonLogin!}</@heading>

@@ -71,6 +71,9 @@ under the License.
 <#macro renderFormatHeaderRowFormCellClose></#macro>
 <#macro renderFormatHeaderRowFormCellTitleSeparator style isLast></#macro>
 
+<#macro renderFormatFooterRowOpen style></#macro>
+<#macro renderFormatFooterRowClose></#macro>
+
 <#macro renderFormatItemRowOpen formName itemIndex altRowStyles evenRowStyle oddRowStyle></#macro>
 <#macro renderFormatItemRowClose formName>
 

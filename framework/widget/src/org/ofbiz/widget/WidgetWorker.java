@@ -299,6 +299,27 @@ public final class WidgetWorker {
         writer.append("</form>");
     }
     
+	// Cato: Renders a javascript to force only one checkbox to be toggled for list form types
+	public static void renderSelectActionScript(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+		writer.append("<script type=\"text/javascript\">\r\n");
+		writer.append("jQuery(document).ready(function() {\r\n");
+		writer.append("\tvar mainForm = $(\"form[name=" + modelForm.getName() + "]\");\r\n");
+		writer.append("\tif (mainForm) {\r\n");
+		writer.append("\t\tvar selectActions = $(\"mainForm[name^=selectAction]\");\r\n");
+		writer.append("\t\t$(selectActions).click(function(e) {\r\n");
+		writer.append("\t\te.preventDefault();\r\n");
+		writer.append("\t\t$(selectActions).prop(\"checked\", false);\r\n");
+		writer.append("\t\t$(e).prop(\"checked\", true);\r\n");
+		writer.append("\t\tconsole.log(\"element ======> \" + $(e).attr(\"name\") + \"   value =======> \" + $(e).val());\r\n");		
+		writer.append("\t\t});\r\n");
+		writer.append("\t} else {\r\n");
+		writer.append("\t\treturn false;\r\n");
+		writer.append("\t}\r\n");
+		writer.append("});\r\n");
+		writer.append("</script>\r\n");
+
+	}
+    
     // Cato: Creates a form that gets populated with the corresponding fields of the row being submitted and then submits it.
 	public static void makeHiddenFormSubmitForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap,
 			HttpServletRequest request, HttpServletResponse response, ModelForm modelForm, Map<String, Object> context) throws IOException {
@@ -489,4 +510,6 @@ public final class WidgetWorker {
         Delegator delegator = (Delegator) context.get("delegator");
         return delegator;
     }
+
+	
 }

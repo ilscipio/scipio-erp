@@ -67,6 +67,10 @@ public interface FormStringRenderer {
     public void renderFormatHeaderRowFormCellOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatHeaderRowFormCellClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatHeaderRowFormCellTitleSeparator(Appendable writer, Map<String, Object> context, ModelForm modelForm, ModelFormField modelFormField, boolean isLast) throws IOException;
+    
+    // Cato: Table footer
+    public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
+    public void renderFormatFooterRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
 
     public void renderFormatItemRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatItemRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;

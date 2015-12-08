@@ -310,6 +310,16 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#if style?has_content><span class="${style}"></#if> - <#if style?has_content></span></#if>
 </#macro>
 
+<#macro renderFormatFooterRowOpen style>
+<#-- Cato: TODO: translate all tfoot/td/th/td/etc to @thead openOnly/closeOnly/etc... -->
+<tfoot>
+  <tr class="<#if style?has_content>${style}<#else>header-row</#if>">
+</#macro>
+<#macro renderFormatFooterRowClose>
+  </tr>
+  </tfoot>
+</#macro>
+
 <#macro renderFormatItemRowOpen formName itemIndex altRowStyles evenRowStyle oddRowStyle>
   <#-- Cato: translate stock "alternate-row" odd-row-style to odd+even -->
   <#local oddRowStyleSet = splitStyleNamesToSet(oddRowStyle)>

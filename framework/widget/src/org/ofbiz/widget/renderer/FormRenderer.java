@@ -407,12 +407,12 @@ public class FormRenderer {
             // Cato: Add an extra column to hold a checkbox for form lists that use an independent row submit. This checkbox will determine which row must be submitted.
             if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
             	ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-            	ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null);
-            	builder.setFieldName("checkbox" +  modelForm.getItemIndexSeparator() + modelForm.getName());
-            	builder.setName("checkbox" +  modelForm.getItemIndexSeparator() + "selectAction");
+            	ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(FieldInfo.DISPLAY, null);
+            	builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
+            	builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
             	builder.setModelForm(modelForm);
             	builder.setTitle("Select");
-            	builder.setFieldInfo(checkField);
+            	builder.setFieldInfo(displayField);
             	innerDisplayHyperlinkFieldsEnd.add(builder.build());            	
             	numOfColumns++;
             }
@@ -589,15 +589,15 @@ public class FormRenderer {
             }
         }
 
-        if (modelForm.getGroupColumns()) {        	
+        if (modelForm.getGroupColumns()) {
         	// Cato: Add an extra column to hold a checkbox for form lists that use an independent row submit. This checkbox will determine which row must be submitted.
             if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
             	ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
             	List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
             	optionSources.add(new SingleOption("Y", " ", null));
-            	ModelFormField.FieldInfoWithOptions checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);
-            	builder.setFieldName("checkbox" +  modelForm.getItemIndexSeparator() + modelForm.getName());
-            	builder.setName("checkbox" +  modelForm.getItemIndexSeparator() + "selectAction");
+            	ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);
+            	builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
+            	builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
             	builder.setModelForm(modelForm);
             	builder.setTitle("Select");
             	builder.setFieldInfo(checkField);
@@ -1026,6 +1026,7 @@ public class FormRenderer {
         
         private boolean wrapperOpened = false;
         private boolean headerRendered = false;
+        private boolean footerRendered = false;
         private boolean alternateTextRendered = false;
         private boolean wrapperClosed = false;
         
@@ -1126,6 +1127,28 @@ public class FormRenderer {
             }
         }
 
+		public void renderTableFooter() throws IOException {
+			// Cato: Renders the submit button in the tfoot
+			if (UtilValidate.isNotEmpty(modelForm.getMultiSubmitFields()) && wrapperOpened && !footerRendered) {
+				Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
+				formStringRenderer.renderFormatFooterRowOpen(writer, context, modelForm);
+				int i = 1;
+				while (submitFields.hasNext()) {
+					ModelFormField submitField = submitFields.next();
+					if (submitField != null && submitField.shouldUse(context)) {
+						if (modelForm.getUseRowSubmit()) {
+							formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, submitField, numOfColumns - i);
+							submitField.renderFieldString(writer, context, formStringRenderer);
+							formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
+						}
+					}
+					i++;
+				}
+				formStringRenderer.renderFormatFooterRowClose(writer, context, modelForm);
+				footerRendered = true;
+			}
+		}
+
     }
     
     private void renderListFormString(Appendable writer, Map<String, Object> context,
@@ -1146,24 +1169,15 @@ public class FormRenderer {
         // Cato: checks whether the form renders a specific submit button or not, if not renders a hidden form at the end of the list of results
         if (!modelForm.getUseRowSubmit()) {        	
         	formStringRenderer.renderSubmitForm(writer, context, modelForm);
+        } else {
+        	WidgetWorker.renderSelectActionScript(writer, context, modelForm);
         }
         
+        if (modelForm.getUseRowSubmit())
+        	listFormHandler.renderTableFooter();
         
-
-        listFormHandler.renderTableClose();
-        
-        // Cato: 
-        if (modelForm.getUseRowSubmit()) {
-        	Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
-            while (submitFields.hasNext()) {
-                ModelFormField submitField = submitFields.next();
-                if (submitField != null && submitField.shouldUse(context)) {                  
-                    if (modelForm.getUseRowSubmit())
-                    	submitField.renderFieldString(writer, context, this.formStringRenderer);
-                  
-                }
-            }
-        }
+        listFormHandler.renderTableClose();        
+       
         listFormHandler.renderFinalize();
     }
 
@@ -1183,6 +1197,9 @@ public class FormRenderer {
         
         // ===== render the item rows =====
         this.renderItemRows(writer, context, formStringRenderer, false, numOfColumns, listFormHandler);
+        
+        if (modelForm.getUseRowSubmit())        
+        	listFormHandler.renderTableFooter(); 
 
         listFormHandler.renderTableClose();
 

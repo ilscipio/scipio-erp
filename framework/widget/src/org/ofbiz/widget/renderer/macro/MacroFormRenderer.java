@@ -1435,28 +1435,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
 
     public void renderMultiFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         //FIXME copy from HtmlFormRenderer.java (except for the closing form tag itself, that is now converted)
-        Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
-        while (submitFields.hasNext()) {
-            ModelFormField submitField = submitFields.next();
-            if (submitField != null && submitField.shouldUse(context)) {
-                // Threw this in that as a hack to keep the submit button from expanding the first field
-                // Needs a more rugged solution
-                // WARNING: this method (renderMultiFormClose) must be called after the
-                // table that contains the list has been closed (to avoid validation errors) so
-                // we cannot call here the methods renderFormatItemRowCell*: for this reason
-                // they are now commented.
-                // this.renderFormatItemRowCellOpen(writer, context, modelForm, submitField);
-                // this.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
-                // this.renderFormatItemRowCellOpen(writer, context, modelForm, submitField);
-            	// Cato: Render the row submit button only if the use-row-submit flag is set to true
-                if (modelForm.getUseRowSubmit())
-                	submitField.renderFieldString(writer, context, this);
-                // this.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
-            }
-        }
-        
-        // Cato: when the form doesn't use a specific row for the submit button, render it below the main one (one per submit button defined)
-        if (!modelForm.getUseRowSubmit()) {        	
+        if (!modelForm.getUseRowSubmit()) {    
+        	// Cato: when the form doesn't use a specific row for the submit button, render it below the main one (one per submit button defined)
         	this.renderSubmitForm(writer, context, modelForm);
         }
         
@@ -3389,6 +3369,24 @@ public final class MacroFormRenderer implements FormStringRenderer {
 			postMultiFormWriter = writer;
 		}
 		WidgetWorker.makeHiddenFormSubmitForm(postMultiFormWriter, modelForm.getTarget(context, modelForm.getTargetType()), modelForm.getTargetType(), modelForm.getTargetWindow(), parameterMap, request, response, modelForm, context);
-	}	
-	
+	}
+
+	@Override
+	public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+		contextHandler.registerContext(writer, context);
+		String headerStyle = FlexibleStringExpander.expandString(modelForm.getHeaderRowStyle(), context);
+		StringWriter sr = new StringWriter();
+		sr.append("<@renderFormatFooterRowOpen ");
+		sr.append(" style=\"");
+		sr.append(headerStyle);
+		sr.append("\" />");
+		executeMacro(writer, sr.toString());
+	}
+
+	@Override
+	public void renderFormatFooterRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+		StringWriter sr = new StringWriter();
+		sr.append("<@renderFormatFooterRowClose />");
+		executeMacro(writer, sr.toString());
+	}
 }

@@ -32,6 +32,9 @@ def sdf2 = new SimpleDateFormat("EEEE dd/MM/yyyy")
 def sdfTime = new SimpleDateFormat("HH:mm")
 def today = new Date()
 
+// Cato: these used to be approved_0, approved_1, ... use proper array instead (entries initialized to null)
+imageEntries = new Map<String, Object>[limit+1];
+
 for(i in 0..limit){
     def date1 = sdf.format(today-i)
     def date2 = sdf.format(today-i+1)
@@ -64,6 +67,15 @@ for(i in 0..limit){
     }
     def showDate = sdf2.format(today-i)
     
+    imageEntries[i] = [
+      "approved" : productContentAndInfoList,
+      "time" : time,
+      "date" : showDate,
+      "timeStampDate1" : timeStampDate1,
+      "timeStampDate2" : timeStampDate2
+    ];
+    
+    /* Cato: No.
     switch (i) {
         case 0: context.approved_0 = productContentAndInfoList; context.time_0 = time; context.date0 = showDate;
             context.timeStampDate1_0 = timeStampDate1; context.timeStampDate2_0 = timeStampDate2; break;
@@ -94,5 +106,7 @@ for(i in 0..limit){
         case 13: context.approved_13 = productContentAndInfoList; context.time_13 = time; context.date13 = showDate;
             context.timeStampDate1_13 = timeStampDate1; context.timeStampDate2_13 = timeStampDate2; break;
         default: context.error = "error";
-    }
+    } */
 }
+
+context.imageEntries = Arrays.asList(imageEntries);

@@ -358,7 +358,8 @@ It is loosely based on http://metroui.org.ua/tiles.html
                       supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
-    link            = Link URL
+    link            = Link URL around nested content
+                      WARN: can only use if no other links inside nested content
     id              = field id
     color           = (0|1|2|3|4|5|6|7) defaul:0 (empty)   
     icon            = Set icon code (http://zurb.com/playground/foundation-icon-fonts-3)
@@ -377,8 +378,11 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <#local dummy = saveCurrentContainerSizes({"large":12, "medium":12, "small":12})> -->
     <#-- NOTE: dataSizex gets automatically translated to data-sizex (FTL: no dashes allowed in arg names) -->
     <@container class=class id=id dataSizex=dataSizex dataSizey=dataSizey>
-        <#if image?has_content><div class="${styles.tile_image!}" style="background-image: url(${image!})"></div></#if>
         <div class="${styles.tile_content!}">
+            <#-- DEV NOTE: I think the image div belongs INSIDE the tile_content container? -->
+            <#if image?has_content>
+              <div class="${styles.tile_image!}" style="background-image: url(${image!})"></div>
+            </#if>
             <#if link?has_content><a href="${link!}"></#if>
             <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>
             <#local nestedContent><#nested></#local>

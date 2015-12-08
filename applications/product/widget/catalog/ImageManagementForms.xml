@@ -63,7 +63,7 @@ under the License.
         </field>
     </form>
     
-    <form name="ImageGallery" type="single" title="" header-row-style="header-row" default-table-style="${styles.table_basic}" target="ListImageGallery"> 
+    <form name="ImageGallery" type="single" method="get" title="" header-row-style="header-row" default-table-style="${styles.table_basic}" target="ListImageGallery"> 
         <field name="productId" title="${uiLabelMap.ImageManagementChooseProductID}"><lookup target-form-name="LookupProduct"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>

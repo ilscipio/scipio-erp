@@ -96,12 +96,21 @@ The following URI forms are currently interpreted and transformed:
 * label
 ************
 Returns empty string if no label is found
+
+  * Parameters *
+    name            = name of label (required)
+    resource        = optional resource. if label not found in uiLabelMap (preferred), falls
+                      back to lookup in this resource.
+                      usually uiLabelMap preferred but sometimes not worth importing
+                      a whole file for one label. 
 -->
-<#function label value="">
-  <#if value?has_content>
-    <#local var="${uiLabelMap[value]}" />
-    <#if var!=value>
+<#function label name resource="">
+  <#if name?has_content>
+    <#local var=uiLabelMap[name]!"" />
+    <#if var!=name>
       <#return var>
+    <#elseif resource?has_content>
+      <#return getPropertyMsg(resource, name)>
     <#else>
       <#return "">
     </#if>
@@ -116,6 +125,7 @@ Returns empty string if no label is found
 ************
 Gets property or empty string if missing (same behavior as UtilProperties).
 note: the ?string kludge is to get rid of the wrapString wrapper which can break.
+locale-less.
 -->
 <#function getPropertyValue resource name>
   <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name))?string>
@@ -126,11 +136,37 @@ note: the ?string kludge is to get rid of the wrapString wrapper which can break
 * getPropertyValueOrNull
 ************
 Gets property or void if missing (use default operator).
+locale-less.
 -->
 <#function getPropertyValueOrNull resource name>
   <#local value = StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name))?string>
   <#if value?has_content>
     <#return value>
+  </#if>
+</#function>
+
+<#-- 
+*************
+* getPropertyMsg
+************
+Gets property or empty string if missing (same behavior as UtilProperties).
+uses locales. meant for resource bundles / ui labels.
+will use context locale if none specified.
+if msgArgs not specified, property has access to context (occasionally this is used in screens).
+if msgArgs is a sequence, they are passed instead of context to the property.
+-->
+<#function getPropertyMsg resource name specLocale=true msgArgs=false>
+  <#if specLocale?is_boolean>
+    <#if specLocale>
+      <#local specLocale = locale!"">
+    <#else>
+      <#local specLocale = "">
+    </#if>
+  </#if>
+  <#if msgArgs?is_sequence>
+    <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, specLocale))?string>
+  <#else>
+    <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, context, specLocale))?string>
   </#if>
 </#function>
 

@@ -58,6 +58,9 @@
     "switch" : "switch",
     "dropdown" : "dropdown",
     
+  <#-- Lists -->
+    "list_inline" : "inline-list",
+    
   <#-- Menus 
        menu_xxx classes are looked up by the @menu and @menuitem macros as defaults for each menu type. 
        NOTE: currently the disabled/active/selected styles are added in addition to the base styles, 

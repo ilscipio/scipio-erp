@@ -17,52 +17,33 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@table type="generic" cellspacing="0" cellpadding="0" border="0" align="center" width="100%">
-  <#-- FIXME: this whole table -->
-    <#assign imageIndex = 0>
-    <#if productImageList?has_content>
+<#if productImageList?has_content>
         <#if product?has_content>
             <@heading>${product.productId}</@heading>
         </#if>
+  <#-- Cato: NOTE: no need for handling rows when have tiles -->
+  <@grid type="tiles">
         <#-- <#assign productName = productTextData >
         <#assign seoUrl = productName.replaceAll(" ", "-") > -->
         <#list productImageList as productImage>
-            <#if (imageIndex < 5)>
-                <@td style="vertical-align:bottom">
-                    <@table type="fields" cellspacing=""> <#-- orig: class="" -->
-                        <@tbody>
-                            <@tr valign="middle">
-                                <#-- <@td align="center"><a href="/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}" target="_blank"><img src="<@ofbizContentUrl>${(contentDataResourceView.drObjectInfo)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a></@td> -->
-                                <@td align="center"><a href="<@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl>" target="_blank"><img src="<@ofbizContentUrl>${(productImage.productImageThumb)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a></@td>
-                            </@tr>
-                            <@tr valign="middle">
-                                <#-- <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productContentAndInfo.contentId}&amp;dataResourceId=${productContentAndInfo.dataResourceId}&amp;seoUrl=/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}','' ,500,500);" class="${styles.link_action!}">${uiLabelMap.ImageManagementShare}</a></@td> -->
-                                <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productImage.contentId}&amp;dataResourceId=${productImage.dataResourceId}','' ,500,500);" class="${styles.link_action!}">${uiLabelMap.ImageManagementShare}</a></@td>
-                            </@tr>
-                        </@tbody>
-                    </@table>
-                </@td>
-                <#assign imageIndex = imageIndex+1>
-            <#else>
-                <#assign imageIndex = 0>
-                <@tr></@tr>
-                <@td style="vertical-align:bottom">
-                    <@table type="fields" cellspacing=""> <#-- orig: class="" -->
-                        <@tbody>
-                            <@tr valign="middle">
-                                <#-- <@td align="center"><a href="/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}" target="_blank"><img src="<@ofbizContentUrl>${(contentDataResourceView.drObjectInfo)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a></@td> -->
-                                <@td align="center"><a href="<@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl>" target="_blank"><img src="<@ofbizContentUrl>${(productImage.productImageThumb)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a></@td>
-                            </@tr>
-                            <@tr valign="middle">
-                                <#-- <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productContentAndInfo.contentId}&amp;dataResourceId=${productContentAndInfo.dataResourceId}&amp;seoUrl=/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}','' ,500,500);" class="${styles.link_action!}">${uiLabelMap.ImageManagementShare}</a></@td> -->
-                                <@td align="center"><a href="javascript:lookup_popup2('ImageShare?contentId=${productImage.contentId}&amp;dataResourceId=${productImage.dataResourceId}','' ,500,500);" class="${styles.link_action!}">${uiLabelMap.ImageManagementShare}</a></@td>
-                            </@tr>
-                        </@tbody>
-                    </@table>
-                </@td>
-                <#assign imageIndex = imageIndex+1>
-            </#if>
+              <#assign imgLink><@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl></#assign>
+              <#assign thumbSrc><@ofbizContentUrl>${(productImage.productImageThumb)!}</@ofbizContentUrl></#assign>
+              <@tile type="normal" image=thumbSrc overlayColor=styles.gallery_overlay_color!> <#-- can't use this, breaks Share button: link=imgLink so use View button instead -->
+                  <@container class="+${styles.text_center!}">
+                      <#--<a href="/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}" target="_blank"><img src="<@ofbizContentUrl>${(contentDataResourceView.drObjectInfo)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a>
+                      <a href="<@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl>" target="_blank"><img src="<@ofbizContentUrl>${(productImage.productImageThumb)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a>-->
+                      <a href="<@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl>" target="_blank" class="${styles.link_action!}">${uiLabelMap.CommonView}</a>
+                  </@container>
+                  <@container class="+${styles.text_center!}">
+                       <#--<a href="javascript:call_fieldlookup('','<@ofbizUrl>ImageShare?contentId=${productContentAndInfo.contentId}&amp;dataResourceId=${productContentAndInfo.dataResourceId}&amp;seoUrl=/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}</@ofbizUrl>','',${styles.gallery_share_view_width!},${styles.gallery_share_view_height!});" class="${styles.link_action!}">${uiLabelMap.ImageManagementShare}</a>-->
+                       <a href="javascript:call_fieldlookup('','<@ofbizUrl>ImageShare?contentId=${productImage.contentId}&amp;dataResourceId=${productImage.dataResourceId}</@ofbizUrl>','',${styles.gallery_share_view_width!},${styles.gallery_share_view_height!});" class="${styles.link_action!}">${uiLabelMap.ImageManagementShare}</a>
+                  </@container>
+              </@tile>
         </#list>
-    </#if>
-</@table>
+  </@grid>
+<#else>
+  <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+</#if>
+
+
 

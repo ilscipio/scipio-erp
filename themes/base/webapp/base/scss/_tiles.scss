@@ -75,7 +75,8 @@
           z-index: 1000;
           height: 100%;
           transition: all 0.3s ease;
-          background: $primary-color;
+          // This is now specified using tile-color-xxx classes
+          //background: $primary-color;
         }
 
     }
@@ -175,3 +176,5 @@
 .tile-color-5 {background-color:$info-color;}
 .tile-color-6 {background-color:$oil;}
 .tile-color-7 {background-color:$iron;}
+// FIXME: this is a re-hardcoding of $primary-color but adding an alpha. should unhardcode somehow.
+.tile-color-50 {background-color:rgba(0, 140, 186, 0.3);}

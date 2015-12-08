@@ -361,17 +361,19 @@ It is loosely based on http://metroui.org.ua/tiles.html
     link            = Link URL around nested content
                       WARN: can only use if no other links inside nested content
     id              = field id
-    color           = (0|1|2|3|4|5|6|7) defaul:0 (empty)   
+    color           = (0|1|2|3|4|5|6|7|...) default: 0 (primary theme color)
     icon            = Set icon code (http://zurb.com/playground/foundation-icon-fonts-3)
     image           = Set a background image-url (icon won't be shown if not empty)
     overlayType     = [|default|...] overlay type. default supported types (extensible by theme) are:
                       slide-up: this is currently the default.
                       type style is looked up as: styles["type_overlay_" + overlayType?replace("-","_")].
+    overlayColor    = accepts same values as color, and same default          
 -->
-<#macro tile type="normal" title="" class="" id="" link="" color=0 icon="" image="" overlayType="">
+<#macro tile type="normal" title="" class="" id="" link="" color="0" icon="" image="" overlayType="" overlayColor="0">
     <#local class = addClassArg(class, styles.tile_wrap!)>
     <#local class = addClassArg(class, "${styles.tile_wrap!}-${type!}")>
-    <#local class = addClassArg(class, "${styles.tile_color_prefix!}${color!}")>
+    <#local colorClass = "${styles.tile_color_prefix!}${color!}">
+    <#local class = addClassArg(class, colorClass)>
     <#local dataSizex = calcTileSize("x",type)>
     <#local dataSizey = calcTileSize("y",type)>
     <#if !overlayType?has_content || overlayType == "default">
@@ -379,6 +381,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <#else>
       <#local overlayClass = styles["tile_overlay_" + overlayType?replace("-","_")]!styles["tile_overlay_default"]!"">
     </#if>
+    <#local overlayColorClass = "${styles.tile_color_prefix!}${overlayColor!}">
     <#-- TODO: need to calc-convert tile x-size to approximate grid sizes and pass in large-medium-small below,
          OR modify parseContainerSizesFromStyleStr to do it automatically from class string (HOWEVER
          note that parseContainerSizesFromStyleStr would have to call calcTileSize type="x" again, and it's
@@ -394,7 +397,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
             <#if link?has_content><a href="${link!}"></#if>
             <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>
             <#local nestedContent><#nested></#local>
-            <#if nestedContent?has_content><span class="${overlayClass}">${nestedContent}</span></#if>
+            <#if nestedContent?has_content><span class="${overlayClass} ${overlayColorClass}">${nestedContent}</span></#if>
             <#if title?has_content><span class="${styles.tile_title!}">${title!}</span></#if>
             <#if link?has_content></a></#if>
         </div>

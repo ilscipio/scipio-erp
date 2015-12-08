@@ -1360,6 +1360,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         
         // Cato: extra attribs map (json-like)
         String attribs = modelForm.getAttribsExpr().compile(context);
+        
+        // Cato: form method
+        String method = modelForm.getMethod(context);
 
         StringWriter sr = new StringWriter();
         sr.append("<@renderFormOpen ");
@@ -1389,7 +1392,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(Boolean.toString(useRowSubmit));
         sr.append(" attribs=(");
         sr.append(attribs);
-        sr.append(") />");
+        sr.append(") method=\"");
+        sr.append(method);
+        sr.append("\" />");
+        
         executeMacro(writer, sr.toString());
     }
 

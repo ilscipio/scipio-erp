@@ -215,6 +215,12 @@ public abstract class ModelForm extends ModelWidget {
      */
     private final AttribsExpression attribsExpr;
     
+    
+    /**
+     * Cato: the <form> get or post method! somehow missing from stock defs.
+     */
+    private final FlexibleStringExpander method;
+    
     /** XML Constructor */
     protected ModelForm(Element formElement, String formLocation, ModelReader entityModelReader, DispatchContext dispatchContext, String defaultType) {
         super(formElement);
@@ -456,6 +462,17 @@ public abstract class ModelForm extends ModelWidget {
         // Cato: extra attribs map
         String attribsExprStr = formElement.getAttribute("attribs");
         this.attribsExpr = AttribsExpression.makeAttribsExpr(attribsExprStr, (parentModel != null ? parentModel.attribsExpr : null));
+        
+        // Cato: form submit method
+        FlexibleStringExpander method = FlexibleStringExpander.getInstance(formElement.getAttribute("method"));
+        if (method.isEmpty()) {
+            if (parentModel != null) {
+                method = parentModel.method;
+            } else {
+                method = FlexibleStringExpander.getInstance("post");
+            }
+        }
+        this.method = method;
         
         String clientAutocompleteFields = formElement.getAttribute("client-autocomplete-fields");
         if (clientAutocompleteFields.isEmpty() && parentModel != null) {
@@ -1691,6 +1708,10 @@ public abstract class ModelForm extends ModelWidget {
     
     public AttribsExpression getAttribsExpr() {
         return attribsExpr;
+    }
+    
+    public String getMethod(Map<String, Object> context) {
+        return method.expandString(context);
     }
     
     public static class AltRowStyle {

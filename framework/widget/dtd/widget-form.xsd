@@ -357,6 +357,19 @@ under the License.
                       </xs:documentation>
                 </xs:annotation>
             </xs:attribute>
+            <xs:attribute name="method">
+                <xs:annotation>
+                    <xs:documentation>Cato: Essential setting to control whether form is a post or get action. 
+                      Implied default is "post".
+                      Only meaningful for widget form types with submit forms generated.</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:token">
+                        <xs:enumeration value="post" />
+                        <xs:enumeration value="get" />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
         </xs:complexType>
     </xs:element>
     <xs:element name="grid">

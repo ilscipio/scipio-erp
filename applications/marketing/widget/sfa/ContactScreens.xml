@@ -103,21 +103,28 @@ under the License.
                         <screenlet title="${uiLabelMap.SfaMergeContacts}">
                             <include-form name="MergeContacts" location="component://marketing/widget/sfa/forms/ContactForms.xml"/>
                         </screenlet>
-                        <screenlet title="${uiLabelMap.SfaMergeContacts}">
-                            <section>
-                                <condition>
-                                    <if-compare-field field="parameters.partyIdFrom" operator="not-equals" to-field="parameters.partyIdTo"/>
-                                </condition>
-                                <widgets>
-                                    <platform-specific>
-                                        <html><html-template location="component://marketing/webapp/sfa/contact/mergeContacts.ftl"/></html>
-                                    </platform-specific>
-                                </widgets>
-                                <fail-widgets>
-                                    <label text="${uiLabelMap.SfaCanNotMergeSameContact}" ></label>
-                                </fail-widgets>
-                            </section>
-                        </screenlet>
+                        <section>
+                            <condition>
+                                <if-compare-field field="parameters.partyIdFrom" operator="not-equals" to-field="parameters.partyIdTo"/>
+                            </condition>
+                            <widgets>
+                                <section>
+                                    <condition>
+                                        <not><if-empty field="contactInfoList" /></not>
+                                    </condition>
+                                    <widgets>
+                                        <screenlet title="${uiLabelMap.SfaMergeContacts}">
+                                            <platform-specific>
+                                                <html><html-template location="component://marketing/webapp/sfa/contact/mergeContacts.ftl"/></html>
+                                            </platform-specific>
+                                        </screenlet>
+                                    </widgets>
+                                </section>
+                            </widgets>
+                            <fail-widgets>
+                                <label text="${uiLabelMap.SfaCanNotMergeSameContact}"></label>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

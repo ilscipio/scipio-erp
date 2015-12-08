@@ -123,7 +123,7 @@ under the License.
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.MarketingManagerApplication}">
-                            <container><label style="label" text="${uiLabelMap.MarketingManagerWelcome}"/></container>
+                            <container><label style="p" text="${uiLabelMap.MarketingManagerWelcome}"/></container>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

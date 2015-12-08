@@ -337,11 +337,14 @@
   <#-- Tile -->
     "tile_container" : "tile-container",
     "tile_wrap" : "tile",
-    "tile_color" : "tile-color-",
+    "tile_color_prefix" : "tile-color-",
     "tile_content" : "tile-content",
     "tile_icon" : "tile-icon",
     "tile_title" : "tile-title",
-    "tile_overlay" : "tile-overlay",
+    <#-- default overlay styles -->
+    "tile_overlay_default" : "tile-overlay-slide-up",    
+    <#-- styles for specific overlay types (extensible by theme) -->
+    "tile_overlay_slide_up" : "tile-overlay-slide-up",
     "tile_image" : "tile-image",
 
   <#-- Breadcrumbs -->

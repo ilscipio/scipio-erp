@@ -10018,7 +10018,7 @@ div.scrollable-table-container > table {
   background-clip: padding-box;
 }
 /* line 67, ../scss/_tiles.scss */
-.tile .tile-content .tile-overlay {
+.tile .tile-content .tile-overlay-slide-up {
   width: 100%;
   height: inherit;
   display: block;
@@ -10031,7 +10031,7 @@ div.scrollable-table-container > table {
   transition: all 0.3s ease;
   background: #008cba;
 }
-/* line 82, ../scss/_tiles.scss */
+/* line 83, ../scss/_tiles.scss */
 .tile .tile-image {
   background-color: #ffffff;
   display: block;
@@ -10041,32 +10041,32 @@ div.scrollable-table-container > table {
   background-repeat: no-repeat;
   transition: all 0.6s ease;
 }
-/* line 93, ../scss/_tiles.scss */
+/* line 94, ../scss/_tiles.scss */
 .tile a, .tile a:active, .tile a:visited {
   color: #fff;
 }
-/* line 96, ../scss/_tiles.scss */
+/* line 97, ../scss/_tiles.scss */
 .tile:hover {
   outline: #999999 solid 3px;
 }
-/* line 99, ../scss/_tiles.scss */
-.tile:hover .tile-overlay {
+/* line 100, ../scss/_tiles.scss */
+.tile:hover .tile-overlay-slide-up {
   top: 0;
   transition: all 0.3s ease;
 }
-/* line 104, ../scss/_tiles.scss */
+/* line 105, ../scss/_tiles.scss */
 .tile:hover .tile-image {
   -webkit-transform: scale(1.5);
   transform: scale(1.5);
   transition: all 0.6s ease;
 }
 
-/* line 114, ../scss/_tiles.scss */
+/* line 115, ../scss/_tiles.scss */
 .tile-small {
   width: 70px;
   height: 70px;
 }
-/* line 119, ../scss/_tiles.scss */
+/* line 120, ../scss/_tiles.scss */
 .tile-small .tile-content .tile-icon {
   width: 32px;
   height: 32px;
@@ -10075,24 +10075,24 @@ div.scrollable-table-container > table {
   margin-left: -16px;
 }
 
-/* line 129, ../scss/_tiles.scss */
+/* line 130, ../scss/_tiles.scss */
 .tile-normal {
   width: 150px;
   height: 150px;
 }
 
-/* line 130, ../scss/_tiles.scss */
+/* line 131, ../scss/_tiles.scss */
 .tile-wide {
   width: 310px;
   height: 150px;
 }
 
-/* line 131, ../scss/_tiles.scss */
+/* line 132, ../scss/_tiles.scss */
 .tile-large {
   width: 310px;
   height: 310px;
 }
-/* line 133, ../scss/_tiles.scss */
+/* line 134, ../scss/_tiles.scss */
 .tile-large .tile-content .tile-icon {
   width: 128px;
   height: 128px;
@@ -10101,12 +10101,12 @@ div.scrollable-table-container > table {
   margin-left: -64px;
 }
 
-/* line 143, ../scss/_tiles.scss */
+/* line 144, ../scss/_tiles.scss */
 .tile-big {
   width: 470px;
   height: 470px;
 }
-/* line 145, ../scss/_tiles.scss */
+/* line 146, ../scss/_tiles.scss */
 .tile-big .tile-content .tile-icon {
   width: 172px;
   height: 172px;
@@ -10115,12 +10115,12 @@ div.scrollable-table-container > table {
   margin-left: -96px;
 }
 
-/* line 155, ../scss/_tiles.scss */
+/* line 156, ../scss/_tiles.scss */
 .tile-super {
   width: 630px;
   height: 630px;
 }
-/* line 157, ../scss/_tiles.scss */
+/* line 158, ../scss/_tiles.scss */
 .tile-super .tile-content .tile-icon {
   width: 256px;
   height: 256px;
@@ -10129,42 +10129,42 @@ div.scrollable-table-container > table {
   margin-left: -128px;
 }
 
-/* line 169, ../scss/_tiles.scss */
+/* line 170, ../scss/_tiles.scss */
 .tile-color-0 {
   background-color: #008cba;
 }
 
-/* line 170, ../scss/_tiles.scss */
+/* line 171, ../scss/_tiles.scss */
 .tile-color-1 {
   background-color: #e7e7e7;
 }
 
-/* line 171, ../scss/_tiles.scss */
+/* line 172, ../scss/_tiles.scss */
 .tile-color-2 {
   background-color: #f04124;
 }
 
-/* line 172, ../scss/_tiles.scss */
+/* line 173, ../scss/_tiles.scss */
 .tile-color-3 {
   background-color: #43ac6a;
 }
 
-/* line 173, ../scss/_tiles.scss */
+/* line 174, ../scss/_tiles.scss */
 .tile-color-4 {
   background-color: #f08a24;
 }
 
-/* line 174, ../scss/_tiles.scss */
+/* line 175, ../scss/_tiles.scss */
 .tile-color-5 {
   background-color: #a0d3e8;
 }
 
-/* line 175, ../scss/_tiles.scss */
+/* line 176, ../scss/_tiles.scss */
 .tile-color-6 {
   background-color: #333333;
 }
 
-/* line 176, ../scss/_tiles.scss */
+/* line 177, ../scss/_tiles.scss */
 .tile-color-7 {
   background-color: #cccccc;
 }

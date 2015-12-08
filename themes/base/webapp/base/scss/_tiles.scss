@@ -63,8 +63,8 @@
             -webkit-background-clip: padding-box;
             background-clip: padding-box;
         }
-        
-        .tile-overlay {
+  
+        .tile-overlay-slide-up {
           width: 100%;
           height: inherit;
           display: block;
@@ -77,6 +77,7 @@
           transition: all 0.3s ease;
           background: $primary-color;
         }
+
     }
     
     .tile-image{
@@ -95,13 +96,13 @@
     
     &:hover {
         outline: #999999 solid 3px;
-        
-        .tile-overlay{
+ 
+        .tile-overlay-slide-up {
                 top: 0;
                 transition: all 0.3s ease;
-              }
+              }   
               
-        .tile-image{
+        .tile-image {
             -webkit-transform: scale(1.5);
             transform: scale(1.5);
             transition: all 0.6s ease;

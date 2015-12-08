@@ -28,7 +28,8 @@ under the License.
         <#list productImageList as productImage>
               <#assign imgLink><@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl></#assign>
               <#assign thumbSrc><@ofbizContentUrl>${(productImage.productImageThumb)!}</@ofbizContentUrl></#assign>
-              <@tile type="normal" image=thumbSrc overlayColor=styles.gallery_overlay_color!> <#-- can't use this, breaks Share button: link=imgLink so use View button instead -->
+              <@tile type="normal" image=thumbSrc overlayColor=styles.gallery_overlay_color!
+                  overlayType=styles.gallery_overlay_type! imageType=styles.gallery_image_type!> <#-- can't use this, breaks Share button: link=imgLink so use View button instead -->
                   <@container class="+${styles.text_center!}">
                       <#--<a href="/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}" target="_blank"><img src="<@ofbizContentUrl>${(contentDataResourceView.drObjectInfo)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a>
                       <a href="<@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl>" target="_blank"><img src="<@ofbizContentUrl>${(productImage.productImageThumb)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a>-->

@@ -364,12 +364,16 @@ It is loosely based on http://metroui.org.ua/tiles.html
     color           = [none|0|1|2|3|4|5|6|7|...] default: 0 (primary theme color). "none" prevents color class.
     icon            = Set icon code (http://zurb.com/playground/foundation-icon-fonts-3)
     image           = Set a background image-url (icon won't be shown if not empty)
+    imageType       = [|default|...] image type for styling. default supported types (extensible by theme) are:
+                      cover: this is currently the default. fills tile.
+                      contain: show whole image in tile.
+                      type style is looked up as: styles["type_image_" + imageType?replace("-","_")].
     overlayType     = [|default|...] overlay type. default supported types (extensible by theme) are:
                       slide-up: this is currently the default.
                       type style is looked up as: styles["type_overlay_" + overlayType?replace("-","_")].
     overlayColor    = [none|0|1|2|3|4|5|6|7|...] default: 0 (primary theme color). "none" prevents color class.
 -->
-<#macro tile type="normal" title="" class="" id="" link="" color="0" icon="" image="" overlayType="" overlayColor="0">
+<#macro tile type="normal" title="" class="" id="" link="" color="0" icon="" image="" imageType="" overlayType="" overlayColor="0" imageSizeMode="">
     <#local class = addClassArg(class, styles.tile_wrap!)>
     <#local class = addClassArg(class, "${styles.tile_wrap!}-${type!}")>
     <#local color = color?string>
@@ -392,6 +396,11 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <#else>
       <#local overlayColorClass = "">
     </#if>
+    <#if !imageType?has_content || imageType == "default">
+      <#local imageClass = styles["tile_image_default"]!"">
+    <#else>
+      <#local imageClass = styles["tile_image_" + imageType?replace("-","_")]!styles["tile_image_default"]!"">
+    </#if>
     <#-- TODO: need to calc-convert tile x-size to approximate grid sizes and pass in large-medium-small below,
          OR modify parseContainerSizesFromStyleStr to do it automatically from class string (HOWEVER
          note that parseContainerSizesFromStyleStr would have to call calcTileSize type="x" again, and it's
@@ -402,7 +411,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
         <div class="${styles.tile_content!}">
             <#-- DEV NOTE: I think the image div belongs INSIDE the tile_content container? -->
             <#if image?has_content>
-              <div class="${styles.tile_image!}" style="background-image: url(${image!})"></div>
+              <div class="${imageClass}" style="background-image: url(${image!});"></div>
             </#if>
             <#if link?has_content><a href="${link!}"></#if>
             <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>

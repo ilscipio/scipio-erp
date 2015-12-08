@@ -381,8 +381,8 @@ It is loosely based on http://metroui.org.ua/tiles.html
         <div class="${styles.tile_content!}">
             <#if link?has_content><a href="${link!}"></#if>
             <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>
-            <#local nested><#nested></#local>
-            <#if nested?has_content><span class="${styles.tile_overlay!}"><#nested></span></#if>
+            <#local nestedContent><#nested></#local>
+            <#if nestedContent?has_content><span class="${styles.tile_overlay!}">${nestedContent}</span></#if>
             <#if title?has_content><span class="${styles.tile_title!}">${title!}</span></#if>
             <#if link?has_content></a></#if>
         </div>

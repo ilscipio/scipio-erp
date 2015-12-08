@@ -352,7 +352,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
     </@tile>
                     
   * Parameters *
-    type            = [small|normal|wide|large|big|super] (default:normal)
+    type            = [small|normal|wide|large|big|super]. default: normal.
     title           = Title
     class           = css classes 
                       supports prefixes:
@@ -361,18 +361,23 @@ It is loosely based on http://metroui.org.ua/tiles.html
     link            = Link URL around nested content
                       WARN: can only use if no other links inside nested content
     id              = field id
-    color           = (0|1|2|3|4|5|6|7|...) default: 0 (primary theme color)
+    color           = [none|0|1|2|3|4|5|6|7|...] default: 0 (primary theme color). "none" prevents color class.
     icon            = Set icon code (http://zurb.com/playground/foundation-icon-fonts-3)
     image           = Set a background image-url (icon won't be shown if not empty)
     overlayType     = [|default|...] overlay type. default supported types (extensible by theme) are:
                       slide-up: this is currently the default.
                       type style is looked up as: styles["type_overlay_" + overlayType?replace("-","_")].
-    overlayColor    = accepts same values as color, and same default          
+    overlayColor    = [none|0|1|2|3|4|5|6|7|...] default: 0 (primary theme color). "none" prevents color class.
 -->
 <#macro tile type="normal" title="" class="" id="" link="" color="0" icon="" image="" overlayType="" overlayColor="0">
     <#local class = addClassArg(class, styles.tile_wrap!)>
     <#local class = addClassArg(class, "${styles.tile_wrap!}-${type!}")>
-    <#local colorClass = "${styles.tile_color_prefix!}${color!}">
+    <#local color = color?string>
+    <#if color?has_content && color != "none">
+      <#local colorClass = "${styles.tile_color_prefix!}${color!}">
+    <#else>
+      <#local colorClass = "">
+    </#if>
     <#local class = addClassArg(class, colorClass)>
     <#local dataSizex = calcTileSize("x",type)>
     <#local dataSizey = calcTileSize("y",type)>
@@ -381,7 +386,12 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <#else>
       <#local overlayClass = styles["tile_overlay_" + overlayType?replace("-","_")]!styles["tile_overlay_default"]!"">
     </#if>
-    <#local overlayColorClass = "${styles.tile_color_prefix!}${overlayColor!}">
+    <#local overlayColor = overlayColor?string>
+    <#if overlayColor?has_content && overlayColor != "none">
+      <#local overlayColorClass = "${styles.tile_color_prefix!}${overlayColor!}">
+    <#else>
+      <#local overlayColorClass = "">
+    </#if>
     <#-- TODO: need to calc-convert tile x-size to approximate grid sizes and pass in large-medium-small below,
          OR modify parseContainerSizesFromStyleStr to do it automatically from class string (HOWEVER
          note that parseContainerSizesFromStyleStr would have to call calcTileSize type="x" again, and it's

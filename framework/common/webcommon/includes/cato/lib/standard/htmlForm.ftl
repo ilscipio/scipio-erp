@@ -559,6 +559,44 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 
 <#-- 
 *************
+* mapOfbizFieldTypeToCatoFieldType
+************ 
+Maps an Ofbiz field type to a Cato field type.
+
+Should be coordinated with mapCatoFieldTypeToStyleName to produce common field type style names.
+-->
+<#function mapOfbizFieldTypeToCatoFieldType fieldType>
+  <#if !ofbizFieldTypeToCatoFieldTypeMap??>
+    <#global ofbizFieldTypeToCatoFieldTypeMap = {
+        "display": "display",
+        "hyperlink": "hyperlink",
+        "text": "input",
+        "textarea": "textarea",
+        "date-time": "datetime",
+        "drop-down": "select",
+        "check": "checkbox",
+        "radio": "radio",
+        "submit": "submit",
+        "reset": "reset",
+        "hidden": "hidden",
+        "ignored": "ignored",
+        "text-find": "textfind",
+        "date-find": "datefind",
+        "range-find": "rangefind",
+        "lookup": "lookup",
+        "file": "file",
+        "password": "password",
+        "image": "image",
+        "display-entity": "displayentity",
+        "container": "container",
+        "default": "other"
+    }>
+  </#if>
+  <#return ofbizFieldTypeToCatoFieldTypeMap[fieldType]!ofbizFieldTypeToCatoFieldTypeMap["default"]!"">
+</#function>
+
+<#-- 
+*************
 * Field
 ************ 
 A form field input widget with optional label and post-input (postfix) content.

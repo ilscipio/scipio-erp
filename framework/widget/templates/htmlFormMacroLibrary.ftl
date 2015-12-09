@@ -438,22 +438,12 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3<#if isLarge> ${styles.grid_large!}2</#if></#if> ${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}">
-        <#local label = (renderFieldTitleCurrentTitle!"")?trim>
-        <#local labelDetail = (renderFieldTitleCurrentTitleDetail!"")?trim>
-        <#if label?has_content>
-          <#if collapse>
-            <span class="prefix form-field-label">${label} <@renderAsterisksCommon requiredField=requiredField requiredStyle=requiredStyle /></span>
-          <#else>
-            <label class="form-field-label" for="<#if id?has_content>${id}<#else>${name!}</#if>">${label} <@renderAsterisksCommon requiredField=requiredField requiredStyle=requiredStyle /></label>
-          </#if>
-        <#else>
-          <@renderAsterisksCommon requiredField=requiredField requiredStyle=requiredStyle />
-        </#if>
-        <#if labelDetail?has_content>${labelDetail}</#if>
-        <#-- FIXME?: nbsp workaround is to prevent a foundation "bug" where empty cells sometimes go to zero width -->
-        <#if !label?has_content && !labelDetail?has_content>
-          &nbsp;
-        </#if>
+        <@field_markup_labelarea label=renderFieldTitleCurrentTitle!"" labelDetail=renderFieldTitleCurrentTitleDetail!"" 
+          required=renderAsterisksIsRequired(requiredField, requiredStyle) 
+          collapse=false fieldId=id!""
+          labelType="horizontal" labelPosition="left" 
+          fieldType=mapOfbizFieldTypeToCatoFieldType(fieldType)
+          origArgs={} />
       </div>
   </#if>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
@@ -608,6 +598,11 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 <#macro renderAsterisksCommon requiredField requiredStyle>
   <#if requiredField?string == "true"><#if !requiredStyle?has_content><span class="form-field-input-asterisk">*</span></#if></#if>
 </#macro>
+
+<#-- Cato: function to isolate this if-required logic -->
+<#function renderAsterisksIsRequired requiredField requiredStyle>
+  <#return requiredField?string == "true" && !requiredStyle?has_content>
+</#function>
 
 <#macro renderAsterisks requiredField requiredStyle>
   <#-- Cato: don't run this here anymore; see widget cell open

@@ -153,7 +153,7 @@ under the License.
             <#--<@th width="10%">${uiLabelMap.OrderOrderName}</@th>-->
             <#--<@th width="10%">${uiLabelMap.OrderOrderType}</@th>-->
             <#--<@th width="10%">${uiLabelMap.OrderOrderBillFromParty}</@th>-->
-            <@th width="10%">${uiLabelMap.OrderOrderBillToParty}</@th>
+            <@th width="30%">${uiLabelMap.OrderOrderBillToParty}</@th>
             <@th width="15%">${uiLabelMap.OrderProductStore}</@th>
             <@th width="8%">${uiLabelMap.CommonAmount}</@th>
             <#if state.hasFilter('filterInventoryProblems') || state.hasFilter('filterAuthProblems') || state.hasFilter('filterPOsOpenPastTheirETA') || state.hasFilter('filterPOsWithRejectedItems') || state.hasFilter('filterPartiallyReceivedPOs')>

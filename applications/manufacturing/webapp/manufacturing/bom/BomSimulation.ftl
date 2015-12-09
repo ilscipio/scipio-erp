@@ -36,7 +36,8 @@ under the License.
          <p>${selectedFeature.productFeatureTypeId} = ${selectedFeature.description!} [${selectedFeature.productFeatureId}]</p>
        </#list>
      </#if>
-
+    <@section title=label("ContentTree", "ContentUiLabels")>
+    <#if tree?has_content>
       <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
        <@thead>
         <@tr class="header-row">
@@ -48,30 +49,30 @@ under the License.
           <@th width="10%" align="right">&nbsp;</@th>
         </@tr>
         </@thead>
-        <#if tree?has_content>
+        <@tbody>
           <#list tree as node>
             <@tr valign="middle">
               <@td>
-              <@table type="generic" cellspacing="1"> <#-- orig: class="" -->
-              <@tr>
-              <@td>${node.depth}</@td>
-              <#list 0..(node.depth) as level>
-              <@td bgcolor="red">&nbsp;&nbsp;</@td>
-              </#list>
-              </@tr>
-              </@table>
+                <@table type="generic" cellspacing="1"> <#-- orig: class="" -->
+                  <@tr>
+                    <@td>${node.depth}</@td>
+                  <#list 0..(node.depth) as level>
+                    <@td bgcolor="red">&nbsp;&nbsp;</@td>
+                  </#list>
+                  </@tr>
+                </@table>
               </@td>
               <@td>
-              <@table type="generic" cellspacing="1"> <#-- orig: class="" -->
-              <@tr>
-              <#list 0..(node.depth) as level>
-              <@td>&nbsp;&nbsp;</@td>
-              </#list>
-              <@td>
-                ${node.product.productId}
-              </@td>
-              </@tr>
-              </@table>
+                <@table type="generic" cellspacing="1"> <#-- orig: class="" -->
+                  <@tr>
+                  <#list 0..(node.depth) as level>
+                    <@td>&nbsp;&nbsp;</@td>
+                  </#list>
+                    <@td>
+                      ${node.product.productId}
+                    </@td>
+                  </@tr>
+                </@table>
               </@td>
               <@td>
                 <#if node.product.isVirtual?default("N") == "Y">
@@ -84,13 +85,15 @@ under the License.
               <@td align="right"><a href="<@ofbizUrl>EditProductBom?productId=${(node.product.productId)!}&amp;productAssocTypeId=${(node.bomTypeId)!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonEdit}</a></@td>
             </@tr>
           </#list>
-        <#else>
-            <@tr type="meta">
-              <@td colspan="6"><@resultMsg>${uiLabelMap.CommonNoElementFound}.</@resultMsg></@td>
-            </@tr>
-        </#if>
+        </@tbody>
       </@table>
+    <#else>
+      <@resultMsg>${uiLabelMap.CommonNoElementFound}.</@resultMsg>
+    </#if>
+    </@section>
     
+    <@section title="${uiLabelMap.ProductProducts}">
+    <#if productsData?has_content>
       <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
        <@thead>
         <@tr class="header-row">
@@ -103,7 +106,7 @@ under the License.
           <@th width="6%" align="right">${uiLabelMap.CommonTotalCost}</@th>
         </@tr>
         </@thead>
-        <#if productsData?has_content>
+        <@tbody>
           <#list productsData as productData>
             <#assign node = productData.node>
             <@tr valign="middle">
@@ -120,18 +123,21 @@ under the License.
               <@td align="right">${productData.totalCost!}</@td>
             </@tr>
           </#list>
-          <#--
+        </@tbody>
+        <#--
+        <@tfoot>
           <#if grandTotalCost??>
           <@tr>
             <@td colspan="6" align="right">${grandTotalCost}</@td>
           </@tr>
           </#if>
-          -->
-        <#else>
-          <@tr type="meta">
-            <@td colspan="6"><@resultMsg>${uiLabelMap.CommonNoElementFound}.</@resultMsg></@td>
-          </@tr>
-        </#if>
+        </@tfoot>
+        -->
       </@table>
+    <#else>
+      <@resultMsg>${uiLabelMap.CommonNoElementFound}.</@resultMsg>
+    </#if>
+    </@section>
+
   </@section>
 </#if>

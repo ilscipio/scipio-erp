@@ -19,53 +19,30 @@ under the License.
 
 <form id="addMultipleImagesForm" name="addMultipleImagesForm" method="post" action="<@ofbizUrl>addImageForProduct</@ofbizUrl>" enctype="multipart/form-data">
 
-<p>${uiLabelMap.ProductProductId} <@htmlTemplate.lookupField name="productId" id="productId" formName="addMultipleImagesForm" fieldFormName="LookupProduct"/></p>
+  <p>${uiLabelMap.ProductProductId} <@htmlTemplate.lookupField name="productId" id="productId" formName="addMultipleImagesForm" fieldFormName="LookupProduct"/></p>
 
-  <@table type="generic">
-    <@tbody>
-      <@tr>
-        <@td>
-            <select name="imageResize">
-                <#list productFeatures as productFeature>
-                    <option value="${productFeature.abbrev!}">${productFeature.description!}</option>
-                </#list>
-                <option selected="" value="">Do not resize</option>
-            </select>
-        </@td>
-      </@tr>
-      <@tr>
-        <@td><input type="file" size="20" name="additionalImageOne"/></@td>
-      </@tr>
-      <@tr>
-        <@td><input type="file" size="20" name="additionalImageTwo"/></@td>
-      </@tr>
-      <@tr>
-        <@td><input type="file" size="20" name="additionalImageThree"/></@td>
-      </@tr>
-      <@tr>
-        <@td><input type="file" size="20" name="additionalImageFour"/></@td>
-      </@tr>
-      <@tr>
-        <@td><input type="file" size="20" name="additionalImageFive"/></@td>
-      </@tr>
-      <@tr>
-        <@td><input type="file" size="20" name="additionalImageSix"/></@td>
-      </@tr>
-      <@tr>
-        <@td><input type="file" size="20" name="additionalImageSeven"/></@td>
-      </@tr>
-      <@tr>
-        <@td><input type="file" size="20" name="additionalImageEight"/></@td>
-      </@tr>
-      <@tr>
-        <@td><input type="file" size="20" name="additionalImageNine"/></@td>
-      </@tr>
-      <@tr>
-        <@td><input type="file" size="20" name="additionalImageTen"/></@td>
-      </@tr>
-      <@tr>
-        <@td><input type="submit" value='${uiLabelMap.CommonUpload}'/></@td>
-      </@tr>
-    </@tbody>
-  </@table>
+  <@fields type="default-nolabels">
+    <@field type="generic">
+      <select name="imageResize">
+          <#list productFeatures as productFeature>
+              <option value="${productFeature.abbrev!}">${productFeature.description!}</option>
+          </#list>
+          <option selected="" value="">Do not resize</option>
+      </select>
+    </@field>
+    <#macro imageField name>
+      <@field type="generic"><input type="file" size="20" name="${name}"/></@field>
+    </#macro>
+    <@imageField name="additionalImageOne" />
+    <@imageField name="additionalImageTwo" />
+    <@imageField name="additionalImageThree" />
+    <@imageField name="additionalImageFour" />
+    <@imageField name="additionalImageFive" />
+    <@imageField name="additionalImageSix" />
+    <@imageField name="additionalImageSeven" />
+    <@imageField name="additionalImageEight" />
+    <@imageField name="additionalImageNine" />
+    <@imageField name="additionalImageTen" />
+    <@field type="submit" text='${uiLabelMap.CommonUpload}'/>
+  </@fields>
 </form>

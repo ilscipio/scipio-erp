@@ -562,8 +562,6 @@ Should be coordinated with mapCatoFieldTypeToStyleName to produce common field t
 * mapOfbizFieldTypeToCatoFieldType
 ************ 
 Maps an Ofbiz field type to a Cato field type.
-
-Should be coordinated with mapCatoFieldTypeToStyleName to produce common field type style names.
 -->
 <#function mapOfbizFieldTypeToCatoFieldType fieldType>
   <#if !ofbizFieldTypeToCatoFieldTypeMap??>

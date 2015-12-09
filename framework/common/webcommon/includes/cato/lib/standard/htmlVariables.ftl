@@ -228,16 +228,16 @@
                                          of the link types (link_id, link_desc, etc.) and is more appropriate as those. when it designates
                                          a single record, usually more appropriate as one of the other types. -->
     "link_longnav" : "",            <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
-    "link_id" : "button tiny",      <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
-    "link_longid" : "button tiny",  <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
-    "link_name" : "button tiny",    <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
+    "link_id" : "",      <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
+    "link_longid" : "",  <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
+    "link_name" : "",    <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
     "link_longname" : "",           <#-- the long name of a record: "Mr. Title The Ambassador of Germany", etc. -->
-    "link_idname" : "button tiny",  <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
+    "link_idname" : "",  <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
     "link_longidname" : "",         <#-- long combination of IDs and names: "Mr. John Alberton Smith Junior (ID: 10000) (Group: 20000)" -->
     "link_desc" : "",               <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. 
                                          in general, as soon as a non-action link text contains more than one type of value, and not idname, it should be changed to link_desc.
                                          however, if it contains a specific action(s), it may be more appropriate as link_longaction. -->
-    "link_date" : "button tiny",    <#-- the date of a record (fromDate, thruDate, etc.) -->
+    "link_date" : "",    <#-- the date of a record (fromDate, thruDate, etc.) -->
     "link_number" : "",             <#-- the number of a record (index, sequence num, etc.) -->
     "link_url" : "",                <#-- link containing a URL as its text -->
     "link_value" : "",              <#-- link containing a value of type not previously listed (or cannot be known statically) -->

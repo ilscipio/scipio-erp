@@ -173,6 +173,8 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#-- </label><#t/> -->
 </#if>
   <#global renderFieldTitleCurrentTitle = title>
+  <#global renderFieldTitleCurrentForId = for>
+  <#global renderFieldTitleCurrentFieldHelpText = fieldHelpText>
 </#macro>
 
 <#macro renderSingleFormFieldTitle></#macro>
@@ -381,6 +383,8 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#global renderFormatFieldRowTitleCellOpened = true>
   <#global renderFieldTitleCurrentTitle = "">
   <#global renderFieldTitleCurrentTitleDetail = "">
+  <#global renderFieldTitleCurrentForId = "">
+  <#global renderFieldTitleCurrentFieldHelpText = "">
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false fieldType="" fieldTitleBlank=false>
   <#global renderFormatFieldRowTitleCellOpened = false>
@@ -438,9 +442,12 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3<#if isLarge> ${styles.grid_large!}2</#if></#if> ${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}">
+        <#-- TODO: currently not making use of:
+          renderFieldTitleCurrentFieldHelpText
+        -->
         <@field_markup_labelarea label=renderFieldTitleCurrentTitle!"" labelDetail=renderFieldTitleCurrentTitleDetail!"" 
           required=renderAsterisksIsRequired(requiredField, requiredStyle) 
-          collapse=false fieldId=id!""
+          collapse=false fieldId=renderFieldTitleCurrentForId!""
           labelType="horizontal" labelPosition="left" 
           fieldType=mapOfbizFieldTypeToCatoFieldType(fieldType)
           origArgs={} />

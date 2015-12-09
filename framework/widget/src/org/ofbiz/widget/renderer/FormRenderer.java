@@ -326,8 +326,6 @@ public class FormRenderer {
         Collection<List<ModelFormField>> fieldListsByPosition = this.getFieldListsByPosition(tempFieldList);
         List<Map<String, List<ModelFormField>>> fieldRowsByPosition = new LinkedList<Map<String, List<ModelFormField>>>(); // this list will contain maps, each one containing the list of fields for a position
         for (List<ModelFormField> mainFieldList : fieldListsByPosition) {
-            int numOfColumns = 0;
-
             List<ModelFormField> innerDisplayHyperlinkFieldsBegin = new LinkedList<ModelFormField>();
             List<ModelFormField> innerFormFields = new LinkedList<ModelFormField>();
             List<ModelFormField> innerDisplayHyperlinkFieldsEnd = new LinkedList<ModelFormField>();
@@ -377,7 +375,7 @@ public class FormRenderer {
                 } else {
                     innerDisplayHyperlinkFieldsEnd.add(modelFormField);
                 }
-                numOfColumns++;
+
             }
 
             // prepare the combined title for the column that will contain the form/input fields
@@ -400,9 +398,13 @@ public class FormRenderer {
 
                 innerFormFields.add(modelFormField);
             }
-            if (innerFormFields.size() > 0) {
-                numOfColumns++;
-            }
+
+            if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsBegin))
+            	maxNumOfColumns += innerDisplayHyperlinkFieldsBegin.size();
+            if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsEnd))
+            	maxNumOfColumns += innerDisplayHyperlinkFieldsEnd.size();
+            if (UtilValidate.isNotEmpty(innerFormFields))
+            	maxNumOfColumns += innerFormFields.size();
             
             // Cato: Add an extra column to hold a checkbox for form lists that use an independent row submit. This checkbox will determine which row must be submitted.
             if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
@@ -414,11 +416,7 @@ public class FormRenderer {
             	builder.setTitle("Select");
             	builder.setFieldInfo(displayField);
             	innerDisplayHyperlinkFieldsEnd.add(builder.build());            	
-            	numOfColumns++;
-            }
-
-            if (maxNumOfColumns < numOfColumns) {
-                maxNumOfColumns = numOfColumns;
+            	maxNumOfColumns++;
             }
 
             Map<String, List<ModelFormField>> fieldRow = UtilMisc.toMap("displayBefore", innerDisplayHyperlinkFieldsBegin,
@@ -1132,7 +1130,7 @@ public class FormRenderer {
 			if (UtilValidate.isNotEmpty(modelForm.getMultiSubmitFields()) && wrapperOpened && !footerRendered) {
 				Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
 				formStringRenderer.renderFormatFooterRowOpen(writer, context, modelForm);
-				int i = 1;
+				int i = 0;
 				while (submitFields.hasNext()) {
 					ModelFormField submitField = submitFields.next();
 					if (submitField != null && submitField.shouldUse(context)) {
@@ -1170,7 +1168,7 @@ public class FormRenderer {
         if (!modelForm.getUseRowSubmit()) {        	
         	formStringRenderer.renderSubmitForm(writer, context, modelForm);
         } else {
-        	WidgetWorker.renderSelectActionScript(writer, context, modelForm);
+        	formStringRenderer.renderSubmitFormForRowSubmit(writer, context, modelForm);
         }
         
         if (modelForm.getUseRowSubmit())

@@ -316,7 +316,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#macro renderFormatFooterRowOpen style>
 <#-- Cato: TODO: translate all tfoot/td/th/td/etc to @thead openOnly/closeOnly/etc... -->
 <tfoot>
-  <tr class="<#if style?has_content>${style}<#else>header-row</#if>">
+  <tr class="<#if style?has_content>${style}<#else>footer-row</#if>">
 </#macro>
 <#macro renderFormatFooterRowClose>
   </tr>

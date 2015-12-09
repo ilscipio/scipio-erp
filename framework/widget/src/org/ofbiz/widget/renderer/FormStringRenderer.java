@@ -55,6 +55,7 @@ public interface FormStringRenderer {
     
     //Cato: 
     public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
+    public void renderSubmitFormForRowSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
 
     public void renderFormatListWrapperOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;
     public void renderFormatListWrapperClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException;

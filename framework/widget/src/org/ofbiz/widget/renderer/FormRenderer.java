@@ -593,7 +593,7 @@ public class FormRenderer {
             	ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
             	List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
             	optionSources.add(new SingleOption("Y", " ", null));
-            	ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);
+            	ModelFormField.RadioField checkField = new ModelFormField.RadioField(FieldInfo.RADIO, null, optionSources);
             	builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
             	builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
             	builder.setModelForm(modelForm);
@@ -1164,17 +1164,17 @@ public class FormRenderer {
         // ===== render the item rows =====
         this.renderItemRows(writer, context, formStringRenderer, true, numOfColumns, listFormHandler);
         
+        if (modelForm.getUseRowSubmit())
+        	listFormHandler.renderTableFooter();
+        
+        listFormHandler.renderTableClose();
+        
         // Cato: checks whether the form renders a specific submit button or not, if not renders a hidden form at the end of the list of results
         if (!modelForm.getUseRowSubmit()) {        	
         	formStringRenderer.renderSubmitForm(writer, context, modelForm);
         } else {
         	formStringRenderer.renderSubmitFormForRowSubmit(writer, context, modelForm);
         }
-        
-        if (modelForm.getUseRowSubmit())
-        	listFormHandler.renderTableFooter();
-        
-        listFormHandler.renderTableClose();        
        
         listFormHandler.renderFinalize();
     }

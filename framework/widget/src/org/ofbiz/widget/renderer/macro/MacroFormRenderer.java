@@ -3342,6 +3342,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }
+    
+    @Override
+	public void renderSubmitFormForRowSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {    	
+		WidgetWorker.makeHiddenFormSubmitFormForRowSubmit(writer, context, modelForm);
+	}
 
 	@Override
 	public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {		
@@ -3395,4 +3400,6 @@ public final class MacroFormRenderer implements FormStringRenderer {
 		sr.append("<@renderFormatFooterRowClose />");
 		executeMacro(writer, sr.toString());
 	}
+
+	
 }

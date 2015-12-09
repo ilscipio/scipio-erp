@@ -3113,6 +3113,11 @@ public class ModelFormField {
         private RadioField(RadioField original, ModelFormField modelFormField) {
             super(original, modelFormField);
         }
+        
+        // Cato: Allow adding options to radio fields
+        public RadioField(int fieldSource, ModelFormField modelFormField, List<OptionSource> optionSourceList) {
+            super(fieldSource, FieldInfo.CHECK, optionSourceList);            
+        }
 
         @Override
         public void accept(ModelFieldVisitor visitor) throws Exception {

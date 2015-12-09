@@ -1358,16 +1358,24 @@ standard markup.
 <#-- @field label area markup - theme override 
     This generates labelContent passed to @field_markup_container. -->
 <#macro field_markup_labelarea origArgs={} labelType="" labelPosition="" label="" labelDetail="" fieldType="" fieldId="" collapse="" required=false extraArgs...>
+  <#local label = label?trim>
   <#if label?has_content>
-    <#if !collapse>
-        <label class="form-field-label"<#if fieldId?has_content> for="${fieldId}"</#if>>${label}<#if required> *</#if></label>
-    <#else>
+    <#if collapse>
         <span class="${styles.prefix!} form-field-label">${label}<#if required> *</#if></span>
+    <#else>
+        <label class="form-field-label"<#if fieldId?has_content> for="${fieldId}"</#if>>${label}<#if required> *</#if></label>
     </#if>  
+  <#else>
+    <#if required>*</#if>
   </#if> 
+  <#local labelDetail = labelDetail?trim>
   <#if labelDetail?has_content>
     ${labelDetail}
   </#if>  
+  <#-- FIXME?: nbsp workaround is to prevent a foundation "bug" where empty cells sometimes go to zero width -->
+  <#if !label?has_content && !labelDetail?has_content>
+    &nbsp;
+  </#if>
 </#macro>
 
 <#-- calculates the default @field grid styles - used unless overridden by @field's caller 

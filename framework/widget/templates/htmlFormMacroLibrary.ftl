@@ -438,8 +438,22 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
       <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3<#if isLarge> ${styles.grid_large!}2</#if></#if> ${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}">
-        <#if collapse><span class="prefix form-field-label"><#else><label class="form-field-label" for="<#if id?has_content>${id}<#else>${name!}</#if>">${renderFieldTitleCurrentTitle!} <@renderAsterisksCommon requiredField=requiredField requiredStyle=requiredStyle /></#if><#if collapse></span><#else></label></#if>
-        ${renderFieldTitleCurrentTitleDetail!}
+        <#local label = (renderFieldTitleCurrentTitle!"")?trim>
+        <#local labelDetail = (renderFieldTitleCurrentTitleDetail!"")?trim>
+        <#if label?has_content>
+          <#if collapse>
+            <span class="prefix form-field-label">${label} <@renderAsterisksCommon requiredField=requiredField requiredStyle=requiredStyle /></span>
+          <#else>
+            <label class="form-field-label" for="<#if id?has_content>${id}<#else>${name!}</#if>">${label} <@renderAsterisksCommon requiredField=requiredField requiredStyle=requiredStyle /></label>
+          </#if>
+        <#else>
+          <@renderAsterisksCommon requiredField=requiredField requiredStyle=requiredStyle />
+        </#if>
+        <#if labelDetail?has_content>${labelDetail}</#if>
+        <#-- FIXME?: nbsp workaround is to prevent a foundation "bug" where empty cells sometimes go to zero width -->
+        <#if !label?has_content && !labelDetail?has_content>
+          &nbsp;
+        </#if>
       </div>
   </#if>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>

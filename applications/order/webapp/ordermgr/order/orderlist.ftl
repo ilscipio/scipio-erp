@@ -148,21 +148,21 @@ under the License.
         <@table type="data-list" autoAltRows=true cellspacing="0">
           <@thead>
           <@tr>
-            <@th>${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>
-            <@th>${uiLabelMap.CommonDate}</@th>
-            <#--<@th>${uiLabelMap.OrderOrderName}</@th>-->
-            <#--<@th>${uiLabelMap.OrderOrderType}</@th>-->
-            <#--<@th>${uiLabelMap.OrderOrderBillFromParty}</@th>-->
-            <@th>${uiLabelMap.OrderOrderBillToParty}</@th>
-            <@th>${uiLabelMap.OrderProductStore}</@th>
-            <@th>${uiLabelMap.CommonAmount}</@th>
+            <@th width="10%">${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>
+            <@th width="15%">${uiLabelMap.CommonDate}</@th>
+            <#--<@th width="10%">${uiLabelMap.OrderOrderName}</@th>-->
+            <#--<@th width="10%">${uiLabelMap.OrderOrderType}</@th>-->
+            <#--<@th width="10%">${uiLabelMap.OrderOrderBillFromParty}</@th>-->
+            <@th width="10%">${uiLabelMap.OrderOrderBillToParty}</@th>
+            <@th width="15%">${uiLabelMap.OrderProductStore}</@th>
+            <@th width="8%">${uiLabelMap.CommonAmount}</@th>
             <#if state.hasFilter('filterInventoryProblems') || state.hasFilter('filterAuthProblems') || state.hasFilter('filterPOsOpenPastTheirETA') || state.hasFilter('filterPOsWithRejectedItems') || state.hasFilter('filterPartiallyReceivedPOs')>
-                <@th>${uiLabelMap.CommonStatus}</@th>
-                <@th>${uiLabelMap.CommonFilter}</@th>
+                <@th width="10%">${uiLabelMap.CommonStatus}</@th>
+                <@th width="5%">${uiLabelMap.CommonFilter}</@th>
             <#else>
-                <@th>${uiLabelMap.CommonStatus}</@th>
+                <@th width="15%">${uiLabelMap.CommonStatus}</@th>
             </#if>
-            <@th>${uiLabelMap.OrderTrackingCode}</@th>
+            <@th width="7%">${uiLabelMap.OrderTrackingCode}</@th>
           </@tr>
           </@thead>
           <#list orderHeaderList as orderHeader>

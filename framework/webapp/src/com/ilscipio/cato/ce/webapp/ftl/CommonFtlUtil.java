@@ -1,4 +1,4 @@
-package com.ilscipio.cato.webapp.ftl;
+package com.ilscipio.cato.ce.webapp.ftl;
 
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
@@ -45,7 +45,7 @@ import freemarker.template.TemplateModelException;
  * where no Freemarker environment is available, in cases where Cato Freemarker additions extend
  * outside of Freemarker (e.g. <code>set/getRequestVar</code>). Those are not facades but simply
  * ensure correctness and calls without Freemarker environment classes needed. See
- * {@link com.ilscipio.cato.webapp.ftl.context.ContextFtlUtil#pushRequestStack} for example.
+ * {@link com.ilscipio.cato.ce.webapp.ftl.context.ContextFtlUtil#pushRequestStack} for example.
  */
 public abstract class CommonFtlUtil {
 

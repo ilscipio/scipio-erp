@@ -16,22 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package com.ilscipio.cato.webapp.ftl.lang;
+package com.ilscipio.cato.ce.webapp.ftl.context;
 
 import java.util.List;
 
+import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
+
+import freemarker.core.Environment;
 import freemarker.template.TemplateMethodModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 
 /**
- * Cato: IsObjectTypeMethod - Freemarker Method to check if variable is strictly a string or map or 
- * variant of, because ?is_string and ?is_hash are not sufficient for widget context vars.
+ * Cato: GetRequestVarMethod - Freemarker Method for getting request-scope variables
+ * with fallback to globals.
+ * <p>
+ * Should only be used to read values set by {@link SetRequestVarMethod}.
  */
-public class IsObjectTypeMethod implements TemplateMethodModelEx {
+public class GetRequestVarMethod implements TemplateMethodModelEx {
 
-    public static final String module = IsObjectTypeMethod.class.getName();
+    public static final String module = GetRequestVarMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -39,13 +44,18 @@ public class IsObjectTypeMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        if (args == null || args.size() != 2) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 2)");
+        if (args == null || args.size() != 1) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 1)");
         }
-        String type = ((TemplateScalarModel) args.get(0)).getAsString();
-        TemplateModel object = (TemplateModel) args.get(1);
+        TemplateModel nameModel = (TemplateModel) args.get(0);
+        if (!(nameModel instanceof TemplateScalarModel)) {
+            throw new TemplateModelException("First argument not an instance of TemplateScalarModel (string)");
+        }
 
-        return OfbizFtlObjectType.isObjectTypeSafe(type, object);
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
+        Object res = ContextFtlUtil.getRequestVar(((TemplateScalarModel) nameModel).getAsString(), env);
+        
+        return res; // NOTE: result gets automatically wrapped by Freemarker on need basis
     }
-    
+
 }

@@ -1,4 +1,4 @@
-package com.ilscipio.cato.webapp.ftl.lang;
+package com.ilscipio.cato.ce.webapp.ftl.lang;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,7 +42,7 @@ import freemarker.template.utility.RichObjectWrapper;
  * where the Ofbiz-specific code is merely a configuration of Freemarker (e.g.
  * selected usage of <code>BeansWrapper</code>).
  *
- * @see com.ilscipio.cato.webapp.ftl.CommonFtlUtil
+ * @see com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil
  */
 public abstract class LangFtlUtil {
 
@@ -258,7 +258,7 @@ public abstract class LangFtlUtil {
     /**
      * Checks if the given model matches the logical FTL object type.
      * 
-     * @see com.ilscipio.cato.webapp.ftl.lang.OfbizFtlObjectType
+     * @see com.ilscipio.cato.ce.webapp.ftl.lang.OfbizFtlObjectType
      */
     public static boolean isObjectType(String ftlTypeName, TemplateModel object) {
         return OfbizFtlObjectType.isObjectTypeSafe(ftlTypeName, object);

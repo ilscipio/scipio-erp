@@ -16,19 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package com.ilscipio.cato.webapp.ftl.context;
+package com.ilscipio.cato.ce.webapp.ftl.lang;
 
 import java.util.List;
 
+import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
+
+import freemarker.core.Environment;
 import freemarker.template.TemplateModelException;
 
 /**
- * Cato: ReadRequestStackMethod - Freemarker Method providing support for a stack
- * structure having request scope, with fallback to globals.
+ * Cato: GlobalsPutAllMethod - Freemarker Method for dumping all values in a map
+ * into FTL globals.
  */
-public class GetRequestStackAsListMethod extends RequestStackMethod {
+public class GlobalsPutAllMethod extends VarsPutAllMethod {
 
-    public static final String module = GetRequestStackAsListMethod.class.getName();
+    public static final String module = GlobalsPutAllMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -36,7 +39,8 @@ public class GetRequestStackAsListMethod extends RequestStackMethod {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        return execGetAsList(args);
+        Environment env = CommonFtlUtil.getCurrentEnvironment();
+        return execPutAll(args, new LangFtlUtil.GlobalFtlVarHandler(env), env);
     }
 
 }

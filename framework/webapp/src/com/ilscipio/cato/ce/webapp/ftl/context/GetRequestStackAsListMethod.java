@@ -16,20 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package com.ilscipio.cato.webapp.ftl.lang;
+package com.ilscipio.cato.ce.webapp.ftl.context;
 
 import java.util.List;
 
-import freemarker.template.TemplateMethodModelEx;
-import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * Cato: MapKeysMethod - Helper method to get the logical map keys for any type of map (?keys or .ketSet()).
+ * Cato: ReadRequestStackMethod - Freemarker Method providing support for a stack
+ * structure having request scope, with fallback to globals.
  */
-public class MapKeysMethod implements TemplateMethodModelEx {
+public class GetRequestStackAsListMethod extends RequestStackMethod {
 
-    public static final String module = MapKeysMethod.class.getName();
+    public static final String module = GetRequestStackAsListMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -37,12 +36,7 @@ public class MapKeysMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        if (args == null || args.size() != 1) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 1)");
-        }
-        TemplateModel object = (TemplateModel) args.get(0);
-        
-        return LangFtlUtil.getMapKeys(object);
+        return execGetAsList(args);
     }
-    
+
 }

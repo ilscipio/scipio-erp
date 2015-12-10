@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package com.ilscipio.cato.webapp.ftl.lang;
+package com.ilscipio.cato.ce.webapp.ftl.lang;
 
 import java.util.List;
 
-import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
+import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.SimpleScalar;

@@ -1,4 +1,4 @@
-package com.ilscipio.cato.webapp.ftl.template;
+package com.ilscipio.cato.ce.webapp.ftl.template;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,9 +22,9 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.webapp.control.RequestHandler;
 
-import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
-import com.ilscipio.cato.webapp.ftl.context.ContextFtlUtil;
-import com.ilscipio.cato.webapp.ftl.lang.LangFtlUtil;
+import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
+import com.ilscipio.cato.ce.webapp.ftl.context.ContextFtlUtil;
+import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateModelException;
@@ -35,14 +35,14 @@ import javolution.util.FastMap;
  * <p>
  * Any theme- or styling-framework-specific code should be placed in a separate package.
  * 
- * @see com.ilscipio.cato.webapp.ftl.CommonFtlUtil
+ * @see com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil
  */
 public abstract class TemplateFtlUtil {
 
     public static final String module = TemplateFtlUtil.class.getName();
     
     private static final UtilCache<String, Map<String, Object>> headingElemSpecFromStyleStrCache = 
-            UtilCache.createUtilCache("com.ilscipio.cato.webapp.ftl.template.TemplateFtlUtil.headingElemSpecFromStyleStrCache");
+            UtilCache.createUtilCache("com.ilscipio.cato.ce.webapp.ftl.template.TemplateFtlUtil.headingElemSpecFromStyleStrCache");
     
     /**
      * Keep this private, implied unmodifiable.

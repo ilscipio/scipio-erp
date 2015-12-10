@@ -1,4 +1,4 @@
-package com.ilscipio.cato.webapp.ftl.context;
+package com.ilscipio.cato.ce.webapp.ftl.context;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +13,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 
-import com.ilscipio.cato.webapp.ftl.lang.LangFtlUtil;
+import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -27,7 +27,7 @@ import freemarker.template.TemplateModelException;
  * <p>
  * Manages request attributes, context vars, and FTL context.
  *
- * @see com.ilscipio.cato.webapp.ftl.CommonFtlUtil
+ * @see com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil
  */
 public abstract class ContextFtlUtil {
 
@@ -300,7 +300,7 @@ public abstract class ContextFtlUtil {
      * Must and should only be used to read values set by {@link setRequestVar}.
      * <p>
      * Return value may or may not be a <code>TemplateModel</code>; caller must wrap or unwrap as needed.
-     * Can use {@link com.ilscipio.cato.webapp.ftl.TransformFtlUtil} <code>unwrapXxx</code> methods.
+     * Can use {@link com.ilscipio.cato.ce.webapp.ftl.TransformFtlUtil} <code>unwrapXxx</code> methods.
      * 
      * @see setRequestVar
      */

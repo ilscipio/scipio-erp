@@ -16,22 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package com.ilscipio.cato.webapp.ftl.lang;
+package com.ilscipio.cato.ce.webapp.ftl.lang;
 
 import java.util.List;
 
-import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
-
-import freemarker.core.Environment;
+import freemarker.template.TemplateMethodModelEx;
+import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * Cato: LocalsPutAllMethod - Freemarker Method for dumping all values in a map
- * into FTL locals.
+ * Cato: MapKeysMethod - Helper method to get the logical map keys for any type of map (?keys or .ketSet()).
  */
-public class LocalsPutAllMethod extends VarsPutAllMethod {
+public class MapKeysMethod implements TemplateMethodModelEx {
 
-    public static final String module = LocalsPutAllMethod.class.getName();
+    public static final String module = MapKeysMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -39,8 +37,12 @@ public class LocalsPutAllMethod extends VarsPutAllMethod {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        Environment env = CommonFtlUtil.getCurrentEnvironment();
-        return execPutAll(args, new LangFtlUtil.LocalFtlVarHandler(env), env);
+        if (args == null || args.size() != 1) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 1)");
+        }
+        TemplateModel object = (TemplateModel) args.get(0);
+        
+        return LangFtlUtil.getMapKeys(object);
     }
-
+    
 }

@@ -2,8 +2,8 @@ import org.ofbiz.base.util.template.FreeMarkerWorker;
 import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateScalarModel;
 import org.ofbiz.base.util.*;
-import com.ilscipio.cato.webapp.ftl.lang.LangFtlUtil;
-import com.ilscipio.cato.webapp.ftl.context.ContextFtlUtil;
+import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
+import com.ilscipio.cato.ce.webapp.ftl.context.ContextFtlUtil;
 
 final module = "getContextCatoStyles.groovy"
 

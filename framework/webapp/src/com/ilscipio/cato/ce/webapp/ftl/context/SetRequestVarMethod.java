@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  *******************************************************************************/
-package com.ilscipio.cato.webapp.ftl.context;
+package com.ilscipio.cato.ce.webapp.ftl.context;
 
 import java.util.List;
 
-import com.ilscipio.cato.webapp.ftl.CommonFtlUtil;
+import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.template.SimpleScalar;
@@ -35,7 +35,7 @@ import freemarker.template.TemplateScalarModel;
  * <p>
  * Values set by this transform should only be read using {@link GetRequestVarMethod}.
  * 
- * @see com.ilscipio.cato.webapp.ftl.context.ContextFtlUtil#setRequestVar
+ * @see com.ilscipio.cato.ce.webapp.ftl.context.ContextFtlUtil#setRequestVar
  */
 public class SetRequestVarMethod implements TemplateMethodModelEx {
 

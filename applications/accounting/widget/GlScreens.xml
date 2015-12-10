@@ -369,14 +369,14 @@ under the License.
                                         </screenlet>
                                     </widgets>
                                     <fail-widgets>
-                                        <screenlet title="${uiLabelMap.AccountingTransactionHeader}">
+                                       <screenlet title="${uiLabelMap.AccountingTransactionHeader}">
                                             <include-form name="EditAcctgTrans" location="component://accounting/widget/GlForms.xml"/>
-                                        </screenlet>
-                                        <screenlet title="${uiLabelMap.PageTitleEditTransactionEntries}">
-                                            <include-form name="ListAcctgTransEntries" location="component://accounting/widget/GlForms.xml"/>
                                         </screenlet>
                                         <screenlet title="${uiLabelMap.PageTitleAddTransactionEntry}">
                                             <include-form name="EditAcctgTransEntry" location="component://accounting/widget/GlForms.xml"/>
+                                        </screenlet>
+                                        <screenlet title="${uiLabelMap.PageTitleEditTransactionEntries}">
+                                            <include-form name="ListAcctgTransEntries" location="component://accounting/widget/GlForms.xml"/>
                                         </screenlet>
                                     </fail-widgets>
                                 </section>

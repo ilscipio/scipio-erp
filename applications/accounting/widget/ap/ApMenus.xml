@@ -19,6 +19,12 @@ under the License.
 -->
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="ApAppBar" title="${uiLabelMap.AccountingApManager}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="accounting" title="${uiLabelMap.AccountingManager}" sort-mode="off" widget-style="+subappitem">
+            <link target="/accounting/control/main" url-mode="inter-app" style="+subapplink"/>
+        </menu-item>
+        <menu-item name="ar" title="${uiLabelMap.AccountingArManager}" sort-mode="off" widget-style="+subappitem">
+            <link target="/ar/control/main" url-mode="inter-app" style="+subapplink"/>
+        </menu-item>
         <menu-item name="agreements" title="${uiLabelMap.AccountingAgreements}"><link target="FindAgreement"/></menu-item>
         <menu-item name="invoices" title="${uiLabelMap.AccountingInvoicesMenu}"><link target="FindApInvoices"/></menu-item>
         <menu-item name="payments" title="${uiLabelMap.AccountingPaymentsMenu}"><link target="findPayments"/></menu-item>

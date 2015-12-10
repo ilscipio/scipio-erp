@@ -108,12 +108,14 @@ under the License.
         server="default-server"
         location="webapp/ar"
         base-permission="OFBTOOLS,ACCOUNTING"
-        mount-point="/ar"/>
+        mount-point="/ar"
+        app-bar-display="false"/> <!-- Cato: don't display in main menu; shown under accounting menu instead -->
 
     <webapp name="ap"
         title="Accounting - AP"
         server="default-server"
         location="webapp/ap"
         base-permission="OFBTOOLS,ACCOUNTING"
-        mount-point="/ap"/>
+        mount-point="/ap"
+        app-bar-display="false"/> <!-- Cato: don't display in main menu; shown under accounting menu instead -->
 </ofbiz-component>

@@ -1,5 +1,3 @@
-!-- TODO: LEGAL STATEMENT -->
-
 <#ftl ns_prefixes={
     "D":"http://docbook.org/ns/docbook",
     "xl":"http://www.w3.org/1999/xlink"

@@ -56,7 +56,7 @@ under the License.
     <form name="ListInventoryItemLabels" type="list" title="" list-name="inventoryItemLabels"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="InventoryItemLabel" default-field-type="display"/>
-        <field name="inventoryItemLabelId" widget-style="${styles.link_id}">
+        <field name="inventoryItemLabelId" widget-style="${styles.link_record_id}">
             <hyperlink target="EditInventoryItemLabel" description="${inventoryItemLabelId}" also-hidden="true">
                 <parameter param-name="inventoryItemLabelId"/>
             </hyperlink>
@@ -94,7 +94,7 @@ under the License.
         <field name="inventoryItemLabelTypeId"><hidden/></field>
         <field name="inventoryItemId">
             <display-entity entity-name="InventoryItem" description="${productId}">
-                <sub-hyperlink target="EditInventoryItem" description="[${inventoryItemId}]" link-style="${styles.link_id}">
+                <sub-hyperlink target="EditInventoryItem" description="[${inventoryItemId}]" link-style="${styles.link_record_id}">
                     <parameter param-name="inventoryItemId"/>
                 </sub-hyperlink>
             </display-entity>

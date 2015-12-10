@@ -25,7 +25,7 @@ under the License.
   </span>
   <span class="name">
     <div>
-      <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" class="${styles.link_name!}">${productContentWrapper.get("PRODUCT_NAME", "html")!}</a>
+      <a href="<@ofbizUrl>product?product_id=${product.productId}</@ofbizUrl>" class="${styles.link_record_name!}">${productContentWrapper.get("PRODUCT_NAME", "html")!}</a>
     </div>
   </span>
   <span class="listPrice">

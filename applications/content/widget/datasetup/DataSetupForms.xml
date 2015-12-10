@@ -262,7 +262,7 @@ under the License.
           <entity-condition entity-name="MimeTypeHtmlTemplate" use-cache="false"/>
         </actions>
         <auto-fields-service service-name="updateMimeTypeHtmlTemplate"/>
-        <field name="mimeTypeId" widget-style="${styles.link_id}">
+        <field name="mimeTypeId" widget-style="${styles.link_record_id}">
             <hyperlink target-type="intra-app" target="editMimeType" description="${mimeTypeId}">
                 <parameter param-name="mimeTypeId"/>
             </hyperlink>

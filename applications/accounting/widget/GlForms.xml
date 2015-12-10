@@ -292,8 +292,8 @@ under the License.
         </field>
         <field name="inventoryItemId" position="1"/>
         <field name="physicalInventoryId" position="2"/>
-        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" position="1" widget-style="${styles.link_id}"><hyperlink target="invoiceOverview?invoiceId=${acctgTrans.invoiceId}" description="${acctgTrans.invoiceId}"/></field>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" position="2" widget-style="${styles.link_id}"><hyperlink target="paymentOverview?paymentId=${acctgTrans.paymentId}" description="${acctgTrans.paymentId}"/></field>
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" position="1" widget-style="${styles.link_record_id}"><hyperlink target="invoiceOverview?invoiceId=${acctgTrans.invoiceId}" description="${acctgTrans.invoiceId}"/></field>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" position="2" widget-style="${styles.link_record_id}"><hyperlink target="paymentOverview?paymentId=${acctgTrans.paymentId}" description="${acctgTrans.paymentId}"/></field>
         <field name="productId" title="${uiLabelMap.CommonProduct}"><display/></field>
         <field name="shipmentId" title="${uiLabelMap.CommonShipment}" position="2"/>
         <field name="receiptId" title="${uiLabelMap.CommonReceipt}" position="1"/>
@@ -422,7 +422,7 @@ under the License.
                 <order-by field-name="-transactionDate"/>
             </entity-condition>
         </actions>
-        <field name="acctgTransId" widget-style="${styles.link_id}">
+        <field name="acctgTransId" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="EditAcctgTrans">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="organizationPartyId"/>
@@ -432,25 +432,25 @@ under the License.
         <field name="acctgTransTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="AcctgTransType"/></field>
         <field name="description"><display/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}"><display-entity entity-name="GlFiscalType"/></field>
-        <field name="invoiceId" use-when="invoiceId!=null" widget-style="${styles.link_id}">
+        <field name="invoiceId" use-when="invoiceId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${invoiceId}" target="editInvoice">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
         <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" use-when="invoiceId==null"><display/></field>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" use-when="paymentId!=null" widget-style="${styles.link_id}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" use-when="paymentId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${paymentId}" target="editPayment">
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
         <field name="paymentId" title="${uiLabelMap.CommonPayment}" use-when="paymentId==null"><display/></field>
-        <field name="workEffortId" use-when="workEffortId!=null" widget-style="${styles.link_id}">
+        <field name="workEffortId" use-when="workEffortId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${workEffortId}" target="/workeffort/control/EditWorkEffort" target-type="inter-app">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
         </field>
         <field name="workEffortId" use-when="workEffortId==null"><display/></field>
-        <field name="shipmentId" use-when="shipmentId!=null" widget-style="${styles.link_id}">
+        <field name="shipmentId" use-when="shipmentId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${shipmentId}" target="/facility/control/EditShipment" target-type="inter-app">
                 <parameter param-name="shipmentId"/>
             </hyperlink>
@@ -473,7 +473,7 @@ under the License.
 
     <form name="ListUnpostedAcctgTrans" type="list" title="Unposted Accounting Transactions" list-name="transactions"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="acctgTransId" widget-style="${styles.link_id}">
+        <field name="acctgTransId" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="EditAcctgTrans">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="organizationPartyId"/>
@@ -482,13 +482,13 @@ under the License.
         <field name="transactionDate"><display/></field>
         <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}"><display-entity entity-name="AcctgTransType"/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}"><display-entity entity-name="GlFiscalType"/></field>
-        <field name="invoiceId" use-when="invoiceId!=null" widget-style="${styles.link_id}">
+        <field name="invoiceId" use-when="invoiceId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${invoiceId}" target="editInvoice">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
         <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" use-when="invoiceId==null"><display/></field>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" use-when="paymentId!=null" widget-style="${styles.link_id}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" use-when="paymentId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${paymentId}" target="editPayment">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -735,47 +735,47 @@ under the License.
             <display-entity entity-name="GlAccountClass"/>
         </field>
 
-        <field name="acctgTransId" widget-style="${styles.link_id}" position="2">
+        <field name="acctgTransId" widget-style="${styles.link_record_id}" position="2">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="EditAcctgTrans">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
         </field>
-        <field name="acctgTransEntrySeqId" widget-style="${styles.link_id}" position="2"><display/></field>
+        <field name="acctgTransEntrySeqId" widget-style="${styles.link_record_id}" position="2"><display/></field>
         <field name="transactionDate" position="2"><display/></field>
         <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}" position="2"><display-entity entity-name="AcctgTransType"/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}" position="2"><display-entity entity-name="GlFiscalType"/></field>
-        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" position="2" use-when="invoiceId!=null" widget-style="${styles.link_id}">
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" position="2" use-when="invoiceId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${invoiceId}" target="editInvoice">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
         <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" position="2" use-when="invoiceId==null"><display/></field>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" position="2" use-when="paymentId!=null" widget-style="${styles.link_id}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" position="2" use-when="paymentId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${paymentId}" target="editPayment">
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
         <field name="paymentId" title="${uiLabelMap.CommonPayment}" position="2" use-when="paymentId==null"><display/></field>
-        <field name="workEffortId" title="${uiLabelMap.WorkEffort}" position="2" use-when="workEffortId!=null" widget-style="${styles.link_id}">
+        <field name="workEffortId" title="${uiLabelMap.WorkEffort}" position="2" use-when="workEffortId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${workEffortId}" target="/workeffort/control/EditWorkEffort" target-type="inter-app">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
         </field>
         <field name="workEffortId" title="${uiLabelMap.WorkEffort}" position="2" use-when="workEffortId==null"><display/></field>
-        <field name="shipmentId" title="${uiLabelMap.CommonShipment}" position="2" use-when="shipmentId!=null" widget-style="${styles.link_id}">
+        <field name="shipmentId" title="${uiLabelMap.CommonShipment}" position="2" use-when="shipmentId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${shipmentId}" target="/facility/control/EditShipment" target-type="inter-app">
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field>
         <field name="shipmentId" title="${uiLabelMap.CommonShipment}" position="2" use-when="shipmentId==null"><display/></field>
-        <field name="partyId" title="${uiLabelMap.CommonParty}" position="2" use-when="partyId!=null" widget-style="${styles.link_id}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" position="2" use-when="partyId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
         <field name="partyId" title="${uiLabelMap.CommonParty}" position="2" use-when="partyId==null"><display/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}" position="2" use-when="productId!=null" widget-style="${styles.link_id}">
+        <field name="productId" title="${uiLabelMap.CommonProduct}" position="2" use-when="productId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${productId}" target="/catalog/control/EditProduct" target-type="inter-app">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -813,13 +813,13 @@ under the License.
         </actions>
 
         <field name="transactionDate"><display/></field>
-        <field name="acctgTransId" widget-style="${styles.link_id}">
+        <field name="acctgTransId" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="EditAcctgTrans">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
         </field>
-        <field name="acctgTransEntrySeqId" widget-style="${styles.link_id}"><display/></field>
+        <field name="acctgTransEntrySeqId" widget-style="${styles.link_record_id}"><display/></field>
         <field name="acctgTransTypeId" title="${uiLabelMap.FormFieldTitle_acctgTransType}"><display-entity entity-name="AcctgTransType"/></field>
         <field name="glFiscalTypeId" title="${uiLabelMap.FormFieldTitle_glFiscalType}"><display-entity entity-name="GlFiscalType"/></field>
         <field name="glAccountId" title="${uiLabelMap.CommonAccount"><display/></field>
@@ -829,37 +829,37 @@ under the License.
         <field name="glAccountClassId" title="${uiLabelMap.CommonClass}">
             <display-entity entity-name="GlAccountClass"/>
         </field>
-        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" use-when="invoiceId!=null" widget-style="${styles.link_id}">
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" use-when="invoiceId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${invoiceId}" target="editInvoice">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
         <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" use-when="invoiceId==null"><display/></field>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" use-when="paymentId!=null" widget-style="${styles.link_id}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" use-when="paymentId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${paymentId}" target="editPayment">
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
         <field name="paymentId" title="${uiLabelMap.CommonPayment}" use-when="paymentId==null"><display/></field>
-        <field name="workEffortId" title="${uiLabelMap.WorkEffort}" use-when="workEffortId!=null" widget-style="${styles.link_id}">
+        <field name="workEffortId" title="${uiLabelMap.WorkEffort}" use-when="workEffortId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${workEffortId}" target="/workeffort/control/EditWorkEffort" target-type="inter-app">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
         </field>
         <field name="workEffortId" title="${uiLabelMap.WorkEffort}" use-when="workEffortId==null"><display/></field>
-        <field name="shipmentId" title="${uiLabelMap.CommonShipment}" use-when="shipmentId!=null" widget-style="${styles.link_id}">
+        <field name="shipmentId" title="${uiLabelMap.CommonShipment}" use-when="shipmentId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${shipmentId}" target="/facility/control/EditShipment" target-type="inter-app">
                 <parameter param-name="shipmentId"/>
             </hyperlink>
         </field>
         <field name="shipmentId" title="${uiLabelMap.CommonShipment}" use-when="shipmentId==null"><display/></field>
-        <field name="partyId" title="${uiLabelMap.CommonParty}" use-when="partyId!=null" widget-style="${styles.link_id}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" use-when="partyId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
         <field name="partyId" title="${uiLabelMap.CommonParty}" use-when="partyId==null"><display/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}" use-when="productId!=null" widget-style="${styles.link_id}">
+        <field name="productId" title="${uiLabelMap.CommonProduct}" use-when="productId!=null" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${productId}" target="/catalog/control/EditProduct" target-type="inter-app">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -1000,25 +1000,25 @@ under the License.
             </entity-condition>
         </actions>
 
-        <field name="acctgTransId" widget-style="${styles.link_id}">
+        <field name="acctgTransId" widget-style="${styles.link_record_id}">
             <hyperlink description="${acctgTransId}" target="EditAcctgTrans">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="organizationPartyId"/>
             </hyperlink>
         </field>
         <field name="acctgTransEntrySeqId"><display/></field>
-        <field name="glAccountId" widget-style="${styles.link_id}">
+        <field name="glAccountId" widget-style="${styles.link_record_id}">
             <hyperlink target="GlAccountNavigate" description="${glAccountId}">
                 <parameter param-name="glAccountId"/>
             </hyperlink>
         </field>
-        <field name="partyId" widget-style="${styles.link_id}">
+        <field name="partyId" widget-style="${styles.link_record_id}">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyIdTo}" target-type="inter-app">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
         <field name="productId"><display/></field>
-        <field name="organizationPartyId" widget-style="${styles.link_id}">
+        <field name="organizationPartyId" widget-style="${styles.link_record_id}">
             <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="organizationPartyId"/>
             </hyperlink>
@@ -1090,7 +1090,7 @@ under the License.
                 </condition-list>
             </entity-condition>
         </actions>
-        <field name="glReconciliationId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_id}">
+        <field name="glReconciliationId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${glReconciliationId}" target="EditGlReconciliations">
                 <parameter param-name="glReconciliationId"/>
                 <parameter param-name="tabButtonItem" from-field="AccountReconciliations"/>
@@ -1099,12 +1099,12 @@ under the License.
         </field>
         <field name="glReconciliationName" title="${uiLabelMap.CommonName}"><display/></field>
         <field name="description"><display/></field>
-        <field name="glAccountId" widget-style="${styles.link_id}">
+        <field name="glAccountId" widget-style="${styles.link_record_id}">
             <hyperlink target="GlAccountNavigate" description="${glAccountId}">
                 <parameter param-name="glAccountId"/>
             </hyperlink>
         </field>
-        <field name="organizationPartyId" widget-style="${styles.link_id}">
+        <field name="organizationPartyId" widget-style="${styles.link_record_id}">
             <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="organizationPartyId"/>
             </hyperlink>

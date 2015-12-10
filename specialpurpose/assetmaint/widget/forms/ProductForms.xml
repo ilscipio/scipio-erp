@@ -67,7 +67,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_id}">
+        <field name="productId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${productId}" target="EditProduct">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -101,7 +101,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_id}">
+        <field name="productId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_values('${productId}', '${internalName}')"/>
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>

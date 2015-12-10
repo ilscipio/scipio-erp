@@ -215,8 +215,8 @@ function lookupBom() {
     <#assign listToProduct = assocFromProduct.getRelatedOne("AssocProduct", true)>
     <#assign curProductAssocType = assocFromProduct.getRelatedOne("ProductAssocType", true)>
       <@tr>
-        <@td><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_id!}">${(assocFromProduct.productIdTo)!}</a></@td>
-        <@td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_name!}">${(listToProduct.internalName)!}</a></#if>&nbsp;</@td>
+        <@td><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_record_id!}">${(assocFromProduct.productIdTo)!}</a></@td>
+        <@td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_record_name!}">${(listToProduct.internalName)!}</a></#if>&nbsp;</@td>
         <#assign class><#if (assocFromProduct.getTimestamp("fromDate"))?? && nowDate.before(assocFromProduct.getTimestamp("fromDate"))>alert</#if></#assign>
         <@td class=class>
         ${(assocFromProduct.fromDate)!}&nbsp;</@td>
@@ -256,9 +256,9 @@ function lookupBom() {
         <#assign listToProduct = assocToProduct.getRelatedOne("MainProduct", true)>
         <#assign curProductAssocType = assocToProduct.getRelatedOne("ProductAssocType", true)>
         <@tr>
-            <@td><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_id!}">${(assocToProduct.productId)!}</a></@td>
-<#--                <@td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="${styles.link_name!}">${(listToProduct.internalName)!}</a></#if></@td> -->
-            <@td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_name!}">${(listToProduct.internalName)!}</a></#if></@td>
+            <@td><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_record_id!}">${(assocToProduct.productId)!}</a></@td>
+<#--                <@td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="${styles.link_record_name!}">${(listToProduct.internalName)!}</a></#if></@td> -->
+            <@td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_record_name!}">${(listToProduct.internalName)!}</a></#if></@td>
             <@td>${(assocToProduct.getTimestamp("fromDate"))!}&nbsp;</@td>
             <@td>${(assocToProduct.getTimestamp("thruDate"))!}&nbsp;</@td>
             <@td>${(assocToProduct.quantity)!}&nbsp;</@td>

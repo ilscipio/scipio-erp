@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if miniProduct??>
-    <a href="<@ofbizCatalogAltUrl productId=miniProduct.productId/>" class="${styles.link_name!}">${miniProductContentWrapper.get("PRODUCT_NAME", "html")?default("No Name Available")}</a>
+    <a href="<@ofbizCatalogAltUrl productId=miniProduct.productId/>" class="${styles.link_record_name!}">${miniProductContentWrapper.get("PRODUCT_NAME", "html")?default("No Name Available")}</a>
     <ul>
         <li>${miniProduct.productId}
           <#if (priceResult.price?default(0) > 0 && miniProduct.requireAmount?default("N") == "N")>

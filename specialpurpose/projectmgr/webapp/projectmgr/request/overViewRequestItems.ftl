@@ -34,7 +34,7 @@ under the License.
     <#if custRequestItemList.custRequestItemSeqId?has_content>
         <@tr>
             <@td>
-              <a href="<@ofbizUrl>requestitem?custRequestId=${custRequestItemList.custRequestId}&amp;custRequestItemSeqId=${custRequestItemList.custRequestItemSeqId}</@ofbizUrl>" class="${styles.link_id!}">${custRequestItemList.custRequestItemSeqId}</a>
+              <a href="<@ofbizUrl>requestitem?custRequestId=${custRequestItemList.custRequestId}&amp;custRequestItemSeqId=${custRequestItemList.custRequestItemSeqId}</@ofbizUrl>" class="${styles.link_record_id!}">${custRequestItemList.custRequestItemSeqId}</a>
             </@td>
             <@td colspan="2">
               <#if custRequestItemList.story?has_content>

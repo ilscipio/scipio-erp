@@ -104,7 +104,7 @@ under the License.
                                         <section>
                                             <widgets>
                                                 <container>
-                                                    <link target="/partymgr/control/EditCommunicationEvent" url-mode="inter-app" text="${commEvent.communicationEventId}" style="${styles.link_id}">
+                                                    <link target="/partymgr/control/EditCommunicationEvent" url-mode="inter-app" text="${commEvent.communicationEventId}" style="${styles.link_record_id}">
                                                         <parameter param-name="communicationEventId" from-field="commEvent.communicationEventId"/>
                                                     </link>
                                                     <label text="${commEvent.subject}"/>
@@ -127,7 +127,7 @@ under the License.
                                         <section>
                                             <widgets>
                                                 <container>
-                                                    <link target="/partymgr/control/editShoppingList" url-mode="inter-app" text="${shopList.shoppingListId}" style="${styles.link_id}">
+                                                    <link target="/partymgr/control/editShoppingList" url-mode="inter-app" text="${shopList.shoppingListId}" style="${styles.link_record_id}">
                                                         <parameter param-name="shoppingListId" from-field="shopList.shoppingListId"/>
                                                     </link>
                                                     <label text="${shopList.listName} ${shopList.description}"/>
@@ -150,7 +150,7 @@ under the License.
                                         <section>
                                             <widgets>
                                                 <container>
-                                                    <link target="/ordermgr/control/EditQuote" url-mode="inter-app" text="${quote.quoteId}" style="${styles.link_id}">
+                                                    <link target="/ordermgr/control/EditQuote" url-mode="inter-app" text="${quote.quoteId}" style="${styles.link_record_id}">
                                                         <parameter param-name="quoteId" from-field="quote.quoteId"/>
                                                     </link>
                                                     <label text="${quote.quoteName} ${quote.description}"/>
@@ -173,7 +173,7 @@ under the License.
                                         <section>
                                             <widgets>
                                                 <container>
-                                                    <link target="/ordermgr/control/orderview" url-mode="inter-app" text="${orderHeader.orderId}" style="${styles.link_id}">
+                                                    <link target="/ordermgr/control/orderview" url-mode="inter-app" text="${orderHeader.orderId}" style="${styles.link_record_id}">
                                                         <parameter param-name="orderId" from-field="orderHeader.orderId"/>
                                                     </link>
                                                     <label text="${uiLabelMap.CommonType} " style="label"/><label text="${orderHeader.orderTypeDescription}"/>

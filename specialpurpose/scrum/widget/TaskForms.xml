@@ -629,7 +629,7 @@
             <set field="fromDate" from-field="listWorkAssignment[0].fromDate"/>
         </row-actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="taskName" title="${uiLabelMap.ScrumTaskName}" widget-style="${styles.link_idname}">
+        <field name="taskName" title="${uiLabelMap.ScrumTaskName}" widget-style="${styles.link_record_idname}">
             <hyperlink also-hidden="false" description="${taskName} - [${taskId}] " target="taskView">
                 <parameter param-name="taskId" from-field="workEffortId"/>
             </hyperlink>
@@ -834,7 +834,7 @@
             <set field="partyId" value="${contentRole[0].partyId}"/>
             <property-to-field resource="revision" property="revision.url" field="url"/>
         </row-actions>
-        <field name="contentName" title="${uiLabelMap.ScrumRevision}" widget-style="${styles.link_name}">
+        <field name="contentName" title="${uiLabelMap.ScrumRevision}" widget-style="${styles.link_record_name}">
                 <hyperlink target="RevisionInfo?repository=${url}${drObjectInfo}" description="${contentName}" link-type="anchor" target-window="_BLANK" target-type="plain"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonMessage}"><display description="${groovy:description.toString().substring(0,Math.min(description.toString().length(),100))}"/></field>

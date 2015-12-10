@@ -107,7 +107,7 @@ function getPaymentRunningTotal() {
                 </@thead>
                 <#list paymentList as payment>
                     <@tr>
-                        <@td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="${styles.link_id!}">${payment.paymentId}</a></@td>
+                        <@td><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId}</@ofbizUrl>" class="${styles.link_record_id!}">${payment.paymentId}</a></@td>
                         <@td>${payment.paymentTypeDesc!}</@td>
                         <@td>${(payment.partyFromFirstName)!} ${(payment.partyFromLastName)!} ${(payment.partyFromGroupName)!}</@td>
                         <@td>${(payment.partyToFirstName)!} ${(payment.partyToLastName)!} ${(payment.partyToGroupName)!}</@td>

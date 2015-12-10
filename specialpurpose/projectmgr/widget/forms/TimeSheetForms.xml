@@ -73,7 +73,7 @@
         <actions>
             <set field="complete" value="${uiLabelMap.ProjectMgrToComplete}"/>
         </actions>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_id}">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${timesheetId}" target="${my}Timesheet">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -133,7 +133,7 @@
             <set field="actualHours" value="${bsh:org.ofbiz.project.Various.calculateActualHours(delegator, timesheetId)}"/>
             <set field="completeAction" value="${bsh:&quot;TIMESHEET_IN_PROCESS&quot;.equals(statusId)?complete:&quot;&quot;}"/>
         </row-actions>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_id}">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${timesheetId}" target="Timesheet">
                 <parameter param-name="timesheetId"/>
             </hyperlink>

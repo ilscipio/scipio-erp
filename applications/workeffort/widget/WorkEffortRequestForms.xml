@@ -28,7 +28,7 @@ under the License.
             </entity-and>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="custRequestId" widget-style="${styles.link_id}">
+        <field name="custRequestId" widget-style="${styles.link_record_id}">
             <hyperlink description="${custRequestId}" target="/ordermgr/control/EditRequest" target-type="inter-app">
                 <parameter param-name="custRequestId"/>
             </hyperlink>
@@ -60,7 +60,7 @@ under the License.
             </entity-and>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="custRequestId" widget-style="${styles.link_id}">
+        <field name="custRequestId" widget-style="${styles.link_record_id}">
             <hyperlink description="${custRequestId}" target="/ordermgr/control/EditRequest" target-type="inter-app">
                 <parameter param-name="custRequestId"/>
             </hyperlink>

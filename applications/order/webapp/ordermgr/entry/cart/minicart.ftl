@@ -61,9 +61,9 @@ under the License.
                 <@td>
                   <#if cartLine.getProductId()??>
                       <#if cartLine.getParentProductId()??>
-                          <a href="<@ofbizCatalogAltUrl productId=cartLine.getParentProductId()/>" class="${styles.link_name!}">${cartLine.getName()}</a>
+                          <a href="<@ofbizCatalogAltUrl productId=cartLine.getParentProductId()/>" class="${styles.link_record_name!}">${cartLine.getName()}</a>
                       <#else>
-                          <a href="<@ofbizCatalogAltUrl productId=cartLine.getProductId()/>" class="${styles.link_name!}">${cartLine.getName()}</a>
+                          <a href="<@ofbizCatalogAltUrl productId=cartLine.getProductId()/>" class="${styles.link_record_name!}">${cartLine.getName()}</a>
                       </#if>
                   <#else>
                     <strong>${cartLine.getItemTypeDescription()!}</strong>

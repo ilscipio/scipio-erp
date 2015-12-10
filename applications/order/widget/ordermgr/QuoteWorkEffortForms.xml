@@ -27,7 +27,7 @@ under the License.
             </entity-and>
         </actions>
         <field name="quoteId"><hidden/></field>
-        <field name="workEffortId" widget-style="${styles.link_idname}">
+        <field name="workEffortId" widget-style="${styles.link_record_idname}">
             <hyperlink also-hidden="false" description="${workEffortName} [${workEffortId}]" target="EditQuoteWorkEffort">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="quoteId"/>

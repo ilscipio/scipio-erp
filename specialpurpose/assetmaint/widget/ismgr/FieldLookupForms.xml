@@ -49,7 +49,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="${styles.link_id}">
+        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${fixedAssetId}" target="javascript:set_value('${fixedAssetId}')"/>
         </field>
         <field name="fixedAssetName" title="${uiLabelMap.CommonName}"><display/></field>
@@ -84,7 +84,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="${styles.link_id}">
+        <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${fixedAssetId}" target="javascript:set_value('${fixedAssetId}')"/>
         </field>
         <field name="fixedAssetName" title="${uiLabelMap.CommonName}"><display/></field>

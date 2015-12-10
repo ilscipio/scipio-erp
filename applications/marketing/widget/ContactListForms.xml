@@ -121,7 +121,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="contactListId" widget-style="${styles.link_id}" title="${uiLabelMap.MarketingContactListContactListId}">
+        <field name="contactListId" widget-style="${styles.link_record_id}" title="${uiLabelMap.MarketingContactListContactListId}">
             <hyperlink target="EditContactList" description="${contactListId}" also-hidden="false">
                 <parameter param-name="contactListId"/>
             </hyperlink>
@@ -214,7 +214,7 @@ under the License.
         <field name="contactListId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.MarketingContactListPartyId}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_id}">
+                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -298,7 +298,7 @@ under the License.
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="partyId" title="${uiLabelMap.MarketingContactListPartyId}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_id}">
+                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -460,7 +460,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="communicationEventId" title="${uiLabelMap.MarketingContactListCommEventId}" widget-style="${styles.link_id}">
+        <field name="communicationEventId" title="${uiLabelMap.MarketingContactListCommEventId}" widget-style="${styles.link_record_id}">
             <hyperlink description="${communicationEventId}" target="EditContactListCommEvent" target-type="intra-app">
                 <parameter param-name="contactListId"/>
                 <parameter param-name="communicationEventId"/>
@@ -521,7 +521,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="contactListId" title="${uiLabelMap.MarketingContactListContactListId}" widget-style="${styles.link_id}">
+        <field name="contactListId" title="${uiLabelMap.MarketingContactListContactListId}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${contactListId}" target="javascript:set_value('${contactListId}')" target-type="plain"/>
         </field>
         <field name="contactListName" title="${uiLabelMap.MarketingContactListContactListName}"><display/></field>
@@ -568,7 +568,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="communicationEventId" title="${uiLabelMap.MarketingContactListCommEventId}" widget-style="${styles.link_id}">
+        <field name="communicationEventId" title="${uiLabelMap.MarketingContactListCommEventId}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${communicationEventId}" target="javascript:set_value('${communicationEventId}')" target-type="plain"/>
         </field>
         <field name="partyIdFrom" title="${uiLabelMap.PartyPartyFrom}">
@@ -593,7 +593,7 @@ under the License.
             </entity-and>
         </actions>
 
-        <field name="contactMechId" widget-style="${styles.link_id}">
+        <field name="contactMechId" widget-style="${styles.link_record_id}">
             <hyperlink description="${contactMechId}" target-type="plain" target="javascript:set_value('${contactMechId}')" also-hidden="false"/>
         </field>
         <field name="contactMechTypeId" title="${uiLabelMap.MarketingContactListContactMechTypeId}"><display-entity entity-name="ContactMechType"/></field>
@@ -650,7 +650,7 @@ under the License.
         <field name="webSiteId"><hidden/></field>
         <field name="siteName">
             <display-entity entity-name="WebSite" key-field-name="webSiteId">
-                <sub-hyperlink target="/content/control/EditWebSite" target-type="inter-app" description="[${webSiteId}]" link-style="${styles.link_id}">
+                <sub-hyperlink target="/content/control/EditWebSite" target-type="inter-app" description="[${webSiteId}]" link-style="${styles.link_record_id}">
                     <parameter param-name="webSiteId"/>
                 </sub-hyperlink>
             </display-entity></field>

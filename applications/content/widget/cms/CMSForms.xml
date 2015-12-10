@@ -46,7 +46,7 @@ under the License.
             </service>
         </actions>
 
-        <field name="caContentIdTo" title=" " widget-style="${styles.link_id}">
+        <field name="caContentIdTo" title=" " widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${caContentIdTo}" target="EditAddContent">
                 <parameter param-name="MASTER_contentId" from-field="contentId"/>
                 <parameter param-name="MASTER_drDataResourceId" from-field="drDataResourceId"/>
@@ -426,16 +426,16 @@ under the License.
                 <entity-options description="${description}" entity-name="MetaDataPredicate" key-field-name="metaDataPredicateId"/>
             </drop-down>
         </field>
-        <field name="caFromDate" title="${uiLabelMap.CommonFrom}" widget-style="${styles.link_date}" position="1" use-when="&quot;${caFromDate}&quot;.length()>0">
+        <field name="caFromDate" title="${uiLabelMap.CommonFrom}" widget-style="${styles.link_record_date}" position="1" use-when="&quot;${caFromDate}&quot;.length()>0">
             <display default-value="${nowTimestamp}"/>
         </field>
-        <field name="caFromDate" title="${uiLabelMap.CommonFrom}" widget-style="${styles.link_date}" position="1" use-when="&quot;${caFromDate}&quot;.length()==0">
+        <field name="caFromDate" title="${uiLabelMap.CommonFrom}" widget-style="${styles.link_record_date}" position="1" use-when="&quot;${caFromDate}&quot;.length()==0">
             <date-time default-value="${nowTimestamp}"/>
         </field>
-        <field name="caThruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.link_date}" position="2" use-when="&quot;${caThruDate}&quot;.length()>0">
+        <field name="caThruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.link_record_date}" position="2" use-when="&quot;${caThruDate}&quot;.length()>0">
             <date-time/>
         </field>
-        <field name="caThruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.link_date}" position="2" use-when="&quot;${caThruDate}&quot;.length()==0">
+        <field name="caThruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.link_record_date}" position="2" use-when="&quot;${caThruDate}&quot;.length()==0">
             <date-time/>
         </field>
         <field name="contentTitle" title="${uiLabelMap.ContentContent}" title-style="h1" map-name="dummy">

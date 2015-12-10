@@ -62,7 +62,7 @@ under the License.
                     <#assign inventoryItemDetailFirst = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(inventoryItem.getRelated("InventoryItemDetail", null, Static["org.ofbiz.base.util.UtilMisc"].toList("effectiveDate"), false))!>
                     <#if curInventoryItemType??>
                         <@tr valign="middle">
-                            <@td><a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_id!}">${(inventoryItem.inventoryItemId)!}</a></@td>
+                            <@td><a href="/facility/control/EditInventoryItem?inventoryItemId=${(inventoryItem.inventoryItemId)!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_record_id!}">${(inventoryItem.inventoryItemId)!}</a></@td>
                             <@td>&nbsp;${(curInventoryItemType.get("description",locale))!}</@td>
                             <@td>
                                     <#if curStatusItem?has_content>
@@ -79,9 +79,9 @@ under the License.
                                 <@td style="color: red;">${uiLabelMap.ProductErrorFacility} (${inventoryItem.facilityId})
                                     ${uiLabelMap.ProductAndContainer} (${inventoryItem.containerId}) ${uiLabelMap.CommonSpecified}</@td>
                             <#elseif inventoryItem.facilityId??>
-                                <@td>${uiLabelMap.ProductFacilityLetter}:&nbsp;<a href="/facility/control/EditFacility?facilityId=${inventoryItem.facilityId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_id!}">${inventoryItem.facilityId}</a></@td>
+                                <@td>${uiLabelMap.ProductFacilityLetter}:&nbsp;<a href="/facility/control/EditFacility?facilityId=${inventoryItem.facilityId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_record_id!}">${inventoryItem.facilityId}</a></@td>
                             <#elseif (inventoryItem.containerId)??>
-                                <@td>${uiLabelMap.ProductContainerLetter}:&nbsp;<a href="<@ofbizUrl>EditContainer?containerId=${inventoryItem.containerId }</@ofbizUrl>" class="${styles.link_id!}">${inventoryItem.containerId}</a></@td>
+                                <@td>${uiLabelMap.ProductContainerLetter}:&nbsp;<a href="<@ofbizUrl>EditContainer?containerId=${inventoryItem.containerId }</@ofbizUrl>" class="${styles.link_record_id!}">${inventoryItem.containerId}</a></@td>
                             <#else>
                                 <@td>&nbsp;</@td>
                             </#if>

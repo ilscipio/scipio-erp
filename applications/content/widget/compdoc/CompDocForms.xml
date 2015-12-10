@@ -470,7 +470,7 @@ under the License.
                 </sub-hyperlink>
             </lookup>
         </field>
-        <field name="addSurveyResponse" map-name="dummy" widget-style="${styles.link_longaction}"
+        <field name="addSurveyResponse" map-name="dummy" widget-style="${styles.link_action_long}"
             use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)==null &amp;&amp; templateDataResource!=null &amp;&amp; templateDataResource.get(&quot;relatedDetailId&quot;)!=null">
             <hyperlink description="${uiLabelMap.CommonCreate} ${uiLabelMap.ContentSurveyResponse} (${uiLabelMap.CommonFor} ${uiLabelMap.ContentSurvey} ${templateDataResource.relatedDetailId})" target="EditSurveyResponse" also-hidden="false" target-window="_blank">
                 <parameter param-name="surveyId" from-field="templateDataResource.relatedDetailId"/>
@@ -478,7 +478,7 @@ under the License.
                 <parameter param-name="rootContentId"/>
             </hyperlink>
         </field>
-        <field name="updateSurveyResponse" map-name="dummy" widget-style="${styles.link_longaction}"
+        <field name="updateSurveyResponse" map-name="dummy" widget-style="${styles.link_action_long}"
             use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)!=null &amp;&amp; templateDataResource!=null &amp;&amp; templateDataResource.get(&quot;relatedDetailId&quot;)!=null">
             <hyperlink description="${uiLabelMap.CommonUpdate} ${uiLabelMap.ContentSurveyResponse} (${uiLabelMap.CommonFor} ${uiLabelMap.ContentSurvey} ${templateDataResource.relatedDetailId}, Response ${dataResource.relatedDetailId})" target="EditSurveyResponse" also-hidden="false" target-window="_blank">
                 <parameter param-name="surveyId" from-field="templateDataResource.relatedDetailId"/>
@@ -525,7 +525,7 @@ under the License.
         <auto-fields-entity entity-name="ContentRevision"/>
         <auto-fields-entity entity-name="ContentRevisionItem"/>
 
-        <field name="contentId" widget-style="${styles.link_id}"><text/></field>
+        <field name="contentId" widget-style="${styles.link_record_id}"><text/></field>
         <field name="contentRevisionSeqId"><hidden/></field>
         <field name="committedByPartyId" widget-style="inputBox"></field>
         <field name="comments" widget-style="inputBox"></field>

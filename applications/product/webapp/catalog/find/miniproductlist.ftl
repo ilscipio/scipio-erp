@@ -22,7 +22,7 @@ under the License.
       <#list productCategoryMembers as productCategoryMember>
         <#assign product = productCategoryMember.getRelatedOne("Product", true)>
           <div>
-            <a href='<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>' class="${styles.link_name!}">
+            <a href='<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>' class="${styles.link_record_name!}">
               <#if product.internalName?has_content>
                 ${product.internalName}
               <#else>

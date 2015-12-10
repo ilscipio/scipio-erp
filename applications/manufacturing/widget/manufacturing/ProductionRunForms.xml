@@ -80,7 +80,7 @@ under the License.
                 <field-map field-name="orderBy" value="estimatedStartDate"/>
             </service>
         </actions>
-        <field name="workEffortId" title=" " widget-style="${styles.link_id}">
+        <field name="workEffortId" title=" " widget-style="${styles.link_record_id}">
             <hyperlink target="ShowProductionRun" description="${workEffortId}" also-hidden="false">
                 <parameter param-name="productionRunId" from-field="workEffortId"/>
             </hyperlink>
@@ -122,7 +122,7 @@ under the License.
     </form>
     <form name="ListProductionRunOrderItems" type="list" target="EditProductionRun" title="" list-name="orderItems"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="orderId" widget-style="${styles.link_longid}">
+        <field name="orderId" widget-style="${styles.link_record_id_long}">
             <hyperlink target="/ordermgr/control/orderview" description="${orderId}/${orderItemSeqId}" also-hidden="false" target-type="inter-app">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -148,7 +148,7 @@ under the License.
             </entity-condition>
             <set field="quantityOnHandDiff" from-field="inventoryItemDetails[0].quantityOnHandDiff"/>
         </row-actions>
-        <field name="inventoryItemId" widget-style="${styles.link_id}">
+        <field name="inventoryItemId" widget-style="${styles.link_record_id}">
             <hyperlink target="/facility/control/EditInventoryItem" description="${inventoryItemId}" also-hidden="false" target-type="inter-app">
                 <parameter param-name="inventoryItemId"/>
             </hyperlink>
@@ -562,7 +562,7 @@ under the License.
     </form>
     <form name="ProductionRunTaskInventoryProducedList" type="list" title="" list-name="prunInventoryProduced"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="inventoryItemId" title="${uiLabelMap.ProductInventoryItem}" widget-style="${styles.link_id}">
+        <field name="inventoryItemId" title="${uiLabelMap.ProductInventoryItem}" widget-style="${styles.link_record_id}">
             <hyperlink target="/facility/control/EditInventoryItem" description="${inventoryItemId}" also-hidden="false" target-type="inter-app">
                 <parameter param-name="inventoryItemId"/>
             </hyperlink>
@@ -603,7 +603,7 @@ under the License.
         <field name="drObjectInfo" title="${uiLabelMap.CommonContent}">
             <display description="default ${drObjectInfo}"/>
         </field>
-        <field name="drObjectInfo" title="${uiLabelMap.CommonContent}" use-when="${groovy: drDataResourceTypeId != null &amp;&amp; (drDataResourceTypeId.contains(&quot;FILE&quot;) || drDataResourceTypeId.equals(&quot;IMAGE_OBJECT&quot;))}" widget-style="${styles.link_longvalue}">
+        <field name="drObjectInfo" title="${uiLabelMap.CommonContent}" use-when="${groovy: drDataResourceTypeId != null &amp;&amp; (drDataResourceTypeId.contains(&quot;FILE&quot;) || drDataResourceTypeId.equals(&quot;IMAGE_OBJECT&quot;))}" widget-style="${styles.link_record_value_long}">
             <hyperlink target="/content/control/ViewBinaryDataResource" target-type="content" target-window="productionRunContentWindow" description="${drObjectInfo}">
                 <parameter param-name="dataResourceId" from-field="drDataResourceId"/>
             </hyperlink>
@@ -635,7 +635,7 @@ under the License.
         <field name="drObjectInfo" title="${uiLabelMap.CommonContent}">
             <display description="default ${drObjectInfo}"/>
         </field>
-        <field name="drObjectInfo" title="${uiLabelMap.CommonContent}" use-when="${groovy: drDataResourceTypeId != null &amp;&amp; (drDataResourceTypeId.contains(&quot;FILE&quot;) || drDataResourceTypeId.equals(&quot;IMAGE_OBJECT&quot;))}" widget-style="${styles.link_longvalue}">
+        <field name="drObjectInfo" title="${uiLabelMap.CommonContent}" use-when="${groovy: drDataResourceTypeId != null &amp;&amp; (drDataResourceTypeId.contains(&quot;FILE&quot;) || drDataResourceTypeId.equals(&quot;IMAGE_OBJECT&quot;))}" widget-style="${styles.link_record_value_long}">
             <hyperlink target="/content/control/ViewBinaryDataResource" target-type="content" target-window="productionRunContentWindow" description="${drObjectInfo}">
                 <parameter param-name="dataResourceId" from-field="drDataResourceId"/>
             </hyperlink>
@@ -776,7 +776,7 @@ under the License.
     <!-- List for Shipment Plan -->
     <form name="listShipmentPlan" type="list" target="" title="" list-name="shipmentPlan"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="orderId" widget-style="${styles.link_id}">
+        <field name="orderId" widget-style="${styles.link_record_id}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}">
                 <parameter param-name="orderId" from-field="orderId"/>
             </hyperlink>
@@ -795,7 +795,7 @@ under the License.
         <field name="totPlannedQuantity"><display/></field>
         <!-- total issued quantity -->
         <field name="totIssuedQuantity"><display/></field>
-        <field name="productionRunId" widget-style="${styles.link_id}">
+        <field name="productionRunId" widget-style="${styles.link_record_id}">
             <hyperlink target="ShowProductionRun" description="${productionRunId}" also-hidden="false">
                 <parameter param-name="productionRunId" from-field="productionRunId"/>
             </hyperlink>
@@ -807,7 +807,7 @@ under the License.
 
     <form name="listShipmentPlans" type="list" target="" title="" list-name="shipmentPlans"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2">
-        <field name="shipmentId" widget-style="${styles.link_id}" sort-field="true">
+        <field name="shipmentId" widget-style="${styles.link_record_id}" sort-field="true">
             <hyperlink target="/facility/control/ViewShipment" target-type="inter-app" description="${shipmentId}">
                 <parameter param-name="shipmentId" from-field="shipmentId"/>
             </hyperlink>
@@ -855,7 +855,7 @@ under the License.
     </form>
     <form name="mandatoryWorkEfforts" type="list" target="" title="" list-name="mandatoryWorkEfforts"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="workEffortIdFrom" title=" " widget-style="${styles.link_id}">
+        <field name="workEffortIdFrom" title=" " widget-style="${styles.link_record_id}">
             <hyperlink target="ShowProductionRun" description="${workEffortIdFrom}" also-hidden="false" link-type="anchor">
                 <parameter param-name="productionRunId" from-field="workEffortIdFrom"/>
             </hyperlink>
@@ -884,7 +884,7 @@ under the License.
     </form>
     <form name="dependentWorkEfforts" type="list" target="" title="" list-name="dependentWorkEfforts"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="workEffortIdTo" title=" " widget-style="${styles.link_id}">
+        <field name="workEffortIdTo" title=" " widget-style="${styles.link_record_id}">
             <hyperlink target="ShowProductionRun" description="${workEffortIdTo}" also-hidden="false" link-type="anchor">
                 <parameter param-name="productionRunId" from-field="workEffortIdTo"/>
             </hyperlink>
@@ -970,7 +970,7 @@ under the License.
         <row-actions>
             <set field="quantityOnHandDiff" value="${groovy:-1*quantityOnHandDiff}" type="BigDecimal"/>
         </row-actions>
-        <field name="inventoryItemId" widget-style="${styles.link_id}">
+        <field name="inventoryItemId" widget-style="${styles.link_record_id}">
             <hyperlink target="/facility/control/EditInventoryItem" description="${inventoryItemId}" also-hidden="false" target-type="inter-app">
                 <parameter param-name="inventoryItemId"/>
             </hyperlink>

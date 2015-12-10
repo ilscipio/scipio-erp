@@ -44,7 +44,7 @@ under the License.
         <div class="smallimage"><a href="${linkUrl}"><img src="<@ofbizContentUrl>${imageUrl}</@ofbizContentUrl>" alt="${titleText?default("Link Image")}"/></a></div>
       </#if>
       <#if titleText?has_content>
-        <a href="${linkUrl}" class="${styles.link_name!}">${titleText}</a>
+        <a href="${linkUrl}" class="${styles.link_record_name!}">${titleText}</a>
       </#if>
       <#if detailText?has_content>
         <div>${detailText}</div>

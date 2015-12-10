@@ -47,7 +47,7 @@ under the License.
         <actions>
             <entity-condition entity-name="DataSource"/>
         </actions>
-        <field name="dataSourceId" widget-style="${styles.link_id}" title="${uiLabelMap.DataSourceDataSourceId}">
+        <field name="dataSourceId" widget-style="${styles.link_record_id}" title="${uiLabelMap.DataSourceDataSourceId}">
             <hyperlink target="EditDataSource" description="${dataSourceId}" also-hidden="false">
                 <parameter param-name="dataSourceId"/>
             </hyperlink>
@@ -129,7 +129,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="dataSourceId" title="${uiLabelMap.DataSourceDataSourceId}" widget-style="${styles.link_id}">
+        <field name="dataSourceId" title="${uiLabelMap.DataSourceDataSourceId}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${dataSourceId}" target="javascript:set_value('${dataSourceId}')" target-type="plain"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
@@ -152,7 +152,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="dataSourceTypeId" title="${uiLabelMap.DataSourceDataSourceTypeId}" widget-style="${styles.link_id}">
+        <field name="dataSourceTypeId" title="${uiLabelMap.DataSourceDataSourceTypeId}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${dataSourceTypeId}" target="javascript:set_value('${dataSourceTypeId}')" target-type="plain"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>

@@ -87,7 +87,7 @@ under the License.
             </entity-and>
         </actions>
         <auto-fields-entity entity-name="OrderHeader" default-field-type="display"/>
-        <field name="orderId" widget-style="${styles.link_id}">
+        <field name="orderId" widget-style="${styles.link_record_id}">
             <hyperlink target="EditOrderHeader" description="[${orderId}]">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -130,7 +130,7 @@ under the License.
         </actions>
         <field name="orderId"><hidden/></field>
         <field name="shipGroupSeqId"><hidden/></field>
-        <field name="productId" widget-style="${styles.link_id}">
+        <field name="productId" widget-style="${styles.link_record_id}">
             <hyperlink description="${productId}" target="/catalog/control/EditProductInventoryItems" target-type="inter-app">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -229,7 +229,7 @@ under the License.
         <field name="orderTypeId" title="${uiLabelMap.FormFieldTitle_orderTypeId}">
             <display-entity entity-name="OrderType" description="${description}"/>
         </field>
-        <field name="orderId" title="${uiLabelMap.OrderOrderId}" widget-style="${styles.link_id}">
+        <field name="orderId" title="${uiLabelMap.OrderOrderId}" widget-style="${styles.link_record_id}">
             <hyperlink target="orderview" description="${orderId}">
                 <parameter param-name="orderId"/>
             </hyperlink>

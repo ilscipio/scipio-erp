@@ -26,7 +26,7 @@ under the License.
     <#if shipmentId?has_content>
       <@row>
         <@cell>
-        <span>${uiLabelMap.ProductShipmentId}</span> <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.link_id!}">${shipmentId}</a>
+        <span>${uiLabelMap.ProductShipmentId}</span> <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.link_record_id!}">${shipmentId}</a>
         </@cell>
       </@row>
       <#if invoiceIds?? && invoiceIds?has_content>
@@ -203,7 +203,7 @@ under the License.
                   <@td>${orderItemSeqId!}</@td>
                   <@td>${product.productId?default("N/A")}</@td>
                   <@td>
-                    <a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_name!}" target="_blank">${(product.internalName)!}</a>
+                    <a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_record_name!}" target="_blank">${(product.internalName)!}</a>
                   </@td>
                   <@td>
                     <select name="geo_${rowKey}">

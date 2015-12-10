@@ -29,7 +29,7 @@ under the License.
                 <order-by field-name="${parameters.sortField}"/>
             </entity-condition>
         </actions>
-        <field name="productStoreId" title="${uiLabelMap.ProductStoreId}" widget-style="${styles.link_idname}" sort-field="true">
+        <field name="productStoreId" title="${uiLabelMap.ProductStoreId}" widget-style="${styles.link_record_idname}" sort-field="true">
             <hyperlink target="EditProductStore" description="${storeName} [${productStoreId}]">
                 <parameter param-name="productStoreId"/>
             </hyperlink>
@@ -244,7 +244,7 @@ under the License.
                 <field-map field-name="productStoreGroupId" from-field="productStoreGroup.productStoreGroupId"/>
             </entity-and>
         </actions>
-        <field name="productStoreId" widget-style="${styles.link_id}">
+        <field name="productStoreId" widget-style="${styles.link_record_id}">
             <hyperlink target="EditProductStore" description="${productStoreId}">
                 <parameter param-name="productStoreId"/>
             </hyperlink>

@@ -29,7 +29,7 @@ under the License.
             </entity-and>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="orderId" widget-style="${styles.link_id}">
+        <field name="orderId" widget-style="${styles.link_record_id}">
             <hyperlink description="${orderId}" target="/ordermgr/control/orderview" target-type="inter-app">
                 <parameter param-name="orderId"/>
                 <parameter param-name="workEffortId"/>

@@ -202,13 +202,13 @@
             <set field="actualHours" from-field="result.taskInfo.actualHours"/>
             <set field="currentStatusId" from-field="result.taskInfo.currentStatusId"/>
         </row-actions>
-        <field name="workEffortId" title="${uiLabelMap.ProjectMgrTaskId}" widget-style="${styles.link_name}">
+        <field name="workEffortId" title="${uiLabelMap.ProjectMgrTaskId}" widget-style="${styles.link_record_name}">
             <hyperlink also-hidden="false" description="${workEffortName}" target="taskView">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
         </field>
         <field name="phaseName" title="${uiLabelMap.ProjectMgrPhaseName}"><display/></field>
-        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.link_name}" sort-field="true">
+        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.link_record_name}" sort-field="true">
             <hyperlink also-hidden="false" description="${projectName}" target="projectView">
                 <parameter param-name="projectId"/>
             </hyperlink>
@@ -237,7 +237,7 @@
         <field name="workEffortId"><hidden/></field>
         <field name="oldRoleTypeId" parameter-name="roleTypeId"><hidden value="${roleTypeId}"/></field>
         <field name="oldPartyId" parameter-name="partyId"><hidden value="${partyId}"/></field>
-        <field name="workEffortName" title="${uiLabelMap.ProjectMgrTaskName}" widget-style="${styles.link_name}">
+        <field name="workEffortName" title="${uiLabelMap.ProjectMgrTaskName}" widget-style="${styles.link_record_name}">
             <hyperlink also-hidden="false" description="${workEffortName}" target="taskView">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="my"/>
@@ -412,7 +412,7 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <field name="workEffortId" title="${uiLabelMap.ProjectMgrWorkEffortId}">
             <display-entity entity-name="WorkEffort" description="${workEffortName}">
-                <sub-hyperlink target="EditTask" description="${workEffortId}" link-style="${styles.link_id}">
+                <sub-hyperlink target="EditTask" description="${workEffortId}" link-style="${styles.link_record_id}">
                     <parameter param-name="workEffortId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -450,7 +450,7 @@
         <field name="maintHistSeqId"><hidden/></field>
         <field name="timeEntryId"><hidden/></field>
         <field name="workEffortId"><hidden/></field>
-        <field name="timesheetId" widget-style="${styles.link_id}">
+        <field name="timesheetId" widget-style="${styles.link_record_id}">
             <hyperlink target="Timesheet" description="${timesheetId}">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -572,7 +572,7 @@
         <field name="projectId"><hidden/></field>
         <field name="partyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="viewprofile" description="${partyId}" link-style="${styles.link_id}">
+                <sub-hyperlink target="viewprofile" description="${partyId}" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -614,7 +614,7 @@
                 <field-map field-name="workEffortId" from-field="workEffortId"/>
             </entity-and>
         </actions>
-        <field name="contentName" widget-style="${styles.link_idname}">
+        <field name="contentName" widget-style="${styles.link_record_idname}">
             <hyperlink also-hidden="false" description="${contentName} [${contentId}]" target="ViewSimpleContent">
                 <parameter param-name="contentId"/>
                 <parameter param-name="dataResourceId"/>
@@ -635,7 +635,7 @@
             </entity-and>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="custRequestId" widget-style="${styles.link_idname}">
+        <field name="custRequestId" widget-style="${styles.link_record_idname}">
             <hyperlink description="${custRequestName} [${custRequestId}]" target="/projectmgr/control/ViewRequest" target-type="inter-app">
                 <parameter param-name="custRequestId"/>
             </hyperlink>

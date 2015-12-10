@@ -35,7 +35,7 @@ under the License.
                 </@td>
                 <@td>&nbsp;&nbsp;</@td>
                 <@td>
-                    <a href="<@ofbizUrl>productstocktake?facilityId=${facility.facilityId!}&amp;productId=${product.productId}</@ofbizUrl>" class="${styles.link_name!}">${(product.internalName)!}</a>
+                    <a href="<@ofbizUrl>productstocktake?facilityId=${facility.facilityId!}&amp;productId=${product.productId}</@ofbizUrl>" class="${styles.link_record_name!}">${(product.internalName)!}</a>
                 </@td>
             </@tr>
         </#list>

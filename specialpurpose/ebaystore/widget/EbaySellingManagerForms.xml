@@ -720,7 +720,7 @@ under the License.
         </row-actions>
         <field name="_rowSubmit" position="1" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="productStoreId"><hidden value="${productStoreId}"/></field>
-        <field name="orderId" title="Order ID" widget-style="${styles.link_id}">
+        <field name="orderId" title="Order ID" widget-style="${styles.link_record_id}">
             <!-- FIXME: horrible hardcoded URL -->
             <hyperlink target="https://localhost:8443/ordermgr/control/orderview?orderId=${orderId}" description="${orderId}" target-type="plain" target-window="_BLANK"/>
         </field>
@@ -762,7 +762,7 @@ under the License.
         </row-actions>
         <field name="productStoreId"><hidden value="${productStoreId}"/></field>
         <field name="_rowSubmit" position="1" title="${uiLabelMap.CommonSelect}" use-when="${bsh:String prev=(String)previousItem.get(&quot;externalId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(externalId)));}"><check/></field>
-        <field name="orderId" position="1" title="Order ID" use-when="${bsh:String prev=(String)previousItem.get(&quot;externalId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(externalId)));}" widget-style="${styles.link_id}">
+        <field name="orderId" position="1" title="Order ID" use-when="${bsh:String prev=(String)previousItem.get(&quot;externalId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(externalId)));}" widget-style="${styles.link_record_id}">
             <hyperlink target="https://localhost:8443/ordermgr/control/orderview?orderId=${orderId}" description="${orderId}" target-type="plain" target-window="_BLANK"/>
         </field>
         <field name="externalId" title="External ID" position="1" use-when="${bsh:String prev=(String)previousItem.get(&quot;externalId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(externalId)));}"><display description="${externalId}"></display></field>

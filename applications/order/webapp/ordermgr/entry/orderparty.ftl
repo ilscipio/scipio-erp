@@ -23,9 +23,9 @@ under the License.
         <@tr>
           <@td align="center">
             <#if person?has_content>
-              <div><a href="${customerDetailLink}${partyId}" class="${styles.link_name!}">${person.firstName!}&nbsp;${person.lastName!}</a></div>
+              <div><a href="${customerDetailLink}${partyId}" class="${styles.link_record_name!}">${person.firstName!}&nbsp;${person.lastName!}</a></div>
             <#elseif partyGroup?has_content>
-                              <div class="tabletext"><a href="${customerDetailLink}${partyId}" class="${styles.link_name!}">${partyGroup.groupName!}</a></div>
+                              <div class="tabletext"><a href="${customerDetailLink}${partyId}" class="${styles.link_record_name!}">${partyGroup.groupName!}</a></div>
             </#if>
             <form method="post" action="<@ofbizUrl>orderentry</@ofbizUrl>" name="setpartyform">
               <div><input type="text" name="partyId" size='10' value="${partyId!}" /></div>

@@ -34,7 +34,7 @@ under the License.
                 </@td>
                 <@td>&nbsp;&nbsp;</@td>
                 <@td>
-                    <a href="<@ofbizUrl>EditProduct?productId=${idProduct.productId}</@ofbizUrl>" class="${styles.link_name!}">${(idProduct.internalName)!}</a>
+                    <a href="<@ofbizUrl>EditProduct?productId=${idProduct.productId}</@ofbizUrl>" class="${styles.link_record_name!}">${(idProduct.internalName)!}</a>
                     (${uiLabelMap.ProductSearchResultsFound})
                 </@td>
             </@tr>
@@ -48,7 +48,7 @@ under the License.
                     </@td>
                     <@td>&nbsp;&nbsp;</@td>
                     <@td>
-                        <a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.link_name!}">${(product.internalName)!}</a>
+                        <a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.link_record_name!}">${(product.internalName)!}</a>
                         (${uiLabelMap.ProductSearchResultsFound} ${goodIdentificationType.get("description",locale)?default(goodIdentification.goodIdentificationTypeId)}.)
                     </@td>
                 </@tr>

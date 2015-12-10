@@ -127,7 +127,7 @@ under the License.
                 <field-map field-name="partyId" from-field="partyId"/>
             </entity-one>
         </row-actions>
-        <field name="partyId" widget-style="${styles.link_id}">
+        <field name="partyId" widget-style="${styles.link_record_id}">
             <hyperlink description="${partyId}" target="viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>

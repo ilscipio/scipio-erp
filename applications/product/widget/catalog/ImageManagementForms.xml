@@ -661,7 +661,7 @@ under the License.
             </entity-and>
         </row-actions>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
-        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_name}">
+        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_record_name}">
             <hyperlink also-hidden="false" target-type="plain" description="${drDataResourceName}" target="javascript:set_value('${contentId}')"/>
         </field>
         <field name="contentId"><display/></field>
@@ -815,7 +815,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
-        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_name}">
+        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_record_name}">
             <hyperlink also-hidden="false" target-type="plain" description="${drDataResourceName}" target="javascript:set_value('${contentId}')"/>
         </field>
         <field name="contentId"><display/></field>

@@ -190,12 +190,12 @@ under the License.
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="InventoryItemDetail" map-name="inventoryItemDetail" default-field-type="display"/>
         <field name="inventoryItemId"><hidden/></field> <!-- this field is redundant -->
-        <field name="orderId" widget-style="${styles.link_id}">
+        <field name="orderId" widget-style="${styles.link_record_id}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}" >
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field>
-        <field name="shipmentId" widget-style="${styles.link_id}">
+        <field name="shipmentId" widget-style="${styles.link_record_id}">
             <hyperlink target="ViewShipment" description="${shipmentId}" >
                 <parameter param-name="shipmentId"/>
             </hyperlink>
@@ -210,7 +210,7 @@ under the License.
         header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="OrderItemShipGrpInvRes" default-field-type="display"/>
         <field name="inventoryItemId"><hidden/></field>
-        <field name="orderId" widget-style="${styles.link_id}">
+        <field name="orderId" widget-style="${styles.link_record_id}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}" >
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -220,7 +220,7 @@ under the License.
     <form name="UpdateInventoryItemLabelAppls" type="list" target="updateInventoryItemLabelApplFromItem" title="" list-name="inventoryItemLabelAppls"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-service service-name="updateInventoryItemLabelAppl"/>
-        <field name="inventoryItemLabelId" title=" " widget-style="${styles.link_id}">
+        <field name="inventoryItemLabelId" title=" " widget-style="${styles.link_record_id}">
             <hyperlink target="EditInventoryItemLabel" description="${inventoryItemLabelId}" also-hidden="true">
                 <parameter param-name="inventoryItemLabelId"/>
             </hyperlink>

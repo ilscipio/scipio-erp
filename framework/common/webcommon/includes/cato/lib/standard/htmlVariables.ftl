@@ -194,56 +194,56 @@
       * any static text intended as a link that means to directly or indirectly change the state of the system or
         encourage the user to do so should be labeled with link_action. also any static text that shows
         an action but appended with an ID falls here. if it's just an ID or name alone, falls under "record identifiers and sorting fields" below.
-        * if the action is very long or complex or contains non-static elements, use link_longaction.
-          * note link_longaction isn't needed in most cases, just in very long/complex cases.
+        * if the action is very long or complex or contains non-static elements, use link_action_long.
+          * note link_action_long isn't needed in most cases, just in very long/complex cases.
         * in stock ofbiz, sometimes these were marked with extra css classes such as " create", but inconsistently
       * any static text that performs a specific function (but not necessarily changing state of system) such as
         "Download" or "Export" should also be labeled with link_action.
       * if the static text implies a navigation link that will not change the state of the system or perform any function, 
         and simply meant to navigate, it probably belongs as a link_nav (alternatively: convert to @menu)
-        * if very long or complex, use link_longnav.
+        * if very long or complex, use link_nav_long.
       * TODO: CLARIFY: if the text is a "View" action, it is mostly ambiguous whether it belongs more 
         as a link_action or as link_nav. many of them are currently labeled as link_action.
       * TODO: a single link_action may be too generic, may need to specialize it
       
     record identifiers and sorting fields:
-      * if the text is a simple single record (entity) id, name, date, or other record identifier, use link_id, link_name, link_date,
-        or if the text type is not listed or cannot be known in advance, link_value.
+      * if the text is a simple single record (entity) id, name, date, or other record identifier, use link_record_id, link_record_name, link_record_date,
+        or if the text type is not listed or cannot be known in advance, link_record_value.
         * if the value is complex or very long (e.g. multiple-field primary key), or possibly if has introductory words ("Order Item: 1000000"),
           use the corresponding link_longxxx variant instead.
-      * if it's a combination of name and id, use link_idname (or link_longidname). however, if it's
-        a name with a default value fallback to id, use link_name (or link_longname).
-      * if it's a more complex combination or a description (other than id + name), use link_desc.
+      * if it's a combination of name and id, use link_record_idname (or link_record_idname_long). however, if it's
+        a name with a default value fallback to id, use link_record_name (or link_record_name_long).
+      * if it's a more complex combination or a description (other than id + name), use link_record_desc.
       * simple extraneous characters like brackets around an id should not affect selection;
         but introductory words ("Order Item: WS10000") may warrant putting it under the link_longxxx variant.
-        in some cases, extra words means it should go under link_desc.
+        in some cases, extra words means it should go under link_record_desc.
   -->
     "link_action" : "button tiny",  <#-- action link: "Add", "Edit", "Remove", "Cancel", "Export as PDF", "Edit: WS10000", etc. not necessarily a verb, action may be implied, but should be an action. usually static text. 
                                          this may overlap with link_nav, but usually there is one more appropriate than the other.
                                          if it's a static action like "View", somewhat ambiguous (TODO: clarify) -->
-    "link_longaction" : "",         <#-- a very long (more than 20-30 chars) or complex/non-static action text: "Add Content Repository For Order Removal: WS100000" -->
+    "link_action_long" : "",        <#-- a very long (more than 20-30 chars) or complex/non-static action text: "Add Content Repository For Order Removal: WS100000" -->
     "link_nav" : "button tiny",     <#-- static navigation text without explicit action or implied "view" action, generic, not part of a menu type (see menu_xxx styles above): "Categories" 
                                          sometimes this is ambiguous with link_action (?). if links to an action that will change the state of the system directly or indirectly, should be link_action. 
                                          if simply browsing or view action, link_nav is more appropriate, though many times will fall under another
-                                         of the link types (link_id, link_desc, etc.) and is more appropriate as those. when it designates
+                                         of the link types (link_record_id, link_record_desc, etc.) and is more appropriate as those. when it designates
                                          a single record, usually more appropriate as one of the other types. -->
-    "link_longnav" : "",            <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
-    "link_id" : "",      <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
-    "link_longid" : "",  <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
-    "link_name" : "",    <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
-    "link_longname" : "",           <#-- the long name of a record: "Mr. Title The Ambassador of Germany", etc. -->
-    "link_idname" : "",  <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
-    "link_longidname" : "",         <#-- long combination of IDs and names: "Mr. John Alberton Smith Junior (ID: 10000) (Group: 20000)" -->
-    "link_desc" : "",               <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. 
-                                         in general, as soon as a non-action link text contains more than one type of value, and not idname, it should be changed to link_desc.
-                                         however, if it contains a specific action(s), it may be more appropriate as link_longaction. -->
-    "link_date" : "",    <#-- the date of a record (fromDate, thruDate, etc.) -->
-    "link_number" : "",             <#-- the number of a record (index, sequence num, etc.) -->
-    "link_url" : "",                <#-- link containing a URL as its text -->
-    "link_value" : "",              <#-- link containing a value of type not previously listed (or cannot be known statically) -->
-    "link_longvalue" : "",          <#-- link containing a value of type not previously listed but that may be long (or cannot be known statically) -->
+    "link_nav_long" : "",           <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
+    "link_record_id" : "",          <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
+    "link_record_id_long" : "",     <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
+    "link_record_name" : "",        <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
+    "link_record_name_long" : "",   <#-- the long name of a record: "Mr. Title The Ambassador of Germany", etc. -->
+    "link_record_idname" : "",      <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
+    "link_record_idname_long" : "", <#-- long combination of IDs and names: "Mr. John Alberton Smith Junior (ID: 10000) (Group: 20000)" -->
+    "link_record_desc" : "",        <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. 
+                                         in general, as soon as a non-action link text contains more than one type of value, and not idname, it should be changed to link_record_desc.
+                                         however, if it contains a specific action(s), it may be more appropriate as link_action_long. -->
+    "link_record_date" : "",        <#-- the date of a record (fromDate, thruDate, etc.) -->
+    "link_record_number" : "",      <#-- the number of a record (index, sequence num, etc.) -->
+    "link_record_value" : "",       <#-- link containing a value of type not previously listed (or cannot be known statically) -->
+    "link_record_value_long" : "",  <#-- link containing a value of type not previously listed but that may be long (or cannot be known statically) -->
+    "link_url" : "",                <#-- link containing a URL or location as its text (<a href="http://ofbiz.apache.org">http://ofbiz.apache.org</a>) -->
     "link_text" : "",               <#-- link containing any kind of free-form text -->
-    "link_image" : "",              <#-- link for an image -->
+    "link_image" : "",              <#-- link for an image (often omitted) -->
     "link_default" : "",            <#-- general link, for anything that does not fall into the above types or cannot be determined.
                                          always use the above types instead where possible.
                                          usually this will be rarely used and the style here will be left empty. -->

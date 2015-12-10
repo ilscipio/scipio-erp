@@ -87,7 +87,7 @@ under the License.
         <field name="contentId"><hidden/></field>
         <field name="contentName" sort-field="true">
             <display-entity entity-name="Content" description="${contentName}" key-field-name="contentId">
-                <sub-hyperlink target="editContent" description="[${contentId}]" link-style="${styles.link_id}">
+                <sub-hyperlink target="editContent" description="[${contentId}]" link-style="${styles.link_record_id}">
                     <parameter param-name="contentId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -100,14 +100,14 @@ under the License.
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" use-when="dataResourceId==null" sort-field="true"><display/></field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" use-when="dataResourceId!=null" sort-field="true">
             <display-entity entity-name="DataResource" description="${dataResourceName}">
-                <sub-hyperlink target="EditDataResource" link-style="${styles.link_id}" description="[${dataResourceId}]">
+                <sub-hyperlink target="EditDataResource" link-style="${styles.link_record_id}" description="[${dataResourceId}]">
                     <parameter param-name="dataResourceId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="ownerContentId" sort-field="true">
             <display-entity entity-name="Content" description="${contentName}" key-field-name="contentId">
-                <sub-hyperlink target="editContent" description="[${contentId}]" link-style="${styles.link_id}">
+                <sub-hyperlink target="editContent" description="[${contentId}]" link-style="${styles.link_record_id}">
                     <parameter param-name="contentId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -124,7 +124,7 @@ under the License.
             <set field="parameters.sortField" from-field="parameters.sortField" default-value="contentId"/>
             <call-parent-actions/>
         </actions>
-        <field name="contentId" widget-style="${styles.link_id}">
+        <field name="contentId" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
         </field>
         <field name="contentName"><display/></field>
@@ -223,10 +223,10 @@ under the License.
     <form name="mruLookupContent" default-entity-name="Content" list-name="mruList" target="" title="" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
 
-        <field name="contentId" widget-style="${styles.link_id}">
+        <field name="contentId" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
         </field>
-        <field name="contentName" widget-style="${styles.link_name}"><display/></field>
+        <field name="contentName" widget-style="${styles.link_record_name}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
     </form>
     <!-- ContentAssoc forms -->
@@ -370,7 +370,7 @@ under the License.
             </entity-and>
         </actions>
         <auto-fields-service service-name="updateContentRole" default-field-type="display"/>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.link_date}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.link_record_date}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
@@ -477,8 +477,8 @@ under the License.
             </entity-and>
         </actions>
         <auto-fields-service service-name="updateContentMetaData" default-field-type="edit"/>
-        <field name="contentId" widget-style="${styles.link_id}"><display/></field>
-        <field name="metaDataPredicateId" widget-style="${styles.link_id}"><display/></field>
+        <field name="contentId" widget-style="${styles.link_record_id}"><display/></field>
+        <field name="metaDataPredicateId" widget-style="${styles.link_record_id}"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentMetaData">
@@ -491,19 +491,19 @@ under the License.
     <!-- Person Lookup forms -->
     <form name="mruLookupPerson" list-name="mruList" target="" title="" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="partyId" title=" " widget-style="${styles.link_id}">
+        <field name="partyId" title=" " widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}')"/>
         </field>
-        <field name="firstName" title=" " widget-style="${styles.link_name}"><display/></field>
-        <field name="lastName" title=" " widget-style="${styles.link_name}"><display/></field>
+        <field name="firstName" title=" " widget-style="${styles.link_record_name}"><display/></field>
+        <field name="lastName" title=" " widget-style="${styles.link_record_name}"><display/></field>
     </form>
     <form name="mruLookupPartyAndUserLoginAndPerson" list-name="mruList" target="" title="" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="partyId" title=" " widget-style="${styles.link_id}">
+        <field name="partyId" title=" " widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}', '${userLoginId}')"/>
         </field>
-        <field name="firstName" title=" " widget-style="${styles.link_name}"><display/></field>
-        <field name="lastName" title=" " widget-style="${styles.link_name}"><display/></field>
+        <field name="firstName" title=" " widget-style="${styles.link_record_name}"><display/></field>
+        <field name="lastName" title=" " widget-style="${styles.link_record_name}"><display/></field>
     </form>
 
     <!-- ContentWorkEffort forms -->
@@ -533,7 +533,7 @@ under the License.
         <auto-fields-service service-name="updateWorkEffortContent" default-field-type="edit"/>
         <field name="workEffortId">
             <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName}" also-hidden="true">
-                <sub-hyperlink target="/workeffort/control/EditWorkEffort" description="${workEffortId}" link-style="${styles.link_id}" target-type="inter-app">
+                <sub-hyperlink target="/workeffort/control/EditWorkEffort" description="${workEffortId}" link-style="${styles.link_record_id}" target-type="inter-app">
                     <parameter param-name="workEffortId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -611,7 +611,7 @@ under the License.
         <field name="submit" title="${uiLabelMap.CommonSubmit}"><submit/></field>
     </form>
     <form name="ViewContentDetail" type="single" default-map-name="lookupContentDetail">
-        <field name="contentId" widget-style="${styles.link_id}">
+        <field name="contentId" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
         </field>
         <field name="contentName"><display/></field>

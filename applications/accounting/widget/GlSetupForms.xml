@@ -52,7 +52,7 @@ under the License.
                 <order-by field-name="accountCode"/>
             </entity-condition>
         </actions>
-        <field name="accountCode" title="${uiLabelMap.CommonCode}" widget-style="${styles.link_id}">
+        <field name="accountCode" title="${uiLabelMap.CommonCode}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${accountCode}" target="GlAccountNavigate">
                 <parameter param-name="glAccountId"/>
             </hyperlink>
@@ -485,7 +485,7 @@ under the License.
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="invoiceItemTypeId"><hidden/></field>
         <field name="description"><display/></field>
-        <field name="defaultGlAccountId" widget-style="${styles.link_id}">
+        <field name="defaultGlAccountId" widget-style="${styles.link_record_id}">
             <hyperlink target="GlAccountNavigate" description="${defaultGlAccountId}">
                 <parameter param-name="glAccountId" from-field="defaultGlAccountId"/>
             </hyperlink>
@@ -539,7 +539,7 @@ under the License.
         <field name="organizationPartyId"><hidden value="${organizationPartyId}"/></field>
         <field name="invoiceItemTypeId"><hidden/></field>
         <field name="description"><display/></field>
-        <field name="defaultGlAccountId" widget-style="${styles.link_id}">
+        <field name="defaultGlAccountId" widget-style="${styles.link_record_id}">
             <hyperlink target="GlAccountNavigate" description="${defaultGlAccountId}">
                 <parameter param-name="glAccountId" from-field="defaultGlAccountId"/>
             </hyperlink>
@@ -648,7 +648,7 @@ under the License.
             </display-entity>
         </field>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="defaultGlAccountId" widget-style="${styles.link_desc}">
+        <field name="defaultGlAccountId" widget-style="${styles.link_record_desc}">
             <hyperlink target="GlAccountNavigate" description="${defaultGlAccountId} : ${description}">
                 <parameter param-name="glAccountId" from-field="defaultGlAccountId"/>
             </hyperlink>
@@ -757,7 +757,7 @@ under the License.
         </actions>
         <auto-fields-entity entity-name="GlJournal" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="glJournalId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_id}">
+        <field name="glJournalId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_record_id}">
             <hyperlink target="SetupGlJournals" description="${glJournalId}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="glJournalId"/>
             </hyperlink>
@@ -994,7 +994,7 @@ under the License.
         </field>
         <field name="taxAuthPartyId" title="${uiLabelMap.CommonParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${taxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_id}">
+                <sub-hyperlink description="${taxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="taxAuthPartyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -1023,7 +1023,7 @@ under the License.
         </field>
         <field name="taxAuthPartyId" title="${uiLabelMap.CommonParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${taxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_id}">
+                <sub-hyperlink description="${taxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="taxAuthPartyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -1043,7 +1043,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-service service-name="updatePartyGlAccount" default-field-type="display"/>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_id}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_record_id}">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyId}" target-type="inter-app">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -1137,7 +1137,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="glAccountCategoryId" widget-style="${styles.link_id}">
+        <field name="glAccountCategoryId" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${glAccountCategoryId}" target="EditGlAccountCategory">
                 <parameter param-name="glAccountCategoryId"/>
                 <parameter param-name="glAccountCategoryTypeId"/>

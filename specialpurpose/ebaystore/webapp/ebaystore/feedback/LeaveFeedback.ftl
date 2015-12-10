@@ -99,7 +99,7 @@ under the License.
                             </div>
                         </@td>
                         <@td>
-                            Buyer:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}" class="${styles.link_id!}">${leaveFeedback.userID}</a>
+                            Buyer:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}" class="${styles.link_record_id!}">${leaveFeedback.userID}</a>
                         </@td>
                     </@tr>
                 <#else>
@@ -222,7 +222,7 @@ under the License.
                         </div>
                         </@td>
                         <@td>
-                            Seller:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}" class="${styles.link_id!}">${leaveFeedback.userID}</a>
+                            Seller:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}" class="${styles.link_record_id!}">${leaveFeedback.userID}</a>
                         </@td>
                     </@tr>
                 </#if>
@@ -256,7 +256,7 @@ under the License.
                         </div>
                     </@td>
                     <@td>
-                        Buyer:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}" class="${styles.link_id!}">${leaveFeedback.userID}</a>
+                        Buyer:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}" class="${styles.link_record_id!}">${leaveFeedback.userID}</a>
                     </@td>
                 </@tr>
             </#if>
@@ -381,7 +381,7 @@ under the License.
                     </div>
                     </@td>
                     <@td>
-                        Seller:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}" class="${styles.link_id!}">${leaveFeedback.userID}</a>
+                        Seller:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}" class="${styles.link_record_id!}">${leaveFeedback.userID}</a>
                     </@td>
                 </@tr>
             </#if>
@@ -520,9 +520,9 @@ under the License.
                 </@td>
                 <@td>
                 <#if leaveFeedback.role == "buyer">
-                    Buyer:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}" class="${styles.link_id!}">${leaveFeedback.userID}</a>
+                    Buyer:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}" class="${styles.link_record_id!}">${leaveFeedback.userID}</a>
                 <#else>
-                    Seller:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}" class="${styles.link_id!}">${leaveFeedback.userID}</a>
+                    Seller:<a target="_blank" href="http://myworld.sandbox.ebay.com/${leaveFeedback.userID}" class="${styles.link_record_id!}">${leaveFeedback.userID}</a>
                 </#if>
                 </@td>
             </@tr>

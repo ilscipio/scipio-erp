@@ -126,7 +126,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productFeatureTypeId" widget-style="${styles.link_id}">
+        <field name="productFeatureTypeId" widget-style="${styles.link_record_id}">
             <hyperlink target="EditFeatureType" description="${productFeatureTypeId}">
                 <parameter param-name="productFeatureTypeId"/>
             </hyperlink>
@@ -309,7 +309,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productFeatureCategoryId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_id}">
+        <field name="productFeatureCategoryId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_record_id}">
             <hyperlink target="EditFeatureCategoryFeatures" description="${productFeatureCategoryId}">
                 <parameter param-name="productFeatureCategoryId"/>
             </hyperlink>

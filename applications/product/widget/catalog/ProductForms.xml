@@ -43,7 +43,7 @@
                 <field-map field-name="viewSize" from-field="viewSize" />
             </service>
         </actions>
-        <field name="productId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_id}">
+        <field name="productId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${productId}" target="EditProduct">
                 <parameter param-name="productId" />
             </hyperlink>
@@ -848,7 +848,7 @@
         </field>
         <field name="productCategoryId" title="${uiLabelMap.CommonCategory}">
             <display-entity entity-name="ProductCategory" also-hidden="true" description="${categoryName}">
-                <sub-hyperlink target="EditCategory" description="${productCategoryId}" link-style="${styles.link_id}">
+                <sub-hyperlink target="EditCategory" description="${productCategoryId}" link-style="${styles.link_record_id}">
                     <parameter param-name="productCategoryId" />
                 </sub-hyperlink>
             </display-entity>
@@ -883,7 +883,7 @@
     <!-- ProductContent -->
     <form name="ListProductContentInfos" type="list" title="" list-name="productContent" odd-row-style="alternate-row"
         default-table-style="${styles.table_basic}">
-        <field name="editProductContentInfo" title="${uiLabelMap.ProductContent}" widget-style="${styles.link_desc}">
+        <field name="editProductContentInfo" title="${uiLabelMap.ProductContent}" widget-style="${styles.link_record_desc}">
             <hyperlink target="EditProductContentContent" description="${description} [${contentId}]" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="contentId" />
@@ -1004,7 +1004,7 @@
         <field name="productId">
             <hidden />
         </field>
-        <field name="contentId" title="${uiLabelMap.ProductContent_Id}" widget-style="${styles.link_desc}">
+        <field name="contentId" title="${uiLabelMap.ProductContent_Id}" widget-style="${styles.link_record_desc}">
             <hyperlink target="EditProductContentContent" description="${content.description} [${productContent.contentId}]">
                 <parameter param-name="productId" from-field="productContent.productId" />
                 <parameter param-name="contentId" from-field="productContent.contentId" />
@@ -1447,7 +1447,7 @@
             <display-entity entity-name="PartyNameView" also-hidden="true"
                 description="${firstName} ${middleName} ${lastName} ${groupName}">
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}"
-                    link-style="${styles.link_id}">
+                    link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" />
                 </sub-hyperlink>
             </display-entity>
@@ -1631,7 +1631,7 @@
         <!-- <display-entity entity-name="FixedAsset" description="${fixedAssetName}[${fixedAssetId}]"/> -->
 
         <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAsset} [${uiLabelMap.AccountingFixedAssetId}]"
-            widget-style="${styles.link_desc}">
+            widget-style="${styles.link_record_desc}">
             <display-entity entity-name="FixedAsset" description="${fixedAssetName} [${fixedAssetId}]" />
         </field>
         <field name="fixedAssetProductTypeId" title="${uiLabelMap.AccountingFixedAssetProductType}">
@@ -1852,7 +1852,7 @@
         <field name="productId">
             <hidden />
         </field>
-        <field name="productIdTo" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_name}">
+        <field name="productIdTo" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_record_name}">
             <hyperlink also-hidden="false" description="${productAssoc.internalName}" target="EditProduct">
                 <parameter param-name="productId" from-field="productIdTo" />
             </hyperlink>
@@ -1893,7 +1893,7 @@
         <field name="productIdTo">
             <hidden />
         </field>
-        <field name="productId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_id}">
+        <field name="productId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${productId}" target="EditProduct">
                 <parameter param-name="productId" />
             </hyperlink>
@@ -1918,7 +1918,7 @@
         <field name="routingWorkEffortId">
             <hidden />
         </field>
-        <field name="productIdTo" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_id}">
+        <field name="productIdTo" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${productIdTo}" target="ViewProductManufacturing">
                 <parameter param-name="productId" from-field="productIdTo" />
             </hyperlink>
@@ -1954,7 +1954,7 @@
         <field name="scrapFactor">
             <hidden />
         </field>
-        <field name="productId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_id}">
+        <field name="productId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${productId}" target="ViewProductManufacturing">
                 <parameter param-name="productId" />
             </hyperlink>
@@ -1978,7 +1978,7 @@
         <field name="workEffortName" title="${uiLabelMap.ProductWorkEffortName}" entry-name="workEffortId">
             <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName}" />
         </field>
-        <field name="workEffortId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_id}">
+        <field name="workEffortId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${workEffortId}" target="/manufacturing/control/EditRoutingProductAction"
                 target-type="inter-app">
                 <parameter param-name="workEffortId" />
@@ -2024,7 +2024,7 @@
         <field name="cost">
             <display />
         </field>
-        <field name="costComponentId" widget-style="${styles.link_id}">
+        <field name="costComponentId" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${costComponentId}" target="EditProductCosts">
                 <parameter param-name="productId" />
                 <parameter param-name="productCostComponentId" from-field="costComponentId" />
@@ -2051,7 +2051,7 @@
         <field name="costComponentTypeId">
             <display-entity entity-name="CostComponentType" />
         </field>
-        <field name="costComponentCalcId" widget-style="${styles.link_id}">
+        <field name="costComponentCalcId" widget-style="${styles.link_record_id}">
             <hyperlink target="/manufacturing/control/EditCostCalcs" also-hidden="false" target-type="inter-app"
                 description="${costComponentCalcId}">
                 <parameter param-name="costComponentCalcId" />
@@ -2179,7 +2179,7 @@
         <field name="orderDate">
             <display />
         </field>
-        <field name="orderId" widget-style="${styles.link_id}">
+        <field name="orderId" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${orderId}" target="/ordermgr/control/orderview" target-type="inter-app">
                 <parameter param-name="orderId" />
             </hyperlink>
@@ -2568,7 +2568,7 @@
         </field>
         <field name="subscriptionResourceId">
             <display-entity entity-name="SubscriptionResource" description="${description}">
-                <sub-hyperlink target="EditSubscriptionResource" description="${subscriptionResourceId}" link-style="${styles.link_id}">
+                <sub-hyperlink target="EditSubscriptionResource" description="${subscriptionResourceId}" link-style="${styles.link_record_id}">
                     <parameter param-name="subscriptionResourceId" />
                 </sub-hyperlink>
             </display-entity>
@@ -2661,7 +2661,7 @@
         <row-actions>
             <entity-one entity-name="Agreement" value-field="agreement" />
         </row-actions>
-        <field name="agreementId" widget-style="${styles.link_id}">
+        <field name="agreementId" widget-style="${styles.link_record_id}">
             <hyperlink target="/accounting/control/EditAgreement" target-type="inter-app" description="${agreementId}"
                 also-hidden="false">
                 <parameter param-name="agreementId" />
@@ -2690,7 +2690,7 @@
         </field>
     </form>
     <form name="ListSalesAgreements" type="list" list-name="salesAgreements" odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
-        <field name="agreementId" widget-style="${styles.link_longid}">
+        <field name="agreementId" widget-style="${styles.link_record_id_long}">
             <hyperlink target="/accounting/control/EditAgreementItemProduct" target-type="inter-app"
                 description="${agreementId}/${agreementItemSeqId}" also-hidden="false">
                 <parameter param-name="agreementId" />
@@ -2722,7 +2722,7 @@
     </form>
     <form name="ListProductAgreements" type="list" list-name="productAgreements" odd-row-style="alternate-row"
         default-table-style="${styles.table_basic}">
-        <field name="agreementId" widget-style="${styles.link_longid}">
+        <field name="agreementId" widget-style="${styles.link_record_id_long}">
             <hyperlink target="/accounting/control/EditAgreementItemProduct" target-type="inter-app"
                 description="${agreementId}/${agreementItemSeqId}" also-hidden="false">
                 <parameter param-name="agreementId" />
@@ -2807,7 +2807,7 @@
         <field name="workEffortId" title="${uiLabelMap.WorkEffort}">
             <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="${workEffortName}"
                 also-hidden="true">
-                <sub-hyperlink target="/workeffort/control/EditWorkEffort" description="${workEffortId}" link-style="${styles.link_id}"
+                <sub-hyperlink target="/workeffort/control/EditWorkEffort" description="${workEffortId}" link-style="${styles.link_record_id}"
                     target-type="inter-app">
                     <parameter param-name="workEffortId" />
                 </sub-hyperlink>
@@ -3246,7 +3246,7 @@
     </form>
 
     <form name="ListCommEvents" list-name="communicationEvents" type="list" header-row-style="header-row" default-table-style="${styles.table_basic}">
-        <field name="communicationEventId" widget-style="${styles.link_id}">
+        <field name="communicationEventId" widget-style="${styles.link_record_id}">
             <hyperlink description="${communicationEventId}" target="/partymgr/control/EditCommunicationEvent?communicationEventId=${communicationEventId}"
                 target-type="inter-app" />
         </field>
@@ -3301,7 +3301,7 @@
             <display-entity entity-name="PartyNameView"
                 description="${personalTitle} ${firstName} ${middleName} ${lastName} ${suffix} ${groupName}" also-hidden="true"
                 cache="false">
-                <sub-hyperlink target-type="inter-app" link-style="${styles.link_id}" target="/partymgr/control/viewprofile"
+                <sub-hyperlink target-type="inter-app" link-style="${styles.link_record_id}" target="/partymgr/control/viewprofile"
                     description="${partyId}">
                     <parameter param-name="party_id" from-field="partyId" />
                 </sub-hyperlink>
@@ -3462,7 +3462,7 @@
         <field name="keywordTypeId">
             <hidden />
         </field>
-        <field name="productId" widget-style="${styles.link_id}">
+        <field name="productId" widget-style="${styles.link_record_id}">
             <hyperlink target="EditProduct" description="${productId}">
                 <parameter param-name="productId" />
             </hyperlink>

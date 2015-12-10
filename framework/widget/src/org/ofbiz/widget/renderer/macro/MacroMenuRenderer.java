@@ -36,6 +36,7 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.webapp.taglib.ContentUrlTag;
@@ -340,6 +341,11 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         if (UtilValidate.isNotEmpty(alignStyle)) {
             style = style.concat(" ").concat(alignStyle);
         }
+        
+        // Cato: expand the style here (not done previously, and _may_ expand on its own through FTL, but
+        // may not produce expected results!)
+        style = FlexibleStringExpander.expandString(style, context).trim();
+                
         parameters.put("style", style);
         parameters.put("toolTip", menuItem.getTooltip(context));
         String linkStr = "";

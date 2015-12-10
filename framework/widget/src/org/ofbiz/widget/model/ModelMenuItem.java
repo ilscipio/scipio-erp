@@ -520,6 +520,7 @@ public class ModelMenuItem extends ModelWidget {
      * but can't change easily in java.
      */
     String buildStyle(String style, String parentStyle, String defaultStyle) {
+        String res;
         if (!style.isEmpty()) {
             // Cato: support extending styles
             if (style.startsWith("+")) {
@@ -532,27 +533,31 @@ public class ModelMenuItem extends ModelWidget {
                 }
                 if (inheritedStyles != null && !inheritedStyles.isEmpty()) {
                     if (!addStyles.isEmpty()) {
-                        return inheritedStyles + (addStyles.startsWith(" ") ? "" : " ") + addStyles;
+                        res = inheritedStyles + (addStyles.startsWith(" ") ? "" : " ") + addStyles;
                     }
                     else {
-                        return inheritedStyles;
+                        res = inheritedStyles;
                     }
                 }
                 else {
-                    return addStyles;
+                    res = addStyles;
                 }
             }
             else {
                 if (style.startsWith("=")) {
                     style = style.substring(1);
                 }
-                return style;
+                res = style;
             }
         } else if (parentStyle != null) {
-            return parentStyle;
+            res = parentStyle;
         } else {
-            return defaultStyle;
+            res = defaultStyle;
         }
+        if (res != null) {
+            res = res.trim();
+        }
+        return res;
     }
     
     public String getOverrideMode() {
@@ -724,7 +729,7 @@ public class ModelMenuItem extends ModelWidget {
             //return link.getStyle(context);
             // We can simply delegate to the parent menu item. it will fetch back the style from us on its own.
             // This makes sure getLinkStyle will be logical.
-            return FlexibleStringExpander.expandString(linkMenuItem.getLinkStyle(), context);
+            return FlexibleStringExpander.expandString(linkMenuItem.getLinkStyle(), context).trim();
         }
 
         public FlexibleStringExpander getStyleExdr() {

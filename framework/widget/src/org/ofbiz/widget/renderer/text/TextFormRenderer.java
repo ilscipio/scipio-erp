@@ -322,9 +322,4 @@ public class TextFormRenderer implements FormStringRenderer {
 		
 	}
 
-	@Override
-	public void renderSubmitFormForRowSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
 }

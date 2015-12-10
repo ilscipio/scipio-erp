@@ -32,8 +32,10 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.apache.xmlrpc.util.HttpUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.MapStack;
@@ -406,8 +408,8 @@ public class FormRenderer {
             if (UtilValidate.isNotEmpty(innerFormFields))
             	maxNumOfColumns += innerFormFields.size();
             
-            // Cato: Add an extra column to hold a checkbox for form lists that use an independent row submit. This checkbox will determine which row must be submitted.
-            if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
+            // Cato: Add an extra column to hold a checkbox or radio button depending on the type of form.
+            if ((modelForm.getType().equals("list") || modelForm.getType().equals("multi")) && modelForm.getUseRowSubmit()) {
             	ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
             	ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(FieldInfo.DISPLAY, null);
             	builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
@@ -588,21 +590,33 @@ public class FormRenderer {
         }
 
         if (modelForm.getGroupColumns()) {
-        	// Cato: Add an extra column to hold a checkbox for form lists that use an independent row submit. This checkbox will determine which row must be submitted.
+        	// Cato: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
             if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
             	ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
             	List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
             	optionSources.add(new SingleOption("Y", " ", null));
-            	ModelFormField.RadioField checkField = new ModelFormField.RadioField(FieldInfo.RADIO, null, optionSources);
+            	ModelFormField.RadioField radioField = new ModelFormField.RadioField(FieldInfo.RADIO, null, optionSources);
             	builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
             	builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
+            	builder.setModelForm(modelForm);
+            	builder.setTitle("Select");
+            	builder.setFieldInfo(radioField);
+            	innerDisplayHyperlinkFieldsEnd.add(builder.build());            	
+            	numOfColumns++;
+            } else if (modelForm.getType().equals("multi") && modelForm.getUseRowSubmit()) {
+            	ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+            	List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
+            	optionSources.add(new SingleOption("Y", " ", null));
+            	ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);            
+            	builder.setFieldName(UtilHttp.ROW_SUBMIT_PREFIX);				
+            	builder.setName(UtilHttp.ROW_SUBMIT_PREFIX);
             	builder.setModelForm(modelForm);
             	builder.setTitle("Select");
             	builder.setFieldInfo(checkField);
             	innerDisplayHyperlinkFieldsEnd.add(builder.build());            	
             	numOfColumns++;
             }
-        	
+        	 
             // do the first part of display and hyperlink fields
             Iterator<ModelFormField> innerDisplayHyperlinkFieldIter = innerDisplayHyperlinkFieldsBegin.iterator();
             while (innerDisplayHyperlinkFieldIter.hasNext()) {
@@ -1169,12 +1183,9 @@ public class FormRenderer {
         
         listFormHandler.renderTableClose();
         
-        // Cato: checks whether the form renders a specific submit button or not, if not renders a hidden form at the end of the list of results
-        if (!modelForm.getUseRowSubmit()) {        	
-        	formStringRenderer.renderSubmitForm(writer, context, modelForm);
-        } else {
-        	formStringRenderer.renderSubmitFormForRowSubmit(writer, context, modelForm);
-        }
+        // Cato: Renders a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.         	
+        formStringRenderer.renderSubmitForm(writer, context, modelForm);
+        
        
         listFormHandler.renderFinalize();
     }

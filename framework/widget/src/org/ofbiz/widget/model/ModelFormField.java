@@ -46,6 +46,7 @@ import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -501,6 +502,8 @@ public class ModelFormField {
 
         Integer itemIndex = (Integer) context.get("itemIndex");
         if (itemIndex != null && "multi".equals(this.modelForm.getType())) {
+        	if (baseName.equals(UtilHttp.ROW_SUBMIT_PREFIX))
+        		return baseName + itemIndex.intValue();
             return baseName + this.modelForm.getItemIndexSeparator() + itemIndex.intValue();
         } else {
             return baseName;

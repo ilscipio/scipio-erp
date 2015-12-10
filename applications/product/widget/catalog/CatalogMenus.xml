@@ -646,7 +646,9 @@ under the License.
                     <if-has-permission permission="IMAGE_MANAGEMENT_ADMIN"/>
                 </or>
             </condition>
-            <link target="ImageUpload"/>
+            <link target="ImageUpload">
+                <parameter param-name="productId"/>
+            </link>
         </menu-item>
         <menu-item name="ImageManage" title="${uiLabelMap.CommonManage}">
             <condition>

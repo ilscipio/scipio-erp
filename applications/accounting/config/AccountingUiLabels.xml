@@ -2789,6 +2789,12 @@
         <value xml:lang="zh">账目表：</value>
         <value xml:lang="zh_TW">會計科目表</value>
     </property>
+    <property key="AccountingArMenu">
+    	<value xml:lang="en">Accounts Receivable</value>
+    </property>
+    <property key="AccountingApMenu">
+    	<value xml:lang="en">Accounts Payable</value>
+    </property>
     <property key="AccountingChartOfAcctsMenu">
         <value xml:lang="ar">بيان الحسابات</value>
         <value xml:lang="de">Kontenübersicht</value>

@@ -400,8 +400,15 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.AccountingMainPage}">
-                            <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific>
+                        <screenlet title="${uiLabelMap.CommonDashboard}">
+                            <!-- <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific> -->
+                            <container style="">
+                            <decorator-screen name="" >
+                            	<decorator-section name="" >
+                            		<include-screen name="ListPayments" location="component://accounting/widget/PaymentScreens.xml" />
+                            	</decorator-section>
+                            </decorator-screen>
+                            </container>
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

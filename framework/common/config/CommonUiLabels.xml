@@ -13208,6 +13208,9 @@
         <value xml:lang="zh_CN">内容</value>
         <value xml:lang="zh_TW">內容</value>
     </property>
+    <property key="CommonSettings">
+        <value xml:lang="en">Settings</value>
+    </property>
     <property key="DataSource">
         <value xml:lang="ar">مصدر المعلومات</value>
         <value xml:lang="cs">Datový zdroj</value>

@@ -17,25 +17,34 @@ specific language governing permissions and limitations
 under the License.
 -->
         
-<@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
-  <@tr>
-    <#list imageEntries as imageEntry>
-    <#if imageEntry?has_content> <#-- Cato: WARN: entries may be null! -->
-      <@td style="vertical-align:top;">
-        <@table type="data-complex"> <#-- orig: class="" -->
-            <#if imageEntry.approved?has_content>
-                <@tr><@td>${imageEntry.date}</@td></@tr>
-                <#list imageEntry.approved as show>
-                    <@tr>
-                        <@td>
-                            <a href="<@ofbizUrl>ListImageRecentlyApproved?productId=${show.productId}&date1=${imageEntry.timeStampDate1}&date2=${imageEntry.timeStampDate2}&showDate=${imageEntry.date}</@ofbizUrl>" class="test">${show.productId}</a> - ${imageEntry.time[show_index]}
-                        </@td>
-                    </@tr>
-                </#list>
-            </#if>
-        </@table>
-      </@td>
+<#-- Cato: this needs an explanation: 
+     on stock this page grouped products by date and for each date showed a list of products,
+     but no actual images.
+     we want sample images at least, so instead of grouping by date we just make a tile
+     for each product for each date group, let them arrangement themselves, and for each
+     product it will show one sample image. 
+     -->
+<@grid type="tiles">    
+    <#list productContentEntries as productContentEntry>
+    <#if productContentEntry?has_content> <#-- Cato: WARN: entries may be null! -->
+      <#if productContentEntry.approved?has_content>
+        <#list productContentEntry.approved as show>
+          <#assign thumbSrc = (productContentEntry.sampleImageList[show_index].productImageThumb)!"">
+          <#assign targetLink><@ofbizUrl>ListImageRecentlyApproved?productId=${show.productId}&date1=${productContentEntry.timeStampDate1}&date2=${productContentEntry.timeStampDate2}&showDate=${productContentEntry.date}</@ofbizUrl></#assign>
+        
+          <#-- Cato: NOTE: the productContentEntry.date used to be in a wrapper around the entries (outside
+               <#list productContentEntry.approved as show>). but we'll just integrate it into the tiles as title. -->
+          <@tile type="normal" image=thumbSrc overlayColor=styles.gallery_overlay_color!
+            overlayType=styles.gallery_overlay_type! imageType=styles.gallery_image_type!
+            title="${productContentEntry.date} - ${show.productId}" link=targetLink>
+
+            <#--link whole tile instead and put product ID in title
+            <a href="${targetLink}" class="${styles.link_record_id!}">${show.productId}</a> - ${productContentEntry.time[show_index]}-->
+            ${productContentEntry.time[show_index]}
+          </@tile>
+
+        </#list>
+      </#if>
     </#if>
     </#list>
-  </@tr>
-</@table>
+</@grid>

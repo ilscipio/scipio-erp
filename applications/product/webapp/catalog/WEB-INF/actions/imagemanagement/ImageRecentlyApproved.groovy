@@ -33,7 +33,7 @@ def sdfTime = new SimpleDateFormat("HH:mm")
 def today = new Date()
 
 // Cato: these used to be approved_0, approved_1, ... use proper array instead (entries initialized to null)
-imageEntries = new Map<String, Object>[limit+1];
+productContentEntries = new Map<String, Object>[limit+1];
 
 for(i in 0..limit){
     def date1 = sdf.format(today-i)
@@ -52,11 +52,12 @@ for(i in 0..limit){
     def productContentAndInfoList = select("productId").from("ProductContentAndInfo").where(exprs).distinct().queryList();
     
     // finding time
+    /* Cato: rewrite this below; too contrived, doesn't get all the info out
     def timeList = from("ProductContentAndInfo").where(exprs).orderBy("productId").queryList();
-    def groupByTimeList =  timeList.groupBy{it.productId}
+    def groupByTimeList = timeList.groupBy{it.productId}
     def tempTimeList = []
     groupByTimeList.each() {
-        key,value -> tempTimeList.add(value.purchaseFromDate)
+        key,value -> tempTimeList.add(value.purchaseFromDate);
     }
     
     def time = []
@@ -65,14 +66,55 @@ for(i in 0..limit){
             time.add(sdfTime.format(tempTimeList.get(j).get(0)))
         }
     }
+    */
+    // Cato: get one entry per product, most recent purchaseFromDate (seems to be the approval date...?)
+    def timeList = from("ProductContentAndInfo").where(exprs).orderBy("productId", "purchaseFromDate").queryList();
+    def sampleProductContentAndInfoList = []
+    def time = []
+    // Cato: iterate timeList and only get the last entry for each product (most recent)
+    def lastProductInfo = ["productId":""]
+    // add a dummy final entry so the real last entry will get processed in the loop
+    timeList.add(["productId":""])
+    timeList.each{ productContentAndInfo ->
+        if (productContentAndInfo.productId != lastProductInfo.productId) {
+            if (lastProductInfo.productId) {
+                sampleProductContentAndInfoList.add(lastProductInfo)
+                time.add(sdfTime.format(lastProductInfo.purchaseFromDate))
+            }
+        }
+        lastProductInfo = productContentAndInfo
+    }
+        
     def showDate = sdf2.format(today-i)
     
-    imageEntries[i] = [
+    // Cato: include one image per product
+    def sampleImageList = []
+    sampleProductContentAndInfoList.each { productContentAndInfoImageManament ->
+        def imageMap = null;
+        def contentAssocThumb = from("ContentAssoc").where("contentId", productContentAndInfoImageManament.contentId, "contentAssocTypeId", "IMAGE_THUMBNAIL").queryFirst();
+        if(contentAssocThumb) {
+            def imageContentThumb = from("Content").where("contentId", contentAssocThumb.contentIdTo).queryOne();
+            if(imageContentThumb) {
+                def productImageThumb = from("ContentDataResourceView").where("contentId", imageContentThumb.contentId, "drDataResourceId", imageContentThumb.dataResourceId).queryOne();
+                productImageMap = [:];
+                productImageMap.contentId = productContentAndInfoImageManament.contentId;
+                productImageMap.dataResourceId = productContentAndInfoImageManament.dataResourceId;
+                productImageMap.productImageThumb = productImageThumb.drObjectInfo;
+                productImageMap.productImage = productContentAndInfoImageManament.drObjectInfo;
+                imageMap = productImageMap;
+            }
+        }
+        sampleImageList.add(imageMap);
+    }
+    
+    productContentEntries[i] = [
+      // Cato: pass full list instead
       "approved" : productContentAndInfoList,
       "time" : time,
       "date" : showDate,
       "timeStampDate1" : timeStampDate1,
-      "timeStampDate2" : timeStampDate2
+      "timeStampDate2" : timeStampDate2,
+      "sampleImageList" : sampleImageList // Cato: pass images
     ];
     
     /* Cato: No.
@@ -109,4 +151,4 @@ for(i in 0..limit){
     } */
 }
 
-context.imageEntries = Arrays.asList(imageEntries);
+context.productContentEntries = Arrays.asList(productContentEntries);

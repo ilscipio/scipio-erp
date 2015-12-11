@@ -22,18 +22,17 @@ under the License.
             <@table type="data-complex" cellspacing="0" role="grid"> <#-- orig: class="basic-table" -->
               <@thead>
                 <@tr valign="bottom" class="header-row">
-                    <@th width="35%">${uiLabelMap.ProductProduct}</@th>
-                    <@th width="10%" class="${styles.text_right!}">${uiLabelMap.CommonStatus}</@th>
+                    <@th width="30%">${uiLabelMap.ProductProduct}</@th>
+                    <@th width="15%" class="${styles.text_right!}">${uiLabelMap.CommonStatus}</@th>
                     <@th width="10%">${uiLabelMap.OrderQuantity}</@th>
-                    <@th width="10%" class="${styles.text_right!}">${uiLabelMap.OrderUnitList}</@th>
-                    <@th width="10%" class="${styles.text_right!}">${uiLabelMap.OrderAdjustments}</@th>
-                    <@th width="10%" class="${styles.text_right!}">${uiLabelMap.OrderSubTotal}</@th>
-                    <@th width="15%">&nbsp;</@th>
+                    <@th width="20%" class="${styles.text_right!}">${uiLabelMap.OrderUnitList}</@th>
+                    <@th width="15%" class="${styles.text_right!}">${uiLabelMap.OrderAdjustments}</@th>
+                    <@th width="15%" class="${styles.text_right!}">${uiLabelMap.OrderSubTotal}</@th>
                 </@tr>
                 </@thead>
                 <#if !orderItemList?has_content>
                     <@tr type="meta">
-                        <@td colspan="7">
+                        <@td colspan="6">
                             <@alert type="error">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</@alert>
                         </@td>
                     </@tr>
@@ -51,20 +50,19 @@ under the License.
                                 <@td> &gt;&gt; ${orderItem.itemDescription}</@td>
                             <#else>
                                 <@td>
-                                    <div>
                                         <strong>
                                         <#if orderItem.supplierProductId?has_content>
-                                            ${orderItem.supplierProductId} - ${orderItem.itemDescription!}
+                                            <a href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}">${orderItem.supplierProductId} - ${orderItem.itemDescription!}</a>
                                         <#elseif productId??>
-                                            ${orderItem.productId?default("N/A")} - ${orderItem.itemDescription!}
+                                            <a href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}">${orderItem.productId?default("N/A")} - ${orderItem.itemDescription!}</a>
                                             <#if (product.salesDiscontinuationDate)?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(product.salesDiscontinuationDate)>
                                                 <br />
                                                     ${uiLabelMap.OrderItemDiscontinued}: ${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(product.salesDiscontinuationDate, "", locale, timeZone)!}
                                             </#if>
                                         <#elseif orderItemType??>
-                                            ${orderItemType.description} - ${orderItem.itemDescription!}
+                                            <a href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}">${orderItemType.description} - ${orderItem.itemDescription!}</a>
                                         <#else>
-                                            ${orderItem.itemDescription!}
+                                            <a href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}">${orderItem.itemDescription!}</a>
                                         </#if>
                                         </strong>
                                         <#assign orderItemAttributes = orderItem.getRelated("OrderItemAttribute", null, null, false)/>
@@ -77,25 +75,18 @@ under the License.
                                             </#list>
                                             </ul>
                                         </#if>
-                                    </div>
-                                    <div> <#-- style="float:right;" -->
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"})/>
                                         <#if downloadContents?has_content>
                                             <#list downloadContents as downloadContent>
-                                                <a href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" class="${styles.link_action!}" target="_blank">${uiLabelMap.ContentDownload}</a>&nbsp;
+                                                <ul>
+                                                    <li><a href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" target="_blank">${uiLabelMap.ContentDownload}</a>
+                                                </ul>
                                             </#list>
                                         </#if>
-                                        <a href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
-                                        <a href="/ecommerce/control/product?product_id=${productId}" class="${styles.link_nav!}" target="_blank">${uiLabelMap.OrderEcommerce}</a>
-                                        <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
-                                            <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>"
-                                               target="_orderImage" class="${styles.link_action!}">${uiLabelMap.OrderViewImage}</a>
-                                        </#if>
-                                    </div>
                                 </@td>
                             </#if>
                             <#if productId?? && productId == "shoppingcart.CommentLine">
-                                <@td colspan="7"> &gt;&gt; ${orderItem.itemDescription}</@td>
+                                <@td colspan="6"> &gt;&gt; ${orderItem.itemDescription}</@td>
                             <#else>
                                 <#-- now show status details per line item -->
                                 <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)>
@@ -456,7 +447,7 @@ under the License.
                         <#assign orderItemPriceInfos = orderReadHelper.getOrderItemPriceInfos(orderItem)>
                         <#if orderItemPriceInfos?? && orderItemPriceInfos?has_content>
                                                 <@tr class="${rowColor!}">
-                                <@td colspan="7">&nbsp;</@td>
+                                <@td colspan="6">&nbsp;</@td>
                             </@tr>
                             <#list orderItemPriceInfos as orderItemPriceInfo>
                                                     <@tr class="${rowColor!}">
@@ -662,21 +653,6 @@ target="facility"
                                         <@ofbizCurrency amount=0.00 isoCode=currencyUomId/>
                                     </#if>
                                 </@td>
-                                <@td>
-                                    <@menu type="button">
-                                        <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"})/>
-                                        <#if downloadContents?has_content>
-                                            <#list downloadContents as downloadContent>
-                                                <@menuitem type="link" href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" text="${uiLabelMap.ContentDownload}" target="_blank" />
-                                            </#list>
-                                        </#if>
-                                        <@menuitem type="link" href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCatalog}" target="_blank" />
-                                        <@menuitem type="link" href="/ecommerce/control/product?product_id=${productId}" text="${uiLabelMap.OrderEcommerce}" target="_blank" />
-                                        <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
-                                          <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL") text="${uiLabelMap.OrderViewImage}" target="_orderImage" />
-                                        </#if>
-                                      </@menu>
-                                </@td>
                             </#if>
                         </@tr>
                         
@@ -714,7 +690,6 @@ target="facility"
                               </@section>
                             </@td>
                             <@td></@td>
-                            <@td></@td>
                           </@tr>
                         </#if>                        
                         <#if itemClass == "2">
@@ -737,7 +712,6 @@ target="facility"
                             <@td class="${styles.text_right!}" nowrap="nowrap">
                                 <@ofbizCurrency amount=adjustmentAmount isoCode=currencyUomId/>
                             </@td>
-                            <@td>&nbsp;</@td>
                         </@tr>
                     </#if>
                 </#list>
@@ -748,7 +722,6 @@ target="facility"
                 <@tr>
                     <@td colspan="5"></@td>
                     <@td colspan="1"><hr /></@td>
-                    <@td colspan="1"></@td>
                 </@tr>
                 <@tr>
                     <@td colspan="5" class="${styles.text_right!}">
@@ -757,7 +730,6 @@ target="facility"
                     <@td nowrap="nowrap" class="${styles.text_right!}">
                         <@ofbizCurrency amount=orderSubTotal isoCode=currencyUomId/>
                     </@td>
-                    <@td>&nbsp;</@td>
                 </@tr>
                 <#-- other adjustments -->
                 <@tr>
@@ -767,7 +739,6 @@ target="facility"
                     <@td nowrap="nowrap" class="${styles.text_right!}">
                         <@ofbizCurrency amount=otherAdjAmount isoCode=currencyUomId/>
                     </@td>
-                    <@td>&nbsp;</@td>
                 </@tr>
                 <#-- shipping adjustments -->
                 <@tr>
@@ -777,7 +748,6 @@ target="facility"
                     <@td nowrap="nowrap" class="${styles.text_right!}">
                         <@ofbizCurrency amount=shippingAmount isoCode=currencyUomId/>
                     </@td>
-                    <@td>&nbsp;</@td>
                 </@tr>
                 <#-- tax adjustments -->
                 <@tr>
@@ -787,13 +757,11 @@ target="facility"
                     <@td nowrap="nowrap" class="${styles.text_right!}">
                         <@ofbizCurrency amount=taxAmount isoCode=currencyUomId/>
                     </@td>
-                    <@td>&nbsp;</@td>
                 </@tr>
                 <#-- grand total -->
                 <@tr>
                     <@td colspan="5"></@td>
                     <@td colspan="1"><hr /></@td>
-                    <@td colspan="1"></@td>
                 </@tr>
                 <@tr>
                     <@td colspan="5" class="${styles.text_right!}">
@@ -803,7 +771,6 @@ target="facility"
                         <@ofbizCurrency amount=grandTotal isoCode=currencyUomId/>
                             </strong>
                     </@td>
-                    <@td>&nbsp;</@td>
                 </@tr>
             </@table>
         </@section>

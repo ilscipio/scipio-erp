@@ -274,7 +274,12 @@ not "current" context (too intrusive in current renderer design). still relies o
     <#-- with "+" (append only), default class will be selected by @table macro -->
     <#local class = "+form-widget-table dark-grid">
   </#if>
-  <@table openOnly=true type=mapOfbizFormTypeToTableType(formType) class=class responsive=responsive scrollable=scrollable fixedColumnsLeft=(attribs.tableArgs.fixedColumnsLeft)!0 fixedColumnsRight=(attribs.tableArgs.fixedColumnsRight)!0 />
+  <#local tableType = mapOfbizFormTypeToTableType(formType)>
+  <!-- table:
+    type: ${tableType}
+    responsive: ${responsive?string} 
+    scrollable: ${scrollable?string} -->
+  <@table openOnly=true type=tableType class=class responsive=responsive scrollable=scrollable fixedColumnsLeft=(attribs.tableArgs.fixedColumnsLeft)!0 fixedColumnsRight=(attribs.tableArgs.fixedColumnsRight)!0 />
 </#macro>
 
 <#macro renderFormatListWrapperClose formName>
@@ -288,13 +293,14 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderFormatHeaderRowOpen style>
-<#-- Cato: TODO: translate all thead/td/th/td/etc to @thead openOnly/closeOnly/etc... -->
-<thead>
-  <tr class="<#if style?has_content>${style}<#else>header-row</#if>">
+<#-- Cato: TODO: translate all thead/td/th/td/etc to @thead openOnly/closeOnly/etc... 
+     I've done @thead because required by responsive tables at the moment -->
+  <@thead openOnly=true />
+    <tr class="<#if style?has_content>${style}<#else>header-row</#if>">
 </#macro>
 <#macro renderFormatHeaderRowClose>
-  </tr>
-  </thead>
+    </tr>
+  <@thead closeOnly=true />
 </#macro>
 <#macro renderFormatHeaderRowCellOpen style positionSpan>
   <#global renderFormatHeaderRowCellOpened = true>

@@ -34,7 +34,7 @@ under the License.
         
           <#-- Cato: NOTE: the productContentEntry.date used to be in a wrapper around the entries (outside
                <#list productContentEntry.approved as show>). but we'll just integrate it into the tiles as title. -->
-          <@tile type="normal" image=thumbSrc overlayColor=styles.gallery_overlay_color!
+          <@tile size="normal" image=thumbSrc overlayColor=styles.gallery_overlay_color!
             overlayType=styles.gallery_overlay_type! imageType=styles.gallery_image_type!
             title="${productContentEntry.date} - ${show.productId}" link=targetLink>
 

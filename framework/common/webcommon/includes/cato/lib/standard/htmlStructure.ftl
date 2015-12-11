@@ -347,12 +347,12 @@ Please be aware that this is neither based on standard bootstrap, nor foundation
 It is loosely based on http://metroui.org.ua/tiles.html 
 
   * Usage Example *  
-    <@tile type="small">
+    <@tile size="small">
        // content
     </@tile>
                     
   * Parameters *
-    type            = [small|normal|wide|large|big|super]. default: normal.
+    size            = [small|normal|wide|large|big|super]. default: normal.
     title           = Title
     class           = css classes 
                       supports prefixes:
@@ -373,9 +373,9 @@ It is loosely based on http://metroui.org.ua/tiles.html
                       type style is looked up as: styles["type_overlay_" + overlayType?replace("-","_")].
     overlayColor    = [none|0|1|2|3|4|5|6|7|...] default: 0 (primary theme color). "none" prevents color class.
 -->
-<#macro tile type="normal" title="" class="" id="" link="" color="0" icon="" image="" imageType="" overlayType="" overlayColor="0" imageSizeMode="">
+<#macro tile size="normal" title="" class="" id="" link="" color="0" icon="" image="" imageType="" overlayType="" overlayColor="0" imageSizeMode="">
     <#local class = addClassArg(class, styles.tile_wrap!)>
-    <#local class = addClassArg(class, "${styles.tile_wrap!}-${type!}")>
+    <#local class = addClassArg(class, "${styles.tile_wrap!}-${size!}")>
     <#local color = color?string>
     <#if color?has_content && color != "none">
       <#local colorClass = "${styles.tile_color_prefix!}${color!}">
@@ -383,8 +383,8 @@ It is loosely based on http://metroui.org.ua/tiles.html
       <#local colorClass = "">
     </#if>
     <#local class = addClassArg(class, colorClass)>
-    <#local dataSizex = calcTileSize("x",type)>
-    <#local dataSizey = calcTileSize("y",type)>
+    <#local dataSizex = calcTileSize("x",size)>
+    <#local dataSizey = calcTileSize("y",size)>
     <#if !overlayType?has_content || overlayType == "default">
       <#local overlayClass = styles["tile_overlay_default"]!"">
     <#else>
@@ -424,8 +424,8 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <#--<#local dummy = unsetCurrentContainerSizes()>-->
 </#macro>
 
-<#function calcTileSize type="x" value="normal">
-    <#if type="x">
+<#function calcTileSize orientation="x" value="normal">
+    <#if orientation="x">
         <#if !catoTileSizeMapX??>
           <#-- global: optimization only (doesn't have to be setRequestVar) -->
           <#global catoTileSizeMapX = {"small":0,"normal":1,"wide":2,"large":2,"big":3,"super":4}/>

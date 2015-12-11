@@ -48,21 +48,21 @@
 <@section>
     <@heading attribs=makeMagTargetAttribMap("blockgrid") id="blockgrid">Tiles</@heading>
     <@grid type="tiles">
-        <@tile type="large" color=3 icon="${styles.icon_prefix!}star">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>
-        <@tile type="normal" color=7 title="Test" image="http://placehold.it/150x150"></@tile>
-        <@tile type="small" color=6 title="" icon="${styles.icon_prefix!}flag"></@tile>
-        <@tile type="small" color=3 title="Test" image="http://placehold.it/70x70"></@tile>
-        <@tile type="wide" color=0 title="dasdsadsas dasdas" image="http://placehold.it/310x150"></@tile>
-        <@tile type="large" color=6 title="Test" image="http://placehold.it/310x310"></@tile>
-        <@tile type="wide" color=2 title="Test 3" icon="${styles.icon_prefix!}heart">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>    
-        <@tile type="normal" color=2 icon="${styles.icon_prefix!}layout">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>
-        <@tile type="normal" color=5 title="2" icon="${styles.icon_prefix!}music"></@tile>
-        <@tile type="small" color=4 title="Test"></@tile>
-        <@tile type="small" color=6 title="Test"></@tile>
-        <@tile type="small" color=4 title="Test"></@tile>
-        <@tile type="small" color=5 title="Test"></@tile>
-        <@tile type="normal" color=0 image="http://placehold.it/150x150"></@tile>
-        <@tile type="normal" color=1 title="2" icon="${styles.icon_prefix!}like"></@tile>
+        <@tile size="large" color=3 icon="${styles.icon_prefix!}star">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>
+        <@tile size="normal" color=7 title="Test" image="http://placehold.it/150x150"></@tile>
+        <@tile size="small" color=6 title="" icon="${styles.icon_prefix!}flag"></@tile>
+        <@tile size="small" color=3 title="Test" image="http://placehold.it/70x70"></@tile>
+        <@tile size="wide" color=0 title="dasdsadsas dasdas" image="http://placehold.it/310x150"></@tile>
+        <@tile size="large" color=6 title="Test" image="http://placehold.it/310x310"></@tile>
+        <@tile size="wide" color=2 title="Test 3" icon="${styles.icon_prefix!}heart">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>    
+        <@tile size="normal" color=2 icon="${styles.icon_prefix!}layout">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>
+        <@tile size="normal" color=5 title="2" icon="${styles.icon_prefix!}music"></@tile>
+        <@tile size="small" color=4 title="Test"></@tile>
+        <@tile size="small" color=6 title="Test"></@tile>
+        <@tile size="small" color=4 title="Test"></@tile>
+        <@tile size="small" color=5 title="Test"></@tile>
+        <@tile size="normal" color=0 image="http://placehold.it/150x150"></@tile>
+        <@tile size="normal" color=1 title="2" icon="${styles.icon_prefix!}like"></@tile>
     </@grid>
 </@section>
 

@@ -402,13 +402,13 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.CommonDashboard}">
                             <!-- <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific> -->
-                            <container style="">
+                      <!--       <container style="">
                             <decorator-screen name="" >
                             	<decorator-section name="" >
                             		<include-screen name="ListPayments" location="component://accounting/widget/PaymentScreens.xml" />
                             	</decorator-section>
                             </decorator-screen>
-                            </container>
+                            </container> -->
                         </screenlet>
                     </decorator-section>
                 </decorator-screen>

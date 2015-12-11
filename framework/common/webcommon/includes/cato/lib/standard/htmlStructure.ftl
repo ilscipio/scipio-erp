@@ -290,51 +290,79 @@ Since this is very foundation specific, this function may be dropped in future i
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     columns         = Number of columns (default 5)
-    type            = (tiles|) default:empty
-    
+    type            = (tiles|list|) default:empty (list)
+    tilesType       = default tiles type for tiles inside this element.
+                      this same value is used as default for the @tile macro "type" attrib.
+                      however, in addition, type when specified here may also influence tile arrangement.
+                      see @tile macro "type" attrib for possible values.
 -->
-<#macro grid type="" class="" columns=4>
+<#assign gridDefaultArgsCatoStd = {
+    <#-- parameters: defaults -->
+    "type":"", "tilesType":"", "class":"", "columns":4, "id":""
+}>
+<#macro grid args={} inlineArgs...>
+    <#local args = mergeArgMaps(args, inlineArgs, gridDefaultArgsCatoStd)>
+    <#local dummy = localsPutAll(args)>
+
+    <#if !type?has_content>
+      <#local type = "list">
+    </#if>
+    <#if !tilesType?has_content>
+      <#local tilesType = "default">
+    </#if>
+    <#local gridInfo = {"type":type, "tilesType":tilesType, "columns":columns}>
+    <#local dummy = pushRequestStack("catoCurrentGridInfo", gridInfo)>
     <#-- here, use the number of greater ("page") columns to estimate corresponding grid sizes for heuristics -->
     <#local dummy = saveCurrentContainerSizes({"large":12/columns, "medium":12/columns, "small":12/columns})>
     <#if type == "tiles" || type == "freetiles">
         <#local freewallNum = getRequestVar("catoFreewallIdNum")!0>
         <#local freewallNum = freewallNum + 1 />
         <#local dummy = setRequestVar("catoFreewallIdNum", freewallNum)>
-        <#local id = "freewall_id_${freewallNum!0}">
-        <#local class = addClassArg(class, styles.tile_container!)>
-        <@container class=class id=id>
-            <#nested>
-        </@container>
-        <@script>
-         $(function() {
-            $('#${id}').freetile({
-                selector: '.${styles.tile_wrap!}'
-            });
-            <#--
-            Alternative implementation of gridster.js
-            $('#${id}').gridster({
-                widget_selector: '.${styles.tile_wrap!}',
-                min_cols:${columns},
-                autogenerate_stylesheet:false
-            }).disable();
-            -->
-         });
-        </@script>
-    <#else>
-        <#-- this never takes effect
-        <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">-->
-          
-        <#if ((columns-2) > 0)>
-            <#local class = addClassArgDefault(class, "${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}${columns-2} ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}${columns-1} ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
-        <#else>
-            <#local class = addClassArgDefault(class, "${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
+        <#if !id?has_content>
+          <#local id = "freewall_id_${freewallNum!0}">
         </#if>
-        <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
-        <ul<@compiledClassAttribStr class=class />>
-            <#nested>
-        </ul>
-        <#local dummy = unsetCurrentContainerSizes()>
+        <#local class = addClassArg(class, styles.tile_container!)>
+        <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType><#nested></@grid_tiles_markup_container>
+    <#elseif type=="list">
+        <@grid_list_markup_container class=class id=id columns=columns><#nested></@grid_list_markup_container>
     </#if>
+    <#local dummy = unsetCurrentContainerSizes()>
+    <#local dummy = popRequestStack("catoCurrentGridInfo")>
+</#macro>
+
+<#macro grid_tiles_markup_container class="" id="" tylesType="" columns=1 extraArgs...>
+    <@container class=class id=id>
+        <#nested>
+    </@container>
+    <@script>
+     $(function() {
+        $('#${id}').freetile({
+            selector: '.${styles.tile_wrap!}'
+        });
+        <#--
+        Alternative implementation of gridster.js
+        $('#${id}').gridster({
+            widget_selector: '.${styles.tile_wrap!}',
+            min_cols:${columns},
+            autogenerate_stylesheet:false
+        }).disable();
+        -->
+     });
+    </@script>
+</#macro>
+
+<#macro grid_list_markup_container class="" id="" columns=1 extraArgs...>
+    <#-- this never takes effect
+    <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">-->
+    <#if ((columns-2) > 0)>
+        <#local class = addClassArgDefault(class, "${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}${columns-2} ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}${columns-1} ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
+    <#else>
+        <#local class = addClassArgDefault(class, "${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
+    </#if>
+    <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
+    <ul<@compiledClassAttribStr class=class />>
+        <#nested>
+    </ul>
     <#local dummy = unsetCurrentContainerSizes()>
 </#macro>
 
@@ -352,28 +380,94 @@ It is loosely based on http://metroui.org.ua/tiles.html
     </@tile>
                     
   * Parameters *
+    type            = [default|generic|(theme-specific)], default inherited from "tilesType" on @grid element, or otherwise, "default".
+                      this provides a set of defaults for the other parameters (size, color, etc.) via global styles hash (as "tile_xxx" where xxx is type).
+                      cato standard by default adds the following types:
+                        gallery1 - tile with settings tailored to image gallery of normal-sized thumb images.
     size            = [small|normal|wide|large|big|super]. default: normal.
     title           = Title
+    titleType       = [|default|...] title type. currently only default supported.
+                      type style is looked up as: styles["type_overlay_" + titleType?replace("-","_")].
+    titleBgColor      = [none|0|1|2|3|4|5|6|7|...] default: from styles hash, otherwise 0 (primary theme color). "none" prevents color class.
     class           = css classes 
                       supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     link            = Link URL around nested content
                       WARN: can only use if no other links inside nested content
+    linkTarget      = [|_blank|...] link <a> target, default from global styles hash, otherwise none (same page)
+                      also accepts boolean true/false (false prevents any, true will allow global styles hash lookup)
     id              = field id
-    color           = [none|0|1|2|3|4|5|6|7|...] default: 0 (primary theme color). "none" prevents color class.
+    color           = [none|0|1|2|3|4|5|6|7|...] default: from styles hash, otherwise 0 (primary theme color). "none" prevents color class.
     icon            = Set icon code (http://zurb.com/playground/foundation-icon-fonts-3)
     image           = Set a background image-url (icon won't be shown if not empty)
     imageType       = [|default|...] image type for styling. default supported types (extensible by theme) are:
                       cover: this is currently the default. fills tile.
                       contain: show whole image in tile.
                       type style is looked up as: styles["type_image_" + imageType?replace("-","_")].
+    imageBgColor    = [none|0|1|2|3|4|5|6|7|...] default: from styles hash, otherwise "none". "none" prevents color class.
     overlayType     = [|default|...] overlay type. default supported types (extensible by theme) are:
                       slide-up: this is currently the default.
                       type style is looked up as: styles["type_overlay_" + overlayType?replace("-","_")].
-    overlayColor    = [none|0|1|2|3|4|5|6|7|...] default: 0 (primary theme color). "none" prevents color class.
+    overlayBgColor  = [none|0|1|2|3|4|5|6|7|...] default: from styles hash, otherwise 0 (primary theme color). "none" prevents color class.
 -->
-<#macro tile size="normal" title="" class="" id="" link="" color="0" icon="" image="" imageType="" overlayType="" overlayColor="0" imageSizeMode="">
+<#assign tileDefaultArgsCatoStd = {
+    <#-- parameters: defaults -->
+    "type":"", "size":"", "title":"", "titleType":"", "titleBgColor":"", "class":"", "id":"", 
+    "link":"", "linkTarget":true, "color":"", "icon":"", 
+    "image":"", "imageType":"", "imageBgColor":"", "overlayType":"", "overlayBgColor":""
+}>
+<#macro tile args={} inlineArgs...>
+    <#local args = mergeArgMaps(args, inlineArgs, tileDefaultArgsCatoStd)>
+    <#local dummy = localsPutAll(args)>
+
+    <#local gridInfo = readRequestStack("catoCurrentGridInfo")!{}>
+    <#if !type?has_content>
+      <#local type = (gridInfo.tilesType)!"">
+    </#if>
+    <#if !type?has_content>
+      <#local type = "default">
+    </#if>
+    
+    <#-- find tile-type-based arg defaults -->
+    <#local styleName = type>
+    <#local stylePrefix = "tile_" + styleName>
+    <#local defaultStylePrefix = "tile_default">
+    <#-- NOTE: _class is handled further below -->
+    <#if !size?has_content>
+      <#local size = styles[stylePrefix + "_size"]!styles[defaultStylePrefix + "_size"]!"normal">
+    </#if>
+    <#if !color?has_content>
+      <#local color = styles[stylePrefix + "_color"]!styles[defaultStylePrefix + "_color"]!"0">
+    </#if>
+    <#if !icon?has_content>
+      <#local icon = styles[stylePrefix + "_icon"]!styles[defaultStylePrefix + "_icon"]!"0">
+    </#if>
+    <#if !imageType?has_content>
+      <#local imageType = styles[stylePrefix + "_imagetype"]!styles[defaultStylePrefix + "_imagetype"]!"">
+    </#if>
+    <#if !imageBgColor?has_content>
+      <#local imageBgColor = styles[stylePrefix + "_imagebgcolor"]!styles[defaultStylePrefix + "_imagebgcolor"]!"">
+    </#if>
+    <#if !overlayType?has_content>
+      <#local overlayType = styles[stylePrefix + "_overlaytype"]!styles[defaultStylePrefix + "_overlaytype"]!"">
+    </#if>
+    <#if !overlayBgColor?has_content>
+      <#local overlayBgColor = styles[stylePrefix + "_overlaybgcolor"]!styles[defaultStylePrefix + "_overlaybgcolor"]!"">
+    </#if>
+    <#if !titleType?has_content>
+      <#local titleType = styles[stylePrefix + "_titletype"]!styles[defaultStylePrefix + "_titletype"]!"">
+    </#if>
+    <#if !titleBgColor?has_content>
+      <#local titleBgColor = styles[stylePrefix + "_titlebgcolor"]!styles[defaultStylePrefix + "_titlebgcolor"]!"">
+    </#if>
+    <#if linkTarget?is_boolean && linkTarget == false>
+      <#local linkTarget = "">
+    <#elseif (linkTarget?is_boolean && linkTarget == true) || !linkTarget?has_content>
+      <#local linkTarget = styles[stylePrefix + "_linktarget"]!styles[defaultStylePrefix + "_linktarget"]!"">
+    </#if>
+
+    <#-- lookup styles -->
     <#local class = addClassArg(class, styles.tile_wrap!)>
     <#local class = addClassArg(class, "${styles.tile_wrap!}-${size!}")>
     <#local color = color?string>
@@ -390,38 +484,40 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <#else>
       <#local overlayClass = styles["tile_overlay_" + overlayType?replace("-","_")]!styles["tile_overlay_default"]!"">
     </#if>
-    <#local overlayColor = overlayColor?string>
-    <#if overlayColor?has_content && overlayColor != "none">
-      <#local overlayColorClass = "${styles.tile_color_prefix!}${overlayColor!}">
+    <#local overlayBgColor = overlayBgColor?string>
+    <#if overlayBgColor?has_content && overlayBgColor != "none">
+      <#local overlayBgColorClass = "${styles.tile_color_prefix!}${overlayBgColor!}">
     <#else>
-      <#local overlayColorClass = "">
+      <#local overlayBgColorClass = "">
     </#if>
     <#if !imageType?has_content || imageType == "default">
       <#local imageClass = styles["tile_image_default"]!"">
     <#else>
       <#local imageClass = styles["tile_image_" + imageType?replace("-","_")]!styles["tile_image_default"]!"">
     </#if>
-    <#-- TODO: need to calc-convert tile x-size to approximate grid sizes and pass in large-medium-small below,
-         OR modify parseContainerSizesFromStyleStr to do it automatically from class string (HOWEVER
-         note that parseContainerSizesFromStyleStr would have to call calcTileSize type="x" again, and it's
-         not clear how precise this will be)
-    <#local dummy = saveCurrentContainerSizes({"large":12, "medium":12, "small":12})> -->
-    <#-- NOTE: dataSizex gets automatically translated to data-sizex (FTL: no dashes allowed in arg names) -->
-    <@container class=class id=id dataSizex=dataSizex dataSizey=dataSizey>
-        <div class="${styles.tile_content!}">
-            <#-- DEV NOTE: I think the image div belongs INSIDE the tile_content container? -->
-            <#if image?has_content>
-              <div class="${imageClass}" style="background-image: url(${image!});"></div>
-            </#if>
-            <#if link?has_content><a href="${link!}"></#if>
-            <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>
-            <#local nestedContent><#nested></#local>
-            <#if nestedContent?has_content><span class="${overlayClass} ${overlayColorClass}">${nestedContent}</span></#if>
-            <#if title?has_content><span class="${styles.tile_title!}">${title!}</span></#if>
-            <#if link?has_content></a></#if>
-        </div>
-    </@container>
-    <#--<#local dummy = unsetCurrentContainerSizes()>-->
+    <#local imageBgColor = imageBgColor?string>
+    <#if imageBgColor?has_content && imageBgColor != "none">
+      <#local imageBgColorClass = "${styles.tile_color_prefix!}${imageBgColor!}">
+    <#else>
+      <#local imageBgColorClass = "">
+    </#if>
+    <#if !titleType?has_content || titleType == "default">
+      <#local titleClass = styles["tile_title_default"]!"">
+    <#else>
+      <#local titleClass = styles["tile_title_" + titleType?replace("-","_")]!styles["tile_title_default"]!"">
+    </#if>
+    <#local titleBgColor = titleBgColor?string>
+    <#if titleBgColor?has_content && titleBgColor != "none">
+      <#local titleBgColorClass = "${styles.tile_color_prefix!}${titleBgColor!}">
+    <#else>
+      <#local titleBgColorClass = "">
+    </#if>
+
+    <#local class = addClassArgDefault(class, styles[stylePrefix + "_class"]!styles[defaultStylePrefix + "_class"]!"")>
+    
+    <@tile_markup class=class id=id dataSizex=dataSizex dataSizey=dataSizey image=image imageClass=imageClass imageBgColorClass=imageBgColorClass 
+        link=link linkTarget=linkTarget icon=icon 
+        overlayClass=overlayClass overlayBgColorClass=overlayBgColorClass title=title titleClass=titleClass titleBgColorClass=titleBgColorClass><#nested></@tile_markup>
 </#macro>
 
 <#function calcTileSize orientation="x" value="normal">
@@ -438,6 +534,33 @@ It is loosely based on http://metroui.org.ua/tiles.html
         <#return catoTileSizeMapY[value]/>
     </#if>
 </#function>
+
+<#macro tile_markup class="" id="" dataSizex="" dataSizey="" image="" imageClass="" imageBgColorClass="" link="" linkTarget="" icon="" 
+  overlayClass="" overlayBgColorClass="" title="" titleClass="" titleBgColorClass="" extraArgs...>
+    <#-- main markup (TODO: factor out into @tile_markup) -->
+    <#-- TODO: need to calc-convert tile x-size to approximate grid sizes and pass in large-medium-small below,
+         OR modify parseContainerSizesFromStyleStr to do it automatically from class string (HOWEVER
+         note that parseContainerSizesFromStyleStr would have to call calcTileSize type="x" again, and it's
+         not clear how precise this will be)
+    <#local dummy = saveCurrentContainerSizes({"large":12, "medium":12, "small":12})> -->
+    <#-- NOTE: dataSizex gets automatically translated to data-sizex (FTL: no dashes allowed in arg names) -->
+    <@container class=class id=id dataSizex=dataSizex dataSizey=dataSizey>
+        <div class="${styles.tile_content!}">
+            <#-- DEV NOTE: I think the image div belongs INSIDE the tile_content container? -->
+            <#if image?has_content>
+              <div class="${imageClass} ${imageBgColorClass}" style="background-image: url(${image!});"></div>
+            </#if>
+            <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+            <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>
+            <#local nestedContent><#nested></#local>
+            <#if nestedContent?has_content><span class="${overlayClass} ${overlayBgColorClass}">${nestedContent}</span></#if>
+            <#if title?has_content><span class="${titleClass} ${titleBgColorClass}">${title!}</span></#if>
+            <#if link?has_content></a></#if>
+        </div>
+    </@container>
+    <#--<#local dummy = unsetCurrentContainerSizes()>-->
+</#macro>
+
 
 <#-- 
 *************

@@ -18,18 +18,17 @@ under the License.
 -->
 
 <#if productImageList?has_content>
-        <#if product?has_content>
-            <@heading>${product.productId}</@heading>
-        </#if>
+  <#if product?has_content>
+      <@heading>${product.productId}</@heading>
+  </#if>
   <#-- Cato: NOTE: no need for handling rows when have tiles -->
-  <@grid type="tiles">
+  <@grid type="tiles" tilesType="gallery1">
         <#-- <#assign productName = productTextData >
         <#assign seoUrl = productName.replaceAll(" ", "-") > -->
         <#list productImageList as productImage>
               <#assign imgLink><@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl></#assign>
               <#assign thumbSrc><@ofbizContentUrl>${(productImage.productImageThumb)!}</@ofbizContentUrl></#assign>
-              <@tile size="normal" image=thumbSrc overlayColor=styles.gallery_overlay_color!
-                  overlayType=styles.gallery_overlay_type! imageType=styles.gallery_image_type!> <#-- can't use this, breaks Share button: link=imgLink so use View button instead -->
+              <@tile size="normal" image=thumbSrc> <#-- can't use this, breaks Share button: link=imgLink so use View button instead -->
                   <@container class="+${styles.text_center!}">
                       <#--<a href="/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}" target="_blank"><img src="<@ofbizContentUrl>${(contentDataResourceView.drObjectInfo)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a>
                       <a href="<@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl>" target="_blank"><img src="<@ofbizContentUrl>${(productImage.productImageThumb)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a>-->
@@ -45,6 +44,3 @@ under the License.
 <#else>
   <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
 </#if>
-
-
-

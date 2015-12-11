@@ -10304,19 +10304,18 @@ div.scrollable-table-container > table {
   text-align: center;
 }
 /* line 53, ../scss/_tiles.scss */
-.tile .tile-content .tile-title {
+.tile .tile-content .tile-title-default {
   position: absolute;
   bottom: 0;
   padding: .425rem .425rem;
   width: 100%;
   border-bottom: 1px solid #eee;
-  background: #f9f9f9;
   color: #222222;
   -moz-background-clip: padding;
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
 }
-/* line 67, ../scss/_tiles.scss */
+/* line 68, ../scss/_tiles.scss */
 .tile .tile-content .tile-overlay-slide-up {
   width: 100%;
   height: inherit;
@@ -10329,7 +10328,7 @@ div.scrollable-table-container > table {
   height: 100%;
   transition: all 0.3s ease;
 }
-/* line 84, ../scss/_tiles.scss */
+/* line 85, ../scss/_tiles.scss */
 .tile .tile-image-cover {
   background-color: #ffffff;
   display: block;
@@ -10339,7 +10338,7 @@ div.scrollable-table-container > table {
   background-repeat: no-repeat;
   transition: all 0.6s ease;
 }
-/* line 94, ../scss/_tiles.scss */
+/* line 95, ../scss/_tiles.scss */
 .tile .tile-image-contain {
   background-color: #ffffff;
   display: block;
@@ -10350,38 +10349,38 @@ div.scrollable-table-container > table {
   background-position: center;
   transition: all 0.6s ease;
 }
-/* line 105, ../scss/_tiles.scss */
+/* line 106, ../scss/_tiles.scss */
 .tile a, .tile a:active, .tile a:visited {
   color: #fff;
 }
-/* line 108, ../scss/_tiles.scss */
+/* line 109, ../scss/_tiles.scss */
 .tile:hover {
   outline: #999999 solid 3px;
 }
-/* line 111, ../scss/_tiles.scss */
+/* line 112, ../scss/_tiles.scss */
 .tile:hover .tile-overlay-slide-up {
   top: 0;
   transition: all 0.3s ease;
 }
-/* line 116, ../scss/_tiles.scss */
+/* line 117, ../scss/_tiles.scss */
 .tile:hover .tile-image-cover {
   -webkit-transform: scale(1.5);
   transform: scale(1.5);
   transition: all 0.6s ease;
 }
-/* line 122, ../scss/_tiles.scss */
+/* line 123, ../scss/_tiles.scss */
 .tile:hover .tile-image-contain {
   -webkit-transform: scale(1.5);
   transform: scale(1.5);
   transition: all 0.6s ease;
 }
 
-/* line 132, ../scss/_tiles.scss */
+/* line 133, ../scss/_tiles.scss */
 .tile-small {
   width: 70px;
   height: 70px;
 }
-/* line 137, ../scss/_tiles.scss */
+/* line 138, ../scss/_tiles.scss */
 .tile-small .tile-content .tile-icon {
   width: 32px;
   height: 32px;
@@ -10390,24 +10389,24 @@ div.scrollable-table-container > table {
   margin-left: -16px;
 }
 
-/* line 147, ../scss/_tiles.scss */
+/* line 148, ../scss/_tiles.scss */
 .tile-normal {
   width: 150px;
   height: 150px;
 }
 
-/* line 148, ../scss/_tiles.scss */
+/* line 149, ../scss/_tiles.scss */
 .tile-wide {
   width: 310px;
   height: 150px;
 }
 
-/* line 149, ../scss/_tiles.scss */
+/* line 150, ../scss/_tiles.scss */
 .tile-large {
   width: 310px;
   height: 310px;
 }
-/* line 151, ../scss/_tiles.scss */
+/* line 152, ../scss/_tiles.scss */
 .tile-large .tile-content .tile-icon {
   width: 128px;
   height: 128px;
@@ -10416,12 +10415,12 @@ div.scrollable-table-container > table {
   margin-left: -64px;
 }
 
-/* line 161, ../scss/_tiles.scss */
+/* line 162, ../scss/_tiles.scss */
 .tile-big {
   width: 470px;
   height: 470px;
 }
-/* line 163, ../scss/_tiles.scss */
+/* line 164, ../scss/_tiles.scss */
 .tile-big .tile-content .tile-icon {
   width: 172px;
   height: 172px;
@@ -10430,12 +10429,12 @@ div.scrollable-table-container > table {
   margin-left: -96px;
 }
 
-/* line 173, ../scss/_tiles.scss */
+/* line 174, ../scss/_tiles.scss */
 .tile-super {
   width: 630px;
   height: 630px;
 }
-/* line 175, ../scss/_tiles.scss */
+/* line 176, ../scss/_tiles.scss */
 .tile-super .tile-content .tile-icon {
   width: 256px;
   height: 256px;
@@ -10444,55 +10443,71 @@ div.scrollable-table-container > table {
   margin-left: -128px;
 }
 
-/* line 187, ../scss/_tiles.scss */
-.tile-color-0, .tile-color-primary {
-  background-color: #008cba;
-}
-
-/* line 188, ../scss/_tiles.scss */
-.tile-color-1, .tile-color-secondary {
-  background-color: #e7e7e7;
-}
-
 /* line 189, ../scss/_tiles.scss */
-.tile-color-2, .tile-color-alert {
-  background-color: #f04124;
+.tile-color-0, .tile-color-primary {
+  background-color: #008cba !important;
 }
 
 /* line 190, ../scss/_tiles.scss */
-.tile-color-3, .tile-color-success {
-  background-color: #43ac6a;
+.tile-color-1, .tile-color-secondary {
+  background-color: #e7e7e7 !important;
 }
 
 /* line 191, ../scss/_tiles.scss */
-.tile-color-4, .tile-color-warning {
-  background-color: #f08a24;
+.tile-color-2, .tile-color-alert {
+  background-color: #f04124 !important;
 }
 
 /* line 192, ../scss/_tiles.scss */
-.tile-color-5, .tile-color-info {
-  background-color: #a0d3e8;
+.tile-color-3, .tile-color-success {
+  background-color: #43ac6a !important;
 }
 
 /* line 193, ../scss/_tiles.scss */
-.tile-color-6 {
-  background-color: #333333;
+.tile-color-4, .tile-color-warning {
+  background-color: #f08a24 !important;
 }
 
 /* line 194, ../scss/_tiles.scss */
-.tile-color-7 {
-  background-color: #cccccc;
+.tile-color-5, .tile-color-info {
+  background-color: #a0d3e8 !important;
+}
+
+/* line 195, ../scss/_tiles.scss */
+.tile-color-6 {
+  background-color: #333333 !important;
 }
 
 /* line 196, ../scss/_tiles.scss */
-.tile-color-50, .tile-color-primary-alpha-light,
-.tile-color-gallery-overlay {
-  background-color: rgba(0, 140, 186, 0.3);
+.tile-color-7 {
+  background-color: #cccccc !important;
 }
 
-/* line 198, ../scss/_tiles.scss */
-.tile-color-51, .tile-color-primary-alpha-heavy {
-  background-color: rgba(0, 140, 186, 0.7);
+/* line 197, ../scss/_tiles.scss */
+.tile-color-8, .tile-color-default-title {
+  background-color: #f9f9f9 !important;
+}
+
+/* line 200, ../scss/_tiles.scss */
+.tile-color-50l, .tile-color-primary-alpha-light,
+.tile-color-gallery-overlay-bg {
+  background-color: rgba(0, 140, 186, 0.3) !important;
+}
+
+/* line 202, ../scss/_tiles.scss */
+.tile-color-50h, .tile-color-primary-alpha-heavy {
+  background-color: rgba(0, 140, 186, 0.7) !important;
+}
+
+/* line 203, ../scss/_tiles.scss */
+.tile-color-58l, .tile-color-snow-alpha-light,
+.tile-color-gallery-title-bg {
+  background-color: rgba(249, 249, 249, 0.3) !important;
+}
+
+/* line 205, ../scss/_tiles.scss */
+.tile-color-58h, .tile-color-snow-alpha-heavy {
+  background-color: rgba(249, 249, 249, 0.7) !important;
 }
 
 /* line 7, ../bower_components/pizza/scss/pizza.scss */

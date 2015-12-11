@@ -930,7 +930,7 @@ now anyway so doesn't matter to templates.
 compileClassArg should usually be used as late as possible in macro:
   <#local classes = compileClassArg(class)>
 A defaultVal can be set which is the same as doing:
-  <#local class = addClassArgDefault("default-class")>
+  <#local class = addClassArgDefault(class, "default-class")>
   <#local classes = compileClassArg(class)>
 -->
 

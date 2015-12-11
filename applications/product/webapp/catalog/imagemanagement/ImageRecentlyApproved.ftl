@@ -22,27 +22,23 @@ under the License.
      but no actual images.
      we want sample images at least, so instead of grouping by date we just make a tile
      for each product for each date group, let them arrangement themselves, and for each
-     product it will show one sample image. 
-     -->
-<@grid type="tiles">    
+     product it will show one sample image.
+     TODO?: maybe could re-group the product images per-date using tile "imagesets" (many images per tile), 
+        but they'll be really small -->
+<@grid type="tiles" tilesType="gallery1">    
     <#list productContentEntries as productContentEntry>
     <#if productContentEntry?has_content> <#-- Cato: WARN: entries may be null! -->
       <#if productContentEntry.approved?has_content>
         <#list productContentEntry.approved as show>
           <#assign thumbSrc = (productContentEntry.sampleImageList[show_index].productImageThumb)!"">
           <#assign targetLink><@ofbizUrl>ListImageRecentlyApproved?productId=${show.productId}&date1=${productContentEntry.timeStampDate1}&date2=${productContentEntry.timeStampDate2}&showDate=${productContentEntry.date}</@ofbizUrl></#assign>
-        
           <#-- Cato: NOTE: the productContentEntry.date used to be in a wrapper around the entries (outside
                <#list productContentEntry.approved as show>). but we'll just integrate it into the tiles as title. -->
-          <@tile size="normal" image=thumbSrc overlayColor=styles.gallery_overlay_color!
-            overlayType=styles.gallery_overlay_type! imageType=styles.gallery_image_type!
-            title="${productContentEntry.date} - ${show.productId}" link=targetLink>
-
+          <@tile size="normal" image=thumbSrc title="${productContentEntry.date} - ${show.productId}" link=targetLink>
             <#--link whole tile instead and put product ID in title
             <a href="${targetLink}" class="${styles.link_record_id!}">${show.productId}</a> - ${productContentEntry.time[show_index]}-->
             ${productContentEntry.time[show_index]}
           </@tile>
-
         </#list>
       </#if>
     </#if>

@@ -339,12 +339,53 @@
     "list_inline" : "inline-list",
 
   <#-- Tile -->
+    <#-- tiles-type-based args and styles
+         as always, default is also used for individual value fallbacks when missing from specific types. 
+         NOTE: currently most of these values are macro args, which may not be straight stylenames (they get mapped to individual styles further below) 
+         DEV NOTE: the bg colors may seem like overkill, but they avoid redundancy in the CSS maybe? whatever, more configurable this way -->
+    "tile_default_class" : "",  
+    "tile_default_size" : "normal",
+    "tile_default_color" : "0",
+    "tile_default_titletype" : "default",
+    "tile_default_titlebgcolor" : "default-title",
+    "tile_default_overlaytype" : "default",   <#-- "default" will be mapped to "tile_overlay_default" style below -->
+    "tile_default_overlaybgcolor" : "0",
+    "tile_default_imagetype" : "default",
+    "tile_default_imagebgcolor" : "none",
+    "tile_default_icon" : "",
+    "tile_default_linktarget" : "",
+    
+    "tile_generic_class" : "",  
+    "tile_generic_size" : "normal",
+    "tile_generic_color" : "none",
+    "tile_generic_titletype" : "default",
+    "tile_generic_titlebgcolor" : "none",
+    "tile_generic_overlaytype" : "contain",
+    "tile_generic_overlaybgcolor" : "none",
+    "tile_generic_imagetype" : "cover",
+    "tile_generic_imagebgcolor" : "none",
+    "tile_generic_icon" : "",
+    "tile_generic_linktarget" : "",
+    
+    "tile_gallery1_class" : "",  
+    "tile_gallery1_size" : "normal",
+    "tile_gallery1_color" : "0",
+    "tile_gallery1_titletype" : "default",
+    "tile_gallery1_titlebgcolor" : "gallery-title-bg",  <#-- (delegated to CSS) -->
+    "tile_gallery1_overlaytype" : "default",
+    "tile_gallery1_overlaybgcolor" : "gallery-overlay-bg",   <#-- (delegated to CSS) -->
+    "tile_gallery1_imagetype" : "contain",
+    "tile_gallery1_imagebgcolor" : "none",
+    "tile_gallery1_icon" : "",
+    "tile_gallery1_linktarget" : "_blank",
+
+    <#-- low-level tile individual styles -->
     "tile_container" : "tile-container",
     "tile_wrap" : "tile",
     "tile_color_prefix" : "tile-color-",
     "tile_content" : "tile-content",
     "tile_icon" : "tile-icon",
-    "tile_title" : "tile-title",
+    "tile_title_default" : "tile-title-default",
     <#-- default overlay styles -->
     "tile_overlay_default" : "tile-overlay-slide-up",    
     <#-- styles for specific overlay types (extensible by theme) -->
@@ -355,10 +396,7 @@
     "tile_image_cover" : "tile-image-cover",
     "tile_image_contain" : "tile-image-contain",
     
-  <#-- Image galleries -->
-    "gallery_image_type" : "contain",
-    "gallery_overlay_type" : "default",
-    "gallery_overlay_color" : "gallery-overlay",         <#-- must be valid tile color name -->
+  <#-- Image galleries (non-tile settings - tile settings contained in tile styles) -->
     "gallery_share_view_width" : 500,
     "gallery_share_view_height" : 500,
 

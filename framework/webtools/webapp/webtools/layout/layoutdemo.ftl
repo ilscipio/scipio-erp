@@ -46,8 +46,9 @@
 </@section>
 
 <@section>
-    <@heading attribs=makeMagTargetAttribMap("blockgrid") id="blockgrid">Tiles</@heading>
-    <@grid type="tiles">
+  <@heading attribs=makeMagTargetAttribMap("blockgrid") id="blockgrid">Tiles</@heading>
+  <@section title="Custom per-tile styles (overriding default styles)" relHeadingLevel=+1>
+    <@grid type="tiles">  <#-- tilesType="default" -->
         <@tile size="large" color=3 icon="${styles.icon_prefix!}star">My money's in that office, right? If she start giving me some bullshit about it ain't there, and we got to go someplace else and get it, I'm gonna shoot you in the head then and there. Then I'm gonna shoot that bitch in the kneecaps, find out where my goddamn money is. She gonna tell me too. Hey, look at me when I'm talking to you, motherfucker. You listen: we go in there, and that nigga Winston or anybody else is in there, you the first motherfucker to get shot. You understand?</@tile>
         <@tile size="normal" color=7 title="Test" image="http://placehold.it/150x150"></@tile>
         <@tile size="small" color=6 title="" icon="${styles.icon_prefix!}flag"></@tile>
@@ -64,6 +65,21 @@
         <@tile size="normal" color=0 image="http://placehold.it/150x150"></@tile>
         <@tile size="normal" color=1 title="2" icon="${styles.icon_prefix!}like"></@tile>
     </@grid>
+  </@section>
+  <@section title="Simple image gallery with fixed-size tiles" relHeadingLevel=+1>
+    <#-- Simple image gallery using tiles -->
+    <@grid type="tiles" tilesType="gallery1">
+        <@tile image=makeOfbizContentUrl("/images/products/GZ-1000/small.png") link=makeOfbizContentUrl("/images/products/GZ-1000/large.png")>Image 1 - click to view full image</@tile>
+        <@tile image=makeOfbizContentUrl("/images/products/GZ-1001/small.png") link=makeOfbizContentUrl("/images/products/GZ-1001/large.png") title="Image 2 title">Image 2 - click to view full image</@tile>
+        <@tile image=makeOfbizContentUrl("/images/products/GZ-1004/small.png") link=makeOfbizContentUrl("/images/products/GZ-1004/large.png")>Image 3 - click to view full image</@tile>
+        <@tile image=makeOfbizContentUrl("/images/products/GZ-1005/small.png") link=makeOfbizContentUrl("/images/products/GZ-1005/large.png")>Image 4 - click to view full image</@tile>
+        <@tile image=makeOfbizContentUrl("/images/products/GZ-1006/small.png") link=makeOfbizContentUrl("/images/products/GZ-1006/large.png") title="Image 5 title">Image 5 - click to view full image</@tile>
+        <@tile image=makeOfbizContentUrl("/images/products/GZ-2002/small.png") link=makeOfbizContentUrl("/images/products/GZ-2002/large.png")>Image 6 - click to view full image</@tile>
+        <@tile image=makeOfbizContentUrl("/images/products/GZ-2644/small.png") link=makeOfbizContentUrl("/images/products/GZ-2644/large.png")>Image 7 - click to view full image</@tile>
+        <@tile image=makeOfbizContentUrl("/images/products/GZ-5005/small.png") link=makeOfbizContentUrl("/images/products/GZ-5005/large.png")>Image 8 - click to view full image</@tile>
+    </@grid>
+  </@section>
+  
 </@section>
 
 <@section title="Section Titles and Headings - Auto Leveling">

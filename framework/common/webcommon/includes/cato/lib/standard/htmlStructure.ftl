@@ -296,12 +296,12 @@ Since this is very foundation specific, this function may be dropped in future i
                       however, in addition, type when specified here may also influence tile arrangement.
                       see @tile macro "type" attrib for possible values.
 -->
-<#assign gridDefaultArgsCatoStd = {
+<#assign grid_catoStd_defaultArgs = {
     <#-- parameters: defaults -->
     "type":"", "tilesType":"", "class":"", "columns":4, "id":""
 }>
 <#macro grid args={} inlineArgs...>
-    <#local args = mergeArgMaps(args, inlineArgs, gridDefaultArgsCatoStd)>
+    <#local args = mergeArgMaps(args, inlineArgs, grid_catoStd_defaultArgs)>
     <#local dummy = localsPutAll(args)>
 
     <#if !type?has_content>
@@ -411,14 +411,14 @@ It is loosely based on http://metroui.org.ua/tiles.html
                       type style is looked up as: styles["type_overlay_" + overlayType?replace("-","_")].
     overlayBgColor  = [none|0|1|2|3|4|5|6|7|...] default: from styles hash, otherwise 0 (primary theme color). "none" prevents color class.
 -->
-<#assign tileDefaultArgsCatoStd = {
+<#assign tile_catoStd_defaultArgs = {
     <#-- parameters: defaults -->
     "type":"", "size":"", "title":"", "titleType":"", "titleBgColor":"", "class":"", "id":"", 
     "link":"", "linkTarget":true, "color":"", "icon":"", 
     "image":"", "imageType":"", "imageBgColor":"", "overlayType":"", "overlayBgColor":""
 }>
 <#macro tile args={} inlineArgs...>
-    <#local args = mergeArgMaps(args, inlineArgs, tileDefaultArgsCatoStd)>
+    <#local args = mergeArgMaps(args, inlineArgs, tile_catoStd_defaultArgs)>
     <#local dummy = localsPutAll(args)>
 
     <#local gridInfo = readRequestStack("catoCurrentGridInfo")!{}>

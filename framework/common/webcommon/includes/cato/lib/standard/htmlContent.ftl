@@ -39,13 +39,13 @@
     [inlineAttribs...]   = other legacy h1-h6 attributes, inlined
                            NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
-<#assign headingDefaultArgsCatoStd = {
+<#assign heading_catoStd_defaultArgs = {
     <#-- parameters: defaults -->
     "elemType":true, "level":"", "relLevel":"", "class":"", "id":"", "levelClassPrefix":true, "consumeLevel":"", 
     "containerElemType":false, "containerClass":"", "containerId":"", "attribs":{}
 }>
 <#macro heading args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, headingDefaultArgsCatoStd)>
+  <#local args = mergeArgMaps(args, inlineArgs, heading_catoStd_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
     
@@ -180,7 +180,7 @@ Creates a responsive tables script (script only - no markup).
     fixedColumnsLeft    = int value; number of columns that are fixed on the left-hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.leftColumns)
     fixedColumnsRight   = int value; number of columns that are fixed on the right hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns) 
 -->
-<#assign tableResponsiveScriptDefaultArgsCatoStd = {
+<#assign tableResponsiveScript_catoStd_defaultArgs = {
     <#-- parameters: defaults -->
     "enabled" : true,
     "tableId" : "",
@@ -195,7 +195,7 @@ Creates a responsive tables script (script only - no markup).
     "htmlwrap" : true
 }>
 <#macro tableResponsiveScript args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, tableResponsiveScriptDefaultArgsCatoStd)>
+  <#local args = mergeArgMaps(args, inlineArgs, tableResponsiveScript_catoStd_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#if enabled>
     <#if !(responsive?is_boolean && responsive == false) && tableId?has_content>

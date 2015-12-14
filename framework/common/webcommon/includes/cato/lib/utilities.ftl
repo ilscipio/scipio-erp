@@ -872,6 +872,18 @@ TODO?: may want helper booleans to control in/out allArgNames?
 
 <#-- 
 *************
+* getCatoMacroDefaultArgs
+************
+This returns all the known args and default args for a cato standard macro that uses the advanced
+args pattern.
+Basically they should always have default values.
+-->
+<#function getCatoMacroDefaultArgs name namespace>
+  <#return .vars[name + "_" + namespace + "_defaultArgs"]!{}>
+</#function>
+
+<#-- 
+*************
 * mergeAttribMaps
 ************
 Merges cato macro attribs/inlineAttribs/defaultAttribs/overrideAttribs maps for macros still implementing the 

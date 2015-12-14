@@ -70,7 +70,6 @@ for getFileUploadProgressStatus AJAX calls.
     htmlwrap        = if true, wrap in @script (default true)
 -->
 <#assign progressScript_defaultArgs = {
-    <#-- parameters: defaults -->
     "enabled" : true,
     "htmlwrap" : true,
     "progressOptions" : {}
@@ -226,7 +225,6 @@ IMPL NOTE: this must support legacy ofbiz parameters.
     responseName          = response name
 -->
 <#assign asmSelectScript_defaultArgs = {
-    <#-- parameters: defaults -->
     "enabled" : true,
     "id" : "",
     "title" : false,
@@ -443,7 +441,6 @@ or even multiple per fieldset.
     inlineItems     = change default for @field inlineItems parameter (true/false)     
 -->
 <#assign fields_defaultArgs = {
-    <#-- parameters: defaults -->
     "type":"default", "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", 
     "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":""
 }>
@@ -816,7 +813,6 @@ standard markup.
     description     = for image type: image alt
 -->
 <#assign field_defaultArgs = {
-    <#-- parameters: defaults -->
     "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", "onClick":"", 
     "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
     "cols":"50", "dateType":"date-time", "multiple":"", "checked":"", 

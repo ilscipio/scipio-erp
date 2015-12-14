@@ -128,7 +128,6 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     htmlWrap        = wrapping HTML element (ul|div|span, default: ul)
 -->
 <#assign menu_defaultArgs = {
-    <#-- parameters: defaults -->
     "type" : "generic",
     "class" : "",
     "inlineItems" : false,
@@ -270,7 +269,6 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     inlineItem      = boolean, if true, generate only items, not menu container
 -->
 <#assign menuitem_defaultArgs = {
-    <#-- parameters: defaults -->
     "type" : "generic",
     "class" : "",
     "contentClass", "",

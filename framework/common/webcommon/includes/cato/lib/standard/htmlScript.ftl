@@ -67,7 +67,6 @@ Not associated with any HTML element.
     scriptType/output/cdata/htmlwrap  = defaults for child @script calls (see @script)
 -->
 <#assign scripts_defaultArgs = {
-    <#-- parameters: defaults -->
     "scriptType" : "text/javascript",
     "output" : "",
     "htmlwrap" : true,
@@ -110,7 +109,6 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
     cdata           = boolean, default true, if false don't include CDATA guard (only used if htmlwrap true)
 -->
 <#assign script_defaultArgs = {
-    <#-- parameters: defaults -->
     "type" : "text/javascript",
     "src" : "",
     "output" : "",
@@ -120,15 +118,14 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
 <#macro script args={} inlineArgs...>
   <#local scriptsInfo = getRequestVar("catoScriptsInfo")!{}>
   <#-- this uses complex defaults from parent @scripts elem, so have to do something different -->
-  <#local argDefaults = {
-    <#-- parameters: defaults -->
+  <#local defaultArgs = {
     "type" : scriptsInfo.scriptType!script_defaultArgs.type,
     "src" : "",
     "output" : scriptsInfo.output!script_defaultArgs.output,
     "htmlwrap" : scriptsInfo.htmlwrap!script_defaultArgs.htmlwrap,
     "cdata" : scriptsInfo.cdata!script_defaultArgs.cdata
   }>
-  <#local args = mergeArgMaps(args, inlineArgs, argDefaults)>
+  <#local args = mergeArgMaps(args, inlineArgs, defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#if src?has_content>
     <script type="${type}" src="${src}"></script>

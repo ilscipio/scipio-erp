@@ -297,7 +297,6 @@ Since this is very foundation specific, this function may be dropped in future i
                       see @tile macro "type" attrib for possible values.
 -->
 <#assign grid_defaultArgs = {
-    <#-- parameters: defaults -->
     "type":"", "tilesType":"", "class":"", "columns":4, "id":""
 }>
 <#macro grid args={} inlineArgs...>
@@ -412,7 +411,6 @@ It is loosely based on http://metroui.org.ua/tiles.html
     overlayBgColor  = [none|0|1|2|3|4|5|6|7|...] default: from styles hash, otherwise 0 (primary theme color). "none" prevents color class.
 -->
 <#assign tile_defaultArgs = {
-    <#-- parameters: defaults -->
     "type":"", "size":"", "title":"", "titleType":"", "titleBgColor":"", "class":"", "id":"", 
     "link":"", "linkTarget":true, "color":"", "icon":"", 
     "image":"", "imageType":"", "imageBgColor":"", "overlayType":"", "overlayBgColor":""

@@ -636,14 +636,19 @@
       </@row>      
       <@row>
         <@cell>
+          <span>Radios:</span>
           <@field type="radio" name="radio1" label="Radio 1 (with label area)" value="val1" labelArea=true/>
           <@field type="radio" name="radio2" label="Radio 2 (no label area - inlined label)" value="val2" />
           <#-- Radio with auto-collapsing "pseudo" inline label (rare) - here the inline label, underneath, is auto-implemented
               using the label area (so radio widget does not receive an inline label): -->
+          <span>Intentionally ugly radio with pseudo-inline label (rare):</span>
           <@field type="radio" name="radio3" label="Radio 3" collapsedInlineLabel=true value="val3" />
+          <br/>
+          <span>Checkboxes:</span>
           <@field type="checkbox" name="checkbox1" label="Checkbox 1 (with label area)" value="val1" labelArea=true/>
           <@field type="checkbox" name="checkbox2" label="Checkbox 2 (no label area - inlined label)" value="val2" />
           <#-- Checkbox with auto-collapsing "pseudo" inline label (rare): -->
+          <span>Intentionally ugly checkbox with pseudo-inline label (rare):</span>
           <@field type="checkbox" name="checkbox3" label="Checkbox 3" collapsedInlineLabel=true value="val3" />
         </@cell>
       </@row>

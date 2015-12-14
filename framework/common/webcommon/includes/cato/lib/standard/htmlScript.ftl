@@ -26,11 +26,11 @@ IMPL NOTE: Beware of whitespace.
 <#macro htmlHeadOpen includeDocType=false>
 <#if includeDocType><!DOCTYPE html></#if>
 <#if locale??>
-    <#local docLangAttr = locale.toString()?replace("_", "-")>
+  <#local docLangAttr = locale.toString()?replace("_", "-")>
 </#if>
 <#local langDir = "ltr">
 <#if docLangAttr?? && "ar.iw"?contains(docLangAttr?substring(0, 2))>
-    <#local langDir = "rtl">
+  <#local langDir = "rtl">
 </#if>
 <#if !docLangAttr?has_content>
   <#local docLangAttr = "en">
@@ -67,10 +67,7 @@ Not associated with any HTML element.
     scriptType/output/cdata/htmlwrap  = defaults for child @script calls (see @script)
 -->
 <#assign scripts_defaultArgs = {
-    "scriptType" : "text/javascript",
-    "output" : "",
-    "htmlwrap" : true,
-    "cdata" : true
+  "scriptType" : "text/javascript", "output" : "", "htmlwrap" : true, "cdata" : true
 }>
 <#macro scripts args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.scripts_defaultArgs)>
@@ -109,11 +106,7 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
     cdata           = boolean, default true, if false don't include CDATA guard (only used if htmlwrap true)
 -->
 <#assign script_defaultArgs = {
-    "type" : "text/javascript",
-    "src" : "",
-    "output" : "",
-    "htmlwrap" : true,
-    "cdata" : true
+  "type" : "text/javascript", "src" : "", "output" : "", "htmlwrap" : true, "cdata" : true
 }>
 <#macro script args={} inlineArgs...>
   <#local scriptsInfo = getRequestVar("catoScriptsInfo")!{}>

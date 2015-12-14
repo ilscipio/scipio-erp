@@ -77,9 +77,7 @@ for getFileUploadProgressStatus AJAX calls.
     htmlwrap        = if true, wrap in @script (default true)
 -->
 <#assign progressScript_defaultArgs = {
-    "enabled" : true,
-    "htmlwrap" : true,
-    "progressOptions" : {}
+  "enabled" : true, "htmlwrap" : true, "progressOptions" : {}
 }>
 <#macro progressScript args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.progressScript_defaultArgs)>
@@ -88,39 +86,38 @@ for getFileUploadProgressStatus AJAX calls.
     <#if progressOptions?has_content && progressOptions.formSel?has_content>
       <@script htmlwrap=htmlwrap>
         <@requireScriptOfbizUrl uri="getFileUploadProgressStatus" htmlwrap=false/>
-      
-      (function() {
-          var uploadProgress = null;
-      
-          jQuery(document).ready(function() {
-            <#if progressOptions.successRedirectUrl??>
-              <#-- shouldn't have &amp; in script tag... but code may escape and should support... -->
-              <#local progressOptions = concatMaps(progressOptions, {"successRedirectUrl":progressOptions.successRedirectUrl?replace("&amp;", "&")})>
-            </#if>
-              uploadProgress = new CatoUploadProgress(<@objectAsScript lang="js" object=progressOptions />);
-              uploadProgress.reset();
-          });
+ 
+          (function() {
+              var uploadProgress = null;
           
-        <#if (progressOptions.submitHook!) == "validate">
-          jQuery("${progressOptions.formSel}").validate({
-              submitHandler: function(form) {
+              jQuery(document).ready(function() {
+                <#if progressOptions.successRedirectUrl??>
+                  <#-- shouldn't have &amp; in script tag... but code may escape and should support... -->
+                  <#local progressOptions = concatMaps(progressOptions, {"successRedirectUrl":progressOptions.successRedirectUrl?replace("&amp;", "&")})>
+                </#if>
+                  uploadProgress = new CatoUploadProgress(<@objectAsScript lang="js" object=progressOptions />);
+                  uploadProgress.reset();
+              });
+              
+            <#if (progressOptions.submitHook!) == "validate">
+              jQuery("${progressOptions.formSel}").validate({
+                  submitHandler: function(form) {
+                      var goodToGo = uploadProgress.initUpload();
+                      if (goodToGo) {
+                          form.submit();
+                      }
+                  },
+                  ${progressOptions.validateObjScript!""}
+              });
+            <#elseif (progressOptions.submitHook!) != "none" >
+              jQuery("${progressOptions.formSel}").submit(function(event) {
                   var goodToGo = uploadProgress.initUpload();
-                  if (goodToGo) {
-                      form.submit();
+                  if (!goodToGo) {
+                      event.preventDefault();
                   }
-              },
-              ${progressOptions.validateObjScript!""}
-          });
-        <#elseif (progressOptions.submitHook!) != "none" >
-          jQuery("${progressOptions.formSel}").submit(function(event) {
-              var goodToGo = uploadProgress.initUpload();
-              if (!goodToGo) {
-                  event.preventDefault();
-              }
-          });
-        </#if>
-      })();
-      
+              });
+            </#if>
+          })();
       </@script>
     </#if>
   </#if>
@@ -173,21 +170,21 @@ for getFileUploadProgressStatus AJAX calls.
     <#local id = (progressOptions.progBarId)!"">
   </#if>
 
-    <#switch type>
-      <#case "alert">
-        <#local color=styles.color_alert!/>
-      <#break>
-      <#case "info">
-        <#local color=styles.color_info!/>
-      <#break>
-      <#case "warning">
-        <#local color=styles.color_warning!/>
-      <#break>
-      <#default>
-        <#local color=styles.color_success!/>
-    </#switch>
+  <#switch type>
+    <#case "alert">
+      <#local color=styles.color_alert!/>
+    <#break>
+    <#case "info">
+      <#local color=styles.color_info!/>
+    <#break>
+    <#case "warning">
+      <#local color=styles.color_warning!/>
+    <#break>
+    <#default>
+      <#local color=styles.color_success!/>
+  </#switch>
 
-    <@progress_markup value=value id=id class=class showValue=showValue containerClass=containerClass color=color />
+  <@progress_markup value=value id=id class=class showValue=showValue containerClass=containerClass color=color />
     
   <#if progressOptions?has_content>
     <#local opts = progressOptions>
@@ -201,13 +198,13 @@ for getFileUploadProgressStatus AJAX calls.
 
 <#-- @progress main markup - theme override -->
 <#macro progress_markup value=0 id="" class="" showValue=false containerClass="" color="" extraArgs...>
-    <#local classes = compileClassArg(class)>
-    <#local containerClasses = compileClassArg(containerClass)>
-    <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if color?has_content> ${color!}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
-      <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
-        <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
-      <#if styles.progress_wrap?has_content></div></#if>
-    </div>
+  <#local classes = compileClassArg(class)>
+  <#local containerClasses = compileClassArg(containerClass)>
+  <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if color?has_content> ${color!}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
+    <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
+      <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
+    <#if styles.progress_wrap?has_content></div></#if>
+  </div>
 </#macro>
 
 <#-- 
@@ -239,9 +236,9 @@ IMPL NOTE: this must support legacy ofbiz parameters.
     responseName          = response name
 -->
 <#assign asmSelectScript_defaultArgs = {
-  "enabled":true, "id":"", "title":false, "sortable":false, "formId":"", "formName":"",
-  "asmSelectOptions":{}, "asmSelectDefaults":true, "relatedFieldId":"", "relatedTypeName":"",
-  "relatedTypeFieldId":"", "paramKey":"", "requestName":"", "responseName":"", "htmlwrap":true
+  "enabled":true, "id":"", "title":false, "sortable":false, "formId":"", "formName":"", "asmSelectOptions":{}, 
+  "asmSelectDefaults":true, "relatedFieldId":"", "relatedTypeName":"", "relatedTypeFieldId":"", "paramKey":"", 
+  "requestName":"", "responseName":"", "htmlwrap":true
 }>
 <#macro asmSelectScript args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.asmSelectScript_defaultArgs)>
@@ -457,85 +454,85 @@ or even multiple per fieldset.
     inlineItems     = change default for @field inlineItems parameter (true/false)     
 -->
 <#assign fields_defaultArgs = {
-    "type":"default", "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", 
-    "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":""
+  "type":"default", "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", 
+  "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":""
 }>
 <#macro fields args={} inlineArgs...>
-    <#--<#local args = mergeArgMapsBasic(args, inlineArgs, catoStdTmplLib.fields_defaultArgs)>
-    <#local dummy = localsPutAll(args)>
-    <#local fieldsInfo = makeFieldsInfo(args)>-->
-    <#local fieldsInfo = makeFieldsInfo(mergeArgMapsBasic(args, inlineArgs))>
-    <#local dummy = pushRequestStack("catoCurrentFieldsInfo", fieldsInfo)>
-    <#nested>
-    <#local dummy = popRequestStack("catoCurrentFieldsInfo")>
+  <#--<#local args = mergeArgMapsBasic(args, inlineArgs, catoStdTmplLib.fields_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local fieldsInfo = makeFieldsInfo(args)>-->
+  <#local fieldsInfo = makeFieldsInfo(mergeArgMapsBasic(args, inlineArgs))>
+  <#local dummy = pushRequestStack("catoCurrentFieldsInfo", fieldsInfo)>
+  <#nested>
+  <#local dummy = popRequestStack("catoCurrentFieldsInfo")>
 </#macro>
 
 <#function makeFieldsInfo args={}>
-    <#local args = mergeArgMapsBasic(args, {}, catoStdTmplLib.fields_defaultArgs)>
-    <#local dummy = localsPutAll(args)>
-    
-    <#local stylesType = type?replace("-","_")>
-    <#local stylesPrefix = "fields_" + stylesType + "_">
-    <#if !styles[stylesPrefix + "labeltype"]??>
-      <#local stylesType = "default">
-      <#local stylesPrefix = "fields_default_">
-    </#if>
+  <#local args = mergeArgMapsBasic(args, {}, catoStdTmplLib.fields_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  
+  <#local stylesType = type?replace("-","_")>
+  <#local stylesPrefix = "fields_" + stylesType + "_">
+  <#if !styles[stylesPrefix + "labeltype"]??>
+    <#local stylesType = "default">
+    <#local stylesPrefix = "fields_default_">
+  </#if>
 
-    <#if !labelArea?is_boolean>
-      <#local stylesLabelArea = styles[stylesPrefix + "labelarea"]!styles["fields_default_labelarea"]!"">
-      <#if stylesLabelArea?is_boolean>
-        <#local labelArea = stylesLabelArea>
-      </#if>
+  <#if !labelArea?is_boolean>
+    <#local stylesLabelArea = styles[stylesPrefix + "labelarea"]!styles["fields_default_labelarea"]!"">
+    <#if stylesLabelArea?is_boolean>
+      <#local labelArea = stylesLabelArea>
     </#if>
-    <#if !labelType?has_content>
-      <#local labelType = styles[stylesPrefix + "labeltype"]!styles["fields_default_labeltype"]!"horizontal">
-    </#if>
-    <#if !labelPosition?has_content>
-      <#local labelPosition = styles[stylesPrefix + "labelposition"]!styles["fields_default_labelposition"]!"left">
-    </#if>
-    <#if !labelArea?is_boolean>
-      <#local labelArea = (labelType != "none" && labelPosition != "none")>
-    </#if>
+  </#if>
+  <#if !labelType?has_content>
+    <#local labelType = styles[stylesPrefix + "labeltype"]!styles["fields_default_labeltype"]!"horizontal">
+  </#if>
+  <#if !labelPosition?has_content>
+    <#local labelPosition = styles[stylesPrefix + "labelposition"]!styles["fields_default_labelposition"]!"left">
+  </#if>
+  <#if !labelArea?is_boolean>
+    <#local labelArea = (labelType != "none" && labelPosition != "none")>
+  </#if>
 
-    <#if !labelAreaExceptions?is_sequence && !labelAreaExceptions?is_string>
-      <#if labelAreaExceptions?is_boolean && labelAreaExceptions == false>
-        <#local labelAreaExceptions = []>
-      <#else>
-        <#local labelAreaExceptions = styles[stylesPrefix + "labelareaexceptions"]!styles["fields_default_labelareaexceptions"]!"">
-      </#if>
+  <#if !labelAreaExceptions?is_sequence && !labelAreaExceptions?is_string>
+    <#if labelAreaExceptions?is_boolean && labelAreaExceptions == false>
+      <#local labelAreaExceptions = []>
+    <#else>
+      <#local labelAreaExceptions = styles[stylesPrefix + "labelareaexceptions"]!styles["fields_default_labelareaexceptions"]!"">
     </#if>
-    <#if labelAreaExceptions?is_string> <#-- WARN: ?is_string unreliable -->
-      <#if labelAreaExceptions?has_content>
-        <#local labelAreaExceptions = labelAreaExceptions?split(" ")>
-      <#else>
-        <#local labelAreaExceptions = []>
-      </#if>
+  </#if>
+  <#if labelAreaExceptions?is_string> <#-- WARN: ?is_string unreliable -->
+    <#if labelAreaExceptions?has_content>
+      <#local labelAreaExceptions = labelAreaExceptions?split(" ")>
+    <#else>
+      <#local labelAreaExceptions = []>
     </#if>
+  </#if>
 
-    <#if !labelAreaRequireContent?is_boolean>
-      <#local labelAreaRequireContent = styles[stylesPrefix + "labelarearequirecontent"]!styles["fields_default_labelarearequirecontent"]!"">
-    </#if>
+  <#if !labelAreaRequireContent?is_boolean>
+    <#local labelAreaRequireContent = styles[stylesPrefix + "labelarearequirecontent"]!styles["fields_default_labelarearequirecontent"]!"">
+  </#if>
 
-    <#if !collapse?is_boolean>
-      <#local collapse = styles[stylesPrefix + "collapse"]!styles["fields_default_collapse"]!"">
+  <#if !collapse?is_boolean>
+    <#local collapse = styles[stylesPrefix + "collapse"]!styles["fields_default_collapse"]!"">
+  </#if>
+  <#if !collapsePostfix?is_boolean>
+    <#local collapsePostfix = styles[stylesPrefix + "collapsepostfix"]!styles["fields_default_collapsepostfix"]!"">
+  </#if>
+  <#if !collapsedInlineLabel?has_content>
+    <#local collapsedInlineLabel = styles[stylesPrefix + "collapsedinlinelabel"]!styles["fields_default_collapsedinlinelabel"]!"">
+  </#if>
+  <#if collapsedInlineLabel?is_string>
+    <#if collapsedInlineLabel?has_content> <#-- WARN: ?is_string unreliable -->
+      <#local collapsedInlineLabel = collapsedInlineLabel?split(" ")>
     </#if>
-    <#if !collapsePostfix?is_boolean>
-      <#local collapsePostfix = styles[stylesPrefix + "collapsepostfix"]!styles["fields_default_collapsepostfix"]!"">
-    </#if>
-    <#if !collapsedInlineLabel?has_content>
-      <#local collapsedInlineLabel = styles[stylesPrefix + "collapsedinlinelabel"]!styles["fields_default_collapsedinlinelabel"]!"">
-    </#if>
-    <#if collapsedInlineLabel?is_string>
-      <#if collapsedInlineLabel?has_content> <#-- WARN: ?is_string unreliable -->
-        <#local collapsedInlineLabel = collapsedInlineLabel?split(" ")>
-      </#if>
-    </#if>
+  </#if>
 
-    <#return {"type":type, "labelType":labelType, "labelPosition":labelPosition, 
-        "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, 
-        "labelAreaRequireContent":labelAreaRequireContent, 
-        "formName":formName, "formId":formId, "inlineItems":inlineItems,
-        "collapse":collapse, "collapsePostfix":collapsePostfix, "collapsedInlineLabel":collapsedInlineLabel}>
+  <#return {"type":type, "labelType":labelType, "labelPosition":labelPosition, 
+    "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, 
+    "labelAreaRequireContent":labelAreaRequireContent, 
+    "formName":formName, "formId":formId, "inlineItems":inlineItems,
+    "collapse":collapse, "collapsePostfix":collapsePostfix, "collapsedInlineLabel":collapsedInlineLabel}>
 </#function>
 
 <#-- 
@@ -579,28 +576,28 @@ Maps an Ofbiz field type to a Cato field type.
 <#function mapOfbizFieldTypeToCatoFieldType fieldType>
   <#if !ofbizFieldTypeToCatoFieldTypeMap??>
     <#global ofbizFieldTypeToCatoFieldTypeMap = {
-        "display": "display",
-        "hyperlink": "hyperlink",
-        "text": "input",
-        "textarea": "textarea",
-        "date-time": "datetime",
-        "drop-down": "select",
-        "check": "checkbox",
-        "radio": "radio",
-        "submit": "submit",
-        "reset": "reset",
-        "hidden": "hidden",
-        "ignored": "ignored",
-        "text-find": "textfind",
-        "date-find": "datefind",
-        "range-find": "rangefind",
-        "lookup": "lookup",
-        "file": "file",
-        "password": "password",
-        "image": "image",
-        "display-entity": "displayentity",
-        "container": "container",
-        "default": "other"
+      "display": "display",
+      "hyperlink": "hyperlink",
+      "text": "input",
+      "textarea": "textarea",
+      "date-time": "datetime",
+      "drop-down": "select",
+      "check": "checkbox",
+      "radio": "radio",
+      "submit": "submit",
+      "reset": "reset",
+      "hidden": "hidden",
+      "ignored": "ignored",
+      "text-find": "textfind",
+      "date-find": "datefind",
+      "range-find": "rangefind",
+      "lookup": "lookup",
+      "file": "file",
+      "password": "password",
+      "image": "image",
+      "display-entity": "displayentity",
+      "container": "container",
+      "default": "other"
     }>
   </#if>
   <#return ofbizFieldTypeToCatoFieldTypeMap[fieldType]!ofbizFieldTypeToCatoFieldTypeMap["default"]!"">
@@ -829,17 +826,17 @@ standard markup.
     description     = for image type: image alt
 -->
 <#assign field_defaultArgs = {
-    "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", "onClick":"", 
-    "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
-    "cols":"50", "dateType":"date-time", "multiple":"", "checked":"", 
-    "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"",
-    "tooltip":"", "columns":"", "norows":false, "nocells":false, "container":"",
-    "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":1, "postfixContent":true, "required":false, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
-    "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "inlineLabelArea":"", "inlineLabel":false,
-    "description":"",
-    "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
-    "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
-    "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "events":{} 
+  "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", "onClick":"", 
+  "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
+  "cols":"50", "dateType":"date-time", "multiple":"", "checked":"", 
+  "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"",
+  "tooltip":"", "columns":"", "norows":false, "nocells":false, "container":"",
+  "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":1, "postfixContent":true, "required":false, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
+  "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "inlineLabelArea":"", "inlineLabel":false,
+  "description":"",
+  "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
+  "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
+  "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "events":{} 
 }>
 <#macro field args={} inlineArgs...> 
   <#-- TODO: the following calls should be combined into a mergeArgMapsToLocals method, but
@@ -911,7 +908,6 @@ standard markup.
     </#if>
   </#if>
 
-  
   <#-- fieldIdNum will always increment throughout the page 
        now stored in request attributes so survived screens.render though still accessible as a global -->
   <#local fieldIdNum = getRequestVar("catoFieldIdNum")!0>
@@ -919,12 +915,12 @@ standard markup.
   <#local dummy = setRequestVar("catoFieldIdNum", fieldIdNum)>
   
   <#if !id?has_content>
-      <#-- FIXME? renderSeqNumber usually empty... where come from? should be as request attribute also? -->
-      <#local id = "field_id_${renderSeqNumber!}_${fieldIdNum!0}">
+    <#-- FIXME? renderSeqNumber usually empty... where come from? should be as request attribute also? -->
+    <#local id = "field_id_${renderSeqNumber!}_${fieldIdNum!0}">
   </#if>
   
   <#if required && (!containsStyleName(class, styles.required!""))>
-      <#local class = addClassArg(class, styles.required!"")>
+    <#local class = addClassArg(class, styles.required!"")>
   </#if>
   <#-- the widgets do this now
   <#local class = compileClassArg(class)>-->
@@ -1005,7 +1001,7 @@ standard markup.
       In our default setup we want it set to false, but can be changed in styles and calls.
       -->
   <#local labelAreaConsumeLabel = (labelArea?is_boolean && labelArea == true) || 
-           (!(labelArea?is_boolean && labelArea == false) && (labelAreaDefault))>
+    (!(labelArea?is_boolean && labelArea == false) && (labelAreaDefault))>
   
   <#local origLabel = label>
   <#local effInlineLabel = false>
@@ -1058,14 +1054,14 @@ standard markup.
   
   <#-- push this field's info (popped at end) -->
   <#local dummy = pushRequestStack("catoCurrentFieldInfo", 
-      {"type":type, "inlineItems":inlineItems})>
+    {"type":type, "inlineItems":inlineItems})>
   
   <#-- main markup begin -->
   <#local labelAreaContent = "">
   <#if useLabelArea>
-      <#-- NOTE: origArgs is passed because in some cases it may be important for markup to know if the caller manually
-          specified a certain parameter to @field or not - the other logical args don't record this info -->
-      <#local labelAreaContent><@field_markup_labelarea origArgs=args labelType=effLabelType labelPosition=effLabelPosition label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
+    <#-- NOTE: origArgs is passed because in some cases it may be important for markup to know if the caller manually
+        specified a certain parameter to @field or not - the other logical args don't record this info -->
+    <#local labelAreaContent><@field_markup_labelarea origArgs=args labelType=effLabelType labelPosition=effLabelPosition label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
   </#if>
       
   <@field_markup_container origArgs=args type=type columns=columns postfix=postfix postfixSize=postfixSize postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container>
@@ -1411,9 +1407,9 @@ standard markup.
   <#local label = label?trim>
   <#if label?has_content>
     <#if collapse>
-        <span class="${styles.prefix!} form-field-label">${label}<#if required> *</#if></span>
+      <span class="${styles.prefix!} form-field-label">${label}<#if required> *</#if></span>
     <#else>
-        <label class="form-field-label"<#if fieldId?has_content> for="${fieldId}"</#if>>${label}<#if required> *</#if></label>
+      <label class="form-field-label"<#if fieldId?has_content> for="${fieldId}"</#if>>${label}<#if required> *</#if></label>
     </#if>  
   <#else>
     <#if required>*</#if>

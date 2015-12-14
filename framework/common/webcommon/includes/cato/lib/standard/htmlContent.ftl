@@ -40,8 +40,8 @@
                            NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#assign heading_defaultArgs = {
-    "elemType":true, "level":"", "relLevel":"", "class":"", "id":"", "levelClassPrefix":true, "consumeLevel":"", 
-    "containerElemType":false, "containerClass":"", "containerId":"", "attribs":{}
+  "elemType":true, "level":"", "relLevel":"", "class":"", "id":"", "levelClassPrefix":true, "consumeLevel":"", 
+  "containerElemType":false, "containerClass":"", "containerId":"", "attribs":{}
 }>
 <#macro heading args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.heading_defaultArgs)>
@@ -91,7 +91,7 @@
     <#local cElem = containerElemType> 
   </#if>
   <@heading_markup level=level elem=hElem class=class id=id attribs=attribs
-      containerElem=cElem containerClass=containerClass containerId=containerId><#nested></@heading_markup>
+    containerElem=cElem containerClass=containerClass containerId=containerId><#nested></@heading_markup>
 </#macro>
 
 <#-- Main markup for @heading (minimal logic; a little needed) - theme override
@@ -131,14 +131,14 @@ Creates a very basic wrapper for code blocks
     type            = (html|java|css|javascript|log) (default:html) 
 -->
 <#assign code_defaultArgs = {
-    "type":"html"
+  "type":"html"
 }>
 <#macro code args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.code_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-    <pre><code data-language="${type!}"><#rt>
-      <#nested><#t>
-    </code></pre><#lt>
+  <pre><code data-language="${type!}"><#rt>
+    <#nested><#t>
+  </code></pre><#lt>
 </#macro>
 
 <#-- 
@@ -185,17 +185,9 @@ Creates a responsive tables script (script only - no markup).
     fixedColumnsRight   = int value; number of columns that are fixed on the right hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns) 
 -->
 <#assign tableResponsiveScript_defaultArgs = {
-    "enabled" : true,
-    "tableId" : "",
-    "tableType" : "",
-    "tableStyleName" : "",
-    "responsive" : "",
-    "scrollable" : "",
-    "responsiveOptions" : {},
-    "responsiveDefaults" : true,
-    "fixedColumnsLeft" : 0,
-    "fixedColumnsRight" : 0,
-    "htmlwrap" : true
+  "enabled" : true, "tableId" : "", "tableType" : "", "tableStyleName" : "", "responsive" : "", "scrollable" : "",
+  "responsiveOptions" : {}, "responsiveDefaults" : true, "fixedColumnsLeft" : 0, "fixedColumnsRight" : 0,
+  "htmlwrap" : true
 }>
 <#macro tableResponsiveScript args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tableResponsiveScript_defaultArgs)>
@@ -826,11 +818,10 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro pul args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.pul_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-
-    <ul class="${styles.pricing_wrap!}">
-        <@pli type="title">${title!}</@pli>
-        <#nested>
-    </ul>
+  <ul class="${styles.pricing_wrap!}">
+      <@pli type="title">${title!}</@pli>
+      <#nested>
+  </ul>
 </#macro>
 
 <#assign pli_defaultArgs = {
@@ -839,24 +830,23 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro pli args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.pli_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  
-    <#switch type>
-        <#case "price">
-            <li class="${styles.pricing_price!}"><#nested></li>
-        <#break>
-        <#case "description">
-            <li class="${styles.pricing_description!}"><#nested></li>
-        <#break>
-        <#case "title">
-            <li class="${styles.pricing_title!}"><#nested></li>
-        <#break>
-        <#case "button">
-            <li class="${styles.pricing_cta!}"><#nested></li>
-        <#break>        
-        <#default>
-            <li class="${styles.pricing_bullet!}"><#nested></li>
-        <#break>
-    </#switch>
+  <#switch type>
+    <#case "price">
+      <li class="${styles.pricing_price!}"><#nested></li>
+    <#break>
+    <#case "description">
+      <li class="${styles.pricing_description!}"><#nested></li>
+    <#break>
+    <#case "title">
+      <li class="${styles.pricing_title!}"><#nested></li>
+    <#break>
+    <#case "button">
+      <li class="${styles.pricing_cta!}"><#nested></li>
+    <#break>        
+    <#default>
+      <li class="${styles.pricing_bullet!}"><#nested></li>
+    <#break>
+  </#switch>
 </#macro>
 
 <#-- 
@@ -883,99 +873,99 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.chart_defaultArgs)>
   <#local dummy = localsPutAll(args)>
 
-    <#global chartLibrary = library!"foundation"/>
-    <#local nestedContent><#nested><#t></#local>
-    <#local chartIdNum = getRequestVar("catoChartIdNum")!0>
-    <#local chartIdNum = chartIdNum + 1 />
-    <#local dummy = setRequestVar("catoChartIdNum", chartIdNum)>
-    <#if chartLibrary=="foundation">
-      <@row>
-        <@cell columns=3>    
-        <ul data-${type!}-id="chart_${renderSeqNumber!}_${chartIdNum!}" class="${styles.chart_legend!}">
-            <#nested/>
-            <#--<#if !nestedContent?has_content><@chartdata value="0" title=""/></#if>-->
-        </ul>
-        </@cell>
-        <@cell columns=9><div id="chart_${renderSeqNumber!}_${chartIdNum!}" style="height:300px;"></div></@cell>
-      </@row>
-    <#else>
-        <#global chartId = "chart_${renderSeqNumber!}_${chartIdNum!}"/>
-        <#global chartType = type/>
-        <canvas id="${chartId!}" class="${styles.grid_large!}12 chart-data" height="300" style="height:300px;"></canvas>
-        <@script>
-            $(function(){
-                var chartDataEl = $('.chart-data:first-of-type');
-                var chartData = chartDataEl.sassToJs({pseudoEl:":before", cssProperty: "content"});
-                var options ={
-                    animation: false,
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    scaleLineColor: chartData.scaleLineColor,
-                    scaleFontFamily: chartData.scaleFontFamily,
-                    scaleFontSize: chartData.scaleFontSize,
-                    scaleFontColor: chartData.scaleFontColor,
-                    scaleShowLabels: chartData.scaleShowLabels,
-                    scaleShowLabels: chartData.scaleShowLabels,
-                    scaleShowLine : chartData.scaleShowLine,
-                    angleShowLineOut : chartData.angleShowLineOut,
-                    scaleBeginAtZero : chartData.scaleBeginAtZero,
-                    showTooltips: chartData.showTooltips,
-                    tooltipFillColor: chartData.tooltipFillColor,
-                    tooltipFontFamily: chartData.tolltipFontFamily,
-                    tooltipFontSize: chartData.tooltipFontSize,
-                    tooltipFontStyle: chartData.tooltipFontStyle,
-                    tooltipFontColor: chartData.tooltipFontColor,
-                    tooltipTitleFontFamily: chartData.tooltipTitleFontFamily,
-                    tooltipTitleFontSize: chartData.tooltipTitleFontSize,
-                    tooltipTitleFontStyle: chartData.tooltipTitleFontStyle,
-                    tooltipTitleFontColor: chartData.tooltipTitleFontColor,
-                    tooltipYPadding: chartData.tooltipYPadding,
-                    tooltipXPadding: chartData.tooltipXPadding,
-                    tooltipCaretSize: chartData.tooltipCaretSize,
-                    tooltipCornerRadius: chartData.tooltipCornerRadius,
-                    datasetFill : chartData.datasetFill,
-                    tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %>",
-                    multiTooltipTemplate: "<%= value %>",
-                    pointDot : chartData.pointDot,
-                    pointHitDetectionRadius : chartData.pointHitDetectionRadius,
-                    pointDotRadius : chartData.pointDotRadius,
-                    pointDotStrokeWidth : chartData.pointDotStrokeWidth,
-                    <#if type=="line">
-                    bezierCurve : chartData.bezierCurve,
-                    bezierCurveTension : chartData.bezierCurveTension,
-                    legendTemplate : "<ul class=\"legend <%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li style=\"color:<%=datasets[i].strokeColor%> !important \"><span style=\"color:#efefef !important \"><%=datasets[i].value%>  <%if(datasets[i].label){%><%=datasets[i].label%><%}%></span></li><%}%></ul>",
-                    dataLabels: chartData.dataLabels
-                    <#elseif type=="pie">
-                    legendTemplate : "<ul class=\"legend <%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li style=\"color:<%=segments[i].fillColor%> !important \"><span style=\"color:#efefef !important \"><%=segments[i].value%>  <%if(segments[i].label){%><%=segments[i].label%><%}%></span></li><%}%></ul>"
-                    <#else>
-                    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
-                    </#if>
-                    };
-                var ctx_${renderSeqNumber!}_${chartIdNum!} = $('#${chartId!}').get(0).getContext("2d");
-                <#if type=="pie">
-                var data = [];
+  <#global chartLibrary = library!"foundation"/>
+  <#local nestedContent><#nested><#t></#local>
+  <#local chartIdNum = getRequestVar("catoChartIdNum")!0>
+  <#local chartIdNum = chartIdNum + 1 />
+  <#local dummy = setRequestVar("catoChartIdNum", chartIdNum)>
+  <#if chartLibrary=="foundation">
+    <@row>
+      <@cell columns=3>    
+      <ul data-${type!}-id="chart_${renderSeqNumber!}_${chartIdNum!}" class="${styles.chart_legend!}">
+        <#nested/>
+        <#--<#if !nestedContent?has_content><@chartdata value="0" title=""/></#if>-->
+      </ul>
+      </@cell>
+      <@cell columns=9><div id="chart_${renderSeqNumber!}_${chartIdNum!}" style="height:300px;"></div></@cell>
+    </@row>
+  <#else>
+    <#global chartId = "chart_${renderSeqNumber!}_${chartIdNum!}"/>
+    <#global chartType = type/>
+    <canvas id="${chartId!}" class="${styles.grid_large!}12 chart-data" height="300" style="height:300px;"></canvas>
+    <@script>
+        $(function(){
+            var chartDataEl = $('.chart-data:first-of-type');
+            var chartData = chartDataEl.sassToJs({pseudoEl:":before", cssProperty: "content"});
+            var options ={
+                animation: false,
+                responsive: true,
+                maintainAspectRatio: true,
+                scaleLineColor: chartData.scaleLineColor,
+                scaleFontFamily: chartData.scaleFontFamily,
+                scaleFontSize: chartData.scaleFontSize,
+                scaleFontColor: chartData.scaleFontColor,
+                scaleShowLabels: chartData.scaleShowLabels,
+                scaleShowLabels: chartData.scaleShowLabels,
+                scaleShowLine : chartData.scaleShowLine,
+                angleShowLineOut : chartData.angleShowLineOut,
+                scaleBeginAtZero : chartData.scaleBeginAtZero,
+                showTooltips: chartData.showTooltips,
+                tooltipFillColor: chartData.tooltipFillColor,
+                tooltipFontFamily: chartData.tolltipFontFamily,
+                tooltipFontSize: chartData.tooltipFontSize,
+                tooltipFontStyle: chartData.tooltipFontStyle,
+                tooltipFontColor: chartData.tooltipFontColor,
+                tooltipTitleFontFamily: chartData.tooltipTitleFontFamily,
+                tooltipTitleFontSize: chartData.tooltipTitleFontSize,
+                tooltipTitleFontStyle: chartData.tooltipTitleFontStyle,
+                tooltipTitleFontColor: chartData.tooltipTitleFontColor,
+                tooltipYPadding: chartData.tooltipYPadding,
+                tooltipXPadding: chartData.tooltipXPadding,
+                tooltipCaretSize: chartData.tooltipCaretSize,
+                tooltipCornerRadius: chartData.tooltipCornerRadius,
+                datasetFill : chartData.datasetFill,
+                tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %>",
+                multiTooltipTemplate: "<%= value %>",
+                pointDot : chartData.pointDot,
+                pointHitDetectionRadius : chartData.pointHitDetectionRadius,
+                pointDotRadius : chartData.pointDotRadius,
+                pointDotStrokeWidth : chartData.pointDotStrokeWidth,
+                <#if type=="line">
+                bezierCurve : chartData.bezierCurve,
+                bezierCurveTension : chartData.bezierCurveTension,
+                legendTemplate : "<ul class=\"legend <%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li style=\"color:<%=datasets[i].strokeColor%> !important \"><span style=\"color:#efefef !important \"><%=datasets[i].value%>  <%if(datasets[i].label){%><%=datasets[i].label%><%}%></span></li><%}%></ul>",
+                dataLabels: chartData.dataLabels
+                <#elseif type=="pie">
+                legendTemplate : "<ul class=\"legend <%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li style=\"color:<%=segments[i].fillColor%> !important \"><span style=\"color:#efefef !important \"><%=segments[i].value%>  <%if(segments[i].label){%><%=segments[i].label%><%}%></span></li><%}%></ul>"
                 <#else>
-                var data = {
-                        labels :[],
-                        datasets: [
-                            {
-                              fillColor: chartData.fillColor,
-                              strokeColor: chartData.strokeColor,
-                              pointColor: chartData.pointColor,
-                              pointStrokeColor: chartData.pointStrokeColor,
-                              pointHighlightFill: chartData.pointHighlightFill,
-                              pointHighlightStroke: chartData.pointHighlightStroke,
-                              label: "",
-                              data: []
-                            }
-                            ]
-                    };
+                legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
                 </#if>
-                var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${chartIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
-                <#nested/>
-            });
-        </@script>
-    </#if>
+                };
+            var ctx_${renderSeqNumber!}_${chartIdNum!} = $('#${chartId!}').get(0).getContext("2d");
+            <#if type=="pie">
+            var data = [];
+            <#else>
+            var data = {
+                    labels :[],
+                    datasets: [
+                        {
+                          fillColor: chartData.fillColor,
+                          strokeColor: chartData.strokeColor,
+                          pointColor: chartData.pointColor,
+                          pointStrokeColor: chartData.pointStrokeColor,
+                          pointHighlightFill: chartData.pointHighlightFill,
+                          pointHighlightStroke: chartData.pointHighlightStroke,
+                          label: "",
+                          data: []
+                        }
+                        ]
+                };
+            </#if>
+            var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${chartIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
+            <#nested/>
+        });
+    </@script>
+  </#if>
 </#macro>
 
 <#assign chartdata_defaultArgs = {
@@ -985,14 +975,16 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.chartdata_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   
-    <#if !chartLibrary?has_content> <#local chartLibrary = "foundation"/></#if>
-    <#if chartLibrary=="foundation">
-        <li <#if value2?has_content>data-y="${value!}" data-x="${value2!}"<#else>data-value="${value!}"</#if>>${title!}</li>
+  <#if !chartLibrary?has_content>
+    <#local chartLibrary = "foundation"/>
+  </#if>
+  <#if chartLibrary=="foundation">
+    <li<#if value2?has_content> data-y="${value!}" data-x="${value2!}"<#else> data-value="${value!}"</#if>>${title!}</li>
+  <#else>
+    <#if chartType="line" || chartType="bar">
+      ${chartId!}.addData([<#if value?has_content>${value!}</#if>]<#if title?has_content>,"${title!}"</#if>);
     <#else>
-        <#if chartType="line" || chartType="bar">
-            ${chartId!}.addData([<#if value?has_content>${value!}</#if>]<#if title?has_content>,"${title!}"</#if>);
-        <#else>
-            ${chartId!}.addData({value:${value!},color:chartData.color,highlight: chartData.highlight<#if title?has_content>,label:"${title!}"</#if>});
-        </#if>
+      ${chartId!}.addData({value:${value!},color:chartData.color,highlight: chartData.highlight<#if title?has_content>,label:"${title!}"</#if>});
     </#if>
+  </#if>
 </#macro>

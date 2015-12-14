@@ -64,16 +64,16 @@ to this one.
   <#local open = !(nestedOnly || closeOnly || norows)>
   <#local close = !(nestedOnly || openOnly || norows)>
   <#if open>
-      <#if alt?is_boolean>
-        <#local class = addClassArg(class, alt?string(styles.row_alt!, styles.row_reg!))>
-      </#if>
-      <#if selected?is_boolean && selected == true>
-        <#local class = addClassArg(class, styles.row_selected!)>
-      </#if>
-      <#local class = addClassArg(class, styles.grid_row!)>
-      <#if collapse>
-        <#local class = addClassArg(class, styles.collapse!)>
-      </#if>
+    <#if alt?is_boolean>
+      <#local class = addClassArg(class, alt?string(styles.row_alt!, styles.row_reg!))>
+    </#if>
+    <#if selected?is_boolean && selected == true>
+      <#local class = addClassArg(class, styles.row_selected!)>
+    </#if>
+    <#local class = addClassArg(class, styles.grid_row!)>
+    <#if collapse>
+      <#local class = addClassArg(class, styles.collapse!)>
+    </#if>
   <#else>
     <#-- WARN: has no memory when closeOnly... -->
     <#local classes = "">
@@ -297,72 +297,72 @@ Since this is very foundation specific, this function may be dropped in future i
                       see @tile macro "type" attrib for possible values.
 -->
 <#assign grid_defaultArgs = {
-    "type":"", "tilesType":"", "class":"", "columns":4, "id":""
+  "type":"", "tilesType":"", "class":"", "columns":4, "id":""
 }>
 <#macro grid args={} inlineArgs...>
-    <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.grid_defaultArgs)>
-    <#local dummy = localsPutAll(args)>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.grid_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
 
-    <#if !type?has_content>
-      <#local type = "list">
+  <#if !type?has_content>
+    <#local type = "list">
+  </#if>
+  <#if !tilesType?has_content>
+    <#local tilesType = "default">
+  </#if>
+  <#local gridInfo = {"type":type, "tilesType":tilesType, "columns":columns}>
+  <#local dummy = pushRequestStack("catoCurrentGridInfo", gridInfo)>
+  <#-- here, use the number of greater ("page") columns to estimate corresponding grid sizes for heuristics -->
+  <#local dummy = saveCurrentContainerSizes({"large":12/columns, "medium":12/columns, "small":12/columns})>
+  <#if type == "tiles" || type == "freetiles">
+    <#local freewallNum = getRequestVar("catoFreewallIdNum")!0>
+    <#local freewallNum = freewallNum + 1 />
+    <#local dummy = setRequestVar("catoFreewallIdNum", freewallNum)>
+    <#if !id?has_content>
+      <#local id = "freewall_id_${freewallNum!0}">
     </#if>
-    <#if !tilesType?has_content>
-      <#local tilesType = "default">
-    </#if>
-    <#local gridInfo = {"type":type, "tilesType":tilesType, "columns":columns}>
-    <#local dummy = pushRequestStack("catoCurrentGridInfo", gridInfo)>
-    <#-- here, use the number of greater ("page") columns to estimate corresponding grid sizes for heuristics -->
-    <#local dummy = saveCurrentContainerSizes({"large":12/columns, "medium":12/columns, "small":12/columns})>
-    <#if type == "tiles" || type == "freetiles">
-        <#local freewallNum = getRequestVar("catoFreewallIdNum")!0>
-        <#local freewallNum = freewallNum + 1 />
-        <#local dummy = setRequestVar("catoFreewallIdNum", freewallNum)>
-        <#if !id?has_content>
-          <#local id = "freewall_id_${freewallNum!0}">
-        </#if>
-        <#local class = addClassArg(class, styles.tile_container!)>
-        <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType><#nested></@grid_tiles_markup_container>
-    <#elseif type=="list">
-        <@grid_list_markup_container class=class id=id columns=columns><#nested></@grid_list_markup_container>
-    </#if>
-    <#local dummy = unsetCurrentContainerSizes()>
-    <#local dummy = popRequestStack("catoCurrentGridInfo")>
+    <#local class = addClassArg(class, styles.tile_container!)>
+    <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType><#nested></@grid_tiles_markup_container>
+  <#elseif type=="list">
+    <@grid_list_markup_container class=class id=id columns=columns><#nested></@grid_list_markup_container>
+  </#if>
+  <#local dummy = unsetCurrentContainerSizes()>
+  <#local dummy = popRequestStack("catoCurrentGridInfo")>
 </#macro>
 
 <#macro grid_tiles_markup_container class="" id="" tylesType="" columns=1 extraArgs...>
-    <@container class=class id=id>
-        <#nested>
-    </@container>
-    <@script>
-     $(function() {
-        $('#${id}').freetile({
-            selector: '.${styles.tile_wrap!}'
-        });
-        <#--
-        Alternative implementation of gridster.js
-        $('#${id}').gridster({
-            widget_selector: '.${styles.tile_wrap!}',
-            min_cols:${columns},
-            autogenerate_stylesheet:false
-        }).disable();
-        -->
-     });
-    </@script>
+  <@container class=class id=id>
+    <#nested>
+  </@container>
+  <@script>
+   $(function() {
+      $('#${id}').freetile({
+          selector: '.${styles.tile_wrap!}'
+      });
+      <#--
+      Alternative implementation of gridster.js
+      $('#${id}').gridster({
+          widget_selector: '.${styles.tile_wrap!}',
+          min_cols:${columns},
+          autogenerate_stylesheet:false
+      }).disable();
+      -->
+   });
+  </@script>
 </#macro>
 
 <#macro grid_list_markup_container class="" id="" columns=1 extraArgs...>
-    <#-- this never takes effect
-    <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">-->
-    <#if ((columns-2) > 0)>
-        <#local class = addClassArgDefault(class, "${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}${columns-2} ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}${columns-1} ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
-    <#else>
-        <#local class = addClassArgDefault(class, "${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
-    </#if>
-    <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
-    <ul<@compiledClassAttribStr class=class />>
-        <#nested>
-    </ul>
-    <#local dummy = unsetCurrentContainerSizes()>
+  <#-- this never takes effect
+  <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">-->
+  <#if ((columns-2) > 0)>
+    <#local class = addClassArgDefault(class, "${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}${columns-2} ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}${columns-1} ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
+  <#else>
+    <#local class = addClassArgDefault(class, "${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}${columns}")/>
+  </#if>
+  <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
+  <ul<@compiledClassAttribStr class=class />>
+    <#nested>
+  </ul>
+  <#local dummy = unsetCurrentContainerSizes()>
 </#macro>
 
 <#-- 
@@ -411,152 +411,152 @@ It is loosely based on http://metroui.org.ua/tiles.html
     overlayBgColor  = [none|0|1|2|3|4|5|6|7|...] default: from styles hash, otherwise 0 (primary theme color). "none" prevents color class.
 -->
 <#assign tile_defaultArgs = {
-    "type":"", "size":"", "title":"", "titleType":"", "titleBgColor":"", "class":"", "id":"", 
-    "link":"", "linkTarget":true, "color":"", "icon":"", 
-    "image":"", "imageType":"", "imageBgColor":"", "overlayType":"", "overlayBgColor":""
+  "type":"", "size":"", "title":"", "titleType":"", "titleBgColor":"", "class":"", "id":"", "link":"", 
+  "linkTarget":true, "color":"", "icon":"", "image":"", "imageType":"", "imageBgColor":"", "overlayType":"", 
+  "overlayBgColor":""
 }>
 <#macro tile args={} inlineArgs...>
-    <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tile_defaultArgs)>
-    <#local dummy = localsPutAll(args)>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tile_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
 
-    <#local gridInfo = readRequestStack("catoCurrentGridInfo")!{}>
-    <#if !type?has_content>
-      <#local type = (gridInfo.tilesType)!"">
-    </#if>
-    <#if !type?has_content>
-      <#local type = "default">
-    </#if>
-    
-    <#-- find tile-type-based arg defaults -->
-    <#local styleName = type>
-    <#local stylePrefix = "tile_" + styleName>
-    <#local defaultStylePrefix = "tile_default">
-    <#-- NOTE: _class is handled further below -->
-    <#if !size?has_content>
-      <#local size = styles[stylePrefix + "_size"]!styles[defaultStylePrefix + "_size"]!"normal">
-    </#if>
-    <#if !color?has_content>
-      <#local color = styles[stylePrefix + "_color"]!styles[defaultStylePrefix + "_color"]!"0">
-    </#if>
-    <#if !icon?has_content>
-      <#local icon = styles[stylePrefix + "_icon"]!styles[defaultStylePrefix + "_icon"]!"0">
-    </#if>
-    <#if !imageType?has_content>
-      <#local imageType = styles[stylePrefix + "_imagetype"]!styles[defaultStylePrefix + "_imagetype"]!"">
-    </#if>
-    <#if !imageBgColor?has_content>
-      <#local imageBgColor = styles[stylePrefix + "_imagebgcolor"]!styles[defaultStylePrefix + "_imagebgcolor"]!"">
-    </#if>
-    <#if !overlayType?has_content>
-      <#local overlayType = styles[stylePrefix + "_overlaytype"]!styles[defaultStylePrefix + "_overlaytype"]!"">
-    </#if>
-    <#if !overlayBgColor?has_content>
-      <#local overlayBgColor = styles[stylePrefix + "_overlaybgcolor"]!styles[defaultStylePrefix + "_overlaybgcolor"]!"">
-    </#if>
-    <#if !titleType?has_content>
-      <#local titleType = styles[stylePrefix + "_titletype"]!styles[defaultStylePrefix + "_titletype"]!"">
-    </#if>
-    <#if !titleBgColor?has_content>
-      <#local titleBgColor = styles[stylePrefix + "_titlebgcolor"]!styles[defaultStylePrefix + "_titlebgcolor"]!"">
-    </#if>
-    <#if linkTarget?is_boolean && linkTarget == false>
-      <#local linkTarget = "">
-    <#elseif (linkTarget?is_boolean && linkTarget == true) || !linkTarget?has_content>
-      <#local linkTarget = styles[stylePrefix + "_linktarget"]!styles[defaultStylePrefix + "_linktarget"]!"">
-    </#if>
+  <#local gridInfo = readRequestStack("catoCurrentGridInfo")!{}>
+  <#if !type?has_content>
+    <#local type = (gridInfo.tilesType)!"">
+  </#if>
+  <#if !type?has_content>
+    <#local type = "default">
+  </#if>
+  
+  <#-- find tile-type-based arg defaults -->
+  <#local styleName = type>
+  <#local stylePrefix = "tile_" + styleName>
+  <#local defaultStylePrefix = "tile_default">
+  <#-- NOTE: _class is handled further below -->
+  <#if !size?has_content>
+    <#local size = styles[stylePrefix + "_size"]!styles[defaultStylePrefix + "_size"]!"normal">
+  </#if>
+  <#if !color?has_content>
+    <#local color = styles[stylePrefix + "_color"]!styles[defaultStylePrefix + "_color"]!"0">
+  </#if>
+  <#if !icon?has_content>
+    <#local icon = styles[stylePrefix + "_icon"]!styles[defaultStylePrefix + "_icon"]!"0">
+  </#if>
+  <#if !imageType?has_content>
+    <#local imageType = styles[stylePrefix + "_imagetype"]!styles[defaultStylePrefix + "_imagetype"]!"">
+  </#if>
+  <#if !imageBgColor?has_content>
+    <#local imageBgColor = styles[stylePrefix + "_imagebgcolor"]!styles[defaultStylePrefix + "_imagebgcolor"]!"">
+  </#if>
+  <#if !overlayType?has_content>
+    <#local overlayType = styles[stylePrefix + "_overlaytype"]!styles[defaultStylePrefix + "_overlaytype"]!"">
+  </#if>
+  <#if !overlayBgColor?has_content>
+    <#local overlayBgColor = styles[stylePrefix + "_overlaybgcolor"]!styles[defaultStylePrefix + "_overlaybgcolor"]!"">
+  </#if>
+  <#if !titleType?has_content>
+    <#local titleType = styles[stylePrefix + "_titletype"]!styles[defaultStylePrefix + "_titletype"]!"">
+  </#if>
+  <#if !titleBgColor?has_content>
+    <#local titleBgColor = styles[stylePrefix + "_titlebgcolor"]!styles[defaultStylePrefix + "_titlebgcolor"]!"">
+  </#if>
+  <#if linkTarget?is_boolean && linkTarget == false>
+    <#local linkTarget = "">
+  <#elseif (linkTarget?is_boolean && linkTarget == true) || !linkTarget?has_content>
+    <#local linkTarget = styles[stylePrefix + "_linktarget"]!styles[defaultStylePrefix + "_linktarget"]!"">
+  </#if>
 
-    <#-- lookup styles -->
-    <#local class = addClassArg(class, styles.tile_wrap!)>
-    <#local class = addClassArg(class, "${styles.tile_wrap!}-${size!}")>
-    <#local color = color?string>
-    <#if color?has_content && color != "none">
-      <#local colorClass = "${styles.tile_color_prefix!}${color!}">
-    <#else>
-      <#local colorClass = "">
-    </#if>
-    <#local class = addClassArg(class, colorClass)>
-    <#local dataSizex = calcTileSize("x",size)>
-    <#local dataSizey = calcTileSize("y",size)>
-    <#if !overlayType?has_content || overlayType == "default">
-      <#local overlayClass = styles["tile_overlay_default"]!"">
-    <#else>
-      <#local overlayClass = styles["tile_overlay_" + overlayType?replace("-","_")]!styles["tile_overlay_default"]!"">
-    </#if>
-    <#local overlayBgColor = overlayBgColor?string>
-    <#if overlayBgColor?has_content && overlayBgColor != "none">
-      <#local overlayBgColorClass = "${styles.tile_color_prefix!}${overlayBgColor!}">
-    <#else>
-      <#local overlayBgColorClass = "">
-    </#if>
-    <#if !imageType?has_content || imageType == "default">
-      <#local imageClass = styles["tile_image_default"]!"">
-    <#else>
-      <#local imageClass = styles["tile_image_" + imageType?replace("-","_")]!styles["tile_image_default"]!"">
-    </#if>
-    <#local imageBgColor = imageBgColor?string>
-    <#if imageBgColor?has_content && imageBgColor != "none">
-      <#local imageBgColorClass = "${styles.tile_color_prefix!}${imageBgColor!}">
-    <#else>
-      <#local imageBgColorClass = "">
-    </#if>
-    <#if !titleType?has_content || titleType == "default">
-      <#local titleClass = styles["tile_title_default"]!"">
-    <#else>
-      <#local titleClass = styles["tile_title_" + titleType?replace("-","_")]!styles["tile_title_default"]!"">
-    </#if>
-    <#local titleBgColor = titleBgColor?string>
-    <#if titleBgColor?has_content && titleBgColor != "none">
-      <#local titleBgColorClass = "${styles.tile_color_prefix!}${titleBgColor!}">
-    <#else>
-      <#local titleBgColorClass = "">
-    </#if>
+  <#-- lookup styles -->
+  <#local class = addClassArg(class, styles.tile_wrap!)>
+  <#local class = addClassArg(class, "${styles.tile_wrap!}-${size!}")>
+  <#local color = color?string>
+  <#if color?has_content && color != "none">
+    <#local colorClass = "${styles.tile_color_prefix!}${color!}">
+  <#else>
+    <#local colorClass = "">
+  </#if>
+  <#local class = addClassArg(class, colorClass)>
+  <#local dataSizex = calcTileSize("x",size)>
+  <#local dataSizey = calcTileSize("y",size)>
+  <#if !overlayType?has_content || overlayType == "default">
+    <#local overlayClass = styles["tile_overlay_default"]!"">
+  <#else>
+    <#local overlayClass = styles["tile_overlay_" + overlayType?replace("-","_")]!styles["tile_overlay_default"]!"">
+  </#if>
+  <#local overlayBgColor = overlayBgColor?string>
+  <#if overlayBgColor?has_content && overlayBgColor != "none">
+    <#local overlayBgColorClass = "${styles.tile_color_prefix!}${overlayBgColor!}">
+  <#else>
+    <#local overlayBgColorClass = "">
+  </#if>
+  <#if !imageType?has_content || imageType == "default">
+    <#local imageClass = styles["tile_image_default"]!"">
+  <#else>
+    <#local imageClass = styles["tile_image_" + imageType?replace("-","_")]!styles["tile_image_default"]!"">
+  </#if>
+  <#local imageBgColor = imageBgColor?string>
+  <#if imageBgColor?has_content && imageBgColor != "none">
+    <#local imageBgColorClass = "${styles.tile_color_prefix!}${imageBgColor!}">
+  <#else>
+    <#local imageBgColorClass = "">
+  </#if>
+  <#if !titleType?has_content || titleType == "default">
+    <#local titleClass = styles["tile_title_default"]!"">
+  <#else>
+    <#local titleClass = styles["tile_title_" + titleType?replace("-","_")]!styles["tile_title_default"]!"">
+  </#if>
+  <#local titleBgColor = titleBgColor?string>
+  <#if titleBgColor?has_content && titleBgColor != "none">
+    <#local titleBgColorClass = "${styles.tile_color_prefix!}${titleBgColor!}">
+  <#else>
+    <#local titleBgColorClass = "">
+  </#if>
 
-    <#local class = addClassArgDefault(class, styles[stylePrefix + "_class"]!styles[defaultStylePrefix + "_class"]!"")>
-    
-    <@tile_markup class=class id=id dataSizex=dataSizex dataSizey=dataSizey image=image imageClass=imageClass imageBgColorClass=imageBgColorClass 
-        link=link linkTarget=linkTarget icon=icon 
-        overlayClass=overlayClass overlayBgColorClass=overlayBgColorClass title=title titleClass=titleClass titleBgColorClass=titleBgColorClass><#nested></@tile_markup>
+  <#local class = addClassArgDefault(class, styles[stylePrefix + "_class"]!styles[defaultStylePrefix + "_class"]!"")>
+  
+  <@tile_markup class=class id=id dataSizex=dataSizex dataSizey=dataSizey image=image imageClass=imageClass imageBgColorClass=imageBgColorClass 
+    link=link linkTarget=linkTarget icon=icon 
+    overlayClass=overlayClass overlayBgColorClass=overlayBgColorClass title=title titleClass=titleClass titleBgColorClass=titleBgColorClass><#nested></@tile_markup>
 </#macro>
 
 <#function calcTileSize orientation="x" value="normal">
-    <#if orientation="x">
-        <#if !catoTileSizeMapX??>
-          <#-- global: optimization only (doesn't have to be setRequestVar) -->
-          <#global catoTileSizeMapX = {"small":0,"normal":1,"wide":2,"large":2,"big":3,"super":4}/>
-        </#if>
-        <#return catoTileSizeMapX[value]/>
-    <#else>
-        <#if !catoTileSizeMapY??>
-          <#global catoTileSizeMapY={"small":0,"normal":1,"wide":1,"large":2,"big":3,"super":4}/>
-        </#if>
-        <#return catoTileSizeMapY[value]/>
+  <#if orientation="x">
+    <#if !catoTileSizeMapX??>
+      <#-- global: optimization only (doesn't have to be setRequestVar) -->
+      <#global catoTileSizeMapX = {"small":0,"normal":1,"wide":2,"large":2,"big":3,"super":4}/>
     </#if>
+    <#return catoTileSizeMapX[value]/>
+  <#else>
+    <#if !catoTileSizeMapY??>
+      <#global catoTileSizeMapY={"small":0,"normal":1,"wide":1,"large":2,"big":3,"super":4}/>
+    </#if>
+    <#return catoTileSizeMapY[value]/>
+  </#if>
 </#function>
 
 <#macro tile_markup class="" id="" dataSizex="" dataSizey="" image="" imageClass="" imageBgColorClass="" link="" linkTarget="" icon="" 
   overlayClass="" overlayBgColorClass="" title="" titleClass="" titleBgColorClass="" extraArgs...>
-    <#-- main markup (TODO: factor out into @tile_markup) -->
-    <#-- TODO: need to calc-convert tile x-size to approximate grid sizes and pass in large-medium-small below,
-         OR modify parseContainerSizesFromStyleStr to do it automatically from class string (HOWEVER
-         note that parseContainerSizesFromStyleStr would have to call calcTileSize type="x" again, and it's
-         not clear how precise this will be)
-    <#local dummy = saveCurrentContainerSizes({"large":12, "medium":12, "small":12})> -->
-    <#-- NOTE: dataSizex gets automatically translated to data-sizex (FTL: no dashes allowed in arg names) -->
-    <@container class=class id=id dataSizex=dataSizex dataSizey=dataSizey>
-        <div class="${styles.tile_content!}">
-            <#-- DEV NOTE: I think the image div belongs INSIDE the tile_content container? -->
-            <#if image?has_content>
-              <div class="${imageClass} ${imageBgColorClass}" style="background-image: url(${image!});"></div>
-            </#if>
-            <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
-            <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>
-            <#local nestedContent><#nested></#local>
-            <#if nestedContent?has_content><span class="${overlayClass} ${overlayBgColorClass}">${nestedContent}</span></#if>
-            <#if title?has_content><span class="${titleClass} ${titleBgColorClass}">${title!}</span></#if>
-            <#if link?has_content></a></#if>
-        </div>
-    </@container>
-    <#--<#local dummy = unsetCurrentContainerSizes()>-->
+  <#-- main markup (TODO: factor out into @tile_markup) -->
+  <#-- TODO: need to calc-convert tile x-size to approximate grid sizes and pass in large-medium-small below,
+      OR modify parseContainerSizesFromStyleStr to do it automatically from class string (HOWEVER
+      note that parseContainerSizesFromStyleStr would have to call calcTileSize type="x" again, and it's
+      not clear how precise this will be)
+  <#local dummy = saveCurrentContainerSizes({"large":12, "medium":12, "small":12})> -->
+  <#-- NOTE: dataSizex gets automatically translated to data-sizex (FTL: no dashes allowed in arg names) -->
+  <@container class=class id=id dataSizex=dataSizex dataSizey=dataSizey>
+    <div class="${styles.tile_content!}">
+      <#-- DEV NOTE: I think the image div belongs INSIDE the tile_content container? -->
+      <#if image?has_content>
+        <div class="${imageClass} ${imageBgColorClass}" style="background-image: url(${image!});"></div>
+      </#if>
+      <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
+      <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>
+      <#local nestedContent><#nested></#local>
+      <#if nestedContent?has_content><span class="${overlayClass} ${overlayBgColorClass}">${nestedContent}</span></#if>
+      <#if title?has_content><span class="${titleClass} ${titleBgColorClass}">${title!}</span></#if>
+      <#if link?has_content></a></#if>
+    </div>
+  </@container>
+  <#--<#local dummy = unsetCurrentContainerSizes()>-->
 </#macro>
 
 
@@ -625,21 +625,21 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
-      <#if !type?has_content>
-          <#local type = "generic">
-      </#if>
-      <#if id?has_content>
-          <#local contentId = id + "_content">
-          <#local menuId = id + "_menu">
-      <#else>
-          <#local contentId = "">
-          <#local menuId = "">
-      </#if>
-  <#else>
-      <#-- section_core has its own stack; don't need to preserve these -->
-      <#local class = "">
+    <#if !type?has_content>
+      <#local type = "generic">
+    </#if>
+    <#if id?has_content>
+      <#local contentId = id + "_content">
+      <#local menuId = id + "_menu">
+    <#else>
       <#local contentId = "">
-      <#local menuId = "">    
+      <#local menuId = "">
+    </#if>
+  <#else>
+    <#-- section_core has its own stack; don't need to preserve these -->
+    <#local class = "">
+    <#local contentId = "">
+    <#local menuId = "">    
   </#if>
   <@section_core id=id collapsibleAreaId=contentId title=title class=class padded=padded menuContent=menuContent 
     fromScreenDef=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
@@ -663,10 +663,10 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
   <#-- level logic begin -->
-      <#-- note: request obj only available because of macro renderer initial context mod -->
-      <#local sLevel = getCurrentSectionLevel()>
-      <#local prevSectionLevel = sLevel>
-      <#local dummy = setCurrentSectionLevel(sLevel+1)>
+    <#-- note: request obj only available because of macro renderer initial context mod -->
+    <#local sLevel = getCurrentSectionLevel()>
+    <#local prevSectionLevel = sLevel>
+    <#local dummy = setCurrentSectionLevel(sLevel+1)>
   <#-- level logic end -->
   
   <#-- title-style parsing begin -->
@@ -676,7 +676,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
                   titleStyle="div;h+1;consumeLevel=true"-->
     <#if titleStyle?has_content>
       <#local titleStyleArgs = getHeadingElemSpecFromStyleStr(titleStyle, titleContainerStyle,
-          "h|heading","div|span|p|raw", "div", "widget-screenlet")>
+        "h|heading","div|span|p|raw", "div", "widget-screenlet")>
   
       <#-- overrides (so style from screen affects heading calc and consume) -->
       <#if titleStyleArgs.level?has_content>
@@ -689,170 +689,170 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#else>
       <#local titleStyleArgs = {}>
     </#if>
-      <#local titleElemType = translateStyleStrClassesArg(titleStyleArgs.elemType!"")!true>
-      <#local titleClass = translateStyleStrClassesArg(titleStyleArgs.elemClass!"")!"">
-      <#local titleContainerElemType = translateStyleStrClassesArg(titleStyleArgs.containerElemType!"")!false>
-      <#local titleContainerClass = translateStyleStrClassesArg(titleStyleArgs.containerElemClass!"")!"">
+    <#local titleElemType = translateStyleStrClassesArg(titleStyleArgs.elemType!"")!true>
+    <#local titleClass = translateStyleStrClassesArg(titleStyleArgs.elemClass!"")!"">
+    <#local titleContainerElemType = translateStyleStrClassesArg(titleStyleArgs.containerElemType!"")!false>
+    <#local titleContainerClass = translateStyleStrClassesArg(titleStyleArgs.containerElemClass!"")!"">
   
   <#-- title-style parsing end -->
   
   <#-- auto-heading-level logic begin -->
-      <#if !defaultHeadingLevel?is_number>
-        <#local defaultHeadingLevel = getDefaultHeadingLevel()>
-      </#if>
-  
-      <#local explicitHeadingLevel = false>
-      <#local updatedHeadingLevel = false> <#-- just so consistent -->
-      <#local prevHeadingLevel = "">
-      <#if autoHeadingLevel>
-          <#local prevHeadingLevel = getCurrentHeadingLevel(false)!"">
-          <#if headingLevel?has_content>
-              <#local hLevel = headingLevel>
-              <#local explicitHeadingLevel = true>
-          <#elseif prevHeadingLevel?has_content>
-              <#local hLevel = prevHeadingLevel>
-          <#else>
-              <#local hLevel = defaultHeadingLevel>
-          </#if>
-          <#if relHeadingLevel?has_content>
-            <#local hLevel = hLevel + relHeadingLevel>
-          </#if>
-        <#if titleConsumeLevel>
-          <#if title?has_content>
-              <#local dummy = setCurrentHeadingLevel(hLevel + 1)>
-              <#local updatedHeadingLevel = true>
-          <#elseif explicitHeadingLevel>
-              <#-- set here but don't increase if none title -->
-              <#local dummy = setCurrentHeadingLevel(hLevel)>
-              <#local updatedHeadingLevel = true>
-          </#if>
-        </#if>
+    <#if !defaultHeadingLevel?is_number>
+      <#local defaultHeadingLevel = getDefaultHeadingLevel()>
+    </#if>
+
+    <#local explicitHeadingLevel = false>
+    <#local updatedHeadingLevel = false> <#-- just so consistent -->
+    <#local prevHeadingLevel = "">
+    <#if autoHeadingLevel>
+      <#local prevHeadingLevel = getCurrentHeadingLevel(false)!"">
+      <#if headingLevel?has_content>
+        <#local hLevel = headingLevel>
+        <#local explicitHeadingLevel = true>
+      <#elseif prevHeadingLevel?has_content>
+        <#local hLevel = prevHeadingLevel>
       <#else>
-          <#if headingLevel?has_content>
-              <#local hLevel = headingLevel>
-              <#local explicitHeadingLevel = true>
-          <#else>
-              <#local hLevel = defaultHeadingLevel>
-          </#if>
-          <#if relHeadingLevel?has_content>
-            <#local hLevel = hLevel + relHeadingLevel>
-          </#if>
+        <#local hLevel = defaultHeadingLevel>
       </#if>
-      <#local dummy = pushRequestStack("renderScreenletStack", {"autoHeadingLevel":autoHeadingLevel, "updatedHeadingLevel":updatedHeadingLevel, "prevHeadingLevel":prevHeadingLevel, "prevSectionLevel":prevSectionLevel})>
+      <#if relHeadingLevel?has_content>
+        <#local hLevel = hLevel + relHeadingLevel>
+      </#if>
+      <#if titleConsumeLevel>
+        <#if title?has_content>
+          <#local dummy = setCurrentHeadingLevel(hLevel + 1)>
+          <#local updatedHeadingLevel = true>
+        <#elseif explicitHeadingLevel>
+          <#-- set here but don't increase if none title -->
+          <#local dummy = setCurrentHeadingLevel(hLevel)>
+          <#local updatedHeadingLevel = true>
+        </#if>
+      </#if>
+    <#else>
+      <#if headingLevel?has_content>
+        <#local hLevel = headingLevel>
+        <#local explicitHeadingLevel = true>
+      <#else>
+        <#local hLevel = defaultHeadingLevel>
+      </#if>
+      <#if relHeadingLevel?has_content>
+        <#local hLevel = hLevel + relHeadingLevel>
+      </#if>
+    </#if>
+    <#local dummy = pushRequestStack("renderScreenletStack", {"autoHeadingLevel":autoHeadingLevel, "updatedHeadingLevel":updatedHeadingLevel, "prevHeadingLevel":prevHeadingLevel, "prevSectionLevel":prevSectionLevel})>
   <#-- auto-heading-level logic end -->
   
-      <#-- Cato: we support menuContent as string (html), macro or hash definitions.
-          When string, menuContent is not wrapped in UL when it's received here from macro renderer... 
-          NOTE: with recent patch, menuContent passed by renderer is rendered by macro renderer (was not the case before - used old html renderer). -->
-      <#if isObjectType("string", menuContent)> <#-- DEV NOTE: WARN: ?is_string would not always work here -->
-        <#local menuContent = menuContent?trim>
-      </#if>
-      <#if !menuRole?has_content>
-          <#local menuRole = "nav-menu">
-      </#if>
-      <#local hasMenu = (menuContent?is_directive || menuContent?has_content || requireMenu || forceEmptyMenu)>
-      <#local hasTitle = title?has_content>
-      <#local contentFlagClasses = makeSectionContentFlagClasses(sLevel, hLevel, hasMenu, hasTitle, hasContent, 
-        menuLayout, menuRole, collapsible, collapsed, javaScriptEnabled, fromScreenDef)>
+    <#-- Cato: we support menuContent as string (html), macro or hash definitions.
+        When string, menuContent is not wrapped in UL when it's received here from macro renderer... 
+        NOTE: with recent patch, menuContent passed by renderer is rendered by macro renderer (was not the case before - used old html renderer). -->
+    <#if isObjectType("string", menuContent)> <#-- DEV NOTE: WARN: ?is_string would not always work here -->
+      <#local menuContent = menuContent?trim>
+    </#if>
+    <#if !menuRole?has_content>
+      <#local menuRole = "nav-menu">
+    </#if>
+    <#local hasMenu = (menuContent?is_directive || menuContent?has_content || requireMenu || forceEmptyMenu)>
+    <#local hasTitle = title?has_content>
+    <#local contentFlagClasses = makeSectionContentFlagClasses(sLevel, hLevel, hasMenu, hasTitle, hasContent, 
+      menuLayout, menuRole, collapsible, collapsed, javaScriptEnabled, fromScreenDef)>
   
     <#if showMore>
       <#if hasMenu>
         <#local menuMarkup>
-        <#-- temporarily (?) unnecessary; all use styles.button_group and hacks moved
-             menuRole and widgetRender were mostly to figure out the context to apply defaults at the time.
-             don't remove.
-        <#local screenletPaginateMenu = (menuRole == "paginate-menu") && widgetRender>
-        <#local screenletNavMenu = (menuRole == "nav-menu") && widgetRender>
-        <#local ftlNavMenu = (menuRole == "nav-menu") && !widgetRender>
-        -->
-  
-        <#if menuLayout == "inline-title">
-          <#local defaultMenuType = "section-inline">
-        <#else>
-          <#local defaultMenuType = "section">
-        </#if>
-  
-        <#if forceEmptyMenu>
-          <#local preMenuItems = []>
-          <#local postMenuItems = []>
-        <#else>
-          <#local extraMenuItemsMap = makeSectionExtraMainMenuItems(sectionLevel, headingLevel, menuLayout, menuRole, hasMenu, 
-            contentFlagClasses, collapsible, collapsed, javaScriptEnabled, collapsibleAreaId, saveCollapsed, expandToolTip, 
-            collapseToolTip, fullUrlString, fromScreenDef)!{}>
-          <#local preMenuItems = extraMenuItemsMap.preMenuItems![]>
-          <#local postMenuItems = extraMenuItemsMap.postMenuItems![]>        
-        </#if>
-  
-        <#if !menuId?has_content && id?has_content>
-          <#local menuId = "${id}_mainmenu">
-        </#if>
-      
-        <#if menuId?has_content>
-          <#local menuIdArg = menuId>
-        <#else>
-          <#local menuIdArg = "">
-        </#if>
-        <#if menuClass?has_content> <#-- note: don't use defaultMenuClass here; @menu will figure it out instead -->
-          <#if menuClass == "none">
-            <#local menuClassArg = "=">
+          <#-- temporarily (?) unnecessary; all use styles.button_group and hacks moved
+               menuRole and widgetRender were mostly to figure out the context to apply defaults at the time.
+               don't remove.
+          <#local screenletPaginateMenu = (menuRole == "paginate-menu") && widgetRender>
+          <#local screenletNavMenu = (menuRole == "nav-menu") && widgetRender>
+          <#local ftlNavMenu = (menuRole == "nav-menu") && !widgetRender>
+          -->
+    
+          <#if menuLayout == "inline-title">
+            <#local defaultMenuType = "section-inline">
           <#else>
-            <#local menuClassArg = menuClass>
+            <#local defaultMenuType = "section">
           </#if>
-        <#else>
-          <#local menuClassArg = "">
-        </#if>
-      
-        <#if menuContent?is_directive || isObjectType("map", menuContent)>
-          <#-- as callback macro, or menu definition in map format -->
-           
-          <#-- inlineItems false; let caller's macro produce the wrapper (must because we don't know the real menu type from here), 
-               or if map def, produce the wrapper through our call -->
-          <#local menuArgs = {"type":defaultMenuType, "inlineItems":false, 
+    
+          <#if forceEmptyMenu>
+            <#local preMenuItems = []>
+            <#local postMenuItems = []>
+          <#else>
+            <#local extraMenuItemsMap = makeSectionExtraMainMenuItems(sectionLevel, headingLevel, menuLayout, menuRole, hasMenu, 
+              contentFlagClasses, collapsible, collapsed, javaScriptEnabled, collapsibleAreaId, saveCollapsed, expandToolTip, 
+              collapseToolTip, fullUrlString, fromScreenDef)!{}>
+            <#local preMenuItems = extraMenuItemsMap.preMenuItems![]>
+            <#local postMenuItems = extraMenuItemsMap.postMenuItems![]>        
+          </#if>
+    
+          <#if !menuId?has_content && id?has_content>
+            <#local menuId = "${id}_mainmenu">
+          </#if>
+        
+          <#if menuId?has_content>
+            <#local menuIdArg = menuId>
+          <#else>
+            <#local menuIdArg = "">
+          </#if>
+          <#if menuClass?has_content> <#-- note: don't use defaultMenuClass here; @menu will figure it out instead -->
+            <#if menuClass == "none">
+              <#local menuClassArg = "=">
+            <#else>
+              <#local menuClassArg = menuClass>
+            </#if>
+          <#else>
+            <#local menuClassArg = "">
+          </#if>
+        
+          <#if menuContent?is_directive || isObjectType("map", menuContent)>
+            <#-- as callback macro, or menu definition in map format -->
+             
+            <#-- inlineItems false; let caller's macro produce the wrapper (must because we don't know the real menu type from here), 
+                or if map def, produce the wrapper through our call -->
+            <#local menuArgs = {"type":defaultMenuType, "inlineItems":false, 
               "preItems":preMenuItems, "postItems":postMenuItems, 
               "id":menuIdArg, "class":menuClassArg}>
-          
-          <#local overrideArgs = "">
-          <#if forceEmptyMenu>
-            <#local overrideArgs = {"items":false, "preItems":false, "postItems":false}>
-          </#if>
-          
-          <#if menuContent?is_directive>
-            <#if overrideArgs?has_content>
-              <#local menuArgs = concatMaps(menuArgs, overrideArgs)>
+            
+            <#local overrideArgs = "">
+            <#if forceEmptyMenu>
+              <#local overrideArgs = {"items":false, "preItems":false, "postItems":false}>
             </#if>
-            <#-- menuArgs: caller macro can simply pass these through using <@menu args=menuArgs />, or override/modify as desired -->
-            <@menuContent menuArgs=menuArgs /> 
-          <#else>
-            <#-- simply concat user defs over our default args -->
-            <#local menuArgs = concatMaps(menuArgs, menuContent)>
-            <#if overrideArgs?has_content>
-              <#local menuArgs = concatMaps(menuArgs, overrideArgs)>
+            
+            <#if menuContent?is_directive>
+              <#if overrideArgs?has_content>
+                <#local menuArgs = concatMaps(menuArgs, overrideArgs)>
+              </#if>
+              <#-- menuArgs: caller macro can simply pass these through using <@menu args=menuArgs />, or override/modify as desired -->
+              <@menuContent menuArgs=menuArgs /> 
+            <#else>
+              <#-- simply concat user defs over our default args -->
+              <#local menuArgs = concatMaps(menuArgs, menuContent)>
+              <#if overrideArgs?has_content>
+                <#local menuArgs = concatMaps(menuArgs, overrideArgs)>
+              </#if>
+              <@menu args=menuArgs />  
             </#if>
-            <@menu args=menuArgs />  
-          </#if>
-        <#elseif isObjectType("string", menuContent)>
-          <#-- legacy menuString; these have limitations but must support because used by screen widgets (e.g. renderScreenletPaginateMenu) 
-               and our code -->
-          <#local menuItemsInlined = isMenuMarkupItemsInline(menuContent)>
-  
-          <#local menuItemsMarkup>
-            <#if !forceEmptyMenu>
-              ${menuContent}
-            </#if>
-          </#local>
-      
-          <#if !menuContent?has_content || menuItemsInlined>
-            <#-- WARN: we have to assume the menu type here (especially for pre/postMenuItems); inherently limited -->
-            <@menu type=defaultMenuType inlineItems=false id=menuIdArg class=menuClassArg preMenuItems=preMenuItems postMenuItems=postMenuItems>
+          <#elseif isObjectType("string", menuContent)>
+            <#-- legacy menuString; these have limitations but must support because used by screen widgets (e.g. renderScreenletPaginateMenu) 
+                 and our code -->
+            <#local menuItemsInlined = isMenuMarkupItemsInline(menuContent)>
+    
+            <#local menuItemsMarkup>
+              <#if !forceEmptyMenu>
+                ${menuContent}
+              </#if>
+            </#local>
+        
+            <#if !menuContent?has_content || menuItemsInlined>
+              <#-- WARN: we have to assume the menu type here (especially for pre/postMenuItems); inherently limited -->
+              <@menu type=defaultMenuType inlineItems=false id=menuIdArg class=menuClassArg preMenuItems=preMenuItems postMenuItems=postMenuItems>
+                ${menuItemsMarkup}
+              </@menu>
+            <#else>
+              <#-- menuContent already contains UL (or other wrapper); this is for compatibility only; should be avoided 
+                   WARN: preMenuItems and postMenuItems can't be applied here (without more ugly parsing) -->
               ${menuItemsMarkup}
-            </@menu>
-          <#else>
-            <#-- menuContent already contains UL (or other wrapper); this is for compatibility only; should be avoided 
-                 WARN: preMenuItems and postMenuItems can't be applied here (without more ugly parsing) -->
-            ${menuItemsMarkup}
+            </#if>
           </#if>
-        </#if>
-      </#local>
+        </#local>
       </#if>
       
       <#if hasTitle>
@@ -864,83 +864,84 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   
   </#if> <#-- /#(if open) -->
 
-      <#local menuTitleMarkup = "">
-      <#-- render menu + title combo; for now, only need to do at open and then save the markup -->
-      <#if open>
-        <#if showMore>
-          <#local menuTitleMarkup><@section_markup_menutitle sectionLevel=sLevel headingLevel=hLevel menuLayout=menuLayout 
-            menuRole=menuRole hasMenu=hasMenu menuMarkup=menuMarkup hasTitle=hasTitle titleMarkup=titleMarkup 
-            contentFlagClasses=contentFlagClasses fromScreenDef=fromScreenDef /></#local>
-        </#if>
-      </#if> 
+  <#local menuTitleMarkup = "">
+  <#-- render menu + title combo; for now, only need to do at open and then save the markup -->
+  <#if open>
+    <#if showMore>
+      <#local menuTitleMarkup><@section_markup_menutitle sectionLevel=sLevel headingLevel=hLevel menuLayout=menuLayout 
+        menuRole=menuRole hasMenu=hasMenu menuMarkup=menuMarkup hasTitle=hasTitle titleMarkup=titleMarkup 
+        contentFlagClasses=contentFlagClasses fromScreenDef=fromScreenDef /></#local>
+    </#if>
+  </#if> 
 
-      <#local innerClass = "">
-      <#if open && !close>
-          <#-- save stack of all the args passed to markup macros that have open/close 
-              so they don't have to remember a stack themselves -->
-          <#local dummy = pushRequestStack("renderScreenletMarkupStack", {
-              "class":class, "innerClass":innerClass, "contentFlagClasses":contentFlagClasses, 
-              "id":id, "title":title, "sLevel":sLevel, "hLevel":hLevel, "menuTitleMarkup":menuTitleMarkup,
-              
-              "collapsed":collapsed, "collapsibleAreaId":collapsibleAreaId, "collapsible":collapsible, "saveCollapsed":saveCollapsed, 
-              "expandToolTip":expandToolTip, "collapseToolTip":collapseToolTip, "padded":padded, "showMore":showMore, "fullUrlString":fullUrlString,
-              "javaScriptEnabled":javaScriptEnabled, "fromScreenDef":fromScreenDef, "hasContent":hasContent, 
-              "menuLayout":menuLayout, "menuRole":menuRole, "requireMenu":requireMenu, "forceEmptyMenu":forceEmptyMenu
-          })>
-      <#elseif close && !open>
-          <#-- these _must_ override anything passed to this macro call (shouldn't be any) -->
-          <#local stackValues = popRequestStack("renderScreenletMarkupStack")!{}>
-          <#local class = stackValues.class>
-          <#local innerClass = stackValues.innerClass>
-          <#local contentFlagClasses = stackValues.contentFlagClasses>
-          <#local id = stackValues.id>
-          <#local title = stackValues.title>
-          <#local sLevel = stackValues.sLevel>
-          <#local hLevel = stackValues.hLevel>  
-          <#local menuTitleMarkup = stackValues.menuTitleMarkup>  
-          
-          <#local collapsed = stackValues.collapsed>
-          <#local collapsibleAreaId = stackValues.collapsibleAreaId>
-          <#local collapsible = stackValues.collapsible>
-          <#local saveCollapsed = stackValues.saveCollapsed>
-          <#local expandToolTip = stackValues.expandToolTip>
-          <#local collapseToolTip = stackValues.collapseToolTip>
-          <#local padded = stackValues.padded>
-          <#local showMore = stackValues.showMore>
-          <#local fullUrlString = stackValues.fullUrlString>
-          <#local javaScriptEnabled = stackValues.javaScriptEnabled>
-          <#local fromScreenDef = stackValues.fromScreenDef>
-          <#local hasContent = stackValues.hasContent>
-          <#local menuLayout = stackValues.menuLayout>
-          <#local menuRole = stackValues.menuRole>
-          <#local requireMenu = stackValues.requireMenu>
-          <#local forceEmptyMenu = stackValues.forceEmptyMenu> 
-      </#if>
-  
-      <#-- DEV NOTE: when adding params to this call, remember to update the stack above as well! -->
-      <@section_markup_container open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup class=class innerClass=innerClass
-        contentFlagClasses=contentFlagClasses id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId collapsible=collapsible saveCollapsed=saveCollapsed 
-        expandToolTip=expandToolTip collapseToolTip=collapseToolTip padded=padded showMore=showMore fullUrlString=fullUrlString
-        javaScriptEnabled=javaScriptEnabled fromScreenDef=fromScreenDef hasContent=hasContent menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu forceEmptyMenu=forceEmptyMenu>
-          <#nested>
-      </@section_markup_container>
+  <#local innerClass = "">
+  <#if open && !close>
+    <#-- save stack of all the args passed to markup macros that have open/close 
+        so they don't have to remember a stack themselves -->
+    <#local dummy = pushRequestStack("renderScreenletMarkupStack", {
+      "class":class, "innerClass":innerClass, "contentFlagClasses":contentFlagClasses, 
+      "id":id, "title":title, "sLevel":sLevel, "hLevel":hLevel, "menuTitleMarkup":menuTitleMarkup,
+      
+      "collapsed":collapsed, "collapsibleAreaId":collapsibleAreaId, "collapsible":collapsible, "saveCollapsed":saveCollapsed, 
+      "expandToolTip":expandToolTip, "collapseToolTip":collapseToolTip, "padded":padded, "showMore":showMore, "fullUrlString":fullUrlString,
+      "javaScriptEnabled":javaScriptEnabled, "fromScreenDef":fromScreenDef, "hasContent":hasContent, 
+      "menuLayout":menuLayout, "menuRole":menuRole, "requireMenu":requireMenu, "forceEmptyMenu":forceEmptyMenu
+    })>
+  <#elseif close && !open>
+    <#-- these _must_ override anything passed to this macro call (shouldn't be any) -->
+    <#local stackValues = popRequestStack("renderScreenletMarkupStack")!{}>
+    <#local class = stackValues.class>
+    <#local innerClass = stackValues.innerClass>
+    <#local contentFlagClasses = stackValues.contentFlagClasses>
+    <#local id = stackValues.id>
+    <#local title = stackValues.title>
+    <#local sLevel = stackValues.sLevel>
+    <#local hLevel = stackValues.hLevel>  
+    <#local menuTitleMarkup = stackValues.menuTitleMarkup>  
+    
+    <#local collapsed = stackValues.collapsed>
+    <#local collapsibleAreaId = stackValues.collapsibleAreaId>
+    <#local collapsible = stackValues.collapsible>
+    <#local saveCollapsed = stackValues.saveCollapsed>
+    <#local expandToolTip = stackValues.expandToolTip>
+    <#local collapseToolTip = stackValues.collapseToolTip>
+    <#local padded = stackValues.padded>
+    <#local showMore = stackValues.showMore>
+    <#local fullUrlString = stackValues.fullUrlString>
+    <#local javaScriptEnabled = stackValues.javaScriptEnabled>
+    <#local fromScreenDef = stackValues.fromScreenDef>
+    <#local hasContent = stackValues.hasContent>
+    <#local menuLayout = stackValues.menuLayout>
+    <#local menuRole = stackValues.menuRole>
+    <#local requireMenu = stackValues.requireMenu>
+    <#local forceEmptyMenu = stackValues.forceEmptyMenu> 
+  </#if>
+
+  <#-- DEV NOTE: when adding params to this call, remember to update the stack above as well! -->
+  <@section_markup_container open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly 
+    sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup class=class innerClass=innerClass
+    contentFlagClasses=contentFlagClasses id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId 
+    collapsible=collapsible saveCollapsed=saveCollapsed expandToolTip=expandToolTip collapseToolTip=collapseToolTip 
+    padded=padded showMore=showMore fullUrlString=fullUrlString javaScriptEnabled=javaScriptEnabled 
+    fromScreenDef=fromScreenDef hasContent=hasContent menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
+    forceEmptyMenu=forceEmptyMenu><#nested></@section_markup_container>
   
   <#if close>
   <#-- auto-heading-level logic begin -->
-      <#local stackValues = popRequestStack("renderScreenletStack")!{}>
-      
-      <#local autoHeadingLevel = stackValues.autoHeadingLevel>
-      <#local updatedHeadingLevel = stackValues.updatedHeadingLevel>
-      <#local prevHeadingLevel = stackValues.prevHeadingLevel>
+    <#local stackValues = popRequestStack("renderScreenletStack")!{}>
+    
+    <#local autoHeadingLevel = stackValues.autoHeadingLevel>
+    <#local updatedHeadingLevel = stackValues.updatedHeadingLevel>
+    <#local prevHeadingLevel = stackValues.prevHeadingLevel>
       
   <#-- level logic begin -->
-      <#local sLevel = stackValues.prevSectionLevel>
-      <#local dummy = setCurrentSectionLevel(sLevel)>
+    <#local sLevel = stackValues.prevSectionLevel>
+    <#local dummy = setCurrentSectionLevel(sLevel)>
   <#-- level logic end -->
   
-      <#if autoHeadingLevel && updatedHeadingLevel>
-          <#local dummy = setCurrentHeadingLevel(prevHeadingLevel)>
-      </#if>
+    <#if autoHeadingLevel && updatedHeadingLevel>
+      <#local dummy = setCurrentHeadingLevel(prevHeadingLevel)>
+    </#if>
   <#-- auto-heading-level logic end -->
   </#if> <#-- /#(if close) -->
 </#macro>
@@ -992,24 +993,24 @@ IMPL NOTE: This has dependencies on some non-structural macros.
       <#local outerClass = addClassArg(outerClass, "toggleField")>
     </#if>
     <div<@compiledClassAttribStr class=outerClass />>
-        <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
-        <@row openOnly=true id=id />
-            <#local class = addClassArg(class, "section-screenlet-container")>
-            <#local class = addClassArg(class, contentFlagClasses)>
-            <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
-            <#-- NOTE: this is same as calling class=("=" + compileClassArg(class)) to override non-essential @cell class defaults -->
-            <@cell openOnly=true class=compileClassArg(class) />
-                ${menuTitleContent}
-                <#-- note: may need to keep this div free of foundation grid classes (for margins collapse?) -->
-                <#local innerClass = addClassArg(innerClass, "section-screenlet-content")>
-                <#local innerClass = addClassArg(innerClass, contentFlagClasses)>
-                <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if><@compiledClassAttribStr class=innerClass />>
+      <#if collapsed><p class="alert legend">[ <i class="${styles.icon!} ${styles.icon_arrow!}"></i> ] ${title}</p></#if>
+      <@row openOnly=true id=id />
+        <#local class = addClassArg(class, "section-screenlet-container")>
+        <#local class = addClassArg(class, contentFlagClasses)>
+        <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
+        <#-- NOTE: this is same as calling class=("=" + compileClassArg(class)) to override non-essential @cell class defaults -->
+        <@cell openOnly=true class=compileClassArg(class) />
+          ${menuTitleContent}
+          <#-- note: may need to keep this div free of foundation grid classes (for margins collapse?) -->
+          <#local innerClass = addClassArg(innerClass, "section-screenlet-content")>
+          <#local innerClass = addClassArg(innerClass, contentFlagClasses)>
+          <div<#if collapsibleAreaId?has_content> id="${collapsibleAreaId}"</#if><@compiledClassAttribStr class=innerClass />>
   </#if>
-    <#nested>
+            <#nested>
   <#if close>
-                </div>
-            <@cell closeOnly=true />
-        <@row closeOnly=true />
+          </div>
+        <@cell closeOnly=true />
+      <@row closeOnly=true />
     </div>
   </#if>
 </#macro>

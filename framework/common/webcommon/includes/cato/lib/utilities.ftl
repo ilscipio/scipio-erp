@@ -79,10 +79,10 @@ The following URI forms are currently interpreted and transformed:
   <#if uri?starts_with("ofbizUrl://")>
     <#local uriDesc = Static["org.ofbiz.webapp.control.RequestDescriptor"].fromUriStringRepr(request!, response!, uri)>
     <#if uriDesc.getType() == "ofbizUrl">
-        <#-- note: although there is uriDesc.getWebUrlString(), should pass through FTL macro version instead, hence all this manual work... -->
-        <#local res><@ofbizUrl fullPath=uriDesc.isFullPath()?c secure=uriDesc.isSecure()?c encode=uriDesc.isEncode()?c>${uriDesc.getBaseUriString()}</@ofbizUrl></#local>
-        <#--<#local res = "uri: " + uriDesc.getBaseUriString() + "; fullPath: " + uriDesc.isFullPath()?c + "; secure: " + uriDesc.isSecure()?c + "; encode: " + uriDesc.isEncode()?c>-->
-        <#return res>
+      <#-- note: although there is uriDesc.getWebUrlString(), should pass through FTL macro version instead, hence all this manual work... -->
+      <#local res><@ofbizUrl fullPath=uriDesc.isFullPath()?c secure=uriDesc.isSecure()?c encode=uriDesc.isEncode()?c>${uriDesc.getBaseUriString()}</@ofbizUrl></#local>
+      <#--<#local res = "uri: " + uriDesc.getBaseUriString() + "; fullPath: " + uriDesc.isFullPath()?c + "; secure: " + uriDesc.isSecure()?c + "; encode: " + uriDesc.isEncode()?c>-->
+      <#return res>
     <#else>
       <#return uri>
     </#if>
@@ -403,11 +403,11 @@ Adds parameters from a hash to a URL. appends delimiters as needed.
 Escapes the URL's parameter delimiters if they are not already escaped.
 -->
 <#function escapeUrlParamDelims url paramDelim="&amp;">
-    <#if url?contains(paramDelim)>
-        <#return url>
-    <#else>
-        <#return url?replace('&', paramDelim)>
-    </#if>
+  <#if url?contains(paramDelim)>
+    <#return url>
+  <#else>
+    <#return url?replace('&', paramDelim)>
+  </#if>
 </#function>
 
 <#-- 
@@ -417,7 +417,7 @@ Escapes the URL's parameter delimiters if they are not already escaped.
 Converts camelCase to camel-case.
 -->
 <#function camelCaseToDashLowerName name>
-    <#return StringUtil.wrapString(Static["com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil"].camelCaseToDashLowerName(name))?string>
+  <#return StringUtil.wrapString(Static["com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil"].camelCaseToDashLowerName(name))?string>
 </#function>
 
 
@@ -691,49 +691,49 @@ TODO: doesn't handle dates (ambiguous?)
     maxDepth        = maximum depth or -1 for no limit
 -->
 <#macro objectAsScript object lang wrap=true hasMore=false escape=true maxDepth=-1 currDepth=1>
-    <#if isObjectType("string", object)>
-        <#-- WARN: context strings also implement ?is_hash when bean models; ?is_string not good enough -->
-        <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
-    <#elseif object?is_number> 
-        ${object}<#t>
-    <#elseif object?is_boolean>
-        ${object?c}<#t>
-    <#elseif object?is_date_like>
-        <#-- TODO? -->
-        <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
-    <#elseif object?is_enumerable> 
-        <#-- check this before string checks and hash because some of these from groovy 
-             also implement ?string and ?is_hash_ex at same time (?).
-             but usually for those if ?is_enumerable it means it was a list-like type. -->
-      <#if (maxDepth < 0) || (currDepth <= maxDepth)>
-        <#if wrap>[</#if><#lt>
-        <#list object as item> 
-            <#if item??><@objectAsScript lang=lang object=item wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1)/><#else>null</#if><#if item_has_next || hasMore>,</#if>
-        </#list> 
-        <#if wrap>]</#if><#rt>
-      <#else>[]</#if>
-    <#elseif object?is_hash_ex && isObjectType("map", object)>
-      <#if (maxDepth < 0) || (currDepth <= maxDepth)>
-        <#if wrap>{</#if><#lt>
-        <#list mapKeys(object) as key> 
-            "${escapeScriptString(lang, key, escape)}" : <#if object[key]??><@objectAsScript lang=lang object=object[key] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) /><#else>null</#if><#if key_has_next || hasMore>,</#if>
-        </#list>
-        <#if wrap>}</#if><#rt>
-      <#else>{}</#if>
-    <#elseif object?is_string> 
-        <#-- WARN: this may catch a lot of different context object types, but ones we care about are above -->
-        <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
-    <#-- some of the following are invalid/inconvertible types, but catch them because otherwise debugging impossible -->
-    <#elseif objectAsScriptTreatInvalidNonFatal && object?is_hash && !object?is_string> 
-        "__NONEXHASH__"<#t>
-    <#elseif objectAsScriptTreatInvalidNonFatal && object?is_method>
-        "__METHOD__"<#t>
-    <#elseif objectAsScriptTreatInvalidNonFatal && object?is_directive>
-        "__DIRECTIVE__"<#t>
-    <#else>
-        <#-- fallback, best-effort. -->
-        <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
-    </#if> 
+  <#if isObjectType("string", object)>
+    <#-- WARN: context strings also implement ?is_hash when bean models; ?is_string not good enough -->
+    <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
+  <#elseif object?is_number> 
+    ${object}<#t>
+  <#elseif object?is_boolean>
+    ${object?c}<#t>
+  <#elseif object?is_date_like>
+    <#-- TODO? -->
+    <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
+  <#elseif object?is_enumerable> 
+    <#-- check this before string checks and hash because some of these from groovy 
+        also implement ?string and ?is_hash_ex at same time (?).
+        but usually for those if ?is_enumerable it means it was a list-like type. -->
+    <#if (maxDepth < 0) || (currDepth <= maxDepth)>
+      <#if wrap>[</#if><#lt>
+      <#list object as item> 
+          <#if item??><@objectAsScript lang=lang object=item wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1)/><#else>null</#if><#if item_has_next || hasMore>,</#if>
+      </#list> 
+      <#if wrap>]</#if><#rt>
+    <#else>[]</#if>
+  <#elseif object?is_hash_ex && isObjectType("map", object)>
+    <#if (maxDepth < 0) || (currDepth <= maxDepth)>
+      <#if wrap>{</#if><#lt>
+      <#list mapKeys(object) as key> 
+          "${escapeScriptString(lang, key, escape)}" : <#if object[key]??><@objectAsScript lang=lang object=object[key] wrap=true escape=escape maxDepth=maxDepth currDepth=(currDepth+1) /><#else>null</#if><#if key_has_next || hasMore>,</#if>
+      </#list>
+      <#if wrap>}</#if><#rt>
+    <#else>{}</#if>
+  <#elseif object?is_string> 
+    <#-- WARN: this may catch a lot of different context object types, but ones we care about are above -->
+    <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
+  <#-- some of the following are invalid/inconvertible types, but catch them because otherwise debugging impossible -->
+  <#elseif objectAsScriptTreatInvalidNonFatal && object?is_hash && !object?is_string> 
+    "__NONEXHASH__"<#t>
+  <#elseif objectAsScriptTreatInvalidNonFatal && object?is_method>
+    "__METHOD__"<#t>
+  <#elseif objectAsScriptTreatInvalidNonFatal && object?is_directive>
+    "__DIRECTIVE__"<#t>
+  <#else>
+    <#-- fallback, best-effort. -->
+    <#if wrap>"${escapeScriptString(lang, object?string, escape)}"<#else>${escapeScriptString(lang, object?string, escape)}</#if><#t>
+  </#if> 
 </#macro>
 
 <#-- escapes a string to be placed within "" literals -->
@@ -1427,136 +1427,136 @@ a level and relLevel are extracted.
 Note that the class portions may be prefixed with "+" as well for append-not-replace logic.
 -->
 <#function getHeadingElemSpecFromStyleStr styleStr containerStyleStr allowedHeadingElemTypes allowedElemTypes allowedContainerElemTypes cacheId="">
-    <#return Static["com.ilscipio.cato.ce.webapp.ftl.template.TemplateFtlUtil"].getHeadingElemSpecFromStyleStr(styleStr, containerStyleStr,
-        allowedHeadingElemTypes, allowedElemTypes, allowedContainerElemTypes, cacheId)>
+  <#return Static["com.ilscipio.cato.ce.webapp.ftl.template.TemplateFtlUtil"].getHeadingElemSpecFromStyleStr(styleStr, containerStyleStr,
+    allowedHeadingElemTypes, allowedElemTypes, allowedContainerElemTypes, cacheId)>
 
 <#-- old FTL impl
-    <#local headingLevel = "">
-    <#local relHeadingLevel = "">
+  <#local headingLevel = "">
+  <#local relHeadingLevel = "">
 
-    <#local isHeadingElem = false>
-    <#local titleStyle = styleStr>
-    <#local titleContainerStyle = containerStyleStr>
+  <#local isHeadingElem = false>
+  <#local titleStyle = styleStr>
+  <#local titleContainerStyle = containerStyleStr>
 
-    <#local titleArgs = {}>
-    <#local titleArgsStr = titleStyle>
+  <#local titleArgs = {}>
+  <#local titleArgsStr = titleStyle>
 
-    <#local titleStyleParts = titleStyle?split(";")>
-    <#if (titleStyleParts?size > 3)>
-      <#local titleArgsStr = titleStyleParts[2]>
-    <#else>
-      <#local titleArgsStr = titleStyleParts?last>
-    </#if>
+  <#local titleStyleParts = titleStyle?split(";")>
+  <#if (titleStyleParts?size > 3)>
+    <#local titleArgsStr = titleStyleParts[2]>
+  <#else>
+    <#local titleArgsStr = titleStyleParts?last>
+  </#if>
 
-    <#if titleArgsStr?has_content && titleArgsStr?contains("=")> <#- heuristic detect params part ->
-      <#local titleArgs = splitStrParams(titleArgsStr, ",")>
-      <#if (titleStyleParts?size >= 3)>
-        <#local titleContainerStyle = titleStyleParts[0]>
-        <#local titleStyle = titleStyleParts[1]> 
-      <#elseif (titleStyleParts?size == 2)>
-        <#local titleStyle = titleStyleParts[0]>   
-      <#elseif (titleStyleParts?size <= 1)>
-        <#local titleStyle = "">
-      </#if>
-    <#elseif (titleStyleParts?size > 1)>
+  <#if titleArgsStr?has_content && titleArgsStr?contains("=")> <#- heuristic detect params part ->
+    <#local titleArgs = splitStrParams(titleArgsStr, ",")>
+    <#if (titleStyleParts?size >= 3)>
       <#local titleContainerStyle = titleStyleParts[0]>
-      <#local titleStyle = titleStyleParts[1]>  
+      <#local titleStyle = titleStyleParts[1]> 
+    <#elseif (titleStyleParts?size == 2)>
+      <#local titleStyle = titleStyleParts[0]>   
+    <#elseif (titleStyleParts?size <= 1)>
+      <#local titleStyle = "">
     </#if>
-    
-    <#local titleContainerElemType = "">
-    <#local titleContainerClass = "">
-    <#if titleContainerStyle?has_content>
-      <#local titleContainerStyleParts = titleContainerStyle?split(":")>
+  <#elseif (titleStyleParts?size > 1)>
+    <#local titleContainerStyle = titleStyleParts[0]>
+    <#local titleStyle = titleStyleParts[1]>  
+  </#if>
+  
+  <#local titleContainerElemType = "">
+  <#local titleContainerClass = "">
+  <#if titleContainerStyle?has_content>
+    <#local titleContainerStyleParts = titleContainerStyle?split(":")>
 
-       <#if (titleContainerStyleParts?size <= 1)>
-        <#- here titleContainerStyle is either an elem or class, can't tell yet ->
-        <#local titleContainerElemType = titleContainerStyle?lower_case>
+     <#if (titleContainerStyleParts?size <= 1)>
+      <#- here titleContainerStyle is either an elem or class, can't tell yet ->
+      <#local titleContainerElemType = titleContainerStyle?lower_case>
+      <#local titleContainerClass = titleContainerStyle>
+    <#else>
+      <#local titleContainerElemType = titleContainerStyleParts?first?lower_case>
+      <#local titleContainerClass = titleContainerStyle?substring(titleContainerElemType?length + 1)>
+    </#if>
+
+    <#- if not sequence, leave to caller to figure out if titleContainerStyle elem or class ->
+    <#if allowedContainerElemTypes?is_sequence>
+      <#if allowedContainerElemTypes?seq_contains(titleContainerElemType)>
+        <#if (titleContainerStyleParts?size <= 1)>
+          <#local titleContainerClass = "">
+        </#if>
+      <#else>
+        <#local titleContainerElemType = "">
         <#local titleContainerClass = titleContainerStyle>
-      <#else>
-        <#local titleContainerElemType = titleContainerStyleParts?first?lower_case>
-        <#local titleContainerClass = titleContainerStyle?substring(titleContainerElemType?length + 1)>
-      </#if>
-
-      <#- if not sequence, leave to caller to figure out if titleContainerStyle elem or class ->
-      <#if allowedContainerElemTypes?is_sequence>
-        <#if allowedContainerElemTypes?seq_contains(titleContainerElemType)>
-          <#if (titleContainerStyleParts?size <= 1)>
-            <#local titleContainerClass = "">
-          </#if>
-        <#else>
-          <#local titleContainerElemType = "">
-          <#local titleContainerClass = titleContainerStyle>
-        </#if>
       </#if>
     </#if>
+  </#if>
 
-    <#local titleElemType = "">
-    <#local titleClass = "">
-    <#if titleStyle?has_content>
-      <#local titleStyleParts = titleStyle?split(":")>
-      <#if (titleStyleParts?size <= 1)>
-        <#- here titleStyle is either an elem or class, can't tell yet ->
-        <#local titleElemType = titleStyle?lower_case>
-        <#local titleClass = titleStyle>
-      <#else>
-        <#local titleElemType = titleStyleParts?first?lower_case>
-        <#local titleClass = titleStyle?substring(titleElemType?length + 1)>
+  <#local titleElemType = "">
+  <#local titleClass = "">
+  <#if titleStyle?has_content>
+    <#local titleStyleParts = titleStyle?split(":")>
+    <#if (titleStyleParts?size <= 1)>
+      <#- here titleStyle is either an elem or class, can't tell yet ->
+      <#local titleElemType = titleStyle?lower_case>
+      <#local titleClass = titleStyle>
+    <#else>
+      <#local titleElemType = titleStyleParts?first?lower_case>
+      <#local titleClass = titleStyle?substring(titleElemType?length + 1)>
+    </#if>
+
+    <#local elemTypeFound = false>
+  
+    <#if allowedHeadingElemTypes?is_sequence && allowedHeadingElemTypes?has_content>
+      <#local res = titleElemType?matches(r'(' + allowedHeadingElemTypes?join("|") + r')(\+)?(\d*)')>
+      <#if res>
+        <#if res?groups[2]?has_content>
+          <#if res?groups[3]?has_content>
+            <#local relHeadingLevel = res?groups[3]?number>
+          </#if>
+        <#else>
+          <#if res?groups[3]?has_content>
+            <#- overrides headingLevel (so style from screen affects heading calc) ->
+            <#local headingLevel = res?groups[3]?number>
+          </#if>
+        </#if>
+        <#if (titleStyleParts?size <= 1)>
+          <#local titleClass = "">
+        </#if>
+        <#local titleElemType = res?groups[1]>
+        <#local elemTypeFound = true>
+        <#local isHeadingElem = true>
       </#if>
-
-      <#local elemTypeFound = false>
+    </#if>
     
-      <#if allowedHeadingElemTypes?is_sequence && allowedHeadingElemTypes?has_content>
-        <#local res = titleElemType?matches(r'(' + allowedHeadingElemTypes?join("|") + r')(\+)?(\d*)')>
-        <#if res>
-          <#if res?groups[2]?has_content>
-            <#if res?groups[3]?has_content>
-              <#local relHeadingLevel = res?groups[3]?number>
-            </#if>
-          <#else>
-            <#if res?groups[3]?has_content>
-              <#- overrides headingLevel (so style from screen affects heading calc) ->
-              <#local headingLevel = res?groups[3]?number>
-            </#if>
-          </#if>
-          <#if (titleStyleParts?size <= 1)>
-            <#local titleClass = "">
-          </#if>
-          <#local titleElemType = res?groups[1]>
-          <#local elemTypeFound = true>
-          <#local isHeadingElem = true>
+    <#- if not sequence, let caller figure it out if titleStyle elem or class ->
+    <#if !elemTypeFound && allowedElemTypes?is_sequence>
+      <#if allowedElemTypes?seq_contains(titleElemType)>
+        <#if (titleStyleParts?size <= 1)>
+          <#local titleClass = "">
         </#if>
-      </#if>
-      
-      <#- if not sequence, let caller figure it out if titleStyle elem or class ->
-      <#if !elemTypeFound && allowedElemTypes?is_sequence>
-        <#if allowedElemTypes?seq_contains(titleElemType)>
-          <#if (titleStyleParts?size <= 1)>
-            <#local titleClass = "">
-          </#if>
-          <#local elemTypeFound = true>
-        <#else>
-          <#local titleElemType = "">
-          <#- if invalid type found, use the full string as class, in case ":" char is important somehow ->
-          <#local titleClass = titleStyle>
-        </#if>
+        <#local elemTypeFound = true>
+      <#else>
+        <#local titleElemType = "">
+        <#- if invalid type found, use the full string as class, in case ":" char is important somehow ->
+        <#local titleClass = titleStyle>
       </#if>
     </#if>
+  </#if>
 
-    <#return titleArgs + {
-        "containerStyleStr":titleContainerStyle, 
-        "containerElemType":titleContainerElemType, 
-        "containerClass":titleContainerClass, 
-        
-        "styleStr":titleStyle,
-        "elemType":titleElemType,
-        "class":titleClass,
-        
-        "isHeadingElem":isHeadingElem,
-        "level":headingLevel,
-        "relLevel":relHeadingLevel,
-        
-        "argsStr":titleArgsStr
-    }>
+  <#return titleArgs + {
+      "containerStyleStr":titleContainerStyle, 
+      "containerElemType":titleContainerElemType, 
+      "containerClass":titleContainerClass, 
+      
+      "styleStr":titleStyle,
+      "elemType":titleElemType,
+      "class":titleClass,
+      
+      "isHeadingElem":isHeadingElem,
+      "level":headingLevel,
+      "relLevel":relHeadingLevel,
+      
+      "argsStr":titleArgsStr
+  }>
 -->
 </#function>
 
@@ -1847,8 +1847,8 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
     maxDepth      = default 5, to prevent endless recursion
 -->
 <#macro printVars var=context platform=true maxDepth=5>
-<#if platform?is_boolean><#if platform><#local platform = getRenderPlatformType()!""><#else><#local platform = ""></#if></#if>
-<#if platform == "html">
+  <#if platform?is_boolean><#if platform><#local platform = getRenderPlatformType()!""><#else><#local platform = ""></#if></#if>
+  <#if platform == "html">
     <table>
     <#list mapKeys(var) as key>
       <tr>
@@ -1859,49 +1859,47 @@ NOTE: since is in utilities.ftl, keep generic and check platform.
       </tr>
     </#list>
     </table>
-</#if>
+  </#if>
 </#macro>
 
 <#macro printVar value="" platform="" maxDepth=-1 currDepth=1>
-<#if platform == "html">
-  <#local var = value>
-
-      <#attempt>
-        <#-- WARN: ?is_ tests may not work as expected on widget context variables (BeanModel)
-             see @objectAsScript -->
-        <#if isObjectType("string", var)>
-            ${var?string}
-        <#elseif var?is_boolean>
-            ${var?c}
-        <#elseif var?is_date>
-            ${var?time}
-        <#elseif var?is_number>
-            ${var?string}
-        <#elseif var?is_enumerable>
-          <#if (maxDepth < 0) || (currDepth <= maxDepth)>
-            <ol>
-            <#list var?sort as i>
-                <li><@printVar value=i platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></li>
-            </#list>
-            </ol>
-          </#if>
-        <#elseif isObjectType("map", var)>
-          <#if (maxDepth < 0) || (currDepth <= maxDepth)>
-            <#-- takes too much space 
-            <table>
-            <#list mapKeys(var)?sort as key>
-                <tr><td>${key}</td><td><@printVar value=var[key]!"" platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></td></tr>
-            </#list>
-            </table>-->
-            <@objectAsScript lang="json" escape=false object=var maxDepth=maxDepth currDepth=currDepth />
-          </#if>
-        <#elseif var?is_string>
-            ${var?string}
+  <#if platform == "html">
+    <#local var = value>
+    <#attempt>
+      <#-- WARN: ?is_ tests may not work as expected on widget context variables (BeanModel)
+          see @objectAsScript -->
+      <#if isObjectType("string", var)>
+        ${var?string}
+      <#elseif var?is_boolean>
+        ${var?c}
+      <#elseif var?is_date>
+        ${var?time}
+      <#elseif var?is_number>
+        ${var?string}
+      <#elseif var?is_enumerable>
+        <#if (maxDepth < 0) || (currDepth <= maxDepth)>
+          <ol>
+          <#list var?sort as i>
+              <li><@printVar value=i platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></li>
+          </#list>
+          </ol>
         </#if>
-      <#recover>
-        <span style="color:red"><strong>${(.error)!"(generic)"}</strong></span>
-      </#attempt>
-
-</#if>
+      <#elseif isObjectType("map", var)>
+        <#if (maxDepth < 0) || (currDepth <= maxDepth)>
+          <#-- takes too much space 
+          <table>
+          <#list mapKeys(var)?sort as key>
+            <tr><td>${key}</td><td><@printVar value=var[key]!"" platform=platform maxDepth=maxDepth currDepth=(currDepth+1)/></td></tr>
+          </#list>
+          </table>-->
+          <@objectAsScript lang="json" escape=false object=var maxDepth=maxDepth currDepth=currDepth />
+        </#if>
+      <#elseif var?is_string>
+        ${var?string}
+      </#if>
+    <#recover>
+      <span style="color:red"><strong>${(.error)!"(generic)"}</strong></span>
+    </#attempt>
+  </#if>
 </#macro>
 

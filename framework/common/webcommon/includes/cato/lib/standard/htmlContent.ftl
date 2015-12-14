@@ -39,9 +39,16 @@
     [inlineAttribs...]   = other legacy h1-h6 attributes, inlined
                            NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
-<#macro heading elemType=true level="" relLevel="" class="" id="" levelClassPrefix=true consumeLevel="" 
-    containerElemType=false containerClass="" containerId="" attribs={} inlineAttribs...>
-  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
+<#assign headingDefaultArgsCatoStd = {
+    <#-- parameters: defaults -->
+    "elemType":true, "level":"", "relLevel":"", "class":"", "id":"", "levelClassPrefix":true, "consumeLevel":"", 
+    "containerElemType":false, "containerClass":"", "containerId":"", "attribs":{}
+}>
+<#macro heading args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, headingDefaultArgsCatoStd)>
+  <#local dummy = localsPutAll(args)>
+  <#local attribs = makeAttribMapFromArgMap(args)>
+    
   <#if !level?has_content>
     <#local level = getCurrentHeadingLevel()>
   </#if>
@@ -84,7 +91,7 @@
   <#else>
     <#local cElem = containerElemType> 
   </#if>
-  <@heading_markup level=level elem=hElem class=class id=id attribs=attribs excludeAttribs=["class", "id"] 
+  <@heading_markup level=level elem=hElem class=class id=id attribs=attribs
       containerElem=cElem containerClass=containerClass containerId=containerId><#nested></@heading_markup>
 </#macro>
 

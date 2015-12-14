@@ -894,6 +894,44 @@ They are not interchangeable.
 
 <#-- 
 *************
+* makeAttribMapFromArgs
+************
+Takes an args map returned by mergeArgMaps (NOT mergeArgMapsBasic) and checks it for an "attribs"
+sub-map and blends them together logically to make an attribs map.
+The resulting map will contain the allArgNames and localArgNames members from the args map for easier passing.
+NOTE: this currently does not change the exclude lists (see @mergeArgMaps), but could in the future.
+
+See getAttribMapAllExcludes function.
+
+  * Parameters *
+    (see mergeArgMaps; parameters are analogous, even though macro implementation may differ)
+-->
+<#function makeAttribMapFromArgMap args={}>
+  <#if args.attribs??>
+    <#local args = args.attribs + args>
+  </#if>
+  <#return args>
+</#function>
+
+<#-- 
+*************
+* getAttribMapAllExcludes
+************
+Returns the attrib map excludes based on allArgNames list, plus known needed excludes, plus an optional list.
+
+See makeAttribMapFromArgs.
+-->
+<#function getAttribMapAllExcludes attribs={} exclude=[]>
+  <#if attribs.allArgNames??>
+    <#local exclude = exclude + attribs.allArgNames>
+  </#if>
+  <#local exclude = exclude + ["attribs", "allArgNames", "localArgNames"]>
+  <#return exclude>
+</#function>
+
+
+<#-- 
+*************
 * Class argument functions
 ************
 Internal functions to help parse class argument passed to macros.

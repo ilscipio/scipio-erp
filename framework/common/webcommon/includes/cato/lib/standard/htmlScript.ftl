@@ -225,13 +225,20 @@ Accepts attrib names as both "onxxx" and "xxx".
 * commonElemAttribStr
 ************
 Prints a string of element attributes for common macro HTML elements.
+This is nearly the same as elemAttribStr but with different defaults and with more versatile attribs map.
 
   * Parameters *
     (see @elemAttribStr; same parameters but defaults different)
+    attribs       = the attribs map here is more versatile and supports mergeArgMaps functions more easily.
+                    it may contain two special members: localArgNames and allArgNames. both should be lists.
+                    localArgNames will be ignored and all names in allArgNames will be appended to the exclude list.
+                    the two will be excluded themselves.
+                    if this map contains an "attribs" member, it will be added for exclude as well.
+                    see function getAttribMapAllExcludes for implementation details.
 -->
 <#macro commonElemAttribStr attribs includeEmpty=false emptyValToken="" exclude=[] 
   attribNamePrefix="" alwaysAddPrefix=true attribNamePrefixStrip="" attribNameSubstitutes={} camelCaseToDashLowerNames=true>
-  <#t><@elemAttribStr attribs=attribs includeEmpty=includeEmpty emptyValToken=emptyValToken exclude=exclude
+  <#t><@elemAttribStr attribs=attribs includeEmpty=includeEmpty emptyValToken=emptyValToken exclude=getAttribMapAllExcludes(attribs, exclude)
     attribNamePrefix=attribNamePrefix alwaysAddPrefix=alwaysAddPrefix attribNamePrefixStrip=attribNamePrefixStrip 
     attribNameSubstitutes=attribNameSubstitutes camelCaseToDashLowerNames=camelCaseToDashLowerNames /><#t>
 </#macro>

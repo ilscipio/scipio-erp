@@ -127,7 +127,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
                       usually use only one of alternatives but versatile.
     htmlWrap        = wrapping HTML element (ul|div|span, default: ul)
 -->
-<#assign menu_catoStd_defaultArgs = {
+<#assign menu_defaultArgs = {
     <#-- parameters: defaults -->
     "type" : "generic",
     "class" : "",
@@ -152,7 +152,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#else>
     <#local class = args.class!"">
   </#if>
-  <#local args = mergeArgMaps(args, inlineArgs, menu_catoStd_defaultArgs, {
+  <#local args = mergeArgMaps(args, inlineArgs, menu_defaultArgs, {
     <#-- parameters: overrides -->
     "class" : class
   })>
@@ -269,7 +269,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     htmlWrap        = wrapping HTML element (li|span|div, default: li)
     inlineItem      = boolean, if true, generate only items, not menu container
 -->
-<#assign menuitem_catoStd_defaultArgs = {
+<#assign menuitem_defaultArgs = {
     <#-- parameters: defaults -->
     "type" : "generic",
     "class" : "",
@@ -307,7 +307,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#else>
     <#local contentClass = args.contentClass!"">
   </#if>
-  <#local args = mergeArgMaps(args, inlineArgs, menuitem_catoStd_defaultArgs, {
+  <#local args = mergeArgMaps(args, inlineArgs, menuitem_defaultArgs, {
     <#-- parameters: overrides -->
     "class" : class,
     "contentClass" : contentClass
@@ -464,13 +464,13 @@ menu item element must override this and provide a proper check.
    paginateToggle  = if true, include a control to toggle pagination on/off 
                      (specify current state with paginateOn and tweak using paginateToggle* arguments)
 -->
-<#assign paginate_catoStd_defaultArgs = {
+<#assign paginate_defaultArgs = {
     "mode":"single", "type":"default", "layout":"default", "noResultsMode":"default", "paginateOn":true, "url":"", "class":"", "viewIndex":0, "listSize":0, "viewSize":1, "altParam":false, 
     "forcePost":false, "paramStr":"", "viewIndexFirst":0, "showCount":true, "countMsg":"",
     "paginateToggle":false, "paginateToggleString":"", "paginateToggleOnValue":"Y", "paginateToggleOffValue":"N"
 }>
 <#macro paginate args={} inlineArgs...>
-    <#local args = mergeArgMaps(args, inlineArgs, paginate_catoStd_defaultArgs)>
+    <#local args = mergeArgMaps(args, inlineArgs, paginate_defaultArgs)>
     <#local dummy = localsPutAll(args)>
 
     <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
@@ -606,7 +606,7 @@ menu item element must override this and provide a proper check.
     listItemsOnly   = only show core paginate items, no container
     paginateToggle  = if true, include a control to toggle pagination on or off
 -->
-<#assign paginate_core_catoStd_defaultArgs = {
+<#assign paginate_core_defaultArgs = {
 "paginateClass":"", "paginateFirstClass":"", "viewIndex":1, "highIndex":0, "listSize":0, "viewSize":1, 
     "ajaxEnabled":false, "javaScriptEnabled":false, "ajaxFirstUrl":"", "firstUrl":"", 
     "paginateFirstLabel":"", "paginatePreviousClass":"", "ajaxPreviousUrl":"", "previousUrl":"", "paginatePreviousLabel":"", 
@@ -618,7 +618,7 @@ menu item element must override this and provide a proper check.
     "paginateOffLabel":""
 }>
 <#macro paginate_core args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, paginate_core_catoStd_defaultArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs, paginate_core_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   
   <#local availPageSizes = [10, 20, 30, 50, 100, 200]>

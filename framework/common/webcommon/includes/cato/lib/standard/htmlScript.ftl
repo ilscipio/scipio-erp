@@ -66,7 +66,7 @@ Not associated with any HTML element.
   * Parameters *
     scriptType/output/cdata/htmlwrap  = defaults for child @script calls (see @script)
 -->
-<#assign scripts_catoStd_defaultArgs = {
+<#assign scripts_defaultArgs = {
     <#-- parameters: defaults -->
     "scriptType" : "text/javascript",
     "output" : "",
@@ -74,7 +74,7 @@ Not associated with any HTML element.
     "cdata" : true
 }>
 <#macro scripts args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, scripts_catoStd_defaultArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs, scripts_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local dummy = setRequestVar("catoScriptsInfo", args)>
   <#nested>
@@ -109,7 +109,7 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
     htmlwrap        = boolean, default true, if false don't include HTML wrapper (or cdata)
     cdata           = boolean, default true, if false don't include CDATA guard (only used if htmlwrap true)
 -->
-<#assign script_catoStd_defaultArgs = {
+<#assign script_defaultArgs = {
     <#-- parameters: defaults -->
     "type" : "text/javascript",
     "src" : "",
@@ -122,11 +122,11 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
   <#-- this uses complex defaults from parent @scripts elem, so have to do something different -->
   <#local argDefaults = {
     <#-- parameters: defaults -->
-    "type" : scriptsInfo.scriptType!script_catoStd_defaultArgs.type,
+    "type" : scriptsInfo.scriptType!script_defaultArgs.type,
     "src" : "",
-    "output" : scriptsInfo.output!script_catoStd_defaultArgs.output,
-    "htmlwrap" : scriptsInfo.htmlwrap!script_catoStd_defaultArgs.htmlwrap,
-    "cdata" : scriptsInfo.cdata!script_catoStd_defaultArgs.cdata
+    "output" : scriptsInfo.output!script_defaultArgs.output,
+    "htmlwrap" : scriptsInfo.htmlwrap!script_defaultArgs.htmlwrap,
+    "cdata" : scriptsInfo.cdata!script_defaultArgs.cdata
   }>
   <#local args = mergeArgMaps(args, inlineArgs, argDefaults)>
   <#local dummy = localsPutAll(args)>

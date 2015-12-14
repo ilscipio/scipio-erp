@@ -801,7 +801,13 @@
 
   <#assign args = {"innerArg3":"some-value-from-caller", "extraAttrib1":"some-value-from-caller"}>
   <@argsTestOuter args=args outerArg2="some-value-from-caller" extraAttrib2="some-value-from-caller"/>
+
+  <@section title="Macro inspection">
+    <p>@field macro default args: <@objectAsScript lang="raw" escape=false object=getCatoMacroDefaultArgs("field") /></p>
+  </@section>
 </@section>
+
+
 
 
 

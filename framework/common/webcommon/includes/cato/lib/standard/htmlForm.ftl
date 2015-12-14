@@ -69,14 +69,14 @@ for getFileUploadProgressStatus AJAX calls.
                       see CatoUploadProgress javascript class for available options.
     htmlwrap        = if true, wrap in @script (default true)
 -->
-<#assign progressScript_catoStd_defaultArgs = {
+<#assign progressScript_defaultArgs = {
     <#-- parameters: defaults -->
     "enabled" : true,
     "htmlwrap" : true,
     "progressOptions" : {}
 }>
 <#macro progressScript args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, progressScript_catoStd_defaultArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs, progressScript_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#if enabled>
     <#if progressOptions?has_content && progressOptions.formSel?has_content>
@@ -225,7 +225,7 @@ IMPL NOTE: this must support legacy ofbiz parameters.
     requestName           = request name
     responseName          = response name
 -->
-<#assign asmSelectScript_catoStd_defaultArgs = {
+<#assign asmSelectScript_defaultArgs = {
     <#-- parameters: defaults -->
     "enabled" : true,
     "id" : "",
@@ -244,7 +244,7 @@ IMPL NOTE: this must support legacy ofbiz parameters.
     "htmlwrap" : true
 }>
 <#macro asmSelectScript args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, asmSelectScript_catoStd_defaultArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs, asmSelectScript_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#if enabled>
     <#-- MIGRATED FROM component://common/webcommon/includes/setMultipleSelectJs.ftl -->
@@ -442,13 +442,13 @@ or even multiple per fieldset.
     formId              = the form ID the child fields should assume   
     inlineItems     = change default for @field inlineItems parameter (true/false)     
 -->
-<#assign fields_catoStd_defaultArgs = {
+<#assign fields_defaultArgs = {
     <#-- parameters: defaults -->
     "type":"default", "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", 
     "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":""
 }>
 <#macro fields args={} inlineArgs...>
-    <#--<#local args = mergeArgMapsBasic(args, inlineArgs, fields_catoStd_defaultArgs)>
+    <#--<#local args = mergeArgMapsBasic(args, inlineArgs, fields_defaultArgs)>
     <#local dummy = localsPutAll(args)>
     <#local fieldsInfo = makeFieldsInfo(args)>-->
     <#local fieldsInfo = makeFieldsInfo(mergeArgMapsBasic(args, inlineArgs))>
@@ -458,7 +458,7 @@ or even multiple per fieldset.
 </#macro>
 
 <#function makeFieldsInfo args={}>
-    <#local args = mergeArgMapsBasic(args, {}, fields_catoStd_defaultArgs)>
+    <#local args = mergeArgMapsBasic(args, {}, fields_defaultArgs)>
     <#local dummy = localsPutAll(args)>
     
     <#local stylesType = type?replace("-","_")>
@@ -815,7 +815,7 @@ standard markup.
     value           = display value or image URL
     description     = for image type: image alt
 -->
-<#assign field_catoStd_defaultArgs = {
+<#assign field_defaultArgs = {
     <#-- parameters: defaults -->
     "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", "onClick":"", 
     "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
@@ -832,7 +832,7 @@ standard markup.
 <#macro field args={} inlineArgs...> 
   <#-- TODO: the following calls should be combined into a mergeArgMapsToLocals method, but
       it is not currently possible. see mergeArgMapsToLocals in utilities.ftl. -->
-  <#local args = mergeArgMaps(args, inlineArgs, field_catoStd_defaultArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs, field_defaultArgs)>
   <#local dummy = localsPutAll(args)>
         
   <#if !type?has_content>

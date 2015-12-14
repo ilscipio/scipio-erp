@@ -874,12 +874,17 @@ TODO?: may want helper booleans to control in/out allArgNames?
 *************
 * getCatoMacroDefaultArgs
 ************
-This returns all the known args and default args for a cato standard macro that uses the advanced
-args pattern.
-Basically they should always have default values.
+Returns all the known args and default args for a cato macro that uses the advanced
+args pattern, where the macro resides in the given namespace (or namespace-like map).
+Basically the macros should always have default values (in the event one was missing, this method
+should automatically give one such as empty string).
+If namespace is omitted, currently (2015-12-14), this will use ".vars" as the namespace.
 -->
-<#function getCatoMacroDefaultArgs name namespace>
-  <#return .vars[name + "_" + namespace + "_defaultArgs"]!{}>
+<#function getCatoMacroDefaultArgs name namespace="">
+  <#if !namespace?has_content>
+    <#local namespace = .vars>
+  </#if>
+  <#return namespace[name + "_defaultArgs"]!{}>
 </#function>
 
 <#-- 

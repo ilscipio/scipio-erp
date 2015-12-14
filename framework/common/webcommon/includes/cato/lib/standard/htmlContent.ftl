@@ -40,12 +40,11 @@
                            NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#assign heading_defaultArgs = {
-    <#-- parameters: defaults -->
     "elemType":true, "level":"", "relLevel":"", "class":"", "id":"", "levelClassPrefix":true, "consumeLevel":"", 
     "containerElemType":false, "containerClass":"", "containerId":"", "attribs":{}
 }>
 <#macro heading args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, heading_defaultArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.heading_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
     
@@ -131,7 +130,12 @@ Creates a very basic wrapper for code blocks
   * Parameters *
     type            = (html|java|css|javascript|log) (default:html) 
 -->
-<#macro code type="html">
+<#assign code_defaultArgs = {
+    "type":"html"
+}>
+<#macro code args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.code_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
     <pre><code data-language="${type!}"><#rt>
       <#nested><#t>
     </code></pre><#lt>
@@ -181,7 +185,6 @@ Creates a responsive tables script (script only - no markup).
     fixedColumnsRight   = int value; number of columns that are fixed on the right hand side (convenience and abstractive option; currently alias for responsiveOptions.fixedColumns.rightColumns) 
 -->
 <#assign tableResponsiveScript_defaultArgs = {
-    <#-- parameters: defaults -->
     "enabled" : true,
     "tableId" : "",
     "tableType" : "",
@@ -195,7 +198,7 @@ Creates a responsive tables script (script only - no markup).
     "htmlwrap" : true
 }>
 <#macro tableResponsiveScript args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, tableResponsiveScript_defaultArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tableResponsiveScript_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#if enabled>
     <#if !(responsive?is_boolean && responsive == false) && tableId?has_content>
@@ -328,10 +331,16 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
                                               responsive tables break when no header.
                                               in other words, responsive tables required a <@thead> element.
 -->
-<#macro table type="" class="" id="" hasHeader="" cellspacing=true responsive="" scrollable="" responsiveOptions={} responsiveDefaults="" 
-  fixedColumnsLeft=0 fixedColumnsRight=0 autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false 
-  nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
+<#assign table_defaultArgs = {
+  "type":"", "class":"", "id":"", "hasHeader":"", "cellspacing":true, "responsive":"", "scrollable":"", "responsiveOptions":{}, "responsiveDefaults":"", 
+  "fixedColumnsLeft":0, "fixedColumnsRight":0, "autoAltRows":"", "firstRowAlt":"", "inheritAltRows":false, "useFootAltRows":false, 
+  "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+}>
+<#macro table args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.table_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local attribs = makeAttribMapFromArgMap(args)>
+
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
@@ -466,7 +475,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   }>
   <@table_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly type=type styleName=styleName class=class id=id cellspacing=cellspacing 
       useResponsive=useResponsive responsiveArgs=responsiveArgs autoAltRows=autoAltRows firstRowAlt=firstRowAlt 
-      inheritAltRows=inheritAltRows useFootAltRows=useFootAltRows attribs=attribs excludeAttribs=["class", "id", "cellspacing"]>
+      inheritAltRows=inheritAltRows useFootAltRows=useFootAltRows attribs=attribs>
     <#nested>
   </@table_markup>
   <#if close>
@@ -500,8 +509,14 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   </#if>
 </#macro>
 
-<#macro thead class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
+<#assign thead_defaultArgs = {
+  "class":"", "id":"", "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+}>
+<#macro thead args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.thead_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local attribs = makeAttribMapFromArgMap(args)>
+  
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
@@ -529,8 +544,14 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   </#if>
 </#macro>
 
-<#macro tbody class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
+<#assign tbody_defaultArgs = {
+  "class":"", "id":"", "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+}>
+<#macro tbody args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tbody_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local attribs = makeAttribMapFromArgMap(args)>
+
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
@@ -556,8 +577,14 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   </#if>
 </#macro>
 
-<#macro tfoot class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
+<#assign tfoot_defaultArgs = {
+  "class":"", "id":"", "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+}>
+<#macro tfoot args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tfoot_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local attribs = makeAttribMapFromArgMap(args)>
+
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
@@ -620,8 +647,15 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     attribs               = hash of other legacy <tr attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <tr attributes and values, inlined
 -->
-<#macro tr type="" class="" id="" useAlt="" alt="" groupLast="" groupParent="" selected="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
+<#assign tr_defaultArgs = {
+  "type":"", "class":"", "id":"", "useAlt":"", "alt":"", "groupLast":"", "groupParent":"", "selected":"", 
+  "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+}>
+<#macro tr args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tr_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local attribs = makeAttribMapFromArgMap(args)>
+
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#local catoCurrentTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
@@ -711,15 +745,27 @@ Helps define table cells.
     attribs               = hash of other legacy <th and <td attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <th and <td attributes and values
 -->
-<#macro th class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
+<#assign th_defaultArgs = {
+  "class":"", "id":"", "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+}>
+<#macro th args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.th_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local attribs = makeAttribMapFromArgMap(args)>
+
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
-<#macro td class="" id="" nestedOnly=false openOnly=false closeOnly=false attribs={} inlineAttribs...>
-  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
+<#assign td_defaultArgs = {
+  "class":"", "id":"", "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+}>
+<#macro td args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.td_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local attribs = makeAttribMapFromArgMap(args)>
+
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>></#if><#nested><#if close></td></#if>
@@ -743,7 +789,13 @@ Usage discouraged: use @table, @tr macros instead.
     alt             = boolean, if true is alternate row (odd), if false regular (even)
     selected        = boolean, if true marked as selected
 -->
-<#macro tableRowClassAttribStr class="" alt="" selected="">
+<#assign tableRowClassAttribStr_defaultArgs = {
+  "class":"", "alt":"", "selected":""
+}>
+<#macro tableRowClassAttribStr args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tableRowClassAttribStr_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+
   <#if alt?is_boolean>
     <#local class = addClassArg(class, alt?string(styles.row_alt!, styles.row_reg!))>
   </#if>
@@ -768,14 +820,26 @@ Since this is very foundation specific, this function may be dropped in future i
     title           = fieldset-title
     
 -->
-<#macro pul title="">
+<#assign pul_defaultArgs = {
+  "title":""
+}>
+<#macro pul args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.pul_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+
     <ul class="${styles.pricing_wrap!}">
         <@pli type="title">${title!}</@pli>
         <#nested>
     </ul>
 </#macro>
 
-<#macro pli type="">
+<#assign pli_defaultArgs = {
+  "type":""
+}>
+<#macro pli args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.pli_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  
     <#switch type>
         <#case "price">
             <li class="${styles.pricing_price!}"><#nested></li>
@@ -812,7 +876,13 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     library        = (foundation|chart) (default:foundation)
     title          = Data Title  (default:empty)
 -->
-<#macro chart type="pie" library="foundation" title="">
+<#assign chart_defaultArgs = {
+  "type":"pie", "library":"foundation", "title":""
+}>
+<#macro chart args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.chart_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+
     <#global chartLibrary = library!"foundation"/>
     <#local nestedContent><#nested><#t></#local>
     <#local chartIdNum = getRequestVar("catoChartIdNum")!0>
@@ -908,7 +978,13 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </#if>
 </#macro>
 
-<#macro chartdata title value value2="">
+<#assign chartdata_defaultArgs = {
+  "title":"", "value":"", "value2":""
+}>
+<#macro chartdata args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.chartdata_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  
     <#if !chartLibrary?has_content> <#local chartLibrary = "foundation"/></#if>
     <#if chartLibrary=="foundation">
         <li <#if value2?has_content>data-y="${value!}" data-x="${value2!}"<#else>data-value="${value!}"</#if>>${title!}</li>

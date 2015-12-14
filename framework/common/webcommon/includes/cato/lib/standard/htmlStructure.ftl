@@ -301,7 +301,7 @@ Since this is very foundation specific, this function may be dropped in future i
     "type":"", "tilesType":"", "class":"", "columns":4, "id":""
 }>
 <#macro grid args={} inlineArgs...>
-    <#local args = mergeArgMaps(args, inlineArgs, grid_defaultArgs)>
+    <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.grid_defaultArgs)>
     <#local dummy = localsPutAll(args)>
 
     <#if !type?has_content>
@@ -418,7 +418,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
     "image":"", "imageType":"", "imageBgColor":"", "overlayType":"", "overlayBgColor":""
 }>
 <#macro tile args={} inlineArgs...>
-    <#local args = mergeArgMaps(args, inlineArgs, tile_defaultArgs)>
+    <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tile_defaultArgs)>
     <#local dummy = localsPutAll(args)>
 
     <#local gridInfo = readRequestStack("catoCurrentGridInfo")!{}>

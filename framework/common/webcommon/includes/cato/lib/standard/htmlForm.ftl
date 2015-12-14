@@ -76,7 +76,7 @@ for getFileUploadProgressStatus AJAX calls.
     "progressOptions" : {}
 }>
 <#macro progressScript args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, progressScript_defaultArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.progressScript_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#if enabled>
     <#if progressOptions?has_content && progressOptions.formSel?has_content>
@@ -244,7 +244,7 @@ IMPL NOTE: this must support legacy ofbiz parameters.
     "htmlwrap" : true
 }>
 <#macro asmSelectScript args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, asmSelectScript_defaultArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.asmSelectScript_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#if enabled>
     <#-- MIGRATED FROM component://common/webcommon/includes/setMultipleSelectJs.ftl -->
@@ -448,7 +448,7 @@ or even multiple per fieldset.
     "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":""
 }>
 <#macro fields args={} inlineArgs...>
-    <#--<#local args = mergeArgMapsBasic(args, inlineArgs, fields_defaultArgs)>
+    <#--<#local args = mergeArgMapsBasic(args, inlineArgs, catoStdTmplLib.fields_defaultArgs)>
     <#local dummy = localsPutAll(args)>
     <#local fieldsInfo = makeFieldsInfo(args)>-->
     <#local fieldsInfo = makeFieldsInfo(mergeArgMapsBasic(args, inlineArgs))>
@@ -832,7 +832,7 @@ standard markup.
 <#macro field args={} inlineArgs...> 
   <#-- TODO: the following calls should be combined into a mergeArgMapsToLocals method, but
       it is not currently possible. see mergeArgMapsToLocals in utilities.ftl. -->
-  <#local args = mergeArgMaps(args, inlineArgs, field_defaultArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_defaultArgs)>
   <#local dummy = localsPutAll(args)>
         
   <#if !type?has_content>

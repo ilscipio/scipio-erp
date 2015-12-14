@@ -74,7 +74,7 @@ Not associated with any HTML element.
     "cdata" : true
 }>
 <#macro scripts args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, scripts_defaultArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.scripts_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local dummy = setRequestVar("catoScriptsInfo", args)>
   <#nested>

@@ -152,7 +152,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#else>
     <#local class = args.class!"">
   </#if>
-  <#local args = mergeArgMaps(args, inlineArgs, menu_defaultArgs, {
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.menu_defaultArgs, {
     <#-- parameters: overrides -->
     "class" : class
   })>
@@ -307,7 +307,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   <#else>
     <#local contentClass = args.contentClass!"">
   </#if>
-  <#local args = mergeArgMaps(args, inlineArgs, menuitem_defaultArgs, {
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.menuitem_defaultArgs, {
     <#-- parameters: overrides -->
     "class" : class,
     "contentClass" : contentClass
@@ -470,7 +470,7 @@ menu item element must override this and provide a proper check.
     "paginateToggle":false, "paginateToggleString":"", "paginateToggleOnValue":"Y", "paginateToggleOffValue":"N"
 }>
 <#macro paginate args={} inlineArgs...>
-    <#local args = mergeArgMaps(args, inlineArgs, paginate_defaultArgs)>
+    <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.paginate_defaultArgs)>
     <#local dummy = localsPutAll(args)>
 
     <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
@@ -618,7 +618,7 @@ menu item element must override this and provide a proper check.
     "paginateOffLabel":""
 }>
 <#macro paginate_core args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, paginate_core_defaultArgs)>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.paginate_core_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   
   <#local availPageSizes = [10, 20, 30, 50, 100, 200]>

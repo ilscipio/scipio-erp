@@ -879,6 +879,10 @@ args pattern, where the macro resides in the given namespace (or namespace-like 
 Basically the macros should always have default values (in the event one was missing, this method
 should automatically give one such as empty string).
 If namespace is omitted, currently (2015-12-14), this will use ".vars" as the namespace.
+
+DEV NOTE: there could be some use for the ?namespace built-in somewhere around this function
+   or more generally the default args, but so far elusive. only works on macro/function so
+   maybe best not to rely on it.
 -->
 <#function getCatoMacroDefaultArgs name namespace="">
   <#if !namespace?has_content>

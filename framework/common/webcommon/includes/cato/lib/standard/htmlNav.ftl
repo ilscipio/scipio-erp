@@ -30,30 +30,40 @@ Since this is very foundation specific, this function may be dropped in future i
     type            = (inline|magellan|breadcrumbs) (default:inline)
     class           = Adds classes - please use "(small|medium|large)-block-grid-#"    
 -->
-<#macro nav type="inline">
-    <#switch type>
-        <#case "magellan">
-            <div data-magellan-expedition="fixed">
-              <dl class="sub-nav">
-                <#nested>
-              </dl>
-            </div>
-        <#break>
-        <#case "breadcrumbs">
-            <ul class="${styles.nav_breadcrumbs!}">
-                <#nested>
-            </ul>
-        <#break>
-        <#default>
-            <ul class="${styles.list_inline!} ${styles.nav_subnav!}">
-              <#nested>
-            </ul>
-        <#break>
-    </#switch>
+<#assign nav_defaultArgs = {
+  "type":"inline"
+}>
+<#macro nav args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.nav_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#switch type>
+    <#case "magellan">
+      <div data-magellan-expedition="fixed">
+        <dl class="sub-nav">
+          <#nested>
+        </dl>
+      </div>
+    <#break>
+    <#case "breadcrumbs">
+      <ul class="${styles.nav_breadcrumbs!}">
+          <#nested>
+      </ul>
+    <#break>
+    <#default>
+      <ul class="${styles.list_inline!} ${styles.nav_subnav!}">
+        <#nested>
+      </ul>
+    <#break>
+  </#switch>
 </#macro>
 
-<#macro mli arrival="">
-    <dd data-magellan-arrival="${arrival!}"><#nested></dd>
+<#assign mli_defaultArgs = {
+  "arrival":""
+}>
+<#macro mli args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.mli_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <dd data-magellan-arrival="${arrival}"><#nested></dd>
 </#macro>
 
 <#function mtarget id>
@@ -128,20 +138,9 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     htmlWrap        = wrapping HTML element (ul|div|span, default: ul)
 -->
 <#assign menu_defaultArgs = {
-    "type" : "generic",
-    "class" : "",
-    "inlineItems" : false,
-    "id" : "",
-    "style" : "",
-    "attribs" : "",
-    "items" : true,
-    "preItems" : true,
-    "postItems" : true,
-    "sort" : false,
-    "sortBy" : "",
-    "sortDesc" : false,
-    "nestedFirst" : false,
-    "htmlWrap" : true
+  "type" : "generic", "class" : "", "inlineItems" : false, "id" : "", "style" : "", "attribs" : "",
+  "items" : true, "preItems" : true, "postItems" : true, "sort" : false, "sortBy" : "", "sortDesc" : false,
+  "nestedFirst" : false, "htmlWrap" : true
 }>
 <#macro menu args={} inlineArgs...>
   <#-- class arg needs special handling here to support extended "+" logic (mostly for section menu defs) -->
@@ -269,28 +268,11 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     inlineItem      = boolean, if true, generate only items, not menu container
 -->
 <#assign menuitem_defaultArgs = {
-    "type" : "generic",
-    "class" : "",
-    "contentClass", "",
-    "id" : "",
-    "style" : "",
-    "attribs" : "",
-    "contentId" : "",
-    "contentStyle" : "",
-    "contentAttribs" : "",
-    "text" : "",
-    "href" : true,
-    "onClick" : "",
-    "disabled" : false,
-    "selected" : false,
-    "active" : false,
-    "target" : "",
-    "nestedContent" : true,
-    "nestedMenu" : false,
-    "wrapNested" : false,
-    "nestedFirst" : false,
-    "htmlWrap" : true,
-    "inlineItem" : false
+  "type" : "generic", "class" : "", "contentClass", "", "id" : "", "style" : "", "attribs" : "",
+  "contentId" : "", "contentStyle" : "", "contentAttribs" : "", "text" : "", "href" : true,
+  "onClick" : "", "disabled" : false, "selected" : false, "active" : false, "target" : "",
+  "nestedContent" : true, "nestedMenu" : false, "wrapNested" : false, "nestedFirst" : false,
+  "htmlWrap" : true, "inlineItem" : false
 }>
 <#macro menuitem args={} inlineArgs...>
   <#-- class args need special handling here to support extended "+" logic (mostly for section menu defs) -->
@@ -468,128 +450,128 @@ menu item element must override this and provide a proper check.
     "paginateToggle":false, "paginateToggleString":"", "paginateToggleOnValue":"Y", "paginateToggleOffValue":"N"
 }>
 <#macro paginate args={} inlineArgs...>
-    <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.paginate_defaultArgs)>
-    <#local dummy = localsPutAll(args)>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.paginate_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
 
-    <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
-    <#if (!viewSize?is_number)>
-        ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize!, "htmlUtilitiesPaginate")!}<#t>
-        <#local viewSize = viewSize?number>
-    </#if>
-    <#local viewSize = viewSize?floor>
-    <#if (!viewIndex?is_number)>
-        ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex!, "htmlUtilitiesPaginate")!}<#t>
-        <#local viewIndex = viewIndex?number>
-    </#if>
-    <#local viewIndex = viewIndex?floor>
-    
-    <#local viewIndexLast = viewIndexFirst + ((listSize/viewSize)?ceiling-1)>
-    <#if (viewIndexLast < viewIndexFirst)>
-        <#local viewIndexLast = viewIndexFirst>
-    </#if>
-    <#if (viewIndex < viewIndexFirst) || (viewIndex > viewIndexLast)>
-        ${Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlUtilitiesPaginate")!}<#t>
-        <#if (viewIndex < viewIndexFirst)>
-            <#local viewIndex = viewIndexFirst>
-        <#else>
-            <#local viewIndex = viewIndexLast>
-        </#if>
-    </#if>
-    
-    <#local lowIndex = (viewIndex - viewIndexFirst) * viewSize/>
-    <#local highIndex = ((viewIndex - viewIndexFirst) + 1) * viewSize/>
-    <#if (listSize < highIndex)>
-        <#local highIndex = listSize/>
-    </#if>
-    <#if altParam>
-        <#local viewIndexString = "viewIndex">
-        <#local viewSizeString = "viewSize">
-        <#if !paginateToggleString?has_content>
-            <#local paginateToggleString = "paging">
-        </#if>
+  <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
+  <#if (!viewSize?is_number)>
+    <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize!, "htmlUtilitiesPaginate")!>
+    <#local viewSize = viewSize?number>
+  </#if>
+  <#local viewSize = viewSize?floor>
+  <#if (!viewIndex?is_number)>
+    <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex!, "htmlUtilitiesPaginate")!>
+    <#local viewIndex = viewIndex?number>
+  </#if>
+  <#local viewIndex = viewIndex?floor>
+  
+  <#local viewIndexLast = viewIndexFirst + ((listSize/viewSize)?ceiling-1)>
+  <#if (viewIndexLast < viewIndexFirst)>
+    <#local viewIndexLast = viewIndexFirst>
+  </#if>
+  <#if (viewIndex < viewIndexFirst) || (viewIndex > viewIndexLast)>
+    <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlUtilitiesPaginate")!>
+    <#if (viewIndex < viewIndexFirst)>
+      <#local viewIndex = viewIndexFirst>
     <#else>
-        <#local viewIndexString = "VIEW_INDEX">
-        <#local viewSizeString = "VIEW_SIZE">
-        <#if !paginateToggleString?has_content>
-            <#local paginateToggleString = "PAGING">
-        </#if>
+      <#local viewIndex = viewIndexLast>
     </#if>
-    <#if (viewIndexLast > (viewIndex))>
-        <#local viewIndexNext = (viewIndex+1)>
-    <#else>
-        <#local viewIndexNext = viewIndex>
+  </#if>
+  
+  <#local lowIndex = (viewIndex - viewIndexFirst) * viewSize/>
+  <#local highIndex = ((viewIndex - viewIndexFirst) + 1) * viewSize/>
+  <#if (listSize < highIndex)>
+    <#local highIndex = listSize/>
+  </#if>
+  <#if altParam>
+    <#local viewIndexString = "viewIndex">
+    <#local viewSizeString = "viewSize">
+    <#if !paginateToggleString?has_content>
+      <#local paginateToggleString = "paging">
     </#if>
-    <#if (viewIndex > viewIndexFirst)>
-        <#local viewIndexPrevious = (viewIndex-1)>
-    <#else>
-        <#local viewIndexPrevious = viewIndex>
+  <#else>
+    <#local viewIndexString = "VIEW_INDEX">
+    <#local viewSizeString = "VIEW_SIZE">
+    <#if !paginateToggleString?has_content>
+      <#local paginateToggleString = "PAGING">
     </#if>
+  </#if>
+  <#if (viewIndexLast > (viewIndex))>
+    <#local viewIndexNext = (viewIndex+1)>
+  <#else>
+    <#local viewIndexNext = viewIndex>
+  </#if>
+  <#if (viewIndex > viewIndexFirst)>
+    <#local viewIndexPrevious = (viewIndex-1)>
+  <#else>
+    <#local viewIndexPrevious = viewIndex>
+  </#if>
 
-    <#local commonUrl = addParamDelimToUrl(url, "&amp;")>
-    <#if paramStr?has_content>
-        <#local commonUrl = commonUrl + trimParamStrDelims(paramStr) + "&amp;">
-    </#if>
-    
-    <#local firstUrl = "">
-    <#if (!firstUrl?has_content)>
-        <#local firstUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexFirst}"/>
-    </#if>
-    <#local previousUrl = "">
-    <#if (!previousUrl?has_content)>
-         <#local previousUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexPrevious}"/>
-    </#if>
-    <#local nextUrl="">
-    <#if (!nextUrl?has_content)>
-        <#local nextUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexNext}"/>
-    </#if>
-    <#local lastUrl="">
-    <#if (!lastUrl?has_content)>
-        <#local lastUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexLast}"/>
-    </#if>
-    <#local selectUrl="">
-    <#if (!selectUrl?has_content)>
-        <#local selectUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}="/>
-    </#if>
-    <#local selectSizeUrl="">
-    <#if (!selectSizeUrl?has_content)>
-        <#local selectSizeUrl=commonUrl+"${viewSizeString}='+this.value+'&amp;${viewIndexString}=${viewIndexFirst}"/>
-    </#if>
+  <#local commonUrl = addParamDelimToUrl(url, "&amp;")>
+  <#if paramStr?has_content>
+    <#local commonUrl = commonUrl + trimParamStrDelims(paramStr) + "&amp;">
+  </#if>
+  
+  <#local firstUrl = "">
+  <#if (!firstUrl?has_content)>
+    <#local firstUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexFirst}"/>
+  </#if>
+  <#local previousUrl = "">
+  <#if (!previousUrl?has_content)>
+    <#local previousUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexPrevious}"/>
+  </#if>
+  <#local nextUrl="">
+  <#if (!nextUrl?has_content)>
+    <#local nextUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexNext}"/>
+  </#if>
+  <#local lastUrl="">
+  <#if (!lastUrl?has_content)>
+    <#local lastUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexLast}"/>
+  </#if>
+  <#local selectUrl="">
+  <#if (!selectUrl?has_content)>
+    <#local selectUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}="/>
+  </#if>
+  <#local selectSizeUrl="">
+  <#if (!selectSizeUrl?has_content)>
+    <#local selectSizeUrl=commonUrl+"${viewSizeString}='+this.value+'&amp;${viewIndexString}=${viewIndexFirst}"/>
+  </#if>
 
-    <#local paginateOnUrl="">
-    <#if (!paginateOnUrl?has_content)>
-        <#local paginateOnUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndex}&amp;${paginateToggleString}=${paginateToggleOnValue}"/>
+  <#local paginateOnUrl="">
+  <#if (!paginateOnUrl?has_content)>
+    <#local paginateOnUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndex}&amp;${paginateToggleString}=${paginateToggleOnValue}"/>
+  </#if>
+  <#local paginateOffUrl="">
+  <#if (!paginateOffUrl?has_content)>
+    <#local paginateOffUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndex}&amp;${paginateToggleString}=${paginateToggleOffValue}"/>
+  </#if>
+  
+  <#if showCount && (!countMsg?has_content)>
+   <#local messageMap = {"lowCount": lowIndex+1, "highCount": highIndex, "total": listSize}>
+   <#local countMsg = Static["org.ofbiz.base.util.UtilProperties"].getMessage("CommonUiLabels", "CommonDisplaying", messageMap, locale)!"">
+  </#if>
+  
+  <#-- TODO: noResultsMode should be delegated to @renderNextPrev... but generally hiding everything for now... -->
+  <#if noResultsMode == "default">
+    <#local noResultsMode = "hide">
+  </#if>
+  <#local showNextPrev = (noResultsMode != "hide") || (listSize > 0)>  
+  
+  <#-- NOTE: javaScriptEnabled is a context var -->
+  <#-- DEV NOTE: make sure all @paginate_core calls same (DO NOT use #local capture; risks duplicate IDs) -->
+  <#if mode == "single">
+    <#if showNextPrev>
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel=uiLabelMap.CommonPagingOff />
     </#if>
-    <#local paginateOffUrl="">
-    <#if (!paginateOffUrl?has_content)>
-        <#local paginateOffUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndex}&amp;${paginateToggleString}=${paginateToggleOffValue}"/>
+  <#else>
+    <#if showNextPrev && layout != "bottom">
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel=uiLabelMap.CommonPagingOff />
     </#if>
-    
-    <#if showCount && (!countMsg?has_content)>
-       <#local messageMap = {"lowCount": lowIndex+1, "highCount": highIndex, "total": listSize}>
-       <#local countMsg = Static["org.ofbiz.base.util.UtilProperties"].getMessage("CommonUiLabels", "CommonDisplaying", messageMap, locale)!"">
+    <#nested>
+    <#if showNextPrev && layout != "top">
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel=uiLabelMap.CommonPagingOff />
     </#if>
-    
-    <#-- TODO: noResultsMode should be delegated to @renderNextPrev... but generally hiding everything for now... -->
-    <#if noResultsMode == "default">
-        <#local noResultsMode = "hide">
-    </#if>
-    <#local showNextPrev = (noResultsMode != "hide") || (listSize > 0)>  
-    
-    <#-- NOTE: javaScriptEnabled is a context var -->
-    <#-- DEV NOTE: make sure all @paginate_core calls same (DO NOT use #local capture; risks duplicate IDs) -->
-    <#if mode == "single">
-        <#if showNextPrev>
-            <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel=uiLabelMap.CommonPagingOff />
-        </#if>
-    <#else>
-        <#if showNextPrev && layout != "bottom">
-            <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel=uiLabelMap.CommonPagingOff />
-        </#if>
-        <#nested>
-        <#if showNextPrev && layout != "top">
-            <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel=uiLabelMap.CommonPagingOff />
-        </#if>
-    </#if>
+  </#if>
 </#macro>
 
 <#-- Core implementation of @paginate. 
@@ -605,15 +587,15 @@ menu item element must override this and provide a proper check.
     paginateToggle  = if true, include a control to toggle pagination on or off
 -->
 <#assign paginate_core_defaultArgs = {
-"paginateClass":"", "paginateFirstClass":"", "viewIndex":1, "highIndex":0, "listSize":0, "viewSize":1, 
-    "ajaxEnabled":false, "javaScriptEnabled":false, "ajaxFirstUrl":"", "firstUrl":"", 
-    "paginateFirstLabel":"", "paginatePreviousClass":"", "ajaxPreviousUrl":"", "previousUrl":"", "paginatePreviousLabel":"", 
-    "pageLabel":"", "ajaxSelectUrl":"", "selectUrl":"", "ajaxSelectSizeUrl":"", "selectSizeUrl":"", "commonDisplaying":"", 
-    "paginateNextClass":"", "ajaxNextUrl":"", "nextUrl":"", "paginateNextLabel":"", "paginateLastClass":"", "ajaxLastUrl":"", 
-    "lastUrl":"", "paginateLastLabel":"", "paginateViewSizeLabel":"", 
-    "paginate":true, "forcePost":false, "viewIndexFirst":0, "listItemsOnly":false, "paginateToggle":false, "ajaxPaginateOnUrl":"", 
-    "paginateOnUrl":"", "paginateOnClass":"", "paginateOnLabel":"", "ajaxPaginateOffUrl":"", "paginateOffUrl":"", "paginateOffClass":"", 
-    "paginateOffLabel":""
+  "paginateClass":"", "paginateFirstClass":"", "viewIndex":1, "highIndex":0, "listSize":0, "viewSize":1, 
+  "ajaxEnabled":false, "javaScriptEnabled":false, "ajaxFirstUrl":"", "firstUrl":"", 
+  "paginateFirstLabel":"", "paginatePreviousClass":"", "ajaxPreviousUrl":"", "previousUrl":"", "paginatePreviousLabel":"", 
+  "pageLabel":"", "ajaxSelectUrl":"", "selectUrl":"", "ajaxSelectSizeUrl":"", "selectSizeUrl":"", "commonDisplaying":"", 
+  "paginateNextClass":"", "ajaxNextUrl":"", "nextUrl":"", "paginateNextLabel":"", "paginateLastClass":"", "ajaxLastUrl":"", 
+  "lastUrl":"", "paginateLastLabel":"", "paginateViewSizeLabel":"", 
+  "paginate":true, "forcePost":false, "viewIndexFirst":0, "listItemsOnly":false, "paginateToggle":false, "ajaxPaginateOnUrl":"", 
+  "paginateOnUrl":"", "paginateOnClass":"", "paginateOnLabel":"", "ajaxPaginateOffUrl":"", "paginateOffUrl":"", "paginateOffClass":"", 
+  "paginateOffLabel":""
 }>
 <#macro paginate_core args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.paginate_core_defaultArgs)>
@@ -629,13 +611,13 @@ menu item element must override this and provide a proper check.
     
     <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
     <#if (!viewSize?is_number)>
-        <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize!, "htmlFormMacroLibraryRenderNextPrev")!><#t>
-        <#local viewSize = viewSize?number>
+      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize!, "htmlFormMacroLibraryRenderNextPrev")!><#t>
+      <#local viewSize = viewSize?number>
     </#if>
     <#local viewSize = viewSize?floor>
     <#if (!viewIndex?is_number)>
-        <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex!, "htmlFormMacroLibraryRenderNextPrev")!><#t>
-        <#local viewIndex = viewIndex?number>
+      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex!, "htmlFormMacroLibraryRenderNextPrev")!><#t>
+      <#local viewIndex = viewIndex?number>
     </#if>
     <#local viewIndex = viewIndex?floor>
     
@@ -644,12 +626,12 @@ menu item element must override this and provide a proper check.
       <#local viewIndexLast = viewIndexFirst>
     </#if>
     <#if (viewIndex < viewIndexFirst) || (viewIndex > viewIndexLast)>
-        <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlFormMacroLibraryRenderNextPrev")!><#t>
-        <#if (viewIndex < viewIndexFirst)>
-            <#local viewIndex = viewIndexFirst>
-        <#else>
-            <#local viewIndex = viewIndexLast>
-        </#if>
+      <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was out of bounds: " + viewIndex, "htmlFormMacroLibraryRenderNextPrev")!><#t>
+      <#if (viewIndex < viewIndexFirst)>
+        <#local viewIndex = viewIndexFirst>
+      <#else>
+        <#local viewIndex = viewIndexLast>
+      </#if>
     </#if>
     <#local multiPage = (listSize > viewSize)>
     

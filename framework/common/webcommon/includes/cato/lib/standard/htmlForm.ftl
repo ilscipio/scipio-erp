@@ -34,14 +34,21 @@ An HTML form element.
     inlineAttribs       = other attributes for HTML <form> element
                           NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
-<#macro form type="input" name="" id="" class="" openOnly=false closeOnly=false nestedOnly=false attribs={} inlineAttribs...>
-  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
+<#assign form_defaultArgs = {
+  "type":"input", "name":"", "id":"", "class":"", "openOnly":false, "closeOnly":false, "nestedOnly":false, 
+  "attribs":{}
+}>
+<#macro form args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.form_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local attribs = makeAttribMapFromArgMap(args)>
+
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
     <#local formInfo = {"type":type, "name":name, "id":id}>
     <#local dummy = pushRequestStack("catoCurrentFormInfo", formInfo)>
-    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "name", "id"]/></#if>>
+    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
@@ -152,7 +159,14 @@ for getFileUploadProgressStatus AJAX calls.
     progressOptions   = convenience parameter; same as passing:
                         progressArgs={"enabled":true, "progressOptions":progressOptions}
 -->
-<#macro progress value=0 id="" type="" class="" showValue=false containerClass="" progressArgs={} progressOptions={}>
+<#assign progress_defaultArgs = {
+  "value":0, "id":"", "type":"", "class":"", "showValue":false, "containerClass":"", "progressArgs":{}, 
+  "progressOptions":{}
+}>
+<#macro progress args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.progress_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+
   <#local progressOptions = progressArgs.progressOptions!progressOptions>
   <#local explicitId = id?has_content>
   <#if !id?has_content>
@@ -225,21 +239,9 @@ IMPL NOTE: this must support legacy ofbiz parameters.
     responseName          = response name
 -->
 <#assign asmSelectScript_defaultArgs = {
-    "enabled" : true,
-    "id" : "",
-    "title" : false,
-    "sortable" : false,
-    "formId" : "",
-    "formName" : "",
-    "asmSelectOptions" : {},
-    "asmSelectDefaults" : true,
-    "relatedFieldId" : "",
-    "relatedTypeName" : "",
-    "relatedTypeFieldId" : "",
-    "paramKey" : "",
-    "requestName" : "",
-    "responseName" : "",
-    "htmlwrap" : true
+  "enabled":true, "id":"", "title":false, "sortable":false, "formId":"", "formName":"",
+  "asmSelectOptions":{}, "asmSelectDefaults":true, "relatedFieldId":"", "relatedTypeName":"",
+  "relatedTypeFieldId":"", "paramKey":"", "requestName":"", "responseName":"", "htmlwrap":true
 }>
 <#macro asmSelectScript args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.asmSelectScript_defaultArgs)>
@@ -314,15 +316,29 @@ A visible fieldset, including the HTML element.
     title           = fieldset-title
     collapsed       = show/hide the fieldset
 -->
-<#macro fieldset id="" title="" class="" containerClass="" collapsed=false openOnly=false closeOnly=false nestedOnly=false>
-    <@fieldset_core class=class containerClass=containerClass id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="" openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly>
-        <#nested />
-    </@fieldset_core>
+<#assign fieldset_defaultArgs = {
+  "id":"", "title":"", "class":"", "containerClass":"", "collapsed":false, "openOnly":false, 
+  "closeOnly":false, "nestedOnly":false
+}>
+<#macro fieldset args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.fieldset_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <@fieldset_core class=class containerClass=containerClass id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="" openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly>
+    <#nested />
+  </@fieldset_core>
 </#macro>
 
 <#-- DEV NOTE: see @section_core for details on pattern 
      migrated from @renderFieldGroupOpen/Close form widget macro -->
-<#macro fieldset_core class="" containerClass="" id="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false openOnly=false closeOnly=false nestedOnly=false>
+
+<#assign fieldset_core_defaultArgs = {
+  "class":"", "containerClass":"", "id":"", "title":"", "collapsed":false, "collapsibleAreaId":"", "expandToolTip":"", "collapseToolTip":"", "collapsible":false, "openOnly":false, 
+  "closeOnly":false, "nestedOnly":false
+}>
+<#macro fieldset_core args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.fieldset_core_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if id?has_content>
@@ -455,7 +471,7 @@ or even multiple per fieldset.
 </#macro>
 
 <#function makeFieldsInfo args={}>
-    <#local args = mergeArgMapsBasic(args, {}, fields_defaultArgs)>
+    <#local args = mergeArgMapsBasic(args, {}, catoStdTmplLib.fields_defaultArgs)>
     <#local dummy = localsPutAll(args)>
     
     <#local stylesType = type?replace("-","_")>

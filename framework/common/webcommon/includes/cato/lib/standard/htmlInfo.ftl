@@ -22,12 +22,17 @@
     label           = set anchor text (required)
     icon            = generates icon inside the link (Note: has to be the full set of classes, e.g. "fa fa-fw fa-info")
 -->
-<#macro modal id label href="" icon="">
-    <a href="#" data-reveal-id="${id}_modal" <#if href?has_content>data-reveal-ajax="${href!}"</#if>><#if icon?has_content><i class="${icon!}"></i> </#if>${label}</a>
-    <div id="${id}_modal" class="${styles.modal_wrap!}" data-reveal>
-        <#nested>
-        <a class="close-reveal-modal">&#215;</a>
-    </div>
+<#assign modal_defaultArgs = {
+  "id":"", "label":"", "href":"", "icon":""
+}>
+<#macro modal args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.modal_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <a href="#" data-reveal-id="${id}_modal" <#if href?has_content>data-reveal-ajax="${href!}"</#if>><#if icon?has_content><i class="${icon!}"></i> </#if>${label}</a>
+  <div id="${id}_modal" class="${styles.modal_wrap!}" data-reveal>
+    <#nested>
+    <a class="close-reveal-modal">&#215;</a>
+  </div>
 </#macro>
 
 <#-- 
@@ -50,7 +55,12 @@ it's an unexpected result, error or one that requires user action. See other mac
                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
 -->
-<#macro alert type="info" class="" id="">
+<#assign alert_defaultArgs = {
+  "type":"info", "class":"", "id":""
+}>
+<#macro alert args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.alert_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
   <#local class = addClassArg(class, styles.grid_cell!"")>
   <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
   <#local typeClass = "alert_type_${type!}"/>
@@ -82,7 +92,12 @@ it's an unexpected result, error or one that requires user action. See other mac
     type           = (callout|) default:empty
     title          = Title
 -->
-<#macro panel type="" title="">
+<#assign panel_defaultArgs = {
+  "type":"", "title":""
+}>
+<#macro panel args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.panel_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
   <div class="${styles.panel_wrap!} ${type}">
     <div class="${styles.panel_head!}"><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
     <div class="${styles.panel_body!}"><p><#nested></p></div>
@@ -104,7 +119,12 @@ Other messages such as for missing params/record IDs are usually errors.
     class       = classes or additional classes for nested container
                   (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
-<#macro resultMsg class="" id="">
+<#assign resultMsg_defaultArgs = {
+  "class":"", "id":""
+}>
+<#macro resultMsg args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.resultMsg_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
   <p<@compiledClassAttribStr class=class defaultVal="result-msg" /><#if id?has_content> id="${id}"</#if>><#nested></p>
 </#macro>
 
@@ -124,7 +144,12 @@ templates: currently @alert.
     class          = classes or additional classes for nested container
                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
-<#macro errorMsg type="error" class="" id="">
+<#assign errorMsg_defaultArgs = {
+  "type":"error", "class":"", "id":""
+}>
+<#macro errorMsg args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.errorMsg_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
   <@alert type="error" class=class id=id><#nested></@alert>
 </#macro>
 

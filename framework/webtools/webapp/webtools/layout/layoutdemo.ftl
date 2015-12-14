@@ -66,7 +66,7 @@
         <@tile size="normal" color=1 title="2" icon="${styles.icon_prefix!}like"></@tile>
     </@grid>
   </@section>
-  <@section title="Simple image gallery with fixed-size tiles" relHeadingLevel=+1>
+  <@section title="Simple thumbnail image gallery with fixed-size tiles" relHeadingLevel=+1>
     <#-- Simple image gallery using tiles -->
     <@grid type="tiles" tilesType="gallery1">
         <@tile image=makeOfbizContentUrl("/images/products/GZ-1000/small.png") link=makeOfbizContentUrl("/images/products/GZ-1000/large.png")>Image 1 - click to view full image</@tile>

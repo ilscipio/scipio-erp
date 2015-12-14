@@ -65,3 +65,9 @@
 <#include "htmlContent.ftl">
 <#include "htmlForm.ftl">
 
+<#-- After everything included, create a copy of the namespace so that macros can access 
+     their global variables without possibility of override (sometimes needed)
+     NOTE: this is only an issue because we use the global/main namespace for everything 
+     NOTE: overriding themes will also make use of this -->
+<#assign catoStdTmplLib = copyObject(.namespace)>
+

@@ -901,6 +901,10 @@ sub-map and blends them together logically to make an attribs map.
 The resulting map will contain the allArgNames and localArgNames members from the args map for easier passing.
 NOTE: this currently does not change the exclude lists (see @mergeArgMaps), but could in the future.
 
+NOTE: The resulting map does not contain only attribs. It may contain a large number of unrelated
+members plus "attribs", "allArgNames", "localArgNames" members. These should be accounted for in the
+allArgNames list, minus the last three members.
+
 See getAttribMapAllExcludes function.
 
   * Parameters *

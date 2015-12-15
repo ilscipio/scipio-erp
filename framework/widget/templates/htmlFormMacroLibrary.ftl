@@ -391,6 +391,7 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#global renderFieldTitleCurrentTitleDetail = "">
   <#global renderFieldTitleCurrentForId = "">
   <#global renderFieldTitleCurrentFieldHelpText = "">
+  <#global renderFieldTitleCurrentAreaStyle = style>
 </#macro>
 <#macro renderFormatFieldRowTitleCellClose collapse=false fieldType="" fieldTitleBlank=false>
   <#global renderFormatFieldRowTitleCellOpened = false>
@@ -430,7 +431,13 @@ not "current" context (too intrusive in current renderer design). still relies o
        fieldEntrySize: ${fieldEntrySize!} gridSize: ${gridSize!} -->
   
   <#local fieldEntryTypeClass = "field-entry-type-" + mapOfbizFieldTypeToStyleName(fieldType)>
-  <#local outerClasses><#if style?has_content>${style}<#else>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#if><#if markLast> ${styles.grid_end!}</#if></#local>
+  <#local outerClassDefault>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#local>
+  <#local outerClass = "">  <#-- can't specify for now -->
+  <#if markLast> 
+    <#local outerClass = addClassArg(outerClass, styles.grid_end!)>
+  </#if>
+  <#-- NOTE: using explicit version for compatibility! -->
+  <#local outerClasses = compileClassArgExplicit(outerClass, outerClassDefault)>
 
   <@cell openOnly=true class=outerClasses />
     <@row openOnly=true class="+form-field-entry ${fieldEntryTypeClass}" />
@@ -447,7 +454,11 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#-- DEV NOTE: field spans were intentionally made to total to 11 instead of 12 as temporary workaround for small-vs-large-sizing-within-columns adaptation problems -->
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
-      <div class="<#if style?has_content>${style}<#else>${styles.grid_small!}3<#if isLarge> ${styles.grid_large!}2</#if></#if> ${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}">
+      <#local titleAreaClass = renderFieldTitleCurrentAreaStyle!>
+      <#local titleAreaClass = addClassArg(titleAreaClass, "${styles.grid_cell!} field-entry-title ${fieldEntryTypeClass}")>
+      <#local titleAreaClassDefault>${styles.grid_small!}3<#if isLarge> ${styles.grid_large!}2</#if></#local>
+      <#-- NOTE: using explicit version for compatibility! -->
+      <div<@compiledClassAttribStrExplicit class=titleAreaClass defaultVal=titleAreaClassDefault />>
         <#-- TODO: currently not making use of:
           renderFieldTitleCurrentFieldHelpText
         -->
@@ -459,13 +470,16 @@ not "current" context (too intrusive in current renderer design). still relies o
           origArgs={} />
       </div>
   </#if>
+  <#local innerClass = style>
+  <#local innerClass = addClassArg(innerClass, "${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}")>
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
   <#if !isActionField>
-      <#local innerClasses><#if style?has_content>${style}<#else>${styles.grid_small!}8<#if isLarge> ${styles.grid_large!}9</#if></#if> ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}</#local>
+      <#local innerClassDefault>${styles.grid_small!}8<#if isLarge> ${styles.grid_large!}9</#if></#local>
   <#else>
-      <#local innerClasses><#if style?has_content>${style}<#else>${styles.grid_small!}12<#if isLarge> ${styles.grid_large!}12</#if></#if> ${styles.grid_end!} field-entry-widget ${fieldEntryTypeClass}</#local>
+      <#local innerClassDefault>${styles.grid_small!}12<#if isLarge> ${styles.grid_large!}12</#if></#local>
   </#if>
-      <@cell openOnly=true class=innerClasses />
+      <#-- NOTE: using explicit version for compatibility! -->
+      <@cell openOnly=true class=compileClassArgExplicit(innerClass, innerClassDefault) />
 </#macro>
 
 <#macro renderFormatFieldRowWidgetCellClose fieldType="" fieldTitleBlank=false>

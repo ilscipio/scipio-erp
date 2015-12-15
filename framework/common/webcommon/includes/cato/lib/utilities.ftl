@@ -760,6 +760,12 @@ TODO: doesn't handle dates (ambiguous?)
 
 <#global objectAsScriptTreatInvalidNonFatal = true>
 
+<#-- compresses all blankspace (space, newline) in a string into single spaces
+    needed for html in javascript strings -->
+<#function compressStringBlankspace str>
+  <#return str?replace(r"[\n\s\r]+", " ", "r")>
+</#function>
+
 
 <#-- 
 *************************************

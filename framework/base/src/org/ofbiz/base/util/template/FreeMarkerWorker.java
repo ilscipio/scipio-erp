@@ -272,19 +272,32 @@ public class FreeMarkerWorker {
      * @param outWriter The Writer to render to
      */
     public static Environment renderTemplate(Template template, Map<String, Object> context, Appendable outWriter) throws TemplateException, IOException {
-        // make sure there is no "null" string in there as FreeMarker will try to use it
-        context.remove("null");
-        // Since the template cache keeps a single instance of a Template that is shared among users,
-        // and since that Template instance is immutable, we need to create an Environment instance and
-        // use it to process the template with the user's settings.
-        //
-        // FIXME: the casting from Appendable to Writer is a temporary fix that could cause a
-        //        run time error if in the future we will pass a different class to the method
-        //        (such as a StringBuffer).
-        Environment env = template.createProcessingEnvironment(context, (Writer) outWriter);
-        applyUserSettings(env, context);
-        env.process();
-        return env;
+        // Cato: 2015-12-15: we want a patch around the processing code to remove our saved copy of
+        // the FTL environment. within this call we know that FTL will store its own environment and make accessible via
+        // Environment.getCurrentEnvironment().
+        // ideally we want at most one of the two to be non-null at any given time.
+        // this method is the best effort we can do to try to enforce that.
+        // @see FreeMarkerWorker#getCurrentEnvironment
+        Environment savedEnv = threadEnv.get();
+        threadEnv.set(null);
+        try {
+            // make sure there is no "null" string in there as FreeMarker will try to use it
+            context.remove("null");
+            // Since the template cache keeps a single instance of a Template that is shared among users,
+            // and since that Template instance is immutable, we need to create an Environment instance and
+            // use it to process the template with the user's settings.
+            //
+            // FIXME: the casting from Appendable to Writer is a temporary fix that could cause a
+            //        run time error if in the future we will pass a different class to the method
+            //        (such as a StringBuffer).
+            Environment env = template.createProcessingEnvironment(context, (Writer) outWriter);
+            applyUserSettings(env, context);
+            env.process();
+            return env;
+        }
+        finally {
+            threadEnv.set(savedEnv);
+        }
     }
 
     /**
@@ -743,13 +756,25 @@ public class FreeMarkerWorker {
      * but Ofbiz macro renderer uses <code>Environment.include</code> to render macros as opposed to 
      * <code>Environment.process</code>, and in those cases the calls return null and inevitable crash.
      * So a patch to the renderer is required so the environment is accessible from macros, and
-     * all transforms must use this method.
+     * all transforms must use this method. This method uses a second local source for Environment.
+     * <p>
+     * <em>2015-12-15</em>: we now give our local source environment priority over the Freemarker source
+     * because of problems rendering nested screens (otherwise may inadvertently return the wrong env).
+     * Really the Freemarker one should have priority, but this order prevents more problems in practice
+     * at current time (there is rarely/never a subscreen call done from the templates included
+     * by #includeTemplate method below).
+     * <p>
+     * On top, an extra fix is added to {@link #renderTemplate(Template, Map, Appendable)} to
+     * try to make it so - as much as possible - at most one of threadEnv OR the Freemarker-saved env
+     * is non-null at any given time. We cannot guarantee this but this should cover most cases in Ofbiz.
+     * 
      * @see #includeTemplate
+     * @see #renderTemplate(Template, Map, Appendable)
      */
     public static Environment getCurrentEnvironment() {
-        Environment env = Environment.getCurrentEnvironment();
+        Environment env = threadEnv.get();
         if (env == null) {
-            env = threadEnv.get();
+            env = Environment.getCurrentEnvironment();
         }
         return env;
     }
@@ -758,6 +783,7 @@ public class FreeMarkerWorker {
      * Cato: Includes the given template with the given environment.
      * <em>All macro renderer template include calls must be wrapped with this method! 
      * See {@link #getCurrentEnvironment}.</em>
+     * 
      * @see #getCurrentEnvironment
      */
     public static void includeTemplate(Template template, Environment env) throws TemplateException, IOException {

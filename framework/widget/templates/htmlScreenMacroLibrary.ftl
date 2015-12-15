@@ -266,19 +266,19 @@ not "current" context (too intrusive in current renderer design). still relies o
         <ul>
           <li>
             <form method="post" action="deletePortalPageColumn" name="delColumn_${columnKey}">
-              ${columnKeyFields}
+              ${columnKeyFields!}
             </form>
             <a class="${styles.link_action!}" href="javascript:document.delColumn_${columnKey}.submit()" title="${delColumnHint}">${delColumnLabel}</a>
           </li>
           <li>
             <form method="post" action="addPortlet" name="addPortlet_${columnKey}">
-              ${columnKeyFields}
+              ${columnKeyFields!}
             </form>
             <a class="${styles.link_action!}" href="javascript:document.addPortlet_${columnKey}.submit()" title="${addPortletHint}">${addPortletLabel}</a>
           </li>
           <li>
             <form method="post" action="editPortalPageColumnWidth" name="setColumnSize_${columnKey}">
-              ${columnKeyFields}
+              ${columnKeyFields!}
             </form>
             <a class="${styles.link_action!}" href="javascript:document.setColumnSize_${columnKey}.submit()" title="${setColumnSizeHint}">${colWidthLabel}: ${width}</a>
           </li>

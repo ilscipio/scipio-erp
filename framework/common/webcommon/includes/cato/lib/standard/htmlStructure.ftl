@@ -25,8 +25,13 @@ to this one.
     attribs/inlineAttribs = other attributes for div; attribs map needed for attribs with dashes in names.
                             NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
-<#macro container class="" openOnly=false closeOnly=false nestedOnly=false attribs={} inlineAttribs...>
-  <#local attribs = mergeAttribMaps(attribs, inlineAttribs)>
+<#assign container_defaultArgs = {
+  "class":"", "openOnly":false, "closeOnly":false, "nestedOnly":false, "attribs":{}
+}>
+<#macro container args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.container_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local attribs = makeAttribMapFromArgMap(args)>
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
@@ -60,7 +65,13 @@ to this one.
     alt             = boolean, if true alternate row (odd), if false regular (even)
     selected        = boolean, if true row is marked selected
 -->
-<#macro row class="" id="" collapse=false norows=false alt="" selected="" openOnly=false closeOnly=false nestedOnly=false>
+<#assign row_defaultArgs = {
+  "class":"", "id":"", "collapse":false, "norows":false, "alt":"", "selected":"", "openOnly":false, "closeOnly":false, 
+  "nestedOnly":false
+}>
+<#macro row args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.row_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
   <#local open = !(nestedOnly || closeOnly || norows)>
   <#local close = !(nestedOnly || openOnly || norows)>
   <#if open>
@@ -80,11 +91,12 @@ to this one.
   </#if>
   <#-- NOTE: we pass openOnly/closeOnly/nestedOnly because otherwise markup has to recalculated it when
        calling some macros. as long as markup macros accep extraArgs... it's not a problem; markup can pick which ones it needs. -->
-  <@row_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class collapse=collapse id=id alt=alt selected=selected><#nested /></@row_markup>
+  <@row_markup origArgs=args open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class 
+    collapse=collapse id=id alt=alt selected=selected><#nested /></@row_markup>
 </#macro>
 
 <#-- @row container markup - theme override -->
-<#macro row_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" collapse=false id="" alt="" selected="" extraArgs...>
+<#macro row_markup origArgs={} open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" collapse=false id="" alt="" selected="" extraArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt/>
   </#if>
@@ -138,7 +150,14 @@ to this one.
     largeOffset     = specific offset for large columns
     last            = boolean, usually optional, if true indicate last cell in row 
 -->
-<#macro cell columns=-1 small=-1 medium=-1 large=-1 offset=-1 smallOffset=-1 mediumOffset=-1 largeOffset=-1 class="" id="" collapse=false nocells=false last=false openOnly=false closeOnly=false nestedOnly=false>
+<#assign cell_defaultArgs = {
+  "columns":-1, "small":-1, "medium":-1, "large":-1, "offset":-1, "smallOffset":-1, "mediumOffset":-1, 
+  "largeOffset":-1, "class":"", "id":"", "collapse":false, "nocells":false, "last":false, "openOnly":false, 
+  "closeOnly":false, "nestedOnly":false
+}>
+<#macro cell args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.cell_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
   <#local open = !(nestedOnly || closeOnly || nocells)>
   <#local close = !(nestedOnly || openOnly || nocells)>
   <#if open>
@@ -171,7 +190,7 @@ to this one.
     <#-- WARN: has no memory when closeOnly... -->
     <#local class = "">
   </#if>
-  <@cell_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id last=last><#nested></@cell_markup>
+  <@cell_markup origArgs=args open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id last=last><#nested></@cell_markup>
   <#if close>
     <#-- pop grid sizes -->
     <#local dummy = unsetCurrentContainerSizes()>
@@ -179,7 +198,7 @@ to this one.
 </#macro>
 
 <#-- @cell container markup - theme override -->
-<#macro cell_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" last=false collapse=false extraArgs...>
+<#macro cell_markup origArgs={} open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" last=false collapse=false extraArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt>
   </#if>
@@ -321,15 +340,15 @@ Since this is very foundation specific, this function may be dropped in future i
       <#local id = "freewall_id_${freewallNum!0}">
     </#if>
     <#local class = addClassArg(class, styles.tile_container!)>
-    <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType><#nested></@grid_tiles_markup_container>
+    <@grid_tiles_markup_container origArgs=args class=class id=id columns=columns tylesType=tylesType><#nested></@grid_tiles_markup_container>
   <#elseif type=="list">
-    <@grid_list_markup_container class=class id=id columns=columns><#nested></@grid_list_markup_container>
+    <@grid_list_markup_container origArgs=args class=class id=id columns=columns><#nested></@grid_list_markup_container>
   </#if>
   <#local dummy = unsetCurrentContainerSizes()>
   <#local dummy = popRequestStack("catoCurrentGridInfo")>
 </#macro>
 
-<#macro grid_tiles_markup_container class="" id="" tylesType="" columns=1 extraArgs...>
+<#macro grid_tiles_markup_container origArgs={} class="" id="" tylesType="" columns=1 extraArgs...>
   <@container class=class id=id>
     <#nested>
   </@container>
@@ -350,7 +369,7 @@ Since this is very foundation specific, this function may be dropped in future i
   </@script>
 </#macro>
 
-<#macro grid_list_markup_container class="" id="" columns=1 extraArgs...>
+<#macro grid_list_markup_container origArgs={} class="" id="" columns=1 extraArgs...>
   <#-- this never takes effect
   <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">-->
   <#if ((columns-2) > 0)>
@@ -513,7 +532,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
 
   <#local class = addClassArgDefault(class, styles[stylePrefix + "_class"]!styles[defaultStylePrefix + "_class"]!"")>
   
-  <@tile_markup class=class id=id dataSizex=dataSizex dataSizey=dataSizey image=image imageClass=imageClass imageBgColorClass=imageBgColorClass 
+  <@tile_markup origArgs=args class=class id=id dataSizex=dataSizex dataSizey=dataSizey image=image imageClass=imageClass imageBgColorClass=imageBgColorClass 
     link=link linkTarget=linkTarget icon=icon 
     overlayClass=overlayClass overlayBgColorClass=overlayBgColorClass title=title titleClass=titleClass titleBgColorClass=titleBgColorClass><#nested></@tile_markup>
 </#macro>
@@ -533,7 +552,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
   </#if>
 </#function>
 
-<#macro tile_markup class="" id="" dataSizex="" dataSizey="" image="" imageClass="" imageBgColorClass="" link="" linkTarget="" icon="" 
+<#macro tile_markup origArgs={} class="" id="" dataSizex="" dataSizey="" image="" imageClass="" imageBgColorClass="" link="" linkTarget="" icon="" 
   overlayClass="" overlayBgColorClass="" title="" titleClass="" titleBgColorClass="" extraArgs...>
   <#-- main markup (TODO: factor out into @tile_markup) -->
   <#-- TODO: need to calc-convert tile x-size to approximate grid sizes and pass in large-medium-small below,
@@ -619,9 +638,16 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     forceEmptyMenu      = if true, always add menu and must be empty
     hasContent          = minor hint, optional, default true, when false, to add classes to indicate content is empty or treat as logically empty (workaround for no css :blank and possibly other)
 -->
-<#macro section type="" id="" title="" class="" padded=false autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" 
-    menuContent="" menuClass="" menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleClass="" 
-    openOnly=false closeOnly=false nestedOnly=false>
+<#assign section_defaultArgs = {
+  "type":"", "id":"", "title":"", "class":"", "padded":false, "autoHeadingLevel":true, "headingLevel":"", 
+  "relHeadingLevel":"", "defaultHeadingLevel":"", "menuContent":"", "menuClass":"", "menuLayout":"", "menuRole":"", 
+  "requireMenu":false, "forceEmptyMenu":false, "hasContent":true, "titleClass":"", "openOnly":false, 
+  "closeOnly":false, "nestedOnly":false
+}>
+<#macro section args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.section_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
@@ -656,9 +682,18 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   * Parameters *     
     fromScreenDef     = hint of whether called from Ofbiz screen renderer/xml (true) or FTL macros (false)
     hasContent        = hint to say there will be content; workaround for not being able to assume that all browsers have the CSS support to check if content present -->
-<#macro section_core id="" title="" class="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuContent="" showMore=true collapsed=false 
-    javaScriptEnabled=true fromScreenDef=false menuClass="" menuId="" menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false hasContent=true titleStyle="" titleContainerStyle="" titleConsumeLevel=true 
-    autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" openOnly=false closeOnly=false nestedOnly=false>
+<#assign section_core_defaultArgs = {
+  "id":"", "title":"", "class":"", "collapsible":false, "saveCollapsed":true, "collapsibleAreaId":"", 
+  "expandToolTip":true, "collapseToolTip":true, "fullUrlString":"", "padded":false, "menuContent":"", 
+  "showMore":true, "collapsed":false, "javaScriptEnabled":true, "fromScreenDef":false, "menuClass":"", "menuId":"", 
+  "menuLayout":"", "menuRole":"", "requireMenu":false, "forceEmptyMenu":false, "hasContent":true, "titleStyle":"", 
+  "titleContainerStyle":"", "titleConsumeLevel":true, "autoHeadingLevel":true, "headingLevel":"", "relHeadingLevel":"", 
+  "defaultHeadingLevel":"", "openOnly":false, "closeOnly":false, "nestedOnly":false
+}>
+<#macro section_core args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.section_core_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
@@ -670,10 +705,10 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   <#-- level logic end -->
   
   <#-- title-style parsing begin -->
-      <#-- titleContainerStyle can be inlined as prefix in titleStyle, separated by ;, as workaround 
-           full string can look like:
-             e.g. titleStyle="div:+containerClass;h4:+titleClass", titleStyle="div;h5"
-                  titleStyle="div;h+1;consumeLevel=true"-->
+    <#-- titleContainerStyle can be inlined as prefix in titleStyle, separated by ;, as workaround 
+        full string can look like:
+          titleStyle="div:+containerClass;h4:+titleClass", titleStyle="div;h5"
+          titleStyle="div;h+1;consumeLevel=true" -->
     <#if titleStyle?has_content>
       <#local titleStyleArgs = getHeadingElemSpecFromStyleStr(titleStyle, titleContainerStyle,
         "h|heading","div|span|p|raw", "div", "widget-screenlet")>
@@ -868,7 +903,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   <#-- render menu + title combo; for now, only need to do at open and then save the markup -->
   <#if open>
     <#if showMore>
-      <#local menuTitleMarkup><@section_markup_menutitle sectionLevel=sLevel headingLevel=hLevel menuLayout=menuLayout 
+      <#local menuTitleMarkup><@section_markup_menutitle origArgs=args sectionLevel=sLevel headingLevel=hLevel menuLayout=menuLayout 
         menuRole=menuRole hasMenu=hasMenu menuMarkup=menuMarkup hasTitle=hasTitle titleMarkup=titleMarkup 
         contentFlagClasses=contentFlagClasses fromScreenDef=fromScreenDef /></#local>
     </#if>
@@ -918,7 +953,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   </#if>
 
   <#-- DEV NOTE: when adding params to this call, remember to update the stack above as well! -->
-  <@section_markup_container open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly 
+  <@section_markup_container origArgs=args open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly 
     sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup class=class innerClass=innerClass
     contentFlagClasses=contentFlagClasses id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId 
     collapsible=collapsible saveCollapsed=saveCollapsed expandToolTip=expandToolTip collapseToolTip=collapseToolTip 
@@ -981,7 +1016,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 </#function>
 
 <#-- @section container markup - theme override -->
-<#macro section_markup_container open=true close=true openOnly=false closeOnly=false nestedOnly=false sectionLevel=1 headingLevel=1 menuTitleContent="" class="" outerClass="" 
+<#macro section_markup_container origArgs={} open=true close=true openOnly=false closeOnly=false nestedOnly=false sectionLevel=1 headingLevel=1 menuTitleContent="" class="" outerClass="" 
     innerClass="" contentFlagClasses="" id="" title="" collapsed=false collapsibleAreaId="" collapsible=false saveCollapsed=true 
     expandToolTip=true collapseToolTip=true padded=false showMore=true fullUrlString=""
     javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false extraArgs...>
@@ -1016,7 +1051,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 </#macro>
 
 <#-- @section menu and title arrangement markup - theme override -->
-<#macro section_markup_menutitle sectionLevel=1 headingLevel=1 menuLayout="" menuRole="" hasMenu=false menuMarkup="" 
+<#macro section_markup_menutitle origArgs={} sectionLevel=1 headingLevel=1 menuLayout="" menuRole="" hasMenu=false menuMarkup="" 
     hasTitle=false titleMarkup="" contentFlagClasses="" fromScreenDef=false extraArgs...>
   <#-- Currently supports only one menu. could have one for each layout (with current macro
        args as post-title), but tons of macro args needed and complicates. -->

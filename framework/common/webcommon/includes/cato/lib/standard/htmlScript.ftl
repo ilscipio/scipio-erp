@@ -23,18 +23,23 @@ IMPL NOTE: Beware of whitespace.
   * Parameters *
     includeDocType      = boolean, default false (included by screen renderer, @renderScreenBegin)
 -->
-<#macro htmlHeadOpen includeDocType=false>
-<#if includeDocType><!DOCTYPE html></#if>
-<#if locale??>
-  <#local docLangAttr = locale.toString()?replace("_", "-")>
-</#if>
-<#local langDir = "ltr">
-<#if docLangAttr?? && "ar.iw"?contains(docLangAttr?substring(0, 2))>
-  <#local langDir = "rtl">
-</#if>
-<#if !docLangAttr?has_content>
-  <#local docLangAttr = "en">
-</#if>
+<#assign htmlHeadOpen_defaultArgs = {
+  "includeDocType":false
+}>
+<#macro htmlHeadOpen args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.htmlHeadOpen_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#if includeDocType><!DOCTYPE html></#if><#lt>
+  <#if locale??>
+    <#local docLangAttr = locale.toString()?replace("_", "-")>
+  </#if>
+  <#local langDir = "ltr">
+  <#if docLangAttr?? && "ar.iw"?contains(docLangAttr?substring(0, 2))>
+    <#local langDir = "rtl">
+  </#if>
+  <#if !docLangAttr?has_content>
+    <#local docLangAttr = "en">
+  </#if>
 <!--[if IE 9]><html class="lt-ie10"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>><![endif]-->
 <html class="no-js"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>>
 <head>

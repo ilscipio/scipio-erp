@@ -90,7 +90,7 @@
   <#else>
     <#local cElem = containerElemType> 
   </#if>
-  <@heading_markup level=level elem=hElem class=class id=id attribs=attribs
+  <@heading_markup origArgs=args level=level elem=hElem class=class id=id attribs=attribs
     containerElem=cElem containerClass=containerClass containerId=containerId><#nested></@heading_markup>
 </#macro>
 
@@ -98,7 +98,7 @@
      This may be overridden by themes to change markup without changing logic.
      Here, elem will contain either the value "h" or a valid html element.
      NOTE: wherever this is overridden, should include "extraArgs..." for compatibility (new args won't break old overrides; remove to identify) -->
-<#macro heading_markup level=1 elem="" class="" id="" attribs={} excludeAttribs=[] containerElem="" containerClass="" containerId="" extraArgs...>
+<#macro heading_markup origArgs={} level=1 elem="" class="" id="" attribs={} excludeAttribs=[] containerElem="" containerClass="" containerId="" extraArgs...>
   <#local elemLevel = level>
   <#if (elemLevel > 6)>
     <#local elemLevel = 6>
@@ -465,7 +465,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     "fixedColumnsLeft" : fixedColumnsLeft,
     "fixedColumnsRight" : fixedColumnsRight
   }>
-  <@table_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly type=type styleName=styleName class=class id=id cellspacing=cellspacing 
+  <@table_markup origArgs=args open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly type=type styleName=styleName class=class id=id cellspacing=cellspacing 
       useResponsive=useResponsive responsiveArgs=responsiveArgs autoAltRows=autoAltRows firstRowAlt=firstRowAlt 
       inheritAltRows=inheritAltRows useFootAltRows=useFootAltRows attribs=attribs>
     <#nested>
@@ -481,7 +481,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 </#macro>
 
 <#-- @table main markup - theme override -->
-<#macro table_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false type="" styleName="" class="" id="" cellspacing="" useResponsive=false responsiveArgs={} 
+<#macro table_markup origArgs={} open=true close=true openOnly=false closeOnly=false nestedOnly=false type="" styleName="" class="" id="" cellspacing="" useResponsive=false responsiveArgs={} 
   autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs={} excludeAttribs=[] extraArgs...>
   <#if open>
     <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>

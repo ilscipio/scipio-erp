@@ -184,7 +184,7 @@ for getFileUploadProgressStatus AJAX calls.
       <#local color=styles.color_success!/>
   </#switch>
 
-  <@progress_markup value=value id=id class=class showValue=showValue containerClass=containerClass color=color />
+  <@progress_markup origArgs=args value=value id=id class=class showValue=showValue containerClass=containerClass color=color />
     
   <#if progressOptions?has_content>
     <#local opts = progressOptions>
@@ -197,7 +197,7 @@ for getFileUploadProgressStatus AJAX calls.
 </#macro>
 
 <#-- @progress main markup - theme override -->
-<#macro progress_markup value=0 id="" class="" showValue=false containerClass="" color="" extraArgs...>
+<#macro progress_markup origArgs={} value=0 id="" class="" showValue=false containerClass="" color="" extraArgs...>
   <#local classes = compileClassArg(class)>
   <#local containerClasses = compileClassArg(containerClass)>
   <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if color?has_content> ${color!}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
@@ -344,11 +344,11 @@ A visible fieldset, including the HTML element.
     <#local containerId = "">
   </#if>
   <#-- TODO: open/close stack -->
-  <@fieldset_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class containerClass=containerClass id=id containerId=containerId title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible><#nested></@fieldset_markup>
+  <@fieldset_markup origArgs=args open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class containerClass=containerClass id=id containerId=containerId title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible><#nested></@fieldset_markup>
 </#macro>
 
 <#-- @fieldset main markup - theme override -->
-<#macro fieldset_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" containerClass="" id="" containerId="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false extraArgs...>
+<#macro fieldset_markup origArgs={} open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" containerClass="" id="" containerId="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false extraArgs...>
   <#if open>
     <#local containerClass = addClassArg(containerClass, "fieldgroup")>
     <#if collapsible || collapsed>
@@ -1282,7 +1282,7 @@ standard markup.
         <#break>        
       <#case "display">
         <#-- TODO? may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 
-             can also partially detect type of value with ?is_, but is not enough... -->
+            can also partially detect type of value with ?is_, but is not enough... -->
         <#if !valueType?has_content || (valueType=="generic")>
           <#local displayType = "text">
         <#else>
@@ -1299,14 +1299,14 @@ standard markup.
           <#local desc = value>
         </#if>
         <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc 
-            title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" 
-            imageAlt=description tooltip=tooltip inlineLabel=effInlineLabel />
+          title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" 
+          imageAlt=description tooltip=tooltip inlineLabel=effInlineLabel />
         <#break> 
       <#default> <#-- "generic", empty or unrecognized -->
         <#if value?has_content>
-            <@field_generic_widget text=value tooltip=tooltip inlineLabel=effInlineLabel/>
+          <@field_generic_widget text=value tooltip=tooltip inlineLabel=effInlineLabel/>
         <#else>
-            <@field_generic_widget tooltip=tooltip inlineLabel=effInlineLabel><#nested /></@field_generic_widget>
+          <@field_generic_widget tooltip=tooltip inlineLabel=effInlineLabel><#nested /></@field_generic_widget>
         </#if>
     </#switch>
   </@field_markup_container>

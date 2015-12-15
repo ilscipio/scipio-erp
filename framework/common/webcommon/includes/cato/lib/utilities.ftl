@@ -995,6 +995,13 @@ compileClassArg should usually be used as late as possible in macro:
 A defaultVal can be set which is the same as doing:
   <#local class = addClassArgDefault(class, "default-class")>
   <#local classes = compileClassArg(class)>
+  
+IMPORTANT:
+Currently in some cases the logic above breaks too much compatibility. So it is not universally used
+for screen/form/menu widgets although often supported.
+For these, in some places an "xxxExplicit" version of functions are used instead which will only
+replace if explicitly prefixed with "=", but not if no prefix. Otherwise, existing widget styles break
+the grid everywhere.
 -->
 
 <#-- Produces a simple list of class names from a class arg, adding optional default 
@@ -1011,11 +1018,31 @@ A defaultVal can be set which is the same as doing:
   </#if>
 </#function>
 
+<#-- version of compileClassArg that will only use defaultVal if it explicitly starts with "="; needed
+    for compatibility in some cases -->
+<#function compileClassArgExplicit class defaultVal="">
+  <#if defaultVal?has_content>
+    <#local class = addClassArgDefaultExplicit(class, defaultVal)>
+  </#if>
+
+  <#if class?starts_with("+") || class?starts_with("=")>
+    <#return class?substring(1)?trim>
+  <#else>
+    <#return class?trim>
+  </#if>
+</#function>
+
 <#-- produces a class string attribute at same time as compiling class arg, with optional default,
      with leading space
     NOTE: default may also be set prior using addClassArgDefault -->
 <#macro compiledClassAttribStr class defaultVal="">
   <#local classes = compileClassArg(class, defaultVal)>
+  <#if classes?has_content> class="${classes}"</#if><#t>
+</#macro>
+
+<#-- explicit version of above -->
+<#macro compiledClassAttribStrExplicit class defaultVal="">
+  <#local classes = compileClassArgExplicit(class, defaultVal)>
   <#if classes?has_content> class="${classes}"</#if><#t>
 </#macro>
 
@@ -1093,6 +1120,21 @@ a replacing string ("=").
   <#if (!class?has_content)>
     <#return "+" + newClass>
   <#elseif class?starts_with("+")>
+    <#return class + " " + newClass>
+  <#else>
+    <#return class> <#-- don't add -->
+  </#if>
+</#function>
+
+<#-- version of addClassArgDefault that will only replace default if it explicitly starts with "="; needed
+    for compatibility in some cases -->
+<#function addClassArgDefaultExplicit class newClass>
+  <#if !newClass?has_content>
+    <#return class>
+  </#if>
+  <#if (!class?has_content)>
+    <#return "+" + newClass>
+  <#elseif class?starts_with("+") || !class?starts_with("=")>
     <#return class + " " + newClass>
   <#else>
     <#return class> <#-- don't add -->

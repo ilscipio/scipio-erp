@@ -19,8 +19,7 @@ under the License.
 <@script src=makeOfbizContentUrl("/images/imagemanagement/sizzle.min.js") />
 <@script>
     <#-- Cato: this breaks everything (?)
-    jQuery.noConflict();
-    -->
+    jQuery.noConflict();-->
 
     var host = document.location.host;
     jQuery(document).ready(function() {

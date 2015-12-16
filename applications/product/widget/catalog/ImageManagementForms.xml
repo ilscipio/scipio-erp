@@ -263,7 +263,7 @@ under the License.
         </field>
     </form>
     
-    <form name="ImageManage" type="single" title="" header-row-style="header-row" default-table-style="${styles.table_basic}" target="ListImageManage"> 
+    <form name="ImageManage" type="single" method="get" title="" header-row-style="header-row" default-table-style="${styles.table_basic}" target="ListImageManage"> 
         <field name="productId" title="${uiLabelMap.ImageManagementChooseProductID}"><lookup target-form-name="LookupProduct"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
@@ -510,7 +510,7 @@ under the License.
         <field name="imageW"><hidden/></field>
         <field name="imageH"><hidden/></field>
         <!-- Cato: widget-area-style here creates an extra div -->
-        <field name="imageCropp" widget-area-style=";div:cropbox" use-when="imageURL != null" title="${uiLabelMap.CommonImage}"><image value="${imageURL}"/></field>
+        <field name="imageCropp" widget-area-style=";container:cropbox" use-when="imageURL != null" title="${uiLabelMap.CommonImage}"><image value="${imageURL}"/></field>
         <field name="imageCropp" use-when="imageURL == null" title="${uiLabelMap.CommonImage}" ><image value="/images/defaultImage.jpg" style="cssImgXLarge"/></field>
     </form>
     
@@ -536,7 +536,7 @@ under the License.
         <field name="angle"><hidden/></field>
         <field name="imageName"><hidden value="${contentDataResource.drDataResourceName}"/></field>
         <!-- Cato: widget-area-style here creates an extra div -->
-        <field name="imageRotate" widget-area-style=";div:cropbox" title="${uiLabelMap.CommonImage}"><image value="${imageURL}" /></field>
+        <field name="imageRotate" widget-area-style=";container:cropbox" title="${uiLabelMap.CommonImage}"><image value="${imageURL}" /></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}" position="1"><submit button-type="button"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="ListImageManage" description="${uiLabelMap.CommonCancel}">
@@ -677,7 +677,7 @@ under the License.
         </field>
     </form>
     
-    <form name="ProductImageReplace" type="single" title="" header-row-style="header-row" default-table-style="${styles.table_basic}" target="ListImageReplace"> 
+    <form name="ProductImageReplace" type="single" method="get" title="" header-row-style="header-row" default-table-style="${styles.table_basic}" target="ListImageReplace"> 
         <field name="productId" title="${uiLabelMap.ImageManagementChooseProductID}"><lookup target-form-name="LookupProduct"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>

@@ -18,7 +18,8 @@ under the License.
 -->
 <@script src=makeOfbizContentUrl("/images/imagemanagement/sizzle.min.js") />
 <@script>
-jQuery.noConflict();
+<#-- Cato: this breaks everything (?)
+jQuery.noConflict();-->
 jQuery(document).ready(function(){
     jQuery('input:radio').click(function(){
         var elementVal = jQuery(this).val();

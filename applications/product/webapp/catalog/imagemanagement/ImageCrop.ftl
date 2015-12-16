@@ -18,6 +18,7 @@ under the License.
 -->
 <@script src=makeOfbizContentUrl("/images/imagemanagement/sizzle.min.js") />
 <@script src=makeOfbizContentUrl("/images/imagemanagement/jquery.Jcrop.min.js") />
+<#-- FIXME: probably don't want this css here (not sure how to manage js files above) -->
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/imagemanagement/jquery.Jcrop.css</@ofbizContentUrl>" type="text/css" />
 <@script>
 <#-- Cato: this breaks everything (?)

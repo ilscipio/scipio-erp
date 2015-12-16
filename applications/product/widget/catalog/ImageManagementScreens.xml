@@ -383,6 +383,7 @@ under the License.
     <screen name="ImageManage">
         <section>
             <actions>
+                <set field="productId" from-field="parameters.productId"/>
                 <set field="userTabButtonImage" value="ImageManage"/>
             </actions>
             <widgets>
@@ -483,6 +484,7 @@ under the License.
     <screen name="ImageFrames">
         <section>
             <actions>
+                <set field="productId" from-field="parameters.productId"/>
                 <set field="userTabButtonImage" value="ImageManage"/>
                 <set field="currentFormName" value="ImageFrames"/>
                 <set field="statusForm" value="IM_PENDING"/>
@@ -515,6 +517,7 @@ under the License.
     <screen name="ImageWatermarking">
         <section>
             <actions>
+                <set field="productId" from-field="parameters.productId"/>
                 <set field="userTabButtonImage" value="ImageManage"/>
                 <set field="currentFormName" value="ImageWatermarking"/>
                 <set field="statusForm" value="IM_PENDING"/>
@@ -553,6 +556,7 @@ under the License.
     <screen name="ImageCropping">
         <section>
             <actions>
+                <set field="productId" from-field="parameters.productId"/>
                 <set field="userTabButtonImage" value="ImageManage"/>
                 <set field="currentFormName" value="ImageCropping"/>
                 <set field="statusForm" value="IM_PENDING"/>
@@ -585,6 +589,7 @@ under the License.
      <screen name="ImageRotating">
         <section>
             <actions>
+                <set field="productId" from-field="parameters.productId"/>
                 <set field="userTabButtonImage" value="ImageManage"/>
                 <set field="currentFormName" value="ImageRotating"/>
                 <set field="statusForm" value="IM_PENDING"/>
@@ -620,6 +625,7 @@ under the License.
     <screen name="ImageShare">
         <section>
             <actions>
+                <set field="productId" from-field="parameters.productId"/>
                 <set field="userTabButtonImage" value="ImageGallery"/>
                 <set field="currentFormName" value="ImageShare"/>
                 <property-map resource="ProductUiLabels" map-name="uiLabelMap" global="true"/>
@@ -646,6 +652,7 @@ under the License.
     <screen name="ImageReplace">
         <section>
             <actions>
+                <set field="productId" from-field="parameters.productId"/>
                 <set field="userTabButtonImage" value="ImageReplace"/>
             </actions>
             <widgets>

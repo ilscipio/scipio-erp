@@ -29,7 +29,8 @@ under the License.
     }
 </style>
 <@script>
-jQuery.noConflict();
+<#-- Cato: this breaks everything (?)
+jQuery.noConflict();-->
 jQuery(document).ready(function(){
     var angleHold = 0;
     if((jQuery.browser.mozilla) || (jQuery.browser.msie)) {

@@ -19,11 +19,11 @@ under the License.
 <@script src=makeOfbizContentUrl("/images/imagemanagement/sizzle.min.js") />
 <@script src=makeOfbizContentUrl("/images/imagemanagement/jQueryRotateCompressed.js") />
 <style type="text/css">
-    td.cropbox span { 
+    .cropbox span { 
         width: auto !important; 
         height: auto !important; 
     }
-    td.cropbox span canvas{ 
+    .cropbox span canvas{ 
         top : 10px !important;
         left : 10px !important;
     }
@@ -33,7 +33,7 @@ jQuery.noConflict();
 jQuery(document).ready(function(){
     var angleHold = 0;
     if((jQuery.browser.mozilla) || (jQuery.browser.msie)) {
-        var rot = jQuery('td.cropbox img').rotate(angleHold);
+        var rot = jQuery('.cropbox img').rotate(angleHold);
         jQuery('#rotate-left').click(function(){
             angleHold = angleHold - 45;
             rot[0].rotate(angleHold);
@@ -45,7 +45,7 @@ jQuery(document).ready(function(){
             jQuery('#ImageRotating_angle').val(angleHold);
         });
     } else {
-        var rot = jQuery('td.cropbox img');
+        var rot = jQuery('.cropbox img');
             jQuery('#rotate-left').click(function(){
             angleHold = angleHold - 45;
             rot.rotate(angleHold);

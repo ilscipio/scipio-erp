@@ -18,7 +18,9 @@ under the License.
 -->
 <@script src=makeOfbizContentUrl("/images/imagemanagement/sizzle.min.js") />
 <@script>
-jQuery.noConflict();
+<#-- Cato: this breaks everything (?)
+jQuery.noConflict();-->
+
 jQuery(document).ready(function(){
     jQuery('img').attr('id',"previewImage");
     

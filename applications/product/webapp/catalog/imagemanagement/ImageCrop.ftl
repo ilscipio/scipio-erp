@@ -20,26 +20,50 @@ under the License.
 <@script src=makeOfbizContentUrl("/images/imagemanagement/jquery.Jcrop.min.js") />
 <link rel="stylesheet" href="<@ofbizContentUrl>/images/imagemanagement/jquery.Jcrop.css</@ofbizContentUrl>" type="text/css" />
 <@script>
-jQuery.noConflict();
+<#-- Cato: this breaks everything (?)
+jQuery.noConflict();-->
+
+var imgWidth = null;
+var imgHeight = null;
+var imageUrl = null;
+var imageName = null;
+var productId = null;
+
 jQuery(document).ready(function(){
-    jQuery('td.cropbox img').Jcrop({
+
+    imgWidth = jQuery('.cropbox img').width();
+    imgHeight = jQuery('.cropbox img').height();
+    imageUrl = jQuery('#ImageCropping_imageURL').val();
+    imageName = jQuery('#ImageCropping_imageName').val();
+    productId = jQuery('#ImageCropping_productId').val();
+    
+    if (imageName) {
+        <#assign jsHtmlString>
+          '<@field type="generic" label="${uiLabelMap.CommonPreview}">
+            <div> <#-- extra div required, do not remove unless having alternate fix -->
+              <div style="width:100px; height:100px; overflow:hidden;">
+                <img src="' + imageUrl + '" id="preview" />
+              </div>
+            </div>
+          </@field>'
+        </#assign>
+        jQuery('#ImageCropping .crop-fields').append(${compressStringBlankspace(jsHtmlString)});
+        
+        <#assign jsHtmlString>
+          '<@field type="submitarea">
+            <@field type="submit" text="${uiLabelMap.CommonSubmit}" name="submitButton"/> 
+            <a class="${styles.link_action!}" title=" " href="/catalog/control/ListImageManage?productId=' + productId + '">${uiLabelMap.CommonCancel}</a>
+          </@field>'
+        </#assign>
+        jQuery('#ImageCropping .crop-fields').append(${compressStringBlankspace(jsHtmlString)});
+    }
+
+    jQuery('.cropbox img').Jcrop({
         onChange: showPreview,
         onSelect: showPreview
     });
+    
 });
-
-var imgWidth = jQuery('td.cropbox img').width();
-var imgHeight = jQuery('td.cropbox img').height();
-var imageUrl = jQuery('#ImageCropping_imageURL').val();
-var imageName = jQuery('#ImageCropping_imageName').val();
-var productId = jQuery('#ImageCropping_productId').val();
-
-if (imageName != "") {
-    <#-- FIXME: bypasses table macro... find another way -->
-    jQuery('#ImageCropping tr').append("<td class='label'>${uiLabelMap.CommonPreview}</td><td><div style='width:100px;height:100px;overflow:hidden;'><img src='"+imageUrl+"' id='preview' /></div></td>");
-    jQuery('#ImageCropping tbody').append("<tr><td><input type='submit' value='${uiLabelMap.CommonSubmit}' name='submitButton' class='${styles.link_action!}'/></td></tr>");
-    jQuery('#ImageCropping tbody').append("<tr><td><a class="${styles.link_action!}" title=' ' href='/catalog/control/ListImageManage?productId="+productId+"'>${uiLabelMap.CommonCancel}</a></td></tr>");
-}
 
 function showPreview(coords){
     jQuery('#ImageCropping_imageX').val(coords.x);
@@ -60,3 +84,30 @@ function showPreview(coords){
     }
 }
 </@script>
+
+<#-- Cato: custom form based on component://applications/product/widget/catalog/ImageManagementForms.xml#ImageCropping -->
+<@form id="ImageCropping" name="ImageCropping" action=makeOfbizUrl("CropImage")
+  method="post" onsubmit="javascript:submitFormDisableSubmits(this);"> 
+  <input id="ImageCropping_productId" type="hidden" name="productId" value="${parameters.productId!}" />
+  <input id="ImageCropping_imageName" type="hidden" name="imageName" value="${(contentDataResource.drDataResourceName)!}" />
+  
+  <input id="ImageCropping_imageURL" type="hidden" name="imageURL" value="${imageURL!}" />
+  <input id="ImageCropping_imageX" type="hidden" name="imageX" value="" />
+  <input id="ImageCropping_imageY" type="hidden" name="imageY" value="" />
+  <input id="ImageCropping_imageW" type="hidden" name="imageW" value="" />
+  <input id="ImageCropping_imageH" type="hidden" name="imageH" value="" />
+  
+  <@container class="crop-fields">
+
+    <@field type="generic" name="imageCropp" label="${uiLabelMap.CommonImage}">
+      <@container class="cropbox">
+        <img src="<@ofbizContentUrl><#if imageURL?has_content>${imageURL!}<#else>/images/defaultImage.jpg</#if></@ofbizContentUrl>" 
+          alt="${uiLabelMap.CommonImage}" title="${uiLabelMap.CommonImage}"<#if !imageURL?has_content> class="cssImgXLarge"</#if> />
+      </@container>
+    </@field>
+
+    <#-- (others added by JS) -->
+
+  </@container>
+</@form>
+

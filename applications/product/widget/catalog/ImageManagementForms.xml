@@ -494,6 +494,7 @@ under the License.
         </field>
     </form>
     
+    <!-- Cato: Deprecated: replaced by HTML form in component://applications/product/webapp/catalog/imagemanagement/ImageCrop.ftl -->
     <form name="ImageCropping" type="single" title="" header-row-style="header-row" default-table-style="${styles.table_basic}" target="CropImage"> 
         <actions>
             <entity-one entity-name="ContentDataResourceView" value-field="contentDataResource">
@@ -509,7 +510,7 @@ under the License.
         <field name="imageY"><hidden/></field>
         <field name="imageW"><hidden/></field>
         <field name="imageH"><hidden/></field>
-        <field name="imageCropp" widget-area-style="cropbox" use-when="imageURL != null" title="${uiLabelMap.CommonImage}" ><image value="${imageURL}"/></field>
+        <field name="imageCropp" widget-area-style="cropbox" use-when="imageURL != null" title="${uiLabelMap.CommonImage}"><image value="${imageURL}"/></field>
         <field name="imageCropp" use-when="imageURL == null" title="${uiLabelMap.CommonImage}" ><image value="/images/defaultImage.jpg" style="cssImgXLarge"/></field>
     </form>
     

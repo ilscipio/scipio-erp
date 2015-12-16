@@ -556,6 +556,13 @@ under the License.
                 <set field="userTabButtonImage" value="ImageManage"/>
                 <set field="currentFormName" value="ImageCropping"/>
                 <set field="statusForm" value="IM_PENDING"/>
+                
+                <!-- Cato: this lookup was in form widget previously -->
+                <entity-one entity-name="ContentDataResourceView" value-field="contentDataResource">
+                  <field-map field-name="contentId" from-field="parameters.contentId"/>
+                  <field-map field-name="drDataResourceId" from-field="parameters.dataResourceId"/>
+                </entity-one>
+                <set field="imageURL" from-field="contentDataResource.drObjectInfo"/>
             </actions>
             <widgets>
                 <decorator-screen name="ImageManagementDecorator" location="${parameters.mainDecoratorLocation}">
@@ -566,7 +573,8 @@ under the License.
                             </condition>
                             <widgets>
                                 <screenlet title="${uiLabelMap.ImageManagementImageCropping}">
-                                    <include-form name="ImageCropping" location="component://product/widget/catalog/ImageManagementForms.xml"/>
+                                    <!-- Cato: use HTML form instead: 
+                                    <include-form name="ImageCropping" location="component://product/widget/catalog/ImageManagementForms.xml"/>-->
                                     <platform-specific>
                                         <html><html-template location="component://product/webapp/catalog/imagemanagement/ImageCrop.ftl"/></html>
                                     </platform-specific>

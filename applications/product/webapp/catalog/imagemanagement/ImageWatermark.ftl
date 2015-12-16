@@ -18,52 +18,55 @@ under the License.
 -->
 <@script src=makeOfbizContentUrl("/images/imagemanagement/sizzle.min.js") />
 <@script>
+    <#-- Cato: this breaks everything (?)
     jQuery.noConflict();
+    -->
+
     var host = document.location.host;
     jQuery(document).ready(function() {
         var productId = jQuery('#ImageWatermarking_productId').val();
         var imageName = jQuery('#ImageWatermarking_imageName').val();
 
-       jQuery('td.img-src img').click(function(e) {
+       jQuery('.img-src img').click(function(e) {
            var previewCount = jQuery('#ImageWatermarking_previewCount').val();
            var next = parseInt(previewCount) + 1;
-           imgOffset = jQuery('td.img-src img').offset();
+           imgOffset = jQuery('.img-src img').offset();
            var pointX = parseInt(e.pageX - imgOffset.left);
            var pointY = parseInt(e.pageY - imgOffset.top);
            jQuery('#ImageWatermarking_positionX').attr('value', pointX);
            jQuery('#ImageWatermarking_positionY').attr('value', pointY);
            getPreviewImage(next);
        });
-       jQuery('td.preview a').click(function() {
+       jQuery('.preview a').click(function() {
            var previewCount = jQuery('#ImageWatermarking_previewCount').val();
            var next = parseInt(previewCount) + 1;
            getPreviewImage(next);
        });
-       jQuery('td.txt_color select').change(function() {
+       jQuery('.txt_color select').change(function() {
            var previewCount = jQuery('#ImageWatermarking_previewCount').val();
            var next = parseInt(previewCount) + 1;
            getPreviewImage(next);
        });
-       jQuery('td.txt_size select').change(function() {
+       jQuery('.txt_size select').change(function() {
            var previewCount = jQuery('#ImageWatermarking_previewCount').val();
            var next = parseInt(previewCount) + 1;
            getPreviewImage(next);
        });
-       jQuery('td.opacity select').change(function() {
+       jQuery('.opacity select').change(function() {
            var previewCount = jQuery('#ImageWatermarking_previewCount').val();
            var next = parseInt(previewCount) + 1;
            getPreviewImage(next);
        });
-       jQuery('td.img-src img').ajaxStart(function() {
+       jQuery('.img-src img').ajaxStart(function() {
             jQuery(this).attr('style', 'opacity:0.6;filter:alpha(opacity=40)');
        });
-       jQuery('td.img-src img').load(function() {
+       jQuery('.img-src img').load(function() {
             jQuery(this).attr('style', 'opacity:1.0;filter:alpha(opacity=100)');
        });
     });
     jQuery(window).load(function() {
-       var width = jQuery('td.img-src img').width();
-       var height = jQuery('td.img-src img').height();
+       var width = jQuery('.img-src img').width();
+       var height = jQuery('.img-src img').height();
        jQuery('#ImageWatermarking_width').attr('value', width);
        jQuery('#ImageWatermarking_height').attr('value', height);
     });
@@ -77,16 +80,16 @@ under the License.
        var positionY = jQuery('#ImageWatermarking_positionY').val();
        var pointX = parseFloat(positionX / width);
        var pointY = parseFloat(positionY / height);
-       var text = jQuery('td.watermark_txt input').val();
-       var opacity = jQuery('td.opacity select').val();
-       var fontColor = jQuery('td.txt_color select').val();
-       var fontSize = jQuery('td.txt_size select').val();
+       var text = jQuery('.watermark_txt input').val();
+       var opacity = jQuery('.opacity select').val();
+       var fontColor = jQuery('.txt_color select').val();
+       var fontSize = jQuery('.txt_size select').val();
        var previewCount = jQuery('#ImageWatermarking_previewCount').val();
        var imageData = {productId : productId, imageName : imageName, text : text, opacity : opacity, x : pointX, y : pointY, 
                            width : width, count : previewCount, fontColor : fontColor, fontSize : fontSize};
        jQuery.post("setPreviewWaterMark", imageData, function() {
            var path = imageServerUrl + "/preview/" + "/previewImage" + next + ".jpg";
-           jQuery('td.img-src img').attr('src', path);
+           jQuery('.img-src img').attr('src', path);
            jQuery('#ImageWatermarking_previewCount').attr('value', next);
        });
     }

@@ -813,6 +813,11 @@
 </@section>
 
 
-
+<#-- NOTE: keep last -->
+<hr />
+<#-- put this in a @section; it provides extra test for the request-scope section/title levels -->
+<@section title="Ofbiz Widgets Layout Tests"> 
+  ${screens.render(ofbizWidgetsLayoutScreenLocation)}
+</@section>
 
 

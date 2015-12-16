@@ -711,7 +711,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
           titleStyle="div;h+1;consumeLevel=true" -->
     <#if titleStyle?has_content>
       <#local titleStyleArgs = getHeadingElemSpecFromStyleStr(titleStyle, titleContainerStyle,
-        "h|heading","div|span|p|raw", "div", "widget-screenlet")>
+        "h|heading","container|div|span|p|raw", "container|div", "widget-screenlet")>
   
       <#-- overrides (so style from screen affects heading calc and consume) -->
       <#if titleStyleArgs.level?has_content>

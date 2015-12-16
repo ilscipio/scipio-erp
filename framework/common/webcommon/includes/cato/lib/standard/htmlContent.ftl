@@ -78,6 +78,8 @@
     </#if>
   <#elseif elemType == "heading" || elemType == "h">
     <#local hElem = "h">
+  <#elseif elemType == "container">
+    <#local hElem = "div">    
   <#elseif elemType == "raw" || !elemType?has_content>
     <#local hElem = "">
   <#else>
@@ -85,6 +87,8 @@
   </#if>
   <#if containerElemType?is_boolean>
     <#local cElem = "">
+  <#elseif containerElemType == "container">
+    <#local cElem = "div">
   <#elseif containerElemType == "raw" || !containerElemType?has_content>
     <#local cElem = "">
   <#else>

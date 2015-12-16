@@ -30,7 +30,7 @@ Cato: Common HTML macro library code
     <#if style?has_content>
       <#-- Cato: can pass class and consumeLevel this way: "h2:class;consumeLevel=true" -->
       <#-- don't specify allowedElemTypes because we go through them ourselves below, redundant -->
-      <#local headingArgs = getHeadingElemSpecFromStyleStr(style, "", "h|heading", true, "div", "widget-label")>
+      <#local headingArgs = getHeadingElemSpecFromStyleStr(style, "", "h|heading", true, "container|div", "widget-label")>
       <#local elemType = headingArgs.elemType> <#-- don't translate for macro; not passed; just for us -->
       <#local class = translateStyleStrClassesArg(headingArgs.elemClass!"")!"">
       <#if headingArgs.isHeadingElem>
@@ -38,6 +38,8 @@ Cato: Common HTML macro library code
             class=class id=id consumeLevel=translateStyleStrBoolArg(headingArgs.consumeLevel!"")!""
             containerElemType=translateStyleStrClassesArg(headingArgs.containerElemType!"")!false
             containerClass=translateStyleStrClassesArg(headingArgs.containerElemClass!"")!"">${text}</@heading>
+      <#elseif elemType=="container">
+        <div${idText}<#if class?is_string && class?has_content> class="${class}"</#if>>${text}</div>
       <#elseif elemType=="p">
         <p${idText}<#if class?is_string && class?has_content> class="${class}"</#if>>${text}</p>
       <#elseif elemType=="span">

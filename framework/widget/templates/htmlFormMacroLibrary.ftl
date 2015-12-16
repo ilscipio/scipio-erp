@@ -431,7 +431,7 @@ not "current" context (too intrusive in current renderer design). still relies o
        fieldEntrySize: ${fieldEntrySize!} gridSize: ${gridSize!} -->
   
   <#-- Cato: widget-area-style now supports a more complex syntax similar to @heading, mainly to be able to add extra containers 
-      e.g. widget-area-style="area-class;div:sub-div-class" -->
+      e.g. widget-area-style="area-class;container:sub-div-class" -->
   <#local styleParts = style?split(";")>
   <#local extraContainerStyles = []>
   <#if (styleParts?size > 1)>
@@ -493,8 +493,12 @@ not "current" context (too intrusive in current renderer design). still relies o
         <#if extraContainerStyles?has_content>
           <#list extraContainerStyles as containerEntry>
             <#local parts = containerEntry?trim?split(":")>
-            <#if parts[0]?trim?has_content>
-              <${parts[0]?trim}<#if (parts?size > 1) && parts[1]?trim?has_content> class="${parts[1]?trim}"</#if>>
+            <#local elem = parts[0]?trim>
+            <#if elem?has_content>
+              <#if elem == "container">
+                <#local elem = "div">
+              </#if>
+              <${elem}<#if (parts?size > 1) && parts[1]?trim?has_content> class="${parts[1]?trim}"</#if>>
             </#if>
           </#list>
         </#if>
@@ -504,8 +508,12 @@ not "current" context (too intrusive in current renderer design). still relies o
         <#if renderFormatFieldRowWidgetCellExtraContainerStyles?has_content>
           <#list renderFormatFieldRowWidgetCellExtraContainerStyles?reverse as containerEntry>
             <#local parts = containerEntry?trim?split(":")>
-            <#if parts[0]?trim?has_content>
-              </${parts[0]?trim}>
+            <#local elem = parts[0]?trim>
+            <#if elem?has_content>
+              <#if elem == "container">
+                <#local elem = "div">
+              </#if>
+              </${elem}>
             </#if>
           </#list>
         </#if>

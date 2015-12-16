@@ -47,7 +47,7 @@ jQuery(document).ready(function(){
             </div>
           </@field>'
         </#assign>
-        jQuery('#ImageCropping .crop-fields').append(${compressStringBlankspace(jsHtmlString)});
+        jQuery('#ImageCropping').append(${compressStringBlankspace(jsHtmlString)});
         
         <#assign jsHtmlString>
           '<@field type="submitarea">
@@ -55,7 +55,7 @@ jQuery(document).ready(function(){
             <a class="${styles.link_action!}" title=" " href="/catalog/control/ListImageManage?productId=' + productId + '">${uiLabelMap.CommonCancel}</a>
           </@field>'
         </#assign>
-        jQuery('#ImageCropping .crop-fields').append(${compressStringBlankspace(jsHtmlString)});
+        jQuery('#ImageCropping').append(${compressStringBlankspace(jsHtmlString)});
     }
 
     jQuery('.cropbox img').Jcrop({
@@ -85,7 +85,8 @@ function showPreview(coords){
 }
 </@script>
 
-<#-- Cato: custom form based on component://applications/product/widget/catalog/ImageManagementForms.xml#ImageCropping -->
+<#-- Cato: custom form based on component://applications/product/widget/catalog/ImageManagementForms.xml#ImageCropping
+     re-enabled the form widget temporarily instead
 <@form id="ImageCropping" name="ImageCropping" action=makeOfbizUrl("CropImage")
   method="post" onsubmit="javascript:submitFormDisableSubmits(this);"> 
   <input id="ImageCropping_productId" type="hidden" name="productId" value="${parameters.productId!}" />
@@ -106,8 +107,6 @@ function showPreview(coords){
       </@container>
     </@field>
 
-    <#-- (others added by JS) -->
-
   </@container>
 </@form>
-
+-->

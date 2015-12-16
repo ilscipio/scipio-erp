@@ -494,7 +494,6 @@ under the License.
         </field>
     </form>
     
-    <!-- Cato: Deprecated: replaced by HTML form in component://applications/product/webapp/catalog/imagemanagement/ImageCrop.ftl -->
     <form name="ImageCropping" type="single" title="" header-row-style="header-row" default-table-style="${styles.table_basic}" target="CropImage"> 
         <actions>
             <entity-one entity-name="ContentDataResourceView" value-field="contentDataResource">
@@ -510,7 +509,8 @@ under the License.
         <field name="imageY"><hidden/></field>
         <field name="imageW"><hidden/></field>
         <field name="imageH"><hidden/></field>
-        <field name="imageCropp" widget-area-style="cropbox" use-when="imageURL != null" title="${uiLabelMap.CommonImage}"><image value="${imageURL}"/></field>
+        <!-- Cato: widget-area-style here creates an extra div -->
+        <field name="imageCropp" widget-area-style=";div:cropbox" use-when="imageURL != null" title="${uiLabelMap.CommonImage}"><image value="${imageURL}"/></field>
         <field name="imageCropp" use-when="imageURL == null" title="${uiLabelMap.CommonImage}" ><image value="/images/defaultImage.jpg" style="cssImgXLarge"/></field>
     </form>
     
@@ -535,7 +535,8 @@ under the License.
         <field name="dataResourceId"><hidden/></field>
         <field name="angle"><hidden/></field>
         <field name="imageName"><hidden value="${contentDataResource.drDataResourceName}"/></field>
-        <field name="imageRotate" widget-area-style="cropbox" title="${uiLabelMap.CommonImage}"><image value="${imageURL}" /></field>
+        <!-- Cato: widget-area-style here creates an extra div -->
+        <field name="imageRotate" widget-area-style=";div:cropbox" title="${uiLabelMap.CommonImage}"><image value="${imageURL}" /></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}" position="1"><submit button-type="button"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="ListImageManage" description="${uiLabelMap.CommonCancel}">

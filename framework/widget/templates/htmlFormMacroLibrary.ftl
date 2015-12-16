@@ -430,6 +430,16 @@ not "current" context (too intrusive in current renderer design). still relies o
        renderFormatFieldRow_gridUsed: ${renderFormatFieldRow_gridUsed}
        fieldEntrySize: ${fieldEntrySize!} gridSize: ${gridSize!} -->
   
+  <#-- Cato: widget-area-style now supports a more complex syntax similar to @heading, mainly to be able to add extra containers 
+      e.g. widget-area-style="area-class;div:sub-div-class" -->
+  <#local styleParts = style?split(";")>
+  <#local extraContainerStyles = []>
+  <#if (styleParts?size > 1)>
+    <#local extraContainerStyles = styleParts[1..]>
+    <#local style = styleParts[0]>
+  </#if>
+  <#global renderFormatFieldRowWidgetCellExtraContainerStyles = extraContainerStyles>
+  
   <#local fieldEntryTypeClass = "field-entry-type-" + mapOfbizFieldTypeToStyleName(fieldType)>
   <#local outerClassDefault>${styles.grid_large!}${fieldEntrySize}<#if (fieldEntryOffset > 0)> ${styles.grid_large_offset!}${fieldEntryOffset}</#if></#local>
   <#local outerClass = "">  <#-- can't specify for now -->
@@ -480,9 +490,25 @@ not "current" context (too intrusive in current renderer design). still relies o
   </#if>
       <#-- NOTE: using explicit version for compatibility! -->
       <@cell openOnly=true class=compileClassArgExplicit(innerClass, innerClassDefault) />
+        <#if extraContainerStyles?has_content>
+          <#list extraContainerStyles as containerEntry>
+            <#local parts = containerEntry?trim?split(":")>
+            <#if parts[0]?trim?has_content>
+              <${parts[0]?trim}<#if (parts?size > 1) && parts[1]?trim?has_content> class="${parts[1]?trim}"</#if>>
+            </#if>
+          </#list>
+        </#if>
 </#macro>
 
 <#macro renderFormatFieldRowWidgetCellClose fieldType="" fieldTitleBlank=false>
+        <#if renderFormatFieldRowWidgetCellExtraContainerStyles?has_content>
+          <#list renderFormatFieldRowWidgetCellExtraContainerStyles?reverse as containerEntry>
+            <#local parts = containerEntry?trim?split(":")>
+            <#if parts[0]?trim?has_content>
+              </${parts[0]?trim}>
+            </#if>
+          </#list>
+        </#if>
       <@cell closeOnly=true />
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
     <@row closeOnly=true />

@@ -47,13 +47,13 @@ An HTML form element.
   <#local close = !(nestedOnly || openOnly)>
   <#if open>
     <#local formInfo = {"type":type, "name":name, "id":id}>
-    <#local dummy = pushRequestStack("catoCurrentFormInfo", formInfo)>
+    <#local dummy = pushRequestStack("catoFormInfoStack", formInfo)>
   </#if>
-  <#-- WARN: currently no stack memory for closeOnly=true -->
+  <#-- FIXME: currently no stack memory for closeOnly=true -->
   <@form_markup type=type name=name id=id class=class open=open close=close openOnly=openOnly closeOnly=closeOnly 
     nestedOnly=nestedOnly attribs=attribs origArgs=origArgs><#nested></@form_markup>
   <#if close>
-    <#local dummy = popRequestStack("catoCurrentFormInfo")>
+    <#local dummy = popRequestStack("catoFormInfoStack")>
   </#if>
 </#macro>
 
@@ -475,9 +475,9 @@ or even multiple per fieldset.
   <#local dummy = localsPutAll(args)>
   <#local fieldsInfo = makeFieldsInfo(args)>-->
   <#local fieldsInfo = makeFieldsInfo(mergeArgMapsBasic(args, inlineArgs))>
-  <#local dummy = pushRequestStack("catoCurrentFieldsInfo", fieldsInfo)>
+  <#local dummy = pushRequestStack("catoFieldsInfoStack", fieldsInfo)>
   <#nested>
-  <#local dummy = popRequestStack("catoCurrentFieldsInfo")>
+  <#local dummy = popRequestStack("catoFieldsInfoStack")>
 </#macro>
 
 <#function makeFieldsInfo args={}>
@@ -879,7 +879,7 @@ standard markup.
   </#if>
   
   <#-- parent @fields group elem info (if any; may be omitted) -->
-  <#local fieldsInfo = readRequestStack("catoCurrentFieldsInfo")!{}>
+  <#local fieldsInfo = readRequestStack("catoFieldsInfoStack")!{}>
   <#if !fieldsInfo.type??>
     <#if !catoDefaultFieldsInfo?has_content>
       <#-- optimization -->
@@ -889,12 +889,12 @@ standard markup.
   </#if>
   
   <#-- parent @field elem info (if any; is possible) -->
-  <#local parentFieldInfo = readRequestStack("catoCurrentFieldInfo")!{}>
+  <#local parentFieldInfo = readRequestStack("catoFieldInfoStack")!{}>
   <#local hasParentField = ((parentFieldInfo.type)!"")?has_content>
   <#local isTopLevelField = !hasParentField>
   <#local isChildField = hasParentField>
   
-  <#local formInfo = readRequestStack("catoCurrentFormInfo")!{}>
+  <#local formInfo = readRequestStack("catoFormInfoStack")!{}>
   
   <#-- get custom default for inlineItems -->
   <#if !inlineItems?has_content>
@@ -1066,7 +1066,7 @@ standard markup.
   </#if>
   
   <#-- push this field's info (popped at end) -->
-  <#local dummy = pushRequestStack("catoCurrentFieldInfo", 
+  <#local dummy = pushRequestStack("catoFieldInfoStack", 
     {"type":type, "inlineItems":inlineItems})>
   
   <#-- main markup begin -->
@@ -1324,7 +1324,7 @@ standard markup.
     </#switch>
   </@field_markup_container>
   <#-- pop field info when done -->
-  <#local dummy = popRequestStack("catoCurrentFieldInfo")>
+  <#local dummy = popRequestStack("catoFieldInfoStack")>
 </#macro>
 
 <#-- @field container markup - theme override 

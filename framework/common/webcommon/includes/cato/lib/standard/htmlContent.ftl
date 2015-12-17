@@ -335,11 +335,13 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   "type":"", "class":"", "id":"", "hasHeader":"", "cellspacing":true, "responsive":"", "scrollable":"", "responsiveOptions":{}, "responsiveDefaults":"", 
   "fixedColumnsLeft":0, "fixedColumnsRight":0, "autoAltRows":"", "firstRowAlt":"", "inheritAltRows":false, "useFootAltRows":false, 
   "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+  <#-- DEV NOTE: for all table macros, when adding parameters, make sure also pushed on catoTableStack stack below -->
 }>
 <#macro table args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.table_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
+  <#local origArgs = args>
 
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
@@ -389,7 +391,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     <#if !responsiveDefaults?is_boolean>
       <#local responsiveDefaults = true>
     </#if>
-    <#-- NOTE: there's currently some duplication between catoCurrentTableInfo and catoCurrentTableStack below; do not confuse
+    <#-- NOTE: there's currently some duplication between catoCurrentTableInfo and catoTableStack below; do not confuse
             (this was written before the stack functions were fully written) -->
     <#local catoCurrentTableInfo = {"type": type, "styleName": styleName, "autoAltRows": autoAltRows,
       "inheritAltRows": inheritAltRows, "parentRowAlt": prevCurrentRowAlt, "useFootAltRows": useFootAltRows}>
@@ -426,40 +428,49 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
            catoCurrentTableInfo; but requires change all the macros, and as-is this optimizes
            for FTLs somewhat, though also more error-prone... -->
       <#local prevHasHeaderFlag = getRequestVar("catoCurrentTableHasHeader")!"">
-      <#local dummy = pushRequestStack("catoCurrentTableStack", 
-          {"prevTableInfo":prevTableInfo, "prevSectionInfo":prevSectionInfo, "prevHasHeaderFlag":prevHasHeaderFlag, "prevRowAltFlag":prevRowAltFlag, 
-           "prevCurrentRowAlt":prevCurrentRowAlt, "prevLastRowAlt":prevLastRowAlt, 
-           "type":type, "id":id, "tableIdNum":tableIdNum, "styleName":styleName, "class":class, "cellspacing":cellspacing,
-           "useResponsive":useResponsive, "responsive":responsive, "scrollable":scrollable, "responsiveOptions":responsiveOptions,
-           "responsiveDefaults":responsiveDefaults, "fixedColumnsLeft":fixedColumnsLeft, "fixedColumnsRight":fixedColumnsRight
-           })>
+      <#local dummy = pushRequestStack("catoTableStack", {
+        <#-- save prev values -->
+        "prevTableInfo":prevTableInfo, 
+        "prevSectionInfo":prevSectionInfo, 
+        "prevHasHeaderFlag":prevHasHeaderFlag, 
+        "prevRowAltFlag":prevRowAltFlag, 
+        "prevCurrentRowAlt":prevCurrentRowAlt, 
+        "prevLastRowAlt":prevLastRowAlt, 
+        
+        <#-- save parameters (including local changes) -->
+        "type":type, 
+        "class":class, 
+        "id":id, 
+        "hasHeader":hasHeader,
+        "cellspacing":cellspacing,
+        "responsive":responsive, 
+        "scrollable":scrollable, 
+        "responsiveOptions":responsiveOptions,
+        "responsiveDefaults":responsiveDefaults, 
+        "fixedColumnsLeft":fixedColumnsLeft, 
+        "fixedColumnsRight":fixedColumnsRight,
+        "autoAltRows":autoAltRows, 
+        "firstRowAlt":firstRowAlt, 
+        "inheritAltRows":inheritAltRows, 
+        "useFootAltRows":useFootAltRows, 
+        "attribs":attribs,
+        "origArgs":origArgs,
+        
+        <#-- save local variables -->
+        "tableIdNum":tableIdNum, 
+        "styleName":styleName, 
+        "useResponsive":useResponsive
+      })>
     </#if>
   <#elseif close>
-    <#local stackValues = popRequestStack("catoCurrentTableStack")!{}>
-    <#local prevTableInfo = stackValues.prevTableInfo>
-    <#local prevSectionInfo = stackValues.prevSectionInfo>
-    <#local prevHasHeaderFlag = stackValues.prevHasHeaderFlag>
-    <#local prevRowAltFlag = stackValues.prevRowAltFlag>
-    <#local prevCurrentRowAlt = stackValues.prevCurrentRowAlt>
-    <#local prevLastRowAlt = stackValues.prevLastRowAlt>
-    <#local type = stackValues.type>
-    <#local id = stackValues.id>
-    <#local tableIdNum = stackValues.tableIdNum>
-    <#local styleName = stackValues.styleName>
-    <#local class = stackValues.class>
-    <#local cellspacing = stackValues.cellspacing>
-    <#local useResponsive = stackValues.useResponsive>
-    <#local responsive = stackValues.responsive>
-    <#local scrollable = stackValues.scrollable>
-    <#local responsiveOptions = stackValues.responsiveOptions>
-    <#local responsiveDefaults = stackValues.responsiveDefaults>
-    <#local fixedColumnsLeft = stackValues.fixedColumnsLeft>
-    <#local fixedColumnsRight = stackValues.fixedColumnsRight>  
+    <#local stackValues = popRequestStack("catoTableStack")!{}>
+    <#local dummy = localsPutAll(stackValues)>
   <#else>
     <#-- needed so no undefined vars -->
     <#local styleName = "">
     <#local cellspacing = "">
     <#local useResponsive = false>
+    <#local tableIdNum = 0>
   </#if>     
   <#-- having this as map simplifies the args the markup has to pass along, much easier -->
   <#local responsiveArgs = {
@@ -475,7 +486,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   }>
   <@table_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly type=type styleName=styleName class=class id=id cellspacing=cellspacing 
       useResponsive=useResponsive responsiveArgs=responsiveArgs autoAltRows=autoAltRows firstRowAlt=firstRowAlt 
-      inheritAltRows=inheritAltRows useFootAltRows=useFootAltRows attribs=attribs origArgs=args>
+      inheritAltRows=inheritAltRows useFootAltRows=useFootAltRows tableIdNum=tableIdNum attribs=attribs origArgs=origArgs>
     <#nested>
   </@table_markup>
   <#if close>
@@ -490,7 +501,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 
 <#-- @table main markup - theme override -->
 <#macro table_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false type="" styleName="" class="" id="" cellspacing="" useResponsive=false responsiveArgs={} 
-  autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs={} excludeAttribs=[] origArgs={} extraArgs...>
+  autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false tableIdNum=0 attribs={} excludeAttribs=[] origArgs={} extraArgs...>
   <#if open>
     <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
       <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>  
@@ -516,6 +527,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.thead_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
+  <#local origArgs = args>
   
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
@@ -527,20 +539,37 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
     <#-- need to save values on a stack if open-only! -->
     <#if !close>
-      <#local dummy = pushRequestStack("catoCurrentTableHeadStack", 
-          {"prevTableSectionInfo":prevTableSectionInfo})>
+      <#local dummy = pushRequestStack("catoTableHeadStack", {
+        "prevTableSectionInfo":prevTableSectionInfo, 
+        
+        "class":class, 
+        "id":id, 
+        "attribs":attribs,
+        "origArgs":origArgs
+      })>
     </#if>
+  <#elseif close>
+    <#local stackValues = popRequestStack("catoTableHeadStack")!{}>
+    <#local dummy = localsPutAll(stackValues)>
+  <#else>
+    <#-- (no missing values yet) -->
+  </#if>
+  <@thead_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly 
+    class=class id=id attribs=attribs origArgs=origArgs>
+    <#nested>
+  </@thead_markup>
+  <#if close>
+    <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
+  </#if>
+</#macro>
+
+<#macro thead_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" attribs="" origArgs={} extraArgs...>
+  <#if open>
     <thead<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
-    <#-- need to get values back from stack if close-only! -->
-    <#if !open>
-      <#local stackValues = popRequestStack("catoCurrentTableHeadStack")!{}>
-      <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
-    </#if>
     </thead>
-    <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
   </#if>
 </#macro>
 
@@ -551,6 +580,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tbody_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
+  <#local origArgs = args>
 
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
@@ -560,22 +590,40 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
     <#-- need to save values on a stack if open-only! -->
     <#if !close>
-      <#local dummy = pushRequestStack("catoCurrentTableBodyStack", 
-          {"prevTableSectionInfo":prevTableSectionInfo})>
+      <#local dummy = pushRequestStack("catoTableBodyStack", {
+        "prevTableSectionInfo":prevTableSectionInfo,
+        
+        "class":class, 
+        "id":id, 
+        "attribs":attribs,
+        "origArgs":origArgs
+      })>
     </#if>
+  <#elseif close>
+    <#local stackValues = popRequestStack("catoTableBodyStack")!{}>
+    <#local dummy = localsPutAll(stackValues)>
+  <#else>
+    <#-- (no missing values yet) -->
+  </#if>
+  <@tbody_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly 
+    class=class id=id attribs=attribs origArgs=origArgs>
+    <#nested>
+  </@tbody_markup>
+  <#if close>
+    <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
+  </#if>
+</#macro>
+
+<#macro tbody_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" attribs="" origArgs={} extraArgs...>
+  <#if open>
     <tbody<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
-    <#-- need to get values back from stack if close-only! -->
-    <#if !open>
-      <#local stackValues = popRequestStack("catoCurrentTableBodyStack")!{}>
-      <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
-    </#if>
     </tbody>
-    <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
   </#if>
 </#macro>
+
 
 <#assign tfoot_defaultArgs = {
   "class":"", "id":"", "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
@@ -584,6 +632,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tfoot_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
+  <#local origArgs = args>
 
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
@@ -593,20 +642,37 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     <#local dummy = setRequestVar("catoCurrentTableSectionInfo", catoCurrentTableSectionInfo)!>
     <#-- need to save values on a stack if open-only! -->
     <#if !close>
-      <#local dummy = pushRequestStack("catoCurrentTableFootStack", 
-          {"prevTableSectionInfo":prevTableSectionInfo})>
+      <#local dummy = pushRequestStack("catoTableFootStack", {
+        "prevTableSectionInfo":prevTableSectionInfo,
+        
+        "class":class, 
+        "id":id, 
+        "attribs":attribs,
+        "origArgs":origArgs
+      })>
     </#if>
+  <#elseif close>
+    <#local stackValues = popRequestStack("catoTableFootStack")!{}>
+    <#local dummy = localsPutAll(stackValues)>
+  <#else>
+    <#-- (no missing values yet) -->
+  </#if>
+  <@tfoot_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly 
+    class=class id=id attribs=attribs origArgs=origArgs>
+    <#nested>
+  </@tfoot_markup>
+  <#if close>
+    <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
+  </#if>
+</#macro>
+
+<#macro tfoot_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" attribs="" origArgs={} extraArgs...>
+  <#if open>
     <tfoot<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
-    <#-- need to get values back from stack if close-only! -->
-    <#if !open>
-      <#local stackValues = popRequestStack("catoCurrentTableFootStack")!{}>
-      <#local prevTableSectionInfo = stackValues.prevTableSectionInfo>
-    </#if>
     </tfoot>
-    <#local dummy = setRequestVar("catoCurrentTableSectionInfo", prevTableSectionInfo)!>
   </#if>
 </#macro>
 
@@ -655,6 +721,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tr_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
+  <#local origArgs = args>
 
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
@@ -692,30 +759,40 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     <#-- save the "effective" or "real" current row alt -->
     <#local catoCurrentTableCurrentRowAlt = alt>
     <#local dummy = setRequestVar("catoCurrentTableCurrentRowAlt", catoCurrentTableCurrentRowAlt)!>
-    <#-- need to save values on a stack if open-only! -->
-    <#if !close>
-      <#local dummy = pushRequestStack("catoCurrentTableRowStack", 
-          {"type":type, "useAlt":useAlt, "alt":alt, "isRegAltRow":isRegAltRow})>
-    </#if>
     <#if alt?is_boolean>
       <#local class = addClassArg(class, alt?string(styles.row_alt!, styles.row_reg!))>
     </#if>
     <#if selected?is_boolean && selected == true>
       <#local class = addClassArg(class, styles.row_selected!)>
     </#if>
-    <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
-  </#if>    
-      <#nested>
-  <#if close>
-    <#-- need to get values back from stack if close-only! -->
-    <#if !open>
-      <#local stackValues = popRequestStack("catoCurrentTableRowStack")!{}>
-      <#local type = stackValues.type>
-      <#local useAlt = stackValues.useAlt>
-      <#local alt = stackValues.alt>
-      <#local isRegAltRow = stackValues.isRegAltRow>
+    <#-- need to save values on a stack if open-only! -->
+    <#if !close>
+      <#local dummy = pushRequestStack("catoTableRowStack", {
+        "type":type, 
+        "class":class, 
+        "id":id, 
+        "useAlt":useAlt, 
+        "alt":alt, 
+        "groupLast":groupLast, 
+        "groupParent":groupParent, 
+        "selected":selected,
+        "attribs":attribs,
+        "origArgs":origArgs,
+        
+        "isRegAltRow":isRegAltRow
+      })>
     </#if>
-    </tr>
+  <#elseif close>
+    <#local stackValues = popRequestStack("catoTableRowStack")!{}>
+    <#local dummy = localsPutAll(stackValues)>
+  <#else>
+    <#local isRegAltRow = false>
+  </#if>    
+  <@tr_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly 
+    class=class id=id attribs=attribs origArgs=origArgs>
+    <#nested>
+  </@tr_markup>
+  <#if close>
     <#if !(useAlt?is_boolean && useAlt == false)>
       <#-- note: isRegAltRow check here could be removed but maybe better to keep? only auto-toggle for regular rows... -->
       <#if alt?is_boolean && isRegAltRow> <#-- not needed:  && ((catoCurrentTableInfo.inheritAltRows)!)==false -->
@@ -726,6 +803,16 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     <#-- note: may be empty string, that's ok, will record if last was disabled so groupLast always makes sense -->
     <#local catoCurrentTableLastRowAlt = alt>
     <#local dummy = setRequestVar("catoCurrentTableLastRowAlt", catoCurrentTableLastRowAlt)!>
+  </#if>
+</#macro>
+
+<#macro tr_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" attribs="" origArgs={} extraArgs...>
+  <#if open>
+    <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
+  </#if>
+      <#nested>
+  <#if close>
+    </tr>
   </#if>
 </#macro>
 
@@ -755,6 +842,10 @@ Helps define table cells.
 
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
+  <@th_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id attribs=attribs origArgs=args><#nested></@th_markup>
+</#macro>
+
+<#macro th_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" attribs="" origArgs={} extraArgs...>
   <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
@@ -768,6 +859,10 @@ Helps define table cells.
 
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
+  <@td_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id attribs=attribs origArgs=args><#nested></@td_markup>
+</#macro>
+
+<#macro td_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" attribs="" origArgs={} extraArgs...>
   <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></td></#if>
 </#macro>
 

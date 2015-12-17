@@ -332,7 +332,7 @@ Since this is very foundation specific, this function may be dropped in future i
     <#local tilesType = "default">
   </#if>
   <#local gridInfo = {"type":type, "tilesType":tilesType, "columns":columns}>
-  <#local dummy = pushRequestStack("catoCurrentGridInfo", gridInfo)>
+  <#local dummy = pushRequestStack("catoGridInfoStack", gridInfo)>
   <#-- here, use the number of greater ("page") columns to estimate corresponding grid sizes for heuristics -->
   <#local dummy = saveCurrentContainerSizes({"large":12/columns, "medium":12/columns, "small":12/columns})>
   <#if type == "tiles" || type == "freetiles">
@@ -348,7 +348,7 @@ Since this is very foundation specific, this function may be dropped in future i
     <@grid_list_markup_container class=class id=id columns=columns origArgs=args><#nested></@grid_list_markup_container>
   </#if>
   <#local dummy = unsetCurrentContainerSizes()>
-  <#local dummy = popRequestStack("catoCurrentGridInfo")>
+  <#local dummy = popRequestStack("catoGridInfoStack")>
 </#macro>
 
 <#macro grid_tiles_markup_container class="" id="" tylesType="" columns=1 origArgs={} extraArgs...>
@@ -441,7 +441,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tile_defaultArgs)>
   <#local dummy = localsPutAll(args)>
 
-  <#local gridInfo = readRequestStack("catoCurrentGridInfo")!{}>
+  <#local gridInfo = readRequestStack("catoGridInfoStack")!{}>
   <#if !type?has_content>
     <#local type = (gridInfo.tilesType)!"">
   </#if>
@@ -695,6 +695,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 <#macro section_core args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.section_core_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
 
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
@@ -775,7 +776,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
         <#local hLevel = hLevel + relHeadingLevel>
       </#if>
     </#if>
-    <#local dummy = pushRequestStack("renderScreenletStack", {"autoHeadingLevel":autoHeadingLevel, "updatedHeadingLevel":updatedHeadingLevel, "prevHeadingLevel":prevHeadingLevel, "prevSectionLevel":prevSectionLevel})>
+    <#local dummy = pushRequestStack("catoSectionStack", {"autoHeadingLevel":autoHeadingLevel, "updatedHeadingLevel":updatedHeadingLevel, "prevHeadingLevel":prevHeadingLevel, "prevSectionLevel":prevSectionLevel})>
   <#-- auto-heading-level logic end -->
   
     <#-- Cato: we support menuContent as string (html), macro or hash definitions.
@@ -915,43 +916,21 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   <#if open && !close>
     <#-- save stack of all the args passed to markup macros that have open/close 
         so they don't have to remember a stack themselves -->
-    <#local dummy = pushRequestStack("renderScreenletMarkupStack", {
+    <#local dummy = pushRequestStack("catoSectionMarkupStack", {
       "class":class, "innerClass":innerClass, "contentFlagClasses":contentFlagClasses, 
       "id":id, "title":title, "sLevel":sLevel, "hLevel":hLevel, "menuTitleMarkup":menuTitleMarkup,
       
       "collapsed":collapsed, "collapsibleAreaId":collapsibleAreaId, "collapsible":collapsible, "saveCollapsed":saveCollapsed, 
       "expandToolTip":expandToolTip, "collapseToolTip":collapseToolTip, "padded":padded, "showMore":showMore, "fullUrlString":fullUrlString,
       "javaScriptEnabled":javaScriptEnabled, "fromScreenDef":fromScreenDef, "hasContent":hasContent, 
-      "menuLayout":menuLayout, "menuRole":menuRole, "requireMenu":requireMenu, "forceEmptyMenu":forceEmptyMenu
+      "menuLayout":menuLayout, "menuRole":menuRole, "requireMenu":requireMenu, "forceEmptyMenu":forceEmptyMenu,
+      
+      "origArgs":origArgs
     })>
   <#elseif close && !open>
     <#-- these _must_ override anything passed to this macro call (shouldn't be any) -->
-    <#local stackValues = popRequestStack("renderScreenletMarkupStack")!{}>
-    <#local class = stackValues.class>
-    <#local innerClass = stackValues.innerClass>
-    <#local contentFlagClasses = stackValues.contentFlagClasses>
-    <#local id = stackValues.id>
-    <#local title = stackValues.title>
-    <#local sLevel = stackValues.sLevel>
-    <#local hLevel = stackValues.hLevel>  
-    <#local menuTitleMarkup = stackValues.menuTitleMarkup>  
-    
-    <#local collapsed = stackValues.collapsed>
-    <#local collapsibleAreaId = stackValues.collapsibleAreaId>
-    <#local collapsible = stackValues.collapsible>
-    <#local saveCollapsed = stackValues.saveCollapsed>
-    <#local expandToolTip = stackValues.expandToolTip>
-    <#local collapseToolTip = stackValues.collapseToolTip>
-    <#local padded = stackValues.padded>
-    <#local showMore = stackValues.showMore>
-    <#local fullUrlString = stackValues.fullUrlString>
-    <#local javaScriptEnabled = stackValues.javaScriptEnabled>
-    <#local fromScreenDef = stackValues.fromScreenDef>
-    <#local hasContent = stackValues.hasContent>
-    <#local menuLayout = stackValues.menuLayout>
-    <#local menuRole = stackValues.menuRole>
-    <#local requireMenu = stackValues.requireMenu>
-    <#local forceEmptyMenu = stackValues.forceEmptyMenu> 
+    <#local stackValues = popRequestStack("catoSectionMarkupStack")!{}>
+    <#local dummy = localsPutAll(stackValues)>
   </#if>
 
   <#-- DEV NOTE: when adding params to this call, remember to update the stack above as well! -->
@@ -961,11 +940,11 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     collapsible=collapsible saveCollapsed=saveCollapsed expandToolTip=expandToolTip collapseToolTip=collapseToolTip 
     padded=padded showMore=showMore fullUrlString=fullUrlString javaScriptEnabled=javaScriptEnabled 
     fromScreenDef=fromScreenDef hasContent=hasContent menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
-    forceEmptyMenu=forceEmptyMenu origArgs=args><#nested></@section_markup_container>
+    forceEmptyMenu=forceEmptyMenu origArgs=origArgs><#nested></@section_markup_container>
   
   <#if close>
   <#-- auto-heading-level logic begin -->
-    <#local stackValues = popRequestStack("renderScreenletStack")!{}>
+    <#local stackValues = popRequestStack("catoSectionStack")!{}>
     
     <#local autoHeadingLevel = stackValues.autoHeadingLevel>
     <#local updatedHeadingLevel = stackValues.updatedHeadingLevel>

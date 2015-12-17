@@ -929,8 +929,7 @@ The resulting map will contain the allArgNames and localArgNames members from th
 NOTE: this currently does not change the exclude lists (see @mergeArgMaps), but could in the future.
 
 NOTE: The resulting map does not contain only attribs. It may contain a large number of unrelated
-members plus "attribs", "allArgNames", "localArgNames" members. These should be accounted for in the
-allArgNames list, minus the last three members.
+members plus "attribs", "allArgNames", "localArgNames", "excludeNames" and "noExcludeNames" members. 
 
 See getAttribMapAllExcludes function.
 
@@ -938,7 +937,7 @@ See getAttribMapAllExcludes function.
     (see mergeArgMaps; parameters are analogous, even though macro implementation may differ)
 -->
 <#function makeAttribMapFromArgMap args={}>
-  <#if args.attribs??>
+  <#if args.attribs?has_content && args.attribs?is_hash> <#-- WARN: poor check -->
     <#local args = args.attribs + args>
   </#if>
   <#return args>
@@ -948,16 +947,32 @@ See getAttribMapAllExcludes function.
 *************
 * getAttribMapAllExcludes
 ************
-Returns the attrib map excludes based on allArgNames list, plus known needed excludes, plus an optional list.
+Returns the attrib map excludes based on allArgNames list, plus known needed excludes, plus an optional list,
+plus "noExclude" alternatives of all the aforementioned that prevent excludes.
+The result is returned as a bean-wrapped Set.
 
 See makeAttribMapFromArgs.
+
+TODO: rewrite as transform.
 -->
-<#function getAttribMapAllExcludes attribs={} exclude=[]>
+<#function getAttribMapAllExcludes attribs={} exclude=[] noExclude=[]>
+  <#if attribs.excludeNames??>
+    <#local exclude = exclude + attribs.excludeNames>
+  </#if>
   <#if attribs.allArgNames??>
     <#local exclude = exclude + attribs.allArgNames>
   </#if>
-  <#local exclude = exclude + ["attribs", "allArgNames", "localArgNames"]>
-  <#return exclude>
+  <#local exclude = exclude + ["attribs", "allArgNames", "localArgNames", "excludeNames", "noExcludeNames"]>
+  <#if attribs.noExcludeNames??>
+    <#local noExclude = noExclude + attribs.noExcludeNames>
+  </#if>
+  <#if noExclude?has_content>
+    <#local res = Static["org.ofbiz.base.util.UtilMisc"].toSet(exclude)>
+    <#local dummy = res.removeAll(noExclude)!>
+    <#return res>
+  <#else>
+    <#return Static["org.ofbiz.base.util.UtilMisc"].toSet(exclude)>
+  </#if>
 </#function>
 
 

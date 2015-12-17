@@ -35,16 +35,17 @@ under the License.
     <#macro imageField name>
       <@field type="generic"><input type="file" size="20" name="${name}"/></@field>
     </#macro>
-    <@imageField name="additionalImageOne" />
-    <@imageField name="additionalImageTwo" />
-    <@imageField name="additionalImageThree" />
-    <@imageField name="additionalImageFour" />
-    <@imageField name="additionalImageFive" />
-    <@imageField name="additionalImageSix" />
-    <@imageField name="additionalImageSeven" />
-    <@imageField name="additionalImageEight" />
-    <@imageField name="additionalImageNine" />
-    <@imageField name="additionalImageTen" />
+    <#assign namePrefix = "additionalImage">
+    <@imageField name=namePrefix + "One" />
+    <@imageField name=namePrefix + "Two" />
+    <@imageField name=namePrefix + "Three" />
+    <@imageField name=namePrefix + "Four" />
+    <@imageField name=namePrefix + "Five" />
+    <@imageField name=namePrefix + "Six" />
+    <@imageField name=namePrefix + "Seven" />
+    <@imageField name=namePrefix + "Eight" />
+    <@imageField name=namePrefix + "Nine" />
+    <@imageField name=namePrefix + "Ten" />
     <@field type="submit" text='${uiLabelMap.CommonUpload}'/>
   </@fields>
 </form>

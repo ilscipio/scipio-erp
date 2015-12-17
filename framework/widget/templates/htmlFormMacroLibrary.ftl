@@ -477,7 +477,7 @@ not "current" context (too intrusive in current renderer design). still relies o
           collapse=false fieldId=renderFieldTitleCurrentForId!""
           labelType="horizontal" labelPosition="left" 
           fieldType=mapOfbizFieldTypeToCatoFieldType(fieldType)
-          origArgs={} />
+          origArgs={}/>
       </div>
   </#if>
   <#local innerClass = style>

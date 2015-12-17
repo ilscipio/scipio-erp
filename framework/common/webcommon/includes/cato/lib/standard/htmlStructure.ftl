@@ -94,8 +94,8 @@ to this one.
   </#if>
   <#-- NOTE: we pass openOnly/closeOnly/nestedOnly because otherwise markup has to recalculated it when
        calling some macros. as long as markup macros accep extraArgs... it's not a problem; markup can pick which ones it needs. -->
-  <@row_markup origArgs=args open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class 
-    collapse=collapse id=id alt=alt selected=selected><#nested /></@row_markup>
+  <@row_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class 
+    collapse=collapse id=id alt=alt selected=selected origArgs=args><#nested /></@row_markup>
 </#macro>
 
 <#-- @row container markup - theme override -->
@@ -193,7 +193,7 @@ to this one.
     <#-- WARN: has no memory when closeOnly... -->
     <#local class = "">
   </#if>
-  <@cell_markup origArgs=args open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id last=last><#nested></@cell_markup>
+  <@cell_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id last=last origArgs=args><#nested></@cell_markup>
   <#if close>
     <#-- pop grid sizes -->
     <#local dummy = unsetCurrentContainerSizes()>
@@ -343,9 +343,9 @@ Since this is very foundation specific, this function may be dropped in future i
       <#local id = "freewall_id_${freewallNum!0}">
     </#if>
     <#local class = addClassArg(class, styles.tile_container!)>
-    <@grid_tiles_markup_container origArgs=args class=class id=id columns=columns tylesType=tylesType><#nested></@grid_tiles_markup_container>
+    <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType origArgs=args><#nested></@grid_tiles_markup_container>
   <#elseif type=="list">
-    <@grid_list_markup_container origArgs=args class=class id=id columns=columns><#nested></@grid_list_markup_container>
+    <@grid_list_markup_container class=class id=id columns=columns origArgs=args><#nested></@grid_list_markup_container>
   </#if>
   <#local dummy = unsetCurrentContainerSizes()>
   <#local dummy = popRequestStack("catoCurrentGridInfo")>
@@ -535,9 +535,9 @@ It is loosely based on http://metroui.org.ua/tiles.html
 
   <#local class = addClassArgDefault(class, styles[stylePrefix + "_class"]!styles[defaultStylePrefix + "_class"]!"")>
   
-  <@tile_markup origArgs=args class=class id=id dataSizex=dataSizex dataSizey=dataSizey image=image imageClass=imageClass imageBgColorClass=imageBgColorClass 
+  <@tile_markup class=class id=id dataSizex=dataSizex dataSizey=dataSizey image=image imageClass=imageClass imageBgColorClass=imageBgColorClass 
     link=link linkTarget=linkTarget icon=icon 
-    overlayClass=overlayClass overlayBgColorClass=overlayBgColorClass title=title titleClass=titleClass titleBgColorClass=titleBgColorClass><#nested></@tile_markup>
+    overlayClass=overlayClass overlayBgColorClass=overlayBgColorClass title=title titleClass=titleClass titleBgColorClass=titleBgColorClass origArgs=args><#nested></@tile_markup>
 </#macro>
 
 <#function calcTileSize orientation="x" value="normal">
@@ -905,9 +905,9 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   <#-- render menu + title combo; for now, only need to do at open and then save the markup -->
   <#if open>
     <#if showMore>
-      <#local menuTitleMarkup><@section_markup_menutitle origArgs=args sectionLevel=sLevel headingLevel=hLevel menuLayout=menuLayout 
+      <#local menuTitleMarkup><@section_markup_menutitle sectionLevel=sLevel headingLevel=hLevel menuLayout=menuLayout 
         menuRole=menuRole hasMenu=hasMenu menuMarkup=menuMarkup hasTitle=hasTitle titleMarkup=titleMarkup 
-        contentFlagClasses=contentFlagClasses fromScreenDef=fromScreenDef /></#local>
+        contentFlagClasses=contentFlagClasses fromScreenDef=fromScreenDef origArgs=args/></#local>
     </#if>
   </#if> 
 
@@ -955,13 +955,13 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   </#if>
 
   <#-- DEV NOTE: when adding params to this call, remember to update the stack above as well! -->
-  <@section_markup_container origArgs=args open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly 
+  <@section_markup_container open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly 
     sectionLevel=sLevel headingLevel=hLevel menuTitleContent=menuTitleMarkup class=class innerClass=innerClass
     contentFlagClasses=contentFlagClasses id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId 
     collapsible=collapsible saveCollapsed=saveCollapsed expandToolTip=expandToolTip collapseToolTip=collapseToolTip 
     padded=padded showMore=showMore fullUrlString=fullUrlString javaScriptEnabled=javaScriptEnabled 
     fromScreenDef=fromScreenDef hasContent=hasContent menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
-    forceEmptyMenu=forceEmptyMenu><#nested></@section_markup_container>
+    forceEmptyMenu=forceEmptyMenu origArgs=args><#nested></@section_markup_container>
   
   <#if close>
   <#-- auto-heading-level logic begin -->

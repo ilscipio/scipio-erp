@@ -50,8 +50,8 @@ An HTML form element.
     <#local dummy = pushRequestStack("catoCurrentFormInfo", formInfo)>
   </#if>
   <#-- WARN: currently no stack memory for closeOnly=true -->
-  <@form_markup origArgs=origArgs type=type name=name id=id class=class open=open close=close openOnly=openOnly closeOnly=closeOnly 
-    nestedOnly=nestedOnly attribs=attribs><#nested></@form_markup>
+  <@form_markup type=type name=name id=id class=class open=open close=close openOnly=openOnly closeOnly=closeOnly 
+    nestedOnly=nestedOnly attribs=attribs origArgs=origArgs><#nested></@form_markup>
   <#if close>
     <#local dummy = popRequestStack("catoCurrentFormInfo")>
   </#if>
@@ -89,7 +89,7 @@ for getFileUploadProgressStatus AJAX calls.
     htmlwrap        = if true, wrap in @script (default true)
 -->
 <#assign progressScript_defaultArgs = {
-  "enabled" : true, "htmlwrap" : true, "progressOptions" : {}
+  "enabled":true, "htmlwrap":true, "progressOptions":{}
 }>
 <#macro progressScript args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.progressScript_defaultArgs)>
@@ -196,7 +196,7 @@ for getFileUploadProgressStatus AJAX calls.
       <#local color=styles.color_success!/>
   </#switch>
 
-  <@progress_markup origArgs=args value=value id=id class=class showValue=showValue containerClass=containerClass color=color />
+  <@progress_markup value=value id=id class=class showValue=showValue containerClass=containerClass color=color origArgs=args/>
     
   <#if progressOptions?has_content>
     <#local opts = progressOptions>
@@ -331,15 +331,16 @@ A visible fieldset, including the HTML element.
 }>
 <#macro fieldset args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.fieldset_defaultArgs)>
+  <#-- NOTE: this macro's args are a subset of core's args (but with potentially different defaults), so can just pass the whole thing
   <#local dummy = localsPutAll(args)>
-  <@fieldset_core class=class containerClass=containerClass id=id title=title collapsed=collapsed collapsibleAreaId="" collapsible=false expandToolTip="" collapseToolTip="" openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly>
+  -->
+  <@fieldset_core args=args>
     <#nested />
   </@fieldset_core>
 </#macro>
 
-<#-- DEV NOTE: see @section_core for details on pattern 
+<#-- DEV NOTE: see @section_core for details on "core" pattern 
      migrated from @renderFieldGroupOpen/Close form widget macro -->
-
 <#assign fieldset_core_defaultArgs = {
   "class":"", "containerClass":"", "id":"", "title":"", "collapsed":false, "collapsibleAreaId":"", "expandToolTip":"", "collapseToolTip":"", "collapsible":false, "openOnly":false, 
   "closeOnly":false, "nestedOnly":false
@@ -356,7 +357,7 @@ A visible fieldset, including the HTML element.
     <#local containerId = "">
   </#if>
   <#-- TODO: open/close stack -->
-  <@fieldset_markup origArgs=args open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class containerClass=containerClass id=id containerId=containerId title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible><#nested></@fieldset_markup>
+  <@fieldset_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class containerClass=containerClass id=id containerId=containerId title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible origArgs=args><#nested></@fieldset_markup>
 </#macro>
 
 <#-- @fieldset main markup - theme override -->
@@ -1073,10 +1074,10 @@ standard markup.
   <#if useLabelArea>
     <#-- NOTE: origArgs is passed because in some cases it may be important for markup to know if the caller manually
         specified a certain parameter to @field or not - the other logical args don't record this info -->
-    <#local labelAreaContent><@field_markup_labelarea origArgs=args labelType=effLabelType labelPosition=effLabelPosition label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required /></#local>
+    <#local labelAreaContent><@field_markup_labelarea labelType=effLabelType labelPosition=effLabelPosition label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required origArgs=args/></#local>
   </#if>
       
-  <@field_markup_container origArgs=args type=type columns=columns postfix=postfix postfixSize=postfixSize postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container>
+  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container origArgs=args>
     <#switch type>
       <#case "input">
         <@field_input_widget name=name 

@@ -40,7 +40,7 @@ IMPL NOTE: Beware of whitespace.
   <#if !docLangAttr?has_content>
     <#local docLangAttr = "en">
   </#if>
-  <@htmlHeadOpen_markup origArgs=args includeDocType=includeDocType docLangAttr=docLangAttr langDir=langDir /><#t>
+  <@htmlHeadOpen_markup includeDocType=includeDocType docLangAttr=docLangAttr langDir=langDir origArgs=args/><#t>
 </#macro>
 
 <#macro htmlHeadOpen_markup includeDocType=false docLangAttr="" langDir="" origArgs={} extraArgs...>
@@ -129,7 +129,7 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
   }>
   <#local args = mergeArgMaps(args, inlineArgs, defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@script_markup origArgs=args type=type src=src output=output htmlwrap=htmlwrap cdata=cdata><#nested></@script_markup>
+  <@script_markup type=type src=src output=output htmlwrap=htmlwrap cdata=cdata origArgs=args><#nested></@script_markup>
 </#macro>
 
 <#macro script_markup type="" src="" output="" htmlwrap=true cdata=true origArgs={} extraArgs...>

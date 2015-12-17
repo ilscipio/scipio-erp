@@ -94,8 +94,8 @@
   <#else>
     <#local cElem = containerElemType> 
   </#if>
-  <@heading_markup origArgs=args level=level elem=hElem class=class id=id attribs=attribs
-    containerElem=cElem containerClass=containerClass containerId=containerId><#nested></@heading_markup>
+  <@heading_markup level=level elem=hElem class=class id=id attribs=attribs
+    containerElem=cElem containerClass=containerClass containerId=containerId origArgs=args><#nested></@heading_markup>
 </#macro>
 
 <#-- Main markup for @heading (minimal logic; a little needed) - theme override
@@ -140,7 +140,7 @@ Creates a very basic wrapper for code blocks
 <#macro code args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.code_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@code_markup origArgs=args type=type><#nested></@code_markup>
+  <@code_markup type=type origArgs=args><#nested></@code_markup>
 </#macro>
 
 <#macro code_markup type="" origArgs={} extraArgs...>
@@ -473,9 +473,9 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     "fixedColumnsLeft" : fixedColumnsLeft,
     "fixedColumnsRight" : fixedColumnsRight
   }>
-  <@table_markup origArgs=args open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly type=type styleName=styleName class=class id=id cellspacing=cellspacing 
+  <@table_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly type=type styleName=styleName class=class id=id cellspacing=cellspacing 
       useResponsive=useResponsive responsiveArgs=responsiveArgs autoAltRows=autoAltRows firstRowAlt=firstRowAlt 
-      inheritAltRows=inheritAltRows useFootAltRows=useFootAltRows attribs=attribs>
+      inheritAltRows=inheritAltRows useFootAltRows=useFootAltRows attribs=attribs origArgs=args>
     <#nested>
   </@table_markup>
   <#if close>
@@ -826,9 +826,13 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro pul args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.pul_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <@pul_markup title=title origArgs=args><#nested></@pul_markup>
+</#macro>
+
+<#macro pul_markup title="" origArgs={} extraArgs...>
   <ul class="${styles.pricing_wrap!}">
-      <@pli type="title">${title!}</@pli>
-      <#nested>
+    <@pli type="title">${title!}</@pli>
+    <#nested>
   </ul>
 </#macro>
 
@@ -838,7 +842,7 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro pli args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.pli_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@pli_markup origArgs=args type=type><#nested></@pli_markup>
+  <@pli_markup type=type origArgs=args><#nested></@pli_markup>
 </#macro>
 
 <#macro pli_markup type="" origArgs={} extraArgs...>
@@ -892,8 +896,8 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#global chartId = "chart_${renderSeqNumber!}_${chartIdNum!}"/>
   <#global chartType = type/>
   
-  <@chart_markup origArgs=args type=type chartId=chartId chartIdNum=chartIdNum chartLibrary=chartLibrary title=title 
-    renderSeqNumber=renderSeqNumber><#nested></@chart_markup>
+  <@chart_markup type=type chartId=chartId chartIdNum=chartIdNum chartLibrary=chartLibrary title=title 
+    renderSeqNumber=renderSeqNumber origArgs=args><#nested></@chart_markup>
 </#macro>
 
 <#macro chart_markup type="" chartLibrary="" title="" chartId="" chartIdNum=0 renderSeqNumber=0 origArgs={} extraArgs...>
@@ -996,8 +1000,8 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     <#local chartLibrary = "foundation"/>
   </#if>
 
-  <@chartdata_markup origArgs=args title=title value=value value2=value2 chartId=chartId chartType=chartType 
-    chartLibrary=chartLibrary><#nested></@chartdata_markup>
+  <@chartdata_markup title=title value=value value2=value2 chartId=chartId chartType=chartType 
+    chartLibrary=chartLibrary origArgs=args><#nested></@chartdata_markup>
 </#macro>
 
 <#macro chartdata_markup title="" value="" value2="" chartId="" chartType="" chartLibrary="" origArgs={} extraArgs...>

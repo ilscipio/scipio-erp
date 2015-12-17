@@ -36,7 +36,7 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro nav args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.nav_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@nav_markup origArgs=args type=type><#nested></@nav_markup>
+  <@nav_markup type=type origArgs=args><#nested></@nav_markup>
 </#macro>
 
 <#macro nav_markup type="" origArgs={} extraArgs...>
@@ -67,7 +67,7 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro mli args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.mli_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@mli_markup origArgs=args arrival=arrival><#nested></@mli_markup>
+  <@mli_markup arrival=arrival origArgs=args><#nested></@mli_markup>
 </#macro>
 
 <#macro mli_markup arrival="" origArgs={} extraArgs...>
@@ -182,7 +182,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
 
   <#local class = addClassArgDefault(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
 
-  <@menu_markup origArgs=args class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItems=inlineItems htmlWrap=htmlWrap>
+  <@menu_markup class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItems=inlineItems htmlWrap=htmlWrap origArgs=args>
   <#if !(preItems?is_boolean && preItems == false)>
     <#if preItems?is_sequence>
       <#list preItems as item>
@@ -337,7 +337,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   </#if>
   <#local contentClass = addClassArgDefault(contentClass, defaultContentClass)>
 
-  <@menuitem_markup origArgs=args class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=inlineItem htmlWrap=htmlWrap disabled=disabled selected=selected active=active><#rt>
+  <@menuitem_markup class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=inlineItem htmlWrap=htmlWrap disabled=disabled selected=selected active=active origArgs=args><#rt>
     <#if !nestedContent?is_boolean>
       <#-- use nestedContent -->
     <#elseif !nestedMenu?is_boolean>
@@ -351,11 +351,11 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
         <#local href = "javascript:void(0);">
       </#if>
       <#local href = interpretRequestUri(href)>
-      <#t><@menuitem_link_markup origArgs=args href=href onclick=onClick class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","href","onclick","target","title"] target=target title=title disabled=disabled selected=selected active=active><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_link_markup>
+      <#t><@menuitem_link_markup href=href onclick=onClick class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","href","onclick","target","title"] target=target title=title disabled=disabled selected=selected active=active origArgs=args><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_link_markup>
     <#elseif type == "text">
-      <#t><@menuitem_text_markup origArgs=args class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","onclick"] onClick=onClick disabled=disabled selected=selected active=active><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_text_markup>
+      <#t><@menuitem_text_markup class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","onclick"] onClick=onClick disabled=disabled selected=selected active=active origArgs=args><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_text_markup>
     <#elseif type == "submit">
-      <#t><#if wrapNested && nestedFirst>${nestedContent}</#if><@menuitem_submit_markup origArgs=args class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","value","onclick","disabled","type"] onClick=onClick disabled=disabled selected=selected active=active><#if text?has_content>${text}</#if></@menuitem_submit_markup><#if wrapNested && !nestedFirst> ${nestedContent}</#if>
+      <#t><#if wrapNested && nestedFirst>${nestedContent}</#if><@menuitem_submit_markup class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","value","onclick","disabled","type"] onClick=onClick disabled=disabled selected=selected active=active origArgs=args><#if text?has_content>${text}</#if></@menuitem_submit_markup><#if wrapNested && !nestedFirst> ${nestedContent}</#if>
     <#else>
       <#t><#if text?has_content>${text}</#if><#if wrapNested>${nestedContent}</#if>
     </#if>
@@ -677,7 +677,7 @@ menu item element must override this and provide a proper check.
     <#local ajaxPaginateOnUrl = escapeUrlParamDelims(ajaxPaginateOnUrl)>
     <#local paginateOnUrl = escapeUrlParamDelims(paginateOnUrl)>
   
-    <@paginate_markup origArgs=args paginateClass=paginateClass paginateFirstClass=paginateFirstClass viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxEnabled=ajaxEnabled javaScriptEnabled=javaScriptEnabled ajaxFirstUrl=ajaxFirstUrl firstUrl=firstUrl 
+    <@paginate_markup paginateClass=paginateClass paginateFirstClass=paginateFirstClass viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxEnabled=ajaxEnabled javaScriptEnabled=javaScriptEnabled ajaxFirstUrl=ajaxFirstUrl firstUrl=firstUrl 
       paginateFirstLabel=paginateFirstLabel paginatePreviousClass=paginatePreviousClass ajaxPreviousUrl=ajaxPreviousUrl previousUrl=previousUrl paginatePreviousLabel=paginatePreviousLabel 
       pageLabel=pageLabel ajaxSelectUrl=ajaxSelectUrl selectUrl=selectUrl ajaxSelectSizeUrl=ajaxSelectSizeUrl selectSizeUrl=selectSizeUrl commonDisplaying=commonDisplaying 
       paginateNextClass=paginateNextClass ajaxNextUrl=ajaxNextUrl nextUrl=nextUrl paginateNextLabel=paginateNextLabel paginateLastClass=paginateLastClass ajaxLastUrl=ajaxLastUrl 
@@ -685,7 +685,7 @@ menu item element must override this and provide a proper check.
       paginate=paginate forcePost=forcePost viewIndexFirst=viewIndexFirst listItemsOnly=listItemsOnly paginateToggle=paginateToggle ajaxPaginateOnUrl=ajaxPaginateOnUrl 
       paginateOnUrl=paginateOnUrl paginateOnClass=paginateOnClass paginateOnLabel=paginateOnLabel ajaxPaginateOffUrl=ajaxPaginateOffUrl paginateOffUrl=paginateOffUrl paginateOffClass=paginateOffClass 
       paginateOffLabel=paginateOffLabel
-      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage />
+      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage origArgs=args/>
   </#if>
 </#macro>
 

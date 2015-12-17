@@ -31,7 +31,7 @@
   <@modal_markup origArgs=args id=id label=label href=href icon=icon><#nested></@modal_markup>
 </#macro>
 
-<#macro modal_markup origArgs={} id="" label="" href="" icon="" extraArgs...>
+<#macro modal_markup id="" label="" href="" icon="" origArgs={} extraArgs...>
   <a href="#" data-reveal-id="${id}_modal"<#if href?has_content> data-reveal-ajax="${href!}"</#if>><#if icon?has_content><i class="${icon!}"></i> </#if>${label}</a>
   <div id="${id}_modal" class="${styles.modal_wrap!}" data-reveal>
     <#nested>
@@ -72,7 +72,7 @@ it's an unexpected result, error or one that requires user action. See other mac
   <@alert_markup origArgs=args type=type class=class typeClass=typeClass id=id><#nested></@alert_markup>
 </#macro>
 
-<#macro alert_markup origArgs={} type="info" class="" typeClass="" id="" extraArgs...>
+<#macro alert_markup type="info" class="" typeClass="" id="" origArgs={} extraArgs...>
   <#local class = addClassArg(class, styles.grid_cell!"")>
   <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
   <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
@@ -111,7 +111,7 @@ it's an unexpected result, error or one that requires user action. See other mac
   <@panel_markup origArgs=args type=type title=title><#nested></@panel_markup>
 </#macro>
 
-<#macro panel_markup origArgs={} type="" title="" extraArgs...>
+<#macro panel_markup type="" title="" origArgs={} extraArgs...>
   <div class="${styles.panel_wrap!} ${type}">
     <div class="${styles.panel_head!}"><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
     <div class="${styles.panel_body!}"><p><#nested></p></div>
@@ -142,7 +142,7 @@ Other messages such as for missing params/record IDs are usually errors.
   <@resultMsg_markup origArgs=args class=class id=id><#nested></@resultMsg_markup>
 </#macro>
 
-<#macro resultMsg_markup origArgs={} class="" id="" extraArgs...>
+<#macro resultMsg_markup class="" id="" origArgs={} extraArgs...>
   <p<@compiledClassAttribStr class=class defaultVal="result-msg" /><#if id?has_content> id="${id}"</#if>><#nested></p>
 </#macro>
 
@@ -171,6 +171,6 @@ templates: currently @alert.
   <@errorMsg_markup origArgs=args type=type class=class id=id><#nested></@errorMsg_markup>
 </#macro>
 
-<#macro errorMsg_markup origArgs={} type="error" class="" id="" extraArgs...>
+<#macro errorMsg_markup type="error" class="" id="" origArgs={} extraArgs...>
   <@alert type="error" class=class id=id><#nested></@alert>
 </#macro>

@@ -39,7 +39,7 @@ Since this is very foundation specific, this function may be dropped in future i
   <@nav_markup origArgs=args type=type><#nested></@nav_markup>
 </#macro>
 
-<#macro nav_markup origArgs={} type="" extraArgs...>
+<#macro nav_markup type="" origArgs={} extraArgs...>
   <#switch type>
     <#case "magellan">
       <div data-magellan-expedition="fixed">
@@ -70,7 +70,7 @@ Since this is very foundation specific, this function may be dropped in future i
   <@mli_markup origArgs=args arrival=arrival><#nested></@mli_markup>
 </#macro>
 
-<#macro mli_markup origArgs={} arrival="" extraArgs...>
+<#macro mli_markup arrival="" origArgs={} extraArgs...>
   <dd data-magellan-arrival="${arrival}"><#nested></dd>
 </#macro>
 
@@ -227,7 +227,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
 </#macro>
 
 <#-- @menu container main markup - theme override -->
-<#macro menu_markup origArgs={} class="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false htmlWrap="ul" extraArgs...>
+<#macro menu_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false htmlWrap="ul" origArgs={} extraArgs...>
   <#if !inlineItems && htmlWrap?has_content>
     <${htmlWrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>
   </#if>
@@ -365,7 +365,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
 </#macro>
 
 <#-- @menuitem container markup - theme override -->
-<#macro menuitem_markup origArgs={} class="" id="" style="" attribs={} excludeAttribs=[] inlineItem=false htmlWrap="li" disabled=false selected=false active=false extraArgs...>
+<#macro menuitem_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItem=false htmlWrap="li" disabled=false selected=false active=false origArgs={} extraArgs...>
   <#if !inlineItem && htmlWrap?has_content>
     <${htmlWrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
   </#if>
@@ -376,17 +376,17 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
 </#macro>
 
 <#-- @menuitem type="link" markup - theme override -->
-<#macro menuitem_link_markup origArgs={} class="" id="" style="" href="" onClick="" target="" title="" attribs={} excludeAttribs=[] disabled=false selected=false active=false extraArgs...>
+<#macro menuitem_link_markup class="" id="" style="" href="" onClick="" target="" title="" attribs={} excludeAttribs=[] disabled=false selected=false active=false origArgs={} extraArgs...>
   <#t><a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#nested></a>
 </#macro>
 
 <#-- @menuitem type="text" markup - theme override -->
-<#macro menuitem_text_markup origArgs={} class="" id="" style="" onClick="" attribs={} excludeAttribs=[] disabled=false selected=false active=false extraArgs...>
+<#macro menuitem_text_markup class="" id="" style="" onClick="" attribs={} excludeAttribs=[] disabled=false selected=false active=false origArgs={} extraArgs...>
   <#t><span<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if>><#nested></span>
 </#macro>
 
 <#-- @menuitem type="submit" markup - theme override -->
-<#macro menuitem_submit_markup origArgs={} class="" id="" style="" text="" onClick="" disabled=false attribs={} excludeAttribs=[] disabled=false selected=false active=false extraArgs...>
+<#macro menuitem_submit_markup class="" id="" style="" text="" onClick="" disabled=false attribs={} excludeAttribs=[] disabled=false selected=false active=false origArgs={} extraArgs...>
   <#t><button type="submit"<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#nested></button>
 </#macro>
 
@@ -690,7 +690,7 @@ menu item element must override this and provide a proper check.
 </#macro>
 
 <#-- @paginate main markup - theme override -->
-<#macro paginate_markup origArgs={} paginateClass="" paginateFirstClass="" viewIndex=1 highIndex=0 listSize=0 viewSize=1 
+<#macro paginate_markup paginateClass="" paginateFirstClass="" viewIndex=1 highIndex=0 listSize=0 viewSize=1 
     ajaxEnabled=false javaScriptEnabled=false ajaxFirstUrl="" firstUrl="" 
     paginateFirstLabel="" paginatePreviousClass="" ajaxPreviousUrl="" previousUrl="" paginatePreviousLabel="" 
     pageLabel="" ajaxSelectUrl="" selectUrl="" ajaxSelectSizeUrl="" selectSizeUrl="" commonDisplaying="" 
@@ -699,7 +699,7 @@ menu item element must override this and provide a proper check.
     paginate=true forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false ajaxPaginateOnUrl="" 
     paginateOnUrl="" paginateOnClass="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffClass="" 
     paginateOffLabel=""
-    availPageSizes=[] minPageSize=1 viewIndexLast=1 multiPage=true>
+    availPageSizes=[] minPageSize=1 viewIndexLast=1 multiPage=true origArgs={} extraArgs...>
     
   <#local paginateClass = addClassArg(paginateClass, styles.pagination_wrap!)> 
   <#local paginateClass = addClassArgDefault(paginateClass, "nav-pager")>  

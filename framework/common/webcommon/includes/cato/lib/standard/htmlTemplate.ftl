@@ -19,6 +19,37 @@
 *     for macro to get attribs out of it if it needs them, cause problems.
 *     FIXME: not all macros currently properly check attribMap for duplicate attribs
 *         of args and inlineAttribs (priority should be: args - inlineAttribs - attribMap).
+*
+*
+* MACRO INTERFACES
+* 
+* Cato standard macros have versatile interfaces. In general, all of them expect to invoked
+* using named parameters (always <@row class="my-class">, never <@row "my-class">).
+*
+* Template-facing macros: these macros such as @field, @row, @heading, etc. are meant to be
+*   used in templates and can also be overridden by themes (though not preferred method).
+*   Most of these use a versatile args pattern that looks like: <@name args={} inlineArgs...>
+*   From templates, these macros accept regular inlined parameters as well as a map of parameters
+*   using the args map parameter. Some also accept additional arbitrary inlined parameters to be used 
+*   as HTML attributes (in both the args map and the inline args).
+*   Intuitively, inline args have priority over args passed in the args map.
+*   This pattern is especially needed for themes to override the templating-facing macros cleanly.
+*   Some non-template-facing macros also use this pattern, and some functions party use it as well (but
+*   functions do not support named parameters at this time, so not fully).
+*   See mergeArgMaps function in utilities library for more details.
+*
+* Markup macros (theme overrides): these macros such as @row_markup, @heading_markup, etc. containing
+*   the "_markup" name are overridable by themes to provide alternative HTML and sometimes javascript markup.
+*   They do not have a versatile interface like the template-facing macros and are intentionally kept
+*   simple.
+*   Nevertheless, they have some requirements: these macros should always end their parameter list with
+*   a varargs catch-all parameter "extraArgs..." so that future changes do not backwards break compability
+*   with themes.
+*   Most also have an advanced "origArgs={}" parameter that will contain the combined arguments map of the parameters
+*   that were passed to the calling macro (WARN: this may not necessarily be a template-facing macro; it may
+*   be intermediate). In most cases it should not be used; it is provided only in case the other regular parameters
+*   do not contain the information needed. It should be considered a last resort.
+*
 -->
 
 <#-- 

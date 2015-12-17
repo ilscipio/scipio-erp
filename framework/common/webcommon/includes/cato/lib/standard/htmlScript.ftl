@@ -43,7 +43,7 @@ IMPL NOTE: Beware of whitespace.
   <@htmlHeadOpen_markup origArgs=args includeDocType=includeDocType docLangAttr=docLangAttr langDir=langDir /><#t>
 </#macro>
 
-<#macro htmlHeadOpen_markup origArgs={} includeDocType=false docLangAttr="" langDir="" extraArgs...>
+<#macro htmlHeadOpen_markup includeDocType=false docLangAttr="" langDir="" origArgs={} extraArgs...>
 <!--[if IE 9]><html class="lt-ie10"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>><![endif]-->
 <html class="no-js"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>>
 <head>
@@ -132,7 +132,7 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
   <@script_markup origArgs=args type=type src=src output=output htmlwrap=htmlwrap cdata=cdata><#nested></@script_markup>
 </#macro>
 
-<#macro script_markup origArgs={} type="" src="" output="" htmlwrap=true cdata=true extraArgs...>
+<#macro script_markup type="" src="" output="" htmlwrap=true cdata=true origArgs={} extraArgs...>
   <#if src?has_content>
     <script type="${type}" src="${src}"></script>
   <#else>

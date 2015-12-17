@@ -102,7 +102,7 @@
      This may be overridden by themes to change markup without changing logic.
      Here, elem will contain either the value "h" or a valid html element.
      NOTE: wherever this is overridden, should include "extraArgs..." for compatibility (new args won't break old overrides; remove to identify) -->
-<#macro heading_markup origArgs={} level=1 elem="" class="" id="" attribs={} excludeAttribs=[] containerElem="" containerClass="" containerId="" extraArgs...>
+<#macro heading_markup level=1 elem="" class="" id="" attribs={} excludeAttribs=[] containerElem="" containerClass="" containerId="" origArgs={} extraArgs...>
   <#local elemLevel = level>
   <#if (elemLevel > 6)>
     <#local elemLevel = 6>
@@ -143,7 +143,7 @@ Creates a very basic wrapper for code blocks
   <@code_markup origArgs=args type=type><#nested></@code_markup>
 </#macro>
 
-<#macro code_markup origArgs={} type="" extraArgs...>
+<#macro code_markup type="" origArgs={} extraArgs...>
   <pre><code data-language="${type!}"><#rt>
     <#nested><#t>
   </code></pre><#lt>
@@ -489,8 +489,8 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 </#macro>
 
 <#-- @table main markup - theme override -->
-<#macro table_markup origArgs={} open=true close=true openOnly=false closeOnly=false nestedOnly=false type="" styleName="" class="" id="" cellspacing="" useResponsive=false responsiveArgs={} 
-  autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs={} excludeAttribs=[] extraArgs...>
+<#macro table_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false type="" styleName="" class="" id="" cellspacing="" useResponsive=false responsiveArgs={} 
+  autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false attribs={} excludeAttribs=[] origArgs={} extraArgs...>
   <#if open>
     <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
       <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>  
@@ -841,7 +841,7 @@ Since this is very foundation specific, this function may be dropped in future i
   <@pli_markup origArgs=args type=type><#nested></@pli_markup>
 </#macro>
 
-<#macro pli_markup origArgs={} type="" extraArgs...>
+<#macro pli_markup type="" origArgs={} extraArgs...>
   <#switch type>
     <#case "price">
       <li class="${styles.pricing_price!}"><#nested></li>
@@ -896,7 +896,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     renderSeqNumber=renderSeqNumber><#nested></@chart_markup>
 </#macro>
 
-<#macro chart_markup origArgs={} type="" chartLibrary="" title="" chartId="" chartIdNum=0 renderSeqNumber=0 extraArgs...>
+<#macro chart_markup type="" chartLibrary="" title="" chartId="" chartIdNum=0 renderSeqNumber=0 origArgs={} extraArgs...>
   <#if chartLibrary=="foundation">
     <@row>
       <@cell columns=3>    
@@ -1000,7 +1000,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     chartLibrary=chartLibrary><#nested></@chartdata_markup>
 </#macro>
 
-<#macro chartdata_markup origArgs={} title="" value="" value2="" chartId="" chartType="" chartLibrary="" extraArgs...>
+<#macro chartdata_markup title="" value="" value2="" chartId="" chartType="" chartLibrary="" origArgs={} extraArgs...>
   <#if chartLibrary=="foundation">
     <li<#if value2?has_content> data-y="${value!}" data-x="${value2!}"<#else> data-value="${value!}"</#if>>${title!}</li>
   <#else>

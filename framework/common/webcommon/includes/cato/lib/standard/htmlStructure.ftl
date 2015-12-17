@@ -99,7 +99,7 @@ to this one.
 </#macro>
 
 <#-- @row container markup - theme override -->
-<#macro row_markup origArgs={} open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" collapse=false id="" alt="" selected="" extraArgs...>
+<#macro row_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" collapse=false id="" alt="" selected="" origArgs={} extraArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt/>
   </#if>
@@ -201,7 +201,7 @@ to this one.
 </#macro>
 
 <#-- @cell container markup - theme override -->
-<#macro cell_markup origArgs={} open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" last=false collapse=false extraArgs...>
+<#macro cell_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" last=false collapse=false origArgs={} extraArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt>
   </#if>
@@ -351,7 +351,7 @@ Since this is very foundation specific, this function may be dropped in future i
   <#local dummy = popRequestStack("catoCurrentGridInfo")>
 </#macro>
 
-<#macro grid_tiles_markup_container origArgs={} class="" id="" tylesType="" columns=1 extraArgs...>
+<#macro grid_tiles_markup_container class="" id="" tylesType="" columns=1 origArgs={} extraArgs...>
   <@container class=class id=id>
     <#nested>
   </@container>
@@ -372,7 +372,7 @@ Since this is very foundation specific, this function may be dropped in future i
   </@script>
 </#macro>
 
-<#macro grid_list_markup_container origArgs={} class="" id="" columns=1 extraArgs...>
+<#macro grid_list_markup_container class="" id="" columns=1 origArgs={} extraArgs...>
   <#-- this never takes effect
   <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">-->
   <#if ((columns-2) > 0)>
@@ -555,8 +555,8 @@ It is loosely based on http://metroui.org.ua/tiles.html
   </#if>
 </#function>
 
-<#macro tile_markup origArgs={} class="" id="" dataSizex="" dataSizey="" image="" imageClass="" imageBgColorClass="" link="" linkTarget="" icon="" 
-  overlayClass="" overlayBgColorClass="" title="" titleClass="" titleBgColorClass="" extraArgs...>
+<#macro tile_markup class="" id="" dataSizex="" dataSizey="" image="" imageClass="" imageBgColorClass="" link="" linkTarget="" icon="" 
+  overlayClass="" overlayBgColorClass="" title="" titleClass="" titleBgColorClass="" origArgs={} extraArgs...>
   <#-- main markup (TODO: factor out into @tile_markup) -->
   <#-- TODO: need to calc-convert tile x-size to approximate grid sizes and pass in large-medium-small below,
       OR modify parseContainerSizesFromStyleStr to do it automatically from class string (HOWEVER
@@ -1018,10 +1018,10 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 </#function>
 
 <#-- @section container markup - theme override -->
-<#macro section_markup_container origArgs={} open=true close=true openOnly=false closeOnly=false nestedOnly=false sectionLevel=1 headingLevel=1 menuTitleContent="" class="" outerClass="" 
+<#macro section_markup_container open=true close=true openOnly=false closeOnly=false nestedOnly=false sectionLevel=1 headingLevel=1 menuTitleContent="" class="" outerClass="" 
     innerClass="" contentFlagClasses="" id="" title="" collapsed=false collapsibleAreaId="" collapsible=false saveCollapsed=true 
     expandToolTip=true collapseToolTip=true padded=false showMore=true fullUrlString=""
-    javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false extraArgs...>
+    javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false origArgs={} extraArgs...>
   <#if open>
     <#local outerClass = "">
     <#local outerClass = addClassArg(outerClass, "section-screenlet")>
@@ -1053,8 +1053,8 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 </#macro>
 
 <#-- @section menu and title arrangement markup - theme override -->
-<#macro section_markup_menutitle origArgs={} sectionLevel=1 headingLevel=1 menuLayout="" menuRole="" hasMenu=false menuMarkup="" 
-    hasTitle=false titleMarkup="" contentFlagClasses="" fromScreenDef=false extraArgs...>
+<#macro section_markup_menutitle sectionLevel=1 headingLevel=1 menuLayout="" menuRole="" hasMenu=false menuMarkup="" 
+    hasTitle=false titleMarkup="" contentFlagClasses="" fromScreenDef=false origArgs={} extraArgs...>
   <#-- Currently supports only one menu. could have one for each layout (with current macro
        args as post-title), but tons of macro args needed and complicates. -->
   <#if menuLayout == "pre-title">

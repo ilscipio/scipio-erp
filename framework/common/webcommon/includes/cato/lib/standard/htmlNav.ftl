@@ -146,9 +146,9 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     htmlWrap        = wrapping HTML element (ul|div|span, default: ul)
 -->
 <#assign menu_defaultArgs = {
-  "type" : "generic", "class" : "", "inlineItems" : false, "id" : "", "style" : "", "attribs" : "",
-  "items" : true, "preItems" : true, "postItems" : true, "sort" : false, "sortBy" : "", "sortDesc" : false,
-  "nestedFirst" : false, "htmlWrap" : true
+  "type":"generic", "class":"", "inlineItems":false, "id":"", "style":"", "attribs":{},
+  "items":true, "preItems":true, "postItems":true, "sort":false, "sortBy":"", "sortDesc":false,
+  "nestedFirst":false, "htmlWrap":true
 }>
 <#macro menu args={} inlineArgs...>
   <#-- class arg needs special handling here to support extended "+" logic (mostly for section menu defs) -->
@@ -163,6 +163,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     "class" : class
   })>
   <#local dummy = localsPutAll(args)>
+  <#local attribs = makeAttribMapFromArgMap(args)>
 
   <#if htmlWrap?is_boolean>
     <#local htmlWrap = htmlWrap?string("ul", "")>
@@ -276,11 +277,11 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     inlineItem      = boolean, if true, generate only items, not menu container
 -->
 <#assign menuitem_defaultArgs = {
-  "type" : "generic", "class" : "", "contentClass", "", "id" : "", "style" : "", "attribs" : "",
-  "contentId" : "", "contentStyle" : "", "contentAttribs" : "", "text" : "", "href" : true,
-  "onClick" : "", "disabled" : false, "selected" : false, "active" : false, "target" : "",
-  "nestedContent" : true, "nestedMenu" : false, "wrapNested" : false, "nestedFirst" : false,
-  "htmlWrap" : true, "inlineItem" : false
+  "type":"generic", "class":"", "contentClass", "", "id":"", "style":"", "attribs":{},
+  "contentId":"", "contentStyle":"", "contentAttribs":"", "text":"", "href":true,
+  "onClick":"", "disabled":false, "selected":false, "active":false, "target":"",
+  "nestedContent":true, "nestedMenu":false, "wrapNested":false, "nestedFirst":false,
+  "htmlWrap":true, "inlineItem":false
 }>
 <#macro menuitem args={} inlineArgs...>
   <#-- class args need special handling here to support extended "+" logic (mostly for section menu defs) -->
@@ -301,6 +302,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
     "contentClass" : contentClass
   })>
   <#local dummy = localsPutAll(args)>
+  <#local attribs = makeAttribMapFromArgMap(args)>
 
   <#local menuType = (catoCurrentMenuInfo.type)!"">
   <#local menuStyleName = (catoCurrentMenuInfo.styleName)!"">

@@ -28,7 +28,11 @@
 <#macro modal args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.modal_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <a href="#" data-reveal-id="${id}_modal" <#if href?has_content>data-reveal-ajax="${href!}"</#if>><#if icon?has_content><i class="${icon!}"></i> </#if>${label}</a>
+  <@modal_markup origArgs=args id=id label=label href=href icon=icon><#nested></@modal_markup>
+</#macro>
+
+<#macro modal_markup origArgs={} id="" label="" href="" icon="" extraArgs...>
+  <a href="#" data-reveal-id="${id}_modal"<#if href?has_content> data-reveal-ajax="${href!}"</#if>><#if icon?has_content><i class="${icon!}"></i> </#if>${label}</a>
   <div id="${id}_modal" class="${styles.modal_wrap!}" data-reveal>
     <#nested>
     <a class="close-reveal-modal">&#215;</a>
@@ -61,10 +65,16 @@ it's an unexpected result, error or one that requires user action. See other mac
 <#macro alert args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.alert_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local typeClass = "alert_type_${type!}"/>
+  <#if type="error">
+    <#local type = "alert">
+  </#if>
+  <@alert_markup origArgs=args type=type class=class typeClass=typeClass id=id><#nested></@alert_markup>
+</#macro>
+
+<#macro alert_markup origArgs={} type="info" class="" typeClass="" id="" extraArgs...>
   <#local class = addClassArg(class, styles.grid_cell!"")>
   <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
-  <#local typeClass = "alert_type_${type!}"/>
-  <#if type="error"><#local type = "alert"></#if>
   <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
     <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
       <div data-alert class="${styles.alert_wrap!} ${styles[typeClass]!}">
@@ -98,6 +108,10 @@ it's an unexpected result, error or one that requires user action. See other mac
 <#macro panel args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.panel_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <@panel_markup origArgs=args type=type title=title><#nested></@panel_markup>
+</#macro>
+
+<#macro panel_markup origArgs={} type="" title="" extraArgs...>
   <div class="${styles.panel_wrap!} ${type}">
     <div class="${styles.panel_head!}"><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
     <div class="${styles.panel_body!}"><p><#nested></p></div>
@@ -125,6 +139,10 @@ Other messages such as for missing params/record IDs are usually errors.
 <#macro resultMsg args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.resultMsg_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <@resultMsg_markup origArgs=args class=class id=id><#nested></@resultMsg_markup>
+</#macro>
+
+<#macro resultMsg_markup origArgs={} class="" id="" extraArgs...>
   <p<@compiledClassAttribStr class=class defaultVal="result-msg" /><#if id?has_content> id="${id}"</#if>><#nested></p>
 </#macro>
 
@@ -150,6 +168,9 @@ templates: currently @alert.
 <#macro errorMsg args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.errorMsg_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@alert type="error" class=class id=id><#nested></@alert>
+  <@errorMsg_markup origArgs=args type=type class=class id=id><#nested></@errorMsg_markup>
 </#macro>
 
+<#macro errorMsg_markup origArgs={} type="error" class="" id="" extraArgs...>
+  <@alert type="error" class=class id=id><#nested></@alert>
+</#macro>

@@ -26,7 +26,7 @@ to this one.
                             NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#assign container_defaultArgs = {
-  "class":"", "openOnly":false, "closeOnly":false, "nestedOnly":false, "attribs":{}
+  "class":"", "openOnly":false, "closeOnly":false, "nestedOnly":false, "elem":"", "attribs":{}
 }>
 <#macro container args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.container_defaultArgs)>
@@ -34,15 +34,18 @@ to this one.
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
+  <#if !elem?has_content || elem == "container">
+    <#local elem = "div">
+  </#if>
   <#if open>
     <#-- NOTE: currently, no stack needed; simple -->
     <#-- save grid sizes (can simply assume this is a cell; saveCurrentContainerSizesFromStyleStr will be okay with it) -->
     <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
-    <div<@compiledClassAttribStr class=class /><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class"]/></#if>><#rt>
+    <${elem}<@compiledClassAttribStr class=class /><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class"]/></#if>><#rt>
   </#if>
       <#nested><#t>
   <#if close>
-    </div><#lt>
+    </${elem}><#lt>
     <#-- pop grid sizes -->
     <#local dummy = unsetCurrentContainerSizes()>
   </#if>
@@ -577,7 +580,6 @@ It is loosely based on http://metroui.org.ua/tiles.html
   </@container>
   <#--<#local dummy = unsetCurrentContainerSizes()>-->
 </#macro>
-
 
 <#-- 
 *************

@@ -48,12 +48,24 @@ An HTML form element.
   <#if open>
     <#local formInfo = {"type":type, "name":name, "id":id}>
     <#local dummy = pushRequestStack("catoCurrentFormInfo", formInfo)>
-    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
+  </#if>
+  <#-- WARN: currently no stack memory for closeOnly=true -->
+  <@form_markup origArgs=origArgs type=type name=name id=id class=class open=open close=close openOnly=openOnly closeOnly=closeOnly 
+    nestedOnly=nestedOnly attribs=attribs><#nested></@form_markup>
+  <#if close>
+    <#local dummy = popRequestStack("catoCurrentFormInfo")>
+  </#if>
+</#macro>
+
+<#macro form_markup origArgs={} type="" name="" id="" class="" open=true close=true openOnly=false closeOnly=false 
+  nestedOnly=false attribs={} extraArgs...>
+  <#if open>
+    <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
+      <#lt><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
       <#nested>
   <#if close>
     </form>
-    <#local dummy = popRequestStack("catoCurrentFormInfo")>
   </#if>
 </#macro>
 

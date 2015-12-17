@@ -140,6 +140,10 @@ Creates a very basic wrapper for code blocks
 <#macro code args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.code_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <@code_markup origArgs=args type=type><#nested></@code_markup>
+</#macro>
+
+<#macro code_markup origArgs={} type="" extraArgs...>
   <pre><code data-language="${type!}"><#rt>
     <#nested><#t>
   </code></pre><#lt>
@@ -834,6 +838,10 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro pli args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.pli_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <@pli_markup origArgs=args type=type><#nested></@pli_markup>
+</#macro>
+
+<#macro pli_markup origArgs={} type="" extraArgs...>
   <#switch type>
     <#case "price">
       <li class="${styles.pricing_price!}"><#nested></li>
@@ -878,23 +886,28 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#local dummy = localsPutAll(args)>
 
   <#global chartLibrary = library!"foundation"/>
-  <#local nestedContent><#nested><#t></#local>
   <#local chartIdNum = getRequestVar("catoChartIdNum")!0>
   <#local chartIdNum = chartIdNum + 1 />
   <#local dummy = setRequestVar("catoChartIdNum", chartIdNum)>
+  <#global chartId = "chart_${renderSeqNumber!}_${chartIdNum!}"/>
+  <#global chartType = type/>
+  
+  <@chart_markup origArgs=args type=type chartId=chartId chartIdNum=chartIdNum chartLibrary=chartLibrary title=title 
+    renderSeqNumber=renderSeqNumber><#nested></@chart_markup>
+</#macro>
+
+<#macro chart_markup origArgs={} type="" chartLibrary="" title="" chartId="" chartIdNum=0 renderSeqNumber=0 extraArgs...>
   <#if chartLibrary=="foundation">
     <@row>
       <@cell columns=3>    
-      <ul data-${type!}-id="chart_${renderSeqNumber!}_${chartIdNum!}" class="${styles.chart_legend!}">
-        <#nested/>
-        <#--<#if !nestedContent?has_content><@chartdata value="0" title=""/></#if>-->
-      </ul>
+        <ul data-${type!}-id="chart_${renderSeqNumber!}_${chartIdNum!}" class="${styles.chart_legend!}">
+          <#nested/>
+          <#--<#if !nestedContent?has_content><@chartdata value="0" title=""/></#if>-->
+        </ul>
       </@cell>
       <@cell columns=9><div id="chart_${renderSeqNumber!}_${chartIdNum!}" style="height:300px;"></div></@cell>
     </@row>
   <#else>
-    <#global chartId = "chart_${renderSeqNumber!}_${chartIdNum!}"/>
-    <#global chartType = type/>
     <canvas id="${chartId!}" class="${styles.grid_large!}12 chart-data" height="300" style="height:300px;"></canvas>
     <@script>
         $(function(){
@@ -982,6 +995,12 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#if !chartLibrary?has_content>
     <#local chartLibrary = "foundation"/>
   </#if>
+
+  <@chartdata_markup origArgs=args title=title value=value value2=value2 chartId=chartId chartType=chartType 
+    chartLibrary=chartLibrary><#nested></@chartdata_markup>
+</#macro>
+
+<#macro chartdata_markup origArgs={} title="" value="" value2="" chartId="" chartType="" chartLibrary="" extraArgs...>
   <#if chartLibrary=="foundation">
     <li<#if value2?has_content> data-y="${value!}" data-x="${value2!}"<#else> data-value="${value!}"</#if>>${title!}</li>
   <#else>
@@ -992,3 +1011,4 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </#if>
   </#if>
 </#macro>
+

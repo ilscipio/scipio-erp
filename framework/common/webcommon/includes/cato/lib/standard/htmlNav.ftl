@@ -36,6 +36,10 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro nav args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.nav_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <@nav_markup origArgs=args type=type><#nested></@nav_markup>
+</#macro>
+
+<#macro nav_markup origArgs={} type="" extraArgs...>
   <#switch type>
     <#case "magellan">
       <div data-magellan-expedition="fixed">
@@ -63,6 +67,10 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro mli args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.mli_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <@mli_markup origArgs=args arrival=arrival><#nested></@mli_markup>
+</#macro>
+
+<#macro mli_markup origArgs={} arrival="" extraArgs...>
   <dd data-magellan-arrival="${arrival}"><#nested></dd>
 </#macro>
 

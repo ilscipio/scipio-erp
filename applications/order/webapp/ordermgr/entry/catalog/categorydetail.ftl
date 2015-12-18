@@ -135,7 +135,7 @@ under the License.
       <#assign tabCol = 1>
       <div<#if categoryImageUrl?string?has_content> style="position: relative; margin-top: ${height}px;"</#if>
           class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">
-      <@table type="data-list" autoAltRows=false nestedOnly=!(numCol?int > 1)> <#-- orig: class="" -->
+      <@table type="data-list" autoAltRows=false open=(numCol?int > 1) close=(numCol?int > 1)> <#-- orig: class="" -->
         <#list productCategoryMembers as productCategoryMember>
           <#if (numCol?int == 1)>
             ${setRequestAttribute("optProductId", productCategoryMember.productId)}
@@ -143,7 +143,7 @@ under the License.
             ${setRequestAttribute("listIndex", productCategoryMember_index)}
             ${screens.render(productsummaryScreen)}
           <#else>
-              <@tr nestedOnly=!(tabCol?int = 1)>
+              <@tr open=(tabCol?int = 1) close=(tabCol?int = 1)>
                   <@td>
                       ${setRequestAttribute("optProductId", productCategoryMember.productId)}
                       ${setRequestAttribute("productCategoryMember", productCategoryMember)}

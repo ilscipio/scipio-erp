@@ -40,6 +40,7 @@ Since this is very foundation specific, this function may be dropped in future i
   <@nav_markup type=type origArgs=origArgs><#nested></@nav_markup>
 </#macro>
 
+<#-- @nav main markup - theme override -->
 <#macro nav_markup type="" origArgs={} extraArgs...>
   <#switch type>
     <#case "magellan">
@@ -72,6 +73,7 @@ Since this is very foundation specific, this function may be dropped in future i
   <@mli_markup arrival=arrival origArgs=origArgs><#nested></@mli_markup>
 </#macro>
 
+<#-- @mli main markup - theme override -->
 <#macro mli_markup arrival="" origArgs={} extraArgs...>
   <dd data-magellan-arrival="${arrival}"><#nested></dd>
 </#macro>

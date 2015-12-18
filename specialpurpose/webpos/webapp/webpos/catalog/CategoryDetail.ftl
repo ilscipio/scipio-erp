@@ -20,7 +20,7 @@ under the License.
 <@table type="generic">
   <#assign numButton = 1/>
   <#assign cell = 0/>
-  <@tr openOnly=true />    
+  <@tr open=true close=false />    
   <#list productCategoryMembers as productCategoryMember>
   <#assign product = productCategoryMember.getRelatedOne("Product", false)!>
   <#if product?? && product?has_content>
@@ -54,12 +54,12 @@ under the License.
   <#assign numButton = numButton + 1/>
   <#assign cell = cell + 1/>
   <#if cell == 3>
-  <@tr closeOnly=true />
+  <@tr close=true open=false />
   <#assign cell = 0/>
   </#if>
   </#list>
   <#if cell != 3>
-  <@tr closeOnly=true />
+  <@tr close=true open=false />
   </#if>
 </@table>
 <@script>

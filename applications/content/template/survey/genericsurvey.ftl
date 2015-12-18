@@ -193,17 +193,17 @@ under the License.
     <#-- this is before the rest because it will be done if the current row is not a MultiResp (or is different MultiResp) but the last row was... -->
     <#if closeMultiRespHeader>
       <#assign haveOpenMultiRespHeader = false/>
-          <@table closeOnly=true />
-        <@td closeOnly=true />
-      <@tr closeOnly=true />
+          <@table close=true open=false />
+        <@td close=true open=false />
+      <@tr close=true open=false />
     </#if>
 
     <#-- -->
     <#if openMultiRespHeader>
       <#assign haveOpenMultiRespHeader = true/>
-      <@tr width="100%" openOnly=true />
-        <@td colspan="5" width="100%" openOnly=true />
-          <@table type="fields" width="100%" border="1" cellpadding="1" cellspacing="0" openOnly=true />
+      <@tr width="100%" open=true close=false />
+        <@td colspan="5" width="100%" open=true close=false />
+          <@table type="fields" width="100%" border="1" cellpadding="1" cellspacing="0" open=true close=false />
             <@tr>
               <@td>
                 <div class="tableheadtext">${surveyMultiResp.multiRespTitle?default("&nbsp;")}</div>
@@ -294,9 +294,9 @@ under the License.
   </#list>
   <#-- one last check for a multi-resp table left open before moving on, will happen if last question was in a multi-resp -->
     <#if haveOpenMultiRespHeader>
-          <@table closeOnly=true />
-        <@td closeOnly=true />
-      <@tr closeOnly=true />
+          <@table close=true open=false />
+        <@td close=true open=false />
+      <@tr close=true open=false />
     </#if>
   <@tr>
     <@td>&nbsp;</@td>

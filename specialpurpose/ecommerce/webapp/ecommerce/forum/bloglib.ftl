@@ -130,7 +130,7 @@ ${uiLabelMap.EcommerceLoggedToPost}
         </#if>
         <#local csv = csv + content.contentId/>
         <#if (counter < len) && (startIndex <= counter)>
-       <@tr openOnly=true />
+       <@tr open=true close=false />
          <@td>
             ${indent}
             <#if content.contentTypeId == "WEB_SITE_PUB_PT" >
@@ -141,7 +141,7 @@ ${uiLabelMap.EcommerceLoggedToPost}
             <#local indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
             [${content.contentId!}]</@td>
         </#if>
-       <@tr closeOnly=true />
+       <@tr close=true open=false />
       </#if>
       <#local counter = counter + 1>
     <#if (20 < counter)> <#break/></#if>

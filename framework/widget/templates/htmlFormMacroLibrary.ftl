@@ -279,12 +279,12 @@ not "current" context (too intrusive in current renderer design). still relies o
     type: ${tableType}
     responsive: ${responsive?string} 
     scrollable: ${scrollable?string} -->
-  <@table openOnly=true type=tableType class=class responsive=responsive scrollable=scrollable fixedColumnsLeft=(attribs.tableArgs.fixedColumnsLeft)!0 fixedColumnsRight=(attribs.tableArgs.fixedColumnsRight)!0 />
+  <@table open=true close=false type=tableType class=class responsive=responsive scrollable=scrollable fixedColumnsLeft=(attribs.tableArgs.fixedColumnsLeft)!0 fixedColumnsRight=(attribs.tableArgs.fixedColumnsRight)!0 />
 </#macro>
 
 <#macro renderFormatListWrapperClose formName>
   <#local stackValues = popRequestStack("renderFormatListWrapperStack")!{}>
-  <@table closeOnly=true />
+  <@table close=true open=false />
   <#-- Cato: unset form info, but only if it was the list wrapper that set it -->
   <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
   <#if (htmlFormRenderFormInfo.setByListWrapper!false) == true>
@@ -293,14 +293,14 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderFormatHeaderRowOpen style>
-<#-- Cato: TODO: translate all thead/td/th/td/etc to @thead openOnly/closeOnly/etc... 
+<#-- Cato: TODO: translate all thead/td/th/td/etc to @thead open/close
      I've done @thead because required by responsive tables at the moment -->
-  <@thead openOnly=true />
+  <@thead open=true close=false />
     <tr class="<#if style?has_content>${style}<#else>header-row</#if>">
 </#macro>
 <#macro renderFormatHeaderRowClose>
     </tr>
-  <@thead closeOnly=true />
+  <@thead close=true open=false />
 </#macro>
 <#macro renderFormatHeaderRowCellOpen style positionSpan>
   <#global renderFormatHeaderRowCellOpened = true>
@@ -322,7 +322,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderFormatFooterRowOpen style>
-<#-- Cato: TODO: translate all tfoot/td/th/td/etc to @thead openOnly/closeOnly/etc... -->
+<#-- Cato: TODO: translate all tfoot/td/th/td/etc to @thead open/close -->
 <tfoot>
   <tr class="<#if style?has_content>${style}<#else>footer-row</#if>">
 </#macro>
@@ -366,14 +366,14 @@ not "current" context (too intrusive in current renderer design). still relies o
 
 <#macro renderFormatFieldRowOpen collapse=false style="" positions="">
   <#global renderFormatFieldRow_gridUsed = 0>
-  <@row openOnly=true class="+form-field-row" />
-    <@cell openOnly=true class=style />
-      <@row openOnly=true collapse=collapse />
+  <@row open=true close=false class="+form-field-row" />
+    <@cell open=true close=false class=style />
+      <@row open=true close=false collapse=collapse />
 </#macro>
 <#macro renderFormatFieldRowClose>
-      <@row closeOnly=true />
-    <@cell closeOnly=true />
-  <@row closeOnly=true />
+      <@row close=true open=false />
+    <@cell close=true open=false />
+  <@row close=true open=false />
 </#macro>
 
 <#function isFieldTypeAction fieldType fieldTitleBlank>
@@ -449,8 +449,8 @@ not "current" context (too intrusive in current renderer design). still relies o
   <#-- NOTE: using explicit version for compatibility! -->
   <#local outerClasses = compileClassArgExplicit(outerClass, outerClassDefault)>
 
-  <@cell openOnly=true class=outerClasses />
-    <@row openOnly=true class="+form-field-entry ${fieldEntryTypeClass}" />
+  <@cell open=true close=false class=outerClasses />
+    <@row open=true close=false class="+form-field-entry ${fieldEntryTypeClass}" />
     
   <#-- Cato: get estimate of the current absolute column widths (with all parent containers, as much as possible) -->
   <#local absColSizes = getAbsContainerSizeFactors()>
@@ -489,7 +489,7 @@ not "current" context (too intrusive in current renderer design). still relies o
       <#local innerClassDefault>${styles.grid_small!}12<#if isLarge> ${styles.grid_large!}12</#if></#local>
   </#if>
       <#-- NOTE: using explicit version for compatibility! -->
-      <@cell openOnly=true class=compileClassArgExplicit(innerClass, innerClassDefault) />
+      <@cell open=true close=false class=compileClassArgExplicit(innerClass, innerClassDefault) />
         <#if extraContainerStyles?has_content>
           <#list extraContainerStyles as containerEntry>
             <#local parts = containerEntry?trim?split(":")>
@@ -517,10 +517,10 @@ not "current" context (too intrusive in current renderer design). still relies o
             </#if>
           </#list>
         </#if>
-      <@cell closeOnly=true />
+      <@cell close=true open=false />
   <#local isActionField = isFieldTypeAction(fieldType, fieldTitleBlank)>
-    <@row closeOnly=true />
-  <@cell closeOnly=true />
+    <@row close=true open=false />
+  <@cell close=true open=false />
   <#local dummy = setRequestVar("htmlFormRenderFieldInfo", {})>
 </#macro>
 
@@ -619,11 +619,11 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
 
 <#macro renderFieldGroupOpen style id title collapsed collapsibleAreaId expandToolTip collapseToolTip collapsible>
     <#-- delegate to cato libs -->
-    <@fieldset_core openOnly=true class=style id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible />
+    <@fieldset_core open=true close=false class=style id=id title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible />
 </#macro>
 
 <#macro renderFieldGroupClose style id title>
-    <@fieldset_core closeOnly=true class=style id=id title=title />
+    <@fieldset_core close=true open=false class=style id=id title=title />
 </#macro>
 
 <#macro renderHyperlinkTitle name title showSelectAll="N">

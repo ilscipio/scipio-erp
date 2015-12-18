@@ -155,8 +155,8 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
   <#assign row=0/>
   <#list mostRecentList as content>
     <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_PUBLISH" subContentId=forumId >
-        <#-- FIXME: restructure to avoid openOnly/closeOnly -->
-        <@tr openOnly=true />
+        <#-- FIXME: restructure to avoid open/close -->
+        <@tr open=true close=false />
           <@td> <b>id:</b>${content.contentId} </@td>
           <@td> <b>name:</b>${content.contentName} </@td>
       <@injectNodeTrailCsv subContentId=content.contentId redo="true" contentAssocTypeId="PUBLISH_LINK">
@@ -175,7 +175,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
           <b>reject:</b>
           <input type="radio" name="statusId_o_${row}" value="CTNT_DEACTIVATED"/>
           </@td>
-        <@tr closeOnly=true />
+        <@tr close=true open=false />
           <input type="hidden" name="contentId_o_${row}" value="${content.contentId}"/>
         <@tr>
           <@td colspan="6">

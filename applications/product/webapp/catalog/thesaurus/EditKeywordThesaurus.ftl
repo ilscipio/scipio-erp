@@ -39,17 +39,17 @@ under the License.
       <#assign lastkeyword = "">
       <#if keywordThesauruses?has_content>
         <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
-            <#-- TODO: rewrite this somehow without need for openOnly/closeOnly -->
+            <#-- Cato: TODO: rewrite this somehow without need for open/close -->
             <#list keywordThesauruses as keyword>
               <#assign relationship = keyword.getRelatedOne("RelationshipEnumeration", true)>
               <#if keyword.enteredKeyword == lastkeyword><#assign sameRow=true><#else><#assign lastkeyword=keyword.enteredKeyword><#assign sameRow=false></#if>
               <#if sameRow == false>
                 <#if (keyword_index > 0)>
-                  <@td closeOnly=true />
-                <@tr closeOnly=true />
+                  <@td close=true open=false />
+                <@tr close=true open=false />
                 </#if>
-                <@tr valign="middle" openOnly=true />
-                  <@td openOnly=true />
+                <@tr valign="middle" open=true close=false />
+                  <@td open=true close=false />
                       <div>
                         ${keyword.enteredKeyword}
                         <form method="post" action="<@ofbizUrl>deleteKeywordThesaurus</@ofbizUrl>" name="deleteKeywordThesaurus">
@@ -66,8 +66,8 @@ under the License.
                         <input type="submit" value="${uiLabelMap.CommonAdd}" />
                       </form>
                       </div>
-                  <@td closeOnly=true />
-                  <@td openOnly=true />
+                  <@td close=true open=false />
+                  <@td open=true close=false />
               </#if>
               <div>
                 <form method="post" action="<@ofbizUrl>deleteKeywordThesaurus</@ofbizUrl>" name="deleteKeywordThesaurus">
@@ -78,8 +78,8 @@ under the License.
                 ${keyword.alternateKeyword}&nbsp;(${uiLabelMap.ProductRelationship}:${(relationship.get("description",locale))?default(keyword.relationshipEnumId!)})
               </div>
             </#list>
-              <@td closeOnly=true />
-            <@tr closeOnly=true />
+              <@td close=true open=false />
+            <@tr close=true open=false />
         </@table>
       </#if>
 </@section>

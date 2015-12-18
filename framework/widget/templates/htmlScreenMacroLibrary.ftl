@@ -48,11 +48,11 @@ not "current" context (too intrusive in current renderer design). still relies o
     <@script>ajaxUpdateAreaPeriodic('${id}', '${autoUpdateLink}', '', '${autoUpdateInterval}');</@script>
   </#if>
   <#-- Cato: delegate to cato libs -->
-  <@container openOnly=true class=style id=id />
+  <@container open=true close=false class=style id=id />
 </#macro>
 
 <#macro renderContainerEnd>
-  <@container closeOnly=true />
+  <@container close=true open=false />
 </#macro>
 
 <#macro renderContentBegin editRequest enableEditValue editContainerStyle><#if editRequest?has_content && enableEditValue == "true"><div class=${editContainerStyle}></#if></#macro>
@@ -150,7 +150,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#-- Cato: new params: menuRole, titleStyle -->
 <#macro renderScreenletBegin id="" title="" collapsible=false saveCollapsed=true collapsibleAreaId="" expandToolTip=true collapseToolTip=true fullUrlString="" padded=false menuString="" showMore=true collapsed=false javaScriptEnabled=true menuRole="" titleStyle="">
     <#-- now delegates to Cato implementation. TODO? this call is still too closely based on this macro and its args; rework later -->
-    <@section_core openOnly=true id=id title=title collapsible=collapsible saveCollapsed=saveCollapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip fullUrlString=fullUrlString padded=padded menuContent=menuString 
+    <@section_core open=true close=false id=id title=title collapsible=collapsible saveCollapsed=saveCollapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip fullUrlString=fullUrlString padded=padded menuContent=menuString 
         showMore=showMore collapsed=collapsed javaScriptEnabled=javaScriptEnabled fromScreenDef=true menuClass="" menuId="" menuLayout="" menuRole=menuRole requireMenu=false forceEmptyMenu=false hasContent=true titleStyle=titleStyle titleContainerStyle="" titleConsumeLevel=true 
         autoHeadingLevel=true headingLevel="" relHeadingLevel="" defaultHeadingLevel="" />
 </#macro>
@@ -158,7 +158,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 <#macro renderScreenletSubWidget></#macro>
 
 <#macro renderScreenletEnd>
-    <@section_core closeOnly=true />
+    <@section_core close=true open=false />
 </#macro>
 
 <#macro renderScreenletPaginateMenu lowIndex actualPageSize ofLabel listSize paginateLastStyle lastLinkUrl paginateLastLabel paginateNextStyle nextLinkUrl paginateNextLabel paginatePreviousStyle paginatePreviousLabel previousLinkUrl paginateFirstStyle paginateFirstLabel firstLinkUrl>
@@ -179,17 +179,17 @@ not "current" context (too intrusive in current renderer design). still relies o
     </form>
   </#if>
   -->
-  <@row openOnly=true />
-    <@cell openOnly=true /> 
-      <@row openOnly=true />
+  <@row open=true close=false />
+    <@cell open=true close=false /> 
+      <@row open=true close=false />
         <#-- for now, make each column a huge cell 
              (can't use grid any other way without rewriting portal page render order?) -->
 </#macro>
 
 <#macro renderPortalPageEnd>
-      <@row closeOnly=true />
-    <@cell closeOnly=true />
-  <@row closeOnly=true />
+      <@row close=true open=false />
+    <@cell close=true open=false />
+  <@row close=true open=false />
 </#macro>
 
 <#function getPortalPageWidthPercent widthHint>
@@ -260,7 +260,7 @@ not "current" context (too intrusive in current renderer design). still relies o
     
     <#-- Column: columnCount: ${columnCount}, columnIndex: ${columnIndex}, portalPageGridUsed: ${portalPageGridUsed}, width: ${width} --> 
     <#local portalPageClasses = "${styles.grid_large!}${columnSize}${endClassStr}">
-    <@cell openOnly=true class=portalPageClasses />
+    <@cell open=true close=false class=portalPageClasses />
     <#if confMode == "true">
       <div class="portal-column-config-title-bar">
         <ul>
@@ -289,7 +289,7 @@ not "current" context (too intrusive in current renderer design). still relies o
 </#macro>
 
 <#macro renderPortalPageColumnEnd>
-    <@cell closeOnly=true /> 
+    <@cell close=true open=false /> 
 </#macro>
 
 <#macro renderPortalPagePortletBegin originalPortalPageId portalPageId portalPortletId portletSeqId prevPortletId="" prevPortletSeqId="" nextPortletId="" nextPortletSeqId="" columnSeqId="" prevColumnSeqId="" nextColumnSeqId="" confMode="false" delPortletHint="Remove this portlet" editAttribute="false" editAttributeHint="Edit portlet parameters" width="auto" columnCount=1 columnIndex=0>

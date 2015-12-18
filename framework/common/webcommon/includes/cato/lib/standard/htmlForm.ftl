@@ -35,7 +35,7 @@ An HTML form element.
                           NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#assign form_defaultArgs = {
-  "type":"input", "name":"", "id":"", "class":"", "openOnly":false, "closeOnly":false, "nestedOnly":false, 
+  "type":"input", "name":"", "id":"", "class":"", "open":true, "close":true, 
   "attribs":{}
 }>
 <#macro form args={} inlineArgs...>
@@ -44,8 +44,6 @@ An HTML form element.
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
 
-  <#local open = !(nestedOnly || closeOnly)>
-  <#local close = !(nestedOnly || openOnly)>
   <#if open>
     <#local formInfo = {"type":type, "name":name, "id":id}>
     <#local dummy = pushRequestStack("catoFormInfoStack", formInfo)>
@@ -59,15 +57,14 @@ An HTML form element.
     <#local stackValues = popRequestStack("catoFormMarkupStack")!{}>
     <#local dummy = localsPutAll(stackValues)>
   </#if>
-  <@form_markup type=type name=name id=id class=class open=open close=close openOnly=openOnly closeOnly=closeOnly 
-    nestedOnly=nestedOnly attribs=attribs origArgs=origArgs><#nested></@form_markup>
+  <@form_markup type=type name=name id=id class=class open=open close=close attribs=attribs origArgs=origArgs><#nested></@form_markup>
   <#if close>
     <#local dummy = popRequestStack("catoFormInfoStack")>
   </#if>
 </#macro>
 
-<#macro form_markup type="" name="" id="" class="" open=true close=true openOnly=false closeOnly=false 
-  nestedOnly=false attribs={} origArgs={} extraArgs...>
+<#-- @form main markup - theme override -->
+<#macro form_markup type="" name="" id="" class="" open=true close=true attribs={} origArgs={} extraArgs...>
   <#if open>
     <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
       <#lt><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
@@ -336,8 +333,7 @@ A visible fieldset, including the HTML element.
     collapsed       = show/hide the fieldset
 -->
 <#assign fieldset_defaultArgs = {
-  "id":"", "title":"", "class":"", "containerClass":"", "collapsed":false, "openOnly":false, 
-  "closeOnly":false, "nestedOnly":false
+  "id":"", "title":"", "class":"", "containerClass":"", "collapsed":false, "open":true, "close":true
 }>
 <#macro fieldset args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.fieldset_defaultArgs)>
@@ -352,16 +348,14 @@ A visible fieldset, including the HTML element.
 <#-- DEV NOTE: see @section_core for details on "core" pattern 
      migrated from @renderFieldGroupOpen/Close form widget macro -->
 <#assign fieldset_core_defaultArgs = {
-  "class":"", "containerClass":"", "id":"", "title":"", "collapsed":false, "collapsibleAreaId":"", "expandToolTip":"", "collapseToolTip":"", "collapsible":false, "openOnly":false, 
-  "closeOnly":false, "nestedOnly":false
+  "class":"", "containerClass":"", "id":"", "title":"", "collapsed":false, "collapsibleAreaId":"", "expandToolTip":"", "collapseToolTip":"", "collapsible":false, 
+  "open":true, "close":true
 }>
 <#macro fieldset_core args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.fieldset_core_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
 
-  <#local open = !(nestedOnly || closeOnly)>
-  <#local close = !(nestedOnly || openOnly)>
   <#if id?has_content>
     <#local containerId = "${id}_wrapper">
   <#else>
@@ -378,11 +372,11 @@ A visible fieldset, including the HTML element.
     <#local stackValues = popRequestStack("catoFieldsetCoreMarkupStack")!{}>
     <#local dummy = localsPutAll(stackValues)>
   </#if>
-  <@fieldset_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class containerClass=containerClass id=id containerId=containerId title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible origArgs=origArgs><#nested></@fieldset_markup>
+  <@fieldset_markup open=open close=close class=class containerClass=containerClass id=id containerId=containerId title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible origArgs=origArgs><#nested></@fieldset_markup>
 </#macro>
 
 <#-- @fieldset main markup - theme override -->
-<#macro fieldset_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" containerClass="" id="" containerId="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false origArgs={} extraArgs...>
+<#macro fieldset_markup open=true close=true class="" containerClass="" id="" containerId="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false origArgs={} extraArgs...>
   <#if open>
     <#local containerClass = addClassArg(containerClass, "fieldgroup")>
     <#if collapsible || collapsed>
@@ -393,8 +387,8 @@ A visible fieldset, including the HTML element.
     </#if>
     <#local classes = compileClassArg(class)>
     <#local containerClasses = compileClassArg(containerClass, "${styles.grid_large!}12")>
-    <@row openOnly=true />
-      <@cell openOnly=true class=containerClasses id=containerId />
+    <@row open=true close=false />
+      <@cell open=true close=false class=containerClasses id=containerId />
         <fieldset<#if classes?has_content> class="${classes!}"</#if><#if id?has_content> id="${id}"</#if>>
       <#--<#if collapsible>
         <ul>
@@ -417,8 +411,8 @@ A visible fieldset, including the HTML element.
           <#nested>
   <#if close>
         </fieldset>
-      <@cell closeOnly=true />
-    <@row closeOnly=true />
+      <@cell close=true open=false />
+    <@row close=true open=false />
   </#if>
 </#macro>
 
@@ -1412,8 +1406,8 @@ standard markup.
       </#if>
 
       <#-- need this surrounding cell/row for collapsePostfix (only if true and collapse false) -->
-      <@cell class=compileClassArg("", defaultGridStyles.widgetPostfixArea) nestedOnly=!widgetPostfixCombined>
-        <@row nestedOnly=!widgetPostfixCombined collapse=(collapse || (postfix && collapsePostfix))>
+      <@cell class=compileClassArg("", defaultGridStyles.widgetPostfixArea) open=widgetPostfixCombined close=widgetPostfixCombined>
+        <@row open=widgetPostfixCombined close=widgetPostfixCombined collapse=(collapse || (postfix && collapsePostfix))>
           <#-- NOTE: here this is the same as doing 
                  class=("=" + compileClassArg(class, defaultGridStyles.widgetArea))
                as we know the compiled class will never be empty. -->

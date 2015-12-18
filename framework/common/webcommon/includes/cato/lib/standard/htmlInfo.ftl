@@ -32,6 +32,7 @@
   <@modal_markup id=id label=label href=href icon=icon origArgs=origArgs><#nested></@modal_markup>
 </#macro>
 
+<#-- @modal main markup - theme override -->
 <#macro modal_markup id="" label="" href="" icon="" origArgs={} extraArgs...>
   <a href="#" data-reveal-id="${id}_modal"<#if href?has_content> data-reveal-ajax="${href!}"</#if>><#if icon?has_content><i class="${icon!}"></i> </#if>${label}</a>
   <div id="${id}_modal" class="${styles.modal_wrap!}" data-reveal>
@@ -74,6 +75,7 @@ it's an unexpected result, error or one that requires user action. See other mac
   <@alert_markup type=type class=class typeClass=typeClass id=id origArgs=origArgs><#nested></@alert_markup>
 </#macro>
 
+<#-- @alert main markup - theme override -->
 <#macro alert_markup type="info" class="" typeClass="" id="" origArgs={} extraArgs...>
   <#local class = addClassArg(class, styles.grid_cell!"")>
   <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
@@ -114,6 +116,7 @@ it's an unexpected result, error or one that requires user action. See other mac
   <@panel_markup type=type title=title origArgs=origArgs><#nested></@panel_markup>
 </#macro>
 
+<#-- @panel main markup - theme override -->
 <#macro panel_markup type="" title="" origArgs={} extraArgs...>
   <div class="${styles.panel_wrap!} ${type}">
     <div class="${styles.panel_head!}"><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
@@ -146,6 +149,7 @@ Other messages such as for missing params/record IDs are usually errors.
   <@resultMsg_markup class=class id=id origArgs=origArgs><#nested></@resultMsg_markup>
 </#macro>
 
+<#-- @resultMsg main markup - theme override -->
 <#macro resultMsg_markup class="" id="" origArgs={} extraArgs...>
   <p<@compiledClassAttribStr class=class defaultVal="result-msg" /><#if id?has_content> id="${id}"</#if>><#nested></p>
 </#macro>
@@ -176,6 +180,7 @@ templates: currently @alert.
   <@errorMsg_markup type=type class=class id=id origArgs=origArgs><#nested></@errorMsg_markup>
 </#macro>
 
+<#-- @errorMsg main markup - theme override -->
 <#macro errorMsg_markup type="error" class="" id="" origArgs={} extraArgs...>
   <@alert type="error" class=class id=id><#nested></@alert>
 </#macro>

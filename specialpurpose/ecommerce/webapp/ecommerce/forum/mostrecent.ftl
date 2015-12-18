@@ -34,7 +34,7 @@ under the License.
   <#assign row=0/>
   <#list entityList as content>
     <@checkPermission entityOperation="_ADMIN" targetOperation="CONTENT_PUBLISH" subContentId=forumId >
-        <@tr openOnly=true />
+        <@tr open=true close=false />
           <@td> ${uiLabelMap.CommonId}:${content.contentId} </@td>
           <@td> ${uiLabelMap.CommonName}:${content.contentName} </@td>
       <@injectNodeTrailCsv subContentId=content.contentId redo="true" contentAssocTypeId="PUBLISH_LINK">
@@ -49,7 +49,7 @@ under the License.
           ${uiLabelMap.CommonPublish}:
           <input type="radio" name="statusId_o_${row}" value="CTNT_PUBLISHED"/>
           </@td>
-        <@tr closeOnly=true />
+        <@tr close=true open=false />
           <input type="hidden" name="contentId_o_${row}" value="${content.contentId}"/>
         <@tr>
           <@td colspan="5">

@@ -145,6 +145,7 @@ Creates a very basic wrapper for code blocks
   <@code_markup type=type origArgs=origArgs><#nested></@code_markup>
 </#macro>
 
+<#-- @code main markup - theme override -->
 <#macro code_markup type="" origArgs={} extraArgs...>
   <pre><code data-language="${type!}"><#rt>
     <#nested><#t>
@@ -319,7 +320,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     inheritAltRows  = only for nested tables: if true, all rows in nested tables will inherit alt from parent table row
     useFootAltRoots = whether use alt row logic in foot or not
     cellspacing     = cellspacing, defaults specified in styles hash, set to "" to prevent setting.
-    nestedOnly/openOnly/closeOnly = advanced structure control, for esoteric cases
+    open/close      = advanced structure control, for esoteric cases
     attribs         = hash of other legacy <table attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <table attributes and values, inlined
                             NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
@@ -336,7 +337,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 <#assign table_defaultArgs = {
   "type":"", "class":"", "id":"", "hasHeader":"", "cellspacing":true, "responsive":"", "scrollable":"", "responsiveOptions":{}, "responsiveDefaults":"", 
   "fixedColumnsLeft":0, "fixedColumnsRight":0, "autoAltRows":"", "firstRowAlt":"", "inheritAltRows":false, "useFootAltRows":false, 
-  "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+  "open":true, "close":true, "attribs":{}
   <#-- DEV NOTE: for all table macros, when adding parameters, make sure also pushed on catoTableStack stack below -->
 }>
 <#macro table args={} inlineArgs...>
@@ -345,8 +346,6 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
 
-  <#local open = !(nestedOnly || closeOnly)>
-  <#local close = !(nestedOnly || openOnly)>
   <#if open>
     <#local tableIdNum = getRequestVar("catoTableIdNum")!0>
     <#local tableIdNum = tableIdNum + 1 />
@@ -486,7 +485,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
     "fixedColumnsLeft" : fixedColumnsLeft,
     "fixedColumnsRight" : fixedColumnsRight
   }>
-  <@table_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly type=type styleName=styleName class=class id=id cellspacing=cellspacing 
+  <@table_markup open=open close=close type=type styleName=styleName class=class id=id cellspacing=cellspacing 
       useResponsive=useResponsive responsiveArgs=responsiveArgs autoAltRows=autoAltRows firstRowAlt=firstRowAlt 
       inheritAltRows=inheritAltRows useFootAltRows=useFootAltRows tableIdNum=tableIdNum attribs=attribs origArgs=origArgs>
     <#nested>
@@ -502,7 +501,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 </#macro>
 
 <#-- @table main markup - theme override -->
-<#macro table_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false type="" styleName="" class="" id="" cellspacing="" useResponsive=false responsiveArgs={} 
+<#macro table_markup open=true close=true type="" styleName="" class="" id="" cellspacing="" useResponsive=false responsiveArgs={} 
   autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false tableIdNum=0 attribs={} excludeAttribs=[] origArgs={} extraArgs...>
   <#if open>
     <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
@@ -523,7 +522,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 </#macro>
 
 <#assign thead_defaultArgs = {
-  "class":"", "id":"", "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+  "class":"", "id":"", "open":true, "close":true, "attribs":{}
 }>
 <#macro thead args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.thead_defaultArgs)>
@@ -531,8 +530,6 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
   
-  <#local open = !(nestedOnly || closeOnly)>
-  <#local close = !(nestedOnly || openOnly)>
   <#if open>
     <#-- inform the parent table (and anything else) that this table has a header -->
     <#local dummy = setRequestVar("catoCurrentTableHasHeader", true)!>
@@ -556,8 +553,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#else>
     <#-- (no missing values yet) -->
   </#if>
-  <@thead_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly 
-    class=class id=id attribs=attribs origArgs=origArgs>
+  <@thead_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs>
     <#nested>
   </@thead_markup>
   <#if close>
@@ -565,7 +561,8 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   </#if>
 </#macro>
 
-<#macro thead_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" attribs="" origArgs={} extraArgs...>
+<#-- @thead main markup - theme override -->
+<#macro thead_markup open=true close=true class="" id="" attribs="" origArgs={} extraArgs...>
   <#if open>
     <thead<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
@@ -576,7 +573,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 </#macro>
 
 <#assign tbody_defaultArgs = {
-  "class":"", "id":"", "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+  "class":"", "id":"", "open":true, "close":true, "attribs":{}
 }>
 <#macro tbody args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tbody_defaultArgs)>
@@ -584,8 +581,6 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
 
-  <#local open = !(nestedOnly || closeOnly)>
-  <#local close = !(nestedOnly || openOnly)>
   <#if open>
     <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
     <#local catoCurrentTableSectionInfo = {"type": "body", "cellElem": "td"}>
@@ -607,8 +602,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#else>
     <#-- (no missing values yet) -->
   </#if>
-  <@tbody_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly 
-    class=class id=id attribs=attribs origArgs=origArgs>
+  <@tbody_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs>
     <#nested>
   </@tbody_markup>
   <#if close>
@@ -616,7 +610,8 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   </#if>
 </#macro>
 
-<#macro tbody_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" attribs="" origArgs={} extraArgs...>
+<#-- @tbody main markup - theme override -->
+<#macro tbody_markup open=true close=true class="" id="" attribs="" origArgs={} extraArgs...>
   <#if open>
     <tbody<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
@@ -628,7 +623,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 
 
 <#assign tfoot_defaultArgs = {
-  "class":"", "id":"", "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+  "class":"", "id":"", "open":true, "close":true, "attribs":{}
 }>
 <#macro tfoot args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tfoot_defaultArgs)>
@@ -636,8 +631,6 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
 
-  <#local open = !(nestedOnly || closeOnly)>
-  <#local close = !(nestedOnly || openOnly)>
   <#if open>
     <#local prevTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
     <#local catoCurrentTableSectionInfo = {"type": "foot", "cellElem": "td"}>
@@ -659,8 +652,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#else>
     <#-- (no missing values yet) -->
   </#if>
-  <@tfoot_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly 
-    class=class id=id attribs=attribs origArgs=origArgs>
+  <@tfoot_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs>
     <#nested>
   </@tfoot_markup>
   <#if close>
@@ -668,7 +660,8 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   </#if>
 </#macro>
 
-<#macro tfoot_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" attribs="" origArgs={} extraArgs...>
+<#-- @tfoot main markup - theme override -->
+<#macro tfoot_markup open=true close=true class="" id="" attribs="" origArgs={} extraArgs...>
   <#if open>
     <tfoot<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
@@ -711,13 +704,13 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
     groupParent     = boolean, nested tables only, if specified, considers row logically grouped with parent row;
                       sets alt to exact same as parent row
     selected        = boolean, if specified and true marked as selected
-    nestedOnly/openOnly/CloseOnly = advanced structure control, for esoteric cases (should omit nested for openOnly/closeOnly)
+    open/close      = advanced structure control, for esoteric cases
     attribs               = hash of other legacy <tr attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <tr attributes and values, inlined
 -->
 <#assign tr_defaultArgs = {
   "type":"", "class":"", "id":"", "useAlt":"", "alt":"", "groupLast":"", "groupParent":"", "selected":"", 
-  "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+  "open":true, "close":true, "attribs":{}
 }>
 <#macro tr args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tr_defaultArgs)>
@@ -725,8 +718,6 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
 
-  <#local open = !(nestedOnly || closeOnly)>
-  <#local close = !(nestedOnly || openOnly)>
   <#local catoCurrentTableInfo = getRequestVar("catoCurrentTableInfo")!{}>
   <#local catoCurrentTableSectionInfo = getRequestVar("catoCurrentTableSectionInfo")!{}>
   <#local catoCurrentTableRowAltFlag = getRequestVar("catoCurrentTableRowAltFlag")!false>
@@ -790,8 +781,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#else>
     <#local isRegAltRow = false>
   </#if>    
-  <@tr_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly 
-    class=class id=id attribs=attribs origArgs=origArgs>
+  <@tr_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs>
     <#nested>
   </@tr_markup>
   <#if close>
@@ -808,7 +798,8 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   </#if>
 </#macro>
 
-<#macro tr_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" attribs="" origArgs={} extraArgs...>
+<#-- @tr main markup - theme override -->
+<#macro tr_markup open=true close=true class="" id="" attribs="" origArgs={} extraArgs...>
   <#if open>
     <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
@@ -830,12 +821,12 @@ Helps define table cells.
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     id              = cell id
-    nestedOnly/openOnly/CloseOnly = advanced structure control, for esoteric cases (should omit nested for openOnly/closeOnly)
+    open/close      = advanced structure control, for esoteric cases
     attribs               = hash of other legacy <th and <td attributes (mainly for those with dash in name)
     [inlineAttribs...]    = other legacy <th and <td attributes and values
 -->
 <#assign th_defaultArgs = {
-  "class":"", "id":"", "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+  "class":"", "id":"", "open":true, "close":true, "attribs":{}
 }>
 <#macro th args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.th_defaultArgs)>
@@ -843,17 +834,16 @@ Helps define table cells.
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
 
-  <#local open = !(nestedOnly || closeOnly)>
-  <#local close = !(nestedOnly || openOnly)>
-  <@th_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id attribs=attribs origArgs=origArgs><#nested></@th_markup>
+  <@th_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs><#nested></@th_markup>
 </#macro>
 
-<#macro th_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" attribs="" origArgs={} extraArgs...>
+<#-- @th main markup - theme override -->
+<#macro th_markup open=true close=true class="" id="" attribs="" origArgs={} extraArgs...>
   <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
 <#assign td_defaultArgs = {
-  "class":"", "id":"", "nestedOnly":false, "openOnly":false, "closeOnly":false, "attribs":{}
+  "class":"", "id":"", "open":true, "close":true, "attribs":{}
 }>
 <#macro td args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.td_defaultArgs)>
@@ -861,12 +851,11 @@ Helps define table cells.
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
 
-  <#local open = !(nestedOnly || closeOnly)>
-  <#local close = !(nestedOnly || openOnly)>
-  <@td_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id attribs=attribs origArgs=origArgs><#nested></@td_markup>
+  <@td_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs><#nested></@td_markup>
 </#macro>
 
-<#macro td_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" attribs="" origArgs={} extraArgs...>
+<#-- @td main markup - theme override -->
+<#macro td_markup open=true close=true class="" id="" attribs="" origArgs={} extraArgs...>
   <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></td></#if>
 </#macro>
 
@@ -929,6 +918,7 @@ Since this is very foundation specific, this function may be dropped in future i
   <@pul_markup title=title origArgs=origArgs><#nested></@pul_markup>
 </#macro>
 
+<#-- @pul main markup - theme override -->
 <#macro pul_markup title="" origArgs={} extraArgs...>
   <ul class="${styles.pricing_wrap!}">
     <@pli type="title">${title!}</@pli>
@@ -946,6 +936,7 @@ Since this is very foundation specific, this function may be dropped in future i
   <@pli_markup type=type origArgs=origArgs><#nested></@pli_markup>
 </#macro>
 
+<#-- @pli main markup - theme override -->
 <#macro pli_markup type="" origArgs={} extraArgs...>
   <#switch type>
     <#case "price">
@@ -1002,6 +993,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     renderSeqNumber=renderSeqNumber origArgs=origArgs><#nested></@chart_markup>
 </#macro>
 
+<#-- @chart main markup - theme override -->
 <#macro chart_markup type="" chartLibrary="" title="" chartId="" chartIdNum=0 renderSeqNumber=0 origArgs={} extraArgs...>
   <#if chartLibrary=="foundation">
     <@row>
@@ -1107,6 +1099,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     chartLibrary=chartLibrary origArgs=origArgs><#nested></@chartdata_markup>
 </#macro>
 
+<#-- @chartdata main markup - theme override -->
 <#macro chartdata_markup title="" value="" value2="" chartId="" chartType="" chartLibrary="" origArgs={} extraArgs...>
   <#if chartLibrary=="foundation">
     <li<#if value2?has_content> data-y="${value!}" data-x="${value2!}"<#else> data-value="${value!}"</#if>>${title!}</li>

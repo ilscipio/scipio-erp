@@ -39,8 +39,8 @@ under the License.
     <#if (nowTimestamp >= period.start) && (nowTimestamp <= period.end)><#assign currentPeriod = true/></#if>
     <#assign indexMod7 = period_index % 7>
     <#if indexMod7 = 0>
-      <#-- FIXME: rearrange without openOnly -->
-      <@tr openOnly=true />
+      <#-- FIXME: rearrange without open/close -->
+      <@tr open=true close=false />
         <@td style=styleTdVal>
           <a href='<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=week&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>'>${uiLabelMap.CommonWeek} ${period.start?date?string("w")}</a>
         </@td>
@@ -147,8 +147,8 @@ under the License.
     <@td colspan="${6 - (indexMod7)}">&nbsp;</@td>
     </#if>
   <#if indexMod7 = 6 || !period_has_next>
-  <#-- FIXME: closeOnly -->
-  <@tr closeOnly=true />
+  <#-- Cato: FIXME: don't want open/close -->
+  <@tr close=true open=false />
   </#if>
   </#list>
 </@table>

@@ -65,7 +65,7 @@ under the License.
             <#-- TODO: rework this to avoid splitting up @tr -->
             <#if entity.entityName?substring(0, 1) != firstChar>
               <#if right_col>
-                <@td>&nbsp;</@td><@td>&nbsp;</@td><@tr closeOnly=true />
+                <@td>&nbsp;</@td><@td>&nbsp;</@td><@tr close=true open=false />
                 <#assign right_col = false>
                 <#assign alt_row = !alt_row>
               </#if>
@@ -78,7 +78,7 @@ under the License.
               <#assign anchorAttribs = {"data-magellan-destination": "Entity_${firstChar}"}>
             </#if>
             <#if !right_col>
-              <@tr alt=alt_row openOnly=true />
+              <@tr alt=alt_row open=true close=false />
             </#if>
 
             <@td id=anchorId attribs=anchorAttribs>${entity.entityName}<#if entity.viewEntity == 'Y'>&nbsp;(${uiLabelMap.WebtoolsEntityView})</#if></@td>
@@ -104,13 +104,13 @@ under the License.
               </#if>
             </@td>
             <#if right_col>
-              <@tr closeOnly=true />
+              <@tr close=true open=false />
               <#assign alt_row = !alt_row>
             </#if>
             <#assign right_col = !right_col>
           </#list>
           <#if right_col>
-            <@td>&nbsp;</@td><@td>&nbsp;</@td><@tr closeOnly=true />
+            <@td>&nbsp;</@td><@td>&nbsp;</@td><@tr close=true open=false />
           </#if>
         </@table>
     </@cell>

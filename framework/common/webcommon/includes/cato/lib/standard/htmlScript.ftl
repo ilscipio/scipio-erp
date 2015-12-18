@@ -44,6 +44,7 @@ IMPL NOTE: Beware of whitespace.
   <@htmlHeadOpen_markup includeDocType=includeDocType docLangAttr=docLangAttr langDir=langDir origArgs=origArgs/><#t>
 </#macro>
 
+<#-- @htmlHeadOpen main markup - theme override -->
 <#macro htmlHeadOpen_markup includeDocType=false docLangAttr="" langDir="" origArgs={} extraArgs...>
 <!--[if IE 9]><html class="lt-ie10"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>><![endif]-->
 <html class="no-js"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>>
@@ -94,7 +95,7 @@ Not associated with any HTML element.
 Inline script wrapper. By default, makes a javascript block.
 DEV NOTE: In future, could be used to collect scripts for inclusion at end of page.
 
-NOTE: Unlike others this macro explicitly currently cannot support openOnly/closeOnly structure (only htmlwrap).
+NOTE: Unlike others this macro explicitly currently cannot support open/close structure (only htmlwrap).
 
   * Usage Example *  
     <@script>
@@ -134,6 +135,7 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
   <@script_markup type=type src=src output=output htmlwrap=htmlwrap cdata=cdata origArgs=origArgs><#nested></@script_markup>
 </#macro>
 
+<#-- @script main markup - theme override -->
 <#macro script_markup type="" src="" output="" htmlwrap=true cdata=true origArgs={} extraArgs...>
   <#if src?has_content>
     <script type="${type}" src="${src}"></script>

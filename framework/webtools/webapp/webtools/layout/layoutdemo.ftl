@@ -41,10 +41,10 @@
     </@row>       
 
     <!-- Manual open/close rows and cells -->
-    <@row openOnly=true class="+${styles.grid_display!}" />
-        <@cell openOnly=true columns=6 />6<@cell closeOnly=true />
-        <@cell openOnly=true columns=6 />6<@cell closeOnly=true />
-    <@row closeOnly=true />
+    <@row open=true close=false class="+${styles.grid_display!}" />
+        <@cell open=true close=false columns=6 />6<@cell close=true open=false />
+        <@cell open=true close=false columns=6 />6<@cell close=true open=false />
+    <@row close=true open=false />
 
 </@section>
 
@@ -103,11 +103,11 @@
   <@heading relLevel=2>Heading - Relative Level +2</@heading>
 </@section>
 
-<@section title="Broken-up section" openOnly=true />
-  <@section title="Broken-up nested section" openOnly=true />
+<@section title="Broken-up section" open=true close=false />
+  <@section title="Broken-up nested section" open=true close=false />
     [inside]
-  <@section closeOnly=true />
-<@section closeOnly=true />
+  <@section close=true open=false />
+<@section close=true open=false />
 
 <@section class="+my-section-headings">
 <@heading attribs=makeMagTargetAttribMap("buttons") id="buttons">Buttons</@heading>
@@ -341,16 +341,16 @@
           <@tr type="meta"><@td colspan=3>Special meta row</@td></@tr>
           <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
   
-          <@tr openOnly=true colspan=3 />
-              <@td openOnly=true/>Manual open/close rows and table<@td closeOnly=true />
-              <@td openOnly=true colspan=2/>
-                  <@table type="data-complex" inheritAltRows=true openOnly=true />
-                      <@thead openOnly=true /><@tr openOnly=true /><@td openOnly=true/>Header<@td closeOnly=true /><@td openOnly=true/>Cell<@td closeOnly=true /><@tr closeOnly=true /><@thead closeOnly=true />
-                      <@tbody openOnly=true /><@tr openOnly=true /><@td openOnly=true/>Body<@td closeOnly=true /><@td openOnly=true/>Cell<@td closeOnly=true /><@tr closeOnly=true /><@tbody closeOnly=true />
-                      <@tfoot openOnly=true /><@tr openOnly=true /><@td openOnly=true/>Footer<@td closeOnly=true /><@td openOnly=true/>Cell<@td closeOnly=true /><@tr closeOnly=true /><@tfoot closeOnly=true />
-                  <@table closeOnly=true />
-              <@td closeOnly=true />
-          <@tr closeOnly=true />
+          <@tr open=true close=false colspan=3 />
+              <@td open=true close=false/>Manual open/close rows and table<@td close=true open=false />
+              <@td open=true close=false colspan=2/>
+                  <@table type="data-complex" inheritAltRows=true open=true close=false />
+                      <@thead open=true close=false /><@tr open=true close=false /><@td open=true close=false/>Header<@td close=true open=false /><@td open=true close=false/>Cell<@td close=true open=false /><@tr close=true open=false /><@thead close=true open=false />
+                      <@tbody open=true close=false /><@tr open=true close=false /><@td open=true close=false/>Body<@td close=true open=false /><@td open=true close=false/>Cell<@td close=true open=false /><@tr close=true open=false /><@tbody close=true open=false />
+                      <@tfoot open=true close=false /><@tr open=true close=false /><@td open=true close=false/>Footer<@td close=true open=false /><@td open=true close=false/>Cell<@td close=true open=false /><@tr close=true open=false /><@tfoot close=true open=false />
+                  <@table close=true open=false />
+              <@td close=true open=false />
+          <@tr close=true open=false />
   
           <@tr><@td>Regular row</@td><@td>Cell</@td><@td>Cell</@td></@tr>
         </@tbody>

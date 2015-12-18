@@ -23,10 +23,17 @@
 *
 * MACRO INTERFACES
 * 
-* Cato standard macros have versatile interfaces. In general, all of them expect to invoked
-* using named parameters (always <@row class="my-class">, never <@row "my-class">).
+* Cato standard macros have versatile interfaces. 
 *
-* Template-facing macros: these macros such as @field, @row, @heading, etc. are meant to be
+* General remarks:
+* * All macros expect to invoked using named parameters only (always <@row class="my-class">, never <@row "my-class">)
+* * Many macros have advanced, low-level open/close controls for esoteric structure control where the macro 
+*   markup open and close tags and logic needs to be split or skipped. Generally their defaults are true; must specify
+*   <@macroname open=true close=false /> for open-only and <@macroname close=true open=false /> for close-only.
+*   Use of these in templates is discouraged but occasionally forcefully needed. 
+*
+* Template-facing macros: 
+*   These macros such as @field, @row, @heading, etc. are meant to be
 *   used in templates and can also be overridden by themes (though not preferred method).
 *   Most of these use a versatile args pattern that looks like: <@name args={} inlineArgs...>
 *   From templates, these macros accept regular inlined parameters as well as a map of parameters
@@ -38,7 +45,8 @@
 *   functions do not support named parameters at this time, so not fully).
 *   See mergeArgMaps function in utilities library for more details.
 *
-* Markup macros (theme overrides): these macros such as @row_markup, @heading_markup, etc. containing
+* Markup macros (theme overrides): 
+*   These macros such as @row_markup, @heading_markup, etc. containing
 *   the "_markup" name are overridable by themes to provide alternative HTML and sometimes javascript markup.
 *   They do not have a versatile interface like the template-facing macros and are intentionally kept
 *   simple.

@@ -78,7 +78,7 @@ under the License.
       </#if>
       class="productsummary-container<#if (numCol?int > 1)> matrix</#if>">
 
-      <@table nestedOnly=!(numCol?int > 1)>
+      <@table open=(numCol?int > 1) close=(numCol?int > 1)>
 
         <#list productIds as productId>
           <#if (numCol?int == 1)>
@@ -86,13 +86,13 @@ under the License.
             ${setRequestAttribute("listIndex", productId_index)}
             ${screens.render(productsummaryScreen)}
           <#else>
-              <#if (tabCol?int = 1)><@tr openOnly=true /></#if>
+              <#if (tabCol?int = 1)><@tr open=true close=false /></#if>
                   <@td>
                       ${setRequestAttribute("optProductId", productId)}
                       ${setRequestAttribute("listIndex", productId_index)}
                       ${screens.render(productsummaryScreen)}
                   </@td>
-              <#if (tabCol?int = numCol)><@tr closeOnly=true /></#if>
+              <#if (tabCol?int = numCol)><@tr close=true open=false /></#if>
               <#assign tabCol = tabCol+1><#if (tabCol?int > numCol)><#assign tabCol = 1></#if>
            </#if>
         </#list>

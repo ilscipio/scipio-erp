@@ -111,8 +111,8 @@ under the License.
         </#if>
         <#local csv = csv + content.contentId/>
         <#if (counter < len) && (startIndex <= counter)>
-       <@tr openOnly=true />
-         <@td openOnly=true />
+       <@tr open=true close=false />
+         <@td open=true close=false />
             ${indent}
             <#if content.contentTypeId == "WEB_SITE_PUB_PT" >
               <a class="tabButton" href="<@ofbizUrl>showcontenttree?contentId=${content.contentId!}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${content.contentName!}
@@ -126,8 +126,8 @@ under the License.
               <a class="tabButton" href="<@ofbizUrl>searchContent?siteId=${siteId!}&nodeTrailCsv=${csv}</@ofbizUrl>" >${uiLabelMap.CommonSearch}</a>
             </#if>
         </#if>
-         <@td closeOnly=true />
-       <@tr closeOnly=true />
+         <@td close=true open=false />
+       <@tr close=true open=false />
       </#if>
       <#local counter = counter + 1>
     <#if (20 < counter)> <#break/></#if>

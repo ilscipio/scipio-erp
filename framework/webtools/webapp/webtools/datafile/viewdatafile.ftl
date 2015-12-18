@@ -81,7 +81,7 @@ under the License.
           <#-- if record is different than the last displayed, make a new table and header row -->
           <#if !modelRecord.name.equals(lastRecordName)>
             <#if lastRecordName??>
-              <@table closeOnly=true />
+              <@table close=true open=false />
             </#if>
             <@table type="fields" class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
               <@tr>
@@ -92,7 +92,7 @@ under the License.
                  <@td>${modelRecord.description}</@td>
               </@tr>
             </@table>
-            <@table type="fields" class="+dark-grid" cellspacing="0" openOnly=true /> <#-- orig: class="dark-grid" -->
+            <@table type="fields" class="+dark-grid" cellspacing="0" open=true close=false/> <#-- orig: class="dark-grid" -->
               <@tr>
                 <#list modelRecord.fields as modelField>
                   <@td><b>${modelField.name}</b></@td>
@@ -115,7 +115,7 @@ under the License.
             <@displayrecords records = record.getChildRecords()/>
           </#if>
         </#list>
-        <@table closeOnly=true />
+        <@table close=true open=false />
     </#macro>
 
       <#if dataFile?has_content && modelDataFile?has_content && (!parameters.ENTITYXML_FILE_SAVE?has_content || parameters.ENTITYXML_FILE_SAVE.length() == 0) && (parameters.DATAFILE_SAVE == null || parameters.DATAFILE_SAVE.length() == 0)>

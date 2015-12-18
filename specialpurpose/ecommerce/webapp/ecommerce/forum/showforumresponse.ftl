@@ -145,14 +145,14 @@ ${uiLabelMap.CommonDescription}[${currentValue.contentId!}]:${description}
     <@table border="0" cellspacing="4">
     <#list trail as webSitePublishPoint>
         <#if (counter < len) && (startIndex <= counter)>
-       <@tr openOnly=true />
+       <@tr open=true close=false />
          <@td>
             ${indent}
             <a class="tabButton" href="<@ofbizUrl>main?pubPt=${webSitePublishPoint.contentId!}</@ofbizUrl>" >${uiLabelMap.CommonBackTo}</a> &nbsp;${webSitePublishPoint.templateTitle!}
                 <#assign indent = indent + "&nbsp;&nbsp;&nbsp;&nbsp;">
          [${webSitePublishPoint.contentId!}]</@td>
         </#if>
-       <@tr closeOnly=true />
+       <@tr close=true open=false />
         <#assign counter = counter + 1>
     <#if (20 < counter)> <#break/></#if>
     </#list>

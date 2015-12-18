@@ -330,7 +330,7 @@ function setAlternateGwp(field) {
                                     <@td>&nbsp;</@td>
                                     <@td>${cartLine.getReservStart()?string("yyyy-mm-dd")}</@td>
                                     <@td>${cartLine.getReservLength()?string.number}</@td></@tr>
-                                <@tr openOnly=true />
+                                <@tr open=true close=false />
                                     <@td>&nbsp;</@td>
                                     <@td>${cartLine.getReservPersons()?string.number}</@td>
                         <#else>
@@ -338,19 +338,19 @@ function setAlternateGwp(field) {
                                     <@td>--</@td>
                                     <@td>--</@td>
                                 </@tr>
-                                <@tr openOnly=true />
+                                <@tr open=true close=false />
                                     <@td>--</@td>       
                         </#if>
                                     <@td>${cartLine.getQuantity()?string.number}</@td>
-                                <@tr closeOnly=true />
+                                <@tr close=true open=false />
                       </@table>
                     <#else><#-- fixedAssetExist -->
                         ${cartLine.getQuantity()?string.number}
                     </#if>
                 <#else><#-- Is Promo or Shoppinglist -->
-                       <#if fixedAssetExist == true><@table><#if cartLine.getReservStart()??><@tr><@td>&nbsp;</@td><@td><input type="text" class="inputBox" size="10" name="reservStart_${cartLineIndex}" value=${cartLine.getReservStart()?string}/></@td><@td><input type="text" class="inputBox" size="2" name="reservLength_${cartLineIndex}" value="${cartLine.getReservLength()?string.number}"/></@td></@tr><@tr openOnly=true /><@td>&nbsp;</@td><@td><input type="text" class="inputBox" size="3" name="reservPersons_${cartLineIndex}" value=${cartLine.getReservPersons()?string.number} /></@td><#else>
-                           <@tr><@td>--</@td><@td>--</@td></@tr><@tr openOnly=true /><@td>--</@td></#if>
-                        <@td><input size="6" class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}" /></@td><@tr closeOnly=true /></@table>
+                       <#if fixedAssetExist == true><@table><#if cartLine.getReservStart()??><@tr><@td>&nbsp;</@td><@td><input type="text" class="inputBox" size="10" name="reservStart_${cartLineIndex}" value=${cartLine.getReservStart()?string}/></@td><@td><input type="text" class="inputBox" size="2" name="reservLength_${cartLineIndex}" value="${cartLine.getReservLength()?string.number}"/></@td></@tr><@tr open=true close=false /><@td>&nbsp;</@td><@td><input type="text" class="inputBox" size="3" name="reservPersons_${cartLineIndex}" value=${cartLine.getReservPersons()?string.number} /></@td><#else>
+                           <@tr><@td>--</@td><@td>--</@td></@tr><@tr open=true close=false /><@td>--</@td></#if>
+                        <@td><input size="6" class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}" /></@td><@tr close=true open=false /></@table>
                     <#else><#-- fixedAssetExist -->
                         <input size="6" class="inputBox" type="text" name="update_${cartLineIndex}" value="${cartLine.getQuantity()?string.number}" />
                     </#if>

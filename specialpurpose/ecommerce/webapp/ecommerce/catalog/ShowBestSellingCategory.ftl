@@ -24,11 +24,11 @@ under the License.
            <@tbody>
 
             <#list productCategoryList as childCategoryList>
-                   <@tr openOnly=true />
+                   <@tr open=true close=false />
                    <#assign cateCount = 0/>
                    <#list childCategoryList as productCategory>
                        <#if (cateCount > 2)>
-                            <@tr openOnly=true />
+                            <@tr open=true close=false />
                             <#assign cateCount = 0/>
                        </#if>
                        <#assign productCategoryId = productCategory.productCategoryId/>
@@ -83,7 +83,7 @@ under the License.
                         </@td>
                         <#assign cateCount = cateCount + 1/>
                  </#list>
-               <@tr closeOnly=true />
+               <@tr close=true open=false />
             </#list>
         </@tbody>
       </@table>

@@ -459,7 +459,7 @@ under the License.
                                     <@td><@htmlTemplate.renderDateTimeField event="" action="" name="reservStartStr" className="inputBox"  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${shoppingListItem.reservStart!}" size="15" maxlength="30" id="reservStartStr_${shoppingListItem.shoppingListItemSeqId}" dateType="date" shortDateInput=true timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></@td>
                                     <@td><input type="text" class="inputBox" size="2" name="reservLength" value="${shoppingListItem.reservLength!}"/></@td>
                                 </@tr>
-                                <@tr openOnly=true />
+                                <@tr open=true close=false />
                                 <#if product.productTypeId == "ASSET_USAGE">
                                     <@td>&nbsp;</@td>
                                     <@td><input type="text" class="inputBox" size="3" name="reservPersons" value="${shoppingListItem.reservPersons!}"/></@td>
@@ -467,18 +467,18 @@ under the License.
                                     <@td>&nbsp;</@td>
                                     <@td>&nbsp;</@td>
                                 </#if>
-                                    <@td openOnly=true />
+                                    <@td open=true close=false />
                            <#else>
                                     <@tr>
                                         <@td width="62%" align="center">--</@td>
                                         <@td align="center">--</@td>
                                     </@tr>
-                                    <@tr openOnly=true />
+                                    <@tr open=true close=false />
                                         <@td align="center">--</@td>
-                                        <@td openOnly=true /><input type="hidden" name="reservStartStr" value=""/>
+                                        <@td open=true close=false /><input type="hidden" name="reservStartStr" value=""/>
                            </#if>
                         <input size="6" class="inputBox" type="text" name="quantity" value="${shoppingListItem.quantity?string.number}"/>
-                        <@td closeOnly=true /></@tr closeOnly=true /></@table>
+                        <@td close=true open=false /></@tr close=true open=false /></@table>
                         </div>
                       </form>
                     </@td>

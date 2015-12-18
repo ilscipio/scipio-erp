@@ -714,14 +714,14 @@ under the License.
                                                                     <#assign j = 0>
                                                                     <#list paymentMethods as paymentMethod>
                                                                         <#if paymentMethod.value()??>
-                                                                            <#if j == 0><@tr openOnly=true /></#if>
+                                                                            <#if j == 0><@tr open=true close=false /></#if>
                                                                         <#if paymentMethod.compareTo(buyerPayMethCode_PAY_PAL!) == 0 >
                                                                                 <#assign is_payPal = true>
                                                                         </#if>
                                                                         <@td valign="top"><input type="checkbox" value="true" name="Payments_${paymentMethod.value()!}" /></@td>
                                                                         <@td align="left"><b>${paymentMethod.value()!}</b></@td>
                                                                         <#if j == 3>
-                                                                             <@tr closeOnly=true />
+                                                                             <@tr close=true open=false />
                                                                              <#assign j = 0>
                                                                         <#else>
                                                                           <#assign j = j+1>
@@ -789,10 +789,10 @@ under the License.
                                                     <#assign j=0>
                                                     <#list shippingLocationDetails as shippingLocationDetail>
                                                         <#assign shippingLocation = shippingLocationDetail.getShippingLocation()!>
-                                                        <#if j==0><@tr openOnly=true /></#if>
+                                                        <#if j==0><@tr open=true close=false /></#if>
                                                           <@td valign="top"><input type="checkbox" value="true" name="Shipping_${shippingLocation!}" /></@td>
                                                           <@td align="left"><b>${shippingLocationDetail.getDescription()!}</b></@td>
-                                                        <#if j==3><@tr closeOnly=true /><#assign j=0><#else><#assign j=j+1></#if>
+                                                        <#if j==3><@tr close=true open=false /><#assign j=0><#else><#assign j=j+1></#if>
                                                     </#list>
                                              </@table>
                                              </#if>

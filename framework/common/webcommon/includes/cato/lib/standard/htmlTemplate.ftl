@@ -49,6 +49,10 @@
 *   that were passed to the calling macro (WARN: this may not necessarily be a template-facing macro; it may
 *   be intermediate). In most cases it should not be used; it is provided only in case the other regular parameters
 *   do not contain the information needed. It should be considered a last resort.
+*   TODO: there needs to be a way to pass arbitrary custom args across the line of macros calls. either add
+*       a "customArgs={}" to basically all macros or try to do it through origArgs. don't really want to
+*       add customArgs everywhere but not sure can be done clearly through origArgs because conflicts with
+*       the inline attribs pattern (remaining args used as html attribs) and more map mergings.
 *
 -->
 

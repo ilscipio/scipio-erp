@@ -17,8 +17,11 @@ import com.ilscipio.cato.ce.webapp.ftl.lang.LangFtlUtil;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleSequence;
+import freemarker.template.TemplateCollectionModel;
+import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
@@ -777,5 +780,63 @@ public abstract class ContextFtlUtil {
     public static Object getRequestStackAsList(String name, HttpServletRequest request, Map<String, Object> context) throws TemplateModelException {
         return getRequestStackAsList(name, request, context, null, LangFtlUtil.TemplateValueTargetType.RAW);
     }
+    
+    /**
+     * Merges macro argument maps following the args/inlineArgs pattern.
+     * Auto-converts maps to simple maps (but only those where this is logical; usually only
+     * the args parameter).
+     * 
+     * FIXME? suboptimal; must optimize;hard to do. complication is we have no access to the concatenation operator "+"
+     * and its implementation is private in Freemarker.
+     */
+    public static TemplateHashModelEx mergeArgMaps(TemplateHashModelEx args, TemplateHashModelEx inlineArgs,
+            TemplateHashModelEx defaultArgs, TemplateHashModelEx overrideArgs, boolean recordArgNames, Environment env) throws TemplateModelException {
+        SimpleHash res = new SimpleHash(env.getObjectWrapper());
+        ObjectWrapper objectWrapper = env.getObjectWrapper();
+        
+        if (args != null) {
+            args = (TemplateHashModelEx) LangFtlUtil.toSimpleMap(objectWrapper, args);
+        }
+        
+        if (defaultArgs != null && !defaultArgs.isEmpty()) {
+            LangFtlUtil.addToSimpleMap(res, defaultArgs);
+        }
+        if (args != null && !args.isEmpty()) {
+            LangFtlUtil.addToSimpleMap(res, args);
+        }
+        if (inlineArgs != null && !inlineArgs.isEmpty()) {
+            LangFtlUtil.addToSimpleMap(res, inlineArgs);
+        }
+        if (overrideArgs != null && !overrideArgs.isEmpty()) {
+            LangFtlUtil.addToSimpleMap(res, overrideArgs);
+        }
+        
+        if (recordArgNames) {
+            // FIXME: this whole part definitely too inefficient, but freemarker wants it...
+            // Problem: we have no access to the concatenation operator "+" which in some cases is desirable
+            TemplateCollectionModel defaultKeys = defaultArgs != null ? defaultArgs.keys() : null;
+            TemplateCollectionModel overrideKeys = overrideArgs != null ? overrideArgs.keys() : null;
+            
+            SimpleSequence localArgNames = new SimpleSequence(objectWrapper);
+            if (defaultKeys != null) {
+                LangFtlUtil.addToSimpleList(localArgNames, defaultKeys);
+            }
+            if (overrideKeys != null) {
+                LangFtlUtil.addToSimpleList(localArgNames, overrideKeys);
+            }
+            
+            TemplateModel allArgNamesPrev = args != null ? args.get("allArgNames") : null;
+            SimpleSequence allArgNames = new SimpleSequence(objectWrapper);
+            if (allArgNamesPrev != null && allArgNamesPrev != TemplateModel.NOTHING) {
+                LangFtlUtil.addToSimpleList(allArgNames, allArgNamesPrev);
+            }
+            LangFtlUtil.addToSimpleList(allArgNames, localArgNames);
+            
+            res.put("localArgNames", localArgNames);
+            res.put("allArgNames", allArgNames);
+        }
+        return res;
+    }
+
 
 }

@@ -776,6 +776,46 @@ TODO: doesn't handle dates (ambiguous?)
 
 <#-- 
 *************
+* processArgMaps
+************
+TODO: implement as transform.
+
+This is a helper pattern which should be functionally nearly identical to doing:
+  <#macro name args={} inlineArgs...>
+    <#local args = mergeArgMaps(inlineArgs, args, defaultArgs, overrideArgs)>
+    <#local dummy = localsPutAll(args)>
+    <#local origArgs = args>
+    ...
+  </#macro>
+  where defaultArgs and overrideArgs are valid maps.
+
+<#function processArgMaps args={} inlineArgs={} defaultArgs={} overrideArgs={}>
+TODO: implement as transform
+</#function>
+-->
+
+<#-- 
+*************
+* processArgMapsBasic
+************
+TODO: implement as transform.
+
+This is a helper pattern which should be functionally nearly identical to doing:
+  <#macro name args={} inlineArgs...>
+    <#local args = mergeArgMapsBasic(inlineArgs, args, defaultArgs, overrideArgs)>
+    <#local dummy = localsPutAll(args)>
+    <#local origArgs = args>
+    ...
+  </#macro>
+  where defaultArgs and overrideArgs are valid maps.
+
+<#function processArgMapsBasic args={} inlineArgs={} defaultArgs={} overrideArgs={}>
+TODO: implement as transform
+</#function>
+-->
+
+<#-- 
+*************
 * mergeArgMaps
 ************
 Merges cato macro inlineArgs/args/defaultArgs/overrideArgs maps for macros implementing the 
@@ -857,23 +897,6 @@ TODO?: may want helper booleans to control in/out allArgNames?
     <#local inlineArgs = {}>
   </#if>
   <#return defaultArgs + toSimpleMap(args) + inlineArgs + overrideArgs>
-</#function>
-
-<#function mergeArgMapsToLocals args={} inlineArgs={} defaultArgs={} overrideArgs={}>
-  <#-- TODO: WRITE THIS AS A TRANSFORM - CANNOT BE IMPLEMENTED IN FTL
-  this should be equivalent to doing:
-    <#local args = mergeArgMaps(args, inlineArgs, defaultArgs, overrideArgs)>
-    <#local dummy = localsPutAll(args)>   
-  in the caller. but the localsPutAll part cannot be written in an FTL function.
-  the other problem is can't exploit FTL hash concat from transforms.
-  note this would still also need to return the args map, as well as dump it in locals.
-  if could be done as one step, probably would help performance of these heavy functions.
-   -->
-</#function>
-
-<#-- a version of mergeArgMaps that only merges maps, nothing else -->
-<#function mergeArgMapsBasicToLocals args={} inlineArgs={} defaultArgs={} overrideArgs={}>
-  <#-- TODO: basic version of mergeArgMapsToLocals -->
 </#function>
 
 <#-- 

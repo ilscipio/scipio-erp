@@ -663,7 +663,7 @@ public abstract class LangFtlUtil {
     /**
      * Adds to simple hash from source map.
      * <p>
-     * TODO: WARN: This is not currently BeanModel-aware (complex map).
+     * <em>WARN</em>: This is not BeanModel-aware (complex map).
      */    
     public static void addToSimpleMap(SimpleHash dest, TemplateHashModelEx source) throws TemplateModelException {
         TemplateCollectionModel keysModel = source.keys();
@@ -683,7 +683,7 @@ public abstract class LangFtlUtil {
     /**
      * Makes a simple hash from source map; only specified keys.
      * <p>
-     * TODO: WARN: This is not currently BeanModel-aware (complex map).
+     * <em>WARN</em>: This is not BeanModel-aware (complex map).
      */
     public static SimpleHash makeSimpleMap(TemplateHashModel map, Set<String> keys, ObjectWrapper objectWrapper) throws TemplateModelException {
         SimpleHash res = new SimpleHash(objectWrapper);
@@ -787,6 +787,31 @@ public abstract class LangFtlUtil {
         return exKeys;
     }
 
+    public static void addToSimpleList(SimpleSequence dest, TemplateCollectionModel source) throws TemplateModelException {
+        TemplateModelIterator it = source.iterator();
+        while(it.hasNext()) {
+            dest.add(it.next());
+        }
+    }    
+    
+    public static void addToSimpleList(SimpleSequence dest, TemplateSequenceModel source) throws TemplateModelException {
+        for(int i=0; i < source.size(); i++) {
+            dest.add(source.get(0));
+        }
+    }   
+    
+    public static void addToSimpleList(SimpleSequence dest, TemplateModel source) throws TemplateModelException {
+        if (source instanceof TemplateCollectionModel) {
+            addToSimpleList(dest, (TemplateCollectionModel) source);
+        }
+        else if (source instanceof TemplateSequenceModel) {
+            addToSimpleList(dest, (TemplateSequenceModel) source);
+        }
+        else {
+            throw new TemplateModelException("Can't add to simple list from source type (non-list type): " + source.getClass());
+        }
+    }       
+    
     /**
      * Puts all values in hash into FTL variables, decided by a varHandler.
      * <p>
@@ -876,6 +901,15 @@ public abstract class LangFtlUtil {
     public static void globalsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Boolean onlyDirectives, Environment env) throws TemplateModelException {
         varsPutAll(hashModel, inExKeys, include, onlyDirectives, new GlobalFtlVarHandler(env), env);
     }
+    
+    /**
+     * Puts all values in hash into FTL globals (#global).
+     * <p>
+     * @see copyMapToSimple
+     */
+    public static void globalsPutAll(TemplateHashModelEx hashModel, Environment env) throws TemplateModelException {
+        varsPutAll(hashModel, null, null, null, new GlobalFtlVarHandler(env), env);
+    }
 
     /**
      * Puts all values in hash into FTL current namespace vars (#assign).
@@ -886,6 +920,10 @@ public abstract class LangFtlUtil {
         varsPutAll(hashModel, inExKeys, include, onlyDirectives, new CurrentFtlVarHandler(env), env);
     }
 
+    public static void varsPutAll(TemplateHashModelEx hashModel, Environment env) throws TemplateModelException {
+        varsPutAll(hashModel, null, null, null, new CurrentFtlVarHandler(env), env);
+    }
+
     /**
      * Puts all values in hash into FTL locals (#local).
      * <p>
@@ -893,6 +931,10 @@ public abstract class LangFtlUtil {
      */
     public static void localsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Boolean onlyDirectives, Environment env) throws TemplateModelException {
         varsPutAll(hashModel, inExKeys, include, onlyDirectives, new LocalFtlVarHandler(env), env);
+    }
+    
+    public static void localsPutAll(TemplateHashModelEx hashModel, Environment env) throws TemplateModelException {
+        varsPutAll(hashModel, null, null, null, new LocalFtlVarHandler(env), env);
     }
     
 }

@@ -757,7 +757,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
         <#elseif defaultValue?has_content && defaultValue == itemValue> checked="checked"</#if> 
         name="${name?html}" value="${itemValue!""?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#rt/>
       <#if item.description?has_content>
-        <label class="radio-label-local"<#if currentId?has_content> for="${currentId}"</#if>>${item.description}</span>
+        <label class="radio-label-local"<#if currentId?has_content> for="${currentId}"</#if>>${item.description}</label>
       </#if>
     </span>
     <#local sepClass = "">

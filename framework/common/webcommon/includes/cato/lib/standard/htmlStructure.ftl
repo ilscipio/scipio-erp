@@ -89,7 +89,7 @@ to this one.
       <#local class = addClassArg(class, styles.collapse!)>
     </#if>
   <#else>
-    <#-- WARN: has no memory when closeOnly... -->
+    <#-- FIXME: has no open/close stack memory -->
     <#local classes = "">
   </#if>
   <#-- NOTE: we pass openOnly/closeOnly/nestedOnly because otherwise markup has to recalculated it when
@@ -190,7 +190,7 @@ to this one.
     <#-- save grid sizes -->
     <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
   <#else>
-    <#-- WARN: has no memory when closeOnly... -->
+    <#-- FIXME: has no open/close stack memory -->
     <#local class = "">
   </#if>
   <@cell_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id last=last origArgs=args><#nested></@cell_markup>

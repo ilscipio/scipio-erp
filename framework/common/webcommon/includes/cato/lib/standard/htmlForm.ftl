@@ -49,7 +49,7 @@ An HTML form element.
     <#local formInfo = {"type":type, "name":name, "id":id}>
     <#local dummy = pushRequestStack("catoFormInfoStack", formInfo)>
   </#if>
-  <#-- FIXME: currently no stack memory for closeOnly=true -->
+  <#-- FIXME: has no open/close stack memory -->
   <@form_markup type=type name=name id=id class=class open=open close=close openOnly=openOnly closeOnly=closeOnly 
     nestedOnly=nestedOnly attribs=attribs origArgs=origArgs><#nested></@form_markup>
   <#if close>
@@ -356,7 +356,7 @@ A visible fieldset, including the HTML element.
   <#else>
     <#local containerId = "">
   </#if>
-  <#-- TODO: open/close stack -->
+  <#-- FIXME: has no open/close stack memory -->
   <@fieldset_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class containerClass=containerClass id=id containerId=containerId title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible origArgs=args><#nested></@fieldset_markup>
 </#macro>
 

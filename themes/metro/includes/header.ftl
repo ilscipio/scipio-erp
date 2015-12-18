@@ -182,7 +182,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
     
     <#-- VT_TOP_JAVASCRIPT must always come before all others and at top of document -->
     <#if layoutSettings.VT_TOP_JAVASCRIPT?has_content>
-        <#assign javaScriptsSet = Static["org.ofbiz.base.util.UtilMisc"].toSet(layoutSettings.VT_TOP_JAVASCRIPT)/>
+        <#assign javaScriptsSet = toSet(layoutSettings.VT_TOP_JAVASCRIPT)/>
         <#list layoutSettings.VT_TOP_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
@@ -193,7 +193,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
 
     <#-- VT_PRIO_JAVASCRIPT should come right before javaScripts (always move together with javaScripts) -->
     <#if layoutSettings.VT_PRIO_JAVASCRIPT?has_content>
-        <#assign javaScriptsSet = Static["org.ofbiz.base.util.UtilMisc"].toSet(layoutSettings.VT_PRIO_JAVASCRIPT)/>
+        <#assign javaScriptsSet = toSet(layoutSettings.VT_PRIO_JAVASCRIPT)/>
         <#list layoutSettings.VT_PRIO_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
@@ -204,7 +204,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
     <#if layoutSettings.javaScripts?has_content>
         <#--layoutSettings.javaScripts is a list of java scripts. -->
         <#-- use a Set to make sure each javascript is declared only once, but iterate the list to maintain the correct order -->
-        <#assign javaScriptsSet = Static["org.ofbiz.base.util.UtilMisc"].toSet(layoutSettings.javaScripts)/>
+        <#assign javaScriptsSet = toSet(layoutSettings.javaScripts)/>
         <#list layoutSettings.javaScripts as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
@@ -213,7 +213,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         </#list>
     </#if>
     <#if layoutSettings.VT_HDR_JAVASCRIPT?has_content>
-        <#assign javaScriptsSet = Static["org.ofbiz.base.util.UtilMisc"].toSet(layoutSettings.VT_HDR_JAVASCRIPT)/>
+        <#assign javaScriptsSet = toSet(layoutSettings.VT_HDR_JAVASCRIPT)/>
         <#list layoutSettings.VT_HDR_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>

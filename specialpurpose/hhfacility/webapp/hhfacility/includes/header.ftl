@@ -28,7 +28,7 @@ under the License.
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <title>${applicationTitle!}</title>
     <#if layoutSettings.javaScripts?has_content>
-        <#assign javaScriptsSet = Static["org.ofbiz.base.util.UtilMisc"].toSet(layoutSettings.javaScripts)/>
+        <#assign javaScriptsSet = toSet(layoutSettings.javaScripts)/>
         <#list layoutSettings.javaScripts as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>

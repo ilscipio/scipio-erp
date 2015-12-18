@@ -583,7 +583,7 @@ public abstract class LangFtlUtil {
                 " to target type: " + targetType.toString());
     }
 
-    public static TemplateHashModel toSimpleMap(ObjectWrapper objectWrapper, TemplateModel object) throws TemplateModelException {
+    public static TemplateHashModel toSimpleMap(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (OfbizFtlObjectType.COMPLEXMAP.isObjectType(object)) {
             // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
             Map<Object, Object> wrappedObject = UtilGenerics.cast(((WrapperTemplateModel) object).getWrappedObject());
@@ -606,7 +606,7 @@ public abstract class LangFtlUtil {
      * won't suffer from the same problems maps have.
      */
     @SuppressWarnings("unchecked")
-    private static TemplateSequenceModel toSimpleSequence(ObjectWrapper objectWrapper, TemplateModel object) throws TemplateModelException {
+    private static TemplateSequenceModel toSimpleSequence(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
         if (object instanceof TemplateSequenceModel) {
             return (TemplateSequenceModel) object;
         }
@@ -646,6 +646,33 @@ public abstract class LangFtlUtil {
         }
     }
 
+    public static Object toSet(TemplateModel object, ObjectWrapper objectWrapper) throws TemplateModelException {
+        if (object instanceof WrapperTemplateModel && ((WrapperTemplateModel) object).getWrappedObject() instanceof Set) {
+            return object;
+        }
+        else if (object instanceof TemplateCollectionModel) {
+            // would be safer to let the wrapper do it, but we know it's just a BeanModel in Ofbiz so we can optimize.
+            TemplateCollectionModel collModel = (TemplateCollectionModel) object;
+            Set<Object> res = new HashSet<Object>();
+            TemplateModelIterator it = collModel.iterator();
+            while(it.hasNext()) {
+                res.add(LangFtlUtil.unwrapAlways(it.next()));
+            }
+            return res;
+        }
+        else if (object instanceof TemplateSequenceModel) {
+            TemplateSequenceModel seqModel = (TemplateSequenceModel) object;
+            Set<Object> res = new HashSet<Object>();
+            for(int i=0; i < seqModel.size(); i++) {
+                res.add(LangFtlUtil.unwrapAlways(seqModel.get(i)));
+            }
+            return res;
+        }
+        else {
+            throw new TemplateModelException("Cannot convert object of type " + (object != null ? object.getClass() : "null") + " to set"); 
+        }
+    }    
+    
     /*
      * DEV NOTE: This has been removed along with all code that relied on it. it adds too much liability.
      * for now there are no more places we need it.

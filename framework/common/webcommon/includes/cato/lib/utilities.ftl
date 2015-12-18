@@ -585,6 +585,20 @@ and ?eval harder there.
 
 <#-- 
 *************
+* toSet
+************
+Returns a bean-wrapped java Set for a sequence or collection. 
+If already a bean-wrapped Set, returns as-is; does not create a copy (this is analogous to toSimpleMap
+and also org.ofbiz.base.util.UtilMisc.toSet).
+If no parameters, creates new empty set.
+
+<#function toSet object=[]>
+- implemented as java transform -
+</#function>
+-->
+
+<#-- 
+*************
 * compileProgressSuccessAction
 ************
 widget-related progress success action compile (see widget-form.xsd form element extra "attribs" attrib).
@@ -966,23 +980,26 @@ See makeAttribMapFromArgs.
 TODO: rewrite as transform.
 -->
 <#function getAttribMapAllExcludes attribs={} exclude=[] noExclude=[]>
-  <#if attribs.excludeNames??>
-    <#local exclude = exclude + attribs.excludeNames>
+  <#local exclude = toSet(exclude)>
+  <#local noExclude = toSet(noExclude)>
+  
+  <#if attribs.excludeNames?has_content>
+    <#local dummy = exclude.addAll(attribs.excludeNames)!>
   </#if>
-  <#if attribs.allArgNames??>
-    <#local exclude = exclude + attribs.allArgNames>
+  <#if attribs.allArgNames?has_content>
+    <#local dummy = exclude.addAll(attribs.allArgNames)!>
   </#if>
-  <#local exclude = exclude + ["attribs", "allArgNames", "localArgNames", "excludeNames", "noExcludeNames"]>
-  <#if attribs.noExcludeNames??>
-    <#local noExclude = noExclude + attribs.noExcludeNames>
+
+  <#local dummy = exclude.addAll(["attribs", "allArgNames", "localArgNames", "excludeNames", "noExcludeNames"])>
+  
+  <#if attribs.noExcludeNames?has_content>
+    <#local dummy = noExclude.addAll(attribs.noExcludeNames)!>
   </#if>
+
   <#if noExclude?has_content>
-    <#local res = Static["org.ofbiz.base.util.UtilMisc"].toSet(exclude)>
-    <#local dummy = res.removeAll(noExclude)!>
-    <#return res>
-  <#else>
-    <#return Static["org.ofbiz.base.util.UtilMisc"].toSet(exclude)>
+    <#local dummy = exclude.removeAll(noExclude)!>
   </#if>
+  <#return exclude>
 </#function>
 
 

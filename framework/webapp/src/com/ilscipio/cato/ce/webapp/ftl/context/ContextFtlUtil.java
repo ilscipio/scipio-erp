@@ -795,7 +795,7 @@ public abstract class ContextFtlUtil {
         ObjectWrapper objectWrapper = env.getObjectWrapper();
         
         if (args != null) {
-            args = (TemplateHashModelEx) LangFtlUtil.toSimpleMap(objectWrapper, args);
+            args = (TemplateHashModelEx) LangFtlUtil.toSimpleMap(args, objectWrapper);
         }
         
         if (defaultArgs != null && !defaultArgs.isEmpty()) {
@@ -813,6 +813,8 @@ public abstract class ContextFtlUtil {
         
         if (recordArgNames) {
             // FIXME: this whole part definitely too inefficient, but freemarker wants it...
+            // TODO: for allArgNames, use bean-wrapped set and modify in-place (screw immutability)
+            // TODO: for localArgNames, would be better to have the "+" operator result...
             // Problem: we have no access to the concatenation operator "+" which in some cases is desirable
             TemplateCollectionModel defaultKeys = defaultArgs != null ? defaultArgs.keys() : null;
             TemplateCollectionModel overrideKeys = overrideArgs != null ? overrideArgs.keys() : null;

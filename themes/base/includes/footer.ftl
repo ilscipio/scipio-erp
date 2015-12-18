@@ -46,7 +46,7 @@ under the License.
   <@scripts output=true> <#-- ensure @script elems here will always output -->
     <#-- New in cato; for app scripts that aren't (exclusively) styling but must go at end of page -->
     <#if layoutSettings.javaScriptsFooter?has_content>
-        <#assign javaScriptsSet = Static["org.ofbiz.base.util.UtilMisc"].toSet(layoutSettings.javaScriptsFooter)/>
+        <#assign javaScriptsSet = toSet(layoutSettings.javaScriptsFooter)/>
         <#list layoutSettings.javaScriptsFooter as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>
@@ -59,7 +59,7 @@ under the License.
     <#if layoutSettings.VT_FTR_JAVASCRIPT?has_content>
         <#--layoutSettings.javaScripts is a list of java scripts. -->
         <#-- use a Set to make sure each javascript is declared only once, but iterate the list to maintain the correct order -->
-        <#assign javaScriptsSet = Static["org.ofbiz.base.util.UtilMisc"].toSet(layoutSettings.VT_FTR_JAVASCRIPT)/>
+        <#assign javaScriptsSet = toSet(layoutSettings.VT_FTR_JAVASCRIPT)/>
         <#list layoutSettings.VT_FTR_JAVASCRIPT as javaScript>
             <#if javaScriptsSet.contains(javaScript)>
                 <#assign nothing = javaScriptsSet.remove(javaScript)/>

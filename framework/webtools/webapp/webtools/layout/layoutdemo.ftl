@@ -98,7 +98,7 @@
     <@section title="Nested Nested Section Title 4">
     </@section>
   </@section>
-  <@heading>Heading</@heading>
+  <@heading extraHeadingAttrib="my-extra-heading-attrib-value">Heading</@heading>
   <@heading relLevel=1>Heading - Relative Level +1</@heading>
   <@heading relLevel=2>Heading - Relative Level +2</@heading>
 </@section>
@@ -813,6 +813,13 @@
   <@section title="Macro inspection">
     <p>@field macro default args: <@objectAsScript lang="raw" escape=false object=getCatoMacroDefaultArgs("field") /></p>
   </@section>
+</@section>
+
+<@section title="Utilities library demo">
+  <#assign mySet = toSet(["val1", "val2", "val2", "val3", "val4", "val3"])>
+  <#assign mySet = toSet(mySet)>
+  <p>Basic set: <@objectAsScript lang="raw" escape=false object=mySet /></p>
+  
 </@section>
 
 

@@ -18,6 +18,7 @@
  *******************************************************************************/
 package com.ilscipio.cato.ce.webapp.ftl.lang;
 
+import java.util.HashSet;
 import java.util.List;
 
 import com.ilscipio.cato.ce.webapp.ftl.CommonFtlUtil;
@@ -28,11 +29,11 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 
 /**
- * Cato: ToSimpleMapMethod -Another workaround for BeansWrapper kludge.
+ * Cato: ToSetMethod - Converts a sequence or collection to bean-wrapped set.
  */
-public class ToSimpleMapMethod implements TemplateMethodModelEx {
+public class ToSetMethod implements TemplateMethodModelEx {
 
-    public static final String module = ToSimpleMapMethod.class.getName();
+    public static final String module = ToSetMethod.class.getName();
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -40,12 +41,19 @@ public class ToSimpleMapMethod implements TemplateMethodModelEx {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        if (args == null || args.size() < 1 || args.size() > 2) {
-            throw new TemplateModelException("Invalid number of arguments (expected: 1-2)");
+        if (args == null || args.size() < 0 || args.size() > 1) {
+            throw new TemplateModelException("Invalid number of arguments (expected: 0-1)");
         }
         Environment env = CommonFtlUtil.getCurrentEnvironment();
-        TemplateModel object = (TemplateModel) args.get(0);
-        return LangFtlUtil.toSimpleMap(object, env.getObjectWrapper());
+        
+        if (args.size() > 0) {
+            TemplateModel object = (TemplateModel) args.get(0);
+    
+            return LangFtlUtil.toSet(object, env.getObjectWrapper());
+        }
+        else {
+            return new HashSet<Object>();
+        }
     }
     
 }

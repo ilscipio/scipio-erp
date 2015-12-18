@@ -188,7 +188,7 @@ dynamic using controller request defs and can't predict URL patterns unless rewr
       </@script>
     <#else>
       <#if requiredScriptOfbizUrls?is_boolean>
-        <#local requiredScriptOfbizUrls = Static["org.ofbiz.base.util.UtilMisc"].toSet(uri)>
+        <#local requiredScriptOfbizUrls = toSet([uri])>
       <#else>
         <#local dummy = requiredScriptOfbizUrls.add(uri)!>
       </#if>

@@ -19,7 +19,7 @@
 *
 -->
 
-<#assign catoOrigMainNsNamesSet = Static["org.ofbiz.base.util.UtilMisc"].toSet(.main?keys)>
+<#assign catoOrigMainNsNamesSet = toSet(.main?keys)>
 
 <#-- these can be included early, for use in this file, since meant to be everything-agnostic -->
 <#include 'component://common/webcommon/includes/cato/lib/utilities.ftl'>
@@ -77,10 +77,10 @@
     <#assign dummy = setRequestVar("catoTemplateIncludeDirective", catoTemplateIncludeDirective)>
     
     <#-- Include and cache the global variables -->
-    <#assign catoMainNsPreGlobalVarsNames = Static["org.ofbiz.base.util.UtilMisc"].toSet(.main?keys)>
+    <#assign catoMainNsPreGlobalVarsNames = toSet(.main?keys)>
     <#-- Main theme variables include -->
     <@catoVariablesIncludeDirective />
-    <#assign catoMainNsPostGlobalVarsNames = Static["org.ofbiz.base.util.UtilMisc"].toSet(.main?keys)>
+    <#assign catoMainNsPostGlobalVarsNames = toSet(.main?keys)>
     <#assign dummy = catoMainNsPostGlobalVarsNames.removeAll(catoMainNsPreGlobalVarsNames)!>
     <#assign dummy = catoMainNsPostGlobalVarsNames.remove("catoMainNsPreGlobalVarsNames")!>
     <#assign catoTmplGlobalVars = copyMap(.main, "i", catoMainNsPostGlobalVarsNames)>

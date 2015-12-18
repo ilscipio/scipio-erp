@@ -646,7 +646,10 @@ public abstract class LangFtlUtil {
         }
     }
 
-    /**
+    /*
+     * DEV NOTE: This has been removed along with all code that relied on it. it adds too much liability.
+     * for now there are no more places we need it.
+     * 
      * Same as Freemarker's ?is_directive.
      * <p>
      * <em>NOTE:</em> This <em>must</em> have the exact same behavior as Freemarker's ?is_directive.
@@ -656,9 +659,11 @@ public abstract class LangFtlUtil {
      * <strong>WARNING:</strong> FIXME: This currently refers to the FTL freemarker.core.Macro class, which is set
      * to change at any time. this needs a better solution!!!
      */
+    /*
     public static boolean isDirective(Object object) {
         return (object instanceof TemplateTransformModel || object instanceof freemarker.core.Macro || object instanceof TemplateDirectiveModel);
     }
+    */
 
     /**
      * Adds to simple hash from source map.
@@ -819,28 +824,18 @@ public abstract class LangFtlUtil {
      * <p>
      * @see copyMapToSimple
      */
-    public static void varsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Boolean onlyDirectives, 
+    public static void varsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, 
             FtlVarHandler varHandler, Environment env) throws TemplateModelException {
         if (include == Boolean.TRUE) {
             if (inExKeys == null) {
                 inExKeys = new HashSet<String>();
             }
-            if (onlyDirectives == Boolean.TRUE) {
-                for(String key : inExKeys) {
-                    TemplateModel valueModel = hashModel.get(key);
-                    if (isDirective(valueModel)) {
-                        varHandler.setVariable(key, valueModel);
-                    }
+            for(String key : inExKeys) {
+                TemplateModel valueModel = hashModel.get(key);
+                if (inExKeys.contains(key)) {
+                    varHandler.setVariable(key, valueModel);
                 }
-            }
-            else {
-                for(String key : inExKeys) {
-                    TemplateModel valueModel = hashModel.get(key);
-                    if (inExKeys.contains(key)) {
-                        varHandler.setVariable(key, valueModel);
-                    }
-                }                
-            }
+            }                
         }
         else if (include == null || inExKeys == null || inExKeys.isEmpty()) {
             if (!(hashModel instanceof TemplateHashModelEx)) {
@@ -849,21 +844,10 @@ public abstract class LangFtlUtil {
             
             TemplateCollectionModel keys = ((TemplateHashModelEx) hashModel).keys();
             TemplateModelIterator keysIt = keys.iterator();
-            if (onlyDirectives == Boolean.TRUE) {
-                while(keysIt.hasNext()) {
-                    String key = ((TemplateScalarModel) keysIt.next()).getAsString();
-                    TemplateModel valueModel = hashModel.get(key);
-                    if (isDirective(valueModel)) {
-                        varHandler.setVariable(key, valueModel);
-                    }
-                }
-            }
-            else {
-                while(keysIt.hasNext()) {
-                    String key = ((TemplateScalarModel) keysIt.next()).getAsString();
-                    varHandler.setVariable(key, hashModel.get(key));
-                }                
-            }
+            while(keysIt.hasNext()) {
+                String key = ((TemplateScalarModel) keysIt.next()).getAsString();
+                varHandler.setVariable(key, hashModel.get(key));
+            }                
         }
         else {
             if (!(hashModel instanceof TemplateHashModelEx)) {
@@ -872,24 +856,13 @@ public abstract class LangFtlUtil {
             
             TemplateCollectionModel keys = ((TemplateHashModelEx) hashModel).keys();
             TemplateModelIterator keysIt = keys.iterator();
-            if (onlyDirectives == Boolean.TRUE) {
-                while(keysIt.hasNext()) {
-                    String key = ((TemplateScalarModel) keysIt.next()).getAsString();
-                    TemplateModel valueModel = hashModel.get(key);
-                    if (!inExKeys.contains(key) && isDirective(valueModel)) {
-                        varHandler.setVariable(key, valueModel);
-                    }
+            while(keysIt.hasNext()) {
+                String key = ((TemplateScalarModel) keysIt.next()).getAsString();
+                TemplateModel valueModel = hashModel.get(key);
+                if (!inExKeys.contains(key)) {
+                    varHandler.setVariable(key, valueModel);
                 }
-            }
-            else {
-                while(keysIt.hasNext()) {
-                    String key = ((TemplateScalarModel) keysIt.next()).getAsString();
-                    TemplateModel valueModel = hashModel.get(key);
-                    if (!inExKeys.contains(key)) {
-                        varHandler.setVariable(key, valueModel);
-                    }
-                } 
-            }
+            } 
         }
     }
 
@@ -898,8 +871,8 @@ public abstract class LangFtlUtil {
      * <p>
      * @see copyMapToSimple
      */
-    public static void globalsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Boolean onlyDirectives, Environment env) throws TemplateModelException {
-        varsPutAll(hashModel, inExKeys, include, onlyDirectives, new GlobalFtlVarHandler(env), env);
+    public static void globalsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Environment env) throws TemplateModelException {
+        varsPutAll(hashModel, inExKeys, include, new GlobalFtlVarHandler(env), env);
     }
     
     /**
@@ -908,7 +881,7 @@ public abstract class LangFtlUtil {
      * @see copyMapToSimple
      */
     public static void globalsPutAll(TemplateHashModelEx hashModel, Environment env) throws TemplateModelException {
-        varsPutAll(hashModel, null, null, null, new GlobalFtlVarHandler(env), env);
+        varsPutAll(hashModel, null, null, new GlobalFtlVarHandler(env), env);
     }
 
     /**
@@ -916,12 +889,12 @@ public abstract class LangFtlUtil {
      * <p>
      * @see copyMapToSimple
      */
-    public static void varsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Boolean onlyDirectives, Environment env) throws TemplateModelException {
-        varsPutAll(hashModel, inExKeys, include, onlyDirectives, new CurrentFtlVarHandler(env), env);
+    public static void varsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Environment env) throws TemplateModelException {
+        varsPutAll(hashModel, inExKeys, include, new CurrentFtlVarHandler(env), env);
     }
 
     public static void varsPutAll(TemplateHashModelEx hashModel, Environment env) throws TemplateModelException {
-        varsPutAll(hashModel, null, null, null, new CurrentFtlVarHandler(env), env);
+        varsPutAll(hashModel, null, null, new CurrentFtlVarHandler(env), env);
     }
 
     /**
@@ -929,12 +902,12 @@ public abstract class LangFtlUtil {
      * <p>
      * @see copyMapToSimple
      */
-    public static void localsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Boolean onlyDirectives, Environment env) throws TemplateModelException {
-        varsPutAll(hashModel, inExKeys, include, onlyDirectives, new LocalFtlVarHandler(env), env);
+    public static void localsPutAll(TemplateHashModel hashModel, Set<String> inExKeys, Boolean include, Environment env) throws TemplateModelException {
+        varsPutAll(hashModel, inExKeys, include, new LocalFtlVarHandler(env), env);
     }
     
     public static void localsPutAll(TemplateHashModelEx hashModel, Environment env) throws TemplateModelException {
-        varsPutAll(hashModel, null, null, null, new LocalFtlVarHandler(env), env);
+        varsPutAll(hashModel, null, null, new LocalFtlVarHandler(env), env);
     }
     
 }

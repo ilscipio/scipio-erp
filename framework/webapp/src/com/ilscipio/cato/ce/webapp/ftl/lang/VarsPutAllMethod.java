@@ -71,7 +71,6 @@ public class VarsPutAllMethod implements TemplateMethodModelEx {
         }
         
         Boolean include = null;
-        Boolean onlyDirectives = null;
         if (mode != null && !mode.isEmpty()) {
             if (mode.contains("i")) {
                 include = Boolean.TRUE;
@@ -79,13 +78,9 @@ public class VarsPutAllMethod implements TemplateMethodModelEx {
             else if (mode.contains("e")) {
                 include = Boolean.FALSE;
             }
-            
-            if (mode.contains("d")) {
-                onlyDirectives = Boolean.TRUE;
-            }
         }
         
-        LangFtlUtil.varsPutAll(hashModel, LangFtlUtil.getAsStringSet(keysModel), include, onlyDirectives, varHandler, env);
+        LangFtlUtil.varsPutAll(hashModel, LangFtlUtil.getAsStringSet(keysModel), include, varHandler, env);
         
         return new SimpleScalar("");
     }

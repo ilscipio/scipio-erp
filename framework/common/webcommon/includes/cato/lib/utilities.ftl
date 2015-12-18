@@ -1413,9 +1413,9 @@ Now implemented as java transform.
 
 <#-- 
 *************
-* globalsPutAll
+* varsPutAll
 ************
-Puts all key-value pairs from given map into FTL globals (#global).
+Puts all key-value pairs from given map into FTL current namespace variables (#assign).
 Now implemented as java transform.
 
   * Parameters *
@@ -1423,25 +1423,24 @@ Now implemented as java transform.
     mode        = optional mode flags
                   "e": exclude listed keys
                   "i": include only listed keys
-                  "d": include only directives (?is_directive)
-    inExKeys    = optional list or wrapped set of keys to include or exclude           
+    inExKeys    = optional list or wrapped set of keys to include or exclude      
 
-<#function globalsPutAll map mode="" inExKeys=[]>
+<#function varsPutAll map mode="" inExKeys=[]>
 - implemented as java transform -
 </#function>
 -->
 
 <#-- 
 *************
-* varsPutAll
+* globalsPutAll
 ************
-Puts all key-value pairs from given map into FTL current namespace variables (#assign).
+Puts all key-value pairs from given map into FTL globals (#global).
 Now implemented as java transform.
 
   * Parameters *
-    @see globalsPutAll       
+  @see varsPutAll     
 
-<#function varsPutAll map mode="" inExKeys=[]>
+<#function globalsPutAll map mode="" inExKeys=[]>
 - implemented as java transform -
 </#function>
 -->
@@ -1454,7 +1453,7 @@ Puts all key-value pairs from given map into FTL globals (#local).
 Now implemented as java transform.
 
   * Parameters *
-    @see globalsPutAll        
+    @see varsPutAll        
 
 <#function localsPutAll map mode="" inExKeys=[]>
 - implemented as java transform -

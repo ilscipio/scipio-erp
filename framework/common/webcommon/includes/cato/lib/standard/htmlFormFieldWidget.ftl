@@ -30,8 +30,9 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_input_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_input_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <@field_input_markup_widget name=name class=class alert=alert value=value textSize=textSize maxlength=maxlength id=id events=events disabled=disabled ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled 
-    mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=args><#nested></@field_input_markup_widget>
+    mask=mask clientAutocomplete=clientAutocomplete placeholder=placeholder tooltip=tooltip collapse=collapse readonly=readonly fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_input_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -76,8 +77,9 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_textarea_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_textarea_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <@field_textarea_markup_widget name=name class=class alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable 
-    buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse inlineLabel=inlineLabel origArgs=args><#nested></@field_textarea_markup_widget>
+    buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_textarea_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -132,10 +134,11 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_datetime_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_datetime_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <@field_datetime_markup_widget name=name class=class title=title value=value size=size maxlength=maxlength id=id dateType=dateType shortDateInput=shortDateInput 
     timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString 
     hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName 
-    alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=args><#nested></@field_datetime_markup_widget>
+    alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_datetime_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -229,10 +232,11 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_datefind_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_datefind_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <@field_datefind_markup_widget class=class alert=alert name=name localizedInputTitle=localizedInputTitle value=value value2=value2 size=size maxlength=maxlength dateType=dateType 
     formName=formName defaultDateTimeString=defaultDateTimeString imgSrc=imgSrc localizedIconTitle=localizedIconTitle titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom defaultOptionThru=defaultOptionThru 
     opEquals=opEquals opSameDay=opSameDay opGreaterThanFromDayStart=opGreaterThanFromDayStart opGreaterThan=opGreaterThan opGreaterThan=opGreaterThan opLessThan=opLessThan opUpToDay=opUpToDay 
-    opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty inlineLabel=inlineLabel origArgs=args><#nested></@field_datefind_markup_widget>
+    opUpThruDay=opUpThruDay opIsEmpty=opIsEmpty inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_datefind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -298,6 +302,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_select_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_select_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <#if !multiple?is_boolean>
     <#if multiple == "true" || multiple == "multiple" || multiple == "Y">
       <#local multiple = true>
@@ -350,7 +355,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     currentValue=currentValue currentDescription=currentDescription allowEmpty=allowEmpty options=options fieldName=fieldName otherFieldName=otherFieldName otherValue=otherValue otherFieldSize=otherFieldSize 
     dDFCurrent=dDFCurrent defaultValue=defaultValue ajaxOptions=ajaxOptions frequency=frequency minChars=minChars choices=choices autoSelect=autoSelect partialSearch=partialSearch partialChars=partialChars 
     ignoreCase=ignoreCase fullSearch=fullSearch events=events ajaxEnabled=ajaxEnabled title=title tooltip=tooltip description=description manualItems=manualItems manualItemsOnly=manualItemsOnly 
-    collapse=collapse fieldTitleBlank=fieldTitleBlank inlineSelected=inlineSelected asmSelectArgs=asmSelectArgs inlineLabel=inlineLabel origArgs=args><#nested></@field_select_markup_widget>
+    collapse=collapse fieldTitleBlank=fieldTitleBlank inlineSelected=inlineSelected asmSelectArgs=asmSelectArgs inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_select_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -430,10 +435,11 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_option_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_option_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <#if !text?has_content>
     <#local text><#nested></#local>
   </#if>
-  <@field_option_markup_widget text=text value=value selected=selected origArgs=args/>
+  <@field_option_markup_widget text=text value=value selected=selected origArgs=origArgs/>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -452,11 +458,12 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_lookup_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_lookup_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <@field_lookup_markup_widget name=name formName=formName fieldFormName=fieldFormName class=class alert=alert value=value size=size 
     maxlength=maxlength id=id events=events readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName 
     targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width 
     height=height position=position fadeBackground=fadeBackground clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed 
-    lastViewName=lastViewName title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=args><#nested></@field_lookup_markup_widget>
+    lastViewName=lastViewName title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_lookup_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -592,6 +599,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_checkbox_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_checkbox_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <#if !items?has_content>
     <#local items = []> <#-- ensure list -->
   </#if>
@@ -628,7 +636,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   </#if>
   <@field_checkbox_markup_widget items=items id=id class=class alert=alert allChecked=allChecked 
     currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip multiMode=multiMode 
-    fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel origArgs=args><#nested></@field_checkbox_markup_widget>
+    fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_checkbox_markup_widget>
 </#macro>
 
 <#-- field markup - theme override 
@@ -699,6 +707,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_radio_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_radio_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <#if !inlineItems?is_boolean>
     <#if inlineItems?has_content>
       <#-- do conversion to boolean so markup doesn't have to; but don't impose a default -->
@@ -706,7 +715,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     </#if>
   </#if>
   <@field_radio_markup_widget items=items id=id class=class alert=alert currentValue=currentValue defaultValue=defaultValue name=name 
-    events=events tooltip=tooltip multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=args><#nested></@field_radio_markup_widget>
+    events=events tooltip=tooltip multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_radio_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -772,7 +781,8 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_file_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_file_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@field_file_markup_widget class=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=args><#nested></@field_file_markup_widget>
+  <#local origArgs = args>
+  <@field_file_markup_widget class=class alert=alert name=name value=value size=size maxlength=maxlength autocomplete=autocomplete id=id title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_file_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -788,7 +798,8 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_password_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_password_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@field_password_markup_widget class=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete title=title placeholder=placeholder fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel origArgs=args><#nested></@field_password_markup_widget>
+  <#local origArgs = args>
+  <@field_password_markup_widget class=class alert=alert name=name value=value size=size maxlength=maxlength id=id autocomplete=autocomplete title=title placeholder=placeholder fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_password_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -810,7 +821,8 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_reset_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_reset_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@field_reset_markup_widget class=class alert=alert name=name text=text fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=args/>
+  <#local origArgs = args>
+  <@field_reset_markup_widget class=class alert=alert name=name text=text fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs/>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -829,7 +841,8 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 }>
 <#macro field_submit_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_submit_widget_defaultArgs)>
-  <#local dummy = localsPutAll(args)>   
+  <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>   
   <#if disabled>
     <#local class = addClassArg(class, styles.disabled!)>
   </#if>
@@ -844,7 +857,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   </#if>
   <@field_submit_markup_widget buttonType=buttonType class=class alert=alert formName=formName name=name events=events imgSrc=imgSrc confirmation=confirmation 
     containerId=containerId ajaxUrl=ajaxUrl text=text description=description fieldTitleBlank=fieldTitleBlank showProgress=showProgress href=href inputType=inputType 
-    disabled=disabled progressArgs=progressArgs id=id inlineLabel=inlineLabel origArgs=args><#nested></@field_submit_markup_widget>
+    disabled=disabled progressArgs=progressArgs id=id inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_submit_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -896,6 +909,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_submitarea_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_submitarea_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <#if progressArgs?has_content> <#-- note progressArgs or progressOptions could be empty strings -->
     <#if !progressArgs.progressOptions?? && progressOptions?has_content>
       <#local progressArgs = progressArgs + {"progressOptions":progressOptions}>
@@ -905,7 +919,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <#else>
     <#local progressArgs = {}>
   </#if>
-  <@field_submitarea_markup_widget progressArgs=progressArgs inlineLabel=inlineLabel origArgs=args><#nested></@field_submitarea_markup_widget>
+  <@field_submitarea_markup_widget progressArgs=progressArgs inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_submitarea_markup_widget>
 </#macro>
 
 <#-- submitarea widget markup - theme override -->
@@ -958,9 +972,10 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_textfind_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_textfind_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <@field_textfind_markup_widget name=name value=value defaultOption=defaultOption opEquals=opEquals opBeginsWith=opBeginsWith opContains=opContains 
     opIsEmpty=opIsEmpty opNotEqual=opNotEqual class=class alert=alert size=size maxlength=maxlength autocomplete=autocomplete titleStyle=titleStyle 
-    hideIgnoreCase=hideIgnoreCase ignCase=ignCase ignoreCase=ignoreCase title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=args><#nested></@field_textfind_markup_widget>
+    hideIgnoreCase=hideIgnoreCase ignCase=ignCase ignoreCase=ignoreCase title=title fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_textfind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -1018,10 +1033,11 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_rangefind_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_rangefind_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <@field_rangefind_markup_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
       autocomplete=autocomplete titleStyle=titleStyle defaultOptionFrom=defaultOptionFrom opEquals=opEquals 
       opGreaterThan=opGreaterThan opGreaterThanEquals=opGreaterThanEquals opLessThan=opLessThan opLessThanEquals=opLessThanEquals
-      value2=value2 defaultOptionThru=defaultOptionThru inlineLabel=inlineLabel origArgs=args><#nested></@field_rangefind_markup_widget>
+      value2=value2 defaultOptionThru=defaultOptionThru inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_rangefind_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -1074,7 +1090,8 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_hidden_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_hidden_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@field_hidden_markup_widget name=name value=value id=id events=events inlineLabel=inlineLabel origArgs=args/>
+  <#local origArgs = args>
+  <@field_hidden_markup_widget name=name value=value id=id events=events inlineLabel=inlineLabel origArgs=origArgs/>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -1090,8 +1107,9 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_display_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_display_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <@field_display_markup_widget type=type imageLocation=imageLocation idName=idName description=description title=title class=class alert=alert inPlaceEditorUrl=inPlaceEditorUrl 
-    inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel origArgs=args><#nested></@field_display_markup_widget>
+    inPlaceEditorParams=inPlaceEditorParams imageAlt=imageAlt collapse=false fieldTitleBlank=fieldTitleBlank tooltip=tooltip inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_display_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
@@ -1131,7 +1149,8 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_generic_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_generic_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@field_generic_markup_widget text=text tooltip=tooltip inlineLabel=inlineLabel origArgs=args><#nested></@field_generic_markup_widget>
+  <#local origArgs = args>
+  <@field_generic_markup_widget text=text tooltip=tooltip inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_generic_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->

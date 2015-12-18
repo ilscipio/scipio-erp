@@ -39,10 +39,13 @@
         <@cell columns=4>4</@cell>
         <@cell columns=8>8</@cell>
     </@row>       
-    <@row class="+${styles.grid_display!}">
-        <@cell columns=6>6</@cell>
-        <@cell columns=6>6</@cell>
-    </@row>
+
+    <!-- Manual open/close rows and cells -->
+    <@row openOnly=true class="+${styles.grid_display!}" />
+        <@cell openOnly=true columns=6 />6<@cell closeOnly=true />
+        <@cell openOnly=true columns=6 />6<@cell closeOnly=true />
+    <@row closeOnly=true />
+
 </@section>
 
 <@section>

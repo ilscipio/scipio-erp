@@ -29,6 +29,7 @@ IMPL NOTE: Beware of whitespace.
 <#macro htmlHeadOpen args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.htmlHeadOpen_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <#if includeDocType><!DOCTYPE html></#if><#lt>
   <#if locale??>
     <#local docLangAttr = locale.toString()?replace("_", "-")>
@@ -40,7 +41,7 @@ IMPL NOTE: Beware of whitespace.
   <#if !docLangAttr?has_content>
     <#local docLangAttr = "en">
   </#if>
-  <@htmlHeadOpen_markup includeDocType=includeDocType docLangAttr=docLangAttr langDir=langDir origArgs=args/><#t>
+  <@htmlHeadOpen_markup includeDocType=includeDocType docLangAttr=docLangAttr langDir=langDir origArgs=origArgs/><#t>
 </#macro>
 
 <#macro htmlHeadOpen_markup includeDocType=false docLangAttr="" langDir="" origArgs={} extraArgs...>
@@ -129,7 +130,8 @@ NOTE: Unlike others this macro explicitly currently cannot support openOnly/clos
   }>
   <#local args = mergeArgMaps(args, inlineArgs, defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@script_markup type=type src=src output=output htmlwrap=htmlwrap cdata=cdata origArgs=args><#nested></@script_markup>
+  <#local origArgs = args>
+  <@script_markup type=type src=src output=output htmlwrap=htmlwrap cdata=cdata origArgs=origArgs><#nested></@script_markup>
 </#macro>
 
 <#macro script_markup type="" src="" output="" htmlwrap=true cdata=true origArgs={} extraArgs...>

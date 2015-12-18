@@ -28,7 +28,8 @@
 <#macro modal args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.modal_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@modal_markup id=id label=label href=href icon=icon origArgs=args><#nested></@modal_markup>
+  <#local origArgs = args>
+  <@modal_markup id=id label=label href=href icon=icon origArgs=origArgs><#nested></@modal_markup>
 </#macro>
 
 <#macro modal_markup id="" label="" href="" icon="" origArgs={} extraArgs...>
@@ -65,11 +66,12 @@ it's an unexpected result, error or one that requires user action. See other mac
 <#macro alert args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.alert_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <#local typeClass = "alert_type_${type!}"/>
   <#if type="error">
     <#local type = "alert">
   </#if>
-  <@alert_markup type=type class=class typeClass=typeClass id=id origArgs=args><#nested></@alert_markup>
+  <@alert_markup type=type class=class typeClass=typeClass id=id origArgs=origArgs><#nested></@alert_markup>
 </#macro>
 
 <#macro alert_markup type="info" class="" typeClass="" id="" origArgs={} extraArgs...>
@@ -108,7 +110,8 @@ it's an unexpected result, error or one that requires user action. See other mac
 <#macro panel args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.panel_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@panel_markup type=type title=title origArgs=args><#nested></@panel_markup>
+  <#local origArgs = args>
+  <@panel_markup type=type title=title origArgs=origArgs><#nested></@panel_markup>
 </#macro>
 
 <#macro panel_markup type="" title="" origArgs={} extraArgs...>
@@ -139,7 +142,8 @@ Other messages such as for missing params/record IDs are usually errors.
 <#macro resultMsg args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.resultMsg_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@resultMsg_markup class=class id=id origArgs=args><#nested></@resultMsg_markup>
+  <#local origArgs = args>
+  <@resultMsg_markup class=class id=id origArgs=origArgs><#nested></@resultMsg_markup>
 </#macro>
 
 <#macro resultMsg_markup class="" id="" origArgs={} extraArgs...>
@@ -168,7 +172,8 @@ templates: currently @alert.
 <#macro errorMsg args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.errorMsg_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@errorMsg_markup type=type class=class id=id origArgs=args><#nested></@errorMsg_markup>
+  <#local origArgs = args>
+  <@errorMsg_markup type=type class=class id=id origArgs=origArgs><#nested></@errorMsg_markup>
 </#macro>
 
 <#macro errorMsg_markup type="error" class="" id="" origArgs={} extraArgs...>

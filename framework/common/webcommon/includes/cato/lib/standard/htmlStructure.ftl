@@ -75,6 +75,8 @@ to this one.
 <#macro row args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.row_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  
   <#local open = !(nestedOnly || closeOnly || norows)>
   <#local close = !(nestedOnly || openOnly || norows)>
   <#if open>
@@ -88,14 +90,20 @@ to this one.
     <#if collapse>
       <#local class = addClassArg(class, styles.collapse!)>
     </#if>
-  <#else>
-    <#-- FIXME: has no open/close stack memory -->
-    <#local classes = "">
+  </#if>
+
+  <#if open && !close>
+    <#local dummy = pushRequestStack("catoRowMarkupStack", {
+      "class":class, "collapse":collapse, "id":id, "alt":alt, "selected":selected, "origArgs":origArgs
+    })>
+  <#elseif close && !open>
+    <#local stackValues = popRequestStack("catoRowMarkupStack")!{}>
+    <#local dummy = localsPutAll(stackValues)>
   </#if>
   <#-- NOTE: we pass openOnly/closeOnly/nestedOnly because otherwise markup has to recalculated it when
        calling some macros. as long as markup macros accep extraArgs... it's not a problem; markup can pick which ones it needs. -->
   <@row_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class 
-    collapse=collapse id=id alt=alt selected=selected origArgs=args><#nested /></@row_markup>
+    collapse=collapse id=id alt=alt selected=selected origArgs=origArgs><#nested /></@row_markup>
 </#macro>
 
 <#-- @row container markup - theme override -->
@@ -161,6 +169,8 @@ to this one.
 <#macro cell args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.cell_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  
   <#local open = !(nestedOnly || closeOnly || nocells)>
   <#local close = !(nestedOnly || openOnly || nocells)>
   <#if open>
@@ -189,11 +199,17 @@ to this one.
     </#if>
     <#-- save grid sizes -->
     <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
-  <#else>
-    <#-- FIXME: has no open/close stack memory -->
-    <#local class = "">
   </#if>
-  <@cell_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id last=last origArgs=args><#nested></@cell_markup>
+
+  <#if open && !close>
+    <#local dummy = pushRequestStack("catoCellMarkupStack", {
+      "class":class, "id":id, "last":last, "collapse":collapse, "origArgs":origArgs
+    })>
+  <#elseif close && !open>
+    <#local stackValues = popRequestStack("catoCellMarkupStack")!{}>
+    <#local dummy = localsPutAll(stackValues)>
+  </#if>
+  <@cell_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id last=last collapse=collapse origArgs=origArgs><#nested></@cell_markup>
   <#if close>
     <#-- pop grid sizes -->
     <#local dummy = unsetCurrentContainerSizes()>
@@ -324,6 +340,7 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro grid args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.grid_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
 
   <#if !type?has_content>
     <#local type = "list">
@@ -343,9 +360,9 @@ Since this is very foundation specific, this function may be dropped in future i
       <#local id = "freewall_id_${freewallNum!0}">
     </#if>
     <#local class = addClassArg(class, styles.tile_container!)>
-    <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType origArgs=args><#nested></@grid_tiles_markup_container>
+    <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType origArgs=origArgs><#nested></@grid_tiles_markup_container>
   <#elseif type=="list">
-    <@grid_list_markup_container class=class id=id columns=columns origArgs=args><#nested></@grid_list_markup_container>
+    <@grid_list_markup_container class=class id=id columns=columns origArgs=origArgs><#nested></@grid_list_markup_container>
   </#if>
   <#local dummy = unsetCurrentContainerSizes()>
   <#local dummy = popRequestStack("catoGridInfoStack")>
@@ -440,6 +457,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
 <#macro tile args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tile_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
 
   <#local gridInfo = readRequestStack("catoGridInfoStack")!{}>
   <#if !type?has_content>
@@ -537,7 +555,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
   
   <@tile_markup class=class id=id dataSizex=dataSizex dataSizey=dataSizey image=image imageClass=imageClass imageBgColorClass=imageBgColorClass 
     link=link linkTarget=linkTarget icon=icon 
-    overlayClass=overlayClass overlayBgColorClass=overlayBgColorClass title=title titleClass=titleClass titleBgColorClass=titleBgColorClass origArgs=args><#nested></@tile_markup>
+    overlayClass=overlayClass overlayBgColorClass=overlayBgColorClass title=title titleClass=titleClass titleBgColorClass=titleBgColorClass origArgs=origArgs><#nested></@tile_markup>
 </#macro>
 
 <#function calcTileSize orientation="x" value="normal">
@@ -908,7 +926,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#if showMore>
       <#local menuTitleMarkup><@section_markup_menutitle sectionLevel=sLevel headingLevel=hLevel menuLayout=menuLayout 
         menuRole=menuRole hasMenu=hasMenu menuMarkup=menuMarkup hasTitle=hasTitle titleMarkup=titleMarkup 
-        contentFlagClasses=contentFlagClasses fromScreenDef=fromScreenDef origArgs=args/></#local>
+        contentFlagClasses=contentFlagClasses fromScreenDef=fromScreenDef origArgs=origArgs/></#local>
     </#if>
   </#if> 
 

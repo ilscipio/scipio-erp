@@ -47,7 +47,8 @@
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.heading_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
-    
+  <#local origArgs = args>
+  
   <#if !level?has_content>
     <#local level = getCurrentHeadingLevel()>
   </#if>
@@ -95,7 +96,7 @@
     <#local cElem = containerElemType> 
   </#if>
   <@heading_markup level=level elem=hElem class=class id=id attribs=attribs
-    containerElem=cElem containerClass=containerClass containerId=containerId origArgs=args><#nested></@heading_markup>
+    containerElem=cElem containerClass=containerClass containerId=containerId origArgs=origArgs><#nested></@heading_markup>
 </#macro>
 
 <#-- Main markup for @heading (minimal logic; a little needed) - theme override
@@ -140,7 +141,8 @@ Creates a very basic wrapper for code blocks
 <#macro code args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.code_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@code_markup type=type origArgs=args><#nested></@code_markup>
+  <#local origArgs = args>
+  <@code_markup type=type origArgs=origArgs><#nested></@code_markup>
 </#macro>
 
 <#macro code_markup type="" origArgs={} extraArgs...>
@@ -839,10 +841,11 @@ Helps define table cells.
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.th_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
+  <#local origArgs = args>
 
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
-  <@th_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id attribs=attribs origArgs=args><#nested></@th_markup>
+  <@th_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id attribs=attribs origArgs=origArgs><#nested></@th_markup>
 </#macro>
 
 <#macro th_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" attribs="" origArgs={} extraArgs...>
@@ -856,10 +859,11 @@ Helps define table cells.
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.td_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
+  <#local origArgs = args>
 
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
-  <@td_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id attribs=attribs origArgs=args><#nested></@td_markup>
+  <@td_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class id=id attribs=attribs origArgs=origArgs><#nested></@td_markup>
 </#macro>
 
 <#macro td_markup open=true close=true openOnly=false closeOnly=false nestedOnly=false class="" id="" attribs="" origArgs={} extraArgs...>
@@ -921,7 +925,8 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro pul args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.pul_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@pul_markup title=title origArgs=args><#nested></@pul_markup>
+  <#local origArgs = args>
+  <@pul_markup title=title origArgs=origArgs><#nested></@pul_markup>
 </#macro>
 
 <#macro pul_markup title="" origArgs={} extraArgs...>
@@ -937,7 +942,8 @@ Since this is very foundation specific, this function may be dropped in future i
 <#macro pli args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.pli_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-  <@pli_markup type=type origArgs=args><#nested></@pli_markup>
+  <#local origArgs = args>
+  <@pli_markup type=type origArgs=origArgs><#nested></@pli_markup>
 </#macro>
 
 <#macro pli_markup type="" origArgs={} extraArgs...>
@@ -983,6 +989,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 <#macro chart args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.chart_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
 
   <#global chartLibrary = library!"foundation"/>
   <#local chartIdNum = getRequestVar("catoChartIdNum")!0>
@@ -992,7 +999,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#global chartType = type/>
   
   <@chart_markup type=type chartId=chartId chartIdNum=chartIdNum chartLibrary=chartLibrary title=title 
-    renderSeqNumber=renderSeqNumber origArgs=args><#nested></@chart_markup>
+    renderSeqNumber=renderSeqNumber origArgs=origArgs><#nested></@chart_markup>
 </#macro>
 
 <#macro chart_markup type="" chartLibrary="" title="" chartId="" chartIdNum=0 renderSeqNumber=0 origArgs={} extraArgs...>
@@ -1090,13 +1097,14 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 <#macro chartdata args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.chartdata_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   
   <#if !chartLibrary?has_content>
     <#local chartLibrary = "foundation"/>
   </#if>
 
   <@chartdata_markup title=title value=value value2=value2 chartId=chartId chartType=chartType 
-    chartLibrary=chartLibrary origArgs=args><#nested></@chartdata_markup>
+    chartLibrary=chartLibrary origArgs=origArgs><#nested></@chartdata_markup>
 </#macro>
 
 <#macro chartdata_markup title="" value="" value2="" chartId="" chartType="" chartLibrary="" origArgs={} extraArgs...>

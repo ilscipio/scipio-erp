@@ -42,6 +42,7 @@ An HTML form element.
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.form_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local attribs = makeAttribMapFromArgMap(args)>
+  <#local origArgs = args>
 
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
@@ -49,7 +50,15 @@ An HTML form element.
     <#local formInfo = {"type":type, "name":name, "id":id}>
     <#local dummy = pushRequestStack("catoFormInfoStack", formInfo)>
   </#if>
-  <#-- FIXME: has no open/close stack memory -->
+
+  <#if open && !close>
+    <#local dummy = pushRequestStack("catoFormMarkupStack", {
+      "type":type, "name":name, "id":id, "class":class, "attribs":attribs, "origArgs":origArgs
+    })>
+  <#elseif close && !open>
+    <#local stackValues = popRequestStack("catoFormMarkupStack")!{}>
+    <#local dummy = localsPutAll(stackValues)>
+  </#if>
   <@form_markup type=type name=name id=id class=class open=open close=close openOnly=openOnly closeOnly=closeOnly 
     nestedOnly=nestedOnly attribs=attribs origArgs=origArgs><#nested></@form_markup>
   <#if close>
@@ -175,6 +184,7 @@ for getFileUploadProgressStatus AJAX calls.
 <#macro progress args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.progress_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
 
   <#local progressOptions = progressArgs.progressOptions!progressOptions>
   <#local explicitId = id?has_content>
@@ -196,7 +206,7 @@ for getFileUploadProgressStatus AJAX calls.
       <#local color=styles.color_success!/>
   </#switch>
 
-  <@progress_markup value=value id=id class=class showValue=showValue containerClass=containerClass color=color origArgs=args/>
+  <@progress_markup value=value id=id class=class showValue=showValue containerClass=containerClass color=color origArgs=origArgs/>
     
   <#if progressOptions?has_content>
     <#local opts = progressOptions>
@@ -348,6 +358,7 @@ A visible fieldset, including the HTML element.
 <#macro fieldset_core args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.fieldset_core_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
 
   <#local open = !(nestedOnly || closeOnly)>
   <#local close = !(nestedOnly || openOnly)>
@@ -356,8 +367,18 @@ A visible fieldset, including the HTML element.
   <#else>
     <#local containerId = "">
   </#if>
-  <#-- FIXME: has no open/close stack memory -->
-  <@fieldset_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class containerClass=containerClass id=id containerId=containerId title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible origArgs=args><#nested></@fieldset_markup>
+
+  <#if open && !close>
+    <#local dummy = pushRequestStack("catoFieldsetCoreMarkupStack", {
+      "class":class, "containerClass":containerClass, "id":id, "containerId":containerId, "title":title, 
+      "collapsed":collapsed, "collapsibleAreaId":collapsibleAreaId, "expandToolTip":expandToolTip, 
+      "collapseToolTip":collapseToolTip, "collapsible":collapsible, "origArgs":origArgs
+    })>
+  <#elseif close && !open>
+    <#local stackValues = popRequestStack("catoFieldsetCoreMarkupStack")!{}>
+    <#local dummy = localsPutAll(stackValues)>
+  </#if>
+  <@fieldset_markup open=open close=close openOnly=openOnly closeOnly=closeOnly nestedOnly=nestedOnly class=class containerClass=containerClass id=id containerId=containerId title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible origArgs=origArgs><#nested></@fieldset_markup>
 </#macro>
 
 <#-- @fieldset main markup - theme override -->
@@ -856,6 +877,7 @@ standard markup.
       it is not currently possible. see mergeArgMapsToLocals in utilities.ftl. -->
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
         
   <#if !type?has_content>
     <#local type = "generic">
@@ -1074,10 +1096,10 @@ standard markup.
   <#if useLabelArea>
     <#-- NOTE: origArgs is passed because in some cases it may be important for markup to know if the caller manually
         specified a certain parameter to @field or not - the other logical args don't record this info -->
-    <#local labelAreaContent><@field_markup_labelarea labelType=effLabelType labelPosition=effLabelPosition label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required origArgs=args/></#local>
+    <#local labelAreaContent><@field_markup_labelarea labelType=effLabelType labelPosition=effLabelPosition label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required origArgs=origArgs/></#local>
   </#if>
       
-  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container origArgs=args>
+  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container origArgs=origArgs>
     <#switch type>
       <#case "input">
         <@field_input_widget name=name 

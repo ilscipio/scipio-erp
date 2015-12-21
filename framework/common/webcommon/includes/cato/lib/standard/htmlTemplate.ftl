@@ -35,7 +35,8 @@
 * Template-facing macros: 
 *   These macros such as @field, @row, @heading, etc. are meant to be
 *   used in templates and can also be overridden by themes (though not preferred method).
-*   Most of these use a versatile args pattern that looks like: <@name args={} inlineArgs...>
+*   Most of these use a versatile args pattern that looks like: 
+*   <@name args={} inlineArgs...>
 *   From templates, these macros accept regular inlined parameters as well as a map of parameters
 *   using the args map parameter. Some also accept additional arbitrary inlined parameters to be used 
 *   as HTML attributes (in both the args map and the inline args).
@@ -44,6 +45,10 @@
 *   Some non-template-facing macros also use this pattern, and some functions party use it as well (but
 *   functions do not support named parameters at this time, so not fully).
 *   See mergeArgMaps function in utilities library for more details.
+*   INTERFACE
+*   <@name args={} inlineArgs...>
+*     args: map of parameters to pass to the macro
+*     inlineArgs: map of parameters passed inline to the macro via usual macro call syntax (these have priority)
 *
 * Markup macros (theme overrides): 
 *   These macros such as @row_markup, @heading_markup, etc. containing
@@ -53,6 +58,8 @@
 *   Nevertheless, they have some requirements: these macros should always end their parameter list with
 *   a varargs catch-all parameter "catchArgs..." so that future changes do not backwards break compability
 *   with themes.
+*   Most of these have a pattern that looks like:
+*   <@name_markup (...) origArgs={} catchArgs...>
 *   Most also have an advanced "origArgs={}" parameter that will contain the combined arguments map of the parameters
 *   that were passed to the calling macro (WARN: this may not necessarily be a template-facing macro; it may
 *   be intermediate). In most cases it should not be used; it is provided only in case the other regular parameters
@@ -61,6 +68,12 @@
 *       a "customArgs={}" to basically all macros or try to do it through origArgs. don't really want to
 *       add customArgs everywhere but not sure can be done clearly through origArgs because conflicts with
 *       the inline attribs pattern (remaining args used as html attribs) and more map mergings.
+*   INTERFACE:
+*   <@name_markup (...) origArgs={} catchArgs...>
+*     origArgs: map of complex parameters that were received by the calling macro. rarely-used and should be
+*       avoided in favor of other simpler macro arguments. is needed in rare cases where the other macro arguments
+*       are too simplistic and don't provide all the information needed.
+*     catchArgs: simply catches all the parameters the macro doesn't need to handle.
 *
 -->
 

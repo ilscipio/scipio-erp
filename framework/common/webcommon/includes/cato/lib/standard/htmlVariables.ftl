@@ -65,6 +65,8 @@
           writing, where disabled/active/selected styles replace their base styles.
           FIXME: we should use same behavior everywhere, but not clear which is more desirable at this time
               (menu widgets' way of replacing is more flexible, but not necessarily intuitive...)
+          WARN: as of ofbiz 14.12 branch revision 1720933 the behavior is no longer clear or consistent for menu widgets
+              (though it was before)
        --> 
     <#-- Generic menu types -->
     "menu_generic" : "",  

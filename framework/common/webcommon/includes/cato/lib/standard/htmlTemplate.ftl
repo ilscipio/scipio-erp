@@ -32,22 +32,27 @@
 *   <@macroname open=true close=false /> for open-only and <@macroname close=true open=false /> for close-only.
 *   Use of these in templates is discouraged but occasionally forcefully needed.
 * * These patterns are often workarounds for limitations in the FTL language.
+* * The advanced args pattern described below is primarily designed to be simple to use from templates, almost
+*   indistinguishable from regular macro calls, but more powerful.
+*   It also provides more power for theme overrides; however, theme overrides must be careful in their use of it;
+*   it's better for themes to use simple markup overrides instead, which do not use the advanced pattern.
 *
-* Template-facing macros: 
+* Template-facing macros (and advanced args pattern): 
 *   These macros such as @field, @row, @heading, etc. are meant to be
 *   used in templates and can also be overridden directly by themes (though not preferred method).
 *   Most of these use a versatile args pattern that looks like: 
 *   <#macro macroname args={} inlineArgs...>
 *   When called from templates, these macros accept regular inlined parameters as well as a map of parameters
-*   using the args map parameter. Intuitively, inline args have priority over args passed in the args map and in most cases override them.
+*   using the args map parameter. Intuitively, inline args have priority over args passed in the args map and in most cases simply override them.
 *   This pattern is especially needed for themes to override the templating-facing macros cleanly and to provide a way
-*   for template code to pass maps as arguments. It can be used in a large number of ways (pass maps from groovy, callback macros, simplifying repeat calls, etc.).
+*   for template code to pass map content as arguments (not supported by Freemarker). It can be exploited 
+*   in a large number of ways (pass maps from groovy, callback macros, simplifying repeat calls, etc.) otherwise not possible.
 *   Some non-template-facing macros also use this pattern, and some functions partly use it as well (but
 *   Freemarker functions do not support named parameters at this time, so only partial pattern).
-*   Some macros also accept additional arbitrary inlined parameters to be used as extra HTML attributes (that can be passed
+*   Some macros with this pattern also accept additional arbitrary inlined parameters to be used as extra HTML attributes (that can be passed
 *   both in args map or inlineArgs, but usually it's used to emulate HTML with macros, thus inlineArgs); 
-*   these are not declared in the default argument lists; see individual macro documentation.
-*   These are equivalent in usage to regular FTL interface macros that take extra attrbs as varargs
+*   these are not declared in the default argument lists; see individual macro documentation;
+*   they are equivalent in usage to regular FTL interface macros that take extra attrbs as varargs
 *   (e.g. <#macro myhtmlmacro (...) inlineAttribs...>). 
 *   IMPL NOTE: Extra attributions are handled by a system that records args names in a "allArgNames" member in 
 *       the args map through the mergeArgMaps function. See mergeArgMaps function in utilities library for more details.

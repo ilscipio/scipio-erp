@@ -51,7 +51,7 @@
 *   They do not have a versatile interface like the template-facing macros and are intentionally kept
 *   simple.
 *   Nevertheless, they have some requirements: these macros should always end their parameter list with
-*   a varargs catch-all parameter "extraArgs..." so that future changes do not backwards break compability
+*   a varargs catch-all parameter "catchArgs..." so that future changes do not backwards break compability
 *   with themes.
 *   Most also have an advanced "origArgs={}" parameter that will contain the combined arguments map of the parameters
 *   that were passed to the calling macro (WARN: this may not necessarily be a template-facing macro; it may

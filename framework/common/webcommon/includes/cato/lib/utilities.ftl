@@ -809,7 +809,7 @@ allArgNames allows arg names to be automatically accumulated
 between delegating/overriding macro calls that make use of mergeArgMaps without
 having to recreate new intermediate maps. allArgNames keep track of all the explicit
 args used by all the macros in a call chain, which can then be used to identify
-the remaining "extra" arguments (analogous to extraArgs in FTL's <#macro extraArgs...>).
+the remaining "extra" arguments (analogous to varArgs in FTL's <#macro varArgs...>).
 WARN: in some cases allArgNames accumulation and reuse of maps could be undesirable.
     (currently workaround this by using localArgNames only and/or creating new intermediate maps).
 NOTE: currently the result may often contain duplicate names (is not a set). 

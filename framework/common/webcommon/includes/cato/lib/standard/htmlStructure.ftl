@@ -101,7 +101,7 @@ to this one.
 </#macro>
 
 <#-- @row container markup - theme override -->
-<#macro row_markup open=true close=true class="" collapse=false id="" alt="" selected="" origArgs={} extraArgs...>
+<#macro row_markup open=true close=true class="" collapse=false id="" alt="" selected="" origArgs={} catchArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt/>
   </#if>
@@ -211,7 +211,7 @@ to this one.
 </#macro>
 
 <#-- @cell container markup - theme override -->
-<#macro cell_markup open=true close=true class="" id="" last=false collapse=false origArgs={} extraArgs...>
+<#macro cell_markup open=true close=true class="" id="" last=false collapse=false origArgs={} catchArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt>
   </#if>
@@ -230,14 +230,14 @@ saveCurrentContainerSizes and related utilities lib functions.
 
 NOTE: implementation of evalAbsContainerSizeFactors assumes all max sizes for large/medium/small are the
     same.
-NOTE: extraArgs is in case of interface changes. Not used.
+NOTE: catchArgs... is in case of interface changes. Not used.
 
 DEV NOTE: TODO: these should be general enough to work for both foundation and bootstrap, but
     should be confirmed...
     
 TODO?: these could also parse style for tile classes and calculate approximate corresponding grid sizes from tiles.
 -->
-<#function parseContainerSizesFromStyleStr style extraArgs...>
+<#function parseContainerSizesFromStyleStr style catchArgs...>
   <#if !catoContainerSizesPrefixMap??>
     <#global catoContainerSizesPrefixMap = {
       "${styles.grid_large!}" : "large", "${styles.grid_medium!}" : "medium", "${styles.grid_small!}" : "small"
@@ -248,7 +248,7 @@ TODO?: these could also parse style for tile classes and calculate approximate c
 
 <#-- TODO: reimplement in java in com.ilscipio.cato.ce.webapp.ftl.template.standard.StdTemplateFtlUtil.evalAbsContainerSizeFactors 
         and have this delegate to it -->
-<#function evalAbsContainerSizeFactors sizesList maxSizes=0 cachedFactorsList=[] extraArgs...>
+<#function evalAbsContainerSizeFactors sizesList maxSizes=0 cachedFactorsList=[] catchArgs...>
   <#local maxSize = 12>
   <#if maxSizes?is_number>
     <#if (maxSizes > 0)>
@@ -363,7 +363,7 @@ Since this is very foundation specific, this function may be dropped in future i
 </#macro>
 
 <#-- @grid tiles container markup - theme override -->
-<#macro grid_tiles_markup_container class="" id="" tylesType="" columns=1 origArgs={} extraArgs...>
+<#macro grid_tiles_markup_container class="" id="" tylesType="" columns=1 origArgs={} catchArgs...>
   <@container class=class id=id>
     <#nested>
   </@container>
@@ -385,7 +385,7 @@ Since this is very foundation specific, this function may be dropped in future i
 </#macro>
 
 <#-- @grid list container markup - theme override -->
-<#macro grid_list_markup_container class="" id="" columns=1 origArgs={} extraArgs...>
+<#macro grid_list_markup_container class="" id="" columns=1 origArgs={} catchArgs...>
   <#-- this never takes effect
   <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">-->
   <#if ((columns-2) > 0)>
@@ -571,7 +571,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
 
 <#-- @tile main markup - theme override -->
 <#macro tile_markup class="" id="" dataSizex="" dataSizey="" image="" imageClass="" imageBgColorClass="" link="" linkTarget="" icon="" 
-  overlayClass="" overlayBgColorClass="" title="" titleClass="" titleBgColorClass="" origArgs={} extraArgs...>
+  overlayClass="" overlayBgColorClass="" title="" titleClass="" titleBgColorClass="" origArgs={} catchArgs...>
   <#-- main markup (TODO: factor out into @tile_markup) -->
   <#-- TODO: need to calc-convert tile x-size to approximate grid sizes and pass in large-medium-small below,
       OR modify parseContainerSizesFromStyleStr to do it automatically from class string (HOWEVER
@@ -977,7 +977,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   * Return Value *
     string of classes (plain; no starting/trailing spaces or special class arg syntax) -->
 <#function makeSectionContentFlagClasses sectionLevel=1 headingLevel=1hasMenu=false hasTitle=false hasContent=true
-     menuLayout="" menuRole="" collapsible=false collapsed=false javaScriptEnabled=false fromScreenDef=false extraArgs...>
+     menuLayout="" menuRole="" collapsible=false collapsed=false javaScriptEnabled=false fromScreenDef=false catchArgs...>
   <#local contentFlagClasses>section-level-${sectionLevel} heading-level-${headingLevel}<#if hasTitle> has-title<#else> no-title</#if><#if hasMenu> has-menu<#else> no-menu</#if><#if hasContent> has-content<#else> no-content</#if></#local>
   <#return contentFlagClasses>
 </#function>
@@ -987,7 +987,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     map of lists, in the format {"preMenuItems":[...], "postMenuItems":[...]} -->
 <#function makeSectionExtraMainMenuItems sectionLevel=1 headingLevel=1 menuLayout="" menuRole="" hasMenu=false contentFlagClasses="" 
     collapsible=false collapsed=false javaScriptEnabled=false collapsibleAreaId="" saveCollapsed=false expandToolTip="" 
-    collapseToolTip="" fullUrlString="" fromScreenDef=false extraArgs...>
+    collapseToolTip="" fullUrlString="" fromScreenDef=false catchArgs...>
   <#return {"preMenuItems":[], "postMenuItems":[]}>
   <#-- Cato: TODO: translate this into vars above if/once needed again (as @menuitem args maps within lists)
   <#local preMenuItems></#local>
@@ -1011,7 +1011,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 <#macro section_markup_container open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" class="" outerClass="" 
     innerClass="" contentFlagClasses="" id="" title="" collapsed=false collapsibleAreaId="" collapsible=false saveCollapsed=true 
     expandToolTip=true collapseToolTip=true padded=false showMore=true fullUrlString=""
-    javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false origArgs={} extraArgs...>
+    javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false origArgs={} catchArgs...>
   <#if open>
     <#local outerClass = "">
     <#local outerClass = addClassArg(outerClass, "section-screenlet")>
@@ -1044,7 +1044,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 
 <#-- @section menu and title arrangement markup - theme override -->
 <#macro section_markup_menutitle sectionLevel=1 headingLevel=1 menuLayout="" menuRole="" hasMenu=false menuMarkup="" 
-    hasTitle=false titleMarkup="" contentFlagClasses="" fromScreenDef=false origArgs={} extraArgs...>
+    hasTitle=false titleMarkup="" contentFlagClasses="" fromScreenDef=false origArgs={} catchArgs...>
   <#-- Currently supports only one menu. could have one for each layout (with current macro
        args as post-title), but tons of macro args needed and complicates. -->
   <#if menuLayout == "pre-title">

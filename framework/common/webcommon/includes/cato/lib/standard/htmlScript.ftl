@@ -45,7 +45,7 @@ IMPL NOTE: Beware of whitespace.
 </#macro>
 
 <#-- @htmlHeadOpen main markup - theme override -->
-<#macro htmlHeadOpen_markup includeDocType=false docLangAttr="" langDir="" origArgs={} extraArgs...>
+<#macro htmlHeadOpen_markup includeDocType=false docLangAttr="" langDir="" origArgs={} catchArgs...>
 <!--[if IE 9]><html class="lt-ie10"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>><![endif]-->
 <html class="no-js"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>>
 <head>
@@ -136,7 +136,7 @@ NOTE: Unlike others this macro explicitly currently cannot support open/close st
 </#macro>
 
 <#-- @script main markup - theme override -->
-<#macro script_markup type="" src="" output="" htmlwrap=true cdata=true origArgs={} extraArgs...>
+<#macro script_markup type="" src="" output="" htmlwrap=true cdata=true origArgs={} catchArgs...>
   <#if src?has_content>
     <script type="${type}" src="${src}"></script>
   <#else>

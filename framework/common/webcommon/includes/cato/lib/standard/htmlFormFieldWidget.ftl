@@ -37,7 +37,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 
 <#-- field markup - theme override -->
 <#macro field_input_markup_widget name="" class="" alert="" value="" textSize="" maxlength="" id="" events={} disabled=false ajaxUrl="" ajaxEnabled=false 
-    mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false inlineLabel=false origArgs={} extraArgs...>
+    mask=false clientAutocomplete="" placeholder="" tooltip="" collapse=false readonly=false fieldTitleBlank=false inlineLabel=false origArgs={} catchArgs...>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, "has-tip tip-right")>
   </#if>
@@ -84,7 +84,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 
 <#-- field markup - theme override -->
 <#macro field_textarea_markup_widget name="" class="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
-    buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false inlineLabel=false origArgs={} extraArgs...>
+    buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false inlineLabel=false origArgs={} catchArgs...>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, "has-tip tip-right")>
   </#if>
@@ -145,7 +145,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_datetime_markup_widget name="" class="" title="" value="" size="" maxlength="" id="" dateType="" shortDateInput=false 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
-    alert=false mask="" events={} step="" timeValues="" tooltip="" collapse=false fieldTitleBlank=false inlineLabel=false origArgs={} extraArgs...>
+    alert=false mask="" events={} step="" timeValues="" tooltip="" collapse=false fieldTitleBlank=false inlineLabel=false origArgs={} catchArgs...>
   
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
   <#-- Note: ofbiz never handled dateType=="date" here because it pass shortDateInput=true in renderer instead-->
@@ -242,7 +242,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- field markup - theme override -->
 <#macro field_datefind_markup_widget class="" alert="" name="" localizedInputTitle="" value="" value2="" size="" maxlength="" dateType="" 
     formName="" defaultDateTimeString="" imgSrc="" localizedIconTitle="" titleStyle="" defaultOptionFrom="" defaultOptionThru="" 
-    opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" inlineLabel=false origArgs={} extraArgs...>
+    opEquals="" opSameDay="" opGreaterThanFromDayStart="" opGreaterThan="" opGreaterThan="" opLessThan="" opUpToDay="" opUpThruDay="" opIsEmpty="" inlineLabel=false origArgs={} catchArgs...>
 
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
   <#-- note: values of localizedInputTitle are: uiLabelMap.CommonFormatDate/Time/DateTime -->
@@ -363,7 +363,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     currentValue="" currentDescription="" allowEmpty=true options="" fieldName="" otherFieldName="" otherValue="" otherFieldSize="" 
     dDFCurrent="" defaultValue="" ajaxOptions="" frequency="" minChars="" choices="" autoSelect="" partialSearch="" partialChars="" 
     ignoreCase="" fullSearch="" events={} ajaxEnabled=false title="" tooltip="" description="" manualItems=false manualItemsOnly=false 
-    collapse=false fieldTitleBlank=false inlineSelected=true asmSelectArgs={} inlineLabel=false origArgs={} extraArgs...>
+    collapse=false fieldTitleBlank=false inlineSelected=true asmSelectArgs={} inlineLabel=false origArgs={} catchArgs...>
 
     <#if tooltip?has_content>
       <#local class = addClassArg(class, "has-tip tip-right")>
@@ -443,7 +443,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_option_markup_widget text="" value="" selected=false origArgs={} extraArgs...>
+<#macro field_option_markup_widget text="" value="" selected=false origArgs={} catchArgs...>
    <option value="${value}"<#if selected> selected="selected"</#if>>${text}</option><#t>
 </#macro>    
 
@@ -471,7 +471,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     maxlength="" id="" events={} readonly=false autocomplete="" descriptionFieldName="" 
     targetParameterIter="" imgSrc="" ajaxUrl="" ajaxEnabled=javaScriptEnabled presentation="layer" width="" 
     height="" position="" fadeBackground="true" clearText="" showDescription="" initiallyCollapsed="" 
-    lastViewName="main" title="" fieldTitleBlank=false inlineLabel=false origArgs={} extraArgs...>
+    lastViewName="main" title="" fieldTitleBlank=false inlineLabel=false origArgs={} catchArgs...>
   <#if Static["org.ofbiz.widget.model.ModelWidget"].widgetBoundaryCommentsEnabled(context)>
   </#if>
   <#if (!ajaxUrl?has_content) && ajaxEnabled?has_content && ajaxEnabled>
@@ -642,7 +642,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- field markup - theme override 
      FIXME: the styling for these is strange, can't get it to work no matter what -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
-    events={} tooltip="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false origArgs={} extraArgs...>
+    events={} tooltip="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false origArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -719,7 +719,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_radio_markup_widget items="" id="" class="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" multiMode=true inlineItems="" fieldTitleBlank=false inlineLabel=false origArgs={} extraArgs...>
+<#macro field_radio_markup_widget items="" id="" class="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" multiMode=true inlineItems="" fieldTitleBlank=false inlineLabel=false origArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -786,7 +786,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_file_markup_widget class="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false inlineLabel=false origArgs={} extraArgs...>
+<#macro field_file_markup_widget class="" alert="" name="" value="" size="" maxlength="" autocomplete="" id="" title="" fieldTitleBlank=false inlineLabel=false origArgs={} catchArgs...>
   <input type="file"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if><#if name?has_content> name="${name}"</#if><#if value?has_content> value="${value}"</#if><#if size?has_content> size="${size}"</#if><#if maxlength?has_content> maxlength="${maxlength}"</#if><#if autocomplete?has_content> autocomplete="off"</#if>/><#rt/>
 </#macro>
 
@@ -803,7 +803,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_password_markup_widget class="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="" inlineLabel=false origArgs={} extraArgs...>
+<#macro field_password_markup_widget class="" alert="" name="" value="" size="" maxlength="" id="" autocomplete="" title="" placeholder="" fieldTitleBlank=false tooltip="" inlineLabel=false origArgs={} catchArgs...>
   <#if tooltip?has_content>
     <#local class = addClassArg(class, "has-tip tip-right")>
   </#if>
@@ -826,7 +826,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_reset_markup_widget class="" alert="" name="" text="" fieldTitleBlank=false inlineLabel=false origArgs={} extraArgs...>
+<#macro field_reset_markup_widget class="" alert="" name="" text="" fieldTitleBlank=false inlineLabel=false origArgs={} catchArgs...>
   <input type="reset"<@fieldClassAttribStr class=class alert=alert /> name="${name}"<#if text?has_content> value="${text}"</#if>/>
 </#macro>
 
@@ -863,7 +863,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- field markup - theme override -->
 <#macro field_submit_markup_widget buttonType="" class="" alert="" formName="" name="" events={} imgSrc="" confirmation="" 
     containerId="" ajaxUrl="" text="" fieldTitleBlank=false showProgress="" href="" inputType="" disabled=false 
-    progressArgs={} id="" inlineLabel=false origArgs={} extraArgs...>
+    progressArgs={} id="" inlineLabel=false origArgs={} catchArgs...>
   <#-- Cato: to omit button (show progress only), we use empty title hack " " similar to what ofbiz does with hyperlinks with no label -->
   <#if (buttonType == "text-link" || buttonType != "image") && !(text?trim?has_content)>
     <#local buttonMarkup = "">
@@ -923,7 +923,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 </#macro>
 
 <#-- submitarea widget markup - theme override -->
-<#macro field_submitarea_markup_widget progressArgs={} inlineLabel=false origArgs={} extraArgs...>
+<#macro field_submitarea_markup_widget progressArgs={} inlineLabel=false origArgs={} catchArgs...>
   <#if progressArgs?has_content && ((progressArgs.enabled!true) != false)>
       <@field_submitarea_markup_widget_progress progressArgs=progressArgs inlineLabel=inlineLabel origArgs=origArgs><#nested></@field_submitarea_markup_widget_progress>
   <#else>
@@ -932,7 +932,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 </#macro>
 
 <#-- submitarea widget progress markup - theme override -->
-<#macro field_submitarea_markup_widget_progress progressArgs={} inlineLabel=false origArgs={} extraArgs...>
+<#macro field_submitarea_markup_widget_progress progressArgs={} inlineLabel=false origArgs={} catchArgs...>
   <#local progressOptions = progressArgs.progressOptions!{}>
   <#local nestedContent><#nested></#local>
   <#local rowClass>submit-progress-row<#if nestedContent?has_content> has-submit-button<#else> no-submit-button</#if></#local>
@@ -981,7 +981,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- field markup - theme override -->
 <#macro field_textfind_markup_widget name="" value="" defaultOption="" opEquals="" opBeginsWith="" opContains="" 
     opIsEmpty="" opNotEqual="" class="" alert="" size="" maxlength="" autocomplete="" titleStyle="" 
-    hideIgnoreCase="" ignCase="" ignoreCase="" title="" fieldTitleBlank=false inlineLabel=false origArgs={} extraArgs...>
+    hideIgnoreCase="" ignCase="" ignoreCase="" title="" fieldTitleBlank=false inlineLabel=false origArgs={} catchArgs...>
 
   <@row collapse=collapse!false>
     <#if opEquals?has_content>
@@ -1043,7 +1043,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- field markup - theme override -->
 <#macro field_rangefind_markup_widget class="" alert="" name="" value="" size="" maxlength="" autocomplete="" titleStyle="" 
     defaultOptionFrom="" opEquals="" opGreaterThan="" opGreaterThanEquals="" opLessThan="" opLessThanEquals="" value2="" 
-    defaultOptionThru="" inlineLabel=false origArgs={} extraArgs...>
+    defaultOptionThru="" inlineLabel=false origArgs={} catchArgs...>
   <#local class1="${styles.grid_small!}9 ${styles.grid_large!}9"/>
   <#local class2="${styles.grid_small!}3 ${styles.grid_large!}3"/>
   <@row collapse=collapse!false>
@@ -1095,7 +1095,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_hidden_markup_widget name="" value="" id="" events={} inlineLabel=false origArgs={} extraArgs...>
+<#macro field_hidden_markup_widget name="" value="" id="" events={} inlineLabel=false origArgs={} catchArgs...>
   <input type="hidden" name="${name}"<#if value?has_content> value="${value}"</#if><#if id?has_content> id="${id}"</#if><#if events?has_content><@commonElemEventAttribStr events=events /></#if>/>
 </#macro>
 
@@ -1114,7 +1114,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 
 <#-- field markup - theme override -->
 <#macro field_display_markup_widget type="" imageLocation="" idName="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
-    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" inlineLabel=false origArgs={} extraArgs...>
+    inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" inlineLabel=false origArgs={} catchArgs...>
   <#if type?has_content && type=="image">
     <img src="${imageLocation}" alt="${imageAlt}"><#lt/>
   <#else>
@@ -1154,7 +1154,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_generic_markup_widget text="" tooltip="" inlineLabel=false origArgs={} extraArgs...>
+<#macro field_generic_markup_widget text="" tooltip="" inlineLabel=false origArgs={} catchArgs...>
   <#if text?has_content>
     ${text}<#t>
   <#else>

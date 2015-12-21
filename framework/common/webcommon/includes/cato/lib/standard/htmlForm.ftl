@@ -36,7 +36,7 @@ An HTML form element.
 -->
 <#assign form_defaultArgs = {
   "type":"input", "name":"", "id":"", "class":"", "open":true, "close":true, 
-  "attribs":{}
+  "attribs":{}, "passArgs":{}
 }>
 <#macro form args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.form_defaultArgs)>
@@ -51,20 +51,20 @@ An HTML form element.
 
   <#if open && !close>
     <#local dummy = pushRequestStack("catoFormMarkupStack", {
-      "type":type, "name":name, "id":id, "class":class, "attribs":attribs, "origArgs":origArgs
+      "type":type, "name":name, "id":id, "class":class, "attribs":attribs, "origArgs":origArgs, "passArgs":passArgs
     })>
   <#elseif close && !open>
     <#local stackValues = popRequestStack("catoFormMarkupStack")!{}>
     <#local dummy = localsPutAll(stackValues)>
   </#if>
-  <@form_markup type=type name=name id=id class=class open=open close=close attribs=attribs origArgs=origArgs><#nested></@form_markup>
+  <@form_markup type=type name=name id=id class=class open=open close=close attribs=attribs origArgs=origArgs passArgs=passArgs><#nested></@form_markup>
   <#if close>
     <#local dummy = popRequestStack("catoFormInfoStack")>
   </#if>
 </#macro>
 
 <#-- @form main markup - theme override -->
-<#macro form_markup type="" name="" id="" class="" open=true close=true attribs={} origArgs={} catchArgs...>
+<#macro form_markup type="" name="" id="" class="" open=true close=true attribs={} origArgs={} passArgs={} catchArgs...>
   <#if open>
     <form<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
       <#lt><#if name?has_content> name="${name}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
@@ -95,7 +95,7 @@ for getFileUploadProgressStatus AJAX calls.
     htmlwrap        = if true, wrap in @script (default true)
 -->
 <#assign progressScript_defaultArgs = {
-  "enabled":true, "htmlwrap":true, "progressOptions":{}
+  "enabled":true, "htmlwrap":true, "progressOptions":{}, "passArgs":{}
 }>
 <#macro progressScript args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.progressScript_defaultArgs)>
@@ -176,7 +176,7 @@ for getFileUploadProgressStatus AJAX calls.
 -->
 <#assign progress_defaultArgs = {
   "value":0, "id":"", "type":"", "class":"", "showValue":false, "containerClass":"", "progressArgs":{}, 
-  "progressOptions":{}
+  "progressOptions":{}, "passArgs":{}
 }>
 <#macro progress args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.progress_defaultArgs)>
@@ -203,7 +203,7 @@ for getFileUploadProgressStatus AJAX calls.
       <#local color=styles.color_success!/>
   </#switch>
 
-  <@progress_markup value=value id=id class=class showValue=showValue containerClass=containerClass color=color origArgs=origArgs/>
+  <@progress_markup value=value id=id class=class showValue=showValue containerClass=containerClass color=color origArgs=origArgs passArgs=passArgs/>
     
   <#if progressOptions?has_content>
     <#local opts = progressOptions>
@@ -211,12 +211,12 @@ for getFileUploadProgressStatus AJAX calls.
       <#local opts = concatMaps(opts, {"progBarId":"${id}"})>
     </#if>
     <#-- inlines always override args map -->
-    <@progressScript progressOptions=opts htmlwrap=true args=progressArgs />
+    <@progressScript progressOptions=opts htmlwrap=true args=progressArgs passArgs=passArgs />
   </#if>
 </#macro>
 
 <#-- @progress main markup - theme override -->
-<#macro progress_markup value=0 id="" class="" showValue=false containerClass="" color="" origArgs={} catchArgs...>
+<#macro progress_markup value=0 id="" class="" showValue=false containerClass="" color="" origArgs={} passArgs={} catchArgs...>
   <#local classes = compileClassArg(class)>
   <#local containerClasses = compileClassArg(containerClass)>
   <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if color?has_content> ${color!}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
@@ -257,7 +257,7 @@ IMPL NOTE: this must support legacy ofbiz parameters.
 <#assign asmSelectScript_defaultArgs = {
   "enabled":true, "id":"", "title":false, "sortable":false, "formId":"", "formName":"", "asmSelectOptions":{}, 
   "asmSelectDefaults":true, "relatedFieldId":"", "relatedTypeName":"", "relatedTypeFieldId":"", "paramKey":"", 
-  "requestName":"", "responseName":"", "htmlwrap":true
+  "requestName":"", "responseName":"", "htmlwrap":true, "passArgs":{}
 }>
 <#macro asmSelectScript args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.asmSelectScript_defaultArgs)>
@@ -333,14 +333,14 @@ A visible fieldset, including the HTML element.
     collapsed       = show/hide the fieldset
 -->
 <#assign fieldset_defaultArgs = {
-  "id":"", "title":"", "class":"", "containerClass":"", "collapsed":false, "open":true, "close":true
+  "id":"", "title":"", "class":"", "containerClass":"", "collapsed":false, "open":true, "close":true, "passArgs":{}
 }>
 <#macro fieldset args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.fieldset_defaultArgs)>
   <#-- NOTE: this macro's args are a subset of core's args (but with potentially different defaults), so can just pass the whole thing
   <#local dummy = localsPutAll(args)>
   -->
-  <@fieldset_core args=args>
+  <@fieldset_core args=args> <#-- implied: passArgs=passArgs -->
     <#nested />
   </@fieldset_core>
 </#macro>
@@ -349,7 +349,7 @@ A visible fieldset, including the HTML element.
      migrated from @renderFieldGroupOpen/Close form widget macro -->
 <#assign fieldset_core_defaultArgs = {
   "class":"", "containerClass":"", "id":"", "title":"", "collapsed":false, "collapsibleAreaId":"", "expandToolTip":"", "collapseToolTip":"", "collapsible":false, 
-  "open":true, "close":true
+  "open":true, "close":true, "passArgs":{}
 }>
 <#macro fieldset_core args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.fieldset_core_defaultArgs)>
@@ -366,17 +366,18 @@ A visible fieldset, including the HTML element.
     <#local dummy = pushRequestStack("catoFieldsetCoreMarkupStack", {
       "class":class, "containerClass":containerClass, "id":id, "containerId":containerId, "title":title, 
       "collapsed":collapsed, "collapsibleAreaId":collapsibleAreaId, "expandToolTip":expandToolTip, 
-      "collapseToolTip":collapseToolTip, "collapsible":collapsible, "origArgs":origArgs
+      "collapseToolTip":collapseToolTip, "collapsible":collapsible, 
+      "origArgs":origArgs, "passArgs":passArgs
     })>
   <#elseif close && !open>
     <#local stackValues = popRequestStack("catoFieldsetCoreMarkupStack")!{}>
     <#local dummy = localsPutAll(stackValues)>
   </#if>
-  <@fieldset_markup open=open close=close class=class containerClass=containerClass id=id containerId=containerId title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible origArgs=origArgs><#nested></@fieldset_markup>
+  <@fieldset_markup open=open close=close class=class containerClass=containerClass id=id containerId=containerId title=title collapsed=collapsed collapsibleAreaId=collapsibleAreaId expandToolTip=expandToolTip collapseToolTip=collapseToolTip collapsible=collapsible origArgs=origArgs passArgs=passArgs><#nested></@fieldset_markup>
 </#macro>
 
 <#-- @fieldset main markup - theme override -->
-<#macro fieldset_markup open=true close=true class="" containerClass="" id="" containerId="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false origArgs={} catchArgs...>
+<#macro fieldset_markup open=true close=true class="" containerClass="" id="" containerId="" title="" collapsed=false collapsibleAreaId="" expandToolTip="" collapseToolTip="" collapsible=false origArgs={} passArgs={} catchArgs...>
   <#if open>
     <#local containerClass = addClassArg(containerClass, "fieldgroup")>
     <#if collapsible || collapsed>
@@ -483,7 +484,7 @@ or even multiple per fieldset.
 -->
 <#assign fields_defaultArgs = {
   "type":"default", "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", 
-  "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":""
+  "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "passArgs":{}
 }>
 <#macro fields args={} inlineArgs...>
   <#--<#local args = mergeArgMapsBasic(args, inlineArgs, catoStdTmplLib.fields_defaultArgs)>
@@ -864,7 +865,7 @@ standard markup.
   "description":"",
   "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
   "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
-  "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "events":{} 
+  "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "events":{}, "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
   <#-- TODO: the following calls should be combined into a mergeArgMapsToLocals method, but
@@ -1090,10 +1091,10 @@ standard markup.
   <#if useLabelArea>
     <#-- NOTE: origArgs is passed because in some cases it may be important for markup to know if the caller manually
         specified a certain parameter to @field or not - the other logical args don't record this info -->
-    <#local labelAreaContent><@field_markup_labelarea labelType=effLabelType labelPosition=effLabelPosition label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required origArgs=origArgs/></#local>
+    <#local labelAreaContent><@field_markup_labelarea labelType=effLabelType labelPosition=effLabelPosition label=label labelDetail=labelDetail fieldType=type fieldId=id collapse=collapse required=required origArgs=origArgs passArgs=passArgs/></#local>
   </#if>
       
-  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container origArgs=origArgs>
+  <@field_markup_container type=type columns=columns postfix=postfix postfixSize=postfixSize postfixContent=postfixContent labelArea=useLabelArea labelType=effLabelType labelPosition=effLabelPosition labelAreaContent=labelAreaContent collapse=collapse collapsePostfix=collapsePostfix norows=norows nocells=nocells container=container origArgs=origArgs passArgs=passArgs>
     <#switch type>
       <#case "input">
         <@field_input_widget name=name 
@@ -1112,7 +1113,8 @@ standard markup.
                               mask=mask 
                               placeholder=placeholder 
                               tooltip=tooltip
-                              inlineLabel=effInlineLabel/>
+                              inlineLabel=effInlineLabel
+                              passArgs=passArgs/>
         <#break>
       <#case "textarea">
         <@field_textarea_widget name=name 
@@ -1125,7 +1127,8 @@ standard markup.
                               value=value 
                               placeholder=placeholder
                               tooltip=tooltip
-                              inlineLabel=effInlineLabel><#nested></@field_textarea_widget>
+                              inlineLabel=effInlineLabel
+                              passArgs=passArgs><#nested></@field_textarea_widget>
         <#break>
       <#case "datetime">
         <#if dateType == "date">
@@ -1163,7 +1166,8 @@ standard markup.
                               compositeType="" 
                               formName=""
                               tooltip=tooltip
-                              inlineLabel=effInlineLabel/>                
+                              inlineLabel=effInlineLabel
+                              passArgs=passArgs/>                
         <#break>
       <#case "select">
         <#if !manualItemsOnly?is_boolean>
@@ -1210,14 +1214,15 @@ standard markup.
                                 manualItemsOnly=manualItemsOnly
                                 currentDescription=currentDescription
                                 asmSelectArgs=asmSelectArgs
-                                inlineLabel=effInlineLabel><#nested></@field_select_widget>
+                                inlineLabel=effInlineLabel
+                                passArgs=passArgs><#nested></@field_select_widget>
         <#break>
       <#case "option">
-        <@field_option_widget value=value text=text selected=selected><#nested></@field_option_widget>
+        <@field_option_widget value=value text=text selected=selected passArgs=passArgs><#nested></@field_option_widget>
         <#break>
       <#case "lookup">
         <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=class alert="false" value=value 
-          size=size?string maxlength=maxlength id=id events=events />
+          size=size?string maxlength=maxlength id=id events=events passArgs=passArgs/>
       <#break>
       <#case "checkbox">
         <#if !items?is_sequence>
@@ -1238,10 +1243,10 @@ standard markup.
           </#if>
           <#local items=[{"value":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked}]/>
           <@field_checkbox_widget multiMode=false items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel/>
+            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel passArgs=passArgs/>
         <#else>
           <@field_checkbox_widget multiMode=true items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel/>
+            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs/>
         </#if>
         <#break>
       <#case "radio">
@@ -1264,23 +1269,23 @@ standard markup.
           </#if>
           <#local items=[{"key":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked}]/>
           <@field_radio_widget multiMode=false items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue name=name tooltip="" inlineLabel=effInlineLabel/>
+            currentValue=currentValue defaultValue=defaultValue name=name tooltip="" inlineLabel=effInlineLabel passArgs=passArgs/>
         <#else>
           <#-- multi radio button item mode -->
           <@field_radio_widget multiMode=true items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip inlineLabel=effInlineLabel/>
+            currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs/>
         </#if>
         <#break>
       <#case "file">
         <@field_file_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
-          autocomplete=autocomplete?string("", "off") id=id inlineLabel=effInlineLabel/>
+          autocomplete=autocomplete?string("", "off") id=id inlineLabel=effInlineLabel passArgs=passArgs/>
         <#break>
       <#case "password">
         <@field_password_widget class=class alert=alert name=name value=value size=size maxlength=maxlength 
-          id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip inlineLabel=effInlineLabel/>
+          id=id autocomplete=autocomplete?string("", "off") placeholder=placeholder tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs/>
         <#break> 
       <#case "reset">                    
-        <@field_reset_widget class=class alert=alert name=name text=text fieldTitleBlank=false inlineLabel=effInlineLabel/>
+        <@field_reset_widget class=class alert=alert name=name text=text fieldTitleBlank=false inlineLabel=effInlineLabel passArgs=passArgs/>
         <#break>    
       <#case "submit">
         <#if !catoSubmitFieldTypeButtonMap??>
@@ -1301,13 +1306,13 @@ standard markup.
         </#if>
         <@field_submit_widget buttonType=buttonType class=class alert=alert formName=formName name=name events=events 
           imgSrc=src confirmation=confirmMsg containerId="" ajaxUrl="" text=text description=description showProgress=false 
-          href=href inputType=inputType disabled=disabled progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel/>
+          href=href inputType=inputType disabled=disabled progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel passArgs=passArgs/>
         <#break>
       <#case "submitarea">
-        <@field_submitarea_widget progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel><#nested></@field_submitarea_widget>
+        <@field_submitarea_widget progressArgs=progressArgs progressOptions=progressOptions inlineLabel=effInlineLabel passArgs=passArgs><#nested></@field_submitarea_widget>
         <#break>
       <#case "hidden">                    
-        <@field_hidden_widget name=name value=value id=id events=events inlineLabel=effInlineLabel />
+        <@field_hidden_widget name=name value=value id=id events=events inlineLabel=effInlineLabel passArgs=passArgs/>
         <#break>        
       <#case "display">
         <#-- TODO? may need formatting here based on valueType... not done by field_display_widget... done in java OOTB... 
@@ -1329,13 +1334,13 @@ standard markup.
         </#if>
         <@field_display_widget type=displayType imageLocation=imageLocation idName="" description=desc 
           title="" class=class alert=alert inPlaceEditorUrl="" inPlaceEditorParams="" 
-          imageAlt=description tooltip=tooltip inlineLabel=effInlineLabel />
+          imageAlt=description tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs/>
         <#break> 
       <#default> <#-- "generic", empty or unrecognized -->
         <#if value?has_content>
-          <@field_generic_widget text=value tooltip=tooltip inlineLabel=effInlineLabel/>
+          <@field_generic_widget text=value tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs/>
         <#else>
-          <@field_generic_widget tooltip=tooltip inlineLabel=effInlineLabel><#nested /></@field_generic_widget>
+          <@field_generic_widget tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs><#nested /></@field_generic_widget>
         </#if>
     </#switch>
   </@field_markup_container>
@@ -1347,7 +1352,7 @@ standard markup.
     labelContent is generated by field_markup_labelarea.
     #nested is the actual field widget (<input>, <select>, etc.). 
     WARN: origArgs may be empty -->
-<#macro field_markup_container type="" class="" columns="" postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelAreaContent="" collapse="" collapseLabel="" collapsePostfix="" norows=false nocells=false container=true origArgs={} catchArgs...>
+<#macro field_markup_container type="" class="" columns="" postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelAreaContent="" collapse="" collapseLabel="" collapsePostfix="" norows=false nocells=false container=true origArgs={} passArgs={} catchArgs...>
   <#local rowClass = "">
   <#local labelAreaClass = "">  
   <#local postfixClass = "">
@@ -1432,7 +1437,7 @@ standard markup.
 <#-- @field label area markup - theme override 
     This generates labelContent passed to @field_markup_container. 
     WARN: origArgs may be empty -->
-<#macro field_markup_labelarea labelType="" labelPosition="" label="" labelDetail="" fieldType="" fieldId="" collapse="" required=false origArgs={} catchArgs...>
+<#macro field_markup_labelarea labelType="" labelPosition="" label="" labelDetail="" fieldType="" fieldId="" collapse="" required=false origArgs={} passArgs={} catchArgs...>
   <#local label = label?trim>
   <#if label?has_content>
     <#if collapse>

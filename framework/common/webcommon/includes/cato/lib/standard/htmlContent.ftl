@@ -41,7 +41,7 @@
 -->
 <#assign heading_defaultArgs = {
   "elemType":true, "level":"", "relLevel":"", "class":"", "id":"", "levelClassPrefix":true, "consumeLevel":"", 
-  "containerElemType":false, "containerClass":"", "containerId":"", "attribs":{}
+  "containerElemType":false, "containerClass":"", "containerId":"", "attribs":{}, "passArgs":{}
 }>
 <#macro heading args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.heading_defaultArgs)>
@@ -96,14 +96,14 @@
     <#local cElem = containerElemType> 
   </#if>
   <@heading_markup level=level elem=hElem class=class id=id attribs=attribs
-    containerElem=cElem containerClass=containerClass containerId=containerId origArgs=origArgs><#nested></@heading_markup>
+    containerElem=cElem containerClass=containerClass containerId=containerId origArgs=origArgs passArgs=passArgs><#nested></@heading_markup>
 </#macro>
 
 <#-- Main markup for @heading (minimal logic; a little needed) - theme override
      This may be overridden by themes to change markup without changing logic.
      Here, elem will contain either the value "h" or a valid html element.
      NOTE: wherever this is overridden, should include "catchArgs..." for compatibility (new args won't break old overrides; remove to identify) -->
-<#macro heading_markup level=1 elem="" class="" id="" attribs={} excludeAttribs=[] containerElem="" containerClass="" containerId="" origArgs={} catchArgs...>
+<#macro heading_markup level=1 elem="" class="" id="" attribs={} excludeAttribs=[] containerElem="" containerClass="" containerId="" origArgs={} passArgs={} catchArgs...>
   <#local elemLevel = level>
   <#if (elemLevel > 6)>
     <#local elemLevel = 6>
@@ -136,17 +136,17 @@ Creates a very basic wrapper for code blocks
     type            = (html|java|css|javascript|log) (default:html) 
 -->
 <#assign code_defaultArgs = {
-  "type":"html"
+  "type":"html", "passArgs":{}
 }>
 <#macro code args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.code_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@code_markup type=type origArgs=origArgs><#nested></@code_markup>
+  <@code_markup type=type origArgs=origArgs passArgs=passArgs><#nested></@code_markup>
 </#macro>
 
 <#-- @code main markup - theme override -->
-<#macro code_markup type="" origArgs={} catchArgs...>
+<#macro code_markup type="" origArgs={} passArgs={} catchArgs...>
   <pre><code data-language="${type!}"><#rt>
     <#nested><#t>
   </code></pre><#lt>
@@ -198,7 +198,7 @@ Creates a responsive tables script (script only - no markup).
 <#assign tableResponsiveScript_defaultArgs = {
   "enabled" : true, "tableId" : "", "tableType" : "", "tableStyleName" : "", "responsive" : "", "scrollable" : "",
   "responsiveOptions" : {}, "responsiveDefaults" : true, "fixedColumnsLeft" : 0, "fixedColumnsRight" : 0,
-  "htmlwrap" : true
+  "htmlwrap" : true, "passArgs":{}
 }>
 <#macro tableResponsiveScript args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tableResponsiveScript_defaultArgs)>
@@ -337,7 +337,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 <#assign table_defaultArgs = {
   "type":"", "class":"", "id":"", "hasHeader":"", "cellspacing":true, "responsive":"", "scrollable":"", "responsiveOptions":{}, "responsiveDefaults":"", 
   "fixedColumnsLeft":0, "fixedColumnsRight":0, "autoAltRows":"", "firstRowAlt":"", "inheritAltRows":false, "useFootAltRows":false, 
-  "open":true, "close":true, "attribs":{}
+  "open":true, "close":true, "attribs":{}, "passArgs":{}
   <#-- DEV NOTE: for all table macros, when adding parameters, make sure also pushed on catoTableStack stack below -->
 }>
 <#macro table args={} inlineArgs...>
@@ -456,6 +456,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
         "useFootAltRows":useFootAltRows, 
         "attribs":attribs,
         "origArgs":origArgs,
+        "passArgs":passArgs,
         
         <#-- save local variables -->
         "tableIdNum":tableIdNum, 
@@ -487,7 +488,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   }>
   <@table_markup open=open close=close type=type styleName=styleName class=class id=id cellspacing=cellspacing 
       useResponsive=useResponsive responsiveArgs=responsiveArgs autoAltRows=autoAltRows firstRowAlt=firstRowAlt 
-      inheritAltRows=inheritAltRows useFootAltRows=useFootAltRows tableIdNum=tableIdNum attribs=attribs origArgs=origArgs>
+      inheritAltRows=inheritAltRows useFootAltRows=useFootAltRows tableIdNum=tableIdNum attribs=attribs origArgs=origArgs passArgs=passArgs>
     <#nested>
   </@table_markup>
   <#if close>
@@ -502,7 +503,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 
 <#-- @table main markup - theme override -->
 <#macro table_markup open=true close=true type="" styleName="" class="" id="" cellspacing="" useResponsive=false responsiveArgs={} 
-  autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false tableIdNum=0 attribs={} excludeAttribs=[] origArgs={} catchArgs...>
+  autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false tableIdNum=0 attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
   <#if open>
     <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
       <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>  
@@ -515,14 +516,14 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
           so only enable if a header was present during rendering -->
       <#local tableHasHeader = getRequestVar("catoCurrentTableHasHeader")!"">
       <#if tableHasHeader?is_boolean && tableHasHeader == true>
-        <@tableResponsiveScript args=responsiveArgs htmlwrap=true />
+        <@tableResponsiveScript args=responsiveArgs htmlwrap=true passArgs=passArgs />
       </#if>
     </#if>  
   </#if>
 </#macro>
 
 <#assign thead_defaultArgs = {
-  "class":"", "id":"", "open":true, "close":true, "attribs":{}
+  "class":"", "id":"", "open":true, "close":true, "attribs":{}, "passArgs":{}
 }>
 <#macro thead args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.thead_defaultArgs)>
@@ -544,7 +545,8 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
         "class":class, 
         "id":id, 
         "attribs":attribs,
-        "origArgs":origArgs
+        "origArgs":origArgs,
+        "passArgs":passArgs
       })>
     </#if>
   <#elseif close>
@@ -553,7 +555,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#else>
     <#-- (no missing values yet) -->
   </#if>
-  <@thead_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs>
+  <@thead_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs passArgs=passArgs>
     <#nested>
   </@thead_markup>
   <#if close>
@@ -562,7 +564,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 </#macro>
 
 <#-- @thead main markup - theme override -->
-<#macro thead_markup open=true close=true class="" id="" attribs="" origArgs={} catchArgs...>
+<#macro thead_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
   <#if open>
     <thead<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
@@ -573,7 +575,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 </#macro>
 
 <#assign tbody_defaultArgs = {
-  "class":"", "id":"", "open":true, "close":true, "attribs":{}
+  "class":"", "id":"", "open":true, "close":true, "attribs":{}, "passArgs":{}
 }>
 <#macro tbody args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tbody_defaultArgs)>
@@ -593,7 +595,8 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
         "class":class, 
         "id":id, 
         "attribs":attribs,
-        "origArgs":origArgs
+        "origArgs":origArgs,
+        "passArgs":passArgs
       })>
     </#if>
   <#elseif close>
@@ -602,7 +605,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#else>
     <#-- (no missing values yet) -->
   </#if>
-  <@tbody_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs>
+  <@tbody_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs passArgs=passArgs>
     <#nested>
   </@tbody_markup>
   <#if close>
@@ -611,7 +614,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 </#macro>
 
 <#-- @tbody main markup - theme override -->
-<#macro tbody_markup open=true close=true class="" id="" attribs="" origArgs={} catchArgs...>
+<#macro tbody_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
   <#if open>
     <tbody<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
@@ -623,7 +626,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 
 
 <#assign tfoot_defaultArgs = {
-  "class":"", "id":"", "open":true, "close":true, "attribs":{}
+  "class":"", "id":"", "open":true, "close":true, "attribs":{}, "passArgs":{}
 }>
 <#macro tfoot args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tfoot_defaultArgs)>
@@ -643,7 +646,8 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
         "class":class, 
         "id":id, 
         "attribs":attribs,
-        "origArgs":origArgs
+        "origArgs":origArgs,
+        "passArgs":passArgs
       })>
     </#if>
   <#elseif close>
@@ -652,7 +656,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   <#else>
     <#-- (no missing values yet) -->
   </#if>
-  <@tfoot_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs>
+  <@tfoot_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs passArgs=passArgs>
     <#nested>
   </@tfoot_markup>
   <#if close>
@@ -661,7 +665,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
 </#macro>
 
 <#-- @tfoot main markup - theme override -->
-<#macro tfoot_markup open=true close=true class="" id="" attribs="" origArgs={} catchArgs...>
+<#macro tfoot_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
   <#if open>
     <tfoot<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
@@ -710,7 +714,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
 -->
 <#assign tr_defaultArgs = {
   "type":"", "class":"", "id":"", "useAlt":"", "alt":"", "groupLast":"", "groupParent":"", "selected":"", 
-  "open":true, "close":true, "attribs":{}
+  "open":true, "close":true, "attribs":{}, "passArgs":{}
 }>
 <#macro tr args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tr_defaultArgs)>
@@ -771,6 +775,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
         "selected":selected,
         "attribs":attribs,
         "origArgs":origArgs,
+        "passArgs":passArgs,
         
         "isRegAltRow":isRegAltRow
       })>
@@ -781,7 +786,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
   <#else>
     <#local isRegAltRow = false>
   </#if>    
-  <@tr_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs>
+  <@tr_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs passArgs=passArgs>
     <#nested>
   </@tr_markup>
   <#if close>
@@ -799,7 +804,7 @@ Helps define table rows. takes care of alt row styles. must have a parent @table
 </#macro>
 
 <#-- @tr main markup - theme override -->
-<#macro tr_markup open=true close=true class="" id="" attribs="" origArgs={} catchArgs...>
+<#macro tr_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
   <#if open>
     <tr<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>>
   </#if>
@@ -826,7 +831,7 @@ Helps define table cells.
     [inlineAttribs...]    = other legacy <th and <td attributes and values
 -->
 <#assign th_defaultArgs = {
-  "class":"", "id":"", "open":true, "close":true, "attribs":{}
+  "class":"", "id":"", "open":true, "close":true, "attribs":{}, "passArgs":{}
 }>
 <#macro th args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.th_defaultArgs)>
@@ -834,16 +839,16 @@ Helps define table cells.
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
 
-  <@th_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs><#nested></@th_markup>
+  <@th_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs passArgs=passArgs><#nested></@th_markup>
 </#macro>
 
 <#-- @th main markup - theme override -->
-<#macro th_markup open=true close=true class="" id="" attribs="" origArgs={} catchArgs...>
+<#macro th_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
   <#if open><th<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></th></#if>
 </#macro>
 
 <#assign td_defaultArgs = {
-  "class":"", "id":"", "open":true, "close":true, "attribs":{}
+  "class":"", "id":"", "open":true, "close":true, "attribs":{}, "passArgs":{}
 }>
 <#macro td args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.td_defaultArgs)>
@@ -851,11 +856,11 @@ Helps define table cells.
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#local origArgs = args>
 
-  <@td_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs><#nested></@td_markup>
+  <@td_markup open=open close=close class=class id=id attribs=attribs origArgs=origArgs passArgs=passArgs><#nested></@td_markup>
 </#macro>
 
 <#-- @td main markup - theme override -->
-<#macro td_markup open=true close=true class="" id="" attribs="" origArgs={} catchArgs...>
+<#macro td_markup open=true close=true class="" id="" attribs="" origArgs={} passArgs={} catchArgs...>
   <#if open><td<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs /></#if>></#if><#nested><#if close></td></#if>
 </#macro>
 
@@ -878,7 +883,7 @@ Usage discouraged: use @table, @tr macros instead.
     selected        = boolean, if true marked as selected
 -->
 <#assign tableRowClassAttribStr_defaultArgs = {
-  "class":"", "alt":"", "selected":""
+  "class":"", "alt":"", "selected":"", "passArgs":{}
 }>
 <#macro tableRowClassAttribStr args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tableRowClassAttribStr_defaultArgs)>
@@ -909,17 +914,17 @@ Since this is very foundation specific, this function may be dropped in future i
     
 -->
 <#assign pul_defaultArgs = {
-  "title":""
+  "title":"", "passArgs":{}
 }>
 <#macro pul args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.pul_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@pul_markup title=title origArgs=origArgs><#nested></@pul_markup>
+  <@pul_markup title=title origArgs=origArgs passArgs=passArgs><#nested></@pul_markup>
 </#macro>
 
 <#-- @pul main markup - theme override -->
-<#macro pul_markup title="" origArgs={} catchArgs...>
+<#macro pul_markup title="" origArgs={} passArgs={} catchArgs...>
   <ul class="${styles.pricing_wrap!}">
     <@pli type="title">${title!}</@pli>
     <#nested>
@@ -927,17 +932,17 @@ Since this is very foundation specific, this function may be dropped in future i
 </#macro>
 
 <#assign pli_defaultArgs = {
-  "type":""
+  "type":"", "passArgs":{}
 }>
 <#macro pli args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.pli_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@pli_markup type=type origArgs=origArgs><#nested></@pli_markup>
+  <@pli_markup type=type origArgs=origArgs passArgs=passArgs><#nested></@pli_markup>
 </#macro>
 
 <#-- @pli main markup - theme override -->
-<#macro pli_markup type="" origArgs={} catchArgs...>
+<#macro pli_markup type="" origArgs={} passArgs={} catchArgs...>
   <#switch type>
     <#case "price">
       <li class="${styles.pricing_price!}"><#nested></li>
@@ -975,7 +980,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     title          = Data Title  (default:empty)
 -->
 <#assign chart_defaultArgs = {
-  "type":"pie", "library":"foundation", "title":""
+  "type":"pie", "library":"foundation", "title":"", "passArgs":{}
 }>
 <#macro chart args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.chart_defaultArgs)>
@@ -990,11 +995,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#global chartType = type/>
   
   <@chart_markup type=type chartId=chartId chartIdNum=chartIdNum chartLibrary=chartLibrary title=title 
-    renderSeqNumber=renderSeqNumber origArgs=origArgs><#nested></@chart_markup>
+    renderSeqNumber=renderSeqNumber origArgs=origArgs passArgs=passArgs><#nested></@chart_markup>
 </#macro>
 
 <#-- @chart main markup - theme override -->
-<#macro chart_markup type="" chartLibrary="" title="" chartId="" chartIdNum=0 renderSeqNumber=0 origArgs={} catchArgs...>
+<#macro chart_markup type="" chartLibrary="" title="" chartId="" chartIdNum=0 renderSeqNumber=0 origArgs={} passArgs={} catchArgs...>
   <#if chartLibrary=="foundation">
     <@row>
       <@cell columns=3>    
@@ -1084,7 +1089,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 </#macro>
 
 <#assign chartdata_defaultArgs = {
-  "title":"", "value":"", "value2":""
+  "title":"", "value":"", "value2":"", "passArgs":{}
 }>
 <#macro chartdata args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.chartdata_defaultArgs)>
@@ -1096,11 +1101,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   </#if>
 
   <@chartdata_markup title=title value=value value2=value2 chartId=chartId chartType=chartType 
-    chartLibrary=chartLibrary origArgs=origArgs><#nested></@chartdata_markup>
+    chartLibrary=chartLibrary origArgs=origArgs passArgs=passArgs><#nested></@chartdata_markup>
 </#macro>
 
 <#-- @chartdata main markup - theme override -->
-<#macro chartdata_markup title="" value="" value2="" chartId="" chartType="" chartLibrary="" origArgs={} catchArgs...>
+<#macro chartdata_markup title="" value="" value2="" chartId="" chartType="" chartLibrary="" origArgs={} passArgs={} catchArgs...>
   <#if chartLibrary=="foundation">
     <li<#if value2?has_content> data-y="${value!}" data-x="${value2!}"<#else> data-value="${value!}"</#if>>${title!}</li>
   <#else>

@@ -24,7 +24,7 @@ IMPL NOTE: Beware of whitespace.
     includeDocType      = boolean, default false (included by screen renderer, @renderScreenBegin)
 -->
 <#assign htmlHeadOpen_defaultArgs = {
-  "includeDocType":false
+  "includeDocType":false, "passArgs":{}
 }>
 <#macro htmlHeadOpen args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.htmlHeadOpen_defaultArgs)>
@@ -41,11 +41,11 @@ IMPL NOTE: Beware of whitespace.
   <#if !docLangAttr?has_content>
     <#local docLangAttr = "en">
   </#if>
-  <@htmlHeadOpen_markup includeDocType=includeDocType docLangAttr=docLangAttr langDir=langDir origArgs=origArgs/><#t>
+  <@htmlHeadOpen_markup includeDocType=includeDocType docLangAttr=docLangAttr langDir=langDir origArgs=origArgs passArgs=passArgs/><#t>
 </#macro>
 
 <#-- @htmlHeadOpen main markup - theme override -->
-<#macro htmlHeadOpen_markup includeDocType=false docLangAttr="" langDir="" origArgs={} catchArgs...>
+<#macro htmlHeadOpen_markup includeDocType=false docLangAttr="" langDir="" origArgs={} passArgs={} catchArgs...>
 <!--[if IE 9]><html class="lt-ie10"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>><![endif]-->
 <html class="no-js"<#if docLangAttr?has_content> lang="${docLangAttr}"</#if><#if langDir?has_content> dir="${langDir}"</#if>>
 <head>
@@ -78,7 +78,7 @@ Not associated with any HTML element.
     scriptType/output/cdata/htmlwrap  = defaults for child @script calls (see @script)
 -->
 <#assign scripts_defaultArgs = {
-  "scriptType" : "text/javascript", "output" : "", "htmlwrap" : true, "cdata" : true
+  "scriptType" : "text/javascript", "output" : "", "htmlwrap" : true, "cdata" : true, "passArgs":{}
 }>
 <#macro scripts args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.scripts_defaultArgs)>
@@ -117,7 +117,7 @@ NOTE: Unlike others this macro explicitly currently cannot support open/close st
     cdata           = boolean, default true, if false don't include CDATA guard (only used if htmlwrap true)
 -->
 <#assign script_defaultArgs = {
-  "type" : "text/javascript", "src" : "", "output" : "", "htmlwrap" : true, "cdata" : true
+  "type" : "text/javascript", "src" : "", "output" : "", "htmlwrap" : true, "cdata" : true, "passArgs":{}
 }>
 <#macro script args={} inlineArgs...>
   <#local scriptsInfo = getRequestVar("catoScriptsInfo")!{}>
@@ -132,11 +132,11 @@ NOTE: Unlike others this macro explicitly currently cannot support open/close st
   <#local args = mergeArgMaps(args, inlineArgs, defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@script_markup type=type src=src output=output htmlwrap=htmlwrap cdata=cdata origArgs=origArgs><#nested></@script_markup>
+  <@script_markup type=type src=src output=output htmlwrap=htmlwrap cdata=cdata origArgs=origArgs passArgs=passArgs><#nested></@script_markup>
 </#macro>
 
 <#-- @script main markup - theme override -->
-<#macro script_markup type="" src="" output="" htmlwrap=true cdata=true origArgs={} catchArgs...>
+<#macro script_markup type="" src="" output="" htmlwrap=true cdata=true origArgs={} passArgs={} catchArgs...>
   <#if src?has_content>
     <script type="${type}" src="${src}"></script>
   <#else>

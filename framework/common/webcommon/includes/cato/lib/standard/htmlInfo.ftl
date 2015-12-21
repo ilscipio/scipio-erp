@@ -23,17 +23,17 @@
     icon            = generates icon inside the link (Note: has to be the full set of classes, e.g. "fa fa-fw fa-info")
 -->
 <#assign modal_defaultArgs = {
-  "id":"", "label":"", "href":"", "icon":""
+  "id":"", "label":"", "href":"", "icon":"", "passArgs":{}
 }>
 <#macro modal args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.modal_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@modal_markup id=id label=label href=href icon=icon origArgs=origArgs><#nested></@modal_markup>
+  <@modal_markup id=id label=label href=href icon=icon origArgs=origArgs passArgs=passArgs><#nested></@modal_markup>
 </#macro>
 
 <#-- @modal main markup - theme override -->
-<#macro modal_markup id="" label="" href="" icon="" origArgs={} catchArgs...>
+<#macro modal_markup id="" label="" href="" icon="" origArgs={} passArgs={} catchArgs...>
   <a href="#" data-reveal-id="${id}_modal"<#if href?has_content> data-reveal-ajax="${href!}"</#if>><#if icon?has_content><i class="${icon!}"></i> </#if>${label}</a>
   <div id="${id}_modal" class="${styles.modal_wrap!}" data-reveal>
     <#nested>
@@ -62,7 +62,7 @@ it's an unexpected result, error or one that requires user action. See other mac
                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
 -->
 <#assign alert_defaultArgs = {
-  "type":"info", "class":"", "id":""
+  "type":"info", "class":"", "id":"", "passArgs":{}
 }>
 <#macro alert args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.alert_defaultArgs)>
@@ -72,11 +72,11 @@ it's an unexpected result, error or one that requires user action. See other mac
   <#if type="error">
     <#local type = "alert">
   </#if>
-  <@alert_markup type=type class=class typeClass=typeClass id=id origArgs=origArgs><#nested></@alert_markup>
+  <@alert_markup type=type class=class typeClass=typeClass id=id origArgs=origArgs passArgs=passArgs><#nested></@alert_markup>
 </#macro>
 
 <#-- @alert main markup - theme override -->
-<#macro alert_markup type="info" class="" typeClass="" id="" origArgs={} catchArgs...>
+<#macro alert_markup type="info" class="" typeClass="" id="" origArgs={} passArgs={} catchArgs...>
   <#local class = addClassArg(class, styles.grid_cell!"")>
   <#local class = addClassArgDefault(class, "${styles.grid_large!}12")>
   <div class="${styles.grid_row!}"<#if id?has_content> id="${id}"</#if>>
@@ -107,17 +107,17 @@ it's an unexpected result, error or one that requires user action. See other mac
     title          = Title
 -->
 <#assign panel_defaultArgs = {
-  "type":"", "title":""
+  "type":"", "title":"", "passArgs":{}
 }>
 <#macro panel args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.panel_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@panel_markup type=type title=title origArgs=origArgs><#nested></@panel_markup>
+  <@panel_markup type=type title=title origArgs=origArgs passArgs=passArgs><#nested></@panel_markup>
 </#macro>
 
 <#-- @panel main markup - theme override -->
-<#macro panel_markup type="" title="" origArgs={} catchArgs...>
+<#macro panel_markup type="" title="" origArgs={} passArgs={} catchArgs...>
   <div class="${styles.panel_wrap!} ${type}">
     <div class="${styles.panel_head!}"><#if title?has_content><h5 class="${styles.panel_title!}">${title!}</h5></#if></div>
     <div class="${styles.panel_body!}"><p><#nested></p></div>
@@ -140,17 +140,17 @@ Other messages such as for missing params/record IDs are usually errors.
                   (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
 <#assign resultMsg_defaultArgs = {
-  "class":"", "id":""
+  "class":"", "id":"", "passArgs":{}
 }>
 <#macro resultMsg args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.resultMsg_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@resultMsg_markup class=class id=id origArgs=origArgs><#nested></@resultMsg_markup>
+  <@resultMsg_markup class=class id=id origArgs=origArgs passArgs=passArgs><#nested></@resultMsg_markup>
 </#macro>
 
 <#-- @resultMsg main markup - theme override -->
-<#macro resultMsg_markup class="" id="" origArgs={} catchArgs...>
+<#macro resultMsg_markup class="" id="" origArgs={} passArgs={} catchArgs...>
   <p<@compiledClassAttribStr class=class defaultVal="result-msg" /><#if id?has_content> id="${id}"</#if>><#nested></p>
 </#macro>
 
@@ -171,16 +171,16 @@ templates: currently @alert.
                      (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
 <#assign errorMsg_defaultArgs = {
-  "type":"error", "class":"", "id":""
+  "type":"error", "class":"", "id":"", "passArgs":{}
 }>
 <#macro errorMsg args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.errorMsg_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@errorMsg_markup type=type class=class id=id origArgs=origArgs><#nested></@errorMsg_markup>
+  <@errorMsg_markup type=type class=class id=id origArgs=origArgs passArgs=passArgs><#nested></@errorMsg_markup>
 </#macro>
 
 <#-- @errorMsg main markup - theme override -->
-<#macro errorMsg_markup type="error" class="" id="" origArgs={} catchArgs...>
+<#macro errorMsg_markup type="error" class="" id="" origArgs={} passArgs={} catchArgs...>
   <@alert type="error" class=class id=id><#nested></@alert>
 </#macro>

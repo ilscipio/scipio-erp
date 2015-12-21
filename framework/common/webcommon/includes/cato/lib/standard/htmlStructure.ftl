@@ -26,7 +26,7 @@ to this one.
                             NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#assign container_defaultArgs = {
-  "class":"", "open":true, "close":true, "elem":"", "attribs":{}
+  "class":"", "open":true, "close":true, "elem":"", "attribs":{}, "passArgs":{}
 }>
 <#macro container args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.container_defaultArgs)>
@@ -67,7 +67,7 @@ to this one.
     selected        = boolean, if true row is marked selected
 -->
 <#assign row_defaultArgs = {
-  "class":"", "id":"", "collapse":false, "norows":false, "alt":"", "selected":"", "open":true, "close":true
+  "class":"", "id":"", "collapse":false, "norows":false, "alt":"", "selected":"", "open":true, "close":true, "passArgs":{}
 }>
 <#macro row args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.row_defaultArgs)>
@@ -91,17 +91,17 @@ to this one.
 
   <#if open && !close>
     <#local dummy = pushRequestStack("catoRowMarkupStack", {
-      "class":class, "collapse":collapse, "id":id, "alt":alt, "selected":selected, "origArgs":origArgs
+      "class":class, "collapse":collapse, "id":id, "alt":alt, "selected":selected, "origArgs":origArgs, "passArgs":passArgs
     })>
   <#elseif close && !open>
     <#local stackValues = popRequestStack("catoRowMarkupStack")!{}>
     <#local dummy = localsPutAll(stackValues)>
   </#if>
-  <@row_markup open=open close=close class=class collapse=collapse id=id alt=alt selected=selected origArgs=origArgs><#nested /></@row_markup>
+  <@row_markup open=open close=close class=class collapse=collapse id=id alt=alt selected=selected origArgs=origArgs passArgs=passArgs><#nested /></@row_markup>
 </#macro>
 
 <#-- @row container markup - theme override -->
-<#macro row_markup open=true close=true class="" collapse=false id="" alt="" selected="" origArgs={} catchArgs...>
+<#macro row_markup open=true close=true class="" collapse=false id="" alt="" selected="" origArgs={} passArgs={} catchArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt/>
   </#if>
@@ -158,7 +158,7 @@ to this one.
 <#assign cell_defaultArgs = {
   "columns":-1, "small":-1, "medium":-1, "large":-1, "offset":-1, "smallOffset":-1, "mediumOffset":-1, 
   "largeOffset":-1, "class":"", "id":"", "collapse":false, "nocells":false, "last":false, 
-  "open":true, "close":true
+  "open":true, "close":true, "passArgs":{}
 }>
 <#macro cell args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.cell_defaultArgs)>
@@ -197,13 +197,13 @@ to this one.
 
   <#if open && !close>
     <#local dummy = pushRequestStack("catoCellMarkupStack", {
-      "class":class, "id":id, "last":last, "collapse":collapse, "origArgs":origArgs
+      "class":class, "id":id, "last":last, "collapse":collapse, "origArgs":origArgs, "passArgs":passArgs
     })>
   <#elseif close && !open>
     <#local stackValues = popRequestStack("catoCellMarkupStack")!{}>
     <#local dummy = localsPutAll(stackValues)>
   </#if>
-  <@cell_markup open=open close=close class=class id=id last=last collapse=collapse origArgs=origArgs><#nested></@cell_markup>
+  <@cell_markup open=open close=close class=class id=id last=last collapse=collapse origArgs=origArgs passArgs=passArgs><#nested></@cell_markup>
   <#if close>
     <#-- pop grid sizes -->
     <#local dummy = unsetCurrentContainerSizes()>
@@ -211,7 +211,7 @@ to this one.
 </#macro>
 
 <#-- @cell container markup - theme override -->
-<#macro cell_markup open=true close=true class="" id="" last=false collapse=false origArgs={} catchArgs...>
+<#macro cell_markup open=true close=true class="" id="" last=false collapse=false origArgs={} passArgs={} catchArgs...>
   <#if open>
     <div<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#rt>
   </#if>
@@ -329,7 +329,7 @@ Since this is very foundation specific, this function may be dropped in future i
                       see @tile macro "type" attrib for possible values.
 -->
 <#assign grid_defaultArgs = {
-  "type":"", "tilesType":"", "class":"", "columns":4, "id":""
+  "type":"", "tilesType":"", "class":"", "columns":4, "id":"", "passArgs":{}
 }>
 <#macro grid args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.grid_defaultArgs)>
@@ -354,16 +354,16 @@ Since this is very foundation specific, this function may be dropped in future i
       <#local id = "freewall_id_${freewallNum!0}">
     </#if>
     <#local class = addClassArg(class, styles.tile_container!)>
-    <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType origArgs=origArgs><#nested></@grid_tiles_markup_container>
+    <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType origArgs=origArgs passArgs=passArgs><#nested></@grid_tiles_markup_container>
   <#elseif type=="list">
-    <@grid_list_markup_container class=class id=id columns=columns origArgs=origArgs><#nested></@grid_list_markup_container>
+    <@grid_list_markup_container class=class id=id columns=columns origArgs=origArgs passArgs=passArgs><#nested></@grid_list_markup_container>
   </#if>
   <#local dummy = unsetCurrentContainerSizes()>
   <#local dummy = popRequestStack("catoGridInfoStack")>
 </#macro>
 
 <#-- @grid tiles container markup - theme override -->
-<#macro grid_tiles_markup_container class="" id="" tylesType="" columns=1 origArgs={} catchArgs...>
+<#macro grid_tiles_markup_container class="" id="" tylesType="" columns=1 origArgs={} passArgs={} catchArgs...>
   <@container class=class id=id>
     <#nested>
   </@container>
@@ -385,7 +385,7 @@ Since this is very foundation specific, this function may be dropped in future i
 </#macro>
 
 <#-- @grid list container markup - theme override -->
-<#macro grid_list_markup_container class="" id="" columns=1 origArgs={} catchArgs...>
+<#macro grid_list_markup_container class="" id="" columns=1 origArgs={} passArgs={} catchArgs...>
   <#-- this never takes effect
   <#local defaultClass="${styles.grid_block_prefix!}${styles.grid_small!}${styles.grid_block_postfix!}2 ${styles.grid_block_prefix!}${styles.grid_medium!}${styles.grid_block_postfix!}4 ${styles.grid_block_prefix!}${styles.grid_large!}${styles.grid_block_postfix!}5">-->
   <#if ((columns-2) > 0)>
@@ -448,7 +448,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
 <#assign tile_defaultArgs = {
   "type":"", "size":"", "title":"", "titleType":"", "titleBgColor":"", "class":"", "id":"", "link":"", 
   "linkTarget":true, "color":"", "icon":"", "image":"", "imageType":"", "imageBgColor":"", "overlayType":"", 
-  "overlayBgColor":""
+  "overlayBgColor":"", "passArgs":{}
 }>
 <#macro tile args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.tile_defaultArgs)>
@@ -551,7 +551,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
   
   <@tile_markup class=class id=id dataSizex=dataSizex dataSizey=dataSizey image=image imageClass=imageClass imageBgColorClass=imageBgColorClass 
     link=link linkTarget=linkTarget icon=icon 
-    overlayClass=overlayClass overlayBgColorClass=overlayBgColorClass title=title titleClass=titleClass titleBgColorClass=titleBgColorClass origArgs=origArgs><#nested></@tile_markup>
+    overlayClass=overlayClass overlayBgColorClass=overlayBgColorClass title=title titleClass=titleClass titleBgColorClass=titleBgColorClass origArgs=origArgs passArgs=passArgs><#nested></@tile_markup>
 </#macro>
 
 <#function calcTileSize orientation="x" value="normal">
@@ -571,7 +571,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
 
 <#-- @tile main markup - theme override -->
 <#macro tile_markup class="" id="" dataSizex="" dataSizey="" image="" imageClass="" imageBgColorClass="" link="" linkTarget="" icon="" 
-  overlayClass="" overlayBgColorClass="" title="" titleClass="" titleBgColorClass="" origArgs={} catchArgs...>
+  overlayClass="" overlayBgColorClass="" title="" titleClass="" titleBgColorClass="" origArgs={} passArgs={} catchArgs...>
   <#-- main markup (TODO: factor out into @tile_markup) -->
   <#-- TODO: need to calc-convert tile x-size to approximate grid sizes and pass in large-medium-small below,
       OR modify parseContainerSizesFromStyleStr to do it automatically from class string (HOWEVER
@@ -659,7 +659,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   "type":"", "id":"", "title":"", "class":"", "padded":false, "autoHeadingLevel":true, "headingLevel":"", 
   "relHeadingLevel":"", "defaultHeadingLevel":"", "menuContent":"", "menuClass":"", "menuLayout":"", "menuRole":"", 
   "requireMenu":false, "forceEmptyMenu":false, "hasContent":true, "titleClass":"", 
-  "open":true, "close":true
+  "open":true, "close":true, "passArgs":{}
 }>
 <#macro section args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.section_defaultArgs)>
@@ -686,7 +686,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     fromScreenDef=false menuClass=menuClass menuId=menuId menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
     forceEmptyMenu=forceEmptyMenu hasContent=hasContent autoHeadingLevel=autoHeadingLevel headingLevel=headingLevel 
     relHeadingLevel=relHeadingLevel defaultHeadingLevel=defaultHeadingLevel titleStyle=titleClass 
-    open=open close=close><#nested /></@section_core>
+    open=open close=close passArgs=passArgs><#nested /></@section_core>
 </#macro>
 
 <#-- Core implementation of @section. 
@@ -703,7 +703,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
   "showMore":true, "collapsed":false, "javaScriptEnabled":true, "fromScreenDef":false, "menuClass":"", "menuId":"", 
   "menuLayout":"", "menuRole":"", "requireMenu":false, "forceEmptyMenu":false, "hasContent":true, "titleStyle":"", 
   "titleContainerStyle":"", "titleConsumeLevel":true, "autoHeadingLevel":true, "headingLevel":"", "relHeadingLevel":"", 
-  "defaultHeadingLevel":"", "open":true, "close":true
+  "defaultHeadingLevel":"", "open":true, "close":true, "passArgs":{}
 }>
 <#macro section_core args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.section_core_defaultArgs)>
@@ -906,7 +906,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
       
       <#if hasTitle>
         <#local titleMarkup>
-          <@heading level=hLevel elemType=titleElemType class=titleClass containerElemType=titleContainerElemType containerClass=titleContainerClass>${title}</@heading>
+          <@heading level=hLevel elemType=titleElemType class=titleClass containerElemType=titleContainerElemType containerClass=titleContainerClass passArgs=passArgs>${title}</@heading>
         </#local>
       </#if> 
     </#if>
@@ -919,7 +919,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     <#if showMore>
       <#local menuTitleMarkup><@section_markup_menutitle sectionLevel=sLevel headingLevel=hLevel menuLayout=menuLayout 
         menuRole=menuRole hasMenu=hasMenu menuMarkup=menuMarkup hasTitle=hasTitle titleMarkup=titleMarkup 
-        contentFlagClasses=contentFlagClasses fromScreenDef=fromScreenDef origArgs=origArgs/></#local>
+        contentFlagClasses=contentFlagClasses fromScreenDef=fromScreenDef origArgs=origArgs passArgs=passArgs/></#local>
     </#if>
   </#if> 
 
@@ -936,7 +936,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
       "javaScriptEnabled":javaScriptEnabled, "fromScreenDef":fromScreenDef, "hasContent":hasContent, 
       "menuLayout":menuLayout, "menuRole":menuRole, "requireMenu":requireMenu, "forceEmptyMenu":forceEmptyMenu,
       
-      "origArgs":origArgs
+      "origArgs":origArgs, "passArgs":passArgs
     })>
   <#elseif close && !open>
     <#-- these _must_ override anything passed to this macro call (shouldn't be any) -->
@@ -951,7 +951,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
     collapsible=collapsible saveCollapsed=saveCollapsed expandToolTip=expandToolTip collapseToolTip=collapseToolTip 
     padded=padded showMore=showMore fullUrlString=fullUrlString javaScriptEnabled=javaScriptEnabled 
     fromScreenDef=fromScreenDef hasContent=hasContent menuLayout=menuLayout menuRole=menuRole requireMenu=requireMenu 
-    forceEmptyMenu=forceEmptyMenu origArgs=origArgs><#nested></@section_markup_container>
+    forceEmptyMenu=forceEmptyMenu origArgs=origArgs passArgs=passArgs><#nested></@section_markup_container>
   
   <#if close>
   <#-- auto-heading-level logic begin -->
@@ -1011,7 +1011,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 <#macro section_markup_container open=true close=true sectionLevel=1 headingLevel=1 menuTitleContent="" class="" outerClass="" 
     innerClass="" contentFlagClasses="" id="" title="" collapsed=false collapsibleAreaId="" collapsible=false saveCollapsed=true 
     expandToolTip=true collapseToolTip=true padded=false showMore=true fullUrlString=""
-    javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false origArgs={} catchArgs...>
+    javaScriptEnabled=true fromScreenDef=false hasContent=true menuLayout="" menuRole="" requireMenu=false forceEmptyMenu=false origArgs={} passArgs={} catchArgs...>
   <#if open>
     <#local outerClass = "">
     <#local outerClass = addClassArg(outerClass, "section-screenlet")>
@@ -1044,7 +1044,7 @@ IMPL NOTE: This has dependencies on some non-structural macros.
 
 <#-- @section menu and title arrangement markup - theme override -->
 <#macro section_markup_menutitle sectionLevel=1 headingLevel=1 menuLayout="" menuRole="" hasMenu=false menuMarkup="" 
-    hasTitle=false titleMarkup="" contentFlagClasses="" fromScreenDef=false origArgs={} catchArgs...>
+    hasTitle=false titleMarkup="" contentFlagClasses="" fromScreenDef=false origArgs={} passArgs={} catchArgs...>
   <#-- Currently supports only one menu. could have one for each layout (with current macro
        args as post-title), but tons of macro args needed and complicates. -->
   <#if menuLayout == "pre-title">

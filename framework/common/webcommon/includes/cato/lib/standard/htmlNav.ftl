@@ -31,17 +31,17 @@ Since this is very foundation specific, this function may be dropped in future i
     class           = Adds classes - please use "(small|medium|large)-block-grid-#"    
 -->
 <#assign nav_defaultArgs = {
-  "type":"inline"
+  "type":"inline", "passArgs":{}
 }>
 <#macro nav args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.nav_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@nav_markup type=type origArgs=origArgs><#nested></@nav_markup>
+  <@nav_markup type=type origArgs=origArgs passArgs=passArgs><#nested></@nav_markup>
 </#macro>
 
 <#-- @nav main markup - theme override -->
-<#macro nav_markup type="" origArgs={} catchArgs...>
+<#macro nav_markup type="" origArgs={} passArgs={} catchArgs...>
   <#switch type>
     <#case "magellan">
       <div data-magellan-expedition="fixed">
@@ -64,17 +64,17 @@ Since this is very foundation specific, this function may be dropped in future i
 </#macro>
 
 <#assign mli_defaultArgs = {
-  "arrival":""
+  "arrival":"", "passArgs":{}
 }>
 <#macro mli args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.mli_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@mli_markup arrival=arrival origArgs=origArgs><#nested></@mli_markup>
+  <@mli_markup arrival=arrival origArgs=origArgs passArgs=passArgs><#nested></@mli_markup>
 </#macro>
 
 <#-- @mli main markup - theme override -->
-<#macro mli_markup arrival="" origArgs={} catchArgs...>
+<#macro mli_markup arrival="" origArgs={} passArgs={} catchArgs...>
   <dd data-magellan-arrival="${arrival}"><#nested></dd>
 </#macro>
 
@@ -152,7 +152,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
 <#assign menu_defaultArgs = {
   "type":"generic", "class":"", "inlineItems":false, "id":"", "style":"", "attribs":{},
   "items":true, "preItems":true, "postItems":true, "sort":false, "sortBy":"", "sortDesc":false,
-  "nestedFirst":false, "htmlWrap":true
+  "nestedFirst":false, "htmlWrap":true, "passArgs":{}
 }>
 <#macro menu args={} inlineArgs...>
   <#-- class arg needs special handling here to support extended "+" logic (mostly for section menu defs) -->
@@ -188,11 +188,11 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
 
   <#local class = addClassArgDefault(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
 
-  <@menu_markup class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItems=inlineItems htmlWrap=htmlWrap origArgs=origArgs>
+  <@menu_markup class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItems=inlineItems htmlWrap=htmlWrap origArgs=origArgs passArgs=passArgs>
   <#if !(preItems?is_boolean && preItems == false)>
     <#if preItems?is_sequence>
       <#list preItems as item>
-        <@menuitem args=item />
+        <@menuitem args=item passArgs=passArgs />
       </#list>    
     </#if>
   </#if>
@@ -211,7 +211,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
         </#if>
       </#if>
       <#list items as item>
-        <@menuitem args=item />
+        <@menuitem args=item passArgs=passArgs/>
       </#list>
     </#if>
     <#if !nestedFirst>
@@ -221,7 +221,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
   <#if !(postItems?is_boolean && postItems == false)>
     <#if postItems?is_sequence>
       <#list postItems as item>
-        <@menuitem args=item />
+        <@menuitem args=item passArgs=passArgs/>
       </#list>
     </#if>
   </#if>
@@ -233,7 +233,7 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
 </#macro>
 
 <#-- @menu container main markup - theme override -->
-<#macro menu_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false htmlWrap="ul" origArgs={} catchArgs...>
+<#macro menu_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false htmlWrap="ul" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems && htmlWrap?has_content>
     <${htmlWrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>
   </#if>
@@ -286,7 +286,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   "contentId":"", "contentStyle":"", "contentAttribs":"", "text":"", "href":true,
   "onClick":"", "disabled":false, "selected":false, "active":false, "target":"",
   "nestedContent":true, "nestedMenu":false, "wrapNested":false, "nestedFirst":false,
-  "htmlWrap":true, "inlineItem":false
+  "htmlWrap":true, "inlineItem":false, "passArgs":{}
 }>
 <#macro menuitem args={} inlineArgs...>
   <#-- class args need special handling here to support extended "+" logic (mostly for section menu defs) -->
@@ -345,7 +345,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
   </#if>
   <#local contentClass = addClassArgDefault(contentClass, defaultContentClass)>
 
-  <@menuitem_markup class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=inlineItem htmlWrap=htmlWrap disabled=disabled selected=selected active=active origArgs=origArgs><#rt>
+  <@menuitem_markup class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItem=inlineItem htmlWrap=htmlWrap disabled=disabled selected=selected active=active origArgs=origArgs passArgs=passArgs><#rt>
     <#if !nestedContent?is_boolean>
       <#-- use nestedContent -->
     <#elseif !nestedMenu?is_boolean>
@@ -359,11 +359,11 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
         <#local href = "javascript:void(0);">
       </#if>
       <#local href = interpretRequestUri(href)>
-      <#t><@menuitem_link_markup href=href onclick=onClick class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","href","onclick","target","title"] target=target title=title disabled=disabled selected=selected active=active origArgs=origArgs><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_link_markup>
+      <#t><@menuitem_link_markup href=href onclick=onClick class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","href","onclick","target","title"] target=target title=title disabled=disabled selected=selected active=active origArgs=origArgs passArgs=passArgs><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_link_markup>
     <#elseif type == "text">
-      <#t><@menuitem_text_markup class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","onclick"] onClick=onClick disabled=disabled selected=selected active=active origArgs=origArgs><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_text_markup>
+      <#t><@menuitem_text_markup class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","onclick"] onClick=onClick disabled=disabled selected=selected active=active origArgs=origArgs passArgs=passArgs><#if wrapNested && nestedFirst>${nestedContent}</#if><#if text?has_content>${text}</#if><#if wrapNested && !nestedFirst>${nestedContent}</#if></@menuitem_text_markup>
     <#elseif type == "submit">
-      <#t><#if wrapNested && nestedFirst>${nestedContent}</#if><@menuitem_submit_markup class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","value","onclick","disabled","type"] onClick=onClick disabled=disabled selected=selected active=active origArgs=origArgs><#if text?has_content>${text}</#if></@menuitem_submit_markup><#if wrapNested && !nestedFirst> ${nestedContent}</#if>
+      <#t><#if wrapNested && nestedFirst>${nestedContent}</#if><@menuitem_submit_markup class=contentClass id=contentId style=contentStyle attribs=contentAttribs excludeAttribs=["class","id","style","value","onclick","disabled","type"] onClick=onClick disabled=disabled selected=selected active=active origArgs=origArgs passArgs=passArgs><#if text?has_content>${text}</#if></@menuitem_submit_markup><#if wrapNested && !nestedFirst> ${nestedContent}</#if>
     <#else>
       <#t><#if text?has_content>${text}</#if><#if wrapNested>${nestedContent}</#if>
     </#if>
@@ -373,7 +373,7 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
 </#macro>
 
 <#-- @menuitem container markup - theme override -->
-<#macro menuitem_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItem=false htmlWrap="li" disabled=false selected=false active=false origArgs={} catchArgs...>
+<#macro menuitem_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItem=false htmlWrap="li" disabled=false selected=false active=false origArgs={} passArgs={} catchArgs...>
   <#if !inlineItem && htmlWrap?has_content>
     <${htmlWrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id", "style"]/></#if>><#rt>
   </#if>
@@ -384,17 +384,17 @@ Menu item macro. Must ALWAYS be enclosed in a @menu macro (see @menu options if 
 </#macro>
 
 <#-- @menuitem type="link" markup - theme override -->
-<#macro menuitem_link_markup class="" id="" style="" href="" onClick="" target="" title="" attribs={} excludeAttribs=[] disabled=false selected=false active=false origArgs={} catchArgs...>
+<#macro menuitem_link_markup class="" id="" style="" href="" onClick="" target="" title="" attribs={} excludeAttribs=[] disabled=false selected=false active=false origArgs={} passArgs={} catchArgs...>
   <#t><a href="${href}"<#if onClick?has_content> onclick="${onClick}"</#if><@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if target?has_content> target="${target}"</#if><#if title?has_content> title="${title}"</#if>><#nested></a>
 </#macro>
 
 <#-- @menuitem type="text" markup - theme override -->
-<#macro menuitem_text_markup class="" id="" style="" onClick="" attribs={} excludeAttribs=[] disabled=false selected=false active=false origArgs={} catchArgs...>
+<#macro menuitem_text_markup class="" id="" style="" onClick="" attribs={} excludeAttribs=[] disabled=false selected=false active=false origArgs={} passArgs={} catchArgs...>
   <#t><span<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if>><#nested></span>
 </#macro>
 
 <#-- @menuitem type="submit" markup - theme override -->
-<#macro menuitem_submit_markup class="" id="" style="" text="" onClick="" disabled=false attribs={} excludeAttribs=[] disabled=false selected=false active=false origArgs={} catchArgs...>
+<#macro menuitem_submit_markup class="" id="" style="" text="" onClick="" disabled=false attribs={} excludeAttribs=[] disabled=false selected=false active=false origArgs={} passArgs={} catchArgs...>
   <#t><button type="submit"<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if><#if onClick?has_content> onclick="${onClick}"</#if><#if disabled> disabled="disabled"</#if> /><#nested></button>
 </#macro>
 
@@ -463,7 +463,7 @@ menu item element must override this and provide a proper check.
 <#assign paginate_defaultArgs = {
     "mode":"single", "type":"default", "layout":"default", "noResultsMode":"default", "paginateOn":true, "url":"", "class":"", "viewIndex":0, "listSize":0, "viewSize":1, "altParam":false, 
     "forcePost":false, "paramStr":"", "viewIndexFirst":0, "showCount":true, "countMsg":"",
-    "paginateToggle":false, "paginateToggleString":"", "paginateToggleOnValue":"Y", "paginateToggleOffValue":"N"
+    "paginateToggle":false, "paginateToggleString":"", "paginateToggleOnValue":"Y", "paginateToggleOffValue":"N", "passArgs":{}
 }>
 <#macro paginate args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.paginate_defaultArgs)>
@@ -577,15 +577,15 @@ menu item element must override this and provide a proper check.
   <#-- DEV NOTE: make sure all @paginate_core calls same (DO NOT use #local capture; risks duplicate IDs) -->
   <#if mode == "single">
     <#if showNextPrev>
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel=uiLabelMap.CommonPagingOff />
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel=uiLabelMap.CommonPagingOff passArgs=passArgs/>
     </#if>
   <#else>
     <#if showNextPrev && layout != "bottom">
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel=uiLabelMap.CommonPagingOff />
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel=uiLabelMap.CommonPagingOff passArgs=passArgs/>
     </#if>
     <#nested>
     <#if showNextPrev && layout != "top">
-      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel=uiLabelMap.CommonPagingOff />
+      <@paginate_core ajaxEnabled=false javaScriptEnabled=(javaScriptEnabled!true) paginateClass=class paginateFirstClass="${styles.pagination_item_first!}" viewIndex=viewIndex highIndex=highIndex listSize=listSize viewSize=viewSize ajaxFirstUrl="" firstUrl=firstUrl paginateFirstLabel=uiLabelMap.CommonFirst paginatePreviousClass="${styles.pagination_item_previous!}" ajaxPreviousUrl="" previousUrl=previousUrl paginatePreviousLabel=uiLabelMap.CommonPrevious pageLabel="" ajaxSelectUrl="" selectUrl=selectUrl ajaxSelectSizeUrl="" selectSizeUrl=selectSizeUrl commonDisplaying=showCount?string(countMsg,"") paginateNextClass="${styles.pagination_item_next!}" ajaxNextUrl="" nextUrl=nextUrl paginateNextLabel=uiLabelMap.CommonNext paginateLastClass="${styles.pagination_item_last!}" ajaxLastUrl="" lastUrl=lastUrl paginateLastLabel=uiLabelMap.CommonLast paginateViewSizeLabel="" forcePost=forcePost viewIndexFirst=viewIndexFirst paginate=paginateOn paginateToggle=paginateToggle ajaxPaginateOnUrl="" paginateOnUrl=paginateOnUrl paginateOnClass="" paginateOnLabel=uiLabelMap.CommonPagingOn ajaxPaginateOffUrl="" paginateOffUrl=paginateOffUrl paginateOffClass="" paginateOffLabel=uiLabelMap.CommonPagingOff passArgs=passArgs/>
     </#if>
   </#if>
 </#macro>
@@ -611,7 +611,7 @@ menu item element must override this and provide a proper check.
   "lastUrl":"", "paginateLastLabel":"", "paginateViewSizeLabel":"", 
   "paginate":true, "forcePost":false, "viewIndexFirst":0, "listItemsOnly":false, "paginateToggle":false, "ajaxPaginateOnUrl":"", 
   "paginateOnUrl":"", "paginateOnClass":"", "paginateOnLabel":"", "ajaxPaginateOffUrl":"", "paginateOffUrl":"", "paginateOffClass":"", 
-  "paginateOffLabel":""
+  "paginateOffLabel":"", "passArgs":{}
 }>
 <#macro paginate_core args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.paginate_core_defaultArgs)>
@@ -679,7 +679,7 @@ menu item element must override this and provide a proper check.
       paginate=paginate forcePost=forcePost viewIndexFirst=viewIndexFirst listItemsOnly=listItemsOnly paginateToggle=paginateToggle ajaxPaginateOnUrl=ajaxPaginateOnUrl 
       paginateOnUrl=paginateOnUrl paginateOnClass=paginateOnClass paginateOnLabel=paginateOnLabel ajaxPaginateOffUrl=ajaxPaginateOffUrl paginateOffUrl=paginateOffUrl paginateOffClass=paginateOffClass 
       paginateOffLabel=paginateOffLabel
-      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage />
+      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage origArgs=origArgs passArgs=passArgs/>
   
   <#elseif paginateToggle>
   
@@ -694,7 +694,7 @@ menu item element must override this and provide a proper check.
       paginate=paginate forcePost=forcePost viewIndexFirst=viewIndexFirst listItemsOnly=listItemsOnly paginateToggle=paginateToggle ajaxPaginateOnUrl=ajaxPaginateOnUrl 
       paginateOnUrl=paginateOnUrl paginateOnClass=paginateOnClass paginateOnLabel=paginateOnLabel ajaxPaginateOffUrl=ajaxPaginateOffUrl paginateOffUrl=paginateOffUrl paginateOffClass=paginateOffClass 
       paginateOffLabel=paginateOffLabel
-      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage origArgs=origArgs/>
+      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage origArgs=origArgs passArgs=passArgs/>
   </#if>
 </#macro>
 
@@ -708,7 +708,7 @@ menu item element must override this and provide a proper check.
     paginate=true forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false ajaxPaginateOnUrl="" 
     paginateOnUrl="" paginateOnClass="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffClass="" 
     paginateOffLabel=""
-    availPageSizes=[] minPageSize=1 viewIndexLast=1 multiPage=true origArgs={} catchArgs...>
+    availPageSizes=[] minPageSize=1 viewIndexLast=1 multiPage=true origArgs={} passArgs={} catchArgs...>
     
   <#local paginateClass = addClassArg(paginateClass, styles.pagination_wrap!)> 
   <#local paginateClass = addClassArgDefault(paginateClass, "nav-pager")>  

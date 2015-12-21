@@ -630,14 +630,15 @@ public class ModelMenuItem extends ModelWidget {
             if (linkElement.getAttribute("text").isEmpty()) {
                 linkElement.setAttribute("text", parentMenuItem.getTitle().getOriginal());
             }
-            if (linkElement.getAttribute("style").isEmpty()) {
+            // Cato: This whole block was removed in ofbiz branch 14.12 r1720933, AFTER we already removed the code inside the block
+            //if (linkElement.getAttribute("style").isEmpty()) {
                 // Cato: this was changed by us...
                 // WARN: removing this effectively changed the behavior of menu-item's widget-style for all widgets!
                 //linkElement.setAttribute("style", parentMenuItem.getWidgetStyle());
                 // The following was added by us instead of previous line, but we don't need to do this here anymore.
                 // we modify the getter below instead.
                 //linkElement.setAttribute("style", parentMenuItem.getLinkStyle());
-            }
+            //}
             this.link = new Link(linkElement);
         }
 

@@ -5,26 +5,56 @@ import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.base.util.UtilProperties
 import org.ofbiz.entity.*
-import org.ofbiz.entity.model.DynamicViewEntity;
-import org.ofbiz.entity.model.ModelKeyMap;
+import org.ofbiz.entity.model.DynamicViewEntity
+import org.ofbiz.entity.model.ModelKeyMap
 import org.ofbiz.entity.util.*
 import org.ofbiz.service.ServiceUtil
 
-import java.math.BigDecimal
-
 public Map createDemoTransaction() {
+	
+	// AcctgTransTypeId
+	List<String> acctgTransTypeIds = [
+		"AMORTIZATION",
+		"CAPITALIZATION",
+		"CREDIT_LINE",
+		"CREDIT_MEMO",
+		"DEPRECIATION",
+		"DISBURSEMENT",
+		"EXTERNAL_ACCTG_TRANS",
+		"INCOMING_PAYMENT",
+		"INTERNAL_ACCTG_TRANS",
+		"INVENTORY",
+		"INVENTORY_RETURN",
+		"ITEM_VARIANCE",
+		"MANUFACTURING",
+		"NOTE",
+		"OBLIGATION_ACCTG_TRA",
+		"OTHER_INTERNAL",
+		"OTHER_OBLIGATION",
+		"OUTGOING_PAYMENT",
+		"PAYMENT_ACCTG_TRANS",
+		"PAYMENT_APPL",
+		"PERIOD_CLOSING",
+		"PURCHASE_INVOICE",
+		"RECEIPT",
+		"SALES",
+		"SALES_INVOICE",
+		"SALES_SHIPMENT",
+		"SHIPMENT_RECEIPT",
+		"TAX_DUE"
+	]
 
-
-	// Income GlAccountType & GlAccounts per GlAccountClass
-	Map<String, String> glIncomeAccountTypeIds = ["810000" : "INTEREST_INCOME"];	
+	// GlAccountType
+//	Map<String, String> glAccountTypeIds = ["503000" : "COGS_ADJ_AVG_COST", "517000" : "WRITEOFF", "517100" : "ACCTRECV_WRITEOFF", "517200" : "ACCTPAY_WRITEOFF", "517300" : "COMMISSIONS_WRITEOFF",
+//		"517400" : "INTRSTINC_WRITEOFF", "518000" : "FX_GAIN_LOSS_ACCT", "518100" : "FX_GAIN_ACCOUNT", "518200" : "FX_LOSS_ACCOUNT", "810000" : "INTEREST_INCOME"];
+	
+	// Income GlAccounts per GlAccountClass	
 	Map<String, List<String>> glIncomeAccountClassIds = [
 		"INCOME" : ["800000"],
 		"CASH_INCOME" : ["801000", "802000", "803000", "804000", "805000", "806000", "810000", "811000", "812000", "813000", "814000", "819000"]
 	]
 	
-	// Expense GlAccountType & GlAccounts per GlAccountClass
-	Map<String, String> glExpenseAccountTypeIds = ["503000" : "COGS_ADJ_AVG_COST", "517000" : "WRITEOFF", "517100" : "ACCTRECV_WRITEOFF", "517200" : "ACCTPAY_WRITEOFF", "517300" : "COMMISSIONS_WRITEOFF", 
-		"517400" : "INTRSTINC_WRITEOFF", "518000" : "FX_GAIN_LOSS_ACCT", "518100" : "FX_GAIN_ACCOUNT", "518200" : "FX_LOSS_ACCOUNT"]; 	
+	// Expense GlAccounts per GlAccountClass
 	Map<String, List<String>> glExpenseAccountClassIds = [
 		"EXPENSE" : ["513000", "513100", "513200", "600000"],
 		"CASH_EXPENSE" : ["820000", "824000", "829000"],
@@ -44,11 +74,6 @@ public Map createDemoTransaction() {
 		 "INTEREST_EXPENSE" : ["821000", "823000"]
 	]
 
-//	
-//	List<String> products = [
-//			 ["productId":"GZ-2644","itemDescription":"Round Gizmo","unitPrice":38.4,"unitListPrice":48.0],
-//			 ["productId":"WG-1111","itemDescription":"Micro Chrome Widget","unitPrice":59.99,"unitListPrice":60.0]
-//		];
 	
 	Debug.logInfo("-=-=-=- DEMO DATA CREATION SERVICE - TX DATA-=-=-=-", "");
 	Map result = ServiceUtil.returnSuccess();
@@ -62,73 +87,71 @@ public Map createDemoTransaction() {
 		// Create AcctgTrans
 		String acctgTransId = "GEN_" + delegator.getNextSeqId("demo-acctgTransId");
 		// Create AcctgTransEntry (2,4,6)
-		int acctgTransEntryCount = getRandomEvenInt(2,6);
-		Debug.log("acctgTransEntryCount ====> " + acctgTransEntryCount);
-		
+		int acctgTransEntryCount = getRandomEvenInt(2,6);		
 		// Determine if it is an income or an expense
 		int incomeExpense = getRandomInt(1,2);
 		
 		List<GenericValue> glAccounts = null;
-		for (int acctgTransEntrySeqId = 1; acctgTransEntrySeqId <= acctgTransEntryCount; acctgTransEntrySeqId++) {
-			
-			if (acctgTransEntrySeqId % 2 == 0) {				
+		for (int acctgTransEntrySeqId = 1; acctgTransEntrySeqId <= acctgTransEntryCount; acctgTransEntrySeqId++) {			
+			if (acctgTransEntrySeqId % 2 == 0) {
 				debitCreditFlag = "D";
 				Debug.log("debit acctg entry");
 			} else {
-				debitCreditFlag = "C";
-//				DynamicViewEntity dve = new DynamicViewEntity();
-//				dve.addMemberEntity("GA", "GlAccount");
-//				dve.addMemberEntity("GAO", "GlAccountOrganization");
-//				dve.addAliasAll("GA", "", null); // no prefix
-//				dve.addAlias("GAO", "organizationPartyId");
-//				dve.addViewLink("GA", "GAO", Boolean.FALSE, UtilMisc.toList(new ModelKeyMap("glAccountId", "glAccountId")));				
+				debitCreditFlag = "C";			
 				List<String> glAccountClassIdList = null;
-				if (incomeExpense == 1) 		
-					glAccountClassIdList = glExpenseAccountClassIds[random(glExpenseAccountClassIds.keySet())];
-				else 
-					glAccountClassIdList = glIncomeAccountClassIds[random(glIncomeAccountClassIds.keySet())];
-					
-				Debug.log("glAccountClassIdList =========> " + glAccountClassIdList);
-				String glAccountId = random(glAccountClassIdList);
-				Debug.log("glAccountId =========> " + glAccountId);
+				if (incomeExpense == 1) {
+					keys = new ArrayList(glExpenseAccountClassIds.keySet());
+					index = random(keys);
+					glAccountClassIdList = glExpenseAccountClassIds.get(keys.get(index));
+				} else {
+					keys = new ArrayList(glIncomeAccountClassIds.keySet());
+					index = random(keys);
+					glAccountClassIdList = glIncomeAccountClassIds.get(keys.get(index));
+				}					
 				
-				glAccount = from("GlAccount").where("glAccountId", glAccountId).cache(true).queryOne();							
 				amount = new BigDecimal(getRandomInt(10, 10000));
-				Debug.log("credit acctg entry");
-			}
-			
-//			GenericValue glAccount = glAccounts.get(0);
-			if (glAccount) {
-				Debug.log("glAccount ========> " + glAccount + " amount ========> " + amount);
-	//			fields = UtilMisc.toMap("acctgTransId", acctgTransId, "acctgTransEntrySeqId", "0000" + acctgTransEntrySeqId, "acctgTransEntryTypeId", "_NA_", "description",
-	//										"Automatically generated transaction (for demo purposes)", "glAccountId", glAccount.glAccountId, "glAccountTypeId", glAccount.glAccountTypeId, "organizationPartyId", "Company",
-	//										"reconcileStatusId", "AES_NOT_RECONCILED", "amount", amount, "currencyUomId", "USD", "debitCreditFlag", debitCreditFlag);
+				String glAccountId = glAccountClassIdList.get(random(glAccountClassIdList));
 				
-	//			GenericValue acctgTransEntry = delegator.makeValue("AcctgTransEntry", fields);
-	//			acctgTransEntrys.add(acctgTransEntry);
+				DynamicViewEntity dve = new DynamicViewEntity();
+				dve.addMemberEntity("GA", "GlAccount");
+				dve.addMemberEntity("GAO", "GlAccountOrganization");
+				dve.addAliasAll("GA", "", null); // no prefix
+				dve.addAlias("GAO", "organizationPartyId");
+				dve.addViewLink("GA", "GAO", Boolean.FALSE, UtilMisc.toList(new ModelKeyMap("glAccountId", "glAccountId")));				
+				glAccount = from(dve).where("glAccountId", glAccountId).cache(true).queryOne();
+				Debug.log("credit acctg entry - glAccountId ===> " + glAccountId);
+			}
+
+			if (glAccount) {
+				Debug.log("glAccountId ========> " + glAccount.glAccountId + " amount ========> " + amount);
+				fields = UtilMisc.toMap("acctgTransId", acctgTransId, "acctgTransEntrySeqId", "0000" + acctgTransEntrySeqId, "acctgTransEntryTypeId", "_NA_", "description",
+					"Automatically generated transaction (for demo purposes)", "glAccountId", glAccount.glAccountId, "glAccountTypeId", glAccount.glAccountTypeId, "organizationPartyId", "Company",
+					"reconcileStatusId", "AES_NOT_RECONCILED", "amount", amount, "currencyUomId", "USD", "debitCreditFlag", debitCreditFlag);				
+				GenericValue acctgTransEntry = delegator.makeValue("AcctgTransEntry", fields);
+				acctgTransEntrys.add(acctgTransEntry);
 			}
 		}
 		
-		String acctgTransTypeId = acctgTransTypeIds.get(random(acctgTransTypeIds));
+		// FIXME: This may be inconsistent with the GlAccount selected, it may affect the accuracy of some reports
+		String acctgTransTypeId = acctgTransTypeIds.get(random(acctgTransTypeIds)); 
 		String description = "Demo Transaction " + acctgTransId;		
 		Timestamp transactionDate = Timestamp.valueOf(generateRandomDate());
 		isPosted = "Y";
 		postedDate =  Timestamp.valueOf(generateRandomDate(transactionDate));
 		glFiscalTypeId = "ACTUAL";
-		
-		Debug.log("acctgTransTypeId ==========> " + acctgTransTypeId);
 		 
 		Map fields = UtilMisc.toMap("acctgTransId", acctgTransId, "acctgTransTypeId", acctgTransTypeId, "description", description, "transactionDate", transactionDate,
 									"isPosted", isPosted, "postedDate", postedDate, "glFiscalTypeId", glFiscalTypeId);
 	
-//		GenericValue acctgTrans = delegator.makeValue("AcctgTrans", fields);
-//		toBeStored.add(acctgTrans);
-//		toBeStored.addAll(acctgTransEntrys);
+		GenericValue acctgTrans = delegator.makeValue("AcctgTrans", fields);
+		toBeStored.add(acctgTrans);
+		toBeStored.addAll(acctgTransEntrys);
 	}
 	
 	// store the changes
 	if (toBeStored.size() > 0) {
 		try {
+			Debug.log("Storing transactions")
 			delegator.storeAll(toBeStored);
 		} catch (GenericEntityException e) {
 			return ServiceUtil.returnError(UtilProperties.getMessage(resource_error,
@@ -183,9 +206,9 @@ public String generateRandomDate(Date beginDate) {
 }
 
 
-public int random(List myList){
+public int random(List myList) {	
 	int size = myList.size();
-	int index = new Random().nextInt(size - 1);
+	int index = new Random().nextInt(size);
 	return index;
 }
 

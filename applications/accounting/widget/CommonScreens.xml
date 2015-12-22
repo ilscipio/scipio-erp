@@ -472,11 +472,11 @@ under the License.
             <widgets>
             	<!-- <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific> -->  
                 <decorator-screen name="main-decorator-dashboard" location="${parameters.mainDecoratorLocation}">
-					<decorator-section name="topLeft">
+					<!-- <decorator-section name="topLeft">
 						<screenlet title="${uiLabelMap.CommonRecentActivity}">
 							<include-screen name="ListPayments" location="component://accounting/widget/PaymentScreens.xml" />
 						</screenlet>
-					</decorator-section>
+					</decorator-section> -->
 					<decorator-section name="topRight">
 						<screenlet title="${uiLabelMap.AccountingFinantialInformation}">
 							<section>
@@ -485,23 +485,21 @@ under the License.
 					                <set field="chartValue" value="total"/>
 					                <set field="chartData" value="C"/>
 					                <set field="chartLibrary" value="foundation"/>
-					                <set field="chartIntervalScope" value="year"/>
-					                <set field="chartIntervalCount" value="6"/>					               
-					                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp" default-value=""/>
-					                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>    
+					                <set field="chartIntervalScope" value="month"/>
+					                <set field="chartIntervalCount" value="6"/>
 					                
 									<!-- <set field="organizationPartyId" from-field="parameters.organizationPartyId"/> -->
-					                <service service-name="getPartyAccountingPreferences" result-map="result">
+					                <!-- <service service-name="getPartyAccountingPreferences" result-map="result">
 					                    <field-map field-name="organizationPartyId"/>
 					                </service>
 					                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-					                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/>
+					                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/> -->
 					                <!-- Get a default fromDate -->
-					                <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">
+					                <!-- <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">
 					                    <field-map field-name="organizationPartyId" from-field="organizationPartyId"/>
 					                </service>
 					                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp" default-value="${findLastClosedDateOutMap.lastClosedDate}"/>
-					                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/>
+					                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/> -->
 					                <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId" default-value="ACTUAL"/>   
 					                            
 					                <!-- <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/IncomeStatement.groovy"/> -->
@@ -516,7 +514,7 @@ under the License.
 							</section>
 						</screenlet>
 					</decorator-section>
-					<decorator-section name="bottomLeft">
+					<!-- <decorator-section name="bottomLeft">
 						<screenlet title="${uiLabelMap.AccountingApMenu}">
 							<section>
 								<actions>
@@ -539,7 +537,7 @@ under the License.
 								<widgets><include-portal-page id="ArPortalPage"/></widgets>
 							</section>							
 						</screenlet>
-					</decorator-section>
+					</decorator-section> -->
                 </decorator-screen>
             </widgets>
         </section>

@@ -4,7 +4,7 @@ import java.util.List;
 
 import freemarker.template.TemplateModelException;
 
-public class ProcessArgMapsMethod extends ArgsMapMethod {
+public class MergeArgMapsToLocalsBasicMethod extends ArgMapMethod {
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)
@@ -12,7 +12,7 @@ public class ProcessArgMapsMethod extends ArgsMapMethod {
     @SuppressWarnings("unchecked")
     @Override
     public Object exec(List args) throws TemplateModelException {
-        return execProcessArgMaps(args, true);
+        return execMergeArgMapsToLocals(args, false);
     }
 
 }

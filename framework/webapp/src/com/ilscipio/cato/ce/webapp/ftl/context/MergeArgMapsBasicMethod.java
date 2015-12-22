@@ -4,7 +4,7 @@ import java.util.List;
 
 import freemarker.template.TemplateModelException;
 
-public class MergeArgMapsBasicMethod extends ArgsMapMethod {
+public class MergeArgMapsBasicMethod extends ArgMapMethod {
 
     /*
      * @see freemarker.template.TemplateMethodModel#exec(java.util.List)

@@ -875,27 +875,26 @@ TODO?: may want helper booleans to control in/out allArgNames?
 
 <#-- 
 *************
-* processArgMaps
+* mergeArgMapsToLocals
 ************
 WIP. DO NOT USE AT CURRENT TIME. Use mergeArgMaps and localsPutAll instead.
 TODO: implement as transform.
 
-This is a helper pattern which should be functionally nearly identical to doing:
+This is a helper function which should be functionally identical to doing:
   <#macro name args={} inlineArgs...>
     <#local args = mergeArgMaps(inlineArgs, args, defaultArgs, overrideArgs)>
     <#local dummy = localsPutAll(args)>
-    <#local origArgs = args>
     ...
   </#macro>
   where defaultArgs and overrideArgs are valid maps.
 
-<#function processArgMaps args={} inlineArgs={} defaultArgs={} overrideArgs={}>
+<#function mergeArgMapsToLocals args={} inlineArgs={} defaultArgs={} overrideArgs={}>
 TODO: implement as transform
 </#function>
 -->
 
-<#-- Same as processArgMaps but calls mergeArgMapsBasic instead of mergeArgMaps
-<#function processArgMapsBasic args={} inlineArgs={} defaultArgs={} overrideArgs={}>
+<#-- Same as mergeArgMapsToLocals but calls mergeArgMapsBasic instead of mergeArgMaps
+<#function mergeArgMapsToLocalsBasic args={} inlineArgs={} defaultArgs={} overrideArgs={}>
 TODO: implement as transform
 </#function>
 -->

@@ -33,9 +33,9 @@ import freemarker.template.TemplateModelException;
 /**
  * Cato: ArgsMapMethod - base class for methods that deal with Cato macro arg patterns.
  */
-public abstract class ArgsMapMethod implements TemplateMethodModelEx {
+public abstract class ArgMapMethod implements TemplateMethodModelEx {
 
-    public static final String module = ArgsMapMethod.class.getName();
+    public static final String module = ArgMapMethod.class.getName();
     
     @SuppressWarnings("unchecked")
     protected Object execMergeArgMaps(List methodArgs, boolean recordArgNames) throws TemplateModelException {
@@ -65,15 +65,13 @@ public abstract class ArgsMapMethod implements TemplateMethodModelEx {
     }    
     
     @SuppressWarnings("unchecked")
-    protected Object execProcessArgMaps(List methodArgs, boolean recordArgNames) throws TemplateModelException {
+    protected Object execMergeArgMapsToLocals(List methodArgs, boolean recordArgNames) throws TemplateModelException {
         Environment env = CommonFtlUtil.getCurrentEnvironment();
         
         SimpleHash resArgs = (SimpleHash) execMergeArgMaps(methodArgs, recordArgNames, env);
         
         LangFtlUtil.localsPutAll(resArgs, env);
-        
-        resArgs.put("args", resArgs);
-        resArgs.put("origArgs", resArgs);
+        env.setLocalVariable("args", resArgs);
         
         return new SimpleScalar(""); 
     }    

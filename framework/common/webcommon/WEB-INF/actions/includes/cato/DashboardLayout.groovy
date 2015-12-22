@@ -13,8 +13,8 @@ if (columns > DASHBOARD_MAX_COLUMNS)
 	
 rows = Math.round(sections.size() / 2);
 
-//Debug.log("columns ==========> " + columns);
-//Debug.log("rows ==========> " + rows);
+Debug.log("columns ==========> " + columns);
+Debug.log("rows ==========> " + rows);
 
 sections = new LinkedList(context.sections.keySet());
 for (section in sections) {
@@ -31,7 +31,12 @@ columnsList = new LinkedList<String>();
 sectionIndex = 0;
 for (i = 0; i < rows; i++) {
 	for (x = 0; x < columns; x++) {
-		columnsList.add(sections.get(sectionIndex));
+		Debug.log("sectionIndex ======> " + sectionIndex);
+		if (sectionIndex < sections.size()) {
+			columnsList.add(sections.get(sectionIndex));
+		} else {
+			columnsList.add(null);
+		}
 		sectionIndex++;
 	}
 	dashboardGrid.add(columnsList);

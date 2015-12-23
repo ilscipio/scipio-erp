@@ -14,8 +14,9 @@ import org.ofbiz.party.party.PartyWorker
 contentCache = UtilCache.getOrCreateUtilCache("dashboard.accounting", 0, 0, 0, true, false, null);
 
 // Setup the divisions for which the report is executed
-List partyIds = PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, organizationPartyId, 'GROUP_ROLLUP');
-partyIds.add(organizationPartyId);
+List partyIds = PartyWorker.getAssociatedPartyIdsByRelationshipType(delegator, context.organizationPartyId, 'GROUP_ROLLUP');
+partyIds.add(context.organizationPartyId);
+Debug.log("organizationPartyId ===========> " + context.organizationPartyId);
 GenericValue incomeGlAccountClass = from("GlAccountClass").where("glAccountClassId", "INCOME").cache(true).queryOne();
 List incomeAccountClassIds = UtilAccounting.getDescendantGlAccountClassIds(incomeGlAccountClass);
 GenericValue expenseGlAccountClass = from("GlAccountClass").where("glAccountClassId", "EXPENSE").cache(true).queryOne();
@@ -33,28 +34,20 @@ currentYearBegin = UtilDateTime.getYearStart(nowTimestamp, timeZone, locale);
 currentYearEnd  = UtilDateTime.getYearEnd(nowTimestamp, timeZone, locale);
 currentYearBeginText = sdf.format(currentYearBegin);
 currentYearEndText = sdf.format(currentYearEnd);
-Debug.log("currentYearBegin ===========> " + currentYearBeginText + "  currentYearEnd =============> " + currentYearEndText);
+
 int iStartDay = context.chartIntervalStartDay != null ? Integer.parseInt(context.chartIntervalStartDay) : 0;
 int iStartWeek = context.chartIntervalStartWeek != null ? Integer.parseInt(context.chartIntervalStartWeek) : 0;
 int iStartMonth = context.chartIntervalStartMonth != null ? Integer.parseInt(context.chartIntervalStartMonth) : 5;
 int iStartYear = context.chartIntervalStartYear != null ? Integer.parseInt(context.chartIntervalStartYear) : 0;
 int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : 6;
 String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year
-Debug.log("icount ==============> " + iCount);
-Debug.log("istartDay ==============> " + iStartDay);
-Debug.log("istartMonth ==============> " + iStartMonth);
-Debug.log("iScope ==============> " + iScope);
-
 
 dateIntervals = getIntervalDates(currentYearBegin, iStartDay, iStartWeek, iStartMonth, iStartYear, 0, iScope);
 
 cacheId = "accounting_" + currentYearBeginText + "-" + currentYearEndText;
-Debug.log("organizationPartyId ===========> " + organizationPartyId);
-
 
 Map<Date, Map<String, BigDecimal>> totalMap = [:];
-for (int i = 0; i <= iCount; i++) {
-	Debug.log("index ====> " + i + "   currentDateBegin ======> " + dateIntervals["beginDate"] + "    currentDateEnd ==========> " + dateIntervals["endDate"]);
+for (int i = 0; i <= iCount; i++) {	
 	
 	Map<String, BigDecimal> auxMap = [:];
 	List transactionDateAndExprs = FastList.newInstance();
@@ -68,34 +61,20 @@ for (int i = 0; i <= iCount; i++) {
 	// mainAndExprs.add(EntityCondition.makeCondition("debitCreditFlag", EntityOperator.EQUALS, "D"));
 	expenseAndExprs.addAll(transactionDateAndExprs);
 
-	expenseTransactionTotals = select("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount").from("AcctgTransEntrySums").where(expenseAndExprs).queryList();
+	expenseTransactionTotals = select("glAccountId", "debitCreditFlag", "amount").from("AcctgTransAndEntries").where(expenseAndExprs).queryList();
 	
-	Debug.log("expenseTransactionTotals ========> " + expenseTransactionTotals);
 	if (expenseTransactionTotals) {
 		balanceTotalCredit = BigDecimal.ZERO;
 		balanceTotalDebit = BigDecimal.ZERO;
 		expenseTransactionTotals.each { transactionTotal ->
-			Map accountMap = (Map)transactionTotalsMap.get(transactionTotal.glAccountId);
-			if (!accountMap) {
-				accountMap = UtilMisc.makeMapWritable(transactionTotal);
-				accountMap.remove("debitCreditFlag");
-				accountMap.remove("amount");
-//				accountMap.put("D", BigDecimal.ZERO);
-//				accountMap.put("C", BigDecimal.ZERO);
-			}
-			UtilMisc.addToBigDecimalInMap(accountMap, transactionTotal.debitCreditFlag, transactionTotal.amount);
 			if ("D".equals(transactionTotal.debitCreditFlag)) {
 				balanceTotalDebit = balanceTotalDebit.add(transactionTotal.amount);
 			} else {
 				balanceTotalCredit = balanceTotalCredit.add(transactionTotal.amount);
 			}
-//			BigDecimal debitAmount = (BigDecimal)accountMap.get("D");
-//			BigDecimal creditAmount = (BigDecimal)accountMap.get("C");
 		}
 		auxMap.put("expense", balanceTotalDebit);
 	}
-	
-	
 
 	// INCOME
 	List incomeAndExprs = FastList.newInstance(mainAndExprs);
@@ -104,64 +83,27 @@ for (int i = 0; i <= iCount; i++) {
 	incomeAndExprs.addAll(transactionDateAndExprs)
 	
 	incomeTransactionTotals = select("glAccountId", "accountName", "accountCode", "debitCreditFlag", "amount").from("AcctgTransEntrySums").where(incomeAndExprs).orderBy("glAccountId").queryList();
-	Debug.log("incomeTransactionTotals ========> " + incomeTransactionTotals);
-	if (incomeTransactionTotals) {
-		Map transactionTotalsMap = [:];
+	if (incomeTransactionTotals) {		
 		balanceTotalCredit = BigDecimal.ZERO;
 		balanceTotalDebit = BigDecimal.ZERO;
 		incomeTransactionTotals.each { transactionTotal ->
-			Map accountMap = (Map)transactionTotalsMap.get(transactionTotal.glAccountId);
-			if (!accountMap) {
-				accountMap = UtilMisc.makeMapWritable(transactionTotal);
-				accountMap.remove("debitCreditFlag");
-				accountMap.remove("amount");
-//				accountMap.put("D", BigDecimal.ZERO);
-//				accountMap.put("C", BigDecimal.ZERO);
-			}
-			UtilMisc.addToBigDecimalInMap(accountMap, transactionTotal.debitCreditFlag, transactionTotal.amount);
 			if ("D".equals(transactionTotal.debitCreditFlag)) {
 				balanceTotalDebit = balanceTotalDebit.add(transactionTotal.amount);
 			} else {
 				balanceTotalCredit = balanceTotalCredit.add(transactionTotal.amount);
 			}
-//			BigDecimal debitAmount = (BigDecimal)accountMap.get("D");
-//			BigDecimal creditAmount = (BigDecimal)accountMap.get("C");
 		}
 		auxMap.put("income", balanceTotalCredit);
-	}
-	
+	}	
 	totalMap.put(dateIntervals["dateFormatter"].format(dateIntervals["beginDate"]), auxMap);
-	
-	Debug.log("index ======> " + i + "   income balanceTotalDebit ==========> " + auxMap.income);
-	Debug.log("index ======> " + i + "   expense balanceTotalCredit ========> " + auxMap.expense);
-	
-	
 	dateIntervals = getIntervalDates(currentYearBegin, iStartDay, iStartWeek, iStartMonth, iStartYear, i + 1, iScope);
 }
 
 context.totalMap = totalMap;
-Debug.log("totalMap ============> " + totalMap);
-
-//Map	processResult(List transactionList) {
-//	Map resultMap = new TreeMap<String, Object>();
-//	transactionList.each { header ->
-//		Debug.log("header ==========> " + header);
-//		Map newMap = [:];
-//		BigDecimal total = BigDecimal.ZERO;
-//		total = total.plus(header.amount ?: BigDecimal.ZERO);
-//		newMap.put("total", total);
-//		newMap.put("count", 1);
-//		newMap.put("pos", header.type);
-//		resultMap.put(header.type, newMap);
-////		}
-//	}
-//	return resultMap;
-//}
 
 Map<String, Object> getIntervalDates(Timestamp sDate, int iStartDay, int iStartWeek, int iStartMonth, int iStartYear, int iCount, String iScope) {
 	Map<String, Timestamp> result = [:];
 	if (iScope != null) {	
-		Debug.log("iScope ==============> " + iScope);
 		if (iScope == "day") {
 			result.put("beginDate", UtilDateTime.getDayStart(sDate, iStartDay + iCount, timeZone, locale));
 			result.put("endDate", UtilDateTime.getDayEnd(result["beginDate"], timeZone, locale));

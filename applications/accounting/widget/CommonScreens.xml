@@ -449,62 +449,28 @@ under the License.
     <screen name="main">
         <section>
             <actions>
-                <!-- <set field="headerItem" value="main"/>
-                <entity-condition entity-name="PaymentType" list="paymentTypes">
-                    <order-by field-name="paymentTypeId"/>
-                </entity-condition>
-                <entity-condition entity-name="InvoiceType" list="invoiceTypes">
-                    <order-by field-name="invoiceTypeId"/>
-                </entity-condition>
-                <entity-condition entity-name="PaymentMethodType" list="paymentMethodTypes">
-                    <order-by field-name="paymentMethodTypeId"/>
-                </entity-condition>
-                <entity-condition entity-name="StatusItem" list="invoiceStatus">
-                    <condition-expr field-name="statusTypeId" operator="equals" value="INVOICE_STATUS"/>
-                    <order-by field-name="statusId"/>
-                </entity-condition>
-                <entity-condition entity-name="StatusItem" list="paymentStatus">
-                    <condition-expr field-name="statusTypeId" operator="equals" value="PMNT_STATUS"/>
-                    <order-by field-name="statusId"/>
-                </entity-condition> -->
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
             </actions>
             <widgets>
             	<!-- <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific> -->  
                 <decorator-screen name="main-decorator-dashboard" location="${parameters.mainDecoratorLocation}">
-					<!-- <decorator-section name="topLeft">
+					<decorator-section name="topLeft">
 						<screenlet title="${uiLabelMap.CommonRecentActivity}">
 							<include-screen name="ListPayments" location="component://accounting/widget/PaymentScreens.xml" />
 						</screenlet>
-					</decorator-section> -->
+					</decorator-section>
 					<decorator-section name="topRight">
 						<screenlet title="${uiLabelMap.AccountingFinantialInformation}">
 							<section>
 								<actions> 
-					               	<set field="chartType" value="bar"/>
-					                <set field="chartValue" value="total"/>
-					                <set field="chartData" value="C"/>
-					                <set field="chartLibrary" value="foundation"/>
+					               	<set field="chartType" value="bar"/>					                
+					                <set field="chartLibrary" value="chart"/>
 					                <set field="chartIntervalScope" value="month"/>
 					                <set field="chartIntervalCount" value="6"/>
-					                
-									<!-- <set field="organizationPartyId" from-field="parameters.organizationPartyId"/> -->
-					                <!-- <service service-name="getPartyAccountingPreferences" result-map="result">
-					                    <field-map field-name="organizationPartyId"/>
-					                </service>
-					                <set field="partyAcctgPreference" from-field="result.partyAccountingPreference"/>
-					                <set field="currencyUomId" from-field="partyAcctgPreference.baseCurrencyUomId"/> -->
-					                <!-- Get a default fromDate -->
-					                <!-- <service service-name="findLastClosedDate" result-map="findLastClosedDateOutMap">
-					                    <field-map field-name="organizationPartyId" from-field="organizationPartyId"/>
-					                </service>
-					                <set field="fromDate" from-field="parameters.fromDate" type="Timestamp" default-value="${findLastClosedDateOutMap.lastClosedDate}"/>
-					                <set field="thruDate" from-field="parameters.thruDate" type="Timestamp" default-value="${nowTimestamp}"/> -->
-					                <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId" default-value="ACTUAL"/>   
-					                            
-					                <!-- <script location="component://accounting/webapp/accounting/WEB-INF/actions/reports/IncomeStatement.groovy"/> -->
+					                <set field="chartDatasets" value="2"/>					                					                
+									<set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>					     
+					                <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId" default-value="ACTUAL"/>					               
 					                <script location="component://accounting/webapp/accounting/WEB-INF/actions/dashboard/IncomeExpenses.groovy"/>
-					                 
 					            </actions>
 					            <widgets>
 					                <platform-specific>
@@ -514,7 +480,7 @@ under the License.
 							</section>
 						</screenlet>
 					</decorator-section>
-					<!-- <decorator-section name="bottomLeft">
+					<decorator-section name="bottomLeft">
 						<screenlet title="${uiLabelMap.AccountingApMenu}">
 							<section>
 								<actions>
@@ -537,7 +503,7 @@ under the License.
 								<widgets><include-portal-page id="ArPortalPage"/></widgets>
 							</section>							
 						</screenlet>
-					</decorator-section> -->
+					</decorator-section>
                 </decorator-screen>
             </widgets>
         </section>

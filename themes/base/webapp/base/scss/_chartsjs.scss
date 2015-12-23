@@ -1,9 +1,12 @@
 @import "sass-to-js";
 $chartMap: (
-  fillColor: rgba($primary-color,.3),
-  strokeColor: rgba($primary-color,.7),
+  primaryFillColor: rgba($primary-color,.3),
+  primaryStrokeColor: rgba($primary-color,.7),
+  primaryPointStrokeColor: rgba($primary-color,.7),
+  secondaryFillColor: rgba($secondary-color,.3),
+  secondaryStrokeColor: rgba($secondary-color,.7),
+  secondaryPointStrokeColor: rgba($secondary-color,.7),
   pointColor: $white,
-  pointStrokeColor: rgba($primary-color,.7),
   pointHighlightFill: $ghost,
   pointHighlightStroke: $base,
   pointDot : true,

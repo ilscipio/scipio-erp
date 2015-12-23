@@ -978,9 +978,10 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     type           = (pie|bar|line) (default:pie)
     library        = (foundation|chart) (default:foundation)
     title          = Data Title  (default:empty)
+    datasets       = Number of datasets (1|2) (default:1) Only works for chart and bar|line
 -->
 <#assign chart_defaultArgs = {
-  "type":"pie", "library":"foundation", "title":"", "passArgs":{}
+  "type":"pie", "library":"foundation", "title":"", "datasets":1, "passArgs":{}
 }>
 <#macro chart args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.chart_defaultArgs)>
@@ -993,13 +994,19 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#local dummy = setRequestVar("catoChartIdNum", chartIdNum)>
   <#global chartId = "chart_${renderSeqNumber!}_${chartIdNum!}"/>
   <#global chartType = type/>
+  <#-- Allow just one or two datasets for now -->
+  <#if datasets &lt;= 0 || datasets &gt; 2>
+  	<#global chartDatasets = 1/>
+  <#else>
+  	<#global chartDatasets = datasets/>
+  </#if>
   
-  <@chart_markup type=type chartId=chartId chartIdNum=chartIdNum chartLibrary=chartLibrary title=title 
+  <@chart_markup type=type chartId=chartId chartIdNum=chartIdNum chartLibrary=chartLibrary chartDatasets=chartDatasets title=title 
     renderSeqNumber=renderSeqNumber origArgs=origArgs passArgs=passArgs><#nested></@chart_markup>
 </#macro>
 
 <#-- @chart main markup - theme override -->
-<#macro chart_markup type="" chartLibrary="" title="" chartId="" chartIdNum=0 renderSeqNumber=0 origArgs={} passArgs={} catchArgs...>
+<#macro chart_markup type="" chartLibrary="" title="" chartId="" chartIdNum=0 chartDatasets=1 renderSeqNumber=0 origArgs={} passArgs={} catchArgs...>
   <#if chartLibrary=="foundation">
     <@row>
       <@cell columns=3>    
@@ -1066,19 +1073,31 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
             var data = [];
             <#else>
             var data = {
-                    labels :[],
-                    datasets: [
-                        {
-                          fillColor: chartData.fillColor,
-                          strokeColor: chartData.strokeColor,
-                          pointColor: chartData.pointColor,
-                          pointStrokeColor: chartData.pointStrokeColor,
-                          pointHighlightFill: chartData.pointHighlightFill,
-                          pointHighlightStroke: chartData.pointHighlightStroke,
-                          label: "",
-                          data: []
-                        }
-                        ]
+                labels :[],
+                datasets: [
+                    {
+                      fillColor: chartData.primaryFillColor,
+                      strokeColor: chartData.primaryStrokeColor,
+                      pointColor: chartData.pointColor,
+                      pointStrokeColor: chartData.primaryPointStrokeColor,
+                      pointHighlightFill: chartData.pointHighlightFill,
+                      pointHighlightStroke: chartData.pointHighlightStroke,
+                      label: "",
+                      data: []
+                    }
+                    <#if chartDatasets == 2>,
+                    {
+                      fillColor: chartData.secondaryFillColor,
+                      strokeColor: chartData.secondaryStrokeColor,
+                      pointColor: chartData.pointColor,
+                      pointStrokeColor: chartData.secondaryPointStrokeColor,
+                      pointHighlightFill: chartData.pointHighlightFill,
+                      pointHighlightStroke: chartData.pointHighlightStroke,
+                      label: "",
+                      data: []
+                    }           
+                    </#if>        
+                    ]
                 };
             </#if>
             var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${chartIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
@@ -1110,7 +1129,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     <li<#if value2?has_content> data-y="${value!}" data-x="${value2!}"<#else> data-value="${value!}"</#if>>${title!}</li>
   <#else>
     <#if chartType="line" || chartType="bar">
-      ${chartId!}.addData([<#if value?has_content>${value!}</#if>]<#if title?has_content>,"${title!}"</#if>);
+      ${chartId!}.addData([<#if value?has_content>${value!}</#if><#if value2?has_content> ,${value2}</#if>]<#if title?has_content>,"${title!}"</#if>);      
     <#else>
       ${chartId!}.addData({value:${value!},color:chartData.color,highlight: chartData.highlight<#if title?has_content>,label:"${title!}"</#if>});
     </#if>

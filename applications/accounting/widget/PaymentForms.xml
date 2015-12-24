@@ -59,18 +59,19 @@ under the License.
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
+            <!-- <script location="component://accounting/webapp/accounting/WEB-INF/actions/dashboard/Test.groovy"/>          -->  
         </actions>
         <row-actions>
-            <set field="amountToApply" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator,paymentId);}"/>
+            <set field="amountToApply" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator,paymentId);}"/>            
         </row-actions>
         <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_record_id}">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
-        <field name="comments"><display/></field>
-        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
+        <field name="statusId" title="${uiLabelMap.CommonStatus} MIerda!!" use-when="isReduced==false"><display-entity entity-name="StatusItem"/></field>
+        <field name="comments" use-when="isReduced==false"><display/></field>
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}" use-when="isReduced==false">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}">
                 <!-- 
                 <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" >
@@ -88,11 +89,36 @@ under the License.
                  -->
             </display-entity>
         </field>
-        <field name="paymentTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="PaymentType"/></field>
+        <field name="paymentTypeId" title="${uiLabelMap.CommonType}" use-when="isReduced==false"><display-entity entity-name="PaymentType"/></field>
         <field name="effectiveDate"><display type="date"/></field>
         <field name="currencyUomId"><hidden/></field>
         <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" title="${uiLabelMap.CommonOutstanding}" widget-area-style="amount" title-area-style="align-right"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
+    </form>
+    
+    
+    <form name="ListPaymentsReduced" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate="false"
+        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" view-size="10">
+        <actions>
+            <service service-name="performFind" result-map="result" result-map-list="listIt">
+                <field-map field-name="inputFields" from-field="parameters"/>
+                <field-map field-name="entityName" value="PaymentAndTypeAndCreditCard"/>
+                <field-map field-name="orderBy" value="effectiveDate ASC"/>
+                <field-map field-name="viewIndex" from-field="viewIndex"/>
+                <field-map field-name="viewSize" from-field="viewSize"/>
+            </service>
+        </actions>
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_record_id}">
+       		 <hyperlink description="${paymentId}" target="paymentOverview">
+                <parameter param-name="paymentId"/>
+            </hyperlink>
+        </field>
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
+            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}"></display-entity>
+        </field>
+         <field name="effectiveDate"><display type="date"/></field>
+         <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
+         <field name="amountToApply" title="${uiLabelMap.CommonOutstanding}" widget-area-style="amount" title-area-style="align-right"><display also-hidden="false" type="currency" currency="${currencyUomId}"/></field>
     </form>
 
     <form name="EditPaymentAttributes" extends="CommonPortletEdit" extends-resource="component://common/widget/PortletEditForms.xml">

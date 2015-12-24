@@ -100,6 +100,7 @@ under the License.
             <actions>
                 <set field="noConditionFind" value="Y"/>
                 <set field="parameters.statusId" from-field="statusId"/>
+                <set field="isReduced" from-field="isReduced" default-value="false" type="Boolean" />                
             </actions>
             <widgets>
                 <screenlet title="${uiLabelMap.AccountingInvoicePayments}">
@@ -108,7 +109,6 @@ under the License.
             </widgets>
         </section>
     </screen>
-
     <screen name="NewPayment">
         <section>
             <actions>

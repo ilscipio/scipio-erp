@@ -453,10 +453,16 @@ under the License.
             </actions>
             <widgets>
             	<!-- <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific> -->  
-                <decorator-screen name="main-decorator-dashboard" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="main-decorator-dashboard" location="${parameters.mainDecoratorLocation}">                	
 					<decorator-section name="topLeft">
 						<screenlet title="${uiLabelMap.CommonRecentActivity}">
-							<include-screen name="ListPayments" location="component://accounting/widget/PaymentScreens.xml" />
+							<section>
+								<actions>
+									<set field="isReduced" value="true" type="Boolean" />
+									<set field="viewSize" value="10" />
+								</actions>
+								<widgets><include-screen name="ListPayments" location="component://accounting/widget/PaymentScreens.xml" /></widgets>
+							</section>
 						</screenlet>
 					</decorator-section>
 					<decorator-section name="topRight">

@@ -9452,6 +9452,9 @@
         <value xml:lang="zh_CN">接收到的</value>
         <value xml:lang="zh_TW">已接收</value>
     </property>
+    <property key="CommonRecentActivity">
+    	<value xml:lang="en">Recent Activity</value>
+    </property>
     <property key="CommonRed">
         <value xml:lang="ar">أحمر</value>
         <value xml:lang="cs">Červený</value>

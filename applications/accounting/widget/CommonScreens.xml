@@ -450,6 +450,8 @@ under the License.
         <section>
             <actions>
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+                <set field="isReduced" value="true" type="Boolean" />
+				<set field="viewSize" value="10" />
             </actions>
             <widgets>
             	<!-- <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific> -->  
@@ -457,10 +459,6 @@ under the License.
 					<decorator-section name="topLeft">
 						<screenlet title="${uiLabelMap.CommonRecentActivity}">
 							<section>
-								<actions>
-									<set field="isReduced" value="true" type="Boolean" />
-									<set field="viewSize" value="10" />
-								</actions>
 								<widgets><include-screen name="ListPayments" location="component://accounting/widget/PaymentScreens.xml" /></widgets>
 							</section>
 						</screenlet>
@@ -494,7 +492,7 @@ under the License.
 									<set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
 									<script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceReport.groovy"/>
 								</actions>
-								<widgets><include-portal-page id="ApPortalPage"/></widgets>
+								<widgets><include-screen name="ApPastDueInvoices" location="component://accounting/widget/ap/CommonScreens.xml" /></widgets>
 							</section>
 						</screenlet>
 					</decorator-section>				
@@ -506,7 +504,7 @@ under the License.
 									<set field="organizationPartyId" from-field="organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
 									<script location="component://accounting/webapp/accounting/WEB-INF/actions/invoice/InvoiceReport.groovy"/>
 								</actions>
-								<widgets><include-portal-page id="ArPortalPage"/></widgets>
+								<widgets><include-screen name="ArPastDueInvoices" location="component://accounting/widget/ar/CommonScreens.xml" /></widgets>
 							</section>							
 						</screenlet>
 					</decorator-section>

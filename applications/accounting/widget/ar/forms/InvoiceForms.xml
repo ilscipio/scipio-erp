@@ -46,11 +46,11 @@ under the License.
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
-        <field name="invoiceTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="InvoiceType"/></field>
+        <field name="invoiceTypeId" title="${uiLabelMap.CommonType}" use-when="isReduced==false"><display-entity entity-name="InvoiceType"/></field>
         <field name="invoiceDate"><display type="date"/></field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
-        <field name="description"><display/></field>
-        <field name="partyIdFrom">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="isReduced==false"><display-entity entity-name="StatusItem"/></field>
+        <field name="description" use-when="isReduced==false"><display/></field>
+        <field name="partyIdFrom" use-when="isReduced==false">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyNameResultFrom.fullName} [${partyIdFrom}]" target-type="inter-app">
                 <parameter param-name="partyId" from-field="partyIdFrom"/>
             </hyperlink>
@@ -60,8 +60,8 @@ under the License.
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
-        <field name="dueDate"><display type="date"/></field>
-        <field name="total" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
+        <field name="dueDate" use-when="isReduced==false"><display type="date"/></field>
+        <field name="total" widget-area-style="amount" title-area-style="align-right" use-when="isReduced==false"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
 

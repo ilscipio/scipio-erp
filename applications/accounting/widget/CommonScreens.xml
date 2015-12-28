@@ -64,77 +64,7 @@ under the License.
             </widgets>
         </section>
     </screen>
-    
-    
-    <screen name="main-decorator-dashboard">
-    	<section>
-    		<widgets>
-		    	<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-		             <decorator-section name="body">		             
-		                 <section>
-		                     <actions>
-		                     	<script location="component://common/webcommon/WEB-INF/actions/includes/cato/DashboardLayout.groovy" />                         
-		                     </actions>
-		                     <widgets>
-		                     	<screenlet title="${uiLabelMap.CommonDashboard}">		                     		
-		                     	
-		                     		<!-- <iterate-section entry="row" list="rowsList">		                     		
-		                     			<section>
-		                     				<widgets>
-		                     					<container style="row">			                     					
-		                     										
-		                     						<iterate-section entry="columns" list="columnsList" >
-		                     							<section>
-		                     								<widgets>
-		                     									<container style="large-6 columns">
-		                     										<label>column ==> ${column} row ==> ${row}</label>
-		                     									</container>		                     									
-		                     								</widgets>		                     							
-		                     							</section>		                     							
-		                     						</iterate-section>
-		                     					</container>
-		                     				</widgets>		                     				
-		                     			</section>
-		                     		</iterate-section> -->
-		                     		<platform-specific><html><html-template location="component://common/webcommon/includes/cato/dashboard.ftl"/></html></platform-specific>
-		                     	
-		                     	
-			                     	<!-- <container style="row">
-			                     		<container style="large-6 columns">
-				                        	<decorator-section-include name="${topLeft}"/>
-				                        </container>
-				                        <container style="large-6 columns">
-				                        	<decorator-section-include name="topRight"/>
-			                        	</container>
-			                        </container>
-			                        
-			                        <container style="row">
-			                     		<container style="large-6 columns">
-			                        		<decorator-section-include name="middelLeft"/>
-			                        	</container>
-			                     		<container style="large-6 columns">
-			                        		<decorator-section-include name="middleRight"/>
-			                        	</container>
-			                        </container>
-			                        
-			                        <container style="row">
-			                     		<container style="large-6 columns">
-			                        		<decorator-section-include name="bottomLeft"/>
-			                        	</container>					
-			                     		<container style="large-6 columns">
-			                        		<decorator-section-include name="bottomRight"/>
-			                        	</container>
-		                        	</container> -->
-		                        </screenlet>
-		                     </widgets>
-		                 </section>
-		             </decorator-section>
-		         </decorator-screen>
-	         </widgets>
-         </section>
-    </screen>
-    
-    
+ 
     <screen name="CommonAgreementDecorator">
         <section>
             <actions>
@@ -455,7 +385,7 @@ under the License.
             </actions>
             <widgets>
             	<!-- <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific> -->  
-                <decorator-screen name="main-decorator-dashboard" location="${parameters.mainDecoratorLocation}">                	
+                <decorator-screen name="main-decorator-dashboard" location="component://common/widget/CommonScreens.xml">                	
 					<decorator-section name="topLeft">
 						<screenlet title="${uiLabelMap.CommonRecentActivity}">
 							<section>

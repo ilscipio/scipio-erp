@@ -32,8 +32,9 @@ under the License.
         <field name="cacheName" title="${uiLabelMap.WebtoolsCacheName}" sort-field="true"><display/></field>
         <field name="cacheSize" title="${uiLabelMap.WebtoolsSize}" sort-field="true"><display/></field>
         <field name="hitCount" title="${uiLabelMap.WebtoolsHits}" sort-field="true"><display/></field>
+        <!-- Uncomment for further information
         <field name="misses" title="${uiLabelMap.WebtoolsMisses}" sort-field="true"><display description="${missCountTot}/${missCountNotFound}/${missCountExpired}/${missCountSoftRef}"/></field>
-        <field name="removes" title="${uiLabelMap.WebtoolsRemoves}" sort-field="true"><display description="${removeHitCount}/${removeMissCount}"/></field>
+        <field name="removes" title="${uiLabelMap.WebtoolsRemoves}" sort-field="true"><display description="${removeHitCount}/${removeMissCount}"/></field>-->
         <field name="maxInMemory" title="${uiLabelMap.WebtoolsMaxInMemory}" sort-field="true"><display/></field>
         <field name="expireTime" title="${uiLabelMap.WebtoolsExpireTime}" sort-field="true"><display/></field>
         <field name="useSoftReference" title="${uiLabelMap.WebtoolsUseSoftRef}" sort-field="true"><display/></field>

@@ -1,0 +1,79 @@
+package org.ofbiz.base.util;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+public class UtilRandom {
+
+	/**
+	 * Method should generate random number that represents a time between two
+	 * dates.
+	 * 
+	 * @return
+	 */
+	private static long getRandomTimeBetweenTwoDates(Timestamp beginDate, Map<String, Object> context) {
+		long beginTime, endTime;
+		Calendar cal = Calendar.getInstance();
+
+		if (context.get("maxDate") != null) {
+			endTime = ((Timestamp) context.get("endTime")).getTime();
+		} else {
+			endTime = cal.getTimeInMillis();
+		}
+
+		if (beginDate != null) {
+			beginTime = beginDate.getTime();
+		} else if (context.get("minDate") != null) {
+			beginTime = ((Timestamp) context.get("minDate")).getTime();
+		} else {
+			cal.add(Calendar.DATE, -180);
+			beginTime = cal.getTimeInMillis();
+		}
+		long diff = endTime - beginTime + 1;
+		beginTime = beginTime + (long) (Math.random() * diff);
+		return beginTime;
+	}
+
+	public static String generateRandomDate(Map<String, Object> context) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date randomDate = new Date(getRandomTimeBetweenTwoDates(null, context));
+		return dateFormat.format(randomDate);
+	}
+
+	public static String generateRandomDate(Date beginDate, Map<String, Object> context) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Date randomDate = new Date(getRandomTimeBetweenTwoDates(new Timestamp(beginDate.getTime()), context));
+		return dateFormat.format(randomDate);
+	}
+
+	public static int random(List myList) {
+		int size = myList.size();
+		int index = new Random().nextInt(size);
+		return index;
+	}
+
+	public static boolean getRandomBoolean() {
+		return Math.random() < 0.5;
+	}
+
+	public static int getRandomEvenInt(int min, int max) {
+		int x = getRandomInt(min, max);
+		while (x % 2 != 0) {
+			x = getRandomInt(min, max);
+		}
+		return x;
+	}
+
+	public static int getRandomInt(int min, int max) {
+		Random rand = new Random();
+		int x = rand.nextInt(max - min + 1) + min;
+		x = rand.nextInt(max - min + 1) + min;
+		return x;
+	}
+
+}

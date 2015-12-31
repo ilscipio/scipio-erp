@@ -2,6 +2,7 @@ import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
 import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.UtilRandom
 import org.ofbiz.base.util.UtilMisc
 import org.ofbiz.base.util.UtilProperties
 import org.ofbiz.entity.*
@@ -87,9 +88,9 @@ public Map createDemoTransaction() {
 		// Create AcctgTrans
 		String acctgTransId = "GEN_" + delegator.getNextSeqId("demo-acctgTransId");
 		// Create AcctgTransEntry (2,4,6)
-		int acctgTransEntryCount = getRandomEvenInt(2,6);		
+		int acctgTransEntryCount = UtilRandom.getRandomEvenInt(2,6);		
 		// Determine if it is an income or an expense
-		int incomeExpense = getRandomInt(1,2);
+		int incomeExpense = UtilRandom.getRandomInt(1,2);
 		
 		List<GenericValue> glAccounts = null;
 		for (int acctgTransEntrySeqId = 1; acctgTransEntrySeqId <= acctgTransEntryCount; acctgTransEntrySeqId++) {			
@@ -101,16 +102,16 @@ public Map createDemoTransaction() {
 				List<String> glAccountClassIdList = null;
 				if (incomeExpense == 1) {
 					keys = new ArrayList(glExpenseAccountClassIds.keySet());
-					index = random(keys);
+					index = UtilRandom.random(keys);
 					glAccountClassIdList = glExpenseAccountClassIds.get(keys.get(index));
 				} else {
 					keys = new ArrayList(glIncomeAccountClassIds.keySet());
-					index = random(keys);
+					index = UtilRandom.random(keys);
 					glAccountClassIdList = glIncomeAccountClassIds.get(keys.get(index));
 				}					
 				
-				amount = new BigDecimal(getRandomInt(10, 10000));
-				String glAccountId = glAccountClassIdList.get(random(glAccountClassIdList));
+				amount = new BigDecimal(UtilRandom.getRandomInt(10, 10000));
+				String glAccountId = glAccountClassIdList.get(UtilRandom.random(glAccountClassIdList));
 				
 				DynamicViewEntity dve = new DynamicViewEntity();
 				dve.addMemberEntity("GA", "GlAccount");
@@ -133,11 +134,11 @@ public Map createDemoTransaction() {
 		}
 		
 		// FIXME: This may be inconsistent with the GlAccount selected, it may affect the accuracy of some reports
-		String acctgTransTypeId = acctgTransTypeIds.get(random(acctgTransTypeIds)); 
+		String acctgTransTypeId = acctgTransTypeIds.get(UtilRandom.random(acctgTransTypeIds)); 
 		String description = "Demo Transaction " + acctgTransId;		
-		Timestamp transactionDate = Timestamp.valueOf(generateRandomDate());
+		Timestamp transactionDate = Timestamp.valueOf(UtilRandom.generateRandomDate(context));
 		isPosted = "Y";
-		postedDate =  Timestamp.valueOf(generateRandomDate(transactionDate));
+		postedDate =  Timestamp.valueOf(UtilRandom.generateRandomDate(transactionDate, context));
 		glFiscalTypeId = "ACTUAL";
 		 
 		Map fields = UtilMisc.toMap("acctgTransId", acctgTransId, "acctgTransTypeId", acctgTransTypeId, "description", description, "transactionDate", transactionDate,
@@ -160,73 +161,4 @@ public Map createDemoTransaction() {
 	}
 	
 	return result;
-}
-
-/**
- * Method should generate random number that represents
- * a time between two dates.
- *
- * @return
- */
-private long getRandomTimeBetweenTwoDates (Timestamp beginDate) {
-	long beginTime,endTime;
-	Calendar cal = Calendar.getInstance();
-	
-	if(context.maxDate != null){
-		endTime = ((Timestamp)context.endTime).getTime();
-	}else{
-		endTime = cal.getTimeInMillis();
-	}
-		
-	if(beginDate != null){
-		beginTime = beginDate.getTime();
-	} else if (context.minDate != null) {
-		beginTime = ((Timestamp)context.minDate).getTime();
-	} else {
-		cal.add(Calendar.DATE, -180);
-		beginTime = cal.getTimeInMillis();
-	}
-	long diff = endTime - beginTime + 1;
-	beginTime = beginTime + (long) (Math.random() * diff);
-	return beginTime;
-}
-
-
-
-public String generateRandomDate() {
-	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-	Date randomDate = new Date(getRandomTimeBetweenTwoDates(null));
-	return dateFormat.format(randomDate);
-}
-
-public String generateRandomDate(Date beginDate) {
-	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-	Date randomDate = new Date(getRandomTimeBetweenTwoDates(beginDate));
-	return dateFormat.format(randomDate);
-}
-
-
-public int random(List myList) {	
-	int size = myList.size();
-	int index = new Random().nextInt(size);
-	return index;
-}
-
-public static boolean getRandomBoolean() {
-	return Math.random() < 0.5;
-}
-
-public static int getRandomEvenInt(int min, int max) {
-	int x = getRandomInt(min, max);
-	while (x % 2 != 0) {
-		x =  getRandomInt(min, max);
-	}
-	return x;
-}
-
-public static int getRandomInt(int min, int max) {
-	Random rand = new Random();
-	int x = rand.nextInt(max - min + 1) + min;
-	x = rand.nextInt(max - min + 1) + min;	
-	return x;
 }

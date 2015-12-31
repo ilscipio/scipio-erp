@@ -23,6 +23,7 @@ import java.util.Map;
 
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilRandom;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.*;
@@ -57,16 +58,16 @@ public Map createDemoOrder() {
 		// Create OrderHeader
 		String orderId = "GEN_"+delegator.getNextSeqId("demo-orderheader");
 		// Create OrderItem (between 1 and 3)
-		int orderItemCount = getRandomInt(1,3);
+		int orderItemCount = UtilRandom.getRandomInt(1,3);
 		BigDecimal remainingSubTotal = new BigDecimal(0.00);
 		BigDecimal grandTotal = new BigDecimal(0.00);
 		
 		for(int orderItemSeqId = 1; orderItemSeqId <= orderItemCount; orderItemSeqId++){
-			Map product = products[getRandomInt(0,products.size()-1)];
+			Map product = products[UtilRandom.getRandomInt(0,products.size()-1)];
 			
 			String productId = product.productId;
 			String prodCatalogId="DemoCatalog";
-			BigDecimal quantity = new BigDecimal(getRandomInt(0,10));
+			BigDecimal quantity = new BigDecimal(UtilRandom.getRandomInt(0,10));
 			BigDecimal unitPrice= new BigDecimal(product.unitPrice);
 			BigDecimal unitListPrice= new BigDecimal(product.unitListPrice);
 			BigDecimal selectedAmount = new BigDecimal(0.0);
@@ -84,11 +85,11 @@ public Map createDemoOrder() {
 			orderItems.add(orderItem);
 		}
 		
-		String orderTypeId = orderTypes.get(random(orderTypes));
+		String orderTypeId = orderTypes.get(UtilRandom.random(orderTypes));
 		String orderName="Demo Order";
 		String salesChannelEnumId = "UNKNWN_SALES_CHANNEL";
-		Timestamp orderDate = Timestamp.valueOf(generateRandomDate());
-		String statusId = orderStatusTypes.get(random(orderStatusTypes));
+		Timestamp orderDate = Timestamp.valueOf(UtilRandom.generateRandomDate(context));
+		String statusId = orderStatusTypes.get(UtilRandom.random(orderStatusTypes));
 		Map fields = UtilMisc.toMap("orderId", orderId,"orderTypeId",orderTypeId,"orderName",orderName,"salesChannelEnumId",
 									salesChannelEnumId,"orderDate",orderDate,"priority","2","entryDate",orderDate,"statusId",statusId,
 									"currencyUom","USD","webSiteId","OrderEntry","remainingSubTotal",remainingSubTotal,"grandTotal",grandTotal);
@@ -125,7 +126,7 @@ public Map createDemoOrder() {
 		GenericValue orderStatus = delegator.makeValue("OrderStatus", fields);
 		toBeStored.add(orderStatus);
 		
-		if(getRandomBoolean()==true){
+		if(UtilRandom.getRandomBoolean()==true){
 		orderStatusId = "GEN_"+delegator.getNextSeqId("demo-orderstatusid");
 		fields = UtilMisc.toMap("orderId", orderId,"orderStatusId",orderStatusId,"statusId","ORDER_COMPLETED",
 								"statusDatetime",orderDate,"statusUserLogin","admin");
@@ -146,54 +147,3 @@ public Map createDemoOrder() {
 	
 	return result;
 }
-
-/**
- * Method should generate random number that represents
- * a time between two dates.
- *
- * @return
- */
-private long getRandomTimeBetweenTwoDates () {
-	long beginTime,endTime;
-	Calendar cal = Calendar.getInstance();
-	
-	if(context.maxDate != null){
-		endTime = ((Timestamp)context.endTime).getTime();
-	}else{
-		endTime = cal.getTimeInMillis();
-	}
-		
-	if(context.minDate != null){
-		beginTime = ((Timestamp)context.minDate).getTime();
-	}else{
-		cal.add(Calendar.DATE, -180);
-		beginTime = cal.getTimeInMillis();
-	}
-	long diff = endTime - beginTime + 1;
-	beginTime = beginTime + (long) (Math.random() * diff);
-	return beginTime;
-}
-
-
-
-public String generateRandomDate() {
-	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-	Date randomDate = new Date(getRandomTimeBetweenTwoDates());
-	return dateFormat.format(randomDate);
-}
-
-public int random(List myList){
-	int size = myList.size();
-	int index = new Random().nextInt(size);
-	return index;
-}
-
-public static boolean getRandomBoolean() {
-	return Math.random() < 0.5;
-}
-
-public static int getRandomInt(int min, int max) {
-		Random rand = new Random();
-		int x = rand.nextInt(max - min + 1) + min;
-		return x;
-	}

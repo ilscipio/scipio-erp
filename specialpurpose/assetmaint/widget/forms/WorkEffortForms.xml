@@ -202,4 +202,86 @@
         <field name="fixedAssetId"><hidden/></field>
         <field name="maintHistSeqId"><hidden/></field>
     </form>
+    
+    <!-- Cato: -->
+    <form name="WorkEffortAssignedTasks" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="tasks">
+    	<actions>
+		   <service service-name="getWorkEffortAssignedTasks"></service>
+    	</actions>
+    	<row-actions>
+    		<!-- <entity-and list="wefa" entity-name="WorkEffortFixedAssetAssign" use-cache="true">
+    			<field-map field-name="workEffortId" from-field="workEffortId"/>
+    			<field-map field-name="fromDate" from-field="createdDate"/>    			
+    		</entity-and> -->
+    		<entity-one value-field="statusItem" entity-name="StatusItem" use-cache="true">
+    			<field-map field-name="statusId" from-field="currentStatusId"/>
+    		</entity-one>
+    		<!-- <set field="" /> -->
+    	</row-actions>
+    	<field name="createdDate" field-name="createdDate"><display type="date"/></field>
+    	<field name="assetName" field-name="assetName"><display/></field>
+    	<field name="maintenanceType" field-name="maintenanceType"><display/></field>
+    	<field name="partyId" field-name="partyId"><display/></field>
+    	<field name="statusId" map-name="statusItem" entry-name="description"><display/></field>
+    </form>
+    <form name="WorkEffortCompletedTasks" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="tasks">
+    	<actions>
+		   <service service-name="getWorkEffortCompletedTasks"></service>
+    	</actions>
+    	<row-actions>
+    		<!-- <entity-and list="wefa" entity-name="WorkEffortFixedAssetAssign" use-cache="true">
+    			<field-map field-name="workEffortId" from-field="workEffortId"/>
+    			<field-map field-name="fromDate" from-field="createdDate"/>    			
+    		</entity-and>-->
+    		<entity-one value-field="statusItem" entity-name="StatusItem" use-cache="true">
+    			<field-map field-name="statusId" from-field="currentStatusId"/>
+    		</entity-one>
+    		<!-- <set field="" /> -->
+    	</row-actions>
+    	<field name="createdDate" field-name="createdDate"><display type="date"/></field>
+    	<field name="assetName" field-name="assetName"><display/></field>
+    	<field name="maintenanceType" field-name="maintenanceType"><display/></field>
+    	<field name="partyId" field-name="partyId"><display/></field>
+    	<field name="statusId" map-name="statusItem" entry-name="description"><display/></field>
+    </form>
+    <form name="WorkEffortAssignedActivities" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="activities">
+    	<actions>
+		   <service service-name="getWorkEffortAssignedActivities"></service>
+    	</actions>
+    	<row-actions>
+    		<!-- <entity-and list="wefa" entity-name="WorkEffortFixedAssetAssign" use-cache="true">
+    			<field-map field-name="workEffortId" from-field="workEffortId"/>
+    			<field-map field-name="fromDate" from-field="createdDate"/>    			
+    		</entity-and>-->
+    		<entity-one value-field="statusItem" entity-name="StatusItem" use-cache="true">
+    			<field-map field-name="statusId" from-field="currentStatusId"/>
+    		</entity-one>
+    		<!-- <set field="" /> -->
+    	</row-actions>
+    	<field name="createdDate" field-name="createdDate"><display type="date"/></field>
+    	<field name="assetName" field-name="assetName"><display/></field>
+    	<field name="maintenanceType" field-name="maintenanceType"><display/></field>
+    	<field name="partyId" field-name="partyId"><display/></field>
+    	<field name="statusId" map-name="statusItem" entry-name="description"><display/></field>
+    </form>
+    <form name="WorkEffortCompletedActivities" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="activities">
+    	<actions>
+		   <service service-name="getWorkEffortCompletedActivities"></service>
+    	</actions>
+    	<row-actions>
+    		<!-- <entity-and list="wefa" entity-name="WorkEffortFixedAssetAssign" use-cache="true">
+    			<field-map field-name="workEffortId" from-field="workEffortId"/>
+    			<field-map field-name="fromDate" from-field="createdDate"/>    			
+    		</entity-and> -->
+    		<entity-one value-field="statusItem" entity-name="StatusItem" use-cache="true">
+    			<field-map field-name="statusId" from-field="currentStatusId"/>
+    		</entity-one>
+    		<!-- <set field="" /> -->
+    	</row-actions>
+    	<field name="createdDate" field-name="createdDate"><display type="date"/></field>
+    	<field name="assetName" field-name="assetName"><display/></field>
+    	<field name="maintenanceType" field-name="maintenanceType"><display/></field>
+    	<field name="partyId" field-name="partyId"><display/></field>
+    	<field name="statusId" map-name="statusItem" entry-name="description"><display/></field>
+    </form>
 </forms>

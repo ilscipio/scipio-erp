@@ -20,6 +20,50 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
+        
+	<screen name="main">
+        <section>
+            <actions>
+                <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
+				<set field="viewSize" value="10" />
+				<set field="now" value="${groovy:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
+				<set field="fromDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.getWeekStart(now)}" global="true"/>
+            </actions>
+            <widgets>
+            	<!-- <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific> -->  
+                <decorator-screen name="main-decorator-dashboard" location="component://common/widget/CommonScreens.xml">                	
+					<decorator-section name="topLeft">					
+						<screenlet title="${uiLabelMap.WorkEffortAssignedTasks}">
+							<section>								
+								<widgets><include-form name="WorkEffortAssignedTasks" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/></widgets>
+							</section>
+						</screenlet>
+					</decorator-section>
+					<decorator-section name="topRight">
+						<screenlet title="${uiLabelMap.WorkEffortCompletedTasks}">    
+		                	<section>								
+								<widgets><include-form name="WorkEffortCompletedTasks" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/></widgets>
+							</section>
+						</screenlet>
+					</decorator-section>					
+					<decorator-section name="bottomLeft">					
+						<screenlet title="${uiLabelMap.WorkEffortAssignedActivities}">						
+							<section>								
+								<widgets><include-form name="WorkEffortAssignedActivities" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/></widgets>
+							</section>
+						</screenlet>
+					</decorator-section>
+					<decorator-section name="bottomRight">
+						<screenlet title="${uiLabelMap.WorkEffortCompletedActivities}">    
+		                	<section>								
+								<widgets><include-form name="WorkEffortCompletedActivities" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/></widgets>
+							</section>
+						</screenlet>
+					</decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
     <screen name="CommonFixedAssetMaintDecorator">
         <section>

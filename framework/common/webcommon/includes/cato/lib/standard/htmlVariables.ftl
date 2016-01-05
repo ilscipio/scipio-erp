@@ -205,9 +205,10 @@
       * if the static text implies a navigation link that will not change the state of the system or perform any function, 
         and simply meant to navigate, it probably belongs as a link_nav (alternatively: convert to @menu)
         * if very long or complex, use link_nav_long.
+      * 2016-01-04: there are now more specific link_action_xxx categories. always prefer them to link_action where applicable.
       * TODO: CLARIFY: if the text is a "View" action, it is mostly ambiguous whether it belongs more 
         as a link_action or as link_nav. many of them are currently labeled as link_action.
-      * TODO: a single link_action may be too generic, may need to specialize it
+
       
     record identifiers and sorting fields:
       * if the text is a simple single record (entity) id, name, date, or other record identifier, use link_record_id, link_record_name, link_record_date,
@@ -223,8 +224,27 @@
   -->
     "link_action" : "button tiny",  <#-- action link: "Add", "Edit", "Remove", "Cancel", "Export as PDF", "Edit: WS10000", etc. not necessarily a verb, action may be implied, but should be an action. usually static text. 
                                          this may overlap with link_nav, but usually there is one more appropriate than the other.
-                                         if it's a static action like "View", somewhat ambiguous (TODO: clarify) -->
+                                         if it's a static action like "View", somewhat ambiguous (TODO: clarify)
+                                         always prefer the more precise sub-categories below... -->
     "link_action_long" : "",        <#-- a very long (more than 20-30 chars) or complex/non-static action text: "Add Content Repository For Order Removal: WS100000" -->
+    "link_action_new" : "button tiny",      <#-- new item action link: "Create", "New", etc. -->
+    "link_action_new_long" : "",
+    "link_action_edit" : "button tiny",     <#-- edit item action link: "Update", "Edit", "Modify", etc. -->
+    "link_action_edit_long" : "",
+    "link_action_delete" : "button tiny",   <#-- delete item action link: "Delete", "Remove", etc. -->
+    "link_action_delete_long" : "",
+    "link_action_find" : "button tiny",     <#-- find action link: "Find", "Search", "Lookup", etc. -->
+    "link_action_find_long" : "",
+    "link_action_select" : "button tiny",   <#-- select action link: "Select", "Choose", "Pick", etc. -->
+    "link_action_select_long" : "",
+    "link_action_view" : "button tiny",     <#-- view item action link: "Delete", "Remove", etc. -->
+    "link_action_view_long" : "",
+    "link_action_download" : "button tiny", <#-- download action link: "Download", "Stream", "Export", etc. -->
+    "link_action_download_long" : "",
+    "link_action_apply" : "button tiny",    <#-- apply action link: "Apply", "Save", "Run", "Submit", "Set", "Send", "Start", etc. -->
+    "link_action_apply_long" : "",
+    "link_action_cancel" : "button tiny",   <#-- cancel action link: "Cancel", "Close", "Stop", etc. -->
+    "link_action_cancel_long" : "", 
     "link_nav" : "button tiny",     <#-- static navigation text without explicit action or implied "view" action, generic, not part of a menu type (see menu_xxx styles above): "Categories" 
                                          sometimes this is ambiguous with link_action (?). if links to an action that will change the state of the system directly or indirectly, should be link_action. 
                                          if simply browsing or view action, link_nav is more appropriate, though many times will fall under another

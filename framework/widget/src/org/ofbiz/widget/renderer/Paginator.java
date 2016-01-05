@@ -25,6 +25,7 @@ import java.util.NoSuchElementException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilGenerics;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityListIterator;
@@ -38,6 +39,12 @@ import org.ofbiz.widget.model.ModelForm;
 public final class Paginator {
 
     public static final String module = Paginator.class.getName();
+    
+    /**
+     * Cato: Static default view size. Do not use this; call {@link #getViewSizeOverride()} instead.
+     */
+    public static final int DEFAULT_VIEW_SIZE_OVERRIDE = 10;
+    
 
     public static int getActualPageSize(Map<String, Object> context) {
         Integer value = (Integer) context.get("actualPageSize");
@@ -158,9 +165,65 @@ public final class Paginator {
         } catch (Exception e) {
             Debug.logWarning(e, "Error getting paginate view size: " + e.toString(), module);
         }
-        return viewSize;
+        // Cato: pass this through a final evaluation function
+        //return viewSize;
+        Boolean prioViewSize = (Boolean) context.get(ModelForm.DEFAULT_PRIO_PAG_SIZE_FIELD);
+        return getFinalViewSize(viewSize, prioViewSize);
     }
 
+    /**
+     * Cato: Decides what the final view size should be after all other selections have been
+     * made. Factors out the final view size selection logic.
+     * 
+     * @param viewSize the tentative view size determined by caller
+     * @param prioViewSize caller may request his view size to have priority
+     */
+    public static int getFinalViewSize(Integer viewSize, Boolean prioViewSize) {
+        if (viewSize == null) {
+            viewSize = -1;
+        }
+        if (prioViewSize == null) {
+            prioViewSize = false;
+        }
+        String sysDefaultMode = UtilProperties.getPropertyValue("widget.properties", "widget.form.overrideViewSize.mode", "disabled");
+        if ("force".equals(sysDefaultMode)) {
+            // here, disregard prioViewSize, always use sys default
+            return getViewSizeOverride();
+        }
+        else if ("prefer".equals(sysDefaultMode)) {
+            // here we honor prioViewSize, but if not requested, we prefer the default
+            if (prioViewSize) {
+                if (viewSize > 0) {
+                    return viewSize;
+                }
+                else {
+                    return getViewSizeOverride();
+                }
+            }
+            else {
+                return getViewSizeOverride();
+            }
+        }
+        else if ("fallback".equals(sysDefaultMode)) {
+            if (viewSize > 0) {
+                return viewSize;
+            }
+            else {
+                return getViewSizeOverride();
+            }
+        }
+        else {
+            return viewSize;
+        }
+    }
+    
+    /**
+     * Cato: Gets system default override view size.
+     */
+    public static int getViewSizeOverride() {
+        return UtilProperties.getPropertyAsInteger("widget.properties", "widget.form.overrideViewSize", DEFAULT_VIEW_SIZE_OVERRIDE);
+    }
+    
     public static void preparePager(ModelForm modelForm, Map<String, Object> context) {
 
         String lookupName = modelForm.getListName();

@@ -231,8 +231,8 @@
     "link_action_new_long" : "",
     "link_action_edit" : "button tiny",     <#-- edit item action link: "Update", "Edit", "Modify", etc. -->
     "link_action_edit_long" : "",
-    "link_action_delete" : "button tiny",   <#-- delete item action link: "Delete", "Remove", etc. -->
-    "link_action_delete_long" : "",
+    "link_action_remove" : "button tiny",   <#-- remove item action link: "Delete", "Remove", etc. -->
+    "link_action_remove_long" : "",
     "link_action_find" : "button tiny",     <#-- find action link: "Find", "Search", "Lookup", etc. -->
     "link_action_find_long" : "",
     "link_action_select" : "button tiny",   <#-- select action link: "Select", "Choose", "Pick", etc. -->

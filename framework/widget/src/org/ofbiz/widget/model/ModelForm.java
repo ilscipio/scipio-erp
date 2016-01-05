@@ -94,7 +94,6 @@ public abstract class ModelForm extends ModelWidget {
     public static int MAX_PAGE_SIZE = 10000;
     public static String DEFAULT_PAG_INDEX_FIELD = "viewIndex";
     public static String DEFAULT_PAG_SIZE_FIELD = "viewSize";
-    public static String DEFAULT_PRIO_PAG_SIZE_FIELD = "prioViewSize";  // Cato: new boolean to indicate code wants piority view size
     public static String DEFAULT_PAG_STYLE = "nav-pager";
     public static String DEFAULT_PAG_FIRST_STYLE = "nav-first";
     public static String DEFAULT_PAG_PREV_STYLE = "nav-previous";

@@ -451,10 +451,7 @@ menu item element must override this and provide a proper check.
    listSize        = size of the list in total
    viewIndex       = page currently displayed
    viewSize        = maximum number of items displayed. NOTE: this should be decided earlier in rendering (data prep)
-                     and a valid value MUST be passed, unless paging disabled somehow.
-   prioViewSize    = default false; if true, the passed view size will be strongly preferred; if false, the implementation
-                     may use a system default instead of the passed view size.
-                     whether this is considered depends on the global sys paginate.viewSize.default.mode property.
+                     and a valid value MUST be passed.
    altParam        = Use viewIndex/viewSize as parameters, instead of VIEW_INDEX / VIEW_SIZE
    forcePost       = Always use POST for non-ajax browsing (note: even if false, large requests are coerced to POST)
    paramStr        = Extra URL parameters in string format, escaped (param1=val1&amp;param2=val2)
@@ -494,8 +491,6 @@ menu item element must override this and provide a proper check.
   <#if (viewSize <= 0)>
     <#local viewSize = (getPropertyValueOrNull("widget.properties", "widget.form.defaultViewSize")!1)?number>
   </#if>
-  <#-re-evaluate the view size with a global decision ->
-  <#local viewSize = Static["org.ofbiz.widget.renderer.Paginator"].getFinalViewSize(viewSize, prioViewSize)>
   -->
   
   <#local viewIndexLast = viewIndexFirst + ((listSize/viewSize)?ceiling-1)>

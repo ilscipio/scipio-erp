@@ -159,10 +159,7 @@ public final class Paginator {
         } catch (Exception e) {
             Debug.logWarning(e, "Error getting paginate view size: " + e.toString(), module);
         }
-        // Cato: pass this through a final evaluation function
-        //return viewSize;
-        Boolean prioViewSize = (Boolean) context.get(ModelForm.DEFAULT_PRIO_PAG_SIZE_FIELD);
-        return org.ofbiz.webapp.PaginateUtil.processViewSizeOverride(viewSize, prioViewSize);
+        return viewSize;
     }
     
     public static void preparePager(ModelForm modelForm, Map<String, Object> context) {

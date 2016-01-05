@@ -960,7 +960,8 @@ standard markup.
     <#global catoFieldNoContainerChildren = {
      <#-- "submit":true -->   <#-- only if parent is submitarea (below) -->
       "radio":true,
-      "checkbox":true
+      "checkbox":true,
+      "option":true
     }>
     <#global catoFieldNoContainerParent = {
       "submitarea":true

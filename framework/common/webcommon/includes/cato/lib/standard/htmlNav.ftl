@@ -450,7 +450,8 @@ menu item element must override this and provide a proper check.
                        "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
    listSize        = size of the list in total
    viewIndex       = page currently displayed
-   viewSize        = maximum number of items displayed
+   viewSize        = maximum number of items displayed. NOTE: this should be decided earlier in rendering (data prep)
+                     and a valid value MUST be passed, unless paging disabled somehow.
    prioViewSize    = default false; if true, the passed view size will be strongly preferred; if false, the implementation
                      may use a system default instead of the passed view size.
                      whether this is considered depends on the global sys paginate.viewSize.default.mode property.
@@ -465,7 +466,7 @@ menu item element must override this and provide a proper check.
 -->
 <#assign paginate_defaultArgs = {
   "mode":"single", "type":"default", "layout":"default", "noResultsMode":"default", "paginateOn":true, "url":"", "class":"", 
-  "viewIndex":0, "listSize":0, "viewSize":1, "prioViewSize":false, "altParam":false, 
+  "viewIndex":0, "listSize":0, "viewSize":-1, "prioViewSize":false, "altParam":false, 
   "forcePost":false, "paramStr":"", "viewIndexFirst":0, "showCount":true, "countMsg":"",
   "paginateToggle":false, "paginateToggleString":"", "paginateToggleOnValue":"Y", "paginateToggleOffValue":"N", "passArgs":{}
 }>
@@ -479,14 +480,23 @@ menu item element must override this and provide a proper check.
     <#local viewSize = viewSize?number>
   </#if>
   <#local viewSize = viewSize?floor>
+  <#if (viewSize <= 0)>
+    <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was a positive number: " + viewSize!, "htmlUtilitiesPaginate")!>
+    <#local viewSize = 1>
+  </#if>  
   <#if (!viewIndex?is_number)>
     <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewIndex was not a number type: " + viewIndex!, "htmlUtilitiesPaginate")!>
     <#local viewIndex = viewIndex?number>
   </#if>
   <#local viewIndex = viewIndex?floor>
   
-  <#-- 2016-01-04: re-evaluate the view size with a global decision -->
+  <#-- these were an error on my part, do NOT do this; the view size should be decided and final earlier than rendering.
+  <#if (viewSize <= 0)>
+    <#local viewSize = (getPropertyValueOrNull("widget.properties", "widget.form.defaultViewSize")!1)?number>
+  </#if>
+  <#-re-evaluate the view size with a global decision ->
   <#local viewSize = Static["org.ofbiz.widget.renderer.Paginator"].getFinalViewSize(viewSize, prioViewSize)>
+  -->
   
   <#local viewIndexLast = viewIndexFirst + ((listSize/viewSize)?ceiling-1)>
   <#if (viewIndexLast < viewIndexFirst)>
@@ -786,6 +796,7 @@ menu item element must override this and provide a proper check.
           </#if>
           <div class="${styles.grid_large!}2 ${styles.grid_cell!}">
             <#if javaScriptEnabled>
+              <#-- 2016-01-05: unwanted view size control is now disabled (see widget.properties for view size settings)
                 <#local actionStr>onchange="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxSelectSizeUrl}')<#else><#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectSizeUrl}')</#if>"</#local>
                 <div class="${styles.grid_row!}">
                     <div class="${styles.grid_large!}6 ${styles.grid_cell!}">
@@ -805,6 +816,7 @@ menu item element must override this and provide a proper check.
                         </select>
                     </div>
                 </div>
+              -->
                 
               <#if paginateToggle>
                 <div class="${styles.grid_row!}">

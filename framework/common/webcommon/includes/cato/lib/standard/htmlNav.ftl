@@ -451,6 +451,9 @@ menu item element must override this and provide a proper check.
    listSize        = size of the list in total
    viewIndex       = page currently displayed
    viewSize        = maximum number of items displayed
+   prioViewSize    = default false; if true, the passed view size will be strongly preferred; if false, the implementation
+                     may use a system default instead of the passed view size.
+                     whether this is considered depends on the global sys paginate.viewSize.default.mode property.
    altParam        = Use viewIndex/viewSize as parameters, instead of VIEW_INDEX / VIEW_SIZE
    forcePost       = Always use POST for non-ajax browsing (note: even if false, large requests are coerced to POST)
    paramStr        = Extra URL parameters in string format, escaped (param1=val1&amp;param2=val2)
@@ -461,9 +464,10 @@ menu item element must override this and provide a proper check.
                      (specify current state with paginateOn and tweak using paginateToggle* arguments)
 -->
 <#assign paginate_defaultArgs = {
-    "mode":"single", "type":"default", "layout":"default", "noResultsMode":"default", "paginateOn":true, "url":"", "class":"", "viewIndex":0, "listSize":0, "viewSize":1, "altParam":false, 
-    "forcePost":false, "paramStr":"", "viewIndexFirst":0, "showCount":true, "countMsg":"",
-    "paginateToggle":false, "paginateToggleString":"", "paginateToggleOnValue":"Y", "paginateToggleOffValue":"N", "passArgs":{}
+  "mode":"single", "type":"default", "layout":"default", "noResultsMode":"default", "paginateOn":true, "url":"", "class":"", 
+  "viewIndex":0, "listSize":0, "viewSize":1, "prioViewSize":false, "altParam":false, 
+  "forcePost":false, "paramStr":"", "viewIndexFirst":0, "showCount":true, "countMsg":"",
+  "paginateToggle":false, "paginateToggleString":"", "paginateToggleOnValue":"Y", "paginateToggleOffValue":"N", "passArgs":{}
 }>
 <#macro paginate args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.paginate_defaultArgs)>
@@ -480,6 +484,9 @@ menu item element must override this and provide a proper check.
     <#local viewIndex = viewIndex?number>
   </#if>
   <#local viewIndex = viewIndex?floor>
+  
+  <#-- 2016-01-04: re-evaluate the view size with a global decision -->
+  <#local viewSize = Static["org.ofbiz.widget.renderer.Paginator"].getFinalViewSize(viewSize, prioViewSize)>
   
   <#local viewIndexLast = viewIndexFirst + ((listSize/viewSize)?ceiling-1)>
   <#if (viewIndexLast < viewIndexFirst)>

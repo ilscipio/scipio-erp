@@ -2982,6 +2982,22 @@
         <value xml:lang="zh">显示${lowCount} - ${highCount}，共${total}</value>
         <value xml:lang="zh_TW">顯示${lowCount} - ${highCount},共${total}</value>
     </property>
+    <property key="CommonDisplayingShort"> <!-- Cato: new -->
+        <value xml:lang="ar">${lowCount} إلى ${highCount} من ${total}</value>
+        <value xml:lang="cs">${lowCount} - ${highCount} z ${total}</value>
+        <value xml:lang="de">${lowCount} - ${highCount} von ${total}</value>
+        <value xml:lang="en">${lowCount} - ${highCount} of ${total}</value>
+        <value xml:lang="es">${lowCount} - ${highCount} de ${total}</value>
+        <value xml:lang="fr">${lowCount} à ${highCount} sur ${total}</value>
+        <value xml:lang="hi_IN">${lowCount} - ${highCount} का ${total} </value>
+        <value xml:lang="it">${lowCount} a ${highCount} su ${total}</value>
+        <value xml:lang="ja">${lowCount} - ${highCount} / ${total}</value>
+        <value xml:lang="pt_BR">${lowCount} - ${highCount} de ${total}</value>
+        <value xml:lang="ru">${lowCount} - ${highCount} of ${total} </value>
+        <value xml:lang="vi">${lowCount} - ${highCount} của ${total}</value>
+        <value xml:lang="zh">${lowCount} - ${highCount}，共${total}</value>
+        <value xml:lang="zh_TW">${lowCount} - ${highCount},共${total}</value>
+    </property>
     <property key="CommonDistance">
         <value xml:lang="ar">مسافة</value>
         <value xml:lang="cs">Vzdálenost</value>

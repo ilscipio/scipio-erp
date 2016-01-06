@@ -955,22 +955,11 @@ standard markup.
   <#-- the widgets do this now
   <#local class = compileClassArg(class)>-->
     
-  <#if !catoFieldNoContainerChildren??>
-    <#-- FIXME: these should be unhardcoded into styles hash -->
-    <#global catoFieldNoContainerChildren = {
-     <#-- "submit":true -->   <#-- only if parent is submitarea (below) -->
-      "radio":true,
-      "checkbox":true,
-      "option":true
-    }>
-    <#global catoFieldNoContainerParent = {
-      "submitarea":true
-    }>
-  </#if>
   <#if !container?is_boolean>
     <#if container?has_content>
       <#local container = container?boolean>
-    <#elseif isChildField && (catoFieldNoContainerChildren[type]?? || catoFieldNoContainerParent[parentFieldInfo.type!]??)>
+    <#elseif isChildField && (((styles.field_type_nocontainer_whenchild[type])!false) || 
+      ((styles.field_type_nocontainer_whenhasparent[parentFieldInfo.type!])!false))>
       <#local container = false>
     <#else> 
       <#local container = true>

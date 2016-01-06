@@ -540,6 +540,21 @@
         "default": "other"
     },
     
+    <#-- field types that should not get containers when they are children of other fields, by default -->
+    "field_type_nocontainer_whenchild" : {
+        <#-- "submit":true -->   <#-- only if parent is submitarea (below) -->
+        "radio":true,
+        "checkbox":true,
+        "option":true
+    },
+    
+    <#-- field types that when a child field has as parent, the child should not get a container, by default
+        (in other words this parent's children should not get containers, by default) -->
+    "field_type_nocontainer_whenhasparent" : {
+        "submitarea":true
+    },
+    
+    
     <#-- Form type to @table type maps -->
     "form_type_tabletypes_ofbiz" : {
         "list": "data-list",

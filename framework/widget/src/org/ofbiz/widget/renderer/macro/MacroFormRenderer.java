@@ -2369,6 +2369,10 @@ public final class MacroFormRenderer implements FormStringRenderer {
             Map<String, Integer> messageMap = UtilMisc.toMap("lowCount", Integer.valueOf(lowIndex + 1), "highCount", Integer.valueOf(lowIndex + actualPageSize), "total", Integer.valueOf(listSize));
             commonDisplaying = UtilProperties.getMessage("CommonUiLabels", "CommonDisplaying", messageMap, (Locale) context.get("locale"));
         }
+        
+        // Cato: realHighIndex needed for macro
+        int realHighIndex = Integer.valueOf(lowIndex + actualPageSize);
+        
         // for legacy support, the viewSizeParam is VIEW_SIZE and viewIndexParam is VIEW_INDEX when the fields are "viewSize" and "viewIndex"
         if (viewIndexParam.equals("viewIndex" + "_" + paginatorNumber))
             viewIndexParam = "VIEW_INDEX" + "_" + paginatorNumber;
@@ -2594,6 +2598,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(Boolean.toString(paginate));
         sr.append(" lowIndex=");
         sr.append(Integer.toString(lowIndex));
+        sr.append(" realHighIndex=");
+        sr.append(Integer.toString(realHighIndex));
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }

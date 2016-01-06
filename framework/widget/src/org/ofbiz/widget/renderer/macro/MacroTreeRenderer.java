@@ -106,8 +106,8 @@ public class MacroTreeRenderer implements TreeStringRenderer {
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
-            Map<String, Object> input = UtilMisc.toMap("key", null);
-            contextHandler.populateInitialContext(writer, input);
+            // Cato: custom render context
+            Map<String, Object> input = contextHandler.createRenderContext(writer, null, UtilMisc.toMap("key", null));
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
         }

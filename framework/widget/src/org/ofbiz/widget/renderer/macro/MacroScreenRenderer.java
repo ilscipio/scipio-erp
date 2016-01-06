@@ -139,34 +139,58 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         }
         
         /**
-         * Populates a target context destined as source for data model for a new Environment.
+         * Creates a new context as source for data model for a new Environment, populated with given
+         * initial values, in addition to anything we deem needed.
+         * <p>
+         * FIXME?: This does not handle the real, "current" context. To minimize intrusive changes
+         * we currently (still) try to emulate as best as possible using an initial context.
+         * otherwise have to rewrite nearly all renderer methods (may have to...).
          */
-        public void populateInitialContext(Appendable writer, Map<String, Object> targetContext) throws IOException {
-            if (screenRenderer != null) {
+        public Map<String, Object> createRenderContext(Appendable writer, Map<String, Object> currentContext, Map<String, Object> extraValues) throws IOException {
+            if (currentContext != null) {
+                throw new UnsupportedOperationException("Not expecting to get a current context in current implementation");
+            }
+            else if (screenRenderer != null) {
                 Map<String, Object> initContext = screenRenderer.initialContext;
                 if (initContext != null) {
-                    populateInitialContext(initContext, targetContext);
+                    return createRenderContextFromInitial(initContext, extraValues);
                 }
                 else {
                     Debug.logError("macro " + rendererLabel + " renderer template environment initial context absent", module);
+                    return new HashMap<String, Object>(extraValues);
                 }
             }
             else {
                 Debug.logError("macro " + rendererLabel + " renderer template environment initial context populate "
                         + "could not retrieve macro screen renderer instance", module);
+                return new HashMap<String, Object>(extraValues);
             }
         }
         
-        private void populateInitialContext(Map<String, Object> context, Map<String, Object> targetContext) throws IOException {
+        private Map<String, Object> createRenderContextFromInitial(Map<String, Object> initContext, Map<String, Object> extraValues) throws IOException {
+            // Here, we don't have the "real" "current" context so we try to create something close by mixing
+            // the initial context with the current globalContext, which is enough for most macros.
+            // FIXME: We are also emulating OFbiz's MapStack, somewhat poorly.
+            
+            Map<String, Object> newContext = new HashMap<String, Object>();
+            
             // 2016-01-06: dump everything in globalContext into context too; this allows at least a semi-presence of up-to-date vars,
             // but only for globals, which is better than nothing. this works out because globalContext is never copied but
             // a one reference which is passed throughout the whole render (as opposed to context).
-            Map<String, Object> globalContext = UtilGenerics.checkMap(context.get("globalContext"));
+            Map<String, Object> globalContext = UtilGenerics.checkMap(initContext.get("globalContext"));
             if (globalContext != null) {
-                targetContext.putAll(globalContext);
+                newContext.putAll(globalContext);
             }
             // this could more more complex or selective, but for now just dump whole initial context
-            targetContext.putAll(context);
+            newContext.putAll(initContext);
+            newContext.putAll(extraValues);
+            
+            // FIXME: create the "context" variable using a copy. a simple reference would be too dangerous and might lead
+            // to circular reference endless loops. not clear. however, this is slow.
+            Map<String, Object> contextCopy = new HashMap<String, Object>(newContext);
+            newContext.put("context", contextCopy);
+            
+            return newContext;
         }
     }
     
@@ -235,8 +259,8 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
-            Map<String, Object> input = UtilMisc.toMap("key", null);
-            contextHandler.populateInitialContext(writer, input);
+            // Cato: custom render context
+            Map<String, Object> input = contextHandler.createRenderContext(writer, null, UtilMisc.toMap("key", null));
             environment = FreeMarkerWorker.renderTemplate(macroLibrary, input, writer);
             environments.put(writer, environment);
         }

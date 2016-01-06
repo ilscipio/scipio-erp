@@ -154,6 +154,7 @@ uses locales. meant for resource bundles / ui labels.
 will use context locale if none specified.
 if msgArgs not specified, property has access to context (occasionally this is used in screens).
 if msgArgs is a sequence, they are passed instead of context to the property.
+TODO: java transform.
 -->
 <#function getPropertyMsg resource name specLocale=true msgArgs=false>
   <#if specLocale?is_boolean>
@@ -166,7 +167,8 @@ if msgArgs is a sequence, they are passed instead of context to the property.
   <#if msgArgs?is_sequence>
     <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, specLocale))?string>
   <#else>
-    <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, context, specLocale))?string>
+    <#-- WARN: context variable _could_ be missing! -->
+    <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, context!{}, specLocale))?string>
   </#if>
 </#function>
 

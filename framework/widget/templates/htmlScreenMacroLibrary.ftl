@@ -21,6 +21,7 @@ under the License.
 Cato: NOTE: since macro renderer initial context mod, macros here now have access to a few widget context objects part of the initial
 context, such as request, response, etc. however it is only from the initial context,
 not "current" context (too intrusive in current renderer design). still relies on macro params.
+2016-01-06: the globalContext is now also dumped into the data model, so uiLabelMap should be available.
 -->
 <#macro renderScreenBegin>
 <#-- Cato: NOTE: HTML head open is now in cato template macros. 

@@ -158,6 +158,13 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
         }
         
         private void populateInitialContext(Map<String, Object> context, Map<String, Object> targetContext) throws IOException {
+            // 2016-01-06: dump everything in globalContext into context too; this allows at least a semi-presence of up-to-date vars,
+            // but only for globals, which is better than nothing. this works out because globalContext is never copied but
+            // a one reference which is passed throughout the whole render (as opposed to context).
+            Map<String, Object> globalContext = UtilGenerics.checkMap(context.get("globalContext"));
+            if (globalContext != null) {
+                targetContext.putAll(globalContext);
+            }
             // this could more more complex or selective, but for now just dump whole initial context
             targetContext.putAll(context);
         }

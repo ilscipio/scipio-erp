@@ -2589,8 +2589,11 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(paginateLastLabel);
         sr.append("\" paginateViewSizeLabel=\"");
         sr.append(paginateViewSizeLabel);
+        // Cato: new params
         sr.append("\" paginate=");
         sr.append(Boolean.toString(paginate));
+        sr.append(" lowIndex=");
+        sr.append(Integer.toString(lowIndex));
         sr.append(" />");
         executeMacro(writer, sr.toString());
     }

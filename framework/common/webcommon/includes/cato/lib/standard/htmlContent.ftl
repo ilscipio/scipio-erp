@@ -995,7 +995,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#global chartId = "chart_${renderSeqNumber!}_${chartIdNum!}"/>
   <#global chartType = type/>
   <#-- Allow just one or two datasets for now -->
-  <#if datasets &lt;= 0 || datasets &gt; 2>
+  <#if (datasets <= 0) || (datasets > 2)>
   	<#global chartDatasets = 1/>
   <#else>
   	<#global chartDatasets = datasets/>

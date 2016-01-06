@@ -42,6 +42,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericValue;
@@ -80,19 +81,27 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
     private static final String formrenderer = UtilProperties.getPropertyValue("widget", "screen.formrenderer");
     private int screenLetsIdCounter = 1;
 
-    private Map<String, Object> initialContext = null;
+    private MapStack<String> initialContext = null; // Cato: context reference as received at beginning of screen render
+    //private Map<String, Object> initialContextCopy = null; // Cato: not needed for now
     
     /**
-     * Cato: for each macro class, saves some values from the context as needed, 
-     * and saves/handles initial context so its values may be part of environment of
-     * macro calls (the major objects: request, response, etc.).
+     * Cato: Saves the initial screen context to use in populating a context upon creation
+     * of Environments used to render macros, to provide context var support to Ofbiz widget macros.
      * <p>
-     * part of macro renderer initial context mod.
+     * 2016-01-06: Previously this class only saved and passed a few major global values from the
+     * initial context (request, locale, globalContext, etc.). Now, we exploit the fact that the
+     * initial context is a MapStack which is only a reference to other maps and simply pass this stack 
+     * to the Environment which means it will automatically know of the last changes to it.
      * <p>
-     * NOTE: this only allows macro environment to get vars part of the INITIAL context,
-     * not values from the current context. access to current context from macros is not possible without
-     * intrusive changes (changing all methods params; also problem that environment is shared
-     * so context stack wouldn't work so each macro call would need its own env, way too heavy).
+     * This is a delicate hack based on MapStack's implementation, but it works for now.
+     * It has 2 major problems:
+     * 1) we can't reliably add new keys to the map - but this is okay since stock code barely adds anything.
+     * 2) the macros will not actually receive the REAL current context received by the java methods - that context
+     *    may be something other than the global MapStack context. we simply ignore this for now
+     *    because it is rare and probably not a problem.
+     * <p>   
+     * TODO?: The real solution to all of this is to modify all MacroXxxRenderer methods to pass context
+     * to macro calls. However it's major change and may not even work with the current Freemarker calls used.
      */
     static class ContextHandler {
 
@@ -119,9 +128,14 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             registerScreenRenderer(writer, context);
             if (screenRenderer != null) {
                 if (screenRenderer.initialContext == null) {
-                    Map<String, Object> initialContext = new HashMap<String, Object>();
-                    initialContext.putAll(context);
-                    screenRenderer.initialContext = initialContext;
+                    if (context instanceof MapStack) {
+                        screenRenderer.initialContext = (MapStack<String>) context;
+                        //screenRenderer.initialContextCopy = new HashMap<String, Object>(context);
+                    }
+                    else {
+                        throw new IllegalStateException("Cato: Expected initial screen context to be a MapStack, "
+                                + "but was of type: " + context.getClass().getName());
+                    }
                 }
             }
             else {
@@ -148,10 +162,10 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
          */
         public Map<String, Object> createRenderContext(Appendable writer, Map<String, Object> currentContext, Map<String, Object> extraValues) throws IOException {
             if (currentContext != null) {
-                throw new UnsupportedOperationException("Not expecting to get a current context in current implementation");
+                throw new UnsupportedOperationException("Not expecting to receive current context in current implementation");
             }
             else if (screenRenderer != null) {
-                Map<String, Object> initContext = screenRenderer.initialContext;
+                MapStack<String> initContext = screenRenderer.initialContext;
                 if (initContext != null) {
                     return createRenderContextFromInitial(initContext, extraValues);
                 }
@@ -167,30 +181,12 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
             }
         }
         
-        private Map<String, Object> createRenderContextFromInitial(Map<String, Object> initContext, Map<String, Object> extraValues) throws IOException {
-            // Here, we don't have the "real" "current" context so we try to create something close by mixing
-            // the initial context with the current globalContext, which is enough for most macros.
-            // FIXME: We are also emulating OFbiz's MapStack, somewhat poorly.
+        private Map<String, Object> createRenderContextFromInitial(MapStack<String> initContext, Map<String, Object> extraValues) throws IOException {
+
+            // FIXME: here we'll cheat and just dump this into the context. it's a terrible idea but won't matter.
+            initContext.putAll(extraValues);
             
-            Map<String, Object> newContext = new HashMap<String, Object>();
-            
-            // 2016-01-06: dump everything in globalContext into context too; this allows at least a semi-presence of up-to-date vars,
-            // but only for globals, which is better than nothing. this works out because globalContext is never copied but
-            // a one reference which is passed throughout the whole render (as opposed to context).
-            Map<String, Object> globalContext = UtilGenerics.checkMap(initContext.get("globalContext"));
-            if (globalContext != null) {
-                newContext.putAll(globalContext);
-            }
-            // this could more more complex or selective, but for now just dump whole initial context
-            newContext.putAll(initContext);
-            newContext.putAll(extraValues);
-            
-            // FIXME: create the "context" variable using a copy. a simple reference would be too dangerous and might lead
-            // to circular reference endless loops. not clear. however, this is slow.
-            Map<String, Object> contextCopy = new HashMap<String, Object>(newContext);
-            newContext.put("context", contextCopy);
-            
-            return newContext;
+            return initContext;
         }
     }
     

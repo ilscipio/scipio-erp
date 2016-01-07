@@ -454,7 +454,7 @@
         </field>
 
         <field name="spacer" title=" "><display/></field>
-        <field name="submit" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit/></field>
+        <field name="submit" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit/></field>
     </form>
 
     <form name="CreateProductStoreCatalog" type="single" target="createProductStoreCatalog" title=""
@@ -689,7 +689,7 @@
             </drop-down>
         </field>
         <field name="sequenceNumber" title="${uiLabelMap.FormFieldTitle_sequenceNum}" tooltip="${uiLabelMap.ProductUsedForDisplayOrdering}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
 
@@ -833,7 +833,7 @@
             </drop-down>
         </field>
         <field name="pprice" title="${uiLabelMap.ProductPerUnitPrice}" tooltip="${uiLabelMap.ProductOnlyAppliesWithinSpan}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
 
         <sort-order>
             <field-group>
@@ -1129,6 +1129,6 @@
                 <option key="N" description="${uiLabelMap.CommonN}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 </forms>

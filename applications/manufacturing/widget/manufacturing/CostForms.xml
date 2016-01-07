@@ -64,7 +64,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>

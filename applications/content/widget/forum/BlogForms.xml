@@ -85,7 +85,7 @@ under the License.
                 <option key="CTNT_INITIAL_DRAFT" description="${uiLabelMap.ContentBlogPreview}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
 

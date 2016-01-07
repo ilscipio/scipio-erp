@@ -56,7 +56,7 @@ under the License.
         </field>
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>

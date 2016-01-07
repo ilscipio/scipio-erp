@@ -171,7 +171,7 @@
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit/></field>
     </form>
     <form name="AddEmployeeTraining" type="single" target="createEmployeeTraining">
         <field name="partyId"><hidden/></field>

@@ -383,7 +383,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="performSearch" position="1"><hidden value="Y"/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="text-link"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
 
     <form name="ListAcctgTrans" type="list" title="List Accounting Transactions" list-name="listIt"
@@ -694,7 +694,7 @@ under the License.
                 <option description="${uiLabelMap.AccountingByDate}" key="byDate"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListFindAcctgTransEntriesByAccount" type="list" title="List Accounting Transaction Entries" list-name="acctgTransEntryList"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

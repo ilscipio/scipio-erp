@@ -72,7 +72,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListFindTimesheet" target="" title="" type="list" list-name="listIt" paginate-target="FindTimesheet" paginate="true"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

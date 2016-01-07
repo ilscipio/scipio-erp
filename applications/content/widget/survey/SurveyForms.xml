@@ -33,7 +33,7 @@ under the License.
         </field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListFindSurvey" target="" title="" list-name="listIt" type="list" paginate-target="FindSurvey"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -256,7 +256,7 @@ under the License.
         <auto-fields-entity entity-name="SurveyResponse" default-field-type="find"/>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListFindSurveyResponse" list-name="listIt" title="" type="list" paginate-target="FindSurveyResponse"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -285,7 +285,7 @@ under the License.
         <field name="allowUpdate"><drop-down allow-empty="true"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupSurvey" list-name="listIt" title="" type="list" paginate-target="LookupSurvey"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -308,7 +308,7 @@ under the License.
         <auto-fields-entity entity-name="SurveyResponse" default-field-type="find"/>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupSurveyResponse" list-name="listIt" title="" type="list" paginate-target="LookupSurveyResponse"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

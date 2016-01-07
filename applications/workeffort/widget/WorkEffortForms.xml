@@ -264,7 +264,7 @@ under the License.
         <field name="noteId"><ignored/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListLookupWorkEffort" target="" title="" list-name="listIt" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -506,7 +506,7 @@ under the License.
             </drop-down>
         </field>
         <field name="preferredContactMechId"><lookup target-form-name="LookupPreferredContactMech" target-parameter="partyId"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
     <form  name="ListWorkEffortParties" list-name="listIt" title="" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -644,7 +644,7 @@ under the License.
         <field name="commEventId" title="${uiLabelMap.FormFieldTitle_communicationEventId}"><lookup target-form-name="LookupCommEvent"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-find/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListWorkEffortCommEvents" default-map-name="workEffortCommEvent" title="" list-name="listIt" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

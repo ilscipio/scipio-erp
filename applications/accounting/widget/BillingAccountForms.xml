@@ -28,7 +28,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="2"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="1"><date-time type="date"/></field>
         <field name="noConditionFind" position="2"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListBillingAccounts" type="list" list-name="listIt" paginate-target="FindBillingAccount" default-entity-name="BillingAccount"

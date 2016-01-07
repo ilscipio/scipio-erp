@@ -65,7 +65,7 @@ under the License.
     <form name="FindFixedAssetOptions" extends="lookupFixedAsset" extends-resource="component://accounting/widget/FieldLookupForms.xml"
         target="ListFixedAssets">
         <field name="searchOptions_collapsed"><hidden value="true"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <!-- create and update a fixed asset -->

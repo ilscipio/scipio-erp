@@ -437,7 +437,7 @@ under the License.
         <field name="monthsInPastLimit" entry-name="monthsInPastLimit"><text/></field>
         <field name="fromDateSellThrough" title="${uiLabelMap.ProductFromDateSellThrough}"><date-time/></field>
         <field name="thruDateSellThrough" title="${uiLabelMap.ProductThruDateSellThrough}"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -563,7 +563,7 @@ under the License.
         <field name="internalName" title="${uiLabelMap.ProductInternalName}">
             <text/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
             <submit/>
         </field>
     </form>
@@ -592,7 +592,7 @@ under the License.
         <field name="availableToPromiseVar" title="${uiLabelMap.ProductProductATPVar}" event="onchange" action="document.ListPhysicalInventory._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field>
         <field name="quantityOnHandVar" title="${uiLabelMap.ProductProductQOHVar}" event="onchange" action="document.ListPhysicalInventory._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
             <submit/>
         </field>
     </form>

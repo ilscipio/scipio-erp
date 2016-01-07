@@ -99,7 +99,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="CommissionRun" type="single" target="CommissionRun">
@@ -114,7 +114,7 @@ under the License.
         <field name="statusId"><hidden value="INVOICE_PAID"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="CommissionReport" type="single" target="FindCommissions">
@@ -129,6 +129,6 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}" position="1"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}" position="1"><submit button-type="button"/></field>
     </form>
 </forms>

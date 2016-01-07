@@ -129,7 +129,7 @@ under the License.
             </drop-down>
         </field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListTrackingCodeOrders" type="list" title="" paginate-target="FindTrackingCodeOrders" list-name="listIt"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -164,7 +164,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}"><submit button-type="button"/>        </field>
-        <field name="cancelAction" title="${uiLabelMap.CommonCancel}" widget-style="${styles.link_action_cancel}"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
+        <field name="cancelAction" title="${uiLabelMap.CommonCancel}" widget-style="${styles.link_action}"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
     <form name="FindTrackingCodeVisits" target="ListTrackingCodeVisits" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -178,7 +178,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListTrackingCodeVisits" list-name="listIt" title="" paginate-target="FindTrackingCodeVisits" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

@@ -36,7 +36,7 @@ under the License.
         </field>
         <!-- <field name="rootonly" map-name="dummy" title="Root CompDocs Only"><check/></field> -->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
     <form name="ListCompDoc" type="list" list-name="listIt" target="" paginate-target="FindCompDoc"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -342,7 +342,7 @@ under the License.
         <field name="rootContentId"><hidden/></field>
         <field name="rootContentRevisionId"><hidden/></field>
             -->
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="EditRootCompDocInstance" default-map-name="content" type="single" target="updateRootCompDocTemplate"
@@ -351,7 +351,7 @@ under the License.
         <field name="contentName"><text/></field>
         <field name="instanceOfContentId"><display/></field>
         <field name="contentTypeId"><hidden value="COMPDOC_INSTANCE"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddRootCompDocTemplate" default-map-name="" type="single" target="createRootCompDocTemplate"
@@ -360,7 +360,7 @@ under the License.
         <field name="contentTypeId" map-name="dummy"><hidden value="COMPDOC_TEMPLATE"/></field>
         <field name="rootTemplateContentId"><hidden/></field>
         <field name="rootTemplateRevSeqId"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="EditRootCompDocTemplate" default-map-name="content" type="single" target="updateRootCompDocTemplate"
@@ -368,7 +368,7 @@ under the License.
         <field name="contentId"><display/></field>
         <field name="contentName"><text/></field>
         <field name="contentTypeId" map-name="dummy"><hidden value="COMPDOC_TEMPLATE"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddChildCompDoc" default-map-name="" type="single" target="${childCompDocTarget}"

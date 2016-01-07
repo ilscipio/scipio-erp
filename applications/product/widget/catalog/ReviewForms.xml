@@ -32,7 +32,7 @@ under the License.
             </drop-down>
         </field>
         <field name="productReview" title="${uiLabelMap.ProductReviews}"><text-find/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
     </form>

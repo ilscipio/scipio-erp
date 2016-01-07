@@ -62,7 +62,7 @@ under the License.
         <field name="lastModifiedDate">
             <date-find/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
             <submit button-type="button"/>
         </field>
         <field name="contentIdTo">

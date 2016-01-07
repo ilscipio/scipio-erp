@@ -195,7 +195,8 @@
     "action_download" : "action-download", <#-- download action link: "Download", "Stream", "Export", etc. -->
     "action_apply" : "action-apply",       <#-- apply action link: "Apply", "Save", "Run", "Submit", "Set", "Send", "Start", etc. -->
     "action_cancel" : "action-cancel",     <#-- cancel action link: "Cancel", "Close", "Stop", etc. -->
-    
+    "action_clear" : "action-clear",       <#-- clear action link: "Clear", "Reset", "Restart", etc. -->
+
   <#-- Standalone link styles (includes links in tables)
     !!! TODO: THIS IS WIP AND IMPERFECT/FLAWED !!!
   
@@ -258,6 +259,8 @@
     "link_action_apply_long" : "action-apply link-long",
     "link_action_cancel" : "button tiny action-cancel",     <#-- cancel action link: "Cancel", "Close", "Stop", etc. -->
     "link_action_cancel_long" : "action-cancel link-long", 
+    "link_action_clear" : "button tiny action-clear",       <#-- clear action link: "Clear", "Reset", "Restart", etc. -->
+    "link_action_clear_long" : "action-clear link-long",
     "link_nav" : "button tiny",               <#-- static navigation text without explicit action or implied "view" action, generic, not part of a menu type (see menu_xxx styles above): "Categories" 
                                                   sometimes this is ambiguous with link_action (?). if links to an action that will change the state of the system directly or indirectly, should be link_action. 
                                                   if simply browsing or view action, link_nav is more appropriate, though many times will fall under another

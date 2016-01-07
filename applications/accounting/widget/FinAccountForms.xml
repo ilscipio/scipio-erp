@@ -37,7 +37,7 @@ under the License.
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="displayAdvancedSearch"><hidden value="true"></hidden></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListFinAccounts" type="list" separate-columns="true" default-entity-name="FinAccount" list-name="listIt" paginate-target="FindFinAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -262,7 +262,7 @@ under the License.
     <form name="PaymentsDepositWithdraw" type="single" target="FindPaymentsForDepositOrWithdraw" extends="FindBatchPayments" extends-resource="component://accounting/widget/ar/forms/ArPaymentForms.xml">
         <field name="finAccountId"><hidden/></field>
         <field name="noConditionFind"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="FindDepositSlips" type="single" target="FindDepositSlips" extends="FindPaymentGroup" extends-resource="component://accounting/widget/PaymentGroupForms.xml">
@@ -322,7 +322,7 @@ under the License.
         </field>
         <field name="finAccountName" title="${uiLabelMap.CommonName}"><text-find ignore-case="true"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="FindFinAccountTransactions" type="single" target="FindFinAccountTrans">
@@ -360,7 +360,7 @@ under the License.
         <field name="thruTransactionDate" position="2"><date-time type="date"/></field>
         <field name="fromEntryDate" position="1"><date-time type="date"/></field>
         <field name="thruEntryDate" position="2"><date-time type="date"/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="FindBankReconciliationFinAcctTrans" target="BankReconciliation" 
@@ -494,7 +494,7 @@ under the License.
             </drop-down>
         </field>
         <field name="glAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="FinAccountReconciliationBalance" default-map-name="currentGlReconciliation"

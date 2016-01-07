@@ -46,7 +46,7 @@ under the License.
         <field position="1" name="amount"><text/></field>
         <field name="paymentRefNum" position="2"><text-find ignore-case="true"/></field>
         <field name="paymentGatewayResponseId" position="2"><text/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListPayments" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate-target="findPayments" paginate="true"
@@ -350,7 +350,7 @@ under the License.
         <field name="amountToApply" title="${uiLabelMap.CommonOutStanding}" widget-area-style="amount" title-area-style="align-right" parameter-name="amountApplied"><text size="10"/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;N&quot;)"><check/></field>
-        <field name="applyAction"  title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action}">
+        <field name="applyAction"  title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action_apply}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -369,7 +369,7 @@ under the License.
         <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display  type="currency" currency="${currencyUomId}"/></field>
         <field name="amountApplied" widget-area-style="amount" title-area-style="align-right" parameter-name="dummy"><display  type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" title="${uiLabelMap.CommonOutstanding}" widget-area-style="amount" title-area-style="align-right" parameter-name="amountApplied"><text size="10"/></field>
-        <field name="applyAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action}">
+        <field name="applyAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action_apply}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -385,7 +385,7 @@ under the License.
         <field name="amountToApply" parameter-name="amountApplied" tooltip="${uiLabelMap.AccountingLeaveEmptyForMaximumAmount}"><text/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;N&quot;)"><check/></field>
-        <field name="applyAction"  title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action}">
+        <field name="applyAction"  title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action_apply}">
             <submit button-type="button"/>
         </field>
     </form>

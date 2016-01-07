@@ -112,7 +112,7 @@
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureTypeId"><text-find size="25"></text-find></field>
         <field name="description"><text-find size="25"></text-find></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit/></field>
     </form>
     <form name="ListFeatureTypes" list-name="listIt" target="" title="" type="list" paginate-target="EditFeatureTypes"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
@@ -165,7 +165,7 @@
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureId"><text-find size="25"></text-find></field>
         <field name="productFeatureIdTo"><text-find size="25"></text-find></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit/></field>
     </form>
     <form name="ListFeatureInterActions" list-name="listIt" target="" title="" type="list" paginate-target="EditFeatureInterAction"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
@@ -285,7 +285,7 @@
         <field name="idCode" title="${uiLabelMap.CommonIdCode}"><display/></field>
         <field name="abbrev" title="${uiLabelMap.ProductAbbrev}"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}">
           <submit/>
         </field>
     </form>
@@ -326,7 +326,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit button-type="button"/></field>
 
     </form>
     <form name="ListFeaturePrice" type="list" target="updateFeaturePrice" list-name="productFeaturePrice"

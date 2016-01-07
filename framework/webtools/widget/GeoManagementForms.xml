@@ -55,7 +55,7 @@
         <field name="geoSecCode" title="${uiLabelMap.CommonGeoSecCode}"><text/></field>
         <field name="abbreviation" title="${uiLabelMap.CommonGeoAbbr}"><text/></field>
         <field name="wellKnownText" title="${uiLabelMap.CommonGeoWellKnownText}"><textarea/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit button-type="button"/></field>
     </form>
     <form name="ListLookupGeo" extends="ListGeos">
         <field name="geoId" title="${uiLabelMap.CommonGeoId}" widget-style="${styles.link_record_id}">
@@ -91,7 +91,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit button-type="button"/></field>
     </form>
         
 </forms>

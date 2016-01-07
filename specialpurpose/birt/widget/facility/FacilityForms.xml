@@ -68,7 +68,7 @@ under the License.
         <field name="monthsInPastLimit" entry-name="monthsInPastLimit"><text/></field>
         <field name="fromDateSellThrough"><date-time/></field>
         <field name="thruDateSellThrough"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}">
             <submit button-type="button"/>
         </field>
     </form>

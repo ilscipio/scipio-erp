@@ -24,7 +24,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}" >
         <field name="prodCatalogId" title="${uiLabelMap.ProdCatalogId}"><text-find/></field>
         <field name="catalogName"><text-find/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}">
             <submit button-type="button"/>
         </field>
     </form>

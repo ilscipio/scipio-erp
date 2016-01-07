@@ -29,7 +29,7 @@ under the License.
         <field name="parentPortalPageId" position="2"><text-find/></field>
         <field name="description"><text-find/></field>
         <field name="securityGroupId" position="2" title="${uiLabelMap.CommonSecurityGroupId}"><text-find/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListPortalPages" type="list" list-name="listIt" paginate-target="FindPortalPage" separate-columns="true"

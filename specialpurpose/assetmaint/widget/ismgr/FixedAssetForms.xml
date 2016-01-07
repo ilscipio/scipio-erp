@@ -105,7 +105,7 @@ under the License.
     </form>
 
     <form name="FindComputerHardwareOptions" extends="LookupComputerHardware" extends-resource="component://assetmaint/widget/ismgr/FieldLookupForms.xml" target="ListComputerHardware">
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
     </form>
     <!-- list all Computer Hardware in a tabular format -->
     <form name="ListComputerHardware" type="list" list-name="listIt" paginate-target="ListFixedAssets"
@@ -136,7 +136,7 @@ under the License.
     </form>
 
     <form name="FindComputerSoftwareOptions" extends="LookupComputerSoftware" extends-resource="component://assetmaint/widget/ismgr/FieldLookupForms.xml" target="ListComputerSoftware">
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
     </form>
 
     <!-- list all Computer Software in a tabular format -->

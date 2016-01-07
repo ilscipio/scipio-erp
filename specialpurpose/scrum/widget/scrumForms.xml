@@ -772,7 +772,7 @@ under the License.
         <field name="story" title="${uiLabelMap.ScrumStory}" use-when="custRequest!=null&amp;&amp;isTeamMember==false"><textarea  rows="4" cols="60" default-value="${story}" /></field>
         <field name="story" title="${uiLabelMap.ScrumStory}" use-when="custRequest!=null&amp;&amp;isTeamMember==true"><display description="${story}"/></field>
         <field name="noteInfo" title="${uiLabelMap.ScrumHowToTest}"><textarea  rows="4" cols="60" default-value="${noteInfo}" /></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit button-type="button"/></field>
         <sort-order>
             <sort-field name="description"/>
             <sort-field name="productId"/>
@@ -855,7 +855,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
     </form>
     <form name="FindTotalBacklog" type="single" target="FindTotalBacklog">
         <actions>
@@ -913,7 +913,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListProdBacklog" type="multi" use-row-submit="true" list-name="custRequestAndCustRequestItems" target="updateProductBacklogItemRow?productId=${productId}&amp;sequence=${sequence}&amp;" paginate-target="AddProdBacklog" separate-columns="true"
@@ -1721,7 +1721,7 @@ under the License.
             </field>
             <field name="partyId"><hidden value="${userLogin.partyId}"/></field>
             <field name="roleTypeId"><hidden value="PRODUCT_OWNER"/></field>
-            <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+            <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
             <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done -->
             </field>
         </form>
@@ -1897,7 +1897,7 @@ under the License.
                 <option key="N"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
     </form>
     <form name="FindProductTotalBilling" extends="FindProductBilling" type="single" target="TotalBilling">
         <field name="productId" title="${uiLabelMap.ScrumProductName}">
@@ -2890,7 +2890,7 @@ under the License.
         <field name="story" title="${uiLabelMap.ScrumStory}" ><textarea  rows="4" cols="60"/></field>
         <field name="custSequenceNum"><hidden value="1"/></field>
         <field name="noteInfo" title="${uiLabelMap.ScrumHowToTest}" ><textarea  rows="4" cols="60"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit button-type="button"/></field>
     </form>
     
     <form name="QuickAddNewTask" type="upload" target="createTaskForBacklog">

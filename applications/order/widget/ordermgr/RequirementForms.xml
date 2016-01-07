@@ -48,7 +48,7 @@ under the License.
         <field name="description"><text-find/></field>
         <field name="requirementStartDate" title="${uiLabelMap.OrderRequirementStartDate}"><date-find type="date"/></field>
         <field name="requiredByDate" title="${uiLabelMap.OrderRequirementByDate}"><date-find type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -137,7 +137,7 @@ under the License.
         <field name="fixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
         <field name="custRequestId" map-name="parameters"><text/></field>
         <field name="custRequestItemSeqId" map-name="parameters"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -206,7 +206,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="requirementRole!=null"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="requirementRole==null"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -229,7 +229,7 @@ under the License.
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
         <field name="requirementStartDate"><date-find type="date"/></field>
         <field name="requiredByDate"><date-find type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -251,7 +251,7 @@ under the License.
         <field name="requiredByDate"><display/></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}">
           <submit/>
         </field>
     </form>
@@ -283,7 +283,7 @@ under the License.
         </field>
         <field name="productId" title="${uiLabelMap.ProductProductId}"><lookup target-form-name="LookupProduct"/></field>
         <field name="requirementByDate"><date-find type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ApprovedProductRequirementsList" type="list" title="" list-name="requirementsForSupplier" paginate-target="RequirementsForSupplier"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

@@ -43,7 +43,7 @@ under the License.
         <field position="2" name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
         <field position="2" name="referenceNumber" ><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListInvoices" type="list" separate-columns="true" title="Invoice List" list-name="listIt" target="" default-entity-name="Invoice" paginate-target="findInvoices"
@@ -470,7 +470,7 @@ under the License.
         <field name="paymentId" title="${uiLabelMap.CommonPayment}"><lookup target-form-name="LookupPayment"/></field>
         <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
-        <field name="applyAction"  title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action}">
+        <field name="applyAction"  title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action_apply}">
             <submit button-type="button" />
         </field>
     </form>
@@ -487,7 +487,7 @@ under the License.
         <field name="effectiveDate"><display type="date"/></field>
         <field name="amountApplied" parameter-name="dummy"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
-        <field name="applyAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action}">
+        <field name="applyAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action_apply}">
             <submit button-type="button" />
         </field>
     </form>
@@ -557,7 +557,7 @@ under the License.
         <field name="subject"><text default-value="Please find attached invoice."/></field>
         <field name="otherCurrency" entry-name="parameters.other" parameter-name="other"><check/></field>
         <field name="bodyText"><textarea/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}"><submit button-type="button"/></field>
     </form>
     
     <form name="EditTimeEntries" type="list" list-name="timeEntries"

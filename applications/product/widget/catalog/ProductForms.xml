@@ -26,7 +26,7 @@
         <field name="productName" position="2">
             <text-find />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2004,7 +2004,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2095,7 +2095,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}">
             <date-time />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2145,7 +2145,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2169,7 +2169,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_apply}">
             <submit button-type="button" />
         </field>
     </form>

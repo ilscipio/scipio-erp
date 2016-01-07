@@ -15,7 +15,7 @@
         <field name="catalogName" title="${uiLabelMap.CommonName}" position="2">
             <text-find />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}">
             <submit button-type="button" />
         </field>
     </form>

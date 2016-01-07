@@ -78,7 +78,7 @@ under the License.
         <field name="dataSourceTypeId" title="${uiLabelMap.DataSourceDataSourceTypeId}"><text-find/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_find}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListDataSourceType" type="list" title="" list-name="listIt"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

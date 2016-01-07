@@ -184,10 +184,11 @@
     "row_alt" : "odd",
     "row_selected" : "selected",
     
-  <#-- Generic action styles (that could be applied to any UI element - list item, button, etc.) -->  
+  <#-- Generic action styles (that could be applied to any UI element - list item, button, etc. - 
+      and regardless of whether a navigation link toward action or a final submit action link) -->   
     "action_generic" : "action-generic",
-    "action_new" : "action-new",           <#-- new item action link: "Create", "New", etc. -->
-    "action_edit" : "action-edit",         <#-- edit item action link: "Update", "Edit", "Modify", etc. -->
+    "action_create" : "action-create",     <#-- create item action link: "Create", "New", etc. -->
+    "action_modify" : "action-modify",     <#-- modify item action link: "Update", "Edit", "Modify", etc. -->
     "action_remove" : "action-remove",     <#-- remove item action link: "Delete", "Remove", "Kill", "Stop", etc. -->
     "action_find" : "action-find",         <#-- find action link: "Find", "Search", "Lookup", etc. -->
     "action_select" : "action-select",     <#-- select action link: "Select", "Choose", "Pick", etc. -->
@@ -200,6 +201,13 @@
 
   <#-- Standalone link styles (includes links in tables)
     !!! TODO: THIS IS WIP AND IMPERFECT/FLAWED !!!
+    !!! 2016-01-07: DO NOT USE ACTION LINKS YET, NO GOOD. Also, disregard text below
+        regarding action links for now. 
+        need to change the categories and instructions because probably the main thing we want to do
+        is style such that buttons that ___actually___ change the state of the system when clicked
+        are clearly identified.
+        so will need "nav" actions and "apply" actions. starting to make more sense but not
+        clear yet. WIP. !!!
   
     how to decide which style to use on a link:
       * labelling should be based mainly on the text content of the link, both the literal content and its meaning in context.
@@ -245,10 +253,10 @@
                                          if it's a static action like "View", somewhat ambiguous (TODO: clarify)
                                          always prefer the more precise sub-categories below... -->
     "link_action_long" : "action-generic link-long",        <#-- a very long (more than 20-30 chars) or complex/non-static action text: "Add Content Repository For Order Removal: WS100000" -->
-    "link_action_new" : "button tiny action-new",           <#-- new item action link: "Create", "New", etc. -->
-    "link_action_new_long" : "action-new link-long",
-    "link_action_edit" : "button tiny action-edit",         <#-- edit item action link: "Update", "Edit", "Modify", etc. -->
-    "link_action_edit_long" : "action-edit link-long",
+    "link_action_create" : "button tiny action-create",     <#-- create item action link: "Create", "New", etc. -->
+    "link_action_create_long" : "action-create link-long",
+    "link_action_modify" : "button tiny action-modify",     <#-- modify item action link: "Update", "Edit", "Modify", etc. -->
+    "link_action_modify_long" : "action-modify link-long",
     "link_action_remove" : "button tiny action-remove",     <#-- remove item action link: "Delete", "Remove", "Kill", "Stop", etc. -->
     "link_action_remove_long" : "action-remove link-long",
     "link_action_find" : "button tiny action-find",         <#-- find action link: "Find", "Search", "Lookup", etc. -->

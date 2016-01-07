@@ -184,6 +184,18 @@
     "row_alt" : "odd",
     "row_selected" : "selected",
     
+  <#-- Generic action styles (that could be applied to any UI element - list item, button, etc.) -->  
+    "action_generic" : "action-generic",
+    "action_new" : "action-new",           <#-- new item action link: "Create", "New", etc. -->
+    "action_edit" : "action-edit",         <#-- edit item action link: "Update", "Edit", "Modify", etc. -->
+    "action_remove" : "action-remove",     <#-- remove item action link: "Delete", "Remove", etc. -->
+    "action_find" : "action-find",         <#-- find action link: "Find", "Search", "Lookup", etc. -->
+    "action_select" : "action-select",     <#-- select action link: "Select", "Choose", "Pick", etc. -->
+    "action_view" : "action-view",         <#-- view item action link: "Delete", "Remove", etc. -->
+    "action_download" : "action-download", <#-- download action link: "Download", "Stream", "Export", etc. -->
+    "action_apply" : "action-apply",       <#-- apply action link: "Apply", "Save", "Run", "Submit", "Set", "Send", "Start", etc. -->
+    "action_cancel" : "action-cancel",     <#-- cancel action link: "Cancel", "Close", "Stop", etc. -->
+    
   <#-- Standalone link styles (includes links in tables)
     !!! TODO: THIS IS WIP AND IMPERFECT/FLAWED !!!
   
@@ -206,6 +218,7 @@
         and simply meant to navigate, it probably belongs as a link_nav (alternatively: convert to @menu)
         * if very long or complex, use link_nav_long.
       * 2016-01-04: there are now more specific link_action_xxx categories. always prefer them to link_action where applicable.
+        Also should be preferred over action_xxx links, for links.
       * TODO: CLARIFY: if the text is a "View" action, it is mostly ambiguous whether it belongs more 
         as a link_action or as link_nav. many of them are currently labeled as link_action.
 
@@ -222,54 +235,55 @@
         but introductory words ("Order Item: WS10000") may warrant putting it under the link_longxxx variant.
         in some cases, extra words means it should go under link_record_desc.
   -->
-    "link_action" : "button tiny",  <#-- action link: "Add", "Edit", "Remove", "Cancel", "Export as PDF", "Edit: WS10000", etc. not necessarily a verb, action may be implied, but should be an action. usually static text. 
+    "link_action" : "button tiny action-generic",  <#-- action link: "Add", "Edit", "Remove", "Cancel", "Export as PDF", "Edit: WS10000", etc. not necessarily a verb, action may be implied, but should be an action. usually static text. 
                                          this may overlap with link_nav, but usually there is one more appropriate than the other.
                                          if it's a static action like "View", somewhat ambiguous (TODO: clarify)
                                          always prefer the more precise sub-categories below... -->
-    "link_action_long" : "",        <#-- a very long (more than 20-30 chars) or complex/non-static action text: "Add Content Repository For Order Removal: WS100000" -->
-    "link_action_new" : "button tiny",      <#-- new item action link: "Create", "New", etc. -->
-    "link_action_new_long" : "",
-    "link_action_edit" : "button tiny",     <#-- edit item action link: "Update", "Edit", "Modify", etc. -->
-    "link_action_edit_long" : "",
-    "link_action_remove" : "button tiny",   <#-- remove item action link: "Delete", "Remove", etc. -->
-    "link_action_remove_long" : "",
-    "link_action_find" : "button tiny",     <#-- find action link: "Find", "Search", "Lookup", etc. -->
-    "link_action_find_long" : "",
-    "link_action_select" : "button tiny",   <#-- select action link: "Select", "Choose", "Pick", etc. -->
-    "link_action_select_long" : "",
-    "link_action_view" : "button tiny",     <#-- view item action link: "Delete", "Remove", etc. -->
-    "link_action_view_long" : "",
-    "link_action_download" : "button tiny", <#-- download action link: "Download", "Stream", "Export", etc. -->
-    "link_action_download_long" : "",
-    "link_action_apply" : "button tiny",    <#-- apply action link: "Apply", "Save", "Run", "Submit", "Set", "Send", "Start", etc. -->
-    "link_action_apply_long" : "",
-    "link_action_cancel" : "button tiny",   <#-- cancel action link: "Cancel", "Close", "Stop", etc. -->
-    "link_action_cancel_long" : "", 
-    "link_nav" : "button tiny",     <#-- static navigation text without explicit action or implied "view" action, generic, not part of a menu type (see menu_xxx styles above): "Categories" 
-                                         sometimes this is ambiguous with link_action (?). if links to an action that will change the state of the system directly or indirectly, should be link_action. 
-                                         if simply browsing or view action, link_nav is more appropriate, though many times will fall under another
-                                         of the link types (link_record_id, link_record_desc, etc.) and is more appropriate as those. when it designates
-                                         a single record, usually more appropriate as one of the other types. -->
-    "link_nav_long" : "",           <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
-    "link_record_id" : "",          <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
-    "link_record_id_long" : "",     <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
-    "link_record_name" : "",        <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
-    "link_record_name_long" : "",   <#-- the long name of a record: "Mr. Title The Ambassador of Germany", etc. -->
-    "link_record_idname" : "",      <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
-    "link_record_idname_long" : "", <#-- long combination of IDs and names: "Mr. John Alberton Smith Junior (ID: 10000) (Group: 20000)" -->
-    "link_record_desc" : "",        <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. 
-                                         in general, as soon as a non-action link text contains more than one type of value, and not idname, it should be changed to link_record_desc.
-                                         however, if it contains a specific action(s), it may be more appropriate as link_action_long. -->
-    "link_record_date" : "",        <#-- the date of a record (fromDate, thruDate, etc.) -->
-    "link_record_number" : "",      <#-- the number of a record (index, sequence num, etc.) -->
-    "link_record_value" : "",       <#-- link containing a value of type not previously listed (or cannot be known statically) -->
-    "link_record_value_long" : "",  <#-- link containing a value of type not previously listed but that may be long (or cannot be known statically) -->
-    "link_url" : "",                <#-- link containing a URL or location as its text (<a href="http://ofbiz.apache.org">http://ofbiz.apache.org</a>) -->
-    "link_text" : "",               <#-- link containing any kind of free-form text -->
-    "link_image" : "",              <#-- link for an image (often omitted) -->
-    "link_default" : "",            <#-- general link, for anything that does not fall into the above types or cannot be determined.
-                                         always use the above types instead where possible.
-                                         usually this will be rarely used and the style here will be left empty. -->
+    "link_action_long" : "action-generic link-long",        <#-- a very long (more than 20-30 chars) or complex/non-static action text: "Add Content Repository For Order Removal: WS100000" -->
+    "link_action_new" : "button tiny action-new",           <#-- new item action link: "Create", "New", etc. -->
+    "link_action_new_long" : "action-new link-long",
+    "link_action_edit" : "button tiny action-edit",         <#-- edit item action link: "Update", "Edit", "Modify", etc. -->
+    "link_action_edit_long" : "action-edit link-long",
+    "link_action_remove" : "button tiny action-remove",     <#-- remove item action link: "Delete", "Remove", etc. -->
+    "link_action_remove_long" : "action-remove link-long",
+    "link_action_find" : "button tiny action-find",         <#-- find action link: "Find", "Search", "Lookup", etc. -->
+    "link_action_find_long" : "action-find link-long",
+    "link_action_select" : "button tiny action-select",     <#-- select action link: "Select", "Choose", "Pick", etc. -->
+    "link_action_select_long" : "action-select link-long",
+    "link_action_view" : "button tiny action-view",         <#-- view item action link: "Delete", "Remove", etc. -->
+    "link_action_view_long" : "action-view link-long",
+    "link_action_download" : "button tiny action-download", <#-- download action link: "Download", "Stream", "Export", etc. -->
+    "link_action_download_long" : "action-download link-long",
+    "link_action_apply" : "button tiny action-apply",       <#-- apply action link: "Apply", "Save", "Run", "Submit", "Set", "Send", "Start", etc. -->
+    "link_action_apply_long" : "action-apply link-long",
+    "link_action_cancel" : "button tiny action-cancel",     <#-- cancel action link: "Cancel", "Close", "Stop", etc. -->
+    "link_action_cancel_long" : "action-cancel link-long", 
+    "link_nav" : "button tiny",               <#-- static navigation text without explicit action or implied "view" action, generic, not part of a menu type (see menu_xxx styles above): "Categories" 
+                                                  sometimes this is ambiguous with link_action (?). if links to an action that will change the state of the system directly or indirectly, should be link_action. 
+                                                  if simply browsing or view action, link_nav is more appropriate, though many times will fall under another
+                                                  of the link types (link_record_id, link_record_desc, etc.) and is more appropriate as those. when it designates
+                                                  a single record, usually more appropriate as one of the other types. -->
+    "link_nav_long" : "link-long",            <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
+    "link_record_id" : "",                    <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
+    "link_record_id_long" : "link-long",      <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
+    "link_record_name" : "",                  <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
+    "link_record_name_long" : "link-long",    <#-- the long name of a record: "Mr. Title The Ambassador of Germany", etc. -->
+    "link_record_idname" : "",                <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
+    "link_record_idname_long" : "link-long",  <#-- long combination of IDs and names: "Mr. John Alberton Smith Junior (ID: 10000) (Group: 20000)" -->
+    "link_record_desc" : "",                  <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. 
+                                                  in general, as soon as a non-action link text contains more than one type of value, and not idname, it should be changed to link_record_desc.
+                                                  however, if it contains a specific action(s), it may be more appropriate as link_action_long. -->
+    "link_record_date" : "",                  <#-- the date of a record (fromDate, thruDate, etc.) -->
+    "link_record_number" : "",                <#-- the number of a record (index, sequence num, etc.) -->
+    "link_record_value" : "",                 <#-- link containing a value of type not previously listed (or cannot be known statically) -->
+    "link_record_value_long" : "link-long",   <#-- link containing a value of type not previously listed but that may be long (or cannot be known statically) -->
+    "link_url" : "",                          <#-- link containing a URL or location as its text (<a href="http://ofbiz.apache.org">http://ofbiz.apache.org</a>) -->
+    "link_text" : "",                         <#-- link containing any kind of free-form text -->
+    "link_image" : "",                        <#-- link for an image (often omitted) -->
+    "link_default" : "",                      <#-- general link, for anything that does not fall into the above types or cannot be determined.
+                                                  always use the above types instead where possible.
+                                                  usually this will be rarely used and the style here will be left empty. -->
+    "link_long" : "link-long",                <#-- style to identify long links -->
     
   <#-- Colors -->
     "color_green" : "success",

@@ -188,12 +188,13 @@
     "action_generic" : "action-generic",
     "action_new" : "action-new",           <#-- new item action link: "Create", "New", etc. -->
     "action_edit" : "action-edit",         <#-- edit item action link: "Update", "Edit", "Modify", etc. -->
-    "action_remove" : "action-remove",     <#-- remove item action link: "Delete", "Remove", etc. -->
+    "action_remove" : "action-remove",     <#-- remove item action link: "Delete", "Remove", "Kill", "Stop", etc. -->
     "action_find" : "action-find",         <#-- find action link: "Find", "Search", "Lookup", etc. -->
     "action_select" : "action-select",     <#-- select action link: "Select", "Choose", "Pick", etc. -->
     "action_view" : "action-view",         <#-- view item action link: "Delete", "Remove", etc. -->
     "action_download" : "action-download", <#-- download action link: "Download", "Stream", "Export", etc. -->
-    "action_apply" : "action-apply",       <#-- apply action link: "Apply", "Save", "Run", "Submit", "Set", "Send", "Start", etc. -->
+    "action_upload" : "action-upload",     <#-- upload action link (often this can also fall under "apply"): "Upload", "Send", etc. -->
+    "action_apply" : "action-apply",       <#-- apply action link: "Apply", "Save", "Run", "Submit", "Set", "Start", etc. -->
     "action_cancel" : "action-cancel",     <#-- cancel action link: "Cancel", "Close", "Stop", etc. -->
     "action_clear" : "action-clear",       <#-- clear action link: "Clear", "Reset", "Restart", etc. -->
 
@@ -208,18 +209,21 @@
       
     actions and navigation:
       * any static text intended as a link that means to directly or indirectly change the state of the system or
-        encourage the user to do so should be labeled with link_action. also any static text that shows
+        encourage the user to do so should be labeled with link_action or preferably one of its more specific forms (link_action_xxx). also any static text that shows
         an action but appended with an ID falls here. if it's just an ID or name alone, falls under "record identifiers and sorting fields" below.
         * if the action is very long or complex or contains non-static elements, use link_action_long.
           * note link_action_long isn't needed in most cases, just in very long/complex cases.
         * in stock ofbiz, sometimes these were marked with extra css classes such as " create", but inconsistently
       * any static text that performs a specific function (but not necessarily changing state of system) such as
-        "Download" or "Export" should also be labeled with link_action.
+        "Download" or "Export" should also be labeled with link_action[_download].
       * if the static text implies a navigation link that will not change the state of the system or perform any function, 
         and simply meant to navigate, it probably belongs as a link_nav (alternatively: convert to @menu)
         * if very long or complex, use link_nav_long.
       * 2016-01-04: there are now more specific link_action_xxx categories. always prefer them to link_action where applicable.
         Also should be preferred over action_xxx links, for links.
+        * WARN: the link label sometimes is deceiving and may not match the link type you should select.
+              it should be selected based on the logical action. 
+              e.g., in some contexts "Cancel" means removing/deleting/voiding a record rather than cancelling an action.
       * TODO: CLARIFY: if the text is a "View" action, it is mostly ambiguous whether it belongs more 
         as a link_action or as link_nav. many of them are currently labeled as link_action.
 
@@ -245,7 +249,7 @@
     "link_action_new_long" : "action-new link-long",
     "link_action_edit" : "button tiny action-edit",         <#-- edit item action link: "Update", "Edit", "Modify", etc. -->
     "link_action_edit_long" : "action-edit link-long",
-    "link_action_remove" : "button tiny action-remove",     <#-- remove item action link: "Delete", "Remove", etc. -->
+    "link_action_remove" : "button tiny action-remove",     <#-- remove item action link: "Delete", "Remove", "Kill", "Stop", etc. -->
     "link_action_remove_long" : "action-remove link-long",
     "link_action_find" : "button tiny action-find",         <#-- find action link: "Find", "Search", "Lookup", etc. -->
     "link_action_find_long" : "action-find link-long",
@@ -255,7 +259,9 @@
     "link_action_view_long" : "action-view link-long",
     "link_action_download" : "button tiny action-download", <#-- download action link: "Download", "Stream", "Export", etc. -->
     "link_action_download_long" : "action-download link-long",
-    "link_action_apply" : "button tiny action-apply",       <#-- apply action link: "Apply", "Save", "Run", "Submit", "Set", "Send", "Start", etc. -->
+    "link_action_upload" : "button tiny action-upload",     <#-- upload action link (often this can also fall under "apply"): "Upload", "Send", etc. -->
+    "link_action_upload_long" : "action-upload link-long",
+    "link_action_apply" : "button tiny action-apply",       <#-- apply action link: "Apply", "Save", "Run", "Submit", "Set", "Send", "Upload", "Start", etc. -->
     "link_action_apply_long" : "action-apply link-long",
     "link_action_cancel" : "button tiny action-cancel",     <#-- cancel action link: "Cancel", "Close", "Stop", etc. -->
     "link_action_cancel_long" : "action-cancel link-long", 

@@ -208,7 +208,7 @@
     "action_modify" : "action-modify",                    <#-- generic modify action, can also be a collection of modifications -->
     "action_create" : "action-modify action-create",      <#-- create item action link: "Create Entity", "New Value", "Add", etc. -->
     "action_update" : "action-modify action-update",      <#-- update item action link: "Update Entity", "Edit", etc. -->
-    "action_remove" : "action-modify action-remove",      <#-- (logical) remove item action link: "Delete", "Remove", "Kill", "Stop", "Cancel Order", etc. -->
+    "action_remove" : "action-modify action-remove",      <#-- (logical) remove item action link: "Delete", "Remove", "Expire", "Kill", "Stop", "Cancel Order", etc. -->
     "action_upload" : "action-modify action-upload",      <#-- upload action link: "Upload", "Transfer", etc. -->
     "action_clear" : "action-modify action-clear",        <#-- clear action link: "Clear", "Reset", "Empty", etc. -->
     "action_start" : "action-modify action-start",        <#-- start action link: "Start", "Start Job", etc. -->

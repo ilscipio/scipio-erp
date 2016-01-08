@@ -210,8 +210,10 @@
     "action_update" : "action-modify action-update",      <#-- update item action link: "Update Entity", "Edit", etc. -->
     "action_remove" : "action-modify action-remove",      <#-- (logical) remove item action link: "Delete", "Remove", "Kill", "Stop", "Cancel Order", etc. -->
     "action_upload" : "action-modify action-upload",      <#-- upload action link: "Upload", "Transfer", etc. -->
-    "action_send" : "action-modify action-send",          <#-- send action link: "Send", "Send Email", etc. -->
     "action_clear" : "action-modify action-clear",        <#-- clear action link: "Clear", "Reset", "Empty", etc. -->
+    "action_start" : "action-modify action-start",        <#-- start action link: "Start", "Start Job", etc. -->
+    "action_stop" : "action-modify action-stop",          <#-- stop action link: "Stop", "Stop Job", etc. -->
+    "action_send" : "action-modify action-send",          <#-- send action link: "Send", "Send Email", etc. -->
 
     <#-- read-only actions -->
     "action_read" : "action-read",                        <#-- generic read action, can also be a collection of read actions -->

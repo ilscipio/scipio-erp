@@ -202,7 +202,7 @@
     
   <#-- Specific action types -->
     "action_generic" : "action-generic",                  <#-- generic action class; avoid using; always use more specific where possible -->
-    "action_cancel" : "action-cancel",                    <#-- cancel (another) action class. WARN: this is only for cancelling other actions or navigations. it does not mean "set order status to cancelled" (use an action_modify for that); 
+    "action_cancel" : "action-cancel",                    <#-- cancel (another) action class. WARN: this is only for cancelling other actions or navigations. it does not mean "set order status to cancelled" (use an action_modify for that, like action_terminate); 
                                                               is only for actions that cancel other actions in progress, not new requests for modifying system state. -->
     <#-- state-changing actions -->
     "action_modify" : "action-modify",                    <#-- generic modify action, can also be a collection of modifications -->
@@ -210,7 +210,8 @@
     "action_update" : "action-modify action-update",      <#-- update item action link: "Update Entity", "Edit", etc. -->
     "action_remove" : "action-modify action-remove",      <#-- (logical) remove item action link: "Delete", "Remove", etc. -->
     "action_clear" : "action-modify action-clear",        <#-- clear action link: "Clear", "Reset", "Empty Fields", etc. -->
-    "action_begin" : "action-modify action-begin",        <#-- start action link: "Start", "Start Job", etc. -->
+    "action_copy" : "action-modify action-copy",          <#-- copy action link: "Copy", "Duplicate", etc. -->
+    "action_begin" : "action-modify action-begin",        <#-- begin action link: "Begin", "Start", "Start Job", etc. -->
     "action_terminate" : "action-modify action-terminate",<#-- terminate action link: "Cancel Order", "Expire", "Stop", "Stop Job", etc. -->
     "action_complete" : "action-modify action-complete",  <#-- complete action link: "Complete Order", "Mark Success", etc. -->
     "action_upload" : "action-modify action-upload",      <#-- upload action link: "Upload", "Transfer", etc. -->

@@ -77,23 +77,29 @@ public class WorkEffortServices {
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		String roleTypeId = (String) context.get("roleTypeId");
 		Locale locale = (Locale) context.get("locale");
+		TimeZone timeZone = (TimeZone) context.get("timeZone");
 
 		List<GenericValue> validWorkEfforts = null;
-		
-		Timestamp fromDate = (context.containsKey("fromDate")) ? (Timestamp) context.get("fromDate") : null;
-
 		if (userLogin != null && userLogin.get("partyId") != null) {
 			try {
-				EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(EntityOperator.AND,
-						EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")),
-						EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, roleTypeId),
-						EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "EVENT"),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
-				validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("estimatedStartDate", "priority")
-						.filterByDate(fromDate).queryList();
+				List<EntityExpr> conditionList = FastList.newInstance();
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
+				conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, roleTypeId));
+				conditionList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "EVENT"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
+				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					conditionList.add(EntityCondition.makeCondition(
+							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
+							EntityOperator.AND,
+							EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.get("dateEnd"))
+					));					
+				}
+				EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("estimatedStartDate", "priority").filterByDate().queryList();
 			} catch (GenericEntityException e) {
 				Debug.logWarning(e, module);
 				return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, "WorkEffortNotFound", UtilMisc.toMap("errorString", e.toString()),
@@ -113,11 +119,9 @@ public class WorkEffortServices {
 		Delegator delegator = ctx.getDelegator();
 		String roleTypeId = (String) context.get("roleTypeId");
 		Locale locale = (Locale) context.get("locale");
+		TimeZone timeZone = (TimeZone) context.get("timeZone");
 
 		List<GenericValue> validWorkEfforts = null;
-		
-		Timestamp fromDate = (context.containsKey("fromDate")) ? (Timestamp) context.get("fromDate") : null;
-
 		try {
 			List<EntityExpr> conditionList = FastList.newInstance();
 			conditionList.add(EntityCondition.makeCondition("roleTypeId", EntityOperator.EQUALS, roleTypeId));
@@ -126,10 +130,17 @@ public class WorkEffortServices {
 			conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
 			conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
 			conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
+			if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
+				Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+				conditionList.add(EntityCondition.makeCondition(
+						EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
+						EntityOperator.AND,
+						EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.get("dateEnd"))
+				));					
+			}
 
 			EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
-			validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("estimatedStartDate", "priority").filterByDate(fromDate)
-					.queryList();
+			validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("estimatedStartDate", "priority").filterByDate().queryList();
 		} catch (GenericEntityException e) {
 			Debug.logWarning(e, module);
 			return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, "WorkEffortNotFound", UtilMisc.toMap("errorString", e.toString()), locale));
@@ -147,32 +158,46 @@ public class WorkEffortServices {
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Locale locale = (Locale) context.get("locale");
+		TimeZone timeZone = (TimeZone) context.get("timeZone");
 
 		List<GenericValue> validWorkEfforts = null;
-		
-		Debug.log("context fromDate =====> " + context.get("fromDate"));
-		
-		Timestamp fromDate = (context.containsKey("fromDate")) ? (Timestamp) context.get("fromDate") : UtilDateTime.nowTimestamp();
-
 		if (userLogin != null && userLogin.get("partyId") != null) {
 			try {
-				EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(EntityOperator.AND,
-						EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")),
-						EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "TASK"),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"),
-						EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
-				validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("priority").filterByDate(fromDate).queryList();
-				ecl = EntityCondition.makeCondition(EntityOperator.AND,
-						EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")),
-						EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "PROD_ORDER_TASK"),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_CANCELLED "),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_COMPLETED"),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_CLOSED"));
-				validWorkEfforts.addAll(EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("createdDate DESC").filterByDate(fromDate)
-						.queryList());
+				List<EntityExpr> conditionList = FastList.newInstance();				
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
+				conditionList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "TASK"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
+				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					conditionList.add(EntityCondition.makeCondition(
+							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
+							EntityOperator.AND,
+							EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.get("dateEnd"))
+					));					
+				}			
+				EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("priority").filterByDate().queryList();
+				
+				conditionList = FastList.newInstance();				
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
+				conditionList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "PROD_ORDER_TASK"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_CANCELLED"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_COMPLETED"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_CLOSED"));
+				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					conditionList.add(EntityCondition.makeCondition(
+							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
+							EntityOperator.AND,
+							EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.get("dateEnd"))
+					));					
+				}
+				ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				validWorkEfforts.addAll(EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("createdDate DESC").filterByDate().queryList());
 			} catch (GenericEntityException e) {
 				Debug.logWarning(e, module);
 				return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, "WorkEffortNotFound", UtilMisc.toMap("errorString", e.toString()),
@@ -199,28 +224,44 @@ public class WorkEffortServices {
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Locale locale = (Locale) context.get("locale");
+		TimeZone timeZone = (TimeZone) context.get("timeZone");
 
 		List<GenericValue> validWorkEfforts = null;
-		
-		Timestamp fromDate = (context.containsKey("fromDate")) ? (Timestamp) context.get("fromDate") : null;
-
 		if (userLogin != null && userLogin.get("partyId") != null) {
 			try {
-				EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(EntityOperator.AND,
-						EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")),
-						EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "TASK"),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_ACCEPTED"),
-						EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
-				validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("priority").filterByDate(fromDate).queryList();
-				ecl = EntityCondition.makeCondition(EntityOperator.AND,
-						EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")),
-						EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "PROD_ORDER_TASK"),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_CREATED "),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_RUNNING"),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_SCHEDULED"),
-						EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_DOC_PRINTED"));
-				validWorkEfforts.addAll(EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("createdDate DESC").filterByDate(fromDate)
-						.queryList());
+				List<EntityExpr> conditionList = FastList.newInstance();
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
+				conditionList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "TASK"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_ACCEPTED"));
+				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
+				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					conditionList.add(EntityCondition.makeCondition(
+							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
+							EntityOperator.AND,
+							EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.get("dateBegin"))
+					));					
+				}
+				EntityConditionList<EntityExpr> ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("priority").filterByDate().queryList();
+				
+				conditionList = FastList.newInstance();
+				conditionList.add(EntityCondition.makeCondition("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
+				conditionList.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "PROD_ORDER_TASK"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_CREATED "));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_RUNNING"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_SCHEDULED"));
+				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_DOC_PRINTED"));
+				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					conditionList.add(EntityCondition.makeCondition(
+							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
+							EntityOperator.AND,
+							EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.get("dateEnd"))
+					));					
+				}
+				ecl = EntityCondition.makeCondition(conditionList, EntityOperator.AND);
+				validWorkEfforts.addAll(EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(ecl).orderBy("createdDate DESC").filterByDate().queryList());
 			} catch (GenericEntityException e) {
 				Debug.logWarning(e, module);
 				return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, "WorkEffortNotFound", UtilMisc.toMap("errorString", e.toString()),
@@ -247,11 +288,9 @@ public class WorkEffortServices {
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Locale locale = (Locale) context.get("locale");
+		TimeZone timeZone = (TimeZone) context.get("timeZone");
 
 		List<GenericValue> validWorkEfforts = null;
-		
-		Timestamp fromDate = (context.containsKey("fromDate")) ? (Timestamp) context.get("fromDate") : null;
-
 		if (userLogin != null && userLogin.get("partyId") != null) {
 			try {
 				List<EntityExpr> constraints = FastList.newInstance();
@@ -259,10 +298,17 @@ public class WorkEffortServices {
 				constraints.add(EntityCondition.makeCondition("workEffortTypeId", EntityOperator.EQUALS, "ACTIVITY"));
 				constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_NEEDS_ACTION"));
 				constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_SENT"));
+				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					constraints.add(EntityCondition.makeCondition(
+							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
+							EntityOperator.AND,
+							EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.get("dateEnd"))
+					));					
+				}
 				// constraints.add(EntityCondition.makeCondition("statusId",
 				// EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
-				validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(constraints).orderBy("priority").filterByDate(fromDate)
-						.queryList();
+				validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(constraints).orderBy("priority").filterByDate().queryList();
 			} catch (GenericEntityException e) {
 				Debug.logWarning(e, module);
 				return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, "WorkEffortNotFound", UtilMisc.toMap("errorString", e.toString()),
@@ -281,11 +327,9 @@ public class WorkEffortServices {
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Locale locale = (Locale) context.get("locale");
+		TimeZone timeZone = (TimeZone) context.get("timeZone");
 
 		List<GenericValue> validWorkEfforts = null;
-		
-		Timestamp fromDate = (context.containsKey("fromDate")) ? (Timestamp) context.get("fromDate") : null;
-
 		if (userLogin != null && userLogin.get("partyId") != null) {
 			try {
 				List<EntityExpr> constraints = FastList.newInstance();
@@ -299,6 +343,14 @@ public class WorkEffortServices {
 				constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
 				constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
 				constraints.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
+				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					constraints.add(EntityCondition.makeCondition(
+							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
+							EntityOperator.AND,
+							EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.get("dateEnd"))
+					));					
+				}
 				// Cato: I don't think those are really used anywhere..
 				// commenting them out
 				// constraints.add(EntityCondition.makeCondition("statusId",
@@ -308,8 +360,7 @@ public class WorkEffortServices {
 				// constraints.add(EntityCondition.makeCondition("statusId",
 				// EntityOperator.NOT_EQUAL, "WF_ABORTED"));
 
-				validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(constraints).orderBy("priority").filterByDate(fromDate)
-						.queryList();
+				validWorkEfforts = EntityQuery.use(delegator).from("WorkEffortAndPartyAssign").where(constraints).orderBy("priority").filterByDate().queryList();
 			} catch (GenericEntityException e) {
 				Debug.logWarning(e, module);
 				return ServiceUtil.returnError(UtilProperties.getMessage(resourceError, "WorkEffortNotFound", UtilMisc.toMap("errorString", e.toString()),
@@ -328,11 +379,9 @@ public class WorkEffortServices {
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Locale locale = (Locale) context.get("locale");
+		TimeZone timeZone = (TimeZone) context.get("timeZone");
 
 		List<GenericValue> roleWorkEfforts = null;
-		
-		Timestamp fromDate = (context.containsKey("fromDate")) ? (Timestamp) context.get("fromDate") : null;
-
 		if (userLogin != null && userLogin.get("partyId") != null) {
 			try {
 				List<EntityExpr> constraints = FastList.newInstance();
@@ -346,6 +395,14 @@ public class WorkEffortServices {
 				constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
 				constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
 				constraints.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
+				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					constraints.add(EntityCondition.makeCondition(
+							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
+							EntityOperator.AND,
+							EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.get("dateEnd"))
+					));					
+				}
 				// Cato: I don't think those are really used anywhere..
 				// commenting them out
 				// constraints.add(EntityCondition.makeCondition("statusId",
@@ -355,7 +412,7 @@ public class WorkEffortServices {
 				// constraints.add(EntityCondition.makeCondition("statusId",
 				// EntityOperator.NOT_EQUAL, "WF_ABORTED"));
 
-				roleWorkEfforts = EntityQuery.use(delegator).from("WorkEffortPartyAssignByRole").where(constraints).orderBy("priority").filterByDate(fromDate)
+				roleWorkEfforts = EntityQuery.use(delegator).from("WorkEffortPartyAssignByRole").where(constraints).orderBy("priority").filterByDate()
 						.queryList();
 			} catch (GenericEntityException e) {
 				Debug.logWarning(e, module);
@@ -375,11 +432,9 @@ public class WorkEffortServices {
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Locale locale = (Locale) context.get("locale");
+		TimeZone timeZone = (TimeZone) context.get("timeZone");
 
 		List<GenericValue> groupWorkEfforts = null;
-		
-		Timestamp fromDate = (context.containsKey("fromDate")) ? (Timestamp) context.get("fromDate") : null;
-
 		if (userLogin != null && userLogin.get("partyId") != null) {
 			try {
 				List<EntityExpr> constraints = FastList.newInstance();
@@ -393,6 +448,14 @@ public class WorkEffortServices {
 				constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
 				constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
 				constraints.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
+				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					constraints.add(EntityCondition.makeCondition(
+							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
+							EntityOperator.AND,
+							EntityCondition.makeCondition("createdDate", EntityOperator.LESS_THAN, createdPeriod.get("dateEnd"))
+					));					
+				}
 				// Cato: I don't think those are really used anywhere..
 				// commenting them out
 				// constraints.add(EntityCondition.makeCondition("statusId",
@@ -402,7 +465,7 @@ public class WorkEffortServices {
 				// constraints.add(EntityCondition.makeCondition("statusId",
 				// EntityOperator.NOT_EQUAL, "WF_ABORTED"));
 
-				groupWorkEfforts = EntityQuery.use(delegator).from("WorkEffortPartyAssignByGroup").where(constraints).orderBy("priority").filterByDate(fromDate)
+				groupWorkEfforts = EntityQuery.use(delegator).from("WorkEffortPartyAssignByGroup").where(constraints).orderBy("priority").filterByDate()
 						.queryList();
 			} catch (GenericEntityException e) {
 				Debug.logWarning(e, module);

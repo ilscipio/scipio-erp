@@ -32,6 +32,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
+import javolution.util.FastMap;
+
 import com.ibm.icu.util.Calendar;
 
 /**
@@ -1229,4 +1231,36 @@ public class UtilDateTime {
         }
 
     }
+    
+    public static Map<String, Timestamp> getPeriodInterval(String period, Locale locale, TimeZone timezone) {
+		Map<String, Timestamp> result = FastMap.newInstance();
+		Timestamp now = UtilDateTime.nowTimestamp();
+		switch (period) {
+		case "week":
+			result.put("dateBegin", UtilDateTime.getWeekStart(now));
+			result.put("dateEnd", UtilDateTime.getWeekEnd(now));
+			break;
+		case "month":
+			result.put("dateBegin", UtilDateTime.getMonthStart(now));
+			result.put("dateEnd", UtilDateTime.getMonthEnd(now, timezone, locale));
+			break;
+		case "trimester":
+			result.put("dateBegin", UtilDateTime.getMonthStart(now, 0, 3));
+			result.put("dateEnd", UtilDateTime.getMonthEnd(now, timezone, locale));
+			break;
+		case "semester":
+			result.put("dateBegin", UtilDateTime.getMonthStart(now, 0, 6));
+			result.put("dateEnd", UtilDateTime.getMonthEnd(now, timezone, locale));
+			break;
+		case "year":
+			result.put("dateBegin", UtilDateTime.getYearStart(now));
+			result.put("dateEnd", UtilDateTime.getYearEnd(now, timezone, locale));
+			break;
+		default:
+			result.put("dateBegin", UtilDateTime.getMonthStart(now));
+			result.put("dateEnd", UtilDateTime.getMonthEnd(now, timezone, locale));
+			break;
+		}
+		return result;
+	}
 }

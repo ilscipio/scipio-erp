@@ -27,7 +27,7 @@
                 <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>
 				<set field="viewSize" value="10" />
 				<set field="now" value="${groovy:org.ofbiz.base.util.UtilDateTime.nowTimestamp()}" />
-				<set field="fromDate" value="${groovy:org.ofbiz.base.util.UtilDateTime.getWeekStart(now)}" global="true"/>
+				<set field="createdPeriod" value="week"/>
             </actions>
             <widgets>
             	<!-- <platform-specific><html><html-template location="component://accounting/webapp/accounting/main.ftl"/></html></platform-specific> -->  
@@ -39,7 +39,7 @@
 							</section>
 						</screenlet>
 					</decorator-section>
-					<decorator-section name="topRight">
+					<!-- <decorator-section name="topRight">
 						<screenlet title="${uiLabelMap.WorkEffortCompletedTasks}">    
 		                	<section>								
 								<widgets><include-form name="WorkEffortCompletedTasks" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/></widgets>
@@ -59,7 +59,7 @@
 								<widgets><include-form name="WorkEffortCompletedActivities" location="component://assetmaint/widget/forms/WorkEffortForms.xml"/></widgets>
 							</section>
 						</screenlet>
-					</decorator-section>
+					</decorator-section> -->
                 </decorator-screen>
             </widgets>
         </section>

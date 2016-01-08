@@ -1,15 +1,11 @@
 import java.sql.Timestamp
-import java.text.SimpleDateFormat
 
 import org.ofbiz.base.util.Debug
+import org.ofbiz.base.util.UtilDateTime
 import org.ofbiz.base.util.UtilMisc
-import org.ofbiz.base.util.UtilRandom
 import org.ofbiz.base.util.UtilProperties
+import org.ofbiz.base.util.UtilRandom
 import org.ofbiz.entity.*
-import org.ofbiz.entity.condition.EntityCondition;
-import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.model.DynamicViewEntity
-import org.ofbiz.entity.model.ModelKeyMap
 import org.ofbiz.entity.util.*
 import org.ofbiz.service.ServiceUtil
 
@@ -86,8 +82,12 @@ public Map createDemoWorkEffort() {
 		workEffortTypeIdsAndStatusList = workEffortTypeIdsAndStatus.get(workEffortTypeId);
 		String currentStatusId = workEffortTypeIdsAndStatusList.get(UtilRandom.random(workEffortTypeIdsAndStatusList));		
 		Debug.log("WorkEffortTypeId ====> " + workEffortTypeId + " currentStatusId ======> " + currentStatusId + " partyId ==========> " + partyId);		
-		String workEffortName = "Demo WorkEffort " + workEffortId;		
-		Timestamp createdDate = Timestamp.valueOf(UtilRandom.generateRandomDate(context));
+		String workEffortName = "Demo WorkEffort " + workEffortId;
+		minDate = UtilDateTime.nowDate();
+		if (context.minDate != null)
+			minDate = new Date(context.minDate.getTime());
+			
+		Timestamp createdDate = Timestamp.valueOf(UtilRandom.generateRandomDate(minDate, context));
 		Map fields = UtilMisc.toMap("workEffortId", workEffortId, "workEffortTypeId", workEffortTypeId, "currentStatusId", currentStatusId, "workEffortName", workEffortName, "description", workEffortName + " description", "createdDate", createdDate);	
 		GenericValue workEffort = delegator.makeValue("WorkEffort", fields);
 		toBeStored.add(workEffort);

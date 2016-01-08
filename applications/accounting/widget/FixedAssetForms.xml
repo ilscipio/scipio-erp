@@ -65,7 +65,7 @@ under the License.
     <form name="FindFixedAssetOptions" extends="lookupFixedAsset" extends-resource="component://accounting/widget/FieldLookupForms.xml"
         target="ListFixedAssets">
         <field name="searchOptions_collapsed"><hidden value="true"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <!-- create and update a fixed asset -->
@@ -142,7 +142,7 @@ under the License.
         <field name="purchaseCost" position="2"><text/></field>
         <field name="depreciation" title="${uiLabelMap.AccountingDepreciation}" position="2"><text/></field>
         <field name="salvageValue" position="2"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListFixedAssetProducts" type="list" list-name="fixedAssetProducts" target="updateFixedAssetProduct"
@@ -152,7 +152,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
         <field name="fixedAssetId"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="removeFixedAssetProduct" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="fixedAssetId"/>
@@ -189,7 +189,7 @@ under the License.
         <field name="sequenceNum"><text/></field>
         <field name="comments" position="2"><textarea/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="WorkEffortSummary" type="single" default-map-name="workEffort"
@@ -242,7 +242,7 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="EditFixedAssetStdCost" type="single" target="createFixedAssetStdCost" title="" default-map-name="fixedAssetStdCost"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -263,7 +263,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
 
     <!-- List all fixed asset idents  -->
@@ -286,7 +286,7 @@ under the License.
                 <parameter param-name="fixedAssetIdentTypeId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <!-- create a fixed asset Idents-->
@@ -302,7 +302,7 @@ under the License.
             </drop-down>
         </field>
         <field name="idValue" title="${uiLabelMap.CommonValue}" position="2"><text size="20" maxlength="20"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
 
     <!-- List all fixed asset Registration  -->
@@ -326,8 +326,8 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <!-- create a fixed asset Registration-->
@@ -340,7 +340,7 @@ under the License.
         <field name="govAgencyPartyId" title="${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="registrationNumber" title="${uiLabelMap.AccountingFixedAssetRegNumber}" position="2"><text size="20"/></field>
         <field name="licenseNumber" title="${uiLabelMap.AccountingFixedAssetLicenseNumber}" position="2"><text size="20"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
 
     <!-- list all Fixed Asset Maintenance-->
@@ -443,7 +443,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="purchaseOrderId" position="2"><lookup target-form-name="LookupOrderHeader"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <!-- List all fixed asset meter readings -->
@@ -474,8 +474,8 @@ under the License.
                 <parameter param-name="maintHistSeqId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteFixedAssetMeter" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="fixedAssetId"/>
                 <parameter param-name="productMeterTypeId"/>
@@ -502,7 +502,7 @@ under the License.
         <field name="meterValue" title="${uiLabelMap.CommonValue}"><text size="20"/></field>
         <field name="readingReasonEnumId" title="${uiLabelMap.CommonReason}" position="2"><text size="20"/></field>
         <field name="workEffortId" title="${uiLabelMap.WorkEffort}" position="2"><lookup target-form-name="LookupWorkEffort"></lookup></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <!-- List all fixed asset Maintenance Order  -->
     <form name="ListFixedAssetMaintOrders" type="list" list-name="fixedAssetMaintOrders" target="updateFixedAssetMaintOrder"
@@ -540,7 +540,7 @@ under the License.
         <field name="maintHistSeqId"><hidden/></field>
         <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
         <field name="orderItemSeqId"><text size="20"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
 
     <!-- =====================Party Fixed Asset Assignment Forms============== -->
@@ -574,7 +574,7 @@ under the License.
              </drop-down>
         </field>
         <field name="comments" title="${uiLabelMap.CommonComments}"><text size="35"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action}">
@@ -614,7 +614,7 @@ under the License.
          <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
          <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
          
-         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddFixedAssetDepMethod" type="single" target="createFixedAssetDepMethod" title=""
@@ -628,7 +628,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListFixedAssetDepMethods" type="list" list-name="fixedAssetDepMethods"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -744,7 +744,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="GlobalFixedAssetTypeGlAccounts" type="list" list-name="globalFixedAssetTypeGlAccounts"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">

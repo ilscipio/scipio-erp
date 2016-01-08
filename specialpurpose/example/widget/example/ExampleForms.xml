@@ -37,7 +37,7 @@ under the License.
                 <entity-options description="${description}" key-field-name="statusId" entity-name="ExampleStatusItem"/>
             </drop-down>
         </field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button" image-location="/images/icons/magnifier.png"/></field>
     </form>
 
     <form name="ListExamples" type="list" list-name="listIt" paginate-target="FindExample" default-entity-name="Example" separate-columns="true"

@@ -43,7 +43,7 @@ under the License.
         <field position="2" name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
         <field position="2" name="referenceNumber" ><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListInvoices" type="list" separate-columns="true" title="Invoice List" list-name="listIt" target="" default-entity-name="Invoice" paginate-target="findInvoices"
@@ -368,8 +368,8 @@ under the License.
        </field>
        <field name="amount" title="${uiLabelMap.AccountingUnitPrice}"><text size="10"/></field>
        <field name="total" widget-area-style="amount"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence display -->
-       <field name="updateAction" id-name="updateInvoiceItem" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}" ><submit button-type="text-link"/></field>
-       <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}">
+       <field name="updateAction" id-name="updateInvoiceItem" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}" ><submit button-type="text-link"/></field>
+       <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceItem">
                 <parameter param-name="invoiceId"/>
                 <parameter param-name="invoiceItemSeqId"/>
@@ -416,10 +416,10 @@ under the License.
             <option key="N" description="${uiLabelMap.CommonNo}"/>
         </drop-down>
         </field>
-        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}" use-when="invoiceItem==null">
+        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}" use-when="invoiceItem==null">
             <submit button-type="button"/>
         </field>
-        <field name="updateAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}" use-when="invoiceItem!=null">
+        <field name="updateAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}" use-when="invoiceItem!=null">
             <submit button-type="button"/>
         </field>
     </form>
@@ -453,8 +453,8 @@ under the License.
         <field name="paymentId" title="${uiLabelMap.CommonPayment}"><lookup target-form-name="LookupPayment"/></field>
         <field name="billingAccountId"><hidden/></field>
         <field name="amountToApply"><text size="10" disabled="true"/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}" use-when="paymentApplicationId!=null">
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}" use-when="paymentApplicationId!=null">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceApplication">
                 <parameter param-name="paymentApplicationId"/>
                 <parameter param-name="invoiceId"/>
@@ -566,7 +566,7 @@ under the License.
 
         <field name="invoiceId"><hidden/></field>
 
-        <field name="deleteAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}">
+        <field name="deleteAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="unlinkInvoiceFromTimeEntry" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="timeEntryId"/>
                 <parameter param-name="invoiceId"/>

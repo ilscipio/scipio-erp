@@ -28,7 +28,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="2"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="1"><date-time type="date"/></field>
         <field name="noConditionFind" position="2"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListBillingAccounts" type="list" list-name="listIt" paginate-target="FindBillingAccount" default-entity-name="BillingAccount"
@@ -198,8 +198,8 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
  		<field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteBillingAccountRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="billingAccountId"/>
                 <parameter param-name="roleTypeId"/>
@@ -224,7 +224,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListBillingAccountTerms" type="list" list-name="billingAccountTermsList" default-entity-name="BillingAccountTerm" paginate-target="EditBillingAccountTerms"
@@ -277,7 +277,7 @@ under the License.
             </drop-down>
         </field>
         <field name="termValue" title="${uiLabelMap.PartyTermValue}"><text size="10"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListBillingAccountPayments" type="list" list-name="payments" paginate-target="BillingAccountPayments"

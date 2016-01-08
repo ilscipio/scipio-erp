@@ -581,7 +581,7 @@
         <field name="roleTypeId"><hidden value="SCRUM_MEMBER"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListTaskParties" type="list" list-name="taskMembers" target="deleteTaskPartyAssign"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true">
@@ -649,7 +649,7 @@
             <text default-value="${taskInfo.planHours}" size="2"/>
         </field>
         <field name="UpdateAction" title="${uiLabelMap.CommonUpdate}"><submit/></field>
-        <field name="RemoveAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}">
+        <field name="RemoveAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="unassignPartyFromWorkEffort" description="${uiLabelMap.CommonRemove}" confirmation-message="Are you sure to remove this task ?" link-type="hidden-form">
                 <parameter param-name="workEffortId" from-field="taskId"/>
                 <parameter param-name="partyId" from-field="partyId"/>

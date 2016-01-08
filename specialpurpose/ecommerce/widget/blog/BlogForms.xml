@@ -45,7 +45,7 @@
         <field name="contentName">
             <text-find/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
         <field name="createBlog" title=" " widget-style="${styles.link_action}">

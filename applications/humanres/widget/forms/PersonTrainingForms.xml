@@ -97,7 +97,7 @@ under the License.
         <field name="approverId" use-when="!hasAdminPermission"><hidden value="${loginPartyId}"/></field>
         <field name="reason"><text-find ignore-case="true"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListTrainingApprovals" type="list" list-name="listIt" target="updateTrainingStatus" title="" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
@@ -126,7 +126,7 @@ under the License.
         <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}"/>
         <field name="trainingRequestId" widget-style="${styles.link_record_id}"/>
         <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}"><display description="Update"/></field>
-        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}" use-when="(&quot;${approvalStatus}&quot;.equals(&quot;TRAINING_APPLIED&quot;))||(&quot;${approvalStatus}&quot;.equals(&quot;TRAINING_APPROVED&quot;))">
+        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}" use-when="(&quot;${approvalStatus}&quot;.equals(&quot;TRAINING_APPLIED&quot;))||(&quot;${approvalStatus}&quot;.equals(&quot;TRAINING_APPROVED&quot;))">
             <hyperlink description="${uiLabelMap.CommonUpdate}" target="EditTrainingApprovals">
                 <parameter param-name="partyId"/>
                 <parameter param-name="trainingClassTypeId"/>

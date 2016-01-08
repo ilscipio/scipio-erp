@@ -53,7 +53,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="1"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="sequenceNum"><text/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListProductStoreRole" type="list" list-name="listIt" paginate-target="FindProductStoreRoles" default-entity-name="ProductStoreRole" separate-columns="true"

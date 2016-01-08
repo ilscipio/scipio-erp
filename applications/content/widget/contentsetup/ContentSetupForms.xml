@@ -24,7 +24,7 @@ under the License.
     <form name="AddContentType" target="addContentType" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentType"/>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -37,7 +37,7 @@ under the License.
         <field name="contentTypeId">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action}">
@@ -57,7 +57,7 @@ under the License.
                     entity-name="ContentType" key-field-name="contentTypeId"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -85,7 +85,7 @@ under the License.
     <form name="AddContentAssocType" target="addContentAssocType" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentAssocType"/>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -98,7 +98,7 @@ under the License.
         <field name="contentAssocTypeId">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action}">
@@ -112,7 +112,7 @@ under the License.
     <form name="AddContentPurposeType" target="addContentPurposeType" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentPurposeType"/>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -125,7 +125,7 @@ under the License.
         <field name="contentPurposeTypeId">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action}">
@@ -139,7 +139,7 @@ under the License.
    <form name="AddContentAssocPredicate" target="addContentAssocPredicate" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentAssocPredicate"/>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -152,7 +152,7 @@ under the License.
         <field name="contentAssocPredicateId">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action}">
@@ -166,7 +166,7 @@ under the License.
     <form name="AddContentOperation" target="addContentOperation" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentOperation"/>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -179,7 +179,7 @@ under the License.
         <field name="contentOperationId">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action}">
@@ -210,7 +210,7 @@ under the License.
                     entity-name="RoleType" key-field-name="roleTypeId"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
             <submit button-type="button"/>
         </field>
     </form>

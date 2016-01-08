@@ -855,7 +855,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="FindTotalBacklog" type="single" target="FindTotalBacklog">
         <actions>
@@ -913,7 +913,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListProdBacklog" type="multi" use-row-submit="true" list-name="custRequestAndCustRequestItems" target="updateProductBacklogItemRow?productId=${productId}&amp;sequence=${sequence}&amp;" paginate-target="AddProdBacklog" separate-columns="true"
@@ -1159,7 +1159,7 @@ under the License.
             </drop-down>
         </field>
         <field name="setToReview" widget-style="${styles.link_action}" title="${uiLabelMap.ScrumMoveToUnplannedSprint}"><hidden/></field>
-        <field name="deleteFlag" position="1" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
+        <field name="deleteFlag" position="1" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="DeleteProductBacklogItem" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productId" from-field="parameters.productId"/>
                 <parameter param-name="custRequestId" from-field="custRequestId"/>
@@ -1721,7 +1721,7 @@ under the License.
             </field>
             <field name="partyId"><hidden value="${userLogin.partyId}"/></field>
             <field name="roleTypeId"><hidden value="PRODUCT_OWNER"/></field>
-            <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+            <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
             <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done -->
             </field>
         </form>
@@ -1859,11 +1859,11 @@ under the License.
         </field>
         <field name="rateTypeId" title="${uiLabelMap.ScrumRateTypeId}" position="2"><display-entity entity-name="RateType" description="${description}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonDate}" position="2"><display type="date"/> </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="totalHoursNotYetBilled" extends="hoursNotYetBilled" paginate-target="TotalBilling"
        target="updateTotalNotBilledBacklog?productId=${productId}&amp;fromDate=${fromDate}&amp;thruDate=${thruDate}&amp;includeMeeting=${includeMeeting}&amp;VIEW_SIZE_1=${parameters.VIEW_SIZE_1}&amp;VIEW_INDEX_1=${parameters.VIEW_INDEX_1}" >
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="AddProductTimeToNewInvoice" type="single" target="addProductTimeToNewInvoice">
         <field name="partyIdFrom" title="${uiLabelMap.WorkEffortTimeBillFromParty}"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} [${partyId}]"/></field>
@@ -1897,7 +1897,7 @@ under the License.
                 <option key="N"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="FindProductTotalBilling" extends="FindProductBilling" type="single" target="TotalBilling">
         <field name="productId" title="${uiLabelMap.ScrumProductName}">

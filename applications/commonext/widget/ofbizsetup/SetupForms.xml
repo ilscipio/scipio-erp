@@ -231,7 +231,7 @@
         <field name="productCategoryTypeId"><hidden value="CATALOG_CATEGORY"/></field>
         <field name="categoryName" required-field="true"><text size="30" maxlength="60"/></field>
         <field name="description" title="${uiLabelMap.ProductCategoryDescription}"><textarea cols="60" rows="2"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>  
     
     <form name="EditProduct" type="single" target="createUpdateProduct" title="" default-map-name="product"

@@ -48,7 +48,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="workEffortId"><hidden/></field>
         <field name="quoteId"><lookup target-form-name="LookupQuote"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListWorkEffortQuoteItems" separate-columns="true" target="ListWorkEffortQuoteItems" title="" type="list"
@@ -89,6 +89,6 @@ under the License.
         <field name="workEffortId"><hidden/></field>
         <field name="quoteId"><lookup target-form-name="LookupQuote"/></field>
         <field name="quoteItemSeqId"><lookup target-form-name="LookupQuoteItem" target-parameter="quoteId"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
 </forms>

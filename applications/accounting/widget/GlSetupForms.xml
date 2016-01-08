@@ -786,7 +786,7 @@ under the License.
                 <parameter param-name="organizationPartyId"/><parameter param-name="productId"/><parameter param-name="glAccountTypeId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddProductGlAccount" type="single" target="createProductGlAccount"
@@ -831,7 +831,7 @@ under the License.
                 <parameter param-name="organizationPartyId"/><parameter param-name="finAccountTypeId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddFinAccountTypeGlAccount" type="single" target="createFinAccountTypeGlAccount"
@@ -871,7 +871,7 @@ under the License.
                 <parameter param-name="organizationPartyId"/><parameter param-name="productCategoryId"/><parameter param-name="glAccountTypeId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddProductCategoryGlAccount" type="single" target="createProductCategoryGlAccount"
@@ -916,7 +916,7 @@ under the License.
                 <parameter param-name="organizationPartyId"/><parameter param-name="varianceReasonId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddVarianceReasonGlAccount" type="single" target="createVarianceReasonGlAccount"
@@ -957,7 +957,7 @@ under the License.
                 <parameter param-name="organizationPartyId"/><parameter param-name="cardType"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddCreditCardTypeGlAccount" type="single" target="createCreditCardTypeGlAccount"
@@ -1009,7 +1009,7 @@ under the License.
                 <parameter param-name="organizationPartyId"/><parameter param-name="taxAuthGeoId"/><parameter param-name="taxAuthPartyId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddTaxAuthorityGlAccount" type="list" target="createOrganizationTaxAuthorityGlAccount" list-name="taxAuthorityHavingNoGlAccountList"
@@ -1060,7 +1060,7 @@ under the License.
                 <parameter param-name="organizationPartyId"/><parameter param-name="partyId"/><parameter param-name="glAccountId"/><parameter param-name="roleTypeId"/><parameter param-name="glAccountTypeId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddPartyGlAccount" type="single" target="createPartyGlAccount"
@@ -1121,7 +1121,7 @@ under the License.
                 <entity-options entity-name="GlAccountCategoryType" key-field-name="glAccountCategoryTypeId" description="${description}"/>
             </drop-down>
         </field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListGlAccountCategory" type="list" list-name="listIt" paginate-target="FindGlAccountCategory" default-entity-name="GlAccountCategory" separate-columns="true"
@@ -1268,7 +1268,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListFixedAssetTypeGlAccounts" type="list" list-name="fixedAssetTypeGlAccounts"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">

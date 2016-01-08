@@ -80,7 +80,7 @@
         <field name="yearsExperience"><text/></field>
         <field name="rating"><text/></field>
         <field name="skillLevel"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListEmployeeSkills" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmployeeSkill" paginate-target="findPartySkills"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -97,7 +97,7 @@
         <field name="yearsExperience"><text/></field>
         <field name="rating"><text/></field>
         <field name="skillLevel"><text/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteEmployeeSkill" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="skillTypeId"/>
                 <parameter param-name="partyId"/>
@@ -131,7 +131,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListEmployeeQualification" type="list" list-name="listIt" use-row-submit="true" separate-columns="true" target="updateEmployeeQualification" paginate-target="FindPartyQuals"
             odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -164,7 +164,7 @@
             </drop-down>
         </field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteEmployeeQualification" also-hidden="false" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="partyQualTypeId"/>
@@ -184,7 +184,7 @@
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="timestamp"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="timestamp"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="AddEmplLeave" type="single" target="createEmplLeave">
         <auto-fields-service service-name="updateEmplLeave" map-name="leaveApp"/>
@@ -203,7 +203,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2" required-field="true"><date-time type="timestamp"></date-time></field>
         <field name="leaveStatus"><hidden value="LEAVE_CREATED"/></field>
         <field name="approverPartyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplLeaves" type="list" list-name="listIt" separate-columns="true" target="updateEmplLeave" paginate-target="FindEmplLeaves"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">

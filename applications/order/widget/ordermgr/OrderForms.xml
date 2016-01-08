@@ -77,7 +77,7 @@ under the License.
         <field name="productStoreId">
             <lookup target-form-name="/marketing/control/LookupProductStore"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListOrderHeaders" type="single" target="" title=""
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -101,7 +101,7 @@ under the License.
         <field name="termTypeId"><display-entity also-hidden="true" entity-name="TermType"/></field>
         <field name="orderId"><hidden/></field>
         <field name="orderItemSeqId"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="removeOrderTerm" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="orderId"/>

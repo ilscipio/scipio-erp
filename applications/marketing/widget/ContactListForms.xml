@@ -107,7 +107,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit/></field>
     </form>
 
     <form name="ListContactLists" target="ListContactLists" title="" type="list" list-name="listIt"
@@ -192,7 +192,7 @@ under the License.
             <lookup target-form-name="LookupContactMech" target-parameter="partyId"/>
         </field>
         <field name="hideExpired"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListContactListParties" type="list" title="" list-name="listIt" paginate-target="ListContactListParties"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -267,7 +267,7 @@ under the License.
         </field>
         <field name="contactMechTypeId" map-name="contactList" event="onfocus" action="javascript:ajaxUpdateAreas('contactMechContainer,ContactMechTypeOnly,contactMechTypeId=' + this.value);this.disabled=true;"><text/></field>
         <field name="contactMechContainer" id-name="contactMechContainer" title=" "><container/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListImportContactListParties" type="multi" title="" list-name="listIt" target="importContactListParties?contactListId=${parameters.contactListId}" paginate-target="FindImportContactListParties"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -448,7 +448,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-find/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListContactListCommEvents" list-name="listIt" title="" type="list" paginate-target="ListContactListCommEvents"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -509,7 +509,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListLookupContactList" list-name="listIt" target="" title="" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -656,8 +656,8 @@ under the License.
             </display-entity></field>
         <field name="fromDate"><display type="date-time"/></field>
         <field name="thruDate"><date-time/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteWebSiteContactList" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="webSiteId"/>
                 <parameter param-name="contactListId"/>

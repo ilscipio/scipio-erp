@@ -277,7 +277,7 @@
         <field name="workEffortId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden/></field>
         <field name="updateAction"><submit/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="updateTaskAssigment" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="partyId"/>
@@ -476,7 +476,7 @@
         <field name="invoiceInfo"><hidden/></field>
         <field name="comments"><text size="60"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteTimeEntry" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="timeEntryId"/>

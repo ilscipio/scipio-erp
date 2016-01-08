@@ -986,7 +986,7 @@ under the License.
         <field name="custRequestName" entry-name="subject"><text size="60"/></field>
         <field name="contentMimeTypeId"><hidden/></field>
         <field name="content" title="${uiLabelMap.CommonContent}"><textarea cols="70" rows="20"/></field>
-        <field name="submit" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submit" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListRequests" extends="ListRequests" extends-resource="component://order/widget/ordermgr/CustRequestForms.xml">
         <field name="custRequestName">
@@ -1019,7 +1019,7 @@ under the License.
                 <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
             </hyperlink>
         </field>
-        <field name="removeAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}"><submit/></field>
+        <field name="removeAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="ListProgressEmails" type="list" extends="ListPartyCommEvents" list-name="commEventProgress">
         <field name="partyIdFrom"><ignored/></field>
@@ -1046,7 +1046,7 @@ under the License.
         <field name="createdBy" title="${uiLabelMap.CommonCreatedBy}">
             <display description="${orderHeader.createdBy}"/>
         </field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}"><submit/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="AddCommOrder" type="single" target="createCommunicationEventOrder" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="communicationEventId"><hidden/></field>
@@ -1067,7 +1067,7 @@ under the License.
         <field name="internalName">
             <display description="${product.internalName}"/>
         </field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}"><submit/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="AddCommProduct" type="single" target="createCommunicationEventProduct" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="communicationEventId"><hidden/></field>

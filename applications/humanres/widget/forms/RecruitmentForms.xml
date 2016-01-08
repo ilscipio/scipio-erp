@@ -57,7 +57,7 @@ under the License.
         <field name="jobRequisitionDate"><hidden/></field>
         <field name="requiredOnDate"><hidden/></field>
         <field name="qualification"><hidden/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListJobRequisitions" list-name="listIt" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" 
         paginate-target="FindJobRequisitions" default-table-style="${styles.table_basic} hover-bar">
@@ -90,7 +90,7 @@ under the License.
                 <parameter param-name="jobRequisitionId"/> 
             </hyperlink>
         </field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}" use-when="hasAdminPermission">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}" use-when="hasAdminPermission">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteJobRequisition"> 
                 <parameter param-name="jobRequisitionId"/> 
             </hyperlink>
@@ -160,7 +160,7 @@ under the License.
         <field name="emplPositionId"><hidden/></field>
         <field name="employmentAppSourceTypeId"><hidden/></field>
         <field name="referredByPartyId"><hidden/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListInternalJobPosting" list-name="listIt" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" 
         paginate-target="FindInternalJobPosting" default-table-style="${styles.table_basic} hover-bar">
@@ -202,7 +202,7 @@ under the License.
                 <parameter param-name="jobRequisitionId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}" use-when="hasAdminPermission">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}" use-when="hasAdminPermission">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteInternalJobPosting"> 
                 <parameter param-name="applicationId"/> 
             </hyperlink>
@@ -253,7 +253,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListInterview" type="list" list-name="listIt" paginate-target="FindJobInterview" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
@@ -344,7 +344,7 @@ under the License.
             </drop-down>
         </field>
         <field name="jobRequisitionId"><lookup target-form-name="LookupJobRequisition"/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListApprovals" list-name="listIt" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
@@ -371,7 +371,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}">
+        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <hyperlink target="EditApprovalStatus" description="${uiLabelMap.CommonUpdate}" > 
                 <parameter param-name="applicationId"/> 
             </hyperlink>
@@ -416,7 +416,7 @@ under the License.
         <field name="reportingDate"><date-find/></field>
         <field name="location"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListRelocation" list-name="listIt" type="list" odd-row-style="alternate-row" header-row-style="header-row-2"
         default-table-style="${styles.table_basic} hover-bar">

@@ -153,7 +153,7 @@ under the License.
         </field>
         <field name="externalId" position="2"><text/></field>
         <field name="description"><textarea/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" use-when="glAccount==null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
     </form>
 

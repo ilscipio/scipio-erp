@@ -78,7 +78,7 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="webSiteId"><hidden value="${webSiteId}"/></field>
         <field name="pathAlias"><text-find ignore-case="true"/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListWebSitePathAlias" target="" title="" list-name="listIt" type="list" paginate-target="WebSiteAliases"
@@ -283,7 +283,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date-time"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteWebSiteContactList" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="webSiteId"/>
                 <parameter param-name="contactListId"/>

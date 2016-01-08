@@ -723,7 +723,7 @@ under the License.
         <field name="carrierPartyId"><display/></field>
         <field name="fromDate"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="updatePartyCarrierAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="partyId"/>
                 <parameter param-name="carrierPartyId"/>
@@ -1004,7 +1004,7 @@ under the License.
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}"><display/></field>
         <field name="description" title="${uiLabelMap.PartyRole}"><display/></field>
         <field name="parentTypeId"><display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action}">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleterole" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>
@@ -1113,7 +1113,7 @@ under the License.
         <field name="partyId"><hidden /></field>
         <field name="partyIdentTypeDesc"><display /></field>
         <field name="idValue"><display /></field>
-        <field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
+        <field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
              <hyperlink target="deletePartyIdentification" description="${uiLabelMap.CommonDelete}">
                  <parameter param-name="partyId"/>
                  <parameter param-name="partyIdentificationTypeId"/>

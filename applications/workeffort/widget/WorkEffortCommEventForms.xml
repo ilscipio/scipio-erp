@@ -38,7 +38,7 @@ under the License.
         <field name="statusId"  title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="contactMechTypeId"><display-entity entity-name="ContactMechType"/></field>
         <field name="description"><text size="40"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action}">
             <hyperlink target="deleteCommunicationEventWorkEff" also-hidden="false" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="workEffortId"/>
@@ -54,7 +54,7 @@ under the License.
         <field name="workEffortId"><hidden/></field>
         <field name="description"><textarea/></field>
         <field name="communicationEventId"><lookup target-form-name="LookupCommEvent"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="text-link"/></field>
         <sort-order>
             <banner left-text="${uiLabelMap.WorkEffortBanner3}"/>
             <sort-field name="workEffortId"/>

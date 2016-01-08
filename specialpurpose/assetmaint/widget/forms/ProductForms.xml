@@ -141,8 +141,8 @@
         <field name="intervalQuantity"><text/></field>
         <field name="repeatCount"><text/></field>
         <field name="maintTemplateWorkEffortId"><lookup target-form-name="LookupWorkEffort"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteProductMaint" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="fixedAssetId" from-field="parameters.fixedAssetId"/>
                 <parameter param-name="productId"/>

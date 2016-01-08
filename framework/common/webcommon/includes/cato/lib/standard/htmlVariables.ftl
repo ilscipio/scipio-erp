@@ -188,7 +188,7 @@
       action_xxx styles are fully generic and meant to apply to any interactive UI element (link, menu item, onclick, etc.) and
       for any element that directly or indirectly triggers or encourages an action (nav link, submit button, etc.).-->
     
-  <#-- Basic action flags -->
+  <#-- General UI functionality action types -->
     "action_nav" : "action-nav",                          <#-- basically, identifies a navigation link. usually optional; added for clarity. -->
     "action_run" : "action-run",                          <#-- identifies a link or item that actually runs an action, such as a form submit button, or download PDF button, or intermediate action like clearing a form. nav links should never have this. -->
     
@@ -200,7 +200,7 @@
     "action_scope_session" : "action-scope-session",      <#-- action that changes user session state -->
     "action_scope_page" : "action-scope-page",            <#-- action that changes state on a page or form only (usually with javascript or input reset button) -->
     
-  <#-- Action type styles -->
+  <#-- Specific action types -->
     "action_generic" : "action-generic",                  <#-- generic action class; avoid using; always use more specific where possible -->
     "action_cancel" : "action-cancel",                    <#-- cancel (another) action class. WARN: this is only for cancelling other actions or navigations. it does not mean "set order status to cancelled" (use an action_modify for that); 
                                                               is only for actions that cancel other actions in progress, not new requests for modifying system state. -->
@@ -208,11 +208,12 @@
     "action_modify" : "action-modify",                    <#-- generic modify action, can also be a collection of modifications -->
     "action_create" : "action-modify action-create",      <#-- create item action link: "Create Entity", "New Value", "Add", etc. -->
     "action_update" : "action-modify action-update",      <#-- update item action link: "Update Entity", "Edit", etc. -->
-    "action_remove" : "action-modify action-remove",      <#-- (logical) remove item action link: "Delete", "Remove", "Expire", "Kill", "Stop", "Cancel Order", etc. -->
+    "action_remove" : "action-modify action-remove",      <#-- (logical) remove item action link: "Delete", "Remove", etc. -->
+    "action_clear" : "action-modify action-clear",        <#-- clear action link: "Clear", "Reset", "Empty Fields", etc. -->
+    "action_begin" : "action-modify action-begin",        <#-- start action link: "Start", "Start Job", etc. -->
+    "action_terminate" : "action-modify action-terminate",<#-- terminate action link: "Cancel Order", "Expire", "Stop", "Stop Job", etc. -->
+    "action_complete" : "action-modify action-complete",  <#-- complete action link: "Complete Order", "Mark Success", etc. -->
     "action_upload" : "action-modify action-upload",      <#-- upload action link: "Upload", "Transfer", etc. -->
-    "action_clear" : "action-modify action-clear",        <#-- clear action link: "Clear", "Reset", "Empty", etc. -->
-    "action_start" : "action-modify action-start",        <#-- start action link: "Start", "Start Job", etc. -->
-    "action_stop" : "action-modify action-stop",          <#-- stop action link: "Stop", "Stop Job", etc. -->
     "action_send" : "action-modify action-send",          <#-- send action link: "Send", "Send Email", etc. -->
 
     <#-- read-only actions -->

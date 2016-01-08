@@ -211,16 +211,14 @@ under the License.
     <service name="getWorkEffortAssignedEventsForRole" engine="java"
             location="org.ofbiz.workeffort.workeffort.WorkEffortServices" invoke="getWorkEffortAssignedEventsForRole" >
         <description>Get the active WorkEffort Events where the logged in user is assigned in the specidied role.</description>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="createdPeriod" type="String" mode="IN" optional="true"/>        
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="events" type="java.util.List" mode="OUT" optional="false"/>
     </service>
     <service name="getWorkEffortAssignedEventsForRoleOfAllParties" engine="java"
             location="org.ofbiz.workeffort.workeffort.WorkEffortServices" invoke="getWorkEffortAssignedEventsForRoleOfAllParties">
         <description>Get the active WorkEffort Events in the specified role for all the parties.</description>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="createdPeriod" type="String" mode="IN" optional="true"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="events" type="java.util.List" mode="OUT" optional="false"/>
     </service>
@@ -229,8 +227,7 @@ under the License.
         <description>Get WorkEffort Assigned Tasks : workEffort assign to userLogin.partyId and with
             workEffortTypeId = TASK and currentStatusId not in (CAL_DECLINED, CAL_DELEGATED, CAL_COMPLETED, CAL_CANCELLED) and partyAssign.statusId != PRTYASGN_UNASSIGNED
             OR  workEffortTypeId = PROD_ORDER_TASK and currentStatusId not in (PRUN_CANCELLED, PRUN_COMPLETED, PRUN_CLOSED)</description>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="createdPeriod" type="String" mode="IN" optional="true"/>
         <attribute name="tasks" type="java.util.List" mode="OUT" optional="false"/>
     </service>
     <service name="getWorkEffortAssignedActivities" engine="java"
@@ -238,24 +235,21 @@ under the License.
         <description>Get WorkEffort Assigned Activities : workEffort assign to userLogin.partyId and with
             workEffortTypeId = ACTIVITY and currentStatusId not in (WF_COMPLETED, WF_TERMINATED, WF_ABORTED)
             and partyAssign.statusId not in (CAL_DECLINED, CAL_DELEGATED, CAL_COMPLETED, CAL_CANCELLED, PRTYASGN_UNASSIGNED)</description>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="createdDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="activities" type="java.util.List" mode="OUT" optional="false"/>
     </service>    
     <service name="getWorkEffortAssignedActivitiesByRole" engine="java"
             location="org.ofbiz.workeffort.workeffort.WorkEffortServices" invoke="getWorkEffortAssignedActivitiesByRole">
         <description>Get WorkEffort Assigned Activities By Role : same condition as getWorkEffortAssignedActivities but on view WorkEffortPartyAssignByRole
             to be able to have all party roles</description>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="createdPeriod" type="String" mode="IN" optional="true"/>
         <attribute name="roleActivities" type="java.util.List" mode="OUT" optional="false"/>
     </service>
     <service name="getWorkEffortAssignedActivitiesByGroup" engine="java"
             location="org.ofbiz.workeffort.workeffort.WorkEffortServices" invoke="getWorkEffortAssignedActivitiesByGroup">
         <description>Get WorkEffort Assigned Activities By Group : same condition as getWorkEffortAssignedActivities but on view WorkEffortPartyAssignByGroup
             to be able to have all parties associated to userLogin.partyId by PartyRelationship</description>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="createdPeriod" type="String" mode="IN" optional="true"/>
         <attribute name="groupActivities" type="java.util.List" mode="OUT" optional="false"/>
     </service>
     
@@ -265,8 +259,7 @@ under the License.
         <description>Get WorkEffort Completed Tasks : workEffort assign to userLogin.partyId and with
             workEffortTypeId = TASK and currentStatusId in (CAL_DECLINED, CAL_DELEGATED, CAL_COMPLETED, CAL_CANCELLED)
             OR  workEffortTypeId = PROD_ORDER_TASK and currentStatusId in (PRUN_CANCELLED, PRUN_COMPLETED, PRUN_CLOSED)</description>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="createdPeriod" type="String" mode="IN" optional="true"/>
         <attribute name="tasks" type="java.util.List" mode="OUT" optional="false"/>
     </service>
     <service name="getWorkEffortCompletedActivities" engine="java"
@@ -274,8 +267,7 @@ under the License.
         <description>Get WorkEffort Completed Activities : workEffort assign to userLogin.partyId and with
             workEffortTypeId = ACTIVITY and partyAssign.statusId in (WF_COMPLETED, WF_TERMINATED, WF_ABORTED)
             and currentStatusId in (CAL_DECLINED, CAL_DELEGATED, CAL_COMPLETED, CAL_CANCELLED, PRTYASGN_UNASSIGNED)</description>
-        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="createdPeriod" type="String" mode="IN" optional="true"/>
         <attribute name="activities" type="java.util.List" mode="OUT" optional="false"/>
     </service>
 

@@ -214,7 +214,7 @@
     "action_begin" : "action-modify action-begin",        <#-- begin action link: "Begin", "Start", "Start Job", etc. -->
     "action_terminate" : "action-modify action-terminate",<#-- terminate action link: "Cancel Order", "Expire", "Stop", "Stop Job", etc. -->
     "action_complete" : "action-modify action-complete",  <#-- complete action link: "Complete Order", "Mark Success", etc. -->
-    "action_upload" : "action-modify action-upload",      <#-- upload action link: "Upload", "Transfer", etc. -->
+    "action_upload" : "action-modify action-upload",      <#-- upload action link: "Upload", "Transfer", "Import", etc. -->
     "action_send" : "action-modify action-send",          <#-- send action link: "Send", "Send Email", etc. -->
 
     <#-- read-only actions -->

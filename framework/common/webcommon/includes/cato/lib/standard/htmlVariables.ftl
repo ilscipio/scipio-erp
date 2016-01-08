@@ -206,11 +206,12 @@
                                                               is only for actions that cancel other actions in progress, not new requests for modifying system state. -->
     <#-- state-changing actions -->
     "action_modify" : "action-modify",                    <#-- generic modify action, can also be a collection of modifications -->
-    "action_create" : "action-modify action-create",      <#-- create item action link: "Create Entity", "New Value", etc. -->
+    "action_create" : "action-modify action-create",      <#-- create item action link: "Create Entity", "New Value", "Add", etc. -->
     "action_update" : "action-modify action-update",      <#-- update item action link: "Update Entity", "Edit", etc. -->
     "action_remove" : "action-modify action-remove",      <#-- (logical) remove item action link: "Delete", "Remove", "Kill", "Stop", "Cancel Order", etc. -->
-    "action_upload" : "action-modify action-upload",      <#-- upload action link: "Upload", "Send", etc. -->
-    "action_clear" : "action-modify action-clear",        <#-- clear action link: "Clear", "Reset", etc. -->
+    "action_upload" : "action-modify action-upload",      <#-- upload action link: "Upload", "Transfer", etc. -->
+    "action_send" : "action-modify action-send",          <#-- send action link: "Send", "Send Email", etc. -->
+    "action_clear" : "action-modify action-clear",        <#-- clear action link: "Clear", "Reset", "Empty", etc. -->
 
     <#-- read-only actions -->
     "action_read" : "action-read",                        <#-- generic read action, can also be a collection of read actions -->

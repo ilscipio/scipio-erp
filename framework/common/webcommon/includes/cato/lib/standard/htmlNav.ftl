@@ -627,8 +627,17 @@ menu item element must override this and provide a proper check.
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
   
-  <#local availPageSizes = [10, 20, 30, 50, 100, 200]>
-  <#local minPageSize = availPageSizes?first>
+  <#-- DEV NOTE: 2016-01-05: unwanted view size control is now disabled (see widget.properties for view size settings)
+      This boolean is for dev purposes. Do not remove code or markup! (but not concerned if it breaks) -->
+  <#local viewSizeSelection = false>  
+  
+  <#if viewSizeSelection>
+    <#local availPageSizes = [10, 20, 30, 50, 100, 200]>
+    <#local minPageSize = availPageSizes?first>
+  <#else>
+    <#local availPageSizes = [viewSize]>
+    <#local minPageSize = viewSize>  
+  </#if>
   <#local viewIndexLast = 0>
   <#local multiPage = false>
     
@@ -688,7 +697,7 @@ menu item element must override this and provide a proper check.
       paginate=paginate forcePost=forcePost viewIndexFirst=viewIndexFirst listItemsOnly=listItemsOnly paginateToggle=paginateToggle ajaxPaginateOnUrl=ajaxPaginateOnUrl 
       paginateOnUrl=paginateOnUrl paginateOnClass=paginateOnClass paginateOnLabel=paginateOnLabel ajaxPaginateOffUrl=ajaxPaginateOffUrl paginateOffUrl=paginateOffUrl paginateOffClass=paginateOffClass 
       paginateOffLabel=paginateOffLabel
-      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage origArgs=origArgs passArgs=passArgs/>
+      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage viewSizeSelection=viewSizeSelection origArgs=origArgs passArgs=passArgs/>
   
   <#elseif paginateToggle>
   
@@ -703,7 +712,7 @@ menu item element must override this and provide a proper check.
       paginate=paginate forcePost=forcePost viewIndexFirst=viewIndexFirst listItemsOnly=listItemsOnly paginateToggle=paginateToggle ajaxPaginateOnUrl=ajaxPaginateOnUrl 
       paginateOnUrl=paginateOnUrl paginateOnClass=paginateOnClass paginateOnLabel=paginateOnLabel ajaxPaginateOffUrl=ajaxPaginateOffUrl paginateOffUrl=paginateOffUrl paginateOffClass=paginateOffClass 
       paginateOffLabel=paginateOffLabel
-      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage origArgs=origArgs passArgs=passArgs/>
+      availPageSizes=availPageSizes minPageSize=minPageSize viewIndexLast=viewIndexLast multiPage=multiPage viewSizeSelection=viewSizeSelection origArgs=origArgs passArgs=passArgs/>
   </#if>
 </#macro>
 
@@ -717,7 +726,7 @@ menu item element must override this and provide a proper check.
     paginate=true forcePost=false viewIndexFirst=0 listItemsOnly=false paginateToggle=false ajaxPaginateOnUrl="" 
     paginateOnUrl="" paginateOnClass="" paginateOnLabel="" ajaxPaginateOffUrl="" paginateOffUrl="" paginateOffClass="" 
     paginateOffLabel=""
-    availPageSizes=[] minPageSize=1 viewIndexLast=1 multiPage=true origArgs={} passArgs={} catchArgs...>
+    availPageSizes=[] minPageSize=1 viewIndexLast=1 multiPage=true viewSizeSelection=false origArgs={} passArgs={} catchArgs...>
     
   <#local paginateClass = addClassArg(paginateClass, styles.pagination_wrap!)> 
   <#local paginateClass = addClassArgDefault(paginateClass, "nav-pager")>  
@@ -812,7 +821,7 @@ menu item element must override this and provide a proper check.
           </#if>
           <div class="${styles.grid_large!}2 ${styles.grid_cell!}">
             <#if javaScriptEnabled>
-              <#-- 2016-01-05: unwanted view size control is now disabled (see widget.properties for view size settings)
+              <#if viewSizeSelection>
                 <#local actionStr>onchange="<#if ajaxEnabled>ajaxUpdateAreas('${ajaxSelectSizeUrl}')<#else><#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectSizeUrl}')</#if>"</#local>
                 <div class="${styles.grid_row!}">
                     <div class="${styles.grid_large!}6 ${styles.grid_cell!}">
@@ -832,7 +841,7 @@ menu item element must override this and provide a proper check.
                         </select>
                     </div>
                 </div>
-              -->
+              </#if>
                 
               <#if paginateToggle>
                 <div class="${styles.grid_row!}">

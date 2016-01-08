@@ -865,7 +865,9 @@ public class ProductSearchSession {
 
         // ========== Create View Indexes
         int viewIndex = 0;
-        int viewSize = 20;
+        // Cato: unhardcode default
+        //int viewSize = 20;
+        int viewSize = UtilProperties.getPropertyAsInteger("general.properties", "paginate.viewSize.default", 20);
         int highIndex = 0;
         int lowIndex = 0;
         int listSize = 0;

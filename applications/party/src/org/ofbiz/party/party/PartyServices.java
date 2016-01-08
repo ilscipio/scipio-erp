@@ -1101,11 +1101,14 @@ public class PartyServices {
         }
         result.put("viewIndex", Integer.valueOf(viewIndex));
 
-        int viewSize = 20;
+        // Cato: unhardcode default
+        //int viewSize = 20;
+        int viewSize;
         try {
             viewSize = Integer.parseInt((String) context.get("VIEW_SIZE"));
         } catch (Exception e) {
-            viewSize = 20;
+            //viewSize = 20;
+            viewSize = UtilProperties.getPropertyAsInteger("general.properties", "paginate.viewSize.default", 20);
         }
         result.put("viewSize", Integer.valueOf(viewSize));
 

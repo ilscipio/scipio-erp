@@ -32,6 +32,7 @@ import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.Delegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -108,7 +109,9 @@ public class OrderListState implements Serializable {
      * instead use getInstance().
      */
     protected OrderListState() {
-        viewSize = 10;
+        // Cato: unhardcode default
+        //viewSize = 10;
+        viewSize = UtilProperties.getPropertyAsInteger("order.properties", "order.paginate.viewSize.default", 10);
         viewIndex = 0;
         orderStatusState = FastMap.newInstance();
         orderTypeState = FastMap.newInstance();

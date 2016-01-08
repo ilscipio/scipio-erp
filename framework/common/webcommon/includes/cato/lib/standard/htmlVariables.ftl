@@ -211,18 +211,19 @@
     "action_remove" : "action-modify action-remove",      <#-- (logical) remove item action link: "Delete", "Remove", etc. -->
     "action_clear" : "action-modify action-clear",        <#-- clear action link: "Clear", "Reset", "Empty Fields", etc. -->
     "action_copy" : "action-modify action-copy",          <#-- copy action link: "Copy", "Duplicate", etc. -->
+    "action_configure" : "action-modify action-configure",<#-- configure action link: "Configure", "Setup", etc. -->
     "action_begin" : "action-modify action-begin",        <#-- begin action link: "Begin", "Start", "Start Job", etc. -->
     "action_terminate" : "action-modify action-terminate",<#-- terminate action link: "Cancel Order", "Expire", "Stop", "Stop Job", etc. -->
     "action_complete" : "action-modify action-complete",  <#-- complete action link: "Complete Order", "Mark Success", etc. -->
-    "action_upload" : "action-modify action-upload",      <#-- upload action link: "Upload", "Transfer", "Import", etc. -->
-    "action_send" : "action-modify action-send",          <#-- send action link: "Send", "Send Email", etc. -->
+    "action_import" : "action-modify action-import",      <#-- upload action link: "Import", "Upload", etc. -->
+    "action_transfer" : "action-modify action-transfer",  <#-- transfer action link: "Transfer", "Send", "Send Email", etc. -->
 
     <#-- read-only actions -->
     "action_read" : "action-read",                        <#-- generic read action, can also be a collection of read actions -->
     "action_find" : "action-read action-find",            <#-- find action link: "Find", "Search", "Lookup", etc. -->
     "action_select" : "action-read action-select",        <#-- select action link: "Select", "Choose", "Pick", etc. -->
     "action_view" : "action-read action-view",            <#-- view item action link: "View PDF", etc. -->
-    "action_download" : "action-read action-download",    <#-- download action link: "Download", "Stream", "Export", etc. -->
+    "action_export" : "action-read action-export",        <#-- export action link: "Export", "Download", "Stream", etc. -->
 
   <#-- Standalone link styles (includes links in tables)
     DEV NOTE: 2016-01-07: the old use of link_nav and link_action made no real sense and has been ratified below.

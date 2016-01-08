@@ -36,11 +36,15 @@ try {
     viewIndex = 0;
 }
 
-viewSize = 20;
+// Cato: unhardcode
+//viewSize = 20;
+defaultViewSize = org.ofbiz.base.util.UtilProperties.getPropertyAsInteger("general.properties", "paginate.viewSize.default", 20);
+viewSize = defaultViewSize;
 try {
     viewSize = Integer.valueOf((String) parameters.VIEW_SIZE).intValue();
 } catch (Exception e) {
-    viewSize = 20;
+    //viewSize = 20;
+    viewSize = defaultViewSize;
 }
 
 listSize = 0;

@@ -54,7 +54,11 @@ context.productIdsAction = productIdsAction;
 context.productIds = productIds as List;
 
 viewIndex = 0;
-viewSize = 10;
+// Cato: unhardcode
+//viewSize = 10;
+defaultViewSize = org.ofbiz.base.util.UtilProperties.getPropertyAsInteger("order.properties", "order.promotion.paginate.viewSize.default", 10);
+viewSize = defaultViewSize;
+viewSize = ;
 highIndex = 0;
 lowIndex = 0;
 listSize = productIds.size();
@@ -68,7 +72,8 @@ try {
 try {
     viewSize = Integer.valueOf(request.getParameter("VIEW_SIZE"));
 } catch (Exception e) {
-    viewSize = 10;
+    //viewSize = 10;
+    viewSize = defaultViewSize;
 }
 
 lowIndex = viewIndex * viewSize;

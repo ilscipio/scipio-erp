@@ -125,7 +125,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" position="1"><submit/></field>
-        <field name="cancelAction" title=" " widget-style="${styles.link_action}" position="2">
+        <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}" position="2">
             <hyperlink target="soldListing" description="${uiLabelMap.CommonCancel}">
                 <parameter param-name="productStoreId" from-field="parameters.productStoreId"/>
             </hyperlink>
@@ -179,7 +179,7 @@ under the License.
         <field name="productName" entry-name="productId">
             <display-entity entity-name="Product" key-field-name="productId" description="${productName}"></display-entity>
         </field>
-        <field name="quantityReserved" widget-style="${styles.link_action}">
+        <field name="quantityReserved" widget-style="${styles.link_action_run} ${styles.action_update}">
             <hyperlink target="updateQuantityReserved" description="${quantityReserved}">
                 <parameter param-name="productStoreId"/>
                 <parameter param-name="facilityId"/>
@@ -301,7 +301,7 @@ under the License.
         <field name="isAutoFeedbackReminder" tooltip="${uiLabelMap.EbayIsAutoFeedbackReminderTooltip}" position="1" title="${uiLabelMap.EbayIsAutoFeedbackReminder}"><check></check></field>
         <field name="afterDays" title="${uiLabelMap.EbayAfter}" position="1" tooltip="${uiLabelMap.CommonDays} ${uiLabelMap.EbayIsSendCopyEmailTooltip}" ><text default-value="5" size="5" maxlength="2"></text></field>
         <field name="isSendCopyEmailToSeller" position="1" title="${uiLabelMap.EbayIsSendCopyEmailToSeller}"><check></check></field>
-        <field name="emailTemplate" title="Email" tooltip="Edit Feedback Reminder email template" widget-style="${styles.link_action}">
+        <field name="emailTemplate" title="Email" tooltip="Edit Feedback Reminder email template" widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink target="editEmailTemplate" description="Edit Email Template">
                 <parameter param-name="productStoreId" from-field="parameters.productStoreId"/>
                 <parameter param-name="emailType" value="EBAY_WIN_BUYER_NOTI"/>
@@ -323,7 +323,7 @@ under the License.
         <field name="productStoreId"><hidden value="${parameters.productStoreId}"/></field>
         <field name="isAutoSendPayReceivedEmail" tooltip="${uiLabelMap.EbayAutoPaymentReceviedEmail}" position="1" title="${uiLabelMap.EbayIsAutoSendEmail}"><check></check></field>
         <field name="isSendCopyEmailToSeller" position="1" title="${uiLabelMap.EbayIsSendCopyEmailToSeller}"><check></check></field>
-        <field name="emailTemplate" title="Email" tooltip="Edit Payment received email template" widget-style="${styles.link_action}">
+        <field name="emailTemplate" title="Email" tooltip="Edit Payment received email template" widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink target="editEmailTemplate" description="${uiLabelMap.EbayEditEmailTemplate}">
                 <parameter param-name="productStoreId" from-field="parameters.productStoreId"/>
                 <parameter param-name="emailType" value="EBAY_PAY_RECIEVED"/>
@@ -482,7 +482,7 @@ under the License.
         <field name="startTime"><display/></field>
         <field name="quantity"><display/></field>
         <field name="listingType"><display/></field>
-        <field name="EditItem" widget-style="${styles.link_action}">
+        <field name="EditItem" widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink target="getItemProduct?productStoreId=${parameters.productStoreId}&amp;itemId=${itemId}" description="Edit" target-type="plain" target-window="_BLANK"/>
         </field>
     </form>
@@ -646,7 +646,7 @@ under the License.
         <field name="userEmail" title="Email"><hidden value="${inMap.email}"/></field>
         <field name="offerStatus" title="Offer Status"><display description="${inMap.offerStatus}"/></field>
         <field name="contactStatus" title="Contact Status"><display description="${contactStatus}"/></field>
-        <field name="viewCustomerDataAction" widget-style="${styles.link_action}" title="View Customer Offer Data">
+        <field name="viewCustomerDataAction" widget-style="${styles.link_nav} ${styles.action_view}" title="View Customer Offer Data">
             <hyperlink target="customerOfferData" description="View Data" also-hidden="false">
                 <parameter param-name="productStoreId" from-field="productStoreId"/>
                 <parameter param-name="itemId" from-field="itemId"/>
@@ -660,7 +660,7 @@ under the License.
                 <parameter param-name="contactStatus" from-field="contactStatus"/>
             </hyperlink>
         </field>
-        <field name="deleteOfferAction" title="Delete Offer Alert Data" widget-style="${styles.link_action}">
+        <field name="deleteOfferAction" title="Delete Offer Alert Data" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteContactAlert" description="Delete Data" also-hidden="false">
                 <parameter param-name="itemId" from-field="itemId"/>
                 <parameter param-name="userId" from-field="userId"/>

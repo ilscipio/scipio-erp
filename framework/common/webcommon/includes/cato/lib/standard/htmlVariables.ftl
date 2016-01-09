@@ -223,7 +223,7 @@
     "action_find" : "action-read action-find",            <#-- find action link: "Find", "Search", "Lookup", etc. -->
     "action_select" : "action-read action-select",        <#-- select action link: "Select", "Choose", "Pick", etc. -->
     "action_view" : "action-read action-view",            <#-- view item action link: "View PDF", etc. -->
-    "action_export" : "action-read action-export",        <#-- export action link: "Export", "Download", "Stream", etc. -->
+    "action_export" : "action-read action-export",        <#-- export action link: "Export", "Download", "Stream", "Print", etc. -->
 
   <#-- Standalone link styles (includes links in tables)
     DEV NOTE: 2016-01-07: the old use of link_nav and link_action made no real sense and has been ratified below.
@@ -245,6 +245,7 @@
         * in principle, you could add a third action_scope_xxx style to "predict" the action, but is not useful.
       * back pages and cancel buttons, even if they seem to be part of a form, as long as they behave as navigation links,
         should have the link_nav_cancel style. they need nothing else.
+      * action_view is more or less the default on link_nav and could be omitted, but should add it anyway.
       
     run actions (class="${styles.link_action_run!} ${styles.action_create!}"):
       * any link that performs an action that contacts the system to perform a new action should be given link_action_run. this means
@@ -275,19 +276,22 @@
       * simple extraneous characters like brackets around an id should not affect selection;
         but introductory words ("Order Item: WS10000") may warrant putting it under the link_longxxx variant.
         in some cases, extra words means it should go under link_record_desc.
-      * it can sometimes optionally be given a second action_xxx style if it encourages an action, such as action_view, action_create, etc.
+      * it can sometimes optionally be given a second action_xxx style if it encourages an action, such as action_update, action_create, etc.
+        action_view is the implied default, can be set explicitly.
       * these styles are for navigation links. if they directly perform actions, probably use run actions instead (see "run actions", e.g. link_action_run).
       
     other notes:  
       * every link style has a _long version for entries with long labels.
       * the cancel links are exceptions: they all have separate entries because often you might want a completely different button on them
         (which you can't do with link_action_run+action_cancel). they are not regular actions in and of themselves - they are anti-actions.
+      * action_view actions are often ambiguous and could be either link_nav or link_action_run depending on UI functionality and perspective.
   -->
     "link_nav" : "button tiny action-nav",                              <#-- navigation link toward another page, usually with static text like "New" or "Edit" or "View".
                                                                             the link should also be qualified with an "action_xxx" class where appropriate (see above), to indicate
                                                                             the action that the link is leading the user to do. -->
     "link_nav_long" : "action-nav link-long",                           <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
-    "link_nav_cancel" : "button tiny action-nav action-cancel",         <#-- back/cancel navigation link that leads back to another page: "Back", "Cancel", etc. NOTE: can often appear as if is part of a form submit (run action), but is not really. -->
+    "link_nav_cancel" : "button tiny action-nav action-cancel",         <#-- back/cancel/done navigation link that leads back to another page (could be said as: "cancels" the nagivation action): "Back", "Cancel", "Done", etc. 
+                                                                            NOTE: can often appear as if is part of a form submit (run action), but is not really. -->
     "link_nav_cancel_long" : "action-nav action-cancel link-long",
 
     "link_action_run" : "button tiny action-run",                       <#-- link that actually performs an action, such as most form submit buttons, "Create Order", "Download PDF", etc. -->

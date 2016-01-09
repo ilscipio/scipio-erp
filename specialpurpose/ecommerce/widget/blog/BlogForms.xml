@@ -48,10 +48,10 @@
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
-        <field name="createBlog" title=" " widget-style="${styles.link_action}">
+        <field name="createBlog" title=" " widget-style="${styles.link_nav} ${styles.action_create}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonNew} ${uiLabelMap.ContentForum}" target="EditBlogArticle"/>
         </field>
-        <field name="createForum" title=" " widget-style="${styles.link_action}">
+        <field name="createForum" title=" " widget-style="${styles.link_nav} ${styles.action_create}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonNew} ${uiLabelMap.ContentForum}" target="EditForumArticle"/>
         </field>
     </form>
@@ -104,7 +104,7 @@
                 <option key="CTNT_INITIAL_DRAFT" description="${uiLabelMap.ContentBlogPreview}"/>
             </radio>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_create}">
             <submit button-type="button"/>
         </field>
         <field name="blogContentId" entry-name="blogContentId" map-name="rsp">
@@ -171,7 +171,7 @@
                 <option key="CTNT_INITIAL_DRAFT" description="${uiLabelMap.ContentBlogPreview}"/>
             </radio>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
         <field name="blogContentId" entry-name="blogContentId" map-name="rsp">
@@ -198,7 +198,7 @@
 
     <form name="editFormSubmit" target="" title="" type="single" skip-start="true" skip-end="true"
         default-title-style="treeHeader" default-widget-style="inputBox">
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>

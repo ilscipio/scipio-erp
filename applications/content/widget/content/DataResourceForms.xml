@@ -209,8 +209,8 @@ under the License.
             </drop-down>
         </field>
 
-        <field name="createAction" title="${uiLabelMap.CommonCreate}" use-when="currentValue==null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="currentValue!=null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="createAction" title="${uiLabelMap.CommonCreate}" use-when="currentValue==null" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="currentValue!=null" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddDataResourceFromContent" extends="AddDataResource" target="createDataResourceAndAssocToContent" >
@@ -352,7 +352,7 @@ under the License.
         <field name="dataResourceTypeId" ><hidden/></field>
         <field name="objectInfo" title="${uiLabelMap.ContentUploadedFile}"><display /></field>
         <field name="imageData" entity-name="ImageDataResource" title="${uiLabelMap.ContentFile}"><file/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action_run} ${styles.action_import}"><submit button-type="button"/></field>
     </form>
     <!-- DataResourceAttribute forms -->
     <form name="AddDataResourceAttribute" target="addDataResourceAttribute" title="" type="single"
@@ -374,7 +374,7 @@ under the License.
         <auto-fields-service service-name="updateDataResourceAttribute" default-field-type="display"/>
         <field name="attrValue"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeDataResourceAttribute">
                 <parameter param-name="dataResourceId"/>
                 <parameter param-name="attrName"/>
@@ -408,7 +408,7 @@ under the License.
         <auto-fields-service service-name="updateDataResourceRole" default-field-type="display"/>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.link_record_date}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeDataResourceRole">
                 <parameter param-name="dataResourceId"/>
                 <parameter param-name="roleTypeId"/>
@@ -423,7 +423,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createProductFeatureDataResource"/>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" map-name="currentValue"><display/></field>
-        <field name="productFeatureId" widget-style="${styles.link_action}"><lookup target-form-name="LookupProductFeature"/></field>
+        <field name="productFeatureId" widget-style="${styles.link_nav} ${styles.action_find}"><lookup target-form-name="LookupProductFeature"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListDataResourceProductFeature" list-name="productFeatureDataResource" target="" title="" type="list"
@@ -437,7 +437,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="ProductFeatureDataResource" default-field-type="display"/>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeDataResourceProductFeature">
                 <parameter param-name="dataResourceId"/>
                 <parameter param-name="productFeatureId"/>

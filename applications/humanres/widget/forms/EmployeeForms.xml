@@ -66,7 +66,7 @@
         <field name="extension" title="${uiLabelMap.PartyContactExt}"><text size="6" maxlength="10"/></field>
         <field name="emailAddressTitle" title="${uiLabelMap.PartyEmailAddress}" title-area-style="group-label"><display/></field>
         <field name="emailAddress" title="${uiLabelMap.CommonEmail}"><text size="50" maxlength="60"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="AddEmployeeSkills" type="single" target="createEmployeeSkill" default-map-name="partySkill">
         <field name="partyId"><hidden/></field>
@@ -171,7 +171,7 @@
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit/></field>
     </form>
     <form name="AddEmployeeTraining" type="single" target="createEmployeeTraining">
         <field name="partyId"><hidden/></field>
@@ -225,7 +225,7 @@
     <form name="CurrentEmploymentData" default-map-name="employmentData" type="single">
         <field name="company" entry-name="employment.partyIdFrom">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ">
-                <sub-hyperlink target="/partymgr/control/viewprofile" description="[${employmentData.employment.partyIdFrom}]" target-type="inter-app">
+                <sub-hyperlink target="/partymgr/control/viewprofile" description="[${employmentData.employment.partyIdFrom}]" target-type="inter-app" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="employmentData.employment.partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>

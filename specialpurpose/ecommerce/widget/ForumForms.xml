@@ -105,7 +105,7 @@ under the License.
             </hyperlink>
         </field>
         -->
-        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
         <field name="ftlContentId" >
@@ -183,7 +183,7 @@ under the License.
         <field name="contentName"><text-find/></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
 <!--
-        <field name="createAction" title=" " widget-style="${styles.link_action}">
+        <field name="createAction" title=" " widget-style="${styles.link_nav} ${styles.action_create}">
             <hyperlink also-hidden="false" description="Create New" target="AddContent"/>
         </field>
 -->
@@ -287,7 +287,7 @@ under the License.
             </hyperlink>
         </field>
         -->
-        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
         <field name="ftlContentId" >
@@ -372,10 +372,10 @@ under the License.
         <field name="lastModifiedByUserLogin" position="1"><display/></field>
         <field name="lastModifiedDate" position="2"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="createAction" title=" " widget-style="${styles.link_action}" position="1">
+        <field name="createAction" title=" " widget-style="${styles.link_nav} ${styles.action_create}" position="1">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreateNew}" target="AddContent"/>
         </field>
-        <field name="findContent" title=" " widget-style="${styles.link_action}" position="2">
+        <field name="findContent" title=" " widget-style="${styles.link_nav} ${styles.action_find}" position="2">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonFind}" target="FindContent"/>
         </field>
        <field name="nodeTrailCsv" map-name="dummy">
@@ -448,7 +448,7 @@ under the License.
         <field name="imageData" entity-name="ImageDataResource">
             <file />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action_run} ${styles.action_import}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -480,7 +480,7 @@ under the License.
         </field>
 
         <field name="textData" title="${uiLabelMap.ContentText}" id-name="textData"><textarea rows="20" cols="80"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action_run} ${styles.action_import}">
             <submit button-type="button"/>
         </field>
         <field name="statusId" >
@@ -613,7 +613,7 @@ under the License.
         <field name="privilegeEnumId" >
             <hidden/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
         <field name="statusId" map-name="currentValue">
@@ -681,7 +681,7 @@ under the License.
         <field name="contentName" title="${uiLabelMap.CommonTitle}" map-name="currentValue">
             <hidden/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
         <field name="statusId" map-name="currentValue">

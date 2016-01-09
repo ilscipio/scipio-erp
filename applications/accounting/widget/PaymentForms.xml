@@ -74,7 +74,7 @@ under the License.
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}" use-when="isReduced==false">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}">
                 <!-- 
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" >
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
                  -->
@@ -83,7 +83,7 @@ under the License.
         <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}">
                 <!-- 
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" >
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="partyIdTo"/>
                 </sub-hyperlink>
                  -->
@@ -188,7 +188,7 @@ under the License.
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
-        <field position="1" name="createAction" widget-style="${styles.link_action}" title="${uiLabelMap.CommonCreate}">
+        <field position="1" name="createAction" widget-style="${styles.link_action_run} ${styles.action_create}" title="${uiLabelMap.CommonCreate}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -235,7 +235,7 @@ under the License.
         </field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
-        <field position="1" name="createAction" widget-style="${styles.link_action}" title="${uiLabelMap.CommonCreate}">
+        <field position="1" name="createAction" widget-style="${styles.link_action_run} ${styles.action_create}" title="${uiLabelMap.CommonCreate}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -350,7 +350,7 @@ under the License.
         <field name="amountToApply" title="${uiLabelMap.CommonOutStanding}" widget-area-style="amount" title-area-style="align-right" parameter-name="amountApplied"><text size="10"/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;N&quot;)"><check/></field>
-        <field name="applyAction"  title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action}">
+        <field name="applyAction"  title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -369,7 +369,7 @@ under the License.
         <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display  type="currency" currency="${currencyUomId}"/></field>
         <field name="amountApplied" widget-area-style="amount" title-area-style="align-right" parameter-name="dummy"><display  type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" title="${uiLabelMap.CommonOutstanding}" widget-area-style="amount" title-area-style="align-right" parameter-name="amountApplied"><text size="10"/></field>
-        <field name="applyAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action}">
+        <field name="applyAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -385,7 +385,7 @@ under the License.
         <field name="amountToApply" parameter-name="amountApplied" tooltip="${uiLabelMap.AccountingLeaveEmptyForMaximumAmount}"><text/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;N&quot;)"><check/></field>
-        <field name="applyAction"  title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action}">
+        <field name="applyAction"  title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -523,7 +523,7 @@ under the License.
         <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="effectiveDate"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonPrint}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonPrint}" widget-style="${styles.link_action_run} ${styles.action_export}">
             <submit/>
         </field>
     </form>
@@ -542,7 +542,7 @@ under the License.
         <field name="effectiveDate"><display/></field>
         <field name="paymentRefNum"><text/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSend}" widget-style="${styles.link_action}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSend}" widget-style="${styles.link_action_run} ${styles.action_transfer}"><submit/></field>
     </form>
 
     <form name="FindSalesInvoicesByDueDate" type="single" target="findSalesInvoicesByDueDate"

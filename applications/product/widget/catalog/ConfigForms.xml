@@ -151,7 +151,7 @@ under the License.
             </drop-down>
         </field>
         <!-- <field name="description"><text size="40"/></field> -->
-        <field name="submitAction" title="${uiLabelMap.ProductPrepareCreate}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.ProductPrepareCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductConfigItemContentAssoc" type="list" target="updateContentToProductConfigItem" title="" list-name="productContentDatas"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
@@ -172,7 +172,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="removeContentFromProductConfigItem" description="[${uiLabelMap.CommonDelete}]" also-hidden="false">
                 <parameter param-name="configItemId" from-field="productContent.configItemId"/>
                 <parameter param-name="contentId" from-field="productContent.contentId"/>
@@ -259,7 +259,7 @@ under the License.
                 <parameter param-name="productId" from-field="product.productId"/>
             </hyperlink>
         </field>
-        <field name="removeAction" widget-style="${styles.link_action}" >
+        <field name="removeAction" widget-style="${styles.link_action_run} ${styles.action_remove}" >
             <hyperlink target="deleteProductConfigProduct" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="configItemId"/>
                 <parameter param-name="configOptionId"/>

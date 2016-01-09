@@ -69,7 +69,7 @@ under the License.
             </display-entity>
         </field>
 
-        <field name="editAction" title=" " widget-style="${styles.link_action}">
+        <field name="editAction" title=" " widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink description="${uiLabelMap.CommonEdit}" target="EditTaxAuthority" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -168,7 +168,7 @@ under the License.
                 <parameter param-name="productCategoryId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteTaxAuthorityCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -224,7 +224,7 @@ under the License.
         </field>
         
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteTaxAuthorityAssoc" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -286,7 +286,7 @@ under the License.
             </hyperlink>
         </field>
 
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteTaxAuthorityGlAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -349,7 +349,7 @@ under the License.
         </field>
 
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteTaxAuthorityRateProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -458,7 +458,7 @@ under the License.
         <field name="isExempt"><display/></field>
         <field name="isNexus"><display/></field>
 
-        <field name="editAction" title=" " widget-style="${styles.link_action}">
+        <field name="editAction" title=" " widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink target="EditTaxAuthorityPartyInfo" description="${uiLabelMap.CommonEdit}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -466,7 +466,7 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteTaxAuthorityPartyInfo" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>

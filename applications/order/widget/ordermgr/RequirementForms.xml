@@ -94,17 +94,17 @@ under the License.
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
         <field name="facilityQuantityOnHandTotal"><display/></field>
         <field name="quantityOnHandTotal"><display/></field>
-        <field name="requestAction" widget-style="${styles.link_action}">
+        <field name="requestAction" widget-style="${styles.link_nav} ${styles.action_view}">
             <hyperlink description="${uiLabelMap.OrderRequests}" target="ListRequirementCustRequests">
                 <parameter param-name="requirementId"/>
             </hyperlink>
         </field>
-        <field name="ordersAction" widget-style="${styles.link_action}">
+        <field name="ordersAction" widget-style="${styles.link_nav} ${styles.action_view}">
             <hyperlink description="${uiLabelMap.CommonOrders}" target="ListRequirementOrders">
                 <parameter param-name="requirementId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" widget-style="${styles.link_action}" title=" ">
+        <field name="deleteAction" widget-style="${styles.link_action_run} ${styles.action_remove}" title=" ">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteRequirement">
                 <parameter param-name="requirementId"/>
             </hyperlink>
@@ -137,7 +137,7 @@ under the License.
         <field name="fixedAssetId"><lookup target-form-name="LookupFixedAsset"/></field>
         <field name="custRequestId" map-name="parameters"><text/></field>
         <field name="custRequestItemSeqId" map-name="parameters"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -174,7 +174,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="RequirementRole" default-field-type="display"/>
         <field name="requirementId"><hidden/></field>
-        <field name="editAction" widget-style="${styles.link_action}" title="${uiLabelMap.CommonEdit}">
+        <field name="editAction" widget-style="${styles.link_nav} ${styles.action_update}" title="${uiLabelMap.CommonEdit}">
             <hyperlink description="${uiLabelMap.CommonEdit}" target="EditRequirementRole">
                 <parameter param-name="requirementId"/>
                 <parameter param-name="partyId"/>
@@ -182,7 +182,7 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="removeAction" widget-style="${styles.link_action}" title="${uiLabelMap.CommonRemove}">
+        <field name="removeAction" widget-style="${styles.link_action_run} ${styles.action_remove}" title="${uiLabelMap.CommonRemove}">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeRequirementRole">
                 <parameter param-name="requirementId"/>
                 <parameter param-name="partyId"/>
@@ -206,7 +206,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="requirementRole!=null"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="requirementRole==null"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -251,7 +251,7 @@ under the License.
         <field name="requiredByDate"><display/></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}">
           <submit/>
         </field>
     </form>
@@ -315,7 +315,7 @@ under the License.
         <field name="facilityId"><display/></field>
         <field name="partyId" title="${uiLabelMap.ProductSupplier}">
             <display-entity entity-name="PartyNameView" description="${LastName} ${firstName} ${middleName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile?partyId=${partyId}" description="[${partyId}]" target-type="inter-app"/>
+                <sub-hyperlink target="/partymgr/control/viewprofile?partyId=${partyId}" description="[${partyId}]" target-type="inter-app" link-style="${styles.link_record_id}"/>
             </display-entity>
         </field>
         <field name="supplierProductId" title="${uiLabelMap.ProductSupplierProductId}" widget-style="${styles.link_record_id}">
@@ -366,7 +366,7 @@ under the License.
     <form name="ApprovedProductRequirementsSubmit" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="orderId" id-name="orderId_o_0"><text/></field>
-        <field name="submitAction" title=" " widget-style="${styles.link_action}">
+        <field name="submitAction" title=" " widget-style="${styles.link_action_run} ${styles.action_update}">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.OrderInputQuickPurchaseOrder}" target="javascript:document.ApprovedProductRequirements.orderId_o_0.value=document.ApprovedProductRequirementsSubmit.orderId_o_0.value;document.ApprovedProductRequirements.submit()"/>
         </field>
     </form>
@@ -407,7 +407,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="prepareAction" title="${uiLabelMap.OrderPrepareOrder}" widget-style="${styles.link_action}">
+        <field name="prepareAction" title="${uiLabelMap.OrderPrepareOrder}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>

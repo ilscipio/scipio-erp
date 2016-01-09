@@ -85,7 +85,7 @@ under the License.
         <field name="jobLocation"><display/></field>
         <field name="experienceYears"><display/></field>
         <field name="experienceMonths"><display/></field>
-        <field name="applyAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action}">
+        <field name="applyAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonApply}" target="EditInternalJobPosting"> 
                 <parameter param-name="jobRequisitionId"/> 
             </hyperlink>
@@ -138,8 +138,8 @@ under the License.
         <field name="experienceMonths" required-field="true"><text/></field>
         <field name="experienceYears" required-field="true"><text/></field>
         <field name="jobPostingTypeEnumId"><hidden value="JOB_POSTING_INTR"/></field>
-        <field name="submitAction" use-when="jobRequisition==null" title="Create" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="submitAction" use-when="jobRequisition!=null" title="Update" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="jobRequisition==null" title="Create" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="jobRequisition!=null" title="Update" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="FindInternalJobPosting" target="FindInternalJobPosting" type="single">
         <auto-fields-entity entity-name="EmploymentApp" default-field-type="find"/>
@@ -223,8 +223,8 @@ under the License.
         <field name="emplPositionId"><hidden/></field>
         <field name="employmentAppSourceTypeId"><hidden/></field>
         <field name="referredByPartyId"><hidden/></field>
-        <field name="submitAction" use-when="employmentApp==null" title="Create" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="submitAction" use-when="employmentApp!=null" title="Update" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="employmentApp==null" title="Create" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="employmentApp!=null" title="Update" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="FindJobInterview" type="single" target="FindJobInterview">
         <auto-fields-entity entity-name="JobInterview" default-field-type="find"/>
@@ -285,7 +285,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteJobInterview"> 
                 <parameter param-name="jobInterviewId"/> 
             </hyperlink>
@@ -323,8 +323,8 @@ under the License.
                 <option key="Fail" description="Fail"/>
             </drop-down>
         </field>
-        <field name="submitAction" use-when="JobInterview==null" title="Create" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="submitAction" use-when="JobInterview!=null" title="Update" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="JobInterview==null" title="Create" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="JobInterview!=null" title="Update" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="FindApprovals" target="FindApprovals" type="single">
         <auto-fields-entity entity-name="EmploymentApp" default-field-type="find"/>
@@ -371,7 +371,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink target="EditApprovalStatus" description="${uiLabelMap.CommonUpdate}" > 
                 <parameter param-name="applicationId"/> 
             </hyperlink>
@@ -400,7 +400,7 @@ under the License.
         <field name="employmentAppSourceTypeId"><hidden/></field>
         <field name="referredByPartyId"><hidden/></field>
         <field name="applicationDate"><hidden/></field>
-        <field name="submitAction" title="Update" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="Update" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="FindRelocation" type="single" target="FindRelocation" odd-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="partyId" title="${uiLabelMap.HumanResEmployeePartyIdTo}"><lookup target-form-name="LookupPartyName"/></field>
@@ -440,7 +440,7 @@ under the License.
                 <parameter param-name="emplPositionId"/>
             </hyperlink>
         </field>
-        <field name="emplPositionIdReportingTo" widget-style="${styles.link_action}">
+        <field name="emplPositionIdReportingTo" widget-style="${styles.link_record_id}">
             <hyperlink also-hidden="false" description="${emplPositionIdReportingTo}" target="emplPositionView">
                 <parameter param-name="emplPositionId" from-field="emplPositionIdReportingTo"/>
             </hyperlink>

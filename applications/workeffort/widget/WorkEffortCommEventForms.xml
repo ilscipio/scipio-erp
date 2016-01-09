@@ -39,7 +39,7 @@ under the License.
         <field name="contactMechTypeId"><display-entity entity-name="ContactMechType"/></field>
         <field name="description"><text size="40"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteCommunicationEventWorkEff" also-hidden="false" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="communicationEventId"/>

@@ -43,7 +43,7 @@ under the License.
                 <entity-options entity-name="ProductStore" description="${storeName}">
                     <entity-order-by field-name="storeName"/>
                 </entity-options>
-                <sub-hyperlink use-when="&quot;${webSite.productStoreId}&quot;.length()>0" link-style="${styles.link_action}" target-type="inter-app" target="/catalog/control/EditProductStore" description="${uiLabelMap.ContentEditProductStore}">
+                <sub-hyperlink use-when="&quot;${webSite.productStoreId}&quot;.length()>0" link-style="${styles.link_nav} ${styles.action_update}" target-type="inter-app" target="/catalog/control/EditProductStore" description="${uiLabelMap.ContentEditProductStore}">
                 <parameter param-name="productStoreId" from-field="webSite.productStoreId"/>
             </sub-hyperlink>
             </drop-down>
@@ -115,7 +115,7 @@ under the License.
 
         <field name="webSiteId"><display also-hidden="true"/></field>
         <!--
-        <field name="contentId" title="Content ID" widget-style="${styles.link_action}">
+        <field name="contentId" title="Content ID" widget-style="${styles.link_record_id} ${styles.action_update}">
             <hyperlink description="${contentId}" target="EditContent" also-hidden="true">
                 <parameter param-name="contentId"/>
             </hyperlink>
@@ -135,7 +135,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="RemoveWebSiteContent" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="webSiteId"/>
                 <parameter param-name="contentId"/>
@@ -199,7 +199,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="removeWebSiteRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="webSiteId" from-field="webSiteRole.webSiteId"/>
                 <parameter param-name="partyId" from-field="webSiteRole.partyId"/>

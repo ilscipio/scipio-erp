@@ -36,7 +36,7 @@ under the License.
         </field>
         <field name="updateCostComponentCalc" title="${uiLabelMap.CommonUpdate}"><submit/></field>
         <field name="costCustomMethodId" title="${uiLabelMap.CommonMethod}"><display-entity entity-name="CustomMethod" key-field-name="customMethodId" description="${description}"/></field>
-        <field name="deleteCostComponentCalc" title=" " widget-style="${styles.link_action}">
+        <field name="deleteCostComponentCalc" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteCostComponentCalc" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="costComponentCalcId"/>
             </hyperlink>
@@ -70,7 +70,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_create}">
             <submit button-type="button"/>
         </field>
     </form>

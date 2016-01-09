@@ -133,7 +133,7 @@ under the License.
         <field name="prodCatalogId">
             <display-entity entity-name="ProdCatalog" description="${catalogName}" key-field-name="prodCatalogId"/>
         </field>
-        <field name="delete" widget-style="${styles.link_action}">
+        <field name="delete" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="removeCatalogFromStore" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productStoreId"/>
                 <parameter param-name="prodCatalogId"/>

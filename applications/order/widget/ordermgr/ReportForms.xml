@@ -61,13 +61,13 @@ under the License.
     <form name="OrderPurchaseProductOptions" type="single" target="OrderPurchaseReportProduct.pdf" title="" extends="OrderPurchaseReportOptions" target-window="_BLANK">
         <field name="fromOrderDate" title="${uiLabelMap.OrderReportFromDate}"><date-time type="timestamp"/></field>
         <field name="thruOrderDate" title="${uiLabelMap.OrderReportThruDate}"><date-time type="timestamp"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action_run} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
     <form name="OrderPurchasePaymentOptions" type="single" target="OrderPurchaseReportPayment.pdf" title="" extends="OrderPurchaseReportOptions" target-window="_BLANK">
         <field name="fromOrderDate" title="${uiLabelMap.OrderReportFromDate}"><date-time type="timestamp"/></field>
         <field name="thruOrderDate" title="${uiLabelMap.OrderReportThruDate}"><date-time type="timestamp"/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action_run} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
 
     <!-- form for generating a report of total product sales (quantity and value) -->
@@ -94,7 +94,7 @@ under the License.
         </field>
         <field name="fromOrderDate" title="${uiLabelMap.CommonFrom}"><date-time type="timestamp"/></field>
         <field name="thruOrderDate" title="${uiLabelMap.CommonThru}"><date-time type="timestamp"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action_run} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
 
     <!-- form for generating a report of open order items -->
@@ -124,7 +124,7 @@ under the License.
         </field>
         <field name="fromOrderDate" title="${uiLabelMap.OrderReportFromDate}"><date-time type="timestamp"/></field>
         <field name="thruOrderDate" title="${uiLabelMap.OrderReportThruDate}"><date-time type="timestamp"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action_run} ${styles.action_view}"><submit button-type="button"/></field>
     </form>
 
     <!-- list open order items -->
@@ -193,6 +193,6 @@ under the License.
         </field>
         <field name="fromOrderDate" title="${uiLabelMap.CommonFrom}"><date-time type="timestamp"/></field>
         <field name="thruOrderDate" title="${uiLabelMap.CommonThru}"><date-time type="timestamp"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action_run} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
 </forms>

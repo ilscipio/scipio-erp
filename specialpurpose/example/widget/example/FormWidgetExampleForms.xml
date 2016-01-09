@@ -303,7 +303,7 @@ under the License.
 
     <!-- Simple form to print a FOP PDF file with the  fonts available in OFBiz Project -->
     <form name="FOPFontsExampleForm" type="single" target="printExampleFOPFonts">
-            <field name="printAction" title="${uiLabelMap.ExamplePrintButton}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="printAction" title="${uiLabelMap.ExamplePrintButton}" widget-style="${styles.link_action_run} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
 
     <form name="FieldGroupExampleForm" type="single" title="">

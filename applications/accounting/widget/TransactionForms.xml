@@ -114,14 +114,14 @@ under the License.
         <field name="comments"><display/></field>
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" >
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" >
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="partyIdTo"/>
                 </sub-hyperlink>
             </display-entity>
@@ -136,7 +136,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="PaymentGatewayResponse" default-field-type="display"/>
         <!-- TODO: what is the correct way to ensure that the response was authorized?
-        <field name="submitAction" use-when="paymentGatewayResponse!=null&amp;&amp;paymentGatewayResponse.getString(&quot;gatewayFlag&quot;).equals(&quot;A&quot;)" title="${uiLabelMap.AccountingCapture}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="paymentGatewayResponse!=null&amp;&amp;paymentGatewayResponse.getString(&quot;gatewayFlag&quot;).equals(&quot;A&quot;)" title="${uiLabelMap.AccountingCapture}" widget-style="${styles.link_action_run} ${styles.action_copy}"><submit button-type="button"/></field>
         -->
         <field name="paymentServiceTypeEnumId">
             <display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"/>
@@ -160,7 +160,7 @@ under the License.
             </drop-down>
         </field>
         <field name="overrideAmount" title="${uiLabelMap.AccountingAmount}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.AccountingAuthorize}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.AccountingAuthorize}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <!-- form for capturing a transaction -->
@@ -181,6 +181,6 @@ under the License.
             </drop-down>
         </field>
         <field name="captureAmount" title="${uiLabelMap.AccountingAmount}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.AccountingCapture}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.AccountingCapture}" widget-style="${styles.link_action_run} ${styles.action_copy}"><submit button-type="button"/></field>
     </form>
 </forms>

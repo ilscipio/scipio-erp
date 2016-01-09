@@ -75,7 +75,7 @@ under the License.
         <field name="facilityId"><lookup target-form-name="LookupFacility"/></field>
         <field name="mustRsvp"><check/></field>
         <field name="comments"><text size="60" maxlength="255"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="EditWorkEffortPartyAssign" default-map-name="workEffortPartyAssignment" target="updateWorkEffortPartyAssign" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">

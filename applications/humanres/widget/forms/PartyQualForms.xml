@@ -65,7 +65,7 @@ under the License.
         <auto-fields-service service-name="updatePartyQual"/>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
-                <sub-hyperlink target="viewprofile" link-style="${styles.link_action}" target-type="inter-app" description="${partyId}">
+                <sub-hyperlink target="viewprofile" link-style="${styles.link_record_id}" target-type="inter-app" description="${partyId}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -96,7 +96,7 @@ under the License.
                 <auto-parameters-service service-name="deletePartyQual"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
     </form>
     <form name="AddPartyQual" type="single" target="createPartyQual"
         header-row-style="header-row" default-table-style="${styles.table_basic}">

@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="ListRequests" type="list" extends="ListRequestList" extends-resource="component://order/widget/ordermgr/CustRequestForms.xml"
             paginate-target="requestlist" >
-        <field name="createAction" title="${uiLabelMap.ProjectMgrCreateTaskFromRequest}" widget-style="${styles.link_action}">
+        <field name="createAction" title="${uiLabelMap.ProjectMgrCreateTaskFromRequest}" widget-style="${styles.link_nav} ${styles.action_create}">
             <hyperlink description="${uiLabelMap.ProjectMgrCreateTaskFromRequest}" target="/projectmgr/control/EditTaskFromRequest" target-type="inter-app">
                 <parameter param-name="custRequestId"/>
             </hyperlink>
@@ -60,7 +60,7 @@ under the License.
         <field name="roleTypeId"><hidden value="PROJECT_TEAM"/></field>
         <field name="custRequestDate" title="${uiLabelMap.OrderRequestDate}"><date-time type="timestamp"/></field>
         <field name="responseRequiredDate"><date-time type="timestamp"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
         <sort-order>
             <sort-field name="custRequestId"/>
             <sort-field name="fromPartyId"/>
@@ -93,7 +93,7 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="fromPartyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId">
-                <sub-hyperlink target="viewprofile" description="[${fromPartyId}]">
+                <sub-hyperlink target="viewprofile" description="[${fromPartyId}]" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="fromPartyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -174,7 +174,7 @@ under the License.
         <field name="createdDate" sort-field="true"><display type="date"/></field>
         <field name="fromPartyId" sort-field="true">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId">
-                <sub-hyperlink target="viewprofile" description="[${fromPartyId}]">
+                <sub-hyperlink target="viewprofile" description="[${fromPartyId}]" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="fromPartyId"/>
                 </sub-hyperlink>
             </display-entity>

@@ -31,7 +31,7 @@
             </hyperlink>
         </field>
         <field name="wellKnownText" title="${uiLabelMap.CommonGeoWellKnownText}"><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteGeo" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="geoId"/>
                 <parameter param-name="noConditionFind" value="Y"/>
@@ -55,7 +55,7 @@
         <field name="geoSecCode" title="${uiLabelMap.CommonGeoSecCode}"><text/></field>
         <field name="abbreviation" title="${uiLabelMap.CommonGeoAbbr}"><text/></field>
         <field name="wellKnownText" title="${uiLabelMap.CommonGeoWellKnownText}"><textarea/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListLookupGeo" extends="ListGeos">
         <field name="geoId" title="${uiLabelMap.CommonGeoId}" widget-style="${styles.link_record_id}">
@@ -91,7 +91,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
         
 </forms>

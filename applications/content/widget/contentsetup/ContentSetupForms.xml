@@ -40,7 +40,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentType">
                 <parameter param-name="contentTypeId"/>
             </hyperlink>
@@ -73,7 +73,7 @@ under the License.
         <field name="attrName">
             <display/>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentTypeAttr">
                 <parameter param-name="contentTypeId"/>
                 <parameter param-name="attrName"/>
@@ -101,7 +101,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentAssocType">
                 <parameter param-name="contentAssocTypeId"/>
             </hyperlink>
@@ -128,7 +128,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentPurposeType">
                 <parameter param-name="contentPurposeTypeId"/>
             </hyperlink>
@@ -155,7 +155,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentAssocPredicate">
                 <parameter param-name="contentAssocPredicateId"/>
             </hyperlink>
@@ -182,7 +182,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentOperation">
                 <parameter param-name="contentOperationId"/>
             </hyperlink>
@@ -220,7 +220,7 @@ under the License.
             <entity-one entity-name="ContentPurposeOperation" use-cache="false"/>
         </actions>
         <auto-fields-service service-name="updateContentPurposeOperation" default-field-type="display"/>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentPurposeOperation">
                 <parameter param-name="contentPurposeTypeId"/>
                 <parameter param-name="contentOperationId"/>

@@ -153,14 +153,14 @@ under the License.
         </field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" use-when="dataResourceId != null">
             <lookup target-form-name="LookupDataResource">
-                <sub-hyperlink link-style="${styles.link_action}" target="EditDataResource" description="${uiLabelMap.ContentGoToDataResource}">
+                <sub-hyperlink link-style="${styles.link_nav} ${styles.action_update}" target="EditDataResource" description="${uiLabelMap.ContentGoToDataResource}">
                     <parameter param-name="dataResourceId" from-field="currentValue.dataResourceId"/>
                 </sub-hyperlink>
             </lookup>
         </field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" use-when="dataResourceId == null ">
             <lookup target-form-name="LookupDataResource">
-                <sub-hyperlink link-style="${styles.link_action}" target="AddDataResourceFromContent" description="${uiLabelMap.FormFieldTitle_newDataResourceId}">
+                <sub-hyperlink link-style="${styles.link_nav} ${styles.action_create}" target="AddDataResourceFromContent" description="${uiLabelMap.FormFieldTitle_newDataResourceId}">
                     <parameter param-name="contentId" from-field="currentValue.contentId"/>
                     <parameter param-name="template" value="N"/>
                 </sub-hyperlink>
@@ -168,14 +168,14 @@ under the License.
         </field>
         <field name="templateDataResourceId" use-when="templateDataResourceId != null">
             <lookup target-form-name="LookupDataResource">
-                <sub-hyperlink link-style="${styles.link_action}" target="EditDataResource" description="${uiLabelMap.ContentGoToDataResource}">
+                <sub-hyperlink link-style="${styles.link_nav} ${styles.action_update}" target="EditDataResource" description="${uiLabelMap.ContentGoToDataResource}">
                     <parameter param-name="dataResourceId" from-field="currentValue.templateDataResourceId"/>
                 </sub-hyperlink>
             </lookup>
         </field>
         <field name="templateDataResourceId" use-when="templateDataResourceId == null">
             <lookup target-form-name="LookupDataResource">
-                <sub-hyperlink link-style="${styles.link_action}" target="AddDataResourceFromContent" description="${uiLabelMap.FormFieldTitle_newDataResourceId}">
+                <sub-hyperlink link-style="${styles.link_nav} ${styles.action_create}" target="AddDataResourceFromContent" description="${uiLabelMap.FormFieldTitle_newDataResourceId}">
                     <parameter param-name="contentId" from-field="currentValue.contentId"/>
                     <parameter param-name="templateDataResource" value="Y"/>
                 </sub-hyperlink>
@@ -184,7 +184,7 @@ under the License.
         <field name="ownerContentId"><lookup target-form-name="LookupContent"/></field>
         <field name="decoratorContentId">
             <lookup target-form-name="LookupContent">
-                <sub-hyperlink use-when="&quot;${currentValue.decoratorContentId}&quot;.length()>0" link-style="${styles.link_action}" target="EditContent" description="${uiLabelMap.ContentGoToContent}">
+                <sub-hyperlink use-when="&quot;${currentValue.decoratorContentId}&quot;.length()>0" link-style="${styles.link_nav} ${styles.action_update}" target="EditContent" description="${uiLabelMap.ContentGoToContent}">
                     <parameter param-name="contentId" from-field="currentValue.decoratorContentId"/>
                 </sub-hyperlink>
             </lookup>
@@ -213,8 +213,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="createAction" title="${uiLabelMap.CommonCreate}" use-when="currentValue==null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="currentValue!=null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="createAction" title="${uiLabelMap.CommonCreate}" use-when="currentValue==null" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="currentValue!=null" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <!-- Content Lookup forms -->
@@ -291,7 +291,7 @@ under the License.
         <field name="contentAssocTypeId"><display-entity entity-name="ContentAssocType" description="${description}"></display-entity></field>
         <field name="mapKey"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display description="${groovy:fromDate.toString().substring(0,10)}"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentAssoc">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentIdTo"/>
@@ -322,7 +322,7 @@ under the License.
         <field name="contentAssocTypeId"><display-entity entity-name="ContentAssocType" description="${description}"></display-entity></field>
         <field name="mapKey"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display description="${groovy:fromDate.toString().substring(0,10)}"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentAssoc">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentIdTo"/>
@@ -340,10 +340,10 @@ under the License.
     <form name="AddContentRole" target="addContentRole" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentRole"/>
-        <field name="contentId" widget-style="${styles.link_action}" >
+        <field name="contentId" widget-style="${styles.link_nav} ${styles.action_find}">
             <lookup target-form-name="LookupContent"/>
         </field>
-        <field name="partyId" widget-style="${styles.link_action}"><lookup target-form-name="LookupPerson"/></field>
+        <field name="partyId" widget-style="${styles.link_nav} ${styles.action_find}"><lookup target-form-name="LookupPerson"/></field>
         <field name="roleTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId">
@@ -372,7 +372,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="remove${contentRoleTarget}ContentRole">
                 <parameter param-name="contentId"/>
                 <parameter param-name="roleTypeId"/>
@@ -386,7 +386,7 @@ under the License.
     <form name="AddContentPurpose" target="addContentPurpose" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentPurpose"/>
-        <field name="contentId" title=" " widget-style="${styles.link_action}" ><lookup target-form-name="LookupContent"/></field>
+        <field name="contentId" title=" " widget-style="${styles.link_nav} ${styles.action_find}" ><lookup target-form-name="LookupContent"/></field>
         <field name="contentPurposeTypeId">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="ContentPurposeType" key-field-name="contentPurposeTypeId">
@@ -405,7 +405,7 @@ under the License.
         </actions>
         <auto-fields-service service-name="updateContentPurpose" default-field-type="display"/>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentPurpose">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentPurposeTypeId"/>
@@ -417,7 +417,7 @@ under the License.
     <form name="AddContentAttribute" target="addContentAttribute" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentAttribute"/>
-        <field name="contentId" title=" " widget-style="${styles.link_action}" >
+        <field name="contentId" title=" " widget-style="${styles.link_nav} ${styles.action_find}">
             <lookup target-form-name="LookupContent"/>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
@@ -432,7 +432,7 @@ under the License.
         <auto-fields-service service-name="updateContentAttribute" default-field-type="display"/>
         <field name="attrValue" widget-style="${styles.link_text}"><text/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentAttribute">
                 <parameter param-name="contentId"/>
                 <parameter param-name="attrName"/>
@@ -444,7 +444,7 @@ under the License.
     <form name="AddContentMetaData" target="addContentMetaData" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentMetaData"/>
-        <field name="contentId" title=" " widget-style="${styles.link_action}" >
+        <field name="contentId" title=" " widget-style="${styles.link_nav} ${styles.action_find}">
             <lookup target-form-name="LookupContent"/>
         </field>
         <field name="metaDataPredicateId">
@@ -456,7 +456,7 @@ under the License.
     </form>
     <form name="ListWebSites" type="list" paginate-target="ListWebSite" paginate="true" list-name="webSites"
             odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2">
-        <field name="webSiteId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_action}" sort-field="true">
+        <field name="webSiteId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav} ${styles.action_update}" sort-field="true">
             <hyperlink description="${webSiteId}" target="EditWebSite" also-hidden="false">
                 <parameter param-name="webSiteId"/>
             </hyperlink>
@@ -478,7 +478,7 @@ under the License.
         <field name="contentId" widget-style="${styles.link_record_id}"><display/></field>
         <field name="metaDataPredicateId" widget-style="${styles.link_record_id}"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentMetaData">
                 <parameter param-name="contentId"/>
                 <parameter param-name="metaDataPredicateId"/>
@@ -540,7 +540,7 @@ under the License.
         <field name="workEffortContentTypeId"><display-entity entity-name="WorkEffortContentType" description="${description}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteWorkEffortContent">
                 <parameter param-name="workEffortContentTypeId"/>
                 <parameter param-name="fromDate"/>
@@ -616,7 +616,7 @@ under the License.
         <field name="contentTypeId"><display/></field>
         <field name="ownerContentId"><display/></field>
         <field name="mimeTypeId"><display/></field>
-        <field name="select" widget-style="${styles.link_action}" title=" " use-when="contentId!=null">
+        <field name="select" widget-style="${styles.link_action_run} ${styles.action_select}" title=" " use-when="contentId!=null">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.CommonSelect}"
                 target="javascript:set_value('${contentId}')"/>            

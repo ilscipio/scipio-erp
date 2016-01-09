@@ -256,7 +256,7 @@
         <field name="partyId" title="${uiLabelMap.ScrumAssignedTo}" use-when="partyId==null"><display/></field>
         <field name="partyId" title="${uiLabelMap.ScrumAssignedTo}" use-when="partyId!=null">
             <display-entity entity-name="Person" description="${lastName} ${firstName} ${middleName}" key-field-name="partyId">
-                <sub-hyperlink target="viewprofile" description=" [${partyId}]">
+                <sub-hyperlink target="viewprofile" description="[${partyId}]" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -318,7 +318,7 @@
         <field name="howToTest" title="${uiLabelMap.ScrumHowToTest}"><textarea/></field>
         <field name="workEffortId" title="${uiLabelMap.ScrumTaskId}"><hidden value="${taskId}"/></field>
         <field name="custRequestId" title="${uiLabelMap.ScrumCustRequestId}"><hidden value="${custRequestId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}" >
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}" >
             <submit/>
         </field>
     </form>
@@ -542,7 +542,7 @@
         <field name="noteInfo"><display/></field>
         <field name="noteDateTime"><display/></field>
         <field name="noteParty"><display/></field>
-        <field name="removeNote" title=" " widget-style="${styles.link_action}">
+        <field name="removeNote" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteTaskNote">
                 <parameter param-name="noteId" from-field="noteId"/>
                 <parameter param-name="taskId" from-field="workEffortId"/>
@@ -648,8 +648,8 @@
         <field name="planHours">
             <text default-value="${taskInfo.planHours}" size="2"/>
         </field>
-        <field name="UpdateAction" title="${uiLabelMap.CommonUpdate}"><submit/></field>
-        <field name="RemoveAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="unassignPartyFromWorkEffort" description="${uiLabelMap.CommonRemove}" confirmation-message="Are you sure to remove this task ?" link-type="hidden-form">
                 <parameter param-name="workEffortId" from-field="taskId"/>
                 <parameter param-name="partyId" from-field="partyId"/>
@@ -738,13 +738,13 @@
         <field name="taskEstimatedMilliSeconds" title="${uiLabelMap.ScrumPlannedHours}" parameter-name="planHours"><display></display></field>
         <field name="taskActualMilliSeconds" title="${uiLabelMap.ScrumActualHours}" parameter-name="actualHours"><display description="${result.actualHours}"/></field>
         <field name="taskEstimatedStartDate" title="${uiLabelMap.CommonStartDate}" parameter-name="estimatedStartDate"><display type="date"/></field>
-        <field name="editAction" title=" " widget-style="${styles.link_action}">
+        <field name="editAction" title=" " widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink target="EditTask" description="${uiLabelMap.CommonEdit}" link-type="hidden-form">
                 <parameter param-name="taskId"/>
                 <parameter param-name="sprintId"></parameter>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteTask" description="${uiLabelMap.CommonDelete}" link-type="hidden-form" confirmation-message="Are you sure to delete this task?">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="workEffortId" from-field="taskId"/>

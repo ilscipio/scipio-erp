@@ -36,7 +36,7 @@ under the License.
         <field name="description"><display/></field>
         <field name="custRequestTypeDescription"><display/></field>
         <field name="statusItemDescription"><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteWorkEffortRequest">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="custRequestId"/>
@@ -47,7 +47,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="workEffortId"><hidden/></field>
         <field name="custRequestId"><lookup target-form-name="LookupCustRequest"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit button-type="text-link"/>
         </field>
     </form>
@@ -70,7 +70,7 @@ under the License.
         <field name="priority"><display/></field>
         <field name="productId"><display/></field>
         <field name="description"><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteWorkEffortRequestItem">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="custRequestId"/>

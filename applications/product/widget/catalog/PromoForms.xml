@@ -111,7 +111,7 @@ under the License.
                 <parameter param-name="productPromoCodeId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteProductPromoCode" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productPromoCodeId"/>
                 <parameter param-name="productPromoId"/>
@@ -146,12 +146,12 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
-        <field name="editContentAction" title="${uiLabelMap.ProductEditContent}" widget-style="${styles.link_action}">
+        <field name="editContentAction" title="${uiLabelMap.ProductEditContent}" widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink target="/content/control/EditContent" target-type="inter-app" description="${contentId}" also-hidden="false">
                 <parameter param-name="contentId"/>
             </hyperlink>
         </field>
-        <field name="removeContentAction" title=" " widget-style="${styles.link_action}">
+        <field name="removeContentAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="removeContentFromProductPromo" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productPromoId"/>
                 <parameter param-name="contentId"/>

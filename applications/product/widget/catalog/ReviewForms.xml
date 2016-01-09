@@ -68,13 +68,13 @@ under the License.
         <field name="productReview" use-when="${statusId != 'PRR_DELETED'}"><textarea/></field>
         <field name="productReview" use-when="${statusId == 'PRR_DELETED'}"><textarea read-only="true"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="${statusId != 'PRR_DELETED'}"><submit button-type="button"/></field>
-        <field name="approveAction" widget-style="${styles.link_action}" use-when="${statusId == 'PRR_PENDING'}">
+        <field name="approveAction" widget-style="${styles.link_action_run} ${styles.action_update}" use-when="${statusId == 'PRR_PENDING'}">
             <hyperlink target="updateProductReviewStatus" description="${uiLabelMap.FormFieldTitle_approve}" also-hidden="false">
                 <parameter param-name="statusId" value="PRR_APPROVED"/>
                 <parameter param-name="productReviewId" from-field="productReviewId"/>
             </hyperlink>
         </field>
-        <field name="rejectAction" widget-style="${styles.link_action}" use-when="${statusId != 'PRR_DELETED'}">
+        <field name="rejectAction" widget-style="${styles.link_action_run} ${styles.action_terminate}" use-when="${statusId != 'PRR_DELETED'}">
             <hyperlink target="updateProductReviewStatus" description="${uiLabelMap.FormFieldTitle_rejectButton}" also-hidden="false" confirmation-message="Do you want to reject this review?">
                 <parameter param-name="statusId" value="PRR_DELETED"/>
                 <parameter param-name="productReviewId" from-field="productReviewId"/>

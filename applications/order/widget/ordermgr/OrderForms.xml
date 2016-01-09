@@ -102,7 +102,7 @@ under the License.
         <field name="orderId"><hidden/></field>
         <field name="orderItemSeqId"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="removeOrderTerm" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="orderId"/>
                 <parameter param-name="termTypeId"/>
@@ -121,7 +121,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="addAction" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="addAction" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="LookupBulkAddSupplierProductsInApprovedOrder" type="multi" use-row-submit="true" list-name="productList" title="" target="bulkAddProductsInApprovedOrder"
             odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="LookupBulkAddSupplierProductsInApprovedOrder" view-size="10">
@@ -144,7 +144,7 @@ under the License.
         <field name="itemDesiredDeliveryDate" title="${uiLabelMap.OrderDesiredDeliveryDate}">
             <date-time/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.OrderAddToOrder}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.OrderAddToOrder}" widget-style="${styles.link_action_run} ${styles.action_select}">
             <submit/>
         </field>
     </form>
@@ -256,7 +256,7 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
 
 </forms>

@@ -47,7 +47,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteInventoryItemLabelType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="inventoryItemLabelTypeId"/>
             </hyperlink>
@@ -64,7 +64,7 @@ under the License.
         <field name="inventoryItemLabelTypeId">
             <display-entity entity-name="InventoryItemLabelType" description="${description} [${inventoryItemLabelTypeId}]" also-hidden="true"/>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteInventoryItemLabel" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="inventoryItemLabelId"/>
             </hyperlink>
@@ -100,7 +100,7 @@ under the License.
             </display-entity>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteInventoryItemLabelAppl" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="inventoryItemId"/>
                 <parameter param-name="inventoryItemLabelTypeId"/>

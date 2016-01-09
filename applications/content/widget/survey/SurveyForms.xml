@@ -82,7 +82,7 @@ under the License.
         <field name="contentId" map-name="empty" title="${uiLabelMap.ContentPDF}">
             <lookup target-form-name="LookupContent"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.ContentSurveyGenerateQuestions}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.ContentSurveyGenerateQuestions}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
 
     <form name="BuildSurveyResponseFromPdf" type="single" target="buildSurveyResponseFromPdf" title="" default-map-name="survey"
@@ -94,7 +94,7 @@ under the License.
         <field name="contentId" map-name="empty" title="${uiLabelMap.ContentPDF}">
             <lookup target-form-name="LookupContent"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.ContentSurveyBuildRespondeFromPDF}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.ContentSurveyBuildRespondeFromPDF}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
 
     <!-- SurveyMultiResp & SurveyMultiRespColumn -->

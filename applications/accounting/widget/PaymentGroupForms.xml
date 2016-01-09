@@ -54,22 +54,22 @@ under the License.
         </field>
         <field name="paymentGroupName" title="${uiLabelMap.CommonName}"><display description="${paymentGroupName}"/></field>
         <field name="paymentGroupTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="PaymentGroupType"/></field>
-        <field name="depositSlipAction" title="${uiLabelMap.AccountingDepositSlip}" widget-style="${styles.link_action}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
+        <field name="depositSlipAction" title="${uiLabelMap.AccountingDepositSlip}" widget-style="${styles.link_action_run} ${styles.action_export}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
             <hyperlink target="DepositSlip.pdf" target-window="_BLANK" description="${uiLabelMap.AccountingInvoicePDF}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
         </field>
-        <field name="printCheckAction" title="${uiLabelMap.CommonPdf}" widget-style="${styles.link_action}" use-when="${paymentGroupTypeId == 'CHECK_RUN'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
+        <field name="printCheckAction" title="${uiLabelMap.CommonPdf}" widget-style="${styles.link_action_run} ${styles.action_export}" use-when="${paymentGroupTypeId == 'CHECK_RUN'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
             <hyperlink target="printChecks.pdf" target-window="_BLANK" description="${uiLabelMap.AccountingInvoicePDF}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title="${uiLabelMap.CommonCancel}" widget-style="${styles.link_action}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${paymentGroupMemberAndTransList[0].finAccountTransStatusId != 'FINACT_TRNS_APPROVED'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
+        <field name="deleteAction" title="${uiLabelMap.CommonCancel}" widget-style="${styles.link_action_run} ${styles.action_remove}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${paymentGroupMemberAndTransList[0].finAccountTransStatusId != 'FINACT_TRNS_APPROVED'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
             <hyperlink target="cancelPaymentGroup" description="${uiLabelMap.CommonCancel}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title="${uiLabelMap.CommonCancel}" widget-style="${styles.link_action}" use-when="${paymentGroupTypeId == 'CHECK_RUN'} @and ${paymentGroupMemberAndTransList[0].finAccountTransStatusId != 'FINACT_TRNS_APPROVED'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
+        <field name="deleteAction" title="${uiLabelMap.CommonCancel}" widget-style="${styles.link_action_run} ${styles.action_remove}" use-when="${paymentGroupTypeId == 'CHECK_RUN'} @and ${paymentGroupMemberAndTransList[0].finAccountTransStatusId != 'FINACT_TRNS_APPROVED'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
             <hyperlink target="cancelCheckRunPayments" description="${uiLabelMap.CommonCancel}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
@@ -147,14 +147,14 @@ under the License.
         <field name="paymentRefNum" title="${uiLabelMap.AccountingReferenceNumber}"><display/></field>
         <field name="partyIdFrom" title="${uiLabelMap.CommonFrom}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${lastName} ${firstName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" >
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="partyIdTo" title="${uiLabelMap.CommonTo}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${lastName} ${firstName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" >
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="partyIdTo"/>
                 </sub-hyperlink>
             </display-entity>
@@ -206,14 +206,14 @@ under the License.
         </field>
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${lastName} ${firstName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" >
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${lastName} ${firstName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" >
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="partyIdTo"/>
                 </sub-hyperlink>
             </display-entity>

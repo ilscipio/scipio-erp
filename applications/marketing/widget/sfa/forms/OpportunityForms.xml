@@ -76,7 +76,7 @@ under the License.
         <field name="opportunityStageId" title="${uiLabelMap.SfaInitialStage}"><display-entity entity-name="SalesOpportunityStage" description="${description}"/></field>
         <field name="partyId" title="${uiLabelMap.SfaLead}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} ${middleName} ${groupName}" key-field-name="partyId">
-                <sub-hyperlink target="viewprofile" description=" [${partyId}]">
+                <sub-hyperlink target="viewprofile" description="[${partyId}]" link-style="${styles.link_record_id}">
                     <parameter param-name="partyId" from-field="partyId"/>
                 </sub-hyperlink>
             </display-entity> 
@@ -85,7 +85,7 @@ under the License.
         <field name="estimatedAmount" title="${uiLabelMap.SfaEstimatedAmount}"><display/></field>
         <field name="nextStepDate" position="1" title="${uiLabelMap.SfaNextStepDate}" sort-field="true"><display/></field>
         <field name="estimatedCloseDate" title="${uiLabelMap.SfaCloseDate}"><display/></field>
-        <field name="editAction" title="${uiLabelMap.CommonClose}" use-when="${groovy: estimatedCloseDate == null || isDateAfterNow == true || opportunityStageId != &quot;SOSTG_CLOSED&quot;}" widget-style="${styles.link_action}">
+        <field name="editAction" title="${uiLabelMap.CommonClose}" use-when="${groovy: estimatedCloseDate == null || isDateAfterNow == true || opportunityStageId != &quot;SOSTG_CLOSED&quot;}" widget-style="${styles.link_action_run} ${styles.action_terminate}">
             <hyperlink target="closeSalesOpportunity" description="${uiLabelMap.CommonClose}">
                 <parameter param-name="salesOpportunityId"/>
                 <parameter param-name="opportunityStageId" value="SOSTG_CLOSED"/>

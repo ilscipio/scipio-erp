@@ -74,7 +74,7 @@
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><display/></field>
-        <field name="searchAction" title=" " widget-style="${styles.link_action}" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
+        <field name="searchAction" title=" " widget-style="${styles.link_nav} ${styles.action_find}" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.ProductVariants}" target="LookupVariantProduct">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -107,7 +107,7 @@
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><display/></field>
         <field name="primaryProductCategoryId" title="${uiLabelMap.ProductPrimaryCategory}"><display/></field>
-        <field name="searchAction" title="" widget-style="${styles.link_action}" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
+        <field name="searchAction" title="" widget-style="${styles.link_nav} ${styles.action_find}" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.ProductVariants}" target="LookupVariantProduct">
                 <parameter param-name="productId"/>
             </hyperlink>

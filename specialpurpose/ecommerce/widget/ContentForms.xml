@@ -23,8 +23,7 @@ under the License.
     <form name="searchQuery" target="AdminSearch" title="" type="single"
         default-title-style="tableheadtext" default-widget-style="inputBox">
         <field name="queryLine" title="${uiLabelMap.EcommerceEnterQueryParameters}"><text size="60"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="searchList" type="list" target="" list-name="queryResults"
         default-title-style="tableheadtext" default-widget-style="inputBox"

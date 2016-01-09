@@ -97,7 +97,7 @@ under the License.
                 <list-options list-name="creditCardList" list-entry-name="creditCardPm" key-name="creditCardPm.paymentMethodId" description="${groovy:org.ofbiz.party.contact.ContactHelper.formatCreditCard(creditCardPm.getRelatedOne(&quot;CreditCard&quot;, false))}"/>
             </drop-down>
         </field>
-        <field name="newCreditCardAction" widget-style="${styles.link_action}" use-when="returnHeader!=null&amp;&amp;returnHeader.getString(&quot;fromPartyId&quot;)!=null">
+        <field name="newCreditCardAction" widget-style="${styles.link_nav} ${styles.action_create}" use-when="returnHeader!=null&amp;&amp;returnHeader.getString(&quot;fromPartyId&quot;)!=null">
             <hyperlink also-hidden="false" target="/partymgr/control/editcreditcard" target-window="partymgr" description="${uiLabelMap.AccountingCreateNewCreditCard}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="returnHeader.fromPartyId"/>
             </hyperlink>
@@ -106,7 +106,7 @@ under the License.
             <drop-down no-current-selected-key="N"><option key="N"/><option key="Y"/></drop-down>
         </field>
         <field name="createdBy"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <!-- UNUSED FORM
     <form name="ReturnItems" type="multi" list-name="orderItems" target="createReturnItem"

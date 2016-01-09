@@ -76,7 +76,7 @@
             </display-entity>
         </field>
         <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
-        <field name="updateLeave" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}" use-when="hasAdminPermission">
+        <field name="updateLeave" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_nav} ${styles.action_update}" use-when="hasAdminPermission">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonUpdate}" target="EditEmplLeave">
                 <parameter param-name="partyId"/>
                 <parameter param-name="leaveTypeId"/>

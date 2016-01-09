@@ -117,7 +117,7 @@ under the License.
         <field name="invoiceDate"><display description="${groovy:invoiceDate.toString().substring(0,10)}"/></field>
         <field name="total" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="capture" use-when="${groovy:!paidInvoice}" widget-style="${styles.link_action}">
+        <field name="capture" use-when="${groovy:!paidInvoice}" widget-style="${styles.link_action_run} ${styles.action_copy}">
             <hyperlink target="capturePaymentsByInvoice" description="${uiLabelMap.AccountingCapture}">
                 <parameter param-name="invoiceId"/>
                 <parameter param-name="billingAccountId"/>
@@ -170,8 +170,8 @@ under the License.
         <field name="availableBalance" title="${uiLabelMap.AccountingBillingAvailableBalance}" tooltip="${uiLabelMap.AccountingBillingAvailableBalanceMessage}" position="2">
             <display type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="billingAccount == null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="billingAccount!=null" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="billingAccount == null" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="billingAccount!=null" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListBillingAccountRoles" type="multi" list-name="billingAccountRoleList" target="updateBillingAccountRole?billingAccountId=${billingAccountId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}"
@@ -197,7 +197,7 @@ under the License.
          <display-entity entity-name="RoleType" description="${description}"/>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
- 		<field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
+ 		    <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteBillingAccountRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
@@ -248,7 +248,7 @@ under the License.
         <field name="uomId" title="${uiLabelMap.CommonUom}">
             <display-entity entity-name="Uom" description="${description}"/>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="removeBillingAccountTerm">
                 <parameter param-name="billingAccountId"/>
                 <parameter param-name="billingAccountTermId"/>

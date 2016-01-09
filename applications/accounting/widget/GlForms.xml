@@ -94,7 +94,7 @@ under the License.
         <field name="workEffortId" title="${uiLabelMap.WorkEffort}" position="2"><lookup target-form-name="LookupWorkEffort" size="20" maxlength="20"/></field>
         <field name="voucherRef" position="1"><text/></field>
         <field name="voucherDate" position="2"><date-time/></field>
-        <field name="createAction" widget-style="${styles.link_action}"><submit button-type="button"/></field>
+        <field name="createAction" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
         <sort-order>
             <field-group>
                 <sort-field name="organisationPartyId"/>
@@ -455,12 +455,12 @@ under the License.
         <field name="shipmentId" use-when="shipmentId==null"><display/></field>
         <field name="isPosted"><display/></field>
         <field name="postedDate"><display/></field>
-        <field name="postAcctgTrans" title=" " use-when="&quot;N&quot;.equals(isPosted)" widget-style="${styles.link_action}">
+        <field name="postAcctgTrans" title=" " use-when="&quot;N&quot;.equals(isPosted)" widget-style="${styles.link_action_run} ${styles.action_update}">
             <hyperlink target="postAcctgTrans" description="${uiLabelMap.AccountingPostTransaction}">
                 <parameter param-name="acctgTransId"/>
             </hyperlink>
         </field>
-        <field name="createTransactionDetailReportPDF" title="${uiLabelMap.AccountingInvoicePDF}" use-when="${isPosted=='Y'}" widget-style="${styles.link_action}">
+        <field name="createTransactionDetailReportPDF" title="${uiLabelMap.AccountingInvoicePDF}" use-when="${isPosted=='Y'}" widget-style="${styles.link_action_run} ${styles.action_export}">
             <hyperlink target="acctgTransDetailReportPdf.pdf" target-window="_BLANK" description="${uiLabelMap.AccountingInvoicePDF}">
                 <parameter param-name="acctgTransId"/>
             </hyperlink>
@@ -494,14 +494,14 @@ under the License.
         <field name="partyId" title="${uiLabelMap.CommonParty}"><display/></field>
         <field name="workEffortId"><display/></field>
         <field name="shipmentId" title="${uiLabelMap.CommonShipment}"><display/></field>
-        <field name="verifyAction" title=" " widget-style="${styles.link_action}">
+        <field name="verifyAction" title=" " widget-style="${styles.link_action_run} ${styles.action_view}">
             <hyperlink description="${uiLabelMap.AccountingVerifyTransaction}" target="postAcctgTrans" also-hidden="false">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="organizationPartyId"/>
                 <parameter param-name="verifyOnly" value="Y"/>
             </hyperlink>
         </field>
-        <field name="postAction" title=" " widget-style="${styles.link_action}">
+        <field name="postAction" title=" " widget-style="${styles.link_action_run} ${styles.action_update}">
             <hyperlink description="${uiLabelMap.AccountingPostTransaction}" target="postAcctgTrans" also-hidden="false">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="organizationPartyId"/>
@@ -982,7 +982,7 @@ under the License.
             </drop-down>
         </field>
         <field name="performSearch"><hidden value="Y"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSearch}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSearch}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListGlAccountReconciliation" type="multi" use-row-submit="false" target="EditGlReconciliation?organizationPartyId=${organizationPartyId}&amp;tabButtonItem=AccountReconciliation"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -1021,7 +1021,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="amount" title="${uiLabelMap.CommonAmount}"><display/></field>        
-        <field name="submitAction" title="${uiLabelMap.AccountingCreateAcctRecons}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.AccountingCreateAcctRecons}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="text-link"/></field>
     </form>
     <form name="EditGlReconciliation" type="single" target="updateGlReconciliation?tabButtonItem=${tabButtonItem}" default-map-name="glReconciliation"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -1042,7 +1042,7 @@ under the License.
         <field name="organizationPartyId"><display/></field>
         <field name="openingBalance" use-when="&quot;GLREC_RECONCILED&quot;.equals(&quot;${glReconciliation.statusId}&quot;)"><display/></field>
         <field name="reconciledBalance" position="2"><display/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="glReconciliationId!=null" widget-style="${styles.link_action}" ><submit button-type="text-link"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="glReconciliationId!=null" widget-style="${styles.link_action_run} ${styles.action_update}" ><submit button-type="text-link"/></field>
     </form>
     <form name="ListGlReconciliationEntries" type="list" use-row-submit="true"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -1073,7 +1073,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="2"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="performSearch"><hidden value="Y"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSearch}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSearch}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
     
     <form name="ListGlAccountReconciliations" type="list" default-entity-name="GlReconciliation"

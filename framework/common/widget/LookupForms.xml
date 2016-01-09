@@ -84,7 +84,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}" widget-style="${styles.link_action}">
+        <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}" widget-style="${styles.link_action_run} ${styles.action_select}">
             <hyperlink also-hidden="false" target-type="plain" description="${userLoginId}" target="javascript:set_value('${userLoginId}', '${userLoginId}', '${parameters.webSitePublishPoint}')"/>
         </field>
         <field name="enabled"><display/></field>
@@ -110,7 +110,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="PortalPage" default-field-type="display"/>
-        <field name="portalPageId" widget-style="${styles.link_action}">
+        <field name="portalPageId" widget-style="${styles.link_action_run} ${styles.action_select}">
             <hyperlink also-hidden="false" target-type="plain" description="${portalPageId}" target="javascript:set_value('${portalPageId}')"/>
         </field>
     </form>

@@ -62,9 +62,9 @@ under the License.
         <field name="groupId" title="${uiLabelMap.MarketingTrackingCodeGroupId}"><text size="10"/></field>
         <field name="subgroupId" title="${uiLabelMap.MarketingTrackingCodeSubgroupId}"><text size="10"/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
         <!-- <field name="DONE_PAGE"><hidden value="${donePage}"/></field> -->
-        <!-- <field name="cancelAction" title=" " widget-style="${styles.link_action}"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="inter-app"/></field> -->
+        <!-- <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="inter-app"/></field> -->
     </form>
 
     <form name="ListTrackingCode" target="ListTrackingCode" title="" type="list"
@@ -82,7 +82,7 @@ under the License.
         <field name="marketingCampaignId" title="${uiLabelMap.MarketingCampaignId}"><display-entity description="${campaignName}" entity-name="MarketingCampaign"/></field>
         <field name="prodCatalogId"><display-entity description="${catalogName}" entity-name="ProdCatalog"/></field>
 
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteTrackingCode" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="trackingCodeId"/>
             </hyperlink>
@@ -114,7 +114,7 @@ under the License.
             </drop-down>
         </field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
      </form>
 
     <form name="FindTrackingCodeOrders" type="single" target="ListTrackingCodeOrders" title=""
@@ -164,7 +164,7 @@ under the License.
             </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}"><submit button-type="button"/>        </field>
-        <field name="cancelAction" title="${uiLabelMap.CommonCancel}" widget-style="${styles.link_action}"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
+        <field name="cancelAction" title="${uiLabelMap.CommonCancel}" widget-style="${styles.link_nav_cancel}"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
     <form name="FindTrackingCodeVisits" target="ListTrackingCodeVisits" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -228,7 +228,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListLookupTrackingCode" target="" title="" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -295,9 +295,9 @@ under the License.
         <field use-when="trackingCodeType==null&amp;&amp;trackingCodeTypeId!=null" name="trackingCodeTypeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeTypeId}" tooltip="${uiLabelMap.CommonCannotBeFound}: [${trackingCodeTypeId}]"><display/></field>
 
         <field name="description" title="${uiLabelMap.MarketingTrackingCodeTypeDescription}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
         <!-- <field name="DONE_PAGE"><hidden value="${donePage}"/></field> -->
-        <!-- <field name="cancelAction" title=" " widget-style="${styles.link_action}"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="inter-app"/></field> -->
+        <!-- <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}" target-type="inter-app"/></field> -->
     </form>
 
     <form name="ListTrackingCodeType" target="ListTrackingCodeType" title="" type="list"
@@ -312,7 +312,7 @@ under the License.
         </field>
         <field name="description" title="${uiLabelMap.MarketingTrackingCodeTypeDescription}"><display/></field>
 
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteTrackingCodeType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="trackingCodeTypeId"/>
             </hyperlink>
@@ -322,7 +322,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="trackingCodeTypeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeTypeId}"><text-find/></field>
         <field name="description" title="${uiLabelMap.MarketingTrackingCodeTypeDescription}"><text-find/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListLookupTrackingCodeType" target="" title="" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

@@ -138,7 +138,7 @@ under the License.
         <field name="serialNumber"><display/></field>
         <field name="softIdentifier"><display/></field>
         <field name="quantityOnHandTotal"><display description="${availableToPromiseTotal} / ${quantityOnHandTotal}"/></field>
-        <field name="transferAction" title="${uiLabelMap.ProductTransfer}" entry-name="inventoryItemId" widget-style="${styles.link_action}">
+        <field name="transferAction" title="${uiLabelMap.ProductTransfer}" entry-name="inventoryItemId" widget-style="${styles.link_action_run} ${styles.action_update}">
             <hyperlink target="TransferInventoryItem" description="${uiLabelMap.ProductTransfer}">
                 <parameter param-name="facilityId"/>
                 <parameter param-name="inventoryItemId"/>
@@ -455,7 +455,7 @@ under the License.
         </field>
         <field name="productId" title="${uiLabelMap.CommonDescription}">
             <display-entity entity-name="Product" description="${internalName}">
-                <sub-hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${uiLabelMap.ProductCatalog}" link-style="${styles.link_action}">
+                <sub-hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${uiLabelMap.ProductCatalog}" link-style="${styles.link_nav} ${styles.action_update}">
                     <parameter param-name="productId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -514,7 +514,7 @@ under the License.
             </drop-down>
         </field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.ProductScheduleTheseRouteSegments}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.ProductScheduleTheseRouteSegments}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit/>
         </field>
     </form>
@@ -551,7 +551,7 @@ under the License.
         <!-- this is for multi-submitting the mark as accepted action (see batchPrintMarkAsAccepted.ftl) -->
         <field name="carrierServiceStatusId"><hidden value="SHRSCS_ACCEPTED"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonPrint}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonPrint}" widget-style="${styles.link_action_run} ${styles.action_export}">
             <submit/>
         </field>
     </form>
@@ -592,7 +592,7 @@ under the License.
         <field name="availableToPromiseVar" title="${uiLabelMap.ProductProductATPVar}" event="onchange" action="document.ListPhysicalInventory._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field>
         <field name="quantityOnHandVar" title="${uiLabelMap.ProductProductQOHVar}" event="onchange" action="document.ListPhysicalInventory._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}">
             <submit/>
         </field>
     </form>
@@ -610,7 +610,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="removeGroupFromFacility" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="facilityId"/>
                 <parameter param-name="facilityGroupId"/>
@@ -642,7 +642,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="removePartyFromFacility" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="facilityId"/>
                 <parameter param-name="partyId"/>
@@ -893,7 +893,7 @@ under the License.
         <field name="mimeTypeId"><display/></field>
         <field name="contentTypeId" title="${uiLabelMap.FormFieldTitle_contentTypeId}"><display-entity entity-name="ContentType" also-hidden="false"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteFacilityContent">
                 <parameter param-name="facilityId"/>
                 <parameter param-name="contentId"/>

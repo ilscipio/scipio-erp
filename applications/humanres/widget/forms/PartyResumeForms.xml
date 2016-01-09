@@ -46,11 +46,11 @@ under the License.
             </hyperlink>
         </field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
-           <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
-               <sub-hyperlink target="viewprofile" link-style="${styles.link_action}" target-type="inter-app" description="${partyId}">
-                <parameter param-name="partyId"/>
-            </sub-hyperlink>
-           </display-entity>
+            <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
+                <sub-hyperlink target="viewprofile" link-style="${styles.link_record_id}" target-type="inter-app" description="${partyId}">
+                    <parameter param-name="partyId"/>
+                </sub-hyperlink>
+            </display-entity>
        </field>
        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
            <hyperlink target="deletePartyResume" description="${uiLabelMap.CommonDelete}" also-hidden="false">

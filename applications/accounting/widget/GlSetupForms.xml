@@ -24,17 +24,17 @@ under the License.
     <form name="ListCompanies" type="list" title="Internal Organizations" list-name="parties"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="partyId" title="${uiLabelMap.AccountingCompanies}"><display-entity entity-name="PartyGroup" description="${groupName}"/></field>
-        <field name="setupAction" title=" " use-when="hasPrefPermission" widget-style="${styles.link_action}">
+        <field name="setupAction" title=" " use-when="hasPrefPermission" widget-style="${styles.link_nav} ${styles.action_configure}">
             <hyperlink target="AdminMain" description="${uiLabelMap.AccountingSetup}">
                 <parameter param-name="organizationPartyId" from-field="partyId"/>
             </hyperlink>
         </field>
-        <field name="accounting" title=" " use-when="hasBasicPermission" widget-style="${styles.link_action}">
+        <field name="accounting" title=" " use-when="hasBasicPermission" widget-style="${styles.link_nav} ${styles.action_view}">
             <hyperlink target="PartyAccountsSummary" description="${uiLabelMap.AccountingAccounting}">
                 <parameter param-name="organizationPartyId" from-field="partyId"/>
             </hyperlink>
         </field>
-        <field name="importexport" title=" " use-when="hasBasicPermission" widget-style="${styles.link_action}">
+        <field name="importexport" title=" " use-when="hasBasicPermission" widget-style="${styles.link_nav} ${styles.action_import}">
             <hyperlink target="ImportExport" description="${uiLabelMap.CommonImportExport}">
                 <parameter param-name="organizationPartyId" from-field="partyId"/>
             </hyperlink>
@@ -445,7 +445,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="removeAction" title=" " widget-style="${styles.link_action}">
+        <field name="removeAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeGlAccountTypeDefault">
                 <parameter param-name="glAccountTypeId"/><parameter param-name="glAccountId"/><parameter param-name="organizationPartyId"/>
             </hyperlink>
@@ -489,7 +489,7 @@ under the License.
         </field>
         <field name="overrideGlAccountId"><display/></field>
         <field name="activeGlDescription"><display/></field>
-        <field name="removeAction" title=" " widget-style="${styles.link_action}" use-when="defaultAccount==false">
+        <field name="removeAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}" use-when="defaultAccount==false">
             <hyperlink target="removeSalInvoiceItemTypeGlAssignment" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="invoiceItemTypeId"/>
             </hyperlink>
@@ -543,7 +543,7 @@ under the License.
         </field>
         <field name="overrideGlAccountId" title="${uiLabelMap.AccountingInvoiceOverrideExpenseGlAccountId}"><display/></field>
         <field name="activeGlDescription"><display/></field>
-        <field name="removeAction" title=" " widget-style="${styles.link_action}" use-when="defaultAccount==false">
+        <field name="removeAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}" use-when="defaultAccount==false">
             <hyperlink target="removePurInvoiceItemTypeGlAssignment" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="invoiceItemTypeId"/>
             </hyperlink>
@@ -592,7 +592,7 @@ under the License.
         <field name="paymentTypeId" title="${uiLabelMap.AccountingPaymentType}"><display-entity entity-name="PaymentType"/></field>
         <field name="glAccountTypeId" title="${uiLabelMap.FormFieldTitle_glAccountType}"><display-entity entity-name="GlAccountType"/></field>
         <field name="organizationPartyId"><hidden/></field>
-        <field name="removeAction" title=" " widget-style="${styles.link_action}">
+        <field name="removeAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="removePaymentTypeGlAssignment" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="paymentTypeId"/>
             </hyperlink>
@@ -650,7 +650,7 @@ under the License.
                 <parameter param-name="glAccountId" from-field="defaultGlAccountId"/>
             </hyperlink>
         </field>
-        <field name="removeAction" title=" " widget-style="${styles.link_action}">
+        <field name="removeAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="removePaymentMethodTypeGlAssignment" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="paymentMethodTypeId"/>
             </hyperlink>
@@ -704,7 +704,7 @@ under the License.
         <field name="parentPeriodId">
           <display-entity entity-name="CustomTimePeriod" key-field-name="customTimePeriodId" description="[${customTimePeriodId}] ${periodName}: ${fromDate} - ${thruDate}"/>
         </field>
-        <field name="close" title=" " widget-style="${styles.link_action}">
+        <field name="close" title=" " widget-style="${styles.link_action_run} ${styles.action_terminate}">
             <hyperlink target="closeFinancialTimePeriod" description="${uiLabelMap.CommonClose}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="customTimePeriodId"/>
             </hyperlink>
@@ -760,7 +760,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="glJournalName"  title="${uiLabelMap.CommonName}"><display/></field>
-        <field name="removeAction" title=" " widget-style="${styles.link_action}">
+        <field name="removeAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteGlJournal" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="glJournalId"/>
             </hyperlink>
@@ -781,7 +781,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteProductGlAccount" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="productId"/><parameter param-name="glAccountTypeId"/>
             </hyperlink>
@@ -826,7 +826,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteFinAccountTypeGlAccount" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="finAccountTypeId"/>
             </hyperlink>
@@ -866,7 +866,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteProductCategoryGlAccount" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="productCategoryId"/><parameter param-name="glAccountTypeId"/>
             </hyperlink>
@@ -911,7 +911,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteVarianceReasonGlAccount" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="varianceReasonId"/>
             </hyperlink>
@@ -952,7 +952,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteCreditCardTypeGlAccount" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="cardType"/>
             </hyperlink>
@@ -1004,7 +1004,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteOrganizationTaxAuthorityGlAccount" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="taxAuthGeoId"/><parameter param-name="taxAuthPartyId"/>
             </hyperlink>
@@ -1055,7 +1055,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deletePartyGlAccount" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="organizationPartyId"/><parameter param-name="partyId"/><parameter param-name="glAccountId"/><parameter param-name="roleTypeId"/><parameter param-name="glAccountTypeId"/>
             </hyperlink>
@@ -1169,7 +1169,7 @@ under the License.
         <field name="glAccountCategoryId"><display-entity entity-name="GlAccountCategory"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="deleteAction" title="" widget-style="${styles.link_action}">
+        <field name="deleteAction" title="" widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteGlAccountCategoryMember" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="glAccountId" from-field="glAccountId"/>
                 <parameter param-name="glAccountCategoryId" from-field="glAccountCategoryId"/>
@@ -1284,7 +1284,7 @@ under the License.
         <field name="depGlAccountId"><display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]"/></field>
         <field name="profitGlAccountId"><display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]"/></field>
         <field name="lossGlAccountId"><display-entity entity-name="GlAccount" key-field-name="glAccountId" description="${accountCode} - ${accountName} [${glAccountId}]"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
             <hyperlink target="deleteFixedAssetTypeGlAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="fixedAssetTypeId"/>
                 <parameter param-name="fixedAssetId"/>

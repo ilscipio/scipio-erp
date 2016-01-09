@@ -68,7 +68,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
     </form>
     <form name="FindEmploymentApps" type="single" target="FindEmploymentApps" header-row-style="header-row" default-table-style="${styles.table_basic}" default-map-name="employmentApp">
         <actions>

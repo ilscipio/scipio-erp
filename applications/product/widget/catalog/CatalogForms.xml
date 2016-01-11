@@ -275,7 +275,7 @@
                 <parameter param-name="prodCatalogCategoryTypeId" />
             </hyperlink>
         </field>
-        <field name="makeTopAction" title=" " widget-style="${styles.link_action_run} ${styles.action_update} ${styles.action_scope_session}">
+        <field name="makeTopAction" title=" " widget-style="${styles.link_action_session} ${styles.action_update}">
             <hyperlink target="EditCategory" description="${uiLabelMap.ProductMakeTop}" also-hidden="false">
                 <parameter param-name="CATALOG_TOP_CATEGORY" from-field="productCategoryId" />
                 <parameter param-name="productCategoryId" />

@@ -99,8 +99,8 @@ under the License.
                                         <label>${uiLabelMap.ExampleDefinitionName} &quot;FieldGroupExampleForm&quot; ${uiLabelMap.ExampleDefinitionFile}</label>
                                         <link target="http://svn.apache.org/repos/asf/ofbiz/trunk/specialpurpose/example/widget/example/FormWidgetExampleForms.xml" url-mode="plain" target-window="svnPage" text="${uiLabelMap.ExampleDefinitionFileTooltip}" style="${styles.link_action_run} ${styles.action_view}"/>
                                         <container style="button-bar">
-                                            <link target="javascript:expandAll(true);"  text="${uiLabelMap.CommonExpandAll}" style="${styles.link_action_prepare} ${styles.action_view} expand-all" url-mode="plain"/>
-                                            <link target="javascript:expandAll(false);" text="${uiLabelMap.CommonCollapseAll}" style="${styles.link_action_prepare} ${styles.action_view} collapse-all" url-mode="plain"/>
+                                            <link target="javascript:expandAll(true);"  text="${uiLabelMap.CommonExpandAll}" style="${styles.link_action_page} ${styles.action_view} expand-all" url-mode="plain"/>
+                                            <link target="javascript:expandAll(false);" text="${uiLabelMap.CommonCollapseAll}" style="${styles.link_action_page} ${styles.action_view} collapse-all" url-mode="plain"/>
                                         </container>
                                         <include-form name="FieldGroupExampleForm" location="component://example/widget/example/FormWidgetExampleForms.xml"/>
                                     </container>

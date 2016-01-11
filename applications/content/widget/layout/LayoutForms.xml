@@ -460,13 +460,13 @@ under the License.
         </field>
     </form>
 <!--
-        <field name="paste" title=" " widget-style="${styles.link_action_prepare} ${styles.action_copy}"
+        <field name="paste" title=" " widget-style="${styles.link_action_page} ${styles.action_copy}"
             use-when="!&quot;${contentIdTo}&quot;.equals(&quot;TEMPLATE_MASTER&quot;)" >
             <hyperlink target-type="plain"
               target="javascript:call_fieldlookup2(document.AddLayoutSubContent.drDataResourceId, 'ClipBoardContent')"
               description="${uiLabelMap.ContentPaste}"/>
         </field>
-        <field name="paste" title=" " widget-style="${styles.link_action_prepare} ${styles.action_copy}"
+        <field name="paste" title=" " widget-style="${styles.link_action_page} ${styles.action_copy}"
             use-when="&quot;${contentIdTo}&quot;.equals(&quot;TEMPLATE_MASTER&quot;)" >
             <hyperlink target-type="plain"
               target="javascript:call_fieldlookup2(document.AddLayoutSubContent.drDataResourceId, 'LookupListLayout')"

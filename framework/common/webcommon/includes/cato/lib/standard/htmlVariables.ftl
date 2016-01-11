@@ -268,17 +268,16 @@
         * by default, link_action_run with any modify action is assumed to change the state of the system (usually database).
           so it means the user is committing to something, and it's usually the last button in a chain of links, like a 
           submit button (whereas link_nav is used to open the page for the action).
-          if it only changes session, it can optionally be given a scope style such as action_scope_session (rare).
-          this would help inform user which changes are permanent and which are not.
+          * if the link is local to the page (page scope) and/or simply prepares for a submit or other action, it should be given
+            link_action_page. this is mostly for javascript and input reset buttons. such links shouldn't
+            really perform actions on the system (except read-only actions). they prepare other incoming system actions.
+          * if the link only changes the state of the user's session, it should given link_action_session instead.
         * the most important purpose of link_action_run is to identify which links will change the state of the system.
           in the end, any link with the styles action_run, action_modify and action_scope_system (or not scope)
           will be assumed to change the system state, or with action_scope_session, the session state (rare).
       * if it's a link to cancel another action like an upload, use link_action_run_cancel instead of link_action_run.
         * link_action_run_cancel should not be used for things like changing order statuses to cancelled.
-      * if the link is local to the page and/or simply prepares for a submit or other action, it should be given
-        link_action_prepare. this is mostly for javascript and input reset buttons. such links shouldn't
-        really perform actions on the system. they prepare other actions.
-      * rarely, a cancel button to cancel a preparation action could happen, in which case link_action_prepare_cancel should be used.
+        * the same applies for link_action_session_cancel and link_action_page_cancel, though these are very rare.
       * should be used for buttons that change what's shown on the page, with action_view ("Show Old", visibility, etc.).
 
     record identifiers and sorting fields (class="${styles.link_record_id!}"):
@@ -318,10 +317,14 @@
     "link_action_run_cancel" : "button tiny action-run action-cancel",  <#-- link that cancels an action in progress, such as cancelling an upload (but NOT if only a button that leads back to previous page - use link_nav_action_cancel, 
                                                                             and NOT for changing an order status to cancelled - use link_action_run with appropriate action_xxx appended) -->
     "link_action_run_cancel_long" : "action-run action-cancel link-long",
-    "link_action_prepare" : "button tiny action-run action-scope-page", <#-- link for any action that prepares a page for another action, such as "Clear" or "Reset" buttons that empty a form or form field. can also be used for heavily interactive javascript forms. -->
-    "link_action_prepare_long" : "action-run action-scope-page link-long",
-    "link_action_prepare_cancel" : "button tiny action-run action-scope-page action-cancel", <#-- link for any action that cancels another preparation action (rare). -->
-    "link_action_prepare_cancel_long" : "action-run action-scope-page action-cancel link-long",
+    "link_action_session" : "button tiny action-run action-scope-session",                          <#-- link for any action that only modifies current session, not the system. -->
+    "link_action_session_long" : "action-run action-scope-session link-long",
+    "link_action_session_cancel" : "button tiny action-run action-scope-session action-cancel",     <#-- link for any action that cancels another session action (rare). -->
+    "link_action_session_cancel_long" : "action-run action-scope-session action-cancel link-long",
+    "link_action_page" : "button tiny action-run action-scope-page",                                <#-- link for any action that prepares a page for another action, such as "Clear" or "Reset" buttons that empty a form or form field. can also be used for heavily interactive javascript forms. -->
+    "link_action_page_long" : "action-run action-scope-page link-long",
+    "link_action_page_cancel" : "button tiny action-run action-scope-page action-cancel",           <#-- link for any action that cancels another preparation action (rare). -->
+    "link_action_page_cancel_long" : "action-run action-scope-page action-cancel link-long",
 
     "link_action" : "button tiny action-generic",               <#-- DEPRECATED; TO BE REMOVED [use link_nav and link_action_run instead]: action link: "Add", "Edit", "Remove", "Cancel", "Export as PDF", "Edit: WS10000", etc. not necessarily a verb, action may be implied, but should be an action. usually static text. 
                                                                     this may overlap with link_nav, but usually there is one more appropriate than the other.

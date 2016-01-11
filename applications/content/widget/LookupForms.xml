@@ -83,12 +83,12 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="replaceAction" widget-style="${styles.link_action_prepare} ${styles.action_copy}" >
+        <field name="replaceAction" widget-style="${styles.link_action_page} ${styles.action_copy}" >
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.FormFieldTitle_replace} [${dataResourceId}/${coContentId}]"
                target="javascript:execRemoteCall('replaceSubContent','${dataResourceId}','${coContentId}', '${contentIdTo}', '${mapKey}')"
             />
         </field>
-        <field name="pasteContentAction" widget-style="${styles.link_action_prepare} ${styles.action_copy}" >
+        <field name="pasteContentAction" widget-style="${styles.link_action_page} ${styles.action_copy}" >
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.ContentPaste} [${dataResourceId}/${coContentId}]"
                target="javascript:execRemoteCall('pasteContent','${dataResourceId}','${coContentId}')"/>
         </field>

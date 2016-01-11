@@ -204,84 +204,48 @@
     </form>
     
     <!-- Cato: -->
-    <form name="WorkEffortAssignedTasks" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="tasks">
+    <form name="WorkEffortAssignedTasks" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="workEfforts">
     	<actions>
 		   <set field="workEffortService" value="getWorkEffortAssignedTasks"/>
 		   <script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/assetmaint/WorkEffortTaskAndActivities.groovy"/>
-    	</actions>
-    	<row-actions>
-    		<entity-one value-field="statusItem" entity-name="StatusItem" use-cache="true">
-    			<field-map field-name="statusId" from-field="currentStatusId"/>
-    		</entity-one>
-    	</row-actions>
+    	</actions>    	
     	<field name="createdDate" field-name="createdDate"><display type="date"/></field>
     	<field name="assetName" map-name="wefa" entry-name="assetName"><display/></field>
     	<field name="maintenanceType" field-name="maintenanceType"><display/></field>
     	<field name="partyId" field-name="partyId"><display/></field>
-    	<field name="statusId" map-name="statusItem" entry-name="description"><display/></field>
+    	<field name="statusDescription" field-name="statusDescription"><display/></field>
     </form>
-    <form name="WorkEffortCompletedTasks" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="tasks">
+    <form name="WorkEffortCompletedTasks" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="workEfforts">
     	<actions>
-		    <service service-name="getWorkEffortCompletedTasks">
-				<field-map field-name="fromDate" from-field="fromDate"/>
-		    </service>
+		    <set field="workEffortService" value="getWorkEffortCompletedTasks"/>
+		   	<script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/assetmaint/WorkEffortTaskAndActivities.groovy"/>
     	</actions>
-    	<row-actions>
-    		<!-- <entity-and list="wefa" entity-name="WorkEffortFixedAssetAssign" use-cache="true">
-    			<field-map field-name="workEffortId" from-field="workEffortId"/>
-    			<field-map field-name="fromDate" from-field="createdDate"/>    			
-    		</entity-and>-->
-    		<entity-one value-field="statusItem" entity-name="StatusItem" use-cache="true">
-    			<field-map field-name="statusId" from-field="currentStatusId"/>
-    		</entity-one>
-    		<!-- <set field="" /> -->
-    	</row-actions>
     	<field name="createdDate" field-name="createdDate"><display type="date"/></field>
     	<field name="assetName" field-name="assetName"><display/></field>
     	<field name="maintenanceType" field-name="maintenanceType"><display/></field>
     	<field name="partyId" field-name="partyId"><display/></field>
-    	<field name="statusId" map-name="statusItem" entry-name="description"><display/></field>
+    	<field name="statusDescription" field-name="statusDescription"><display/></field>
     </form>
-    <form name="WorkEffortAssignedActivities" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="activities">
-    	<actions>
-		   	<service service-name="getWorkEffortAssignedActivities">
-		  		<field-map field-name="fromDate" from-field="fromDate"/>
-		  	</service>
-    	</actions>
-    	<row-actions>
-    		<!-- <entity-and list="wefa" entity-name="WorkEffortFixedAssetAssign" use-cache="true">
-    			<field-map field-name="workEffortId" from-field="workEffortId"/>
-    			<field-map field-name="fromDate" from-field="createdDate"/>    			
-    		</entity-and>-->
-    		<entity-one value-field="statusItem" entity-name="StatusItem" use-cache="true">
-    			<field-map field-name="statusId" from-field="currentStatusId"/>
-    		</entity-one>
-    		<!-- <set field="" /> -->
-    	</row-actions>
+    <form name="WorkEffortAssignedActivities" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="workEfforts">
+    	<actions>		   
+		  	<set field="workEffortService" value="getWorkEffortAssignedActivities"/>
+		   	<script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/assetmaint/WorkEffortTaskAndActivities.groovy"/>
+    	</actions>    	
     	<field name="createdDate" field-name="createdDate"><display type="date"/></field>
     	<field name="assetName" field-name="assetName"><display/></field>
     	<field name="maintenanceType" field-name="maintenanceType"><display/></field>
     	<field name="partyId" field-name="partyId"><display/></field>
-    	<field name="statusId" map-name="statusItem" entry-name="description"><display/></field>
+    	<field name="statusDescription" field-name="statusDescription"><display/></field>
     </form>
-    <form name="WorkEffortCompletedActivities" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="activities">
+    <form name="WorkEffortCompletedActivities" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="workEfforts">
     	<actions>
-		   <service service-name="getWorkEffortCompletedActivities"></service>
-    	</actions>
-    	<row-actions>
-    		<!-- <entity-and list="wefa" entity-name="WorkEffortFixedAssetAssign" use-cache="true">
-    			<field-map field-name="workEffortId" from-field="workEffortId"/>
-    			<field-map field-name="fromDate" from-field="createdDate"/>    			
-    		</entity-and> -->
-    		<entity-one value-field="statusItem" entity-name="StatusItem" use-cache="true">
-    			<field-map field-name="statusId" from-field="currentStatusId"/>
-    		</entity-one>
-    		<!-- <set field="" /> -->
-    	</row-actions>
+		   <set field="workEffortService" value="getWorkEffortCompletedActivities"/>
+		   <script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/assetmaint/WorkEffortTaskAndActivities.groovy"/>
+    	</actions>    	
     	<field name="createdDate" field-name="createdDate"><display type="date"/></field>
     	<field name="assetName" field-name="assetName"><display/></field>
     	<field name="maintenanceType" field-name="maintenanceType"><display/></field>
     	<field name="partyId" field-name="partyId"><display/></field>
-    	<field name="statusId" map-name="statusItem" entry-name="description"><display/></field>
+    	<field name="statusDescription" field-name="statusDescription"><display/></field>
     </form>
 </forms>

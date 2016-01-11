@@ -77,7 +77,7 @@ public class WorkEffortServices {
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		String roleTypeId = (String) context.get("roleTypeId");
 		Locale locale = (Locale) context.get("locale");
-		TimeZone timeZone = (TimeZone) context.get("timeZone");
+		TimeZone timeZone = (UtilValidate.isNotEmpty(context.get("timeZone"))) ? (TimeZone) context.get("timeZone") : TimeZone.getDefault();
 
 		List<GenericValue> validWorkEfforts = null;
 		if (userLogin != null && userLogin.get("partyId") != null) {
@@ -119,7 +119,7 @@ public class WorkEffortServices {
 		Delegator delegator = ctx.getDelegator();
 		String roleTypeId = (String) context.get("roleTypeId");
 		Locale locale = (Locale) context.get("locale");
-		TimeZone timeZone = (TimeZone) context.get("timeZone");
+		TimeZone timeZone = (UtilValidate.isNotEmpty(context.get("timeZone"))) ? (TimeZone) context.get("timeZone") : TimeZone.getDefault();
 
 		List<GenericValue> validWorkEfforts = null;
 		try {
@@ -158,7 +158,7 @@ public class WorkEffortServices {
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Locale locale = (Locale) context.get("locale");
-		TimeZone timeZone = (TimeZone) context.get("timeZone");
+		TimeZone timeZone = (UtilValidate.isNotEmpty(context.get("timeZone"))) ? (TimeZone) context.get("timeZone") : TimeZone.getDefault();
 
 		List<GenericValue> validWorkEfforts = null;
 		if (userLogin != null && userLogin.get("partyId") != null) {
@@ -224,7 +224,7 @@ public class WorkEffortServices {
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Locale locale = (Locale) context.get("locale");
-		TimeZone timeZone = (TimeZone) context.get("timeZone");
+		TimeZone timeZone = (UtilValidate.isNotEmpty(context.get("timeZone"))) ? (TimeZone) context.get("timeZone") : TimeZone.getDefault();
 
 		List<GenericValue> validWorkEfforts = null;
 		if (userLogin != null && userLogin.get("partyId") != null) {
@@ -288,7 +288,7 @@ public class WorkEffortServices {
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Locale locale = (Locale) context.get("locale");
-		TimeZone timeZone = (TimeZone) context.get("timeZone");
+		TimeZone timeZone = (UtilValidate.isNotEmpty(context.get("timeZone"))) ? (TimeZone) context.get("timeZone") : TimeZone.getDefault();
 
 		List<GenericValue> validWorkEfforts = null;
 		if (userLogin != null && userLogin.get("partyId") != null) {
@@ -327,7 +327,7 @@ public class WorkEffortServices {
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Locale locale = (Locale) context.get("locale");
-		TimeZone timeZone = (TimeZone) context.get("timeZone");
+		TimeZone timeZone = (UtilValidate.isNotEmpty(context.get("timeZone"))) ? (TimeZone) context.get("timeZone") : TimeZone.getDefault();
 
 		List<GenericValue> validWorkEfforts = null;
 		if (userLogin != null && userLogin.get("partyId") != null) {
@@ -379,7 +379,7 @@ public class WorkEffortServices {
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Locale locale = (Locale) context.get("locale");
-		TimeZone timeZone = (TimeZone) context.get("timeZone");
+		TimeZone timeZone = (UtilValidate.isNotEmpty(context.get("timeZone"))) ? (TimeZone) context.get("timeZone") : TimeZone.getDefault();
 
 		List<GenericValue> roleWorkEfforts = null;
 		if (userLogin != null && userLogin.get("partyId") != null) {
@@ -432,7 +432,7 @@ public class WorkEffortServices {
 		Delegator delegator = ctx.getDelegator();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Locale locale = (Locale) context.get("locale");
-		TimeZone timeZone = (TimeZone) context.get("timeZone");
+		TimeZone timeZone = (UtilValidate.isNotEmpty(context.get("timeZone"))) ? (TimeZone) context.get("timeZone") : TimeZone.getDefault();
 
 		List<GenericValue> groupWorkEfforts = null;
 		if (userLogin != null && userLogin.get("partyId") != null) {
@@ -694,7 +694,7 @@ public class WorkEffortServices {
 		Security security = ctx.getSecurity();
 		GenericValue userLogin = (GenericValue) context.get("userLogin");
 		Locale locale = (Locale) context.get("locale");
-		TimeZone timeZone = (TimeZone) context.get("timeZone");
+		TimeZone timeZone = (UtilValidate.isNotEmpty(context.get("timeZone"))) ? (TimeZone) context.get("timeZone") : TimeZone.getDefault();
 
 		Timestamp startDay = (Timestamp) context.get("start");
 		Integer numPeriodsInteger = (Integer) context.get("numPeriods");

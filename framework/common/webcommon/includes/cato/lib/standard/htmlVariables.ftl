@@ -259,6 +259,7 @@
         action_download, etc. or the more generic action_modify or action_read if not available.
         * by default, link_action_run with any modify action is assumed to change the state of the system (usually database).
           if it only changes session, it can optionally be given a scope style such as action_scope_session (rare).
+          this would help inform user which changes are permanent and which are not.
         * the most important purpose of link_action_run is to identify which links will change the state of the system.
           in the end, any link with the styles action_run, action_modify and action_scope_system (or not scope)
           will be assumed to change the system state, or with action_scope_session, the session state (rare).

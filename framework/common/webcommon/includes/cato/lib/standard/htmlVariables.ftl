@@ -224,6 +224,7 @@
     "action_select" : "action-read action-select",        <#-- select action link: "Select", "Choose", "Pick", etc. -->
     "action_view" : "action-read action-view",            <#-- view item action link: "View PDF", etc. -->
     "action_export" : "action-read action-export",        <#-- export action link: "Export", "Download", "Stream", "Print", etc. -->
+    "action_reload" : "action-read action-reload",        <#-- reload action link: "Refresh", etc. -->
 
   <#-- Standalone link styles (includes links in tables)
     DEV NOTE: 2016-01-07: the old use of link_nav and link_action made no real sense and has been ratified below.
@@ -251,6 +252,7 @@
       * back pages and cancel buttons, even if they seem to be part of a form, as long as they behave as navigation links,
         should have the link_nav_cancel style. they need nothing else.
       * action_view is more or less the default on link_nav and could be omitted, but should add it anyway.
+      * normally is for navigating between pages and opening pages that allow further actions.
       
     run actions (class="${styles.link_action_run!} ${styles.action_create!}"):
       * any link that performs an action that contacts the system to perform a new action should be given link_action_run. this means
@@ -258,6 +260,8 @@
         they should also be given a specific action_xxx action type style (see above), such as action_create, 
         action_download, etc. or the more generic action_modify or action_read if not available.
         * by default, link_action_run with any modify action is assumed to change the state of the system (usually database).
+          so it means the user is committing to something, and it's usually the last button in a chain of links, like a 
+          submit button (whereas link_nav is used to open the page for the action).
           if it only changes session, it can optionally be given a scope style such as action_scope_session (rare).
           this would help inform user which changes are permanent and which are not.
         * the most important purpose of link_action_run is to identify which links will change the state of the system.
@@ -269,6 +273,7 @@
         link_action_prepare. this is mostly for javascript and input reset buttons. such links shouldn't
         really perform actions on the system. they prepare other actions.
       * rarely, a cancel button to cancel a preparation action could happen, in which case link_action_prepare_cancel should be used.
+      * should be used for buttons that change what's shown on the page, with action_view ("Show Old", visibility, etc.).
 
     record identifiers and sorting fields (class="${styles.link_record_id!}"):
       * these are essentially specific versions of link_nav.
@@ -291,6 +296,8 @@
       * the cancel links are exceptions: they all have separate entries because often you might want a completely different button on them
         (which you can't do with link_action_run+action_cancel). they are not regular actions in and of themselves - they are anti-actions.
       * action_view actions are often ambiguous and could be either link_nav or link_action_run depending on UI functionality and perspective.
+        * as a general rule, link_action_run are for the "final" actions (like submit buttons), while link_nav are for links heading toward the action (or that open a page).
+          however, for view action, sometimes the line is not clear and subjective or there is no distinction. should be judged based on context.
   -->
     "link_nav" : "button tiny action-nav",                              <#-- navigation link toward another page, usually with static text like "New" or "Edit" or "View".
                                                                             the link should also be qualified with an "action_xxx" class where appropriate (see above), to indicate

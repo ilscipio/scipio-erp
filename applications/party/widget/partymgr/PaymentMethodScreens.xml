@@ -45,7 +45,7 @@ under the License.
                                     <label>${uiLabelMap.AccountingCardInfoNotBelongToYou}</label>
                                 </container>
                                 <container>
-                                    <link target="authview/${donePage}" text="${uiLabelMap.CommonBack}" style="${styles.link_action}"/>
+                                    <link target="authview/${donePage}" text="${uiLabelMap.CommonBack}" style="${styles.link_nav_cancel}"/>
                                 </container>
                             </fail-widgets>
                         </section>

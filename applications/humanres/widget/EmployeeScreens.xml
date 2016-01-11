@@ -36,7 +36,7 @@ under the License.
                             </actions>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="NewEmployee" text="${uiLabelMap.HumanResNewEmployee}" style="${styles.link_action} create"/>
+                                    <link target="NewEmployee" text="${uiLabelMap.HumanResNewEmployee}" style="${styles.link_nav} ${styles.action_create}"/>
                                 </container>
                                 <section>
                                     <widgets>
@@ -102,14 +102,14 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar button-style-2">
-                                            <link target="viewprofile" text="${uiLabelMap.PartyHideOld}" style="${styles.link_action}">
+                                            <link target="viewprofile" text="${uiLabelMap.PartyHideOld}" style="${styles.link_action_run} ${styles.action_view}">
                                                 <parameter param-name="partyId" from-field="party.partyId"/>
                                             </link>
                                         </container>
                                     </widgets>
                                     <fail-widgets>
                                         <container style="button-bar button-style-2">
-                                            <link target="viewprofile" text="${uiLabelMap.PartyShowOld}" style="${styles.link_action}">
+                                            <link target="viewprofile" text="${uiLabelMap.PartyShowOld}" style="${styles.link_action_run} ${styles.action_view}">
                                                 <parameter param-name="partyId" from-field="party.partyId"/>
                                                 <parameter param-name="SHOW_OLD" value="true"/>
                                             </link>

@@ -273,7 +273,7 @@ under the License.
                                             </condition>
                                             <widgets>
                                                 <container style="button-bar">
-                                                   <link text="Create A Default Task" target="editDefaultTask" style="${styles.link_action} create">
+                                                   <link text="Create A Default Task" target="editDefaultTask" style="${styles.link_nav} ${styles.action_create}">
                                                         <parameter param-name="productId" from-field="product.productId"/>
                                                    </link>
                                                 </container>
@@ -343,7 +343,7 @@ under the License.
                                             </condition>
                                             <widgets>
                                                 <container style="button-bar">
-                                                   <link text="Create A Default Task" target="editDefaultTask" style="${styles.link_action} create">
+                                                   <link text="Create A Default Task" target="editDefaultTask" style="${styles.link_nav} ${styles.action_create}">
                                                         <parameter param-name="productId" from-field="product.productId"/>
                                                    </link>
                                                 </container>

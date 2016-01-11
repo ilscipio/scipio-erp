@@ -129,7 +129,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="EditFinAccount" text="${uiLabelMap.AccountingCreateNewFinAccount}" style="${styles.link_action} create"/>
+                                    <link target="EditFinAccount" text="${uiLabelMap.AccountingCreateNewFinAccount}" style="${styles.link_nav} ${styles.action_create}"/>
                                 </container>
                                 <label style="heading" text="${uiLabelMap.AccountingEditFinAccount}"></label>
                                 <screenlet id="EditFinAccountPanel" collapsible="true">
@@ -239,10 +239,10 @@ under the License.
                         <section>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="NewDepositPayment" text="${uiLabelMap.AccountingCreateNewDepositPayment}" style="${styles.link_action}">
+                                    <link target="NewDepositPayment" text="${uiLabelMap.AccountingCreateNewDepositPayment}" style="${styles.link_nav} ${styles.action_create}">
                                         <parameter param-name="finAccountId"/>
                                     </link>
-                                    <link target="NewWithdrawalPayment" text="${uiLabelMap.AccountingCreateNewWithdrawalPayment}" style="${styles.link_action}">
+                                    <link target="NewWithdrawalPayment" text="${uiLabelMap.AccountingCreateNewWithdrawalPayment}" style="${styles.link_nav} ${styles.action_create}">
                                         <parameter param-name="finAccountId"/>
                                     </link>
                                 </container>
@@ -317,7 +317,7 @@ under the License.
                         <section>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="NewDepositSlip" text="${uiLabelMap.AccountingCreateNewDepositSlip}" style="${styles.link_action}">
+                                    <link target="NewDepositSlip" text="${uiLabelMap.AccountingCreateNewDepositSlip}" style="${styles.link_nav} ${styles.action_create}">
                                         <parameter param-name="finAccountId" from-field="parameters.finAccountId"/>
                                         <parameter param-name="organizationPartyId" from-field="parameters.organizationPartyId"/>
                                     </link>
@@ -359,7 +359,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="DepositSlip.pdf" target-window="_BLANK" text="${uiLabelMap.AccountingPrintDepositSlip}" style="${styles.link_action}">
+                                    <link target="DepositSlip.pdf" target-window="_BLANK" text="${uiLabelMap.AccountingPrintDepositSlip}" style="${styles.link_action_run} ${styles.action_export}">
                                         <parameter param-name="paymentGroupId"/>
                                     </link>
                                 </container>
@@ -437,7 +437,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
                     <decorator-section name="body">
-                        <link target="EditFinAccountTrans" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonTransaction}" style="${styles.link_action}">
+                        <link target="EditFinAccountTrans" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonTransaction}" style="${styles.link_nav} ${styles.action_create}">
                             <parameter param-name="finAccountId" from-field="finAccountId"/>
                         </link>
                         <section>
@@ -445,7 +445,7 @@ under the License.
                                 <if-compare field="finAccount.finAccountTypeId" operator="equals" value="BANK_ACCOUNT"/>
                             </condition>
                             <widgets>
-                                <link target="BankReconciliation" text="${uiLabelMap.AccountingBankReconciliation}" style="${styles.link_action}">
+                                <link target="BankReconciliation" text="${uiLabelMap.AccountingBankReconciliation}" style="${styles.link_nav}">
                                     <parameter param-name="finAccountId" from-field="finAccountId"/>
                                     <parameter param-name="statusId" value="FINACT_TRNS_CREATED"/>
                                 </link>
@@ -477,7 +477,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonFinAccountDecorator" location="${parameters.finAccountDecoratorLocation}">
                     <decorator-section name="body">
-                        <link target="EditFinAccountTrans" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonTransaction}" style="${styles.link_action}">
+                        <link target="EditFinAccountTrans" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonTransaction}" style="${styles.link_nav} ${styles.action_create}">
                             <parameter param-name="finAccountId" from-field="finAccountId"/>
                         </link>
                             <label style="heading" text="${uiLabelMap.AccountingReconcileFinAccountTransFor}"/>

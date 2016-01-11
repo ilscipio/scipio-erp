@@ -40,7 +40,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link text="${uiLabelMap.ScrumCreateProject}" target="editScrumProject" style="${styles.link_action} create"/>
+                                    <link text="${uiLabelMap.ScrumCreateProject}" target="editScrumProject" style="${styles.link_nav} ${styles.action_create}"/>
                                 </container>
                             </widgets>
                         </section>
@@ -290,7 +290,7 @@ under the License.
                         </widgets>
                         <fail-widgets>
                             <container style="button-bar">
-                                <link target="SprintList" text="Back" style="${styles.link_action}">
+                                <link target="SprintList" text="Back" style="${styles.link_nav_cancel}">
                                     <parameter param-name="projectId" from-field="parameters.projectId"/>
                                 </link>
                             </container>
@@ -1338,7 +1338,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <link target="DailyScrumMeetingMinute" text="${uiLabelMap.CommonBack}" style="${styles.link_action}">
+                                <link target="DailyScrumMeetingMinute" text="${uiLabelMap.CommonBack}" style="${styles.link_nav_cancel}">
                                     <parameter param-name="projectId" from-field="parameters.projectId"/>
                                     <parameter param-name="custRequestId" from-field="parameters.custRequestId"/>
                                 </link>
@@ -1372,7 +1372,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="DailyScrumMeetingMinute" text="${uiLabelMap.CommonBack}" style="${styles.link_action}">
+                                    <link target="DailyScrumMeetingMinute" text="${uiLabelMap.CommonBack}" style="${styles.link_nav_cancel}">
                                         <parameter param-name="projectId" from-field="parameters.projectId"/>
                                         <parameter param-name="custRequestId" from-field="parameters.custRequestId"/>
                                     </link>
@@ -1407,7 +1407,7 @@ under the License.
                         <section>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="ViewSprint" text="${uiLabelMap.CommonBack}" style="${styles.link_action}" link-type="hidden-form">
+                                    <link target="ViewSprint" text="${uiLabelMap.CommonBack}" style="${styles.link_nav_cancel}" link-type="hidden-form">
                                         <parameter param-name="projectId" from-field="parameters.projectId"/>
                                         <parameter param-name="sprintId" from-field="parameters.sprintId"/>
                                     </link>
@@ -2377,7 +2377,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="EditSprintTask" text="${uiLabelMap.ScrumNewTask}" style="${styles.link_action} create" link-type="hidden-form">
+                                            <link target="EditSprintTask" text="${uiLabelMap.ScrumNewTask}" style="${styles.link_nav} ${styles.action_create}" link-type="hidden-form">
                                                 <parameter param-name="sprintId" from-field="parameters.sprintId"/>
                                             </link>
                                         </container>

@@ -41,7 +41,7 @@ under the License.
                                 </section>
                                 <label style="heading">[${uiLabelMap.CommonId} ${productionRunId}]</label>
                                 <container style="button-bar">
-                                    <link target="CreateProductionRun" text="${uiLabelMap.ManufacturingCreateProductionRun}" style="${styles.link_action}"/>
+                                    <link target="CreateProductionRun" text="${uiLabelMap.ManufacturingCreateProductionRun}" style="${styles.link_nav} ${styles.action_create}"/>
                                 </container>
                                 <decorator-section-include name="body"/>
                             </widgets>
@@ -563,7 +563,7 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="CreateProductionRun" text="${uiLabelMap.ManufacturingCreateProductionRun}" style="${styles.link_action} create"/>
+                                            <link target="CreateProductionRun" text="${uiLabelMap.ManufacturingCreateProductionRun}" style="${styles.link_nav} ${styles.action_create}"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
@@ -616,23 +616,23 @@ under the License.
                                         <if-compare field="workInProgress" operator="equals" value="true"/>
                                     </condition>
                                     <widgets>
-                                        <link text="${uiLabelMap.ManufacturingTasksReport}" style="${styles.link_action}" target="ShipmentWorkEffortTasks.pdf" target-window="_BLANK">
+                                        <link text="${uiLabelMap.ManufacturingTasksReport}" style="${styles.link_action_run} ${styles.action_export}" target="ShipmentWorkEffortTasks.pdf" target-window="_BLANK">
                                             <parameter param-name="shipmentId" from-field="shipment.shipmentId"/>
                                         </link>
-                                        <link text="${uiLabelMap.ManufacturingCuttingListReport}" style="${styles.link_action}" target="CuttingListReport.pdf" target-window="_BLANK">
+                                        <link text="${uiLabelMap.ManufacturingCuttingListReport}" style="${styles.link_action_run} ${styles.action_export}" target="CuttingListReport.pdf" target-window="_BLANK">
                                             <parameter param-name="shipmentId" from-field="shipment.shipmentId"/>
                                         </link>
                                     </widgets>
                                     <fail-widgets>
-                                        <link text="${uiLabelMap.ManufacturingGenerateProductionRuns}" style="${styles.link_action}" target="createProductionRunsForShipment">
+                                        <link text="${uiLabelMap.ManufacturingGenerateProductionRuns}" style="${styles.link_action_run} ${styles.action_create}" target="createProductionRunsForShipment">
                                             <parameter param-name="shipmentId" from-field="shipment.shipmentId"/>
                                         </link>
-                                        <link text="${uiLabelMap.ManufacturingShipmentPlanStockReport}" style="${styles.link_action}" target="ShipmentPlanStockReport.pdf" target-window="_BLANK">
+                                        <link text="${uiLabelMap.ManufacturingShipmentPlanStockReport}" style="${styles.link_action_run} ${styles.action_export}" target="ShipmentPlanStockReport.pdf" target-window="_BLANK">
                                             <parameter param-name="shipmentId" from-field="shipment.shipmentId"/>
                                         </link>
                                     </fail-widgets>
                                 </section>
-                                <link text="${uiLabelMap.ManufacturingPackageLabelsReport}" style="${styles.link_action}" target="ShipmentLabel.pdf" target-window="_BLANK">
+                                <link text="${uiLabelMap.ManufacturingPackageLabelsReport}" style="${styles.link_action_run} ${styles.action_export}" target="ShipmentLabel.pdf" target-window="_BLANK">
                                     <parameter param-name="shipmentId" from-field="shipment.shipmentId"/>
                                 </link>
                             </widgets>

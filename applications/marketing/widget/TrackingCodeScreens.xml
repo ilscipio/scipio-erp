@@ -85,7 +85,7 @@ under the License.
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleEditTrackingCode}">
                                     <container>
-                                        <link text="${uiLabelMap.MarketingTrackingCodeCreate}" target="/EditTrackingCode" style="${styles.link_action}">
+                                        <link text="${uiLabelMap.MarketingTrackingCodeCreate}" target="/EditTrackingCode" style="${styles.link_nav} ${styles.action_create}">
                                             <parameter param-name="DONE_PAGE" from-field="donePage"/>
                                         </link>
                                     </container>
@@ -119,7 +119,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListTrackingCode}">
                             <container style="button-bar">
-                                <link text="${uiLabelMap.MarketingTrackingCodeCreate}" target="/EditTrackingCode" style="${styles.link_action} create">
+                                <link text="${uiLabelMap.MarketingTrackingCodeCreate}" target="/EditTrackingCode" style="${styles.link_nav} ${styles.action_create}">
                                     <parameter param-name="DONE_PAGE" from-field="donePage"/>
                                 </link>
                             </container>
@@ -358,7 +358,7 @@ under the License.
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleEditTrackingCodeType}">
                                     <container style="button-bar">
-                                        <link text="${uiLabelMap.MarketingTrackingCodeTypeCreate}" target="/EditTrackingCodeType" style="${styles.link_action} create">
+                                        <link text="${uiLabelMap.MarketingTrackingCodeTypeCreate}" target="/EditTrackingCodeType" style="${styles.link_nav} ${styles.action_create}">
                                             <parameter param-name="DONE_PAGE" from-field="donePage"/>
                                         </link>
                                     </container>
@@ -393,7 +393,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListTrackingCodeType}">
                             <container style="button-bar">
-                                <link text="${uiLabelMap.MarketingTrackingCodeTypeCreate}" target="/EditTrackingCodeType" style="${styles.link_action} create">
+                                <link text="${uiLabelMap.MarketingTrackingCodeTypeCreate}" target="/EditTrackingCodeType" style="${styles.link_nav} ${styles.action_create}">
                                     <parameter param-name="DONE_PAGE" from-field="donePage"/>
                                 </link>
                             </container>

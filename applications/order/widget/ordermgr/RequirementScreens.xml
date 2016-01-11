@@ -99,7 +99,7 @@ under the License.
                                 <set field="genericLinkName" value="print"/>
                                 <set field="genericLinkText" value="${uiLabelMap.CommonPrint}"/>
                                 <set field="genericLinkTarget" value="ApprovedProductRequirementsReport"/>
-                                <set field="genericLinkStyle" value="${styles.link_action}"/>
+                                <set field="genericLinkStyle" value="${styles.link_action_run} ${styles.action_export}"/>
                                 <set field="genericLinkWindow" value="reportWindow"/>
                             </actions>
                             <widgets>
@@ -288,10 +288,10 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListRequirementRoles}">
                             <container>
-                                <link target="EditRequirementRole" text="${uiLabelMap.CommonNew}" style="${styles.link_action}">
+                                <link target="EditRequirementRole" text="${uiLabelMap.CommonNew}" style="${styles.link_nav} ${styles.action_create}">
                                     <parameter param-name="requirementId"/>
                                 </link>
-                                <link target="autoAssignRequirementToSupplier" text="${uiLabelMap.OrderAutoAssign}" style="${styles.link_action}">
+                                <link target="autoAssignRequirementToSupplier" text="${uiLabelMap.OrderAutoAssign}" style="${styles.link_action_run} ${styles.action_update}">
                                     <parameter param-name="requirementId"/>
                                 </link>
                             </container>

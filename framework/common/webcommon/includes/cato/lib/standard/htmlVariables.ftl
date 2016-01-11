@@ -228,18 +228,24 @@
 
   <#-- Standalone link styles (includes links in tables)
     DEV NOTE: 2016-01-07: the old use of link_nav and link_action made no real sense and has been ratified below.
-      link_action will be removed and turned mostly into link_nav(+action_xxx) and link_action_run(+action_xxx)
+      the old link_action will be removed and turned mostly into link_nav(+action_xxx) and link_action_run(+action_xxx)
       (link_action_run might then be renamed again or not, but have to go through this process).
+    TODO: move documentation and compactify what's left here
   
     how to decide which style to use on a link:
       * the main classes of links are nav and run-action links. everything else is a specialization of these.
-        * nav is classed as a "navigation action" (link_action_nav) but call it nav for short and for clarity.
-      * if the link designates a record (usually entity value) by name or ID alone or some combination, basically "points to" a record,
+        * nav can be (and is) classified as a "navigation action" (link_action_nav) but called nav for short and for clarity.
+      * if the link's text designates a record (usually entity value) by name or ID alone or some combination of these, and basically "points to" a record,
         usually it should have link_record_xxx. see "record identifiers and sorting fields" below.
-        * it's a special form of nav link, made different for styling reasons.
-      * if it's a basic navigation link or a link that leads to another page that leads to or encourages an action, see "navigation link".
-      * if it's a link that directly performs an action such as a submit button, see "run actions".
-      * simpler links such as external links have their own link_xxx styles such as link_url.
+        e.g. a link with an order ID (<a...>WS10000</a>) as its text that points to an order summary.
+        * this is a special form/case of nav link, emphasized for styling needs.
+      * if it's another basic navigation link or a link that leads to another page that leads to or encourages an action, see "navigation link".
+        e.g., a "New" button that leads to a new page with a form where you can create a new entity value.
+      * if it's a link that directly performs an action, see "run actions".
+        e.g., the submit button ("Submit" or "Create New") on a form that trigger a new entity value creation.
+      * a few rarer types have their own link_xxx styles such as link_url further below.
+        * link_url would be a link with a URL as its text.
+        * TODO: clarify how these fall in with the others
    
     navigation link (class="${styles.link_nav!} ${styles.action_create!}"):
       * any basic navigation link can have link_nav (though note, link_nav like the other link_xxx may contain a core style like button style). 

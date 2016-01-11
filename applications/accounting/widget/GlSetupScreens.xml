@@ -144,10 +144,10 @@ under the License.
                         <screenlet id="GlAccountOrganizationPanel" title="${uiLabelMap.AccountingChartOfAcctsMenu}" collapsible="true">
                             <include-form name="AssignGlAccount" location="component://accounting/widget/GlSetupForms.xml"/>
                         </screenlet>
-                        <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_action}" target="ListGlAccountOrgCsv.csv">
+                        <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_action_run} ${styles.action_export}" target="ListGlAccountOrgCsv.csv">
                             <parameter param-name="organizationPartyId"/>
                         </link>
-                        <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action}" target="ListGlAccountOrgPdf.pdf" target-window="_BLANK">
+                        <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action_run} ${styles.action_export}" target="ListGlAccountOrgPdf.pdf" target-window="_BLANK">
                             <parameter param-name="organizationPartyId"/>
                         </link>
                         <include-form name="ListGlAccountOrganization" location="component://accounting/widget/GlSetupForms.xml"/>
@@ -612,7 +612,7 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="EditGlAccountCategory" text="${uiLabelMap.FormFieldTitle_newGlAccountCategory}" style="${styles.link_action}"/>
+                                            <link target="EditGlAccountCategory" text="${uiLabelMap.FormFieldTitle_newGlAccountCategory}" style="${styles.link_nav} ${styles.action_create}"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">

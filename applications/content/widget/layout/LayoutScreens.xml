@@ -38,7 +38,7 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="EditLayoutSubContent" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_action}">
+                                            <link target="EditLayoutSubContent" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_create}">
                                                 <parameter param-name="mode" value="add"/>
                                                 <parameter param-name="contentIdTo" value="TEMPLATE_MASTER"/>
                                             </link>
@@ -76,7 +76,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListLayout}">
                             <container>
-                                <link target="EditLayoutSubContent" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_action}">
+                                <link target="EditLayoutSubContent" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_create}">
                                     <parameter param-name="mode" value="add"/>
                                     <parameter param-name="contentIdTo" value="TEMPLATE_MASTER"/>
                                 </link>
@@ -103,7 +103,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditLayout}">
                             <include-form name="EditLayout" location="component://content/widget/layout/LayoutForms.xml"/>
-                            <link target="cloneLayout" text="${uiLabelMap.ContentCloneLayout}" style="${styles.link_action}">
+                            <link target="cloneLayout" text="${uiLabelMap.ContentCloneLayout}" style="${styles.link_action_run} ${styles.action_copy}">
                                 <parameter param-name="contentId" from-field="currentValue.contentId"/>
                             </link>
                             <platform-specific>

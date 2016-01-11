@@ -75,9 +75,9 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="newPayment" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonPayment}" style="${styles.link_action} create"/>
-                                            <link target="FindSalesInvoicesByDueDate" text="${uiLabelMap.AccountingFindSalesInvoicesByDueDate}" style="${styles.link_action} search"/>
-                                            <link target="FindPurchaseInvoicesByDueDate" text="${uiLabelMap.AccountingFindPurchaseInvoicesByDueDate}" style="${styles.link_action} search"/>
+                                            <link target="newPayment" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonPayment}" style="${styles.link_nav} ${styles.action_create}"/>
+                                            <link target="FindSalesInvoicesByDueDate" text="${uiLabelMap.AccountingFindSalesInvoicesByDueDate}" style="${styles.link_nav} ${styles.action_find}"/>
+                                            <link target="FindPurchaseInvoicesByDueDate" text="${uiLabelMap.AccountingFindPurchaseInvoicesByDueDate}" style="${styles.link_nav} ${styles.action_find}"/>
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">
@@ -369,14 +369,14 @@ under the License.
                             </condition>
                             <widgets>                                
                                 <screenlet title="${uiLabelMap.AccountingPaymentHeader} ${uiLabelMap.CommonId}:[${paymentId}]">
-                                     <link target="editPayment" text="${uiLabelMap.CommonUpdate}" style="${styles.link_action}">
+                                     <link target="editPayment" text="${uiLabelMap.CommonUpdate}" style="${styles.link_nav} ${styles.action_update}">
                                          <parameter param-name="paymentId"/>
                                      </link>
                                      <include-form name="paymentHeader" location="component://accounting/widget/PaymentForms.xml"/>
                                 </screenlet>                               
                                 
                                 <screenlet title="${uiLabelMap.AccountingPaymentsApplied} ${appliedAmount?currency(${payment.currencyUomId})} ${uiLabelMap.AccountingOpenPayments} ${notAppliedAmount?currency(${payment.currencyUomId})}">
-                                     <link target="editPaymentApplications" text="${uiLabelMap.CommonUpdate}" style="${styles.link_action}">
+                                     <link target="editPaymentApplications" text="${uiLabelMap.CommonUpdate}" style="${styles.link_nav} ${styles.action_update}">
                                          <parameter param-name="paymentId"/>
                                      </link>
                                      <include-form name="paymentApplications" location="component://accounting/widget/PaymentForms.xml"/>

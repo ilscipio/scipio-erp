@@ -250,7 +250,7 @@ under the License.
                 <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="button-bar">
-                            <link target="CreateNewSecurityGroup" style="${styles.link_action} create" text="${uiLabelMap.CommonCreateNew}"/>
+                            <link target="CreateNewSecurityGroup" style="${styles.link_nav} ${styles.action_create}" text="${uiLabelMap.CommonCreateNew}"/>
                         </container>
                         <include-form name="ListSecurityGroups" location="component://common/widget/SecurityForms.xml"/>
                     </decorator-section>
@@ -272,7 +272,7 @@ under the License.
                 <decorator-screen name="SecurityDecorator" location="${parameters.securityDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="button-bar">
-                            <link target="createnewlogin" style="${styles.link_action} create" text="${uiLabelMap.CommonCreateNew}"/>
+                            <link target="createnewlogin" style="${styles.link_nav} ${styles.action_create}" text="${uiLabelMap.CommonCreateNew}"/>
                         </container>
                         <include-form name="ListUserLogins" location="component://common/widget/SecurityForms.xml"/>
                     </decorator-section>

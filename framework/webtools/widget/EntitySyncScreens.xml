@@ -32,7 +32,7 @@ under the License.
                         <section>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="EntitySyncStatus" style="${styles.link_action}" text="${uiLabelMap.CommonRefresh}"/>
+                                    <link target="EntitySyncStatus" style="${styles.link_action_run} ${styles.action_reload}" text="${uiLabelMap.CommonRefresh}"/>
                                 </container>
 
                                 <!-- Now call the SimpleScreen form -->
@@ -58,7 +58,7 @@ under the License.
                 <decorator-screen name="CommonEntityDecorator" location="component://webtools/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <container style="button-bar">
-                           <link target="EntitySyncStatus" style="${styles.link_action} refresh" text="${uiLabelMap.CommonRefresh}"/>
+                           <link target="EntitySyncStatus" style="${styles.link_action_run} ${styles.action_reload}" text="${uiLabelMap.CommonRefresh}"/>
                         </container>
                         <screenlet>
                             <include-form name="EntitySyncStatus" location="component://webtools/widget/EntitySyncForms.xml"/>

@@ -195,11 +195,11 @@ under the License.
                             <decorator-section name="menu-bar">
                                 <container style="${styles.grid_row}">
                                     <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                                        <link target="entitymaint" text="${uiLabelMap.WebtoolsBackToEntityList}" style="${styles.link_action}"/>
-                                        <link target="ViewRelations" text="${uiLabelMap.WebtoolsViewRelations}" style="${styles.link_action}">
+                                        <link target="entitymaint" text="${uiLabelMap.WebtoolsBackToEntityList}" style="${styles.link_nav_cancel}"/>
+                                        <link target="ViewRelations" text="${uiLabelMap.WebtoolsViewRelations}" style="${styles.link_nav} ${styles.action_view}">
                                             <parameter param-name="entityName" from-field="entityName"/>
                                         </link>
-                                        <link target="ViewGeneric" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_action} success">
+                                        <link target="ViewGeneric" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_create}">
                                             <parameter param-name="entityName" from-field="entityName"/>
                                             <parameter param-name="enableEdit" value="true"/>
                                         </link>

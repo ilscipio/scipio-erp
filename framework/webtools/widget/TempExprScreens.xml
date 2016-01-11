@@ -63,7 +63,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar">
-                                    <link target="editTemporalExpression" text="${uiLabelMap.CommonCreate}" style="${styles.link_action} create"/>
+                                    <link target="editTemporalExpression" text="${uiLabelMap.CommonCreate}" style="${styles.link_nav} ${styles.action_create}"/>
                                         </container>
                                     </widgets>
                                 </section>

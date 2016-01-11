@@ -22159,4 +22159,7 @@
         <value xml:lang="zh">交易成功了。</value>
         <value xml:lang="zh_TW">交易成功了.</value>
     </property>
+    <property key="AccountingMaintenanceJobs">
+    	<value xml:lang="en">Maintenance Jobs</value>
+    </property>
 </resource>

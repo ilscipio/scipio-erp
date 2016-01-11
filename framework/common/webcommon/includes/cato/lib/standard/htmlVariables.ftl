@@ -232,10 +232,10 @@
   
     how to decide which style to use on a link:
       * the main classes of links are nav and run-action links. everything else is a specialization of these.
-        * nav can be considered a "navigation action" but call it nav for short.
+        * nav is classed as a "navigation action" (link_action_nav) but call it nav for short and for clarity.
       * if the link designates a record (usually entity value) by name or ID alone or some combination, basically "points to" a record,
         usually it should have link_record_xxx. see "record identifiers and sorting fields" below.
-        * it's a special form of navigation link, made different for styling reasons.
+        * it's a special form of nav link, made different for styling reasons.
       * if it's a basic navigation link or a link that leads to another page that leads to or encourages an action, see "navigation link".
       * if it's a link that directly performs an action such as a submit button, see "run actions".
       * simpler links such as external links have their own link_xxx styles such as link_url.
@@ -244,8 +244,10 @@
       * any basic navigation link can have link_nav (though note, link_nav like the other link_xxx may contain a core style like button style). 
       * if the navigation link leads to a page intended to perform a specific action, the link should be given link_nav
         along with an appropriate specific action_xxx action type style (see above), such as action_create, action_view, etc.
-        this is similar to stock Ofbiz use of classes on menu items and helpful visually.
-        * in principle, you could add a third action_scope_xxx style to "predict" the action, but is not useful.
+        * this is similar to some stock Ofbiz classes, but more generalized and better and supersedes the Ofbiz classes. 
+          in original ofbiz you see such classes as link-style="create". they should be replaced by link-style="${styles.action_create}" or appropriate.
+          the action_xxx classes can be applied to any interactive element, not just <a> links.
+        * in principle, you could add a third action_scope_xxx style to "predict" the action, but is not very useful.
       * back pages and cancel buttons, even if they seem to be part of a form, as long as they behave as navigation links,
         should have the link_nav_cancel style. they need nothing else.
       * action_view is more or less the default on link_nav and could be omitted, but should add it anyway.

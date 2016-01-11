@@ -227,9 +227,12 @@
 
   <#-- Standalone link styles (includes links in tables)
     DEV NOTE: 2016-01-07: the old use of link_nav and link_action made no real sense and has been ratified below.
-      link_action will be removed and turned mostly into link_nav(+action_xxx) and link_action_run(+action_xxx).
+      link_action will be removed and turned mostly into link_nav(+action_xxx) and link_action_run(+action_xxx)
+      (link_action_run might then be renamed again or not, but have to go through this process).
   
     how to decide which style to use on a link:
+      * the main classes of links are nav and run-action links. everything else is a specialization of these.
+        * nav can be considered a "navigation action" but call it nav for short.
       * if the link designates a record (usually entity value) by name or ID alone or some combination, basically "points to" a record,
         usually it should have link_record_xxx. see "record identifiers and sorting fields" below.
         * it's a special form of navigation link, made different for styling reasons.

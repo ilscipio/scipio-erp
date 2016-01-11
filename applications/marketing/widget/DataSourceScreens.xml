@@ -149,7 +149,7 @@ under the License.
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleEditDataSourceType}">
                                     <container style="button-bar">
-                                        <link  text="${uiLabelMap.DataSourceTypeCreate}" target="EditDataSourceType" style="${styles.link_action} create">
+                                        <link text="${uiLabelMap.DataSourceTypeCreate}" target="EditDataSourceType" style="${styles.link_action} create">
                                             <parameter param-name="DONE_PAGE" from-field="donePage"/>
                                         </link>
                                     </container>

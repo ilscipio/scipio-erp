@@ -478,7 +478,7 @@ under the License.
                 <decorator-screen name="CommonRequestDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AddCustRequestItemWorkEffortPanel" title="${uiLabelMap.CommonId}:${custRequestItem.custRequestItemSeqId} ${custRequestItem.description}" collapsible="true">
-                            <link  target="EditRequestItem" text="${uiLabelMap.OrderNewRequestItem}" style="${styles.link_action}">
+                            <link target="EditRequestItem" text="${uiLabelMap.OrderNewRequestItem}" style="${styles.link_action}">
                                 <parameter param-name="custRequestId"/>
                             </link>
                             <include-form name="AddCustRequestItemWorkEffort" location="component://order/widget/ordermgr/CustRequestForms.xml"/>

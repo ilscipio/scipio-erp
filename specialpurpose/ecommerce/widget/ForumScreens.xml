@@ -549,7 +549,7 @@ under the License.
                         <container style="responseSelected">
                             <label text="${rsp.contentName}" style="responseheader"/>
                             <label text=" - ${rsp.description} [${rsp.contentId}]" style="responsetext"/>
-                            <link  text="${uiLabelMap.CommonView}" target="ViewForumMessage" style="${styles.link_action}">
+                            <link text="${uiLabelMap.CommonView}" target="ViewForumMessage" style="${styles.link_action}">
                                 <parameter param-name="forumId" from-field="parameters.forumId"/>
                                 <parameter param-name="threadContentId" from-field="parameters.threadContentId"/>
                                 <parameter param-name="responseContentId" from-field="rsp.contentId"/>
@@ -561,7 +561,7 @@ under the License.
                         <container>
                             <label text="${rsp.contentName}" style="responseheader"/>
                             <label text=" - ${rsp.description} [${rsp.contentId}]" style="responsetext"/>
-                            <link  text="${uiLabelMap.CommonView}" target="ViewForumMessage" style="${styles.link_action}">
+                            <link text="${uiLabelMap.CommonView}" target="ViewForumMessage" style="${styles.link_action}">
                                 <parameter param-name="forumId" from-field="parameters.forumId"/>
                                 <parameter param-name="threadContentId" from-field="parameters.threadContentId"/>
                                 <parameter param-name="responseContentId" from-field="rsp.contentId"/>

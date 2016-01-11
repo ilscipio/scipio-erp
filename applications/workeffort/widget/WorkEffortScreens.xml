@@ -144,10 +144,10 @@ under the License.
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
                                 <container style="button-bar">
-                                    <link  text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort" style="${styles.link_action}">
+                                    <link text="${uiLabelMap.WorkEffortCreate}" target="EditWorkEffort" style="${styles.link_action}">
                                         <parameter param-name="DONE_PAGE" from-field="donePage"/>
                                     </link>
-                                    <link  text="${uiLabelMap.CommonAdvancedSearch}" target="WorkEffortSearchOptions" style="${styles.link_action}"/>
+                                    <link text="${uiLabelMap.CommonAdvancedSearch}" target="WorkEffortSearchOptions" style="${styles.link_action}"/>
                                 </container>
                             </decorator-section>
                             <decorator-section name="search-options">

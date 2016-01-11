@@ -351,7 +351,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <!--<container style="button-bar">
-                                    <link  text="${uiLabelMap.ContentCreateNewWebSite}" target="EditWebSite" style="${styles.link_action} create"/>
+                                    <link text="${uiLabelMap.ContentCreateNewWebSite}" target="EditWebSite" style="${styles.link_action} create"/>
                                 </container>-->
                                 <container>
                                     <include-menu name="websiteMenu" location="component://content/widget/content/ContentMenus.xml"/>
@@ -433,7 +433,7 @@ under the License.
                     <widgets>
                         <container style="responseSelected">
                             <label text="${rsp.contentName} - ${rsp.description} [${rsp.contentId}]" style="responseheader"/>
-                            <link  text="${uiLabelMap.PartyReply}" target="addForumThreadMessage" style="${styles.link_action}">
+                            <link text="${uiLabelMap.PartyReply}" target="addForumThreadMessage" style="${styles.link_action}">
                                 <parameter param-name="forumGroupId" from-field="parameters.forumGroupId"/>
                                 <parameter param-name="forumId" from-field="parameters.forumId"/>
                                 <parameter param-name="forumMessageIdTo" from-field="rsp.contentId"/>
@@ -447,7 +447,7 @@ under the License.
                     <fail-widgets>
                         <container>
                             <label text="${rsp.contentName} - ${rsp.description} [${rsp.contentId}]" style="responseheader"/>
-                            <link  text="${uiLabelMap.PartyReply}" target="addForumThreadMessage" style="${styles.link_action}">
+                            <link text="${uiLabelMap.PartyReply}" target="addForumThreadMessage" style="${styles.link_action}">
                                 <parameter param-name="forumGroupId" from-field="parameters.forumGroupId"/>
                                 <parameter param-name="forumId" from-field="parameters.forumId"/>
                                 <parameter param-name="forumMessageIdTo" from-field="rsp.contentId"/>

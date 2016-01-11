@@ -145,7 +145,7 @@ under the License.
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleFindTimesheet}">
                                     <container style="button-bar">
-                                        <link  text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_action} create"/>
+                                        <link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_action} create"/>
                                     </container>
                                     <include-form name="FindTimesheet" location="component://workeffort/widget/TimesheetForms.xml"/>
                                 </screenlet>
@@ -187,7 +187,7 @@ under the License.
                             <fail-widgets>
                                 <screenlet title="${uiLabelMap.PageTitleEditTimesheet}">
                                     <container style="button-bar">
-                                        <link  text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_action} create"/>
+                                        <link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_action} create"/>
                                     </container>
                                     <include-form name="EditTimesheet" location="component://workeffort/widget/TimesheetForms.xml"/>
                                 </screenlet>
@@ -195,7 +195,7 @@ under the License.
                                     <include-form name="AddTimesheetToInvoice" location="component://workeffort/widget/TimesheetForms.xml"/>
                                 </screenlet>
                                 <screenlet title="${uiLabelMap.PageTitleDisplayTimesheetEntries}">
-                                    <container><link  text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_action}"/></container>
+                                    <container><link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_action}"/></container>
                                     <include-form name="DisplayTimesheetEntries" location="component://workeffort/widget/TimesheetForms.xml"/>
                                 </screenlet>
                                 <screenlet title="${uiLabelMap.PageTitleAddTimesheetToNewInvoice}">
@@ -223,7 +223,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditTimesheetRoles}">
                             <container style="button-bar">
-                                <link  text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_action} create"/>
+                                <link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_action} create"/>
                             </container>
                             <include-form name="ListTimesheetRoles" location="component://workeffort/widget/TimesheetForms.xml"/>
                         </screenlet>
@@ -249,7 +249,7 @@ under the License.
                 <decorator-screen name="CommonTimesheetDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditTimesheetEntries}">
-                            <container><link  text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_action}"/></container>
+                            <container><link text="${uiLabelMap.WorkEffortTimesheetCreate}" target="EditTimesheet" style="${styles.link_action}"/></container>
                             <include-form name="ListTimesheetEntries" location="component://workeffort/widget/TimesheetForms.xml"/>
                         </screenlet>
                         <screenlet title="${uiLabelMap.PageTitleAddTimesheetEntries}">

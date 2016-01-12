@@ -526,6 +526,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
   <#else>
     <#local overlayClass = styles["tile_overlay_" + overlayType?replace("-","_")]!styles["tile_overlay_default"]!"">
   </#if>
+  <#local overlayClass = addClassArg(overlayClass, styles.tile_overlay!)>
   <#local overlayBgColor = overlayBgColor?string>
   <#if overlayBgColor?has_content && overlayBgColor != "none">
     <#local overlayBgColorClass = "${styles.tile_color_prefix!}${overlayBgColor!}">
@@ -537,6 +538,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
   <#else>
     <#local imageClass = styles["tile_image_" + imageType?replace("-","_")]!styles["tile_image_default"]!"">
   </#if>
+  <#local imageClass = addClassArg(imageClass, styles.tile_image!)>
   <#local imageBgColor = imageBgColor?string>
   <#if imageBgColor?has_content && imageBgColor != "none">
     <#local imageBgColorClass = "${styles.tile_color_prefix!}${imageBgColor!}">
@@ -548,6 +550,7 @@ It is loosely based on http://metroui.org.ua/tiles.html
   <#else>
     <#local titleClass = styles["tile_title_" + titleType?replace("-","_")]!styles["tile_title_default"]!"">
   </#if>
+  <#local titleClass = addClassArg(titleClass, styles.tile_title!)>
   <#local titleBgColor = titleBgColor?string>
   <#if titleBgColor?has_content && titleBgColor != "none">
     <#local titleBgColorClass = "${styles.tile_color_prefix!}${titleBgColor!}">

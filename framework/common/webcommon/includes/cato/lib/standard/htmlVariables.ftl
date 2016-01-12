@@ -504,16 +504,23 @@
     "tile_color_prefix" : "tile-color-",
     "tile_content" : "tile-content",
     "tile_icon" : "tile-icon",
-    "tile_title_default" : "tile-title tile-title-default",
-    <#-- default overlay styles -->
-    "tile_overlay_default" : "tile-overlay tile-overlay-slide-up",    
-    <#-- styles for specific overlay types (extensible by theme) -->
-    "tile_overlay_slide_up" : "tile-overlay tile-overlay-slide-up",
-    <#-- default image styles -->
-    "tile_image_default" : "tile-image tile-image-cover",
-    <#-- styles for specific tile types (extensible by theme) -->
-    "tile_image_cover" : "tile-image tile-image-cover",
-    "tile_image_contain" : "tile-image tile-image-contain",
+    <#-- title styles -->
+    "tile_title" : "tile-title",
+    <#-- default title styles (looked up based on title type) -->
+    "tile_title_default" : "tile-title-default",
+    <#-- overlay styles -->
+    "tile_overlay" : "tile-overlay",
+    <#-- default overlay styles (looked up based on overlay type) -->
+    "tile_overlay_default" : "tile-overlay-slide-up",    
+    <#-- styles for specific overlay types (extensible by theme) (looked up based on overlay type) -->
+    "tile_overlay_slide_up" : "tile-overlay-slide-up",
+    <#-- image styles -->
+    "tile_image" : "tile-image",
+    <#-- default image styles (looked up based on image type) -->
+    "tile_image_default" : "tile-image-cover",
+    <#-- styles for specific tile types (extensible by theme) (looked up based on image type) -->
+    "tile_image_cover" : "tile-image-cover",
+    "tile_image_contain" : "tile-image-contain",
     
   <#-- Image galleries (non-tile settings - tile settings contained in tile styles) -->
     "gallery_share_view_width" : 500,

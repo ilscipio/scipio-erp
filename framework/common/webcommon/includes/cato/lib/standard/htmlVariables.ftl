@@ -456,9 +456,11 @@
     <#-- tiles-type-based args and styles
          as always, default is also used for individual value fallbacks when missing from specific types. 
          NOTE: currently most of these values are macro args, which may not be straight stylenames (they get mapped to individual styles further below) 
-            see @tile macro interface.
+            see @tile macro interface. it's perfectly possible to ignore them and delegate styling to css by addressing the right classes.
+            for example, the *bgcolor can be set to the value "none" to prevent setting a color class.
          DEV NOTE: the bg colors may seem like overkill, but they avoid redundancy in the CSS maybe? whatever, more configurable this way -->
-    "tile_default_class" : "",  
+    "tile_default_containerclass" : "tile-container-default", 
+    "tile_default_class" : "tile-default",  
     "tile_default_size" : "normal",
     "tile_default_color" : "0",
     "tile_default_titletype" : "default",
@@ -470,7 +472,8 @@
     "tile_default_icon" : "",
     "tile_default_linktarget" : "",
     
-    "tile_generic_class" : "",  
+    "tile_generic_containerclass" : "tile-container-generic", 
+    "tile_generic_class" : "tile-generic",  
     "tile_generic_size" : "normal",
     "tile_generic_color" : "none",
     "tile_generic_titletype" : "default",
@@ -482,7 +485,8 @@
     "tile_generic_icon" : "",
     "tile_generic_linktarget" : "",
     
-    "tile_gallery1_class" : "",  
+    "tile_gallery1_containerclass" : "tile-container-gallery1", 
+    "tile_gallery1_class" : "tile-gallery1",  
     "tile_gallery1_size" : "normal",
     "tile_gallery1_color" : "0",
     "tile_gallery1_titletype" : "default",
@@ -500,16 +504,16 @@
     "tile_color_prefix" : "tile-color-",
     "tile_content" : "tile-content",
     "tile_icon" : "tile-icon",
-    "tile_title_default" : "tile-title-default",
+    "tile_title_default" : "tile-title tile-title-default",
     <#-- default overlay styles -->
-    "tile_overlay_default" : "tile-overlay-slide-up",    
+    "tile_overlay_default" : "tile-overlay tile-overlay-slide-up",    
     <#-- styles for specific overlay types (extensible by theme) -->
-    "tile_overlay_slide_up" : "tile-overlay-slide-up",
+    "tile_overlay_slide_up" : "tile-overlay tile-overlay-slide-up",
     <#-- default image styles -->
-    "tile_image_default" : "tile-image-cover",
+    "tile_image_default" : "tile-image tile-image-cover",
     <#-- styles for specific tile types (extensible by theme) -->
-    "tile_image_cover" : "tile-image-cover",
-    "tile_image_contain" : "tile-image-contain",
+    "tile_image_cover" : "tile-image tile-image-cover",
+    "tile_image_contain" : "tile-image tile-image-contain",
     
   <#-- Image galleries (non-tile settings - tile settings contained in tile styles) -->
     "gallery_share_view_width" : 500,

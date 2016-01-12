@@ -342,6 +342,7 @@ Since this is very foundation specific, this function may be dropped in future i
   <#if !tilesType?has_content>
     <#local tilesType = "default">
   </#if>
+
   <#local gridInfo = {"type":type, "tilesType":tilesType, "columns":columns}>
   <#local dummy = pushRequestStack("catoGridInfoStack", gridInfo)>
   <#-- here, use the number of greater ("page") columns to estimate corresponding grid sizes for heuristics -->
@@ -353,7 +354,14 @@ Since this is very foundation specific, this function may be dropped in future i
     <#if !id?has_content>
       <#local id = "freewall_id_${freewallNum!0}">
     </#if>
+
+    <#local tileStyleName = tilesType>
+    <#local tileStylePrefix = "tile_" + tileStyleName>
+    <#local defaultTileStylePrefix = "tile_default">
+
     <#local class = addClassArg(class, styles.tile_container!)>
+    <#local class = addClassArgDefault(class, styles[tileStylePrefix + "_containerclass"]!styles[defaultTileStylePrefix + "_containerclass"]!"")>
+ 
     <@grid_tiles_markup_container class=class id=id columns=columns tylesType=tylesType origArgs=origArgs passArgs=passArgs><#nested></@grid_tiles_markup_container>
   <#elseif type=="list">
     <@grid_list_markup_container class=class id=id columns=columns origArgs=origArgs passArgs=passArgs><#nested></@grid_list_markup_container>
@@ -583,13 +591,13 @@ It is loosely based on http://metroui.org.ua/tiles.html
     <div class="${styles.tile_content!}">
       <#-- DEV NOTE: I think the image div belongs INSIDE the tile_content container? -->
       <#if image?has_content>
-        <div class="${imageClass} ${imageBgColorClass}" style="background-image: url(${image!});"></div>
+        <div class="${imageClass}<#if imageBgColorClass?has_content> ${imageBgColorClass}</#if>" style="background-image: url(${image!});"></div>
       </#if>
       <#if link?has_content><a href="${link}"<#if linkTarget?has_content> target="${linkTarget}"</#if>></#if>
       <#if icon?has_content && !icon?starts_with("AdminTileIcon") && !image?has_content><span class="${styles.tile_icon!}"><i class="${icon!}"></i></span></#if>
       <#local nestedContent><#nested></#local>
-      <#if nestedContent?has_content><span class="${overlayClass} ${overlayBgColorClass}">${nestedContent}</span></#if>
-      <#if title?has_content><span class="${titleClass} ${titleBgColorClass}">${title!}</span></#if>
+      <#if nestedContent?has_content><span class="${overlayClass}<#if overlayBgColorClass?has_content> ${overlayBgColorClass}</#if>">${nestedContent}</span></#if>
+      <#if title?has_content><span class="${titleClass}<#if titleBgColorClass?has_content> ${titleBgColorClass}</#if>">${title!}</span></#if>
       <#if link?has_content></a></#if>
     </div>
   </@container>

@@ -1480,7 +1480,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             renderBeginningBoundaryComment(writer, "Grid Widget - Grid Element", modelForm);
         }
         if (this.renderPagination) {
-            this.renderNextPrev(writer, context, modelForm);
+            this.renderNextPrev(writer, context, modelForm, "top");
         }
         List<ModelFormField> childFieldList = modelForm.getFieldList();
         List<String> columnStyleList = new LinkedList<String>();
@@ -1538,7 +1538,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append("\" />");
         executeMacro(writer, sr.toString());
         if (this.renderPagination) {
-            this.renderNextPrev(writer, context, modelForm);
+            this.renderNextPrev(writer, context, modelForm, "bottom");
         }
         if (modelForm instanceof ModelSingleForm) {
             renderEndingBoundaryComment(writer, "Form Widget - Form Element", modelForm);
@@ -2332,7 +2332,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
         return result;
     }
 
-    public void renderNextPrev(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+    // Cato: new param: position
+    public void renderNextPrev(Appendable writer, Map<String, Object> context, ModelForm modelForm, String position) throws IOException {
         boolean ajaxEnabled = false;
         List<ModelForm.UpdateArea> updateAreas = modelForm.getOnPaginateUpdateAreas();
         String targetService = modelForm.getPaginateTarget(context);
@@ -2600,7 +2601,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(Integer.toString(lowIndex));
         sr.append(" realHighIndex=");
         sr.append(Integer.toString(realHighIndex));
-        sr.append(" />");
+        sr.append(" position=\"");
+        sr.append(position != null ? position : "");
+        sr.append("\" />");
         executeMacro(writer, sr.toString());
     }
 

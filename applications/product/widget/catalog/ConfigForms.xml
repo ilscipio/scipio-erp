@@ -33,7 +33,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListProductConfigItems" type="list" list-name="listIt"
@@ -79,7 +79,7 @@ under the License.
         <field name="configItemName" title="${uiLabelMap.CommonName}"><text/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" position="2"><textarea/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <form name="EditConfigOption" type="list" target="updateProductConfigOption" title="" list-name="configOptionList" list-entry-name="configOption"
@@ -88,7 +88,7 @@ under the License.
         <auto-fields-service service-name="updateProductConfigOption" map-name="configOption"/>
         <field use-when="configOption!=null" name="configOptionId"><hidden/></field>
         <field name="configItemId"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <form name="CreateConfigOption" type="single" target="createProductConfigOption" title="" default-map-name="configOption"
@@ -100,8 +100,8 @@ under the License.
         <field name="configItemId" ><hidden value="${configItemId}"/></field>
         <field name="configOptionName" title="${uiLabelMap.CommonName}"><text/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><textarea/></field>
-        <field use-when="configOption!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field use-when="configOption!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     
     <form name="CreateProductConfigProduct" type="single" target="createProductConfigProduct" title="" default-map-name="productConfigProduct"
@@ -115,8 +115,8 @@ under the License.
         <field use-when="productConfigProduct==null" name="productId" title="${uiLabelMap.CommonProduct}">
             <lookup target-form-name="LookupProduct"/>
         </field>
-        <field use-when="productConfigProduct!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field use-when="productConfigProduct!=null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
 
     <!-- ProdConfItemContent -->
@@ -134,7 +134,7 @@ under the License.
         </field>
          <field name="fromDate" title="${uiLabelMap.CommonFrom}" ></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="PrepareAddProductConfigItemContentAssoc" type="single" target="prepareAddContentToProductConfigItem" title="Add ProdConfItemContent (select Content Id, enter From Date):"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -151,7 +151,7 @@ under the License.
             </drop-down>
         </field>
         <!-- <field name="description"><text size="40"/></field> -->
-        <field name="submitAction" title="${uiLabelMap.ProductPrepareCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.ProductPrepareCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductConfigItemContentAssoc" type="list" target="updateContentToProductConfigItem" title="" list-name="productContentDatas"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
@@ -171,8 +171,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="removeContentFromProductConfigItem" description="[${uiLabelMap.CommonDelete}]" also-hidden="false">
                 <parameter param-name="configItemId" from-field="productContent.configItemId"/>
                 <parameter param-name="contentId" from-field="productContent.contentId"/>
@@ -195,8 +195,8 @@ under the License.
         <field name="textDataResourceId" title="${uiLabelMap.ProductTextDataResourceId}" map-name="textData"><hidden/></field>
         <field name="configItemId"><hidden/></field>
         <field name="confItemContentTypeId"><hidden/></field>
-        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
-        <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
+        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListProductConfigItem" type="list" list-name="productConfigs"
@@ -235,7 +235,7 @@ under the License.
         </field>
         <field name="configOptionId" ><hidden/></field>
         <field name="configOptionName" ><hidden/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}" >
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}" >
             <hyperlink target="deleteProductConfigOption" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="configItemId"/>
                 <parameter param-name="configOptionId"/>
@@ -259,7 +259,7 @@ under the License.
                 <parameter param-name="productId" from-field="product.productId"/>
             </hyperlink>
         </field>
-        <field name="removeAction" widget-style="${styles.link_action_run} ${styles.action_remove}" >
+        <field name="removeAction" widget-style="${styles.link_action_sys} ${styles.action_remove}" >
             <hyperlink target="deleteProductConfigProduct" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="configItemId"/>
                 <parameter param-name="configOptionId"/>

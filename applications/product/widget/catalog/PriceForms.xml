@@ -66,9 +66,9 @@
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="timestamp"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="timestamp"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>        
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>        
         <field use-when="org.ofbiz.base.util.UtilValidate.isEmpty(productPriceConds) &amp;&amp; org.ofbiz.base.util.UtilValidate.isEmpty(productPriceActions)"
-            name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+            name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductPriceRule" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="productPriceRuleId"/>
             </hyperlink>
@@ -98,8 +98,8 @@
                 <list-options list-name="productPriceRulesCondValues" key-name="condValue"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductPriceCond" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="productPriceRuleId" from-field="productPriceCond.productPriceRuleId"/>
                 <parameter param-name="productPriceCondSeqId" from-field="productPriceCond.productPriceCondSeqId"/>
@@ -130,7 +130,7 @@
                 <list-options list-name="productPriceRulesCondValues" key-name="condValue"/>                
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit/></field>        
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit/></field>        
     </form>
     <form name="EditProductPriceRulesAction" type="list" target="updateProductPriceAction" title="" list-name="productPriceActions" 
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" separate-columns="true">
@@ -142,8 +142,8 @@
             </drop-down>
         </field>        
         <field name="amount" title="${uiLabelMap.ProductValue}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductPriceAction" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="productPriceRuleId" from-field="productPriceAction.productPriceRuleId"/>
                 <parameter param-name="productPriceActionSeqId" from-field="productPriceAction.productPriceActionSeqId"/>
@@ -160,7 +160,7 @@
             </drop-down>
         </field>        
         <field name="amount" title="${uiLabelMap.ProductValue}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit/></field>
     </form>        
     
 </forms>

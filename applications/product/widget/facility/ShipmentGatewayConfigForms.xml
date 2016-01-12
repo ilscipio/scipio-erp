@@ -32,7 +32,7 @@ under the License.
         </field>
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -63,7 +63,7 @@ under the License.
         <field name="shipmentGatewayConfTypeId" title="${uiLabelMap.FacilityShipmentGatewayConfigTypeId}">
             <display-entity entity-name="ShipmentGatewayConfigType" key-field-name="shipmentGatewayConfTypeId" description="${description}"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -107,7 +107,7 @@ under the License.
                 <option key="api.schema.DHL" description="${uiLabelMap.FacilityShipmentDhlRateEstimate}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -175,7 +175,7 @@ under the License.
         <field name="rateEstimateTemplate" title="${uiLabelMap.FacilityShipmentFedexRateEstimateTemplateLocation}">
             <text size="80" maxlength="80"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -269,7 +269,7 @@ under the License.
         <field name="defaultReturnLabelSubject" title="${uiLabelMap.FacilityShipmentUpsDefaultReturnLabelSubject}">
             <text size="60" maxlength="60"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -298,7 +298,7 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -308,7 +308,7 @@ under the License.
         <field name="description" title="${uiLabelMap.FacilityShipmentGatewayConfigDescription}"><text-find ignore-case="true"/></field>
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -347,7 +347,7 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>

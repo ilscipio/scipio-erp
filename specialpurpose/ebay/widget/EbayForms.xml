@@ -85,7 +85,7 @@ under the License.
         <field name="errorMessage"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}" use-when="${canImportOrder}"><check/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}" use-when="!${canImportOrder}"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.EbayImportSingleTransactionFromEbay}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.EbayImportSingleTransactionFromEbay}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     
     <form name="FindEbayOrders" type="single" target="GetEbayOrders"
@@ -126,7 +126,7 @@ under the License.
         <field name="ebayUserIdBuyer"><hidden/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}" use-when="${canImportOrder}"><check/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}" use-when="!${canImportOrder}"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.EbayImportOrdersFromEbay}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.EbayImportOrdersFromEbay}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     
     <!-- Ebay configuration settings forms  -->
@@ -150,7 +150,7 @@ under the License.
                 <parameter param-name="productStoreId"/>
             </hyperlink>
         </field>
-        <field name="deleteEbayConfiguration" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteEbayConfiguration" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteEbayConfiguration" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productStoreId"/>
             </hyperlink>
@@ -214,7 +214,7 @@ under the License.
                 <entity-options entity-name="ShipmentMethodType" key-field-name="shipmentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>
-        <field name="deleteEbayShippingMethod" title="" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteEbayShippingMethod" title="" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteEbayShippingMethod" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="shipmentMethodName"/>
                 <parameter param-name="productStoreId"/>
@@ -268,6 +268,6 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 </forms>

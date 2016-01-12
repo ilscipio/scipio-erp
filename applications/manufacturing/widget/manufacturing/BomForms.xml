@@ -90,7 +90,7 @@ under the License.
                 <parameter param-name="ruleId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="DeleteProductManufacturingRule" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="ruleId"/>
             </hyperlink>

@@ -35,7 +35,7 @@ under the License.
         <field name="geoSecCode" title="${uiLabelMap.CommonGeoSecCode}"><text-find/></field>
         <field name="abbreviation" title="${uiLabelMap.CommonGeoAbbr}"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupGeo" list-name="listIt" target="" title="" type="list" paginate-target="LookupGeo">
         <actions>
@@ -84,7 +84,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}" widget-style="${styles.link_action_run} ${styles.action_select}">
+        <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}" widget-style="${styles.link_action_sys} ${styles.action_select}">
             <hyperlink also-hidden="false" target-type="plain" description="${userLoginId}" target="javascript:set_value('${userLoginId}', '${userLoginId}', '${parameters.webSitePublishPoint}')"/>
         </field>
         <field name="enabled"><display/></field>
@@ -110,7 +110,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="PortalPage" default-field-type="display"/>
-        <field name="portalPageId" widget-style="${styles.link_action_run} ${styles.action_select}">
+        <field name="portalPageId" widget-style="${styles.link_action_sys} ${styles.action_select}">
             <hyperlink also-hidden="false" target-type="plain" description="${portalPageId}" target="javascript:set_value('${portalPageId}')"/>
         </field>
     </form>

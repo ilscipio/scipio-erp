@@ -41,7 +41,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit/></field>
     </form>
 
     <form name="ListSalesOpportunity" type="list" list-name="listIt" paginate-target="FindSalesOpportunity" view-size="20"
@@ -85,7 +85,7 @@ under the License.
         <field name="estimatedAmount" title="${uiLabelMap.SfaEstimatedAmount}"><display/></field>
         <field name="nextStepDate" position="1" title="${uiLabelMap.SfaNextStepDate}" sort-field="true"><display/></field>
         <field name="estimatedCloseDate" title="${uiLabelMap.SfaCloseDate}"><display/></field>
-        <field name="editAction" title="${uiLabelMap.CommonClose}" use-when="${groovy: estimatedCloseDate == null || isDateAfterNow == true || opportunityStageId != &quot;SOSTG_CLOSED&quot;}" widget-style="${styles.link_action_run} ${styles.action_terminate}">
+        <field name="editAction" title="${uiLabelMap.CommonClose}" use-when="${groovy: estimatedCloseDate == null || isDateAfterNow == true || opportunityStageId != &quot;SOSTG_CLOSED&quot;}" widget-style="${styles.link_action_sys} ${styles.action_terminate}">
             <hyperlink target="closeSalesOpportunity" description="${uiLabelMap.CommonClose}">
                 <parameter param-name="salesOpportunityId"/>
                 <parameter param-name="opportunityStageId" value="SOSTG_CLOSED"/>

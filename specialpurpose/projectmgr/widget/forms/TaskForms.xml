@@ -277,7 +277,7 @@
         <field name="workEffortId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden/></field>
         <field name="updateAction"><submit/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="updateTaskAssigment" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="partyId"/>
@@ -286,7 +286,7 @@
                 <parameter param-name="statusId" value="PAS_ENDED"/>
             </hyperlink>
         </field>
-        <field name="toCompleteAction" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.link_action_run} ${styles.action_complete}">
+        <field name="toCompleteAction" title="${uiLabelMap.CommonStatustoComplete}" widget-style="${styles.link_action_sys} ${styles.action_complete}">
             <hyperlink target="updateTaskAssigment" description="${uiLabelMap.CommonStatustoComplete}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="partyId"/>
@@ -476,7 +476,7 @@
         <field name="invoiceInfo"><hidden/></field>
         <field name="comments"><text size="60"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteTimeEntry" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="timeEntryId"/>
@@ -524,14 +524,14 @@
         <field name="workEffortId"><hidden/></field>
         <field name="noteParty" title="${uiLabelMap.CommonBy}"><display description="${bsh:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, noteParty, true)} at ${bsh: org.ofbiz.base.util.UtilDateTime.timeStampToString(noteDateTime, &quot;dd-MM-yyyy HH:mm&quot;, TimeZone.getDefault(), context.get(&quot;locale&quot;))}"/></field>
 
-        <field name="internalNote" widget-style="${styles.link_action_run} ${styles.action_update}" title="${uiLabelMap.ProjectMgrPrivateOrPublic}" use-when="internalNote.equals(&quot;N&quot;)">
+        <field name="internalNote" widget-style="${styles.link_action_sys} ${styles.action_update}" title="${uiLabelMap.ProjectMgrPrivateOrPublic}" use-when="internalNote.equals(&quot;N&quot;)">
             <hyperlink target="updateTaskNote" description="${uiLabelMap.OrderNotesPrivate}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="noteId"/>
                 <parameter param-name="internalNote" value="Y"/>
             </hyperlink>
         </field>
-        <field name="internalNote" widget-style="${styles.link_action_run} ${styles.action_update}" title="${uiLabelMap.ProjectMgrPrivateOrPublic}" use-when="internalNote.equals(&quot;Y&quot;)">
+        <field name="internalNote" widget-style="${styles.link_action_sys} ${styles.action_update}" title="${uiLabelMap.ProjectMgrPrivateOrPublic}" use-when="internalNote.equals(&quot;Y&quot;)">
             <hyperlink target="updateTaskNote" description="${uiLabelMap.OrderNotesPublic}">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="noteId"/>
@@ -583,8 +583,8 @@
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
-        <field name="deleteAction" widget-style="${styles.link_action_run} ${styles.action_remove}"><submit button-type="button"/></field>
-        <field name="completeAction" widget-style="${styles.link_action_run} ${styles.action_complete}">
+        <field name="deleteAction" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit button-type="button"/></field>
+        <field name="completeAction" widget-style="${styles.link_action_sys} ${styles.action_complete}">
             <hyperlink description="${uiLabelMap.ProjectMgrToComplete}" target="updateTaskPartyAssign">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="partyId"/>

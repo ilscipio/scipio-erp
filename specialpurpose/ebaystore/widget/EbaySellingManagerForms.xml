@@ -179,7 +179,7 @@ under the License.
         <field name="productName" entry-name="productId">
             <display-entity entity-name="Product" key-field-name="productId" description="${productName}"></display-entity>
         </field>
-        <field name="quantityReserved" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="quantityReserved" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <hyperlink target="updateQuantityReserved" description="${quantityReserved}">
                 <parameter param-name="productStoreId"/>
                 <parameter param-name="facilityId"/>
@@ -660,7 +660,7 @@ under the License.
                 <parameter param-name="contactStatus" from-field="contactStatus"/>
             </hyperlink>
         </field>
-        <field name="deleteOfferAction" title="Delete Offer Alert Data" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteOfferAction" title="Delete Offer Alert Data" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteContactAlert" description="Delete Data" also-hidden="false">
                 <parameter param-name="itemId" from-field="itemId"/>
                 <parameter param-name="userId" from-field="userId"/>

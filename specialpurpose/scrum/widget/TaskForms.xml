@@ -318,7 +318,7 @@
         <field name="howToTest" title="${uiLabelMap.ScrumHowToTest}"><textarea/></field>
         <field name="workEffortId" title="${uiLabelMap.ScrumTaskId}"><hidden value="${taskId}"/></field>
         <field name="custRequestId" title="${uiLabelMap.ScrumCustRequestId}"><hidden value="${custRequestId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}" >
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}" >
             <submit/>
         </field>
     </form>
@@ -542,7 +542,7 @@
         <field name="noteInfo"><display/></field>
         <field name="noteDateTime"><display/></field>
         <field name="noteParty"><display/></field>
-        <field name="removeNote" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="removeNote" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteTaskNote">
                 <parameter param-name="noteId" from-field="noteId"/>
                 <parameter param-name="taskId" from-field="workEffortId"/>
@@ -581,7 +581,7 @@
         <field name="roleTypeId"><hidden value="SCRUM_MEMBER"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListTaskParties" type="list" list-name="taskMembers" target="deleteTaskPartyAssign"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true">
@@ -648,8 +648,8 @@
         <field name="planHours">
             <text default-value="${taskInfo.planHours}" size="2"/>
         </field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="unassignPartyFromWorkEffort" description="${uiLabelMap.CommonRemove}" confirmation-message="Are you sure to remove this task ?" link-type="hidden-form">
                 <parameter param-name="workEffortId" from-field="taskId"/>
                 <parameter param-name="partyId" from-field="partyId"/>
@@ -744,7 +744,7 @@
                 <parameter param-name="sprintId"></parameter>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteTask" description="${uiLabelMap.CommonDelete}" link-type="hidden-form" confirmation-message="Are you sure to delete this task?">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="workEffortId" from-field="taskId"/>

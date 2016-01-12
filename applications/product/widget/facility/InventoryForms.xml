@@ -166,7 +166,7 @@ under the License.
             </drop-down>
         </field>
         <field name="comments"/>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ViewPhysicalInventoryAndVariance" type="list" target="" title="" list-name="physicalInventoryAndVarianceDatas"
         header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -231,7 +231,7 @@ under the License.
             <display-entity entity-name="InventoryItemLabelType" description="${description} [${inventoryItemLabelTypeId}]"/>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteInventoryItemLabelApplFromItem" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="inventoryItemId"/>
                 <parameter param-name="inventoryItemLabelTypeId"/>

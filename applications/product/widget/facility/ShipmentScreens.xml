@@ -75,7 +75,7 @@ under the License.
                                     <widgets>
                                         <label style="heading" text="${uiLabelMap.ProductShipmentId}: ${shipment.shipmentId}"/>
                                         <container>
-                                            <link style="${styles.link_action_run} ${styles.action_export}" text="${uiLabelMap.ProductGenerateShipmentManifestReport}" target="ShipmentManifest.pdf" target-window="_BLANK">
+                                            <link style="${styles.link_action_sys} ${styles.action_export}" text="${uiLabelMap.ProductGenerateShipmentManifestReport}" target="ShipmentManifest.pdf" target-window="_BLANK">
                                                 <parameter param-name="shipmentId" from-field="shipment.shipmentId"/>
                                             </link>
                                         </container>

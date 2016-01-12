@@ -189,7 +189,7 @@ under the License.
         <field name="requirePasswordChange">
             <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}"><hyperlink target="backHome" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
 
@@ -204,7 +204,7 @@ under the License.
         <field name="currentPassword"><password/></field>
         <field name="newPassword"><password/></field>
         <field name="newPasswordVerify"><password/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="partyId"/>
@@ -222,7 +222,7 @@ under the License.
         <field name="userLoginId"><hidden/></field>
         <field name="userLdapDn" use-when="&quot;true&quot;.equals(ldapEnabled)"><text/></field>
         <field name="userLdapDn" use-when="!&quot;true&quot;.equals(ldapEnabled)"><ignored/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="partyId"/>
@@ -336,7 +336,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFromTime}"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deletePartyTaxAuthInfo" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="partyId"/>
                 <parameter param-name="taxAuthPartyId"/>
@@ -359,7 +359,7 @@ under the License.
         <field name="noteId" tooltip="${uiLabelMap.PartyOptional}"><hidden/></field>
         <field name="noteName" title="${uiLabelMap.FormFieldTitle_noteName}" tooltip="${uiLabelMap.PartyOptional}"> </field>
         <field name="note"><textarea cols="70" rows="10"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="partyId"/>
@@ -427,7 +427,7 @@ under the License.
         <field name="rateDefaultAmount" use-when="rateLevel==null" tooltip="${uiLabelMap.PartyRateNotSpecified}"><display/></field>
         <field name="defaultRate"><display/></field>
         <field name="percentageUsed"><display/></field>
-        <field name="deleteAction" widget-style="${styles.link_action_run} ${styles.action_remove}"><submit /></field>
+        <field name="deleteAction" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit /></field>
     </form>
 
     <form name="NewUser" type="single" target="${target}${previousParams}"
@@ -497,7 +497,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
     </form>
 
     <form name="ListSegmentRoles" type="list" target="updateSegmentGroupRole"
@@ -517,7 +517,7 @@ under the License.
         <field name="roleTypeId" title="${uiLabelMap.PartyRole}">
             <display-entity entity-name="RoleType" description="${description}"/>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteSegmentGroupRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="segmentGroupId"/>
                 <parameter param-name="partyId"/>
@@ -539,7 +539,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <!-- <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="segmentGroupId"/>
@@ -723,7 +723,7 @@ under the License.
         <field name="carrierPartyId"><display/></field>
         <field name="fromDate"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="updatePartyCarrierAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="partyId"/>
                 <parameter param-name="carrierPartyId"/>
@@ -827,7 +827,7 @@ under the License.
         <field name="thruDate"><date-time/></field>
         <field name="comments"><text/></field>
         <field name="updateAction"><submit button-type="button"/></field>
-        <field name="deleteAction" widget-style="${styles.link_action_run} ${styles.action_remove}"><hyperlink description="${uiLabelMap.CommonDelete}" target="deletePartyRelationship">
+        <field name="deleteAction" widget-style="${styles.link_action_sys} ${styles.action_remove}"><hyperlink description="${uiLabelMap.CommonDelete}" target="deletePartyRelationship">
                 <parameter param-name="partyId"/>
                 <parameter param-name="partyIdFrom"/>
                 <parameter param-name="partyIdTo"/>
@@ -1004,7 +1004,7 @@ under the License.
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}"><display/></field>
         <field name="description" title="${uiLabelMap.PartyRole}"><display/></field>
         <field name="parentTypeId"><display-entity entity-name="RoleType" key-field-name="roleTypeId" description="${description}"/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleterole" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>
@@ -1113,7 +1113,7 @@ under the License.
         <field name="partyId"><hidden /></field>
         <field name="partyIdentTypeDesc"><display /></field>
         <field name="idValue"><display /></field>
-        <field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
              <hyperlink target="deletePartyIdentification" description="${uiLabelMap.CommonDelete}">
                  <parameter param-name="partyId"/>
                  <parameter param-name="partyIdentificationTypeId"/>
@@ -1192,7 +1192,7 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" widget-style="${styles.link_action_run} ${styles.action_remove}" title="${uiLabelMap.CommonDelete}">
+        <field name="deleteAction" widget-style="${styles.link_action_sys} ${styles.action_remove}" title="${uiLabelMap.CommonDelete}">
             <hyperlink target="storeRemoveRole" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="productStoreId"/>

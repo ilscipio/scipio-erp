@@ -53,8 +53,8 @@ under the License.
                     <decorator-section name="body">
                         <label style="heading" text="${uiLabelMap.ProductInventoryByProduct} ${uiLabelMap.CommonFor} ${facility.facilityName}"/>
                         <container>
-                            <link target="ViewFacilityInventoryByProductReport?${searchParameterString}" text="${uiLabelMap.CommonPrint}" style="${styles.link_action_run} ${styles.action_export}"/>
-                            <link target="ViewFacilityInventoryByProductExport?${searchParameterString}" text="${uiLabelMap.CommonExport}" style="${styles.link_action_run} ${styles.action_export}"/>
+                            <link target="ViewFacilityInventoryByProductReport?${searchParameterString}" text="${uiLabelMap.CommonPrint}" style="${styles.link_action_sys} ${styles.action_export}"/>
+                            <link target="ViewFacilityInventoryByProductExport?${searchParameterString}" text="${uiLabelMap.CommonExport}" style="${styles.link_action_sys} ${styles.action_export}"/>
                         </container>
                         <screenlet title="${uiLabelMap.PageTitleFindFacilityInventoryItemsByProduct}">
                             <include-form name="FindFacilityInventoryByProduct" location="component://product/widget/facility/FacilityForms.xml"/>

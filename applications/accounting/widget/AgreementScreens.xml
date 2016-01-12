@@ -586,7 +586,7 @@
                 <decorator-screen name="CommonAgreementDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                            <link target="ListAgreementItemSupplierProductsReport" text="${uiLabelMap.CommonPrint}" style="${styles.link_action_run} ${styles.link_action_export}">
+                            <link target="ListAgreementItemSupplierProductsReport" text="${uiLabelMap.CommonPrint}" style="${styles.link_action_sys} ${styles.link_action_export}">
                                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
                                 <parameter param-name="agreementItemSeqId" from-field="agreementItem.agreementItemSeqId" />
                             </link>

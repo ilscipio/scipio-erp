@@ -67,7 +67,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>-->
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListContent" target="" title="" list-name="listIt" type="list" paginate-target="findContent"
@@ -213,8 +213,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="createAction" title="${uiLabelMap.CommonCreate}" use-when="currentValue==null" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="currentValue!=null" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="createAction" title="${uiLabelMap.CommonCreate}" use-when="currentValue==null" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="currentValue!=null" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <!-- Content Lookup forms -->
@@ -243,7 +243,7 @@ under the License.
         <field name="contentIdTo"><display/></field>
         <field name="contentAssocTypeId"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="AddContentAssoc" target="createContentAssoc" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -264,7 +264,7 @@ under the License.
                 <entity-options description="${description}" entity-name="MetaDataPredicate"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button"/>
         </field>
         <field name="createdDate"><hidden/></field>
@@ -291,7 +291,7 @@ under the License.
         <field name="contentAssocTypeId"><display-entity entity-name="ContentAssocType" description="${description}"></display-entity></field>
         <field name="mapKey"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display description="${groovy:fromDate.toString().substring(0,10)}"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentAssoc">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentIdTo"/>
@@ -300,7 +300,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="text-link"/>
         </field>
     </form>
@@ -322,7 +322,7 @@ under the License.
         <field name="contentAssocTypeId"><display-entity entity-name="ContentAssocType" description="${description}"></display-entity></field>
         <field name="mapKey"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display description="${groovy:fromDate.toString().substring(0,10)}"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentAssoc">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentIdTo"/>
@@ -331,7 +331,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="text-link"/>
         </field>
     </form>
@@ -351,14 +351,14 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button"/>
         </field>
     </form>
     <form name="EditContentRole" target="Edit${contentRoleTarget}ContentRole" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createContentRole"/>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListContentRole" target="update${contentRoleTarget}ContentRole" title="" type="list"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -369,10 +369,10 @@ under the License.
         </actions>
         <auto-fields-service service-name="updateContentRole" default-field-type="display"/>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.link_record_date}"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="remove${contentRoleTarget}ContentRole">
                 <parameter param-name="contentId"/>
                 <parameter param-name="roleTypeId"/>
@@ -394,7 +394,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListContentPurpose" target="updateContentPurpose" title="" type="list"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -404,8 +404,8 @@ under the License.
             </entity-and>
         </actions>
         <auto-fields-service service-name="updateContentPurpose" default-field-type="display"/>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentPurpose">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentPurposeTypeId"/>
@@ -420,7 +420,7 @@ under the License.
         <field name="contentId" title=" " widget-style="${styles.link_nav} ${styles.action_find}">
             <lookup target-form-name="LookupContent"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListContentAttribute" target="updateContentAttribute" title="" type="list"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -431,8 +431,8 @@ under the License.
         </actions>
         <auto-fields-service service-name="updateContentAttribute" default-field-type="display"/>
         <field name="attrValue" widget-style="${styles.link_text}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentAttribute">
                 <parameter param-name="contentId"/>
                 <parameter param-name="attrName"/>
@@ -452,7 +452,7 @@ under the License.
                 <entity-options description="${description}" entity-name="MetaDataPredicate" key-field-name="metaDataPredicateId"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListWebSites" type="list" paginate-target="ListWebSite" paginate="true" list-name="webSites"
             odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2">
@@ -477,8 +477,8 @@ under the License.
         <auto-fields-service service-name="updateContentMetaData" default-field-type="edit"/>
         <field name="contentId" widget-style="${styles.link_record_id}"><display/></field>
         <field name="metaDataPredicateId" widget-style="${styles.link_record_id}"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeContentMetaData">
                 <parameter param-name="contentId"/>
                 <parameter param-name="metaDataPredicateId"/>
@@ -519,7 +519,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListWorkEffortContents" type="list" target="updateWorkEffortContent" list-name="workEffortContents"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -539,8 +539,8 @@ under the License.
         <field name="contentId"><hidden/></field>
         <field name="workEffortContentTypeId"><display-entity entity-name="WorkEffortContentType" description="${description}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteWorkEffortContent">
                 <parameter param-name="workEffortContentTypeId"/>
                 <parameter param-name="fromDate"/>
@@ -567,7 +567,7 @@ under the License.
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
         </field>
         <field name="caCreatedDate"><display/></field>
-        <field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="delete" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="removeDocumentFromTree" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentIdTo"/>
@@ -616,7 +616,7 @@ under the License.
         <field name="contentTypeId"><display/></field>
         <field name="ownerContentId"><display/></field>
         <field name="mimeTypeId"><display/></field>
-        <field name="select" widget-style="${styles.link_action_run} ${styles.action_select}" title=" " use-when="contentId!=null">
+        <field name="select" widget-style="${styles.link_action_sys} ${styles.action_select}" title=" " use-when="contentId!=null">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.CommonSelect}"
                 target="javascript:set_value('${contentId}')"/>            
@@ -641,7 +641,7 @@ under the License.
         <field name="contentId"><hidden value="${parameters.contentId}"/></field>
         <field name="keyword" title="${uiLabelMap.ContentKeyword}*"><text size="10"/></field>
         <field name="relevancyWeight" title="${uiLabelMap.ProductWeight}"><text size="5"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListContentKeywords" type="list" target="deleteContentKeyword" odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <actions>

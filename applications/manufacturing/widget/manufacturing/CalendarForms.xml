@@ -30,7 +30,7 @@ under the License.
                 <parameter param-name="calendarId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="RemoveCalendar" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="calendarId"/>
             </hyperlink>
@@ -45,7 +45,7 @@ under the License.
                 <parameter param-name="calendarWeekId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="RemoveCalendarWeek" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="calendarWeekId"/>
             </hyperlink>
@@ -64,7 +64,7 @@ under the License.
                 <parameter param-name="exceptionDateStartTime"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="RemoveCalendarExceptionDay" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="calendarId"/>
                 <parameter param-name="exceptionDateStartTime"/>
@@ -115,7 +115,7 @@ under the License.
                 <parameter param-name="exceptionDateStart" from-field="calendarExceptionWeek.exceptionDateStart"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="RemoveCalendarExceptionWeek" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="calendarId" from-field="calendarExceptionWeek.calendarId"/>
                 <parameter param-name="exceptionDateStart" from-field="calendarExceptionWeek.exceptionDateStart"/>

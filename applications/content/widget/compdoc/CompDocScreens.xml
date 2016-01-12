@@ -556,7 +556,7 @@ under the License.
                                     <widgets>
                                         <container>
                                             <label style="tableheadtext" text="${uiLabelMap.ContentCompDocRevisions} [${rootContentRevisionSeqId}], Latest is [${mostRecentRevisionSeqId}]"/>
-                                            <link style="${styles.link_action_run} ${styles.action_find}" text="${uiLabelMap.ContentLatest}" target="EditChildCompDoc">
+                                            <link style="${styles.link_action_sys} ${styles.action_find}" text="${uiLabelMap.ContentLatest}" target="EditChildCompDoc">
                                                 <parameter param-name="contentId"/>
                                                 <parameter param-name="rootContentId"/>
                                                 <parameter param-name="caFromDate" from-field="fromDate"/>
@@ -634,7 +634,7 @@ under the License.
                     </actions>
                     <widgets>
                         <container>
-                            <link target="ViewCompDocContentBinary" text="${uiLabelMap.PageTitleViewCompDocContentBinary}" style="${styles.link_action_run} ${styles.action_view}">
+                            <link target="ViewCompDocContentBinary" text="${uiLabelMap.PageTitleViewCompDocContentBinary}" style="${styles.link_action_sys} ${styles.action_view}">
                                 <parameter param-name="contentId"/>
                                 <parameter param-name="contentRevisionSeqId" from-field="itemContentRevisionSeqId"/>
                                 <parameter param-name="rootContentId"/>
@@ -653,7 +653,7 @@ under the License.
                     </actions>
                     <widgets>
                         <container>
-                            <link target="ViewCompDocContentHtml" text="${uiLabelMap.PageTitleViewCompDocContentHtml}" style="${styles.link_action_run} ${styles.action_view}">
+                            <link target="ViewCompDocContentHtml" text="${uiLabelMap.PageTitleViewCompDocContentHtml}" style="${styles.link_action_sys} ${styles.action_view}">
                                 <parameter param-name="contentId"/>
                                 <parameter param-name="contentRevisionSeqId" from-field="itemContentRevisionSeqId"/>
                                 <parameter param-name="rootContentId"/>
@@ -1035,7 +1035,7 @@ under the License.
                 <decorator-screen name="commonCompDocDecorator" location="component://content/widget/CommonScreens.xml">
                     <decorator-section name="body">
                        <container>
-                            <link target="GenCompDocPdf" text="${uiLabelMap.ContentCompDocGeneratePDF}" style="${styles.link_action_run} ${styles.action_export}">
+                            <link target="GenCompDocPdf" text="${uiLabelMap.ContentCompDocGeneratePDF}" style="${styles.link_action_sys} ${styles.action_export}">
                                 <parameter param-name="contentId" from-field="rootContentId"/>
                                 <parameter param-name="contentRevisionSeqId"/>
                             </link>
@@ -1083,7 +1083,7 @@ under the License.
                             </and>
                         </condition>
                         <widgets>
-                            <link text="${uiLabelMap.ContentCompDocStartApprovalProcess}" target="prepForApproval" style="${styles.link_action_run} ${styles.action_begin}">
+                            <link text="${uiLabelMap.ContentCompDocStartApprovalProcess}" target="prepForApproval" style="${styles.link_action_sys} ${styles.action_begin}">
                                 <parameter param-name="rootContentId"/>
                                 <parameter param-name="rootContentRevisionSeqId"/>
                             </link>
@@ -1185,7 +1185,7 @@ under the License.
                                     <parameter param-name="contentRevisionSeqId" from-field="assocRevisionItemView.maxRevisionSeqId"/>
                                     <parameter param-name="rootContentRevisionSeqId"/>
                                 </link>
-                                <link text="${uiLabelMap.ContentCompDocGeneratePDF}" target="GenContentPdf" style="${styles.link_action_run} ${styles.action_export}">
+                                <link text="${uiLabelMap.ContentCompDocGeneratePDF}" target="GenContentPdf" style="${styles.link_action_sys} ${styles.action_export}">
                                     <parameter param-name="contentId" from-field="assocRevisionItemView.contentId"/>
                                     <parameter param-name="caSequenceNum" from-field="sequenceNum"/>
                                 </link>

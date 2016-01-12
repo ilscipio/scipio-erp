@@ -113,11 +113,11 @@ under the License.
                                             <link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="${styles.link_nav} ${styles.action_create}">
                                                 <image url-mode="raw" src="${iconsLocation}/add.png"/>
                                             </link>
-                                            <link target="ExampleReportHtml" text="${uiLabelMap.CommonPrinterFriendly}" style="${styles.link_action_run} ${styles.action_export}">
+                                            <link target="ExampleReportHtml" text="${uiLabelMap.CommonPrinterFriendly}" style="${styles.link_action_sys} ${styles.action_export}">
                                                 <parameter param-name="exampleId"/>
                                                 <image url-mode="raw" src="${iconsLocation}/printer.png"/>
                                             </link>
-                                            <link target="ExampleReportPdf" text="${uiLabelMap.CommonPdf}" style="${styles.link_action_run} ${styles.action_export}">
+                                            <link target="ExampleReportPdf" text="${uiLabelMap.CommonPdf}" style="${styles.link_action_sys} ${styles.action_export}">
                                                 <parameter param-name="exampleId"/>
                                                 <image url-mode="raw" src="${iconsLocation}/page_white_acrobat.png"/>
                                             </link>

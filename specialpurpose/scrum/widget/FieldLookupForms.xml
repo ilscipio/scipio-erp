@@ -36,7 +36,7 @@ under the License.
         </field>
         
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductBacklog" list-name="listIt" title="" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="LookupProductBacklog">

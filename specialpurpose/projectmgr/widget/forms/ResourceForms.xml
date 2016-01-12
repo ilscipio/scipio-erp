@@ -47,7 +47,7 @@
         </field>
         <field name="telephone" title="${uiLabelMap.PartyPhoneNumber}"><display description="${telResult.countryCode} ${telResult.areaCode} ${telResult.contactNumber}${groovy:telResult.get(&quot;extension&quot;)!=null?&quot; Ext:&quot;:&quot; &quot;}${telResult.extension}"/></field>
         <field name="contactMechPurposeTypeId" entry-name="telResult.contactMechPurposeTypeId" title="${uiLabelMap.CommonPurpose}"><display-entity entity-name="ContactMechPurposeType"/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="removeResource" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>

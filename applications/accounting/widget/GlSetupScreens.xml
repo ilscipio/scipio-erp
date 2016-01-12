@@ -144,10 +144,10 @@ under the License.
                         <screenlet id="GlAccountOrganizationPanel" title="${uiLabelMap.AccountingChartOfAcctsMenu}" collapsible="true">
                             <include-form name="AssignGlAccount" location="component://accounting/widget/GlSetupForms.xml"/>
                         </screenlet>
-                        <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_action_run} ${styles.action_export}" target="ListGlAccountOrgCsv.csv">
+                        <link text="${uiLabelMap.AccountingExportAsCsv}" style="${styles.link_action_sys} ${styles.action_export}" target="ListGlAccountOrgCsv.csv">
                             <parameter param-name="organizationPartyId"/>
                         </link>
-                        <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action_run} ${styles.action_export}" target="ListGlAccountOrgPdf.pdf" target-window="_BLANK">
+                        <link text="${uiLabelMap.AccountingExportAsPdf}" style="${styles.link_action_sys} ${styles.action_export}" target="ListGlAccountOrgPdf.pdf" target-window="_BLANK">
                             <parameter param-name="organizationPartyId"/>
                         </link>
                         <include-form name="ListGlAccountOrganization" location="component://accounting/widget/GlSetupForms.xml"/>

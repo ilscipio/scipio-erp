@@ -60,7 +60,7 @@ under the License.
         <field name="roleTypeId"><hidden value="PROJECT_TEAM"/></field>
         <field name="custRequestDate" title="${uiLabelMap.OrderRequestDate}"><date-time type="timestamp"/></field>
         <field name="responseRequiredDate"><date-time type="timestamp"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <sort-order>
             <sort-field name="custRequestId"/>
             <sort-field name="fromPartyId"/>

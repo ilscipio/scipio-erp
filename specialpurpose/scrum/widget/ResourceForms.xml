@@ -85,14 +85,14 @@
         <field name="rateTypeId" use-when="rateTypeId!=null"><display-entity entity-name="RateType" description="${description}" key-field-name="rateTypeId"/></field>
         <field name="rateAmount" use-when="rateTypeId!=null"><display/></field>
         <field name="percentageUsed" use-when="rateTypeId!=null"><display/></field>
-        <field name="update" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}" use-when="rateTypeId!=null">
+        <field name="update" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}" use-when="rateTypeId!=null">
             <hyperlink target="QuickAddPartyRate" description="${uiLabelMap.CommonUpdate}" link-type="hidden-form">
                 <parameter param-name="partyId"/>
                 <parameter param-name="rateTypeId"/>
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="remove" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="remove" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="removeResource" description="${uiLabelMap.CommonRemove}" link-type="hidden-form" confirmation-message="Are you sure to delete this person ?">
                 <parameter param-name="partyId"/>
                 <parameter param-name="groupId"/>
@@ -376,7 +376,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" sort-field="true">
             <display type="date"/>
         </field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}" use-when="!compCheck">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}" use-when="!compCheck">
             <hyperlink target="removeProductMember" description="${uiLabelMap.CommonRemove}" link-type="hidden-form">
                 <parameter param-name="productId" from-field="productId"/>
                 <parameter param-name="partyId"/>
@@ -406,7 +406,7 @@
         </field>
         <field name="rateAmount" tooltip="${uiLabelMap.PartyOverrideDefaultRateAmount}"><text size="10" default-value="${rateDefaultAmount}"/></field>
         <field name="percentageUsed"><text size="10"/></field>
-        <field name="update" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
+        <field name="update" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="PartyRevisions" extends="ListTaskRevisions" extends-resource="component://scrum/widget/TaskForms.xml" paginate-target="viewprofile" view-size="10">
     </form>

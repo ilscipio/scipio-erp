@@ -26,7 +26,7 @@
         <field name="productName" position="2">
             <text-find />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
             <submit button-type="button" />
         </field>
     </form>
@@ -354,10 +354,10 @@
             maxlength="255"/></field> <field name="mediumImageUrl"><text size="60" maxlength="255"/></field> <field name="largeImageUrl"><text size="60" 
             maxlength="255"/></field> <field name="detailImageUrl"><text size="60" maxlength="255"/></field> <field name="detailScreen"><text size="60" 
             maxlength="250"/></field> -->
-        <field name="submitAction" title="${uiLabelMap.ProductUpdateProduct}" use-when="product!=null" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.ProductUpdateProduct}" use-when="product!=null" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
-        <field name="submitAction" title="${uiLabelMap.ProductCreateProduct}" use-when="product==null" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.ProductCreateProduct}" use-when="product==null" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
 
@@ -530,7 +530,7 @@
         <field name="removeInventoryItems" position="4" title="${uiLabelMap.ProductInventoryItems}">
             <check all-checked="false" />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonDuplicate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonDuplicate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -565,7 +565,7 @@
         <field name="duplicateLocations" position="4" title="${uiLabelMap.ProductLocations}">
             <check all-checked="true" />
         </field>
-        <field name="commonGoAction" title="${uiLabelMap.CommonGo}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="commonGoAction" title="${uiLabelMap.CommonGo}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -638,7 +638,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -703,7 +703,7 @@
                 <parameter param-name="fromDate" />
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductPrice" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="productPriceTypeId" />
@@ -776,7 +776,7 @@
             <date-time type="date" />
         </field>
         <field name="sequenceNum" position="2"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -799,10 +799,10 @@
             <date-time type="date" />
         </field>
         <field name="sequenceNum"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductPaymentMethodType" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="productPricePurposeId" />
@@ -836,7 +836,7 @@
         <field name="comments">
             <textarea />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -868,10 +868,10 @@
         <field name="comments" title="${uiLabelMap.ProductComments}">
             <textarea />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="removeProductFromCategory" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="productCategoryId" />
@@ -927,7 +927,7 @@
                 <parameter param-name="contentId" />
             </hyperlink>
         </field>
-        <field name="removeContent" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="removeContent" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="removeContentFromProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="contentId" />
@@ -974,7 +974,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -992,7 +992,7 @@
             </drop-down>
         </field>
         <!-- <field name="description"><text size="40"/></field> -->
-        <field name="submitAction" title="${uiLabelMap.ProductPrepareCreate}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.ProductPrepareCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -1017,10 +1017,10 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="removeContentFromProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" from-field="productContent.productId" />
                 <parameter param-name="contentId" from-field="productContent.contentId" />
@@ -1134,10 +1134,10 @@
         <field name="productContentTypeId">
             <hidden />
         </field>
-        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
-        <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -1183,10 +1183,10 @@
         <field name="productContentTypeId">
             <hidden />
         </field>
-        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
-        <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -1215,10 +1215,10 @@
         <field name="productContentTypeId">
             <hidden />
         </field>
-        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
-        <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -1276,10 +1276,10 @@
         <field name="productContentTypeId">
             <display-entity entity-name="ProductContentType" also-hidden="true" />
         </field>
-        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
-        <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -1327,10 +1327,10 @@
         <field name="productId">
             <hidden />
         </field>
-        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
-        <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -1352,7 +1352,7 @@
         <field name="productContentTypeId">
             <hidden />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -1489,7 +1489,7 @@
                 <parameter param-name="availableFromDate" />
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="removeSupplierProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="partyId" />
@@ -1542,7 +1542,7 @@
             <textarea/>
         </field>
         
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -1588,10 +1588,10 @@
             <textarea/>
         </field>
         
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductConfig" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="configItemId" />
@@ -1619,7 +1619,7 @@
             <text size="4" maxlength="10" />
         </field>
 
-        <field name="submitAction" title="${uiLabelMap.ProductUpdateProduct}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.ProductUpdateProduct}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -1653,7 +1653,7 @@
                 <parameter param-name="fromDate" />
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}" separate-column="false">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}" separate-column="false">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="removeFixedAssetProduct">
                 <parameter param-name="fixedAssetId" />
                 <parameter param-name="productId" />
@@ -1705,7 +1705,7 @@
             </drop-down>
         </field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -1765,7 +1765,7 @@
             </drop-down>
         </field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -1803,7 +1803,7 @@
         <field name="reason" position="2">
             <textarea />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -1836,7 +1836,7 @@
         <field name="reason" position="2">
             <textarea />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -1878,7 +1878,7 @@
                 <parameter param-name="fromDate" />
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="removeAgreementItem" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="productIdTo" />
@@ -2003,7 +2003,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_find}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2035,7 +2035,7 @@
         <field name="costComponentTypeId">
             <display-entity entity-name="CostComponentType" />
         </field>
-        <field name="deleteAction" entry-name="costComponentId" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" entry-name="costComponentId" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteCostComponent" also-hidden="false" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productId" />
                 <parameter param-name="costComponentId" />
@@ -2065,7 +2065,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThru}">
             <display />
         </field>
-        <field name="deleteAction" entry-name="productId" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" entry-name="productId" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductCostComponentCalc" also-hidden="false" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productId" />
                 <parameter param-name="costComponentTypeId" />
@@ -2094,7 +2094,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}">
             <date-time />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2144,7 +2144,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2168,7 +2168,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2251,7 +2251,7 @@
         <field name="repeatCount" position="2">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2298,13 +2298,13 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductMaint" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="productMaintSeqId" />
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2334,7 +2334,7 @@
         <field name="meterName" title="${uiLabelMap.CommonName}">
             <text size="20" />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2363,13 +2363,13 @@
         <field name="meterName" title="${uiLabelMap.CommonName}">
             <text size="20" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductMeter" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="productMeterTypeId" />
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2430,7 +2430,7 @@
         <field name="description">
             <textarea/>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductGeo" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="geoId" />
@@ -2463,7 +2463,7 @@
             <display-entity entity-name="ProductFeatureIactnType" />
         </field>
 
-        <field name="removeAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="removeAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="removeFeatureIactn" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productFeatureId" />
                 <parameter param-name="productFeatureIdTo" />
@@ -2502,7 +2502,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2523,7 +2523,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2541,7 +2541,7 @@
         <field name="productFeatureId">
             <display-entity entity-name="ProductFeature" description="${description} [${productFeatureId}]" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductFeatureApplAttr" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="productFeatureId" />
@@ -2600,10 +2600,10 @@
             </drop-down>
         </field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductSubscriptionResource" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="subscriptionResourceId" />
@@ -2650,7 +2650,7 @@
             </drop-down>
         </field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2788,7 +2788,7 @@
         <field name="estimatedCost" position="2">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2835,10 +2835,10 @@
         <field name="estimatedCost">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="[${uiLabelMap.CommonDelete}]" target="removeWorkEffortGoodStandard">
                 <parameter param-name="productId" />
                 <parameter param-name="workEffortId" />
@@ -2860,10 +2860,10 @@
         <field name="lastInventoryCount">
             <display />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductFacility" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="facilityId" />
@@ -2936,7 +2936,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductFacilityLocation" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="facilityId" />
@@ -3004,7 +3004,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteGoodIdentification" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="goodIdentificationTypeId" />
@@ -3080,7 +3080,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductKeyword" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="keyword" />
@@ -3125,7 +3125,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductAttribute" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="attrName" />
@@ -3159,7 +3159,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" title="" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title="" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductGlAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="organizationPartyId" />
@@ -3208,7 +3208,7 @@
             <display />
         </field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <submit button-type="button" />
         </field>
     </form>
@@ -3226,7 +3226,7 @@
                 <entity-options entity-name="ProductStoreGroup" key-field-name="productStoreGroupId" description="${description}" />
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -3314,10 +3314,10 @@
         <field name="thruDate" title="${uiLabelMap.CommonThru}" red-when="before-now">
             <date-time type="date" />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="removePartyFromProduct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="partyId" />
@@ -3351,7 +3351,7 @@
         <field name="comments">
             <textarea />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -3387,7 +3387,7 @@
                 <parameter param-name="groupOrderId" />
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductGroupOrder" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productId" />
                 <parameter param-name="groupOrderId" />
@@ -3415,7 +3415,7 @@
         <field name="reqOrderQty" title="${uiLabelMap.CommonQuantity}" required-field="true" position="2" >
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}">
             <submit button-type="button" />
         </field>
     </form>
@@ -3440,7 +3440,7 @@
         <field name="reqOrderQty" title="${uiLabelMap.CommonQuantity}" required-field="true" position="2" >
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>

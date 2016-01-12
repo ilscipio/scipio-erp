@@ -80,7 +80,7 @@ under the License.
         </actions>
         <auto-fields-service service-name="updateGoogleBaseConfig"/>
         <field name="productStoreId"><display/></field>
-        <field name="deleteGoogleBaseConfig" title="" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteGoogleBaseConfig" title="" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteGoogleBaseConfig" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productStoreId"/>
             </hyperlink>

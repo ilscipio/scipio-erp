@@ -119,30 +119,30 @@ under the License.
                     <decorator-section name="body">
                         <container>
                             <label>${uiLabelMap.CommonView}</label>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="${styles.link_action_run} ${styles.action_view}">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="${styles.link_action_sys} ${styles.action_view}">
                                 <parameter param-name="productStoreId"/>
                             </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonUserEnteredOnly}" style="${styles.link_action_run} ${styles.action_view}">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonUserEnteredOnly}" style="${styles.link_action_sys} ${styles.action_view}">
                                 <parameter param-name="productStoreId"/>
                                 <parameter param-name="userEntered" value="Y"/>
                             </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.ProductPromotionImported}" style="${styles.link_action_run} ${styles.action_view}">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.ProductPromotionImported}" style="${styles.link_action_sys} ${styles.action_view}">
                                 <parameter param-name="productStoreId"/>
                                 <parameter param-name="userEntered" value="N"/>
                             </link>
                         </container>
                         <container>
                             <label>${uiLabelMap.CommonView} ${uiLabelMap.CommonActiveInactive}</label>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="${styles.link_action_run} ${styles.action_view}">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonAll}" style="${styles.link_action_sys} ${styles.action_view}">
                                 <parameter param-name="productStoreId"/>
                                 <parameter param-name="activeOnly" value="N"/>
                             </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonUserEnteredOnly}" style="${styles.link_action_run} ${styles.action_view}">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.CommonUserEnteredOnly}" style="${styles.link_action_sys} ${styles.action_view}">
                                 <parameter param-name="productStoreId"/>
                                 <parameter param-name="activeOnly" value="N"/>
                                 <parameter param-name="userEntered" value="Y"/>
                             </link>
-                            <link target="EditProductStorePromos" text="${uiLabelMap.ProductPromotionImported}" style="${styles.link_action_run} ${styles.action_view}">
+                            <link target="EditProductStorePromos" text="${uiLabelMap.ProductPromotionImported}" style="${styles.link_action_sys} ${styles.action_view}">
                                 <parameter param-name="productStoreId"/>
                                 <parameter param-name="activeOnly" value="N"/>
                                 <parameter param-name="userEntered" value="N"/>

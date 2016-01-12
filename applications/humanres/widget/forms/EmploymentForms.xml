@@ -45,7 +45,7 @@
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListEmploymentsPerson" type="list" paginate-target="FindEmployments" default-entity-name="EmploymentAndPerson" list-name="listIt" separate-columns="true"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -142,8 +142,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" use-when="employment==null" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
-        <field name="submitAction" use-when="employment!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="employment==null" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="employment!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListPayHistories" type="list" target="updatePayHistory" title="" paginate-target="findPayHistories"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -176,7 +176,7 @@
             </drop-down>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deletePayHistory" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="roleTypeIdFrom"/>
                 <parameter param-name="roleTypeIdTo"/>
@@ -207,8 +207,8 @@
         </field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deletePartyBenefit" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="benefitTypeId"/>
                 <parameter param-name="roleTypeIdFrom"/>
@@ -263,7 +263,7 @@
         <field name="periodTypeId"><display-entity entity-name="PeriodType" description="${description}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deletePayrollPreference" description="${uiLabelMap.CommonDelete}" also-hidden="true">
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>
@@ -271,7 +271,7 @@
             </hyperlink>
         </field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="AddPayrollPreference" type="single" target="createPayrollPreference"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -301,7 +301,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListPerformanceNotes" type="list" target="updatePerformanceNote" title="" paginate-target="findPerformanceNotes"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -328,7 +328,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListUnemploymentClaims" type="multi" target="updateUnemploymentClaim?unemploymentClaimId=${unemploymentClaimId}&amp;roleTypeIdFrom=${roleTypeIdFrom}&amp;roleTypeIdTo=${roleTypeIdTo}&amp;partyIdFrom=${partyIdFrom}&amp;partyIdTo=${partyIdTo}&amp;fromDate=${fromDate}" paginate-target="FindUnemploymentClaim"
          odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -360,8 +360,8 @@
             </drop-down>
         </field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteUnemploymentClaim" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="unemploymentClaimId"/>
                 <parameter param-name="roleTypeIdFrom"/>
@@ -389,7 +389,7 @@
         <field name="partyIdFrom"><hidden/></field>
         <field name="partyIdTo"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
     </form>
     <form name="ListAgreementEmploymentAppls" type="multi" title="" target="updateAgreementEmploymentAppl?agreementId=${agreementId}&amp;partyIdTo=${partyIdTo}&amp;partyIdFrom=${partyIdFrom}&amp;roleTypeIdFrom=${roleTypeIdFrom}&amp;roleTypeIdTo=${roleTypeIdTo}&amp;fromDate=${fromDate}&amp;agreementItemSeqId=${agreementItemSeqId}" paginate-target="EditAgreementEmploymentAppls"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -405,7 +405,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="agreementDate"><date-time/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteAgreementEmploymentAppl" also-hidden="false">
                 <parameter param-name="agreementId"/>
                 <parameter param-name="partyIdTo"/>
@@ -417,7 +417,7 @@
             </hyperlink>
         </field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><hidden value="Y"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="AddAgreementEmploymentAppl" type="single" target="createAgreementEmploymentAppl" default-map-name="agreementEmploymentAppl"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -443,6 +443,6 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
         <field name="agreementDate"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_run} ${styles.action_create}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="text-link"/></field>
     </form>
 </forms>

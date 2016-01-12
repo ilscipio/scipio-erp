@@ -43,7 +43,7 @@ under the License.
         <field position="2" name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
         <field position="2" name="referenceNumber" ><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListInvoices" type="list" separate-columns="true" title="Invoice List" list-name="listIt" target="" default-entity-name="Invoice" paginate-target="findInvoices"
@@ -251,7 +251,7 @@ under the License.
             </drop-down>
         </field>
         <field position="2" name="partyIdTo" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}" parameter-name="partyId" required-field="true"><lookup target-form-name="LookupPartyName"/></field>
-        <field position="1" name="createAction" widget-style="${styles.link_action_run} ${styles.action_create}" title="${uiLabelMap.CommonCreate}">
+        <field position="1" name="createAction" widget-style="${styles.link_action_sys} ${styles.action_create}" title="${uiLabelMap.CommonCreate}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -276,7 +276,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field position="1" name="createAction" widget-style="${styles.link_action_run} ${styles.action_create}" title="${uiLabelMap.CommonCreate}">
+        <field position="1" name="createAction" widget-style="${styles.link_action_sys} ${styles.action_create}" title="${uiLabelMap.CommonCreate}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -337,7 +337,7 @@ under the License.
         <field position="2" name="invoiceMessage"><text size="100"/></field>
         <field position="2" name="referenceNumber"><text/></field>
         <!--field position="2" name="invoiceAmount" use-when="invoiceId!=null"><display/></field-->
-        <field position="1" name="updateAction" widget-style="${styles.link_action_run} ${styles.action_update}" use-when="invoice!=null&amp;&amp;invoice.getString(&quot;statusId&quot;).equals(&quot;INVOICE_IN_PROCESS&quot;)">
+        <field position="1" name="updateAction" widget-style="${styles.link_action_sys} ${styles.action_update}" use-when="invoice!=null&amp;&amp;invoice.getString(&quot;statusId&quot;).equals(&quot;INVOICE_IN_PROCESS&quot;)">
             <submit button-type="button"/>
         </field>
     </form>
@@ -368,8 +368,8 @@ under the License.
        </field>
        <field name="amount" title="${uiLabelMap.AccountingUnitPrice}"><text size="10"/></field>
        <field name="total" widget-area-style="amount"><display type="currency" currency="${invoice.currencyUomId}"/></field>  <!-- this should not look like something you can modify, hence display -->
-       <field name="updateAction" id-name="updateInvoiceItem" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}" ><submit button-type="text-link"/></field>
-       <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+       <field name="updateAction" id-name="updateInvoiceItem" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}" ><submit button-type="text-link"/></field>
+       <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceItem">
                 <parameter param-name="invoiceId"/>
                 <parameter param-name="invoiceItemSeqId"/>
@@ -416,10 +416,10 @@ under the License.
             <option key="N" description="${uiLabelMap.CommonNo}"/>
         </drop-down>
         </field>
-        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}" use-when="invoiceItem==null">
+        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}" use-when="invoiceItem==null">
             <submit button-type="button"/>
         </field>
-        <field name="updateAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_run} ${styles.action_create}" use-when="invoiceItem!=null">
+        <field name="updateAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}" use-when="invoiceItem!=null">
             <submit button-type="button"/>
         </field>
     </form>
@@ -453,8 +453,8 @@ under the License.
         <field name="paymentId" title="${uiLabelMap.CommonPayment}"><lookup target-form-name="LookupPayment"/></field>
         <field name="billingAccountId"><hidden/></field>
         <field name="amountToApply"><text size="10" disabled="true"/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_run} ${styles.action_update}"><submit button-type="text-link"/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}" use-when="paymentApplicationId!=null">
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}" use-when="paymentApplicationId!=null">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeInvoiceApplication">
                 <parameter param-name="paymentApplicationId"/>
                 <parameter param-name="invoiceId"/>
@@ -470,7 +470,7 @@ under the License.
         <field name="paymentId" title="${uiLabelMap.CommonPayment}"><lookup target-form-name="LookupPayment"/></field>
         <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
         <field name="invoiceProcessing" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;Y&quot;)"><check/></field>
-        <field name="applyAction"  title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="applyAction"  title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -487,7 +487,7 @@ under the License.
         <field name="effectiveDate"><display type="date"/></field>
         <field name="amountApplied" parameter-name="dummy"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="amountToApply" parameter-name="amountApplied"><text size="10"/></field>
-        <field name="applyAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="applyAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -512,7 +512,7 @@ under the License.
         </field>
         <field name="percentage" widget-area-style="amount" title-area-style="align-right"><display/></field>
         <field name="datetimePerformed"><display/></field>
-        <field name="removeAction" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="removeAction" widget-style="${styles.link_action_sys} ${styles.action_remove}">
            <hyperlink title="${uiLabelMap.CommonRemove}" description="${uiLabelMap.CommonRemove}" target="removeInvoiceRole">
                 <parameter param-name="invoiceId"/>
                 <parameter param-name="partyId"/>
@@ -535,7 +535,7 @@ under the License.
         </field>
         <field name="percentage"><text/></field>
         <field name="datetimePerformed" position="2"><date-time/></field>
-        <field name="submitAction" widget-style="${styles.link_action_run} ${styles.action_create}" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_create}" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
     </form>
     
     <form name="SendPerEmail" type="single" target="executeSendPerEmail" title=""
@@ -557,7 +557,7 @@ under the License.
         <field name="subject"><text default-value="Please find attached invoice."/></field>
         <field name="otherCurrency" entry-name="parameters.other" parameter-name="other"><check/></field>
         <field name="bodyText"><textarea/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_run} ${styles.action_transfer}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_transfer}"><submit button-type="button"/></field>
     </form>
     
     <form name="EditTimeEntries" type="list" list-name="timeEntries"
@@ -566,7 +566,7 @@ under the License.
 
         <field name="invoiceId"><hidden/></field>
 
-        <field name="deleteAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_run} ${styles.action_remove}">
+        <field name="deleteAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="unlinkInvoiceFromTimeEntry" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="timeEntryId"/>
                 <parameter param-name="invoiceId"/>

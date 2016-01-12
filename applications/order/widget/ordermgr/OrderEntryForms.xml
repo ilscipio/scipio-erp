@@ -25,7 +25,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.PartySupplier}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}"><lookup target-form-name="LookupProduct"/></field>
         <field name="requirementByDate"><date-find type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="RequirementsList" type="multi" use-row-submit="true" target="addRequirementsToCart" title="" list-name="requirementsForSupplier"
         default-title-style="tableheadtext"
@@ -50,7 +50,7 @@ under the License.
         <field name="requiredByDate"><display/></field>
         <field name="quantity"><text/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" widget-style="${styles.link_action_run} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="FindQuotes" target="FindQuoteForCart" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -70,7 +70,7 @@ under the License.
         <field name="validFromDate"><hidden/></field>
         <field name="validThruDate"><hidden/></field>
         <field name="description"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_run} ${styles.action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -111,12 +111,12 @@ under the License.
             <display-entity entity-name="ShoppingListType"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>
-        <field name="addFromListAction" title=" " widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="addFromListAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_create}">
             <hyperlink target="addFromShoppingList" description="${uiLabelMap.OrderToAddSelectedItemsToShoppingList}" also-hidden="false">
                 <parameter param-name="shoppingListId"/>
             </hyperlink>
         </field>
-        <field name="addAllFromList" title=" " widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="addAllFromList" title=" " widget-style="${styles.link_action_sys} ${styles.action_create}">
             <hyperlink target="addAllFromShoppingList" description="${uiLabelMap.OrderQuickAdd}" also-hidden="false">
                 <parameter param-name="shoppingListId"/>
             </hyperlink>
@@ -128,7 +128,7 @@ under the License.
         <field name="productId" title="${uiLabelMap.ProductProduct}">
             <display-entity entity-name="Product" description="${productId} - ${description}"/>
         </field>
-        <field name="addToCart" title=" " widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="addToCart" title=" " widget-style="${styles.link_action_sys} ${styles.action_create}">
             <hyperlink target="additem/editShoppingList" description="${uiLabelMap.CommonAdd} ${quantity} ${uiLabelMap.OrderAddQntToOrder}" also-hidden="false">
                 <parameter param-name="shoppingListId"/>
                 <parameter param-name="shoppingListItemSeqId"/>
@@ -139,7 +139,7 @@ under the License.
         </field>
     </form>
     <form name="AddFromShoppingListAll" type="single" target="">
-        <field name="addAllFromList" title=" " widget-style="${styles.link_action_run} ${styles.action_create}">
+        <field name="addAllFromList" title=" " widget-style="${styles.link_action_sys} ${styles.action_create}">
             <hyperlink target="addAllFromShoppingList" description="${uiLabelMap.OrderQuickAdd}" also-hidden="false">
                 <parameter param-name="shoppingListId"/>
             </hyperlink>
@@ -175,7 +175,7 @@ under the License.
         <field name="itemDesiredDeliveryDate" title="${uiLabelMap.OrderDesiredDeliveryDate}">
             <date-time/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.OrderAddToOrder}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.OrderAddToOrder}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit/>
         </field>
     </form>
@@ -200,7 +200,7 @@ under the License.
         <field name="itemDesiredDeliveryDate" title="${uiLabelMap.OrderDesiredDeliveryDate}">
             <date-time/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.OrderAddToOrder}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.OrderAddToOrder}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit/>
         </field>
     </form>
@@ -220,7 +220,7 @@ under the License.
         <field name="itemDesiredDeliveryDate" title="${uiLabelMap.OrderDesiredDeliveryDate}">
             <date-time/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.OrderAddToOrder}" widget-style="${styles.link_action_run} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.OrderAddToOrder}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit/>
         </field>
     </form>

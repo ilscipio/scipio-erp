@@ -96,7 +96,7 @@ under the License.
                                             <link target="/ecommerce/control/product" url-mode="inter-app" text="${uiLabelMap.ProductProductPage}" style="${styles.link_nav} ${styles.action_view}">
                                                 <parameter param-name="product_id" from-field="productId"/>
                                             </link>
-                                            <link target="ProductBarCode.pdf" target-window="_blank" text="${uiLabelMap.ProductBarcode}" style="${styles.link_action_run} ${styles.action_export}">
+                                            <link target="ProductBarCode.pdf" target-window="_blank" text="${uiLabelMap.ProductBarcode}" style="${styles.link_action_sys} ${styles.action_export}">
                                                 <parameter param-name="productId"/>
                                                 <parameter param-name="productName"/>
                                             </link>

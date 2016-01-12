@@ -456,6 +456,7 @@
     <#-- tiles-type-based args and styles
          as always, default is also used for individual value fallbacks when missing from specific types. 
          NOTE: currently most of these values are macro args, which may not be straight stylenames (they get mapped to individual styles further below) 
+            see @tile macro interface.
          DEV NOTE: the bg colors may seem like overkill, but they avoid redundancy in the CSS maybe? whatever, more configurable this way -->
     "tile_default_class" : "",  
     "tile_default_size" : "normal",

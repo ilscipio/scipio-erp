@@ -99,6 +99,7 @@ public class MacroScreenRenderer implements ScreenStringRenderer {
      * 2) the macros will not actually receive the REAL current context received by the java methods - that context
      *    may be something other than the global MapStack context. we simply ignore this for now
      *    because it is rare and probably not a problem.
+     *    WARN: it could still be a problem in complex rendering cases.
      * <p>   
      * TODO?: The real solution to all of this is to modify all MacroXxxRenderer methods to pass context
      * to macro calls. However it's major change and may not even work with the current Freemarker calls used.

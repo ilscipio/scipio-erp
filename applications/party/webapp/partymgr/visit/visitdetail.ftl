@@ -78,20 +78,9 @@ under the License.
       </@table>
 </@section>
 <@section title="${uiLabelMap.PartyHitTracker}">
-
-  <#macro paginateVisit>
-    <#assign url><@ofbizUrl>visitdetail</@ofbizUrl></#assign>
+  <#if serverHits?has_content>
     <#assign paramStr = addParamsToStr("", {"visitId": visitId!})>
-    <@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=listSize paramStr=paramStr/>   
-  </#macro> 
-   
-      <#assign paginated = false>
-      <#if serverHits?has_content>
-        <#if (0 < listSize)>
-          <@paginateVisit />
-          <#assign paginated = true>
-        </#if>
-      </#if>
+    <@paginate mode="content" url=makeOfbizUrl("visitdetail") viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paramStr=paramStr>   
       <@table type="data-list" class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
        <@thead>
         <@tr class="header-row">
@@ -104,7 +93,6 @@ under the License.
         </@tr>
         </@thead>
         <@tbody>
-        <#if serverHits?has_content>
         <#list serverHits[lowIndex..highIndex-1] as hit>
           <#assign serverHitType = hit.getRelatedOne("ServerHitType", false)!>
           <@tr>
@@ -125,16 +113,12 @@ under the License.
             </@td>
           </@tr>
         </#list>
-        <#else>
-          <@tr type="meta">
-            <@td colspan="6"><@resultMsg>${uiLabelMap.PartyNoServerHitsFound}</@resultMsg></@td>
-          </@tr>
-        </#if>
         </@tbody>
       </@table>
-      <#if paginated>
-        <@paginateVisit />
-      </#if>
+    </@paginate>
+  <#else>
+    <@resultMsg>${uiLabelMap.PartyNoServerHitsFound}</@resultMsg>
+  </#if>
 </@section>
 
 <#--

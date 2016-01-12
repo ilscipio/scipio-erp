@@ -35,20 +35,8 @@ under the License.
 <@section title="${sectionTitleParty}&nbsp;${uiLabelMap.PartyVisitListing}" menuContent=menuContent>
   <#if visitList?has_content>
     
-    <#assign paginated = false>
-    <#if (visitSize > 0)>
-        <#assign url><@ofbizUrl>showvisits</@ofbizUrl></#assign>
-        <#assign paramStr = addParamsToStr("", {"sort": sort!, "partyId": partyId!, "showAll": showAll!}, "&amp;", false)>
-        <#-- forcePost required because search done from service event with https="true" -->
-        <#macro paginateVisits>
-          <@paginate url=url viewSize=viewSize viewIndex=viewIndex listSize=visitSize altParam=false paramStr=paramStr viewIndexFirst=1 />
-        </#macro>
-        <#assign paginated = true>
-    </#if>
-    
-    <#if paginated>
-      <@paginateVisits />
-    </#if>
+    <#assign paramStr = addParamsToStr("", {"sort": sort!, "partyId": partyId!, "showAll": showAll!}, "&amp;", false)>
+    <@paginate mode="content" url=makeOfbizUrl("showvisits") viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=visitSize!0 altParam=false paramStr=paramStr viewIndexFirst=1>
     
       <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
        <@thead>
@@ -80,10 +68,7 @@ under the License.
         </#list>
         </@tbody>
       </@table>
-    
-    <#if paginated>
-      <@paginateVisits />
-    </#if>
+    </@paginate>
     
   <#else>
     <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>

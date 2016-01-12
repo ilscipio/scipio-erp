@@ -157,7 +157,7 @@ under the License.
       
   <#if partyList?has_content>
     <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"showAll": showAll!"", "hideFields": hideFields!"", "sortField" : sortField!""}, "&amp;", false)>
-    <@paginate mode="content" url=makeOfbizUrl("findparty") viewSize=viewSize viewIndex=viewIndex listSize=partyListSize!0 altParam=false paramStr=paramStr viewIndexFirst=0>
+    <@paginate mode="content" url=makeOfbizUrl("findparty") viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=partyListSize!0 altParam=false paramStr=paramStr viewIndexFirst=0>
     
     <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
      <@thead>

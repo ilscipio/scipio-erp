@@ -295,7 +295,7 @@ document.lookuporder.orderId.focus();
 
   <#if lookupErrorMessage?has_content>
     <@alert type="alert">
-        ${lookupErrorMessage}
+      ${lookupErrorMessage}
     </@alert>
   </#if>    
 

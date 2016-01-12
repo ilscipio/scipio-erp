@@ -133,18 +133,8 @@ under the License.
  
 
 <#if hasPermission>
-  <@section title="${uiLabelMap.OrderOrderList}" id="findOrderList">
-        <#assign url><@ofbizUrl>orderlist</@ofbizUrl></#assign>
-        
-        <#macro paginateOrders>
-          <@paginate url=url viewSize=state.getViewSize() viewIndex=state.getViewIndex() listSize=state.getSize() altParam=true/>
-        </#macro>
-        <#assign paginated = true>
-        
-        <#if paginated>
-          <@paginateOrders />
-        </#if>
-        
+  <@section title="${uiLabelMap.OrderOrderList}" id="findOrderList">        
+      <@paginate mode="content" url=makeOfbizUrl("orderlist") viewSize=state.getViewSize() viewIndex=state.getViewIndex() listSize=state.getSize() altParam=true>
         <@table type="data-list" autoAltRows=true cellspacing="0">
           <@thead>
           <@tr>
@@ -229,11 +219,7 @@ under the License.
             <@tr type="meta"><@td colspan="9"><@resultMsg>${uiLabelMap.OrderNoOrderFound}</@resultMsg></@td></@tr>
           </#if>
         </@table>
-        
-        <#if paginated>
-          <@paginateOrders />
-        </#if>
-        
+      </@paginate>
   </@section>
 <#else>
   <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>

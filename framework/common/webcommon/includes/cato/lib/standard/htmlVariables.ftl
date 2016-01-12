@@ -446,6 +446,8 @@
     "pagination_item_next" : "nav-next",
     "pagination_item_active" : "current",
     "pagination_item_disabled" : "unavailable",
+    "pagination_layout" : "bottom",
+    "pagination_noresultsmode" : "hide",
 
   <#-- Lists -->
     "list_inline" : "inline-list",

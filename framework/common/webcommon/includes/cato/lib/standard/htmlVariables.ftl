@@ -448,7 +448,11 @@
     "pagination_item_disabled" : "unavailable",
     "pagination_layout" : "bottom",
     "pagination_noresultsmode" : "hide",
-
+    "pagination_showcount" : true,           <#-- show count by default -->
+    "pagination_alwaysshowcount" : true,     <#-- show count even if no pagination controls -->
+    "pagination_countmsglabel" : "CommonDisplayingShort",     <#-- default count message property; must be in CommonUiLabels.xml -->
+    "pagination_lowcountmsglabel" : "CommonDisplayingShort",  <#-- default count message property for low counts; must be in CommonUiLabels.xml -->
+    
   <#-- Lists -->
     "list_inline" : "inline-list",
 

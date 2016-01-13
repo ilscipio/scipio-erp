@@ -18,7 +18,7 @@ under the License.
 -->
         <#if (arraySize > 0)>
             <#assign commonUrl="FindGeneric?${curFindString}&amp;searchOptions_collapsed=${(parameters.searchOptions_collapsed)?default(\"false\")}&amp;"/>
-            <@htmlTemplate.nextPrev commonUrl=commonUrl listSize=arraySize viewSize=viewSize viewIndex=viewIndex highIndex=highIndex commonDisplaying=commonDisplaying/>
+            <@htmlTemplate.nextPrev position="top" commonUrl=commonUrl listSize=arraySize viewSize=viewSize viewIndex=viewIndex highIndex=highIndex commonDisplaying=commonDisplaying/>
         </#if>
         <#if resultPartialList?has_content>
           <@table type="data-list" autoAltRows=true cellspacing="0" scrollable=true fixedColumnsLeft=1 fixedColumnsRight=1> <#-- orig: class="basic-table responsive" -->
@@ -49,9 +49,10 @@ under the License.
                 </#list>
             </#if>
         </@table>
-            <#else>
+      <#else>
          <@panel><@resultMsg>${uiLabelMap.WebtoolsNoEntityRecordsFound} ${entityName}.</@resultMsg></@panel>
-            </#if>
+      </#if>
+    
         <#if (arraySize > 0)>
-            <@htmlTemplate.nextPrev commonUrl=commonUrl listSize=arraySize viewSize=viewSize viewIndex=viewIndex  highIndex=highIndex commonDisplaying=commonDisplaying />
+            <@htmlTemplate.nextPrev position="bottom" commonUrl=commonUrl listSize=arraySize viewSize=viewSize viewIndex=viewIndex highIndex=highIndex commonDisplaying=commonDisplaying />
         </#if>

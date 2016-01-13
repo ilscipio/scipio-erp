@@ -88,21 +88,16 @@ Map<Date, Map<String, BigDecimal>> processResults() {
 			}
 		}
 		auxMap.put("income", balanceTotalCredit);
-	
-		Debug.log("auxMap ===========> " + auxMap);
+
 		totalMap.put(dateIntervals["dateFormatter"].format(dateIntervals["dateBegin"]), auxMap);
 		dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, dateIntervals["dateEnd"] + 1, context.locale, context.timeZone);
 	}
-	
-	
-	Debug.log("totalMap ==========> " + totalMap);
+//	Debug.log("totalMap ==========> " + totalMap);
 	return totalMap;
 }
 
 Map cacheMap = [:];
 if (contentCache.get(cacheId)==null) {
-//	GenericValue userLogin = context.get("userLogin");	
-	// Lookup results
 	cacheMap = processResults();	
 	contentCache.put(cacheId, cacheMap);
 	Debug.log("adding totalMap to cache");

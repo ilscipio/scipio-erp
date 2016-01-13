@@ -75,7 +75,7 @@ under the License.
                 <set field="chartType" value="bar"/>
                 <set field="chartValue" value="total"/>
                 <set field="chartData" value="month"/>
-                <set field="chartLibrary" value="foundation"/>
+                <set field="chartLibrary" value="chart"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
                 <set field="title" value="Gross Sales (per month)"/>
             </actions>

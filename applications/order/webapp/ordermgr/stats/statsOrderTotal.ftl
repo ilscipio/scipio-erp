@@ -27,9 +27,9 @@ under the License.
 
 <#if title?has_content><@heading relLevel=1>${title!}</@heading></#if>
 <#if ((currData.isEmpty())!true) == false>
-  <@chart type=chartType library=library>
+  <@chart type=chartType library=library datasets=2>
     <#list currData.keySet() as key>
-      <#if chartType=="line">
+      <#if chartType=="bar" || chartType=="line">
         <@chartdata value="${(currData[key][chartValue])!0}" value2="${(currData[key].pos)!0}" title="${key}"/>
       <#else>
         <@chartdata value="${(currData[key][chartValue])!0}" title="${key}"/>

@@ -1126,7 +1126,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 <#-- @chartdata main markup - theme override -->
 <#macro chartdata_markup title="" value="" value2="" chartId="" chartType="" chartLibrary="" origArgs={} passArgs={} catchArgs...>
   <#if chartLibrary=="foundation">
-    <li<#if value2?has_content> data-y="${value!}" data-x="${value2!}"<#else> data-value="${value!}"</#if>>${title!}</li>
+    <#-- FIXME: apparently this doesn't work well when value2 has content, data-x & data-y don't seem to be supported by this lib -->
+    <#-- <li<#if value2?has_content> data-y="${value!}" data-x="${value2!}"<#else> data-value="${value!}"</#if>>${title!}</li> -->
+    <li data-value="${value!}">${title!}</li>
   <#else>
     <#if chartType="line" || chartType="bar">
       ${chartId!}.addData([<#if value?has_content>${value!}</#if><#if value2?has_content> ,${value2}</#if>]<#if title?has_content>,"${title!}"</#if>);      

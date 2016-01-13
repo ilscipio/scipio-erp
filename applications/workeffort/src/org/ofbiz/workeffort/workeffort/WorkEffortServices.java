@@ -91,7 +91,7 @@ public class WorkEffortServices {
 				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
 				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
 				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
-					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
 					conditionList.add(EntityCondition.makeCondition(
 							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
 							EntityOperator.AND,
@@ -131,7 +131,7 @@ public class WorkEffortServices {
 			conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
 			conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
 			if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
-				Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+				Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
 				conditionList.add(EntityCondition.makeCondition(
 						EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
 						EntityOperator.AND,
@@ -172,7 +172,7 @@ public class WorkEffortServices {
 				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
 				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
-					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
 					conditionList.add(EntityCondition.makeCondition(
 							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
 							EntityOperator.AND,
@@ -189,7 +189,7 @@ public class WorkEffortServices {
 				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_COMPLETED"));
 				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_CLOSED"));
 				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
-					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
 					conditionList.add(EntityCondition.makeCondition(
 							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
 							EntityOperator.AND,
@@ -235,7 +235,7 @@ public class WorkEffortServices {
 				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_ACCEPTED"));
 				conditionList.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
 				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
-					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
 					conditionList.add(EntityCondition.makeCondition(
 							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
 							EntityOperator.AND,
@@ -253,7 +253,7 @@ public class WorkEffortServices {
 				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_SCHEDULED"));
 				conditionList.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "PRUN_DOC_PRINTED"));
 				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
-					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
 					conditionList.add(EntityCondition.makeCondition(
 							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
 							EntityOperator.AND,
@@ -299,7 +299,7 @@ public class WorkEffortServices {
 				constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_NEEDS_ACTION"));
 				constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_SENT"));
 				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
-					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
 					constraints.add(EntityCondition.makeCondition(
 							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
 							EntityOperator.AND,
@@ -344,7 +344,7 @@ public class WorkEffortServices {
 				constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
 				constraints.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
 				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
-					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
 					constraints.add(EntityCondition.makeCondition(
 							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
 							EntityOperator.AND,
@@ -396,7 +396,7 @@ public class WorkEffortServices {
 				constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
 				constraints.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
 				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
-					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
 					constraints.add(EntityCondition.makeCondition(
 							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
 							EntityOperator.AND,
@@ -449,7 +449,7 @@ public class WorkEffortServices {
 				constraints.add(EntityCondition.makeCondition("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
 				constraints.add(EntityCondition.makeCondition("statusId", EntityOperator.NOT_EQUAL, "PRTYASGN_UNASSIGNED"));
 				if (UtilValidate.isNotEmpty(context.get("createdPeriod"))) {
-					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), locale, timeZone);
+					Map<String, Timestamp> createdPeriod = UtilDateTime.getPeriodInterval((String) context.get("createdPeriod"), null, locale, timeZone);
 					constraints.add(EntityCondition.makeCondition(
 							EntityCondition.makeCondition("createdDate", EntityOperator.GREATER_THAN_EQUAL_TO, createdPeriod.get("dateBegin")), 
 							EntityOperator.AND,

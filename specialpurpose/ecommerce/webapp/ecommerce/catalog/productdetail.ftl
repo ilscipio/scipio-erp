@@ -861,7 +861,7 @@ ${virtualVariantJavaScript!}
     </div>
     
     <#-- special cross/up-sell area using commonFeatureResultIds (from common feature product search) -->
-    <#if comsmonFeatureResultIds?has_content>
+    <#if commonFeatureResultIds?has_content>
         <@heading>${uiLabelMap.ProductSimilarProducts}</@heading>
     
         <div class="productsummary-container">

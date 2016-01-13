@@ -301,7 +301,7 @@
     other notes:  
       * every link style has a _long version for entries with long labels.
       * the cancel links are exceptions: they all have separate entries because often you might want a completely different button on them
-        (which you can't do with link_action_sys+action_cancel). they are not regular actions in and of themselves - they are anti-actions.
+        (which you can do with CSS but not as easily with link_action_sys+action_cancel). they are not regular actions in and of themselves - they are anti-actions.
       * action_view actions are often ambiguous and could be either link_nav or link_action_sys depending on UI functionality and perspective.
         * as a general rule, link_action_sys are for the "final" actions (like submit buttons), while link_nav are for links heading toward the action (or that open a page).
           however, for view action, sometimes the line is not clear and subjective or there is no distinction. should be judged based on context.

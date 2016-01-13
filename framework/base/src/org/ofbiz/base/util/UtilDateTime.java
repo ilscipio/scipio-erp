@@ -1232,35 +1232,84 @@ public class UtilDateTime {
 
     }
     
-    public static Map<String, Timestamp> getPeriodInterval(String period, Locale locale, TimeZone timezone) {
+    /**
+     * Cato: Returns a map with begin/end timestamp for a given period. Defaults to month.
+     * @param period
+     * @param fromDate
+     * @param locale
+     * @param timezone
+     * @return a map with two fixed keys, dateBegin & dateEnd, representing the beginning and the end of the given period
+     */
+    public static Map<String, Timestamp> getPeriodInterval(String period, Timestamp fromDate, Locale locale, TimeZone timezone) {
 		Map<String, Timestamp> result = FastMap.newInstance();
-		Timestamp now = UtilDateTime.nowTimestamp();
+		Timestamp date = (UtilValidate.isNotEmpty(fromDate)) ? fromDate : UtilDateTime.nowTimestamp();
 		switch (period) {
+		case "day":
+			result.put("dateBegin", UtilDateTime.getDayStart(date));
+			result.put("dateEnd", UtilDateTime.getDayEnd(date));
+			break;
 		case "week":
-			result.put("dateBegin", UtilDateTime.getWeekStart(now));
-			result.put("dateEnd", UtilDateTime.getWeekEnd(now));
+			result.put("dateBegin", UtilDateTime.getWeekStart(date));
+			result.put("dateEnd", UtilDateTime.getWeekEnd(date));
 			break;
 		case "month":
-			result.put("dateBegin", UtilDateTime.getMonthStart(now));
-			result.put("dateEnd", UtilDateTime.getMonthEnd(now, timezone, locale));
+			result.put("dateBegin", UtilDateTime.getMonthStart(date));
+			result.put("dateEnd", UtilDateTime.getMonthEnd(date, timezone, locale));
 			break;
-		case "trimester":
-			result.put("dateBegin", UtilDateTime.getMonthStart(now, 0, 3));
-			result.put("dateEnd", UtilDateTime.getMonthEnd(now, timezone, locale));
+		case "quarter":
+			result.put("dateBegin", UtilDateTime.getMonthStart(date, 0, 3));
+			result.put("dateEnd", UtilDateTime.getMonthEnd(date, timezone, locale));
 			break;
 		case "semester":
-			result.put("dateBegin", UtilDateTime.getMonthStart(now, 0, 6));
-			result.put("dateEnd", UtilDateTime.getMonthEnd(now, timezone, locale));
+			result.put("dateBegin", UtilDateTime.getMonthStart(date, 0, 6));
+			result.put("dateEnd", UtilDateTime.getMonthEnd(date, timezone, locale));
 			break;
 		case "year":
-			result.put("dateBegin", UtilDateTime.getYearStart(now));
-			result.put("dateEnd", UtilDateTime.getYearEnd(now, timezone, locale));
+			result.put("dateBegin", UtilDateTime.getYearStart(date));
+			result.put("dateEnd", UtilDateTime.getYearEnd(date, timezone, locale));
 			break;
 		default:
-			result.put("dateBegin", UtilDateTime.getMonthStart(now));
-			result.put("dateEnd", UtilDateTime.getMonthEnd(now, timezone, locale));
+			result.put("dateBegin", UtilDateTime.getMonthStart(date));
+			result.put("dateEnd", UtilDateTime.getMonthEnd(date, timezone, locale));
 			break;
 		}
 		return result;
 	}
+    
+    /**
+     * Cato: Enhanced version of getPeriodInterval that returns also a date formatter for a given period.
+     * @param period
+     * @param locale
+     * @param timezone
+     * @return a map with three fixed keys, dateBegin & dateEnd & dateFormatter, representing the beginning and the end of the given period 
+     * and the date formatter needed to display the date.
+     */
+    public static Map<String, Object> getPeriodIntervalAndFormatter(String period, Timestamp fromDate, Locale locale, TimeZone timezone) {
+    	Map<String, Object> result = FastMap.newInstance();
+    	result.putAll(getPeriodInterval(period, fromDate, locale, timezone));
+    	switch (period) {
+		case "day":
+			result.put("dateFormatter", new SimpleDateFormat("yyyy-MM-dd"));
+			break;
+		case "week":
+			result.put("dateFormatter", new SimpleDateFormat("yyyy-MM W"));
+			break;
+		case "month":
+			result.put("dateFormatter", new SimpleDateFormat("yyyy-MM"));
+			break;
+		case "quarter":
+			result.put("dateFormatter", new SimpleDateFormat("yyyy-MM"));
+			break;
+		case "semester":
+			result.put("dateFormatter", new SimpleDateFormat("yyyy-MM"));
+			break;
+		case "year":
+			result.put("dateFormatter", new SimpleDateFormat("yyyy"));
+			break;
+		default:
+			result.put("dateFormatter", new SimpleDateFormat("yyyy-MM"));
+			break;
+		}
+    	return result;
+    }    
 }

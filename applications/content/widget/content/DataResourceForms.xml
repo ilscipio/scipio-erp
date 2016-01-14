@@ -83,7 +83,7 @@ under the License.
         <field name="dataResourceId"><hidden/></field>
         <field name="dataResourceName" sort-field="true">
             <display-entity entity-name="DataResource" description="${dataResourceName}" key-field-name="dataResourceId">
-                <sub-hyperlink target="EditDataResource" description="[${dataResourceId}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="EditDataResource" description="[${dataResourceId}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="dataResourceId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -140,18 +140,18 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" widget-style="${styles.link_record_id}">
+        <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${dataResourceId}" target="javascript:set_value('${dataResourceId}')"/>
         </field>
         <field name="dataResourceName"><display/></field>
     </form>
     <form name="mruLookupDataResource" default-entity-name="DataResource" list-name="mruList" target="" title="" type="list" default-widget-style="display"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="contentId" widget-style="${styles.link_record_id}">
+        <field name="contentId" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${dataResourceId}" target="javascript:set_value('${dataResourceId}')"/>
         </field>
-        <field name="dataResourceName" widget-style="${styles.link_record_name}"><display/></field>
-        <field name="dataCategoryId" widget-style="${styles.link_record_id}"><display/></field>
+        <field name="dataResourceName" widget-style="${styles.link_nav_record_name}"><display/></field>
+        <field name="dataCategoryId" widget-style="${styles.link_nav_record_id}"><display/></field>
     </form>
     <form name="EditDataResource" target="updateDataResource" title="" type="single" default-map-name="currentValue"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -209,7 +209,7 @@ under the License.
             </drop-down>
         </field>
 
-        <field name="createAction" title="${uiLabelMap.CommonCreate}" use-when="currentValue==null" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="createAction" title="${uiLabelMap.CommonCreate}" use-when="currentValue==null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="currentValue!=null" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
@@ -226,7 +226,7 @@ under the License.
                 <order-by field-name="contentId"/>
             </entity-and>
         </actions>
-        <field name="contentId" widget-style="${styles.link_record_id}">
+        <field name="contentId" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" description="${contentId}" target="/EditContent">
                 <parameter param-name="contentId"/>
             </hyperlink>
@@ -288,7 +288,7 @@ under the License.
     <form name="AddDataResource" target="createDataResource" title="" type="single" extends="DataResourceMaster"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="objectInfo" title="${uiLabelMap.ContentUrl}"/>
         <field name="mode"><hidden value="CREATE"/></field>
     </form>
@@ -300,7 +300,7 @@ under the License.
             <display description="ELECTRONIC_TEXT" also-hidden="false"/>
         </field>
         <field name="textData" id-name="textData"><textarea rows="20" cols="120"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="AddDataResourceUrl" target="createDataResourceUrl" title="" type="single" extends="DataResourceMaster"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -310,7 +310,7 @@ under the License.
         <field name="dataResourceTypeIdDisplay" title="${uiLabelMap.CommonType}" field-name="dataResourceTypeId">
             <display description="URL_RESOURCE" also-hidden="false"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="AddDataResourceUpload" target="createDataResourceUpload" title="" type="single" extends="DataResourceMaster"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -319,7 +319,7 @@ under the License.
         <field name="dataResourceTypeIdDisplay" title="${uiLabelMap.CommonType}" field-name="dataResourceTypeId">
             <display description="IMAGE_OBJECT" also-hidden="false"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="objectInfo" title="${uiLabelMap.ContentUploadedFile}"><display/></field>
     </form>
     <form name="EditDataResourceText" target="updateDataResourceText" title="" type="single" extends="DataResourceMaster"
@@ -330,7 +330,7 @@ under the License.
             <display description="ELECTRONIC_TEXT" also-hidden="false"/>
         </field>
         <field name="textData" id-name="textData"><textarea rows="20" cols="120"/> </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="EditDataResourceUpload" target="updateDataResourceUpload" title="" type="single" extends="DataResourceMaster"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -359,7 +359,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createDataResourceAttribute"/>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" map-name="currentValue"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListDataResourceAttribute" list-name="dataResourceAttribute" target="updateDataResourceAttribute" title="" type="list"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -393,7 +393,7 @@ under the License.
                 <entity-options description="${description}" entity-name="RoleType" key-field-name="roleTypeId"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListDataResourceRole" list-name="dataResourceRole" target="updateDataResourceRole" title="" type="list"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -406,7 +406,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-service service-name="updateDataResourceRole" default-field-type="display"/>
-        <field name="thruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.link_record_date}"><date-time/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThru}" widget-style="${styles.link_nav_record_date}"><date-time/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeDataResourceRole">
@@ -424,7 +424,7 @@ under the License.
         <auto-fields-service service-name="createProductFeatureDataResource"/>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" map-name="currentValue"><display/></field>
         <field name="productFeatureId" widget-style="${styles.link_nav} ${styles.action_find}"><lookup target-form-name="LookupProductFeature"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListDataResourceProductFeature" list-name="productFeatureDataResource" target="" title="" type="list"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -466,17 +466,17 @@ under the License.
     <form name="listLookupProductFeature" list-name="entityList" title="" type="list" paginate-target="LookupProductFeature"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="ProductFeature" default-field-type="display"/>
-        <field name="productFeatureId" title=" " widget-style="${styles.link_record_id}">
+        <field name="productFeatureId" title=" " widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${productFeatureId}" target="javascript:set_value('${productFeatureId}')"/>
         </field>
     </form>
     <form name="mruLookupProductFeature" default-entity-name="ProductFeature" list-name="mruList" target="" title="" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="contentId" widget-style="${styles.link_record_id}">
+        <field name="contentId" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${productFeatureId}" target="javascript:set_value('${productFeatureId}')"/>
         </field>
-        <field name="description" title="${uiLabelMap.FormFieldTitle_contentName}" widget-style="${styles.link_record_name}"><display/></field>
-        <field name="productFeatureTypeId" title="${uiLabelMap.CommonType}" widget-style="${styles.link_record_id}"><display/></field>
+        <field name="description" title="${uiLabelMap.FormFieldTitle_contentName}" widget-style="${styles.link_nav_record_name}"><display/></field>
+        <field name="productFeatureTypeId" title="${uiLabelMap.CommonType}" widget-style="${styles.link_nav_record_id}"><display/></field>
     </form>
 
     <!-- ElectronicText forms -->
@@ -487,19 +487,19 @@ under the License.
             <entity-one entity-name="ElectronicText" value-field="electronicText"/>
         </actions>
         <alt-target use-when="electronicText==null" target="addElectronicText"/>
-        <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" widget-style="${styles.link_record_id}"><display also-hidden="true"/></field>
-        <field name="textData" widget-style="${styles.link_text}"><textarea cols="120" rows="24"/></field>
+        <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" widget-style="${styles.link_nav_record_id}"><display also-hidden="true"/></field>
+        <field name="textData" widget-style="${styles.link_nav_text}"><textarea cols="120" rows="24"/></field>
         <field name="submitAction" use-when="electronicText!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="submitAction" use-when="electronicText==null" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="electronicText==null" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <!-- Html forms -->
     <form name="AddHtmlText" target="addHtmlText" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="ElectronicText"/>
-        <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" widget-style="${styles.link_record_id}" map-name="currentValue"><display/></field>
+        <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" widget-style="${styles.link_nav_record_id}" map-name="currentValue"><display/></field>
         <field name="textData" id-name="textData"><textarea rows="24" cols="120"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="EditHtmlText" target="updateHtmlText" title="" type="single" default-map-name="electronicText"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -508,7 +508,7 @@ under the License.
         </actions>
         <alt-target use-when="electronicText==null" target="addHtmlText"/>
         <auto-fields-entity entity-name="ElectronicText"/>
-        <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" widget-style="${styles.link_record_id}"><display/></field>
+        <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}" widget-style="${styles.link_nav_record_id}"><display/></field>
         <field name="textData" id-name="textData" encode-output="true"><textarea cols="120" rows="20" visual-editor-enable="true" /></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>

@@ -20,7 +20,7 @@
                           <option value="${facility.facilityId}">${facility.facilityName}</option>
                         </#list>
                       </select>
-                      <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.OrderQuickReceivePurchaseOrder}"/>
+                      <input type="submit" class="${styles.link_action_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderQuickReceivePurchaseOrder}"/>
                      </form>
                   </@menuitem>
                   <@menuitem type="generic">
@@ -74,7 +74,7 @@
                         <option value="${facility.facilityId}">${facility.facilityName}</option>
                       </#list>
                     </select>
-                    <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.OrderForceCompletePurchaseOrder}"/>
+                    <input type="submit" class="${styles.link_action_sys!} ${styles.action_complete!}" value="${uiLabelMap.OrderForceCompletePurchaseOrder}"/>
                     </form>
                   </@menuitem>
               </#if>

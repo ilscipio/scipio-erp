@@ -421,7 +421,7 @@ under the License.
         <field name="imageWidth" title="${uiLabelMap.ImageManagementImageWidth}"><text/></field>
         <field name="imageHeight" title="${uiLabelMap.ImageManagementImageHeight}"><text/></field>
         <field name="previewAction" title="${uiLabelMap.CommonPreview}" use-when="frameURL != null" widget-style="${styles.link_action_sys} ${styles.action_view}" event="onClick" action="javascript:setTargetWindows('new');"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="frameURL != null" widget-style="${styles.link_action_sys} ${styles.action_create}" event="onClick" action="javascript:setTargetWindows('_self');"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="frameURL != null" widget-style="${styles.link_action_sys} ${styles.action_add}" event="onClick" action="javascript:setTargetWindows('_self');"><submit button-type="button"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}" event="onClick" action="javascript:deletePreviewFrameImage();">
             <hyperlink target="ListImageManage" description="${uiLabelMap.CommonCancel}">
                 <parameter param-name="productId" from-field="parameters.productId"/>
@@ -663,7 +663,7 @@ under the License.
             </entity-and>
         </row-actions>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
-        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_record_name}">
+        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_nav_record_name}">
             <hyperlink also-hidden="false" target-type="plain" description="${drDataResourceName}" target="javascript:set_value('${contentId}')"/>
         </field>
         <field name="contentId"><display/></field>
@@ -817,7 +817,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
-        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_record_name}">
+        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_nav_record_name}">
             <hyperlink also-hidden="false" target-type="plain" description="${drDataResourceName}" target="javascript:set_value('${contentId}')"/>
         </field>
         <field name="contentId"><display/></field>

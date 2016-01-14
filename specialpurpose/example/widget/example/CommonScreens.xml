@@ -110,7 +110,7 @@ under the License.
                                     <widgets>
                                         <label style="h2">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${example.exampleName} [${exampleId}]</label>
                                         <container style="button-bar">
-                                            <link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="${styles.link_nav} ${styles.action_create}">
+                                            <link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="${styles.link_nav} ${styles.action_add}">
                                                 <image url-mode="raw" src="${iconsLocation}/add.png"/>
                                             </link>
                                             <link target="ExampleReportHtml" text="${uiLabelMap.CommonPrinterFriendly}" style="${styles.link_action_sys} ${styles.action_export}">
@@ -181,7 +181,7 @@ under the License.
                                             <label>${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${exampleFeature.description} [${exampleFeatureId}]</label>
                                         </container>
                                         <container style="button-bar">
-                                            <link target="EditExampleFeature" text="${uiLabelMap.ExampleNewExampleFeature}" style="${styles.link_nav} ${styles.action_create}">
+                                            <link target="EditExampleFeature" text="${uiLabelMap.ExampleNewExampleFeature}" style="${styles.link_nav} ${styles.action_add}">
                                                 <image url-mode="raw" src="${iconsLocation}/add.png"/>
                                             </link>
                                         </container>

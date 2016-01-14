@@ -49,7 +49,7 @@ under the License.
       <input type="radio" name="SEARCH_OPERATOR" id="keywordSearchOperatorAnd" value="AND" <#if requestParameters.SEARCH_OPERATOR! == "AND">checked="checked"</#if> />
     </div>
     <div>
-      <input type="submit" name="find" value="${uiLabelMap.CommonFind}" class="${styles.link_action!}" />
+      <input type="submit" name="find" value="${uiLabelMap.CommonFind}" class="${styles.link_action_sys!} ${styles.action_find!}" />
     </div>
     </fieldset>
 </form>

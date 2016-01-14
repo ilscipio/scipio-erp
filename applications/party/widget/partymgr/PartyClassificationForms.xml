@@ -49,7 +49,7 @@ under the License.
         <actions>
             <entity-condition entity-name="PartyClassificationGroup"/>
         </actions>
-        <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroupId}" widget-style="${styles.link_record_id}">
+        <field name="partyClassificationGroupId" title="${uiLabelMap.PartyClassificationGroupId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="EditPartyClassificationGroup" description="${partyClassificationGroupId}" also-hidden="false">
                 <parameter param-name="partyClassificationGroupId"/>
             </hyperlink>
@@ -132,7 +132,7 @@ under the License.
         </field>
         <field name="partyId" title="${uiLabelMap.Party}">
            <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${lastName} ${groupName}">
-                   <sub-hyperlink target="viewprofile" description="${partyId}" link-style="${styles.link_record_id}">
+                   <sub-hyperlink target="viewprofile" description="${partyId}" link-style="${styles.link_nav_record_id}">
                 <parameter param-name="partyId"/>
             </sub-hyperlink>
            </display-entity>

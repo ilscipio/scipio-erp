@@ -151,7 +151,7 @@ under the License.
         <field name="VIEW_INDEX_2" position="2"><hidden value="${parameters.VIEW_INDEX_2}"/></field>
         <field name="custRequestId" title="${uiLabelMap.ScrumSprintBacklog}" position="1" use-when="showPosition1&amp;&amp;&quot;${custRequestTypeId}&quot;!=&quot;RF_SCRUM_MEETINGS&quot;">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description=" ">
-                <sub-hyperlink  target="ViewProdBacklogItem" description="${context.description} - [${custRequestId}]" link-type="hidden-form" target-window="_BLANK" link-style="${styles.link_record_desc}">
+                <sub-hyperlink  target="ViewProdBacklogItem" description="${context.description} - [${custRequestId}]" link-type="hidden-form" target-window="_BLANK" link-style="${styles.link_nav_record_desc}">
                     <parameter param-name="custRequestId"/>
                     <parameter param-name="productId"/>
                 </sub-hyperlink>
@@ -193,7 +193,7 @@ under the License.
                 <parameter param-name="projectId"/>
             </hyperlink>
         </field>
-        <field name="newTask" title=" " position="1" use-when="showPosition1&amp;&amp;!&quot;CRQ_COMPLETED&quot;.equals(&quot;${custRequest.statusId}&quot;)" widget-style="${styles.link_nav} ${styles.action_create}">
+        <field name="newTask" title=" " position="1" use-when="showPosition1&amp;&amp;!&quot;CRQ_COMPLETED&quot;.equals(&quot;${custRequest.statusId}&quot;)" widget-style="${styles.link_nav} ${styles.action_add}">
             <hyperlink target="NewSprintBacklogTask" description="Add Task" link-type="hidden-form">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="sprintId"/>
@@ -1134,7 +1134,7 @@ under the License.
         <field name="custSequenceNum" position="1" title="${uiLabelMap.ScrumSeq}"><display/></field>
         <field name="realSequenceNum"><hidden/></field>
         <field name="custRequestId"><hidden/></field>
-        <field name="backlogId" position="1" title="${uiLabelMap.ScrumBacklogId}" widget-style="${styles.link_record_id}">
+        <field name="backlogId" position="1" title="${uiLabelMap.ScrumBacklogId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="ViewProdBacklogItem" description="${custRequestId}">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="productId"/>
@@ -1225,12 +1225,12 @@ under the License.
                 <field-map field-name="productId" from-field="productId"/>
             </entity-one>
         </row-actions>
-        <field name="companyId" title="${uiLabelMap.ScrumOwnerCompany}" position="1" use-when="!isCurrentCompany" widget-style="${styles.link_record_idname}">
+        <field name="companyId" title="${uiLabelMap.ScrumOwnerCompany}" position="1" use-when="!isCurrentCompany" widget-style="${styles.link_nav_record_idname}">
             <hyperlink target="viewprofile" description="${companyName} [${companyId}]">
                 <parameter param-name="partyId" from-field="companyId"/>
             </hyperlink>
         </field>
-        <field name="projectName" title="${uiLabelMap.ScrumProject}" position="1" use-when="!isCurrentProject" widget-style="${styles.link_record_idname}">
+        <field name="projectName" title="${uiLabelMap.ScrumProject}" position="1" use-when="!isCurrentProject" widget-style="${styles.link_nav_record_idname}">
             <hyperlink target="viewScrumProject" description="${projectName} [${projectId}]">
                 <parameter param-name="projectId"/>
             </hyperlink>
@@ -1265,7 +1265,7 @@ under the License.
         <field name="sprintActualCompletionDate" title="${uiLabelMap.CommonEndDate}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display type="date"></display></field>
     </form>
     <form name="projectListWithNoLinkProfile" extends="projectList">
-        <field name="companyId" title="${uiLabelMap.ScrumOwnerCompany}" position="1" use-when="!isCurrentCompany" widget-style="${styles.link_record_idname}">
+        <field name="companyId" title="${uiLabelMap.ScrumOwnerCompany}" position="1" use-when="!isCurrentCompany" widget-style="${styles.link_nav_record_idname}">
             <display description="${companyName} [${companyId}]"/>
         </field>
         <field name="productOwnerName" title="${uiLabelMap.ScrumProductOwner}" position="1" use-when="!isCurrentProject">
@@ -1514,7 +1514,7 @@ under the License.
         <field name="longDescription" title="${uiLabelMap.CommonDescription}"><textarea/></field>
         <field name="productTypeId"><hidden value="SCRUM_ITEM"/></field>
         <field name="productId"><hidden value="${parameters.productId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="product==null" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="product==null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" position="1" use-when="product!=null" widget-style="${styles.link_action_sys} ${styles.action_update}" event="onClick" action="javascript: if(document.EditProduct.statusId.value == 'PRODUCT_CLOSED') {
                                                                                                                                                                                 if (confirm('Are you sure to close this product ?.')){ 
                                                                                                                                                                                     document.ViewEditProdBacklog.disable();
@@ -1575,7 +1575,7 @@ under the License.
         <field name="internalName" title="${uiLabelMap.ScrumProductName}"><display description="${product.internalName} [${product.productId}]"/></field>
         <field name="longDescription" title="${uiLabelMap.CommonDescription}"><display /></field>
         <field name="productTypeId"><hidden value="SCRUM_ITEM"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="product==null" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="product==null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListProductBacklogCategories" type="list" use-row-submit="true" list-name="listIt" target="DeleteSprint" paginate-target="SprintList" separate-columns="true"
         odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
@@ -1638,7 +1638,7 @@ under the License.
         <field name="productId"><hidden value="${productId}"/></field>
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestName" title="${uiLabelMap.ScrumCategory}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="custRequest==null" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="custRequest==null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="custRequest!=null" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListProductByAdmin" type="list" default-entity-name="ProductRole" use-row-submit="true" list-name="listIt" target="deleteProduct" paginate-target="EditProduct" separate-columns="true"
@@ -1885,7 +1885,7 @@ under the License.
             </drop-down>
            </field>
         <field name="invoiceDate" title="${uiLabelMap.ScrumInvoiceDate}" use-when="context.get(&quot;invoiceId&quot;)!=null"><date-time type="date"></date-time></field>
-        <field name="submitAction" title="${uiLabelMap.PageTitleAddProjectTimeToNewInvoice}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PageTitleAddProjectTimeToNewInvoice}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="FindProductBilling" type="single" target="ProductBilling">
         <field name="productId"><hidden/></field>
@@ -2452,7 +2452,7 @@ under the License.
         <field name="longDescription" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="productId" title="${uiLabelMap.ScrumProduct}">
             <display-entity entity-name="Product" key-field-name="productId" description=" " >
-                <sub-hyperlink target="${productTartget}" description="${internalName} [${productId}]" link-style="${styles.link_record_idname}" >
+                <sub-hyperlink target="${productTartget}" description="${internalName} [${productId}]" link-style="${styles.link_nav_record_idname}" >
                     <parameter param-name="productId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -2510,7 +2510,7 @@ under the License.
    
    <form name="ListTaskSprint" list-name="notes" title="" type="list" paginate-target="backlogView"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="custRequestId" title="Backlog ID" widget-style="${styles.link_record_id}">
+        <field name="custRequestId" title="Backlog ID" widget-style="${styles.link_nav_record_id}">
         <hyperlink target="backlogView" description="${custRequestId}">
             <parameter param-name="custRequestId" from-field="${custRequestId}"/>
         </hyperlink>
@@ -2584,7 +2584,7 @@ under the License.
             </entity-and>
         </actions>
         <field name="contentTypeId"><display-entity entity-name="ContentType" description="${description}"/></field>
-        <field name="contentName" widget-style="${styles.link_record_idname}">
+        <field name="contentName" widget-style="${styles.link_nav_record_idname}">
             <display description="${contentName}[${contentId}]"/>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
@@ -2647,7 +2647,7 @@ under the License.
             </entity-one>
         </row-actions>
         <field name="contentTypeId"><display description="${descContent.description}"/></field>
-        <field name="contentName" widget-style="${styles.link_record_idname}">
+        <field name="contentName" widget-style="${styles.link_nav_record_idname}">
              <display description="${contentMap.contentName} [${contentId}]"/>
         </field>
         <field name="deleteAction"><ignored/></field>
@@ -2739,7 +2739,7 @@ under the License.
             </entity-one>
         </row-actions>
         <field name="contentTypeId"><display description="${descContent.description}"/></field>
-        <field name="contentName" widget-style="${styles.link_record_idname}">
+        <field name="contentName" widget-style="${styles.link_nav_record_idname}">
              <display description="${contentMap.contentName} [${contentId}]"/>
         </field>
         <field name="deleteAction"><ignored/> </field>
@@ -2890,7 +2890,7 @@ under the License.
         <field name="story" title="${uiLabelMap.ScrumStory}" ><textarea  rows="4" cols="60"/></field>
         <field name="custSequenceNum"><hidden value="1"/></field>
         <field name="noteInfo" title="${uiLabelMap.ScrumHowToTest}" ><textarea  rows="4" cols="60"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="QuickAddNewTask" type="upload" target="createTaskForBacklog">
@@ -3034,7 +3034,7 @@ under the License.
         <field name="productId" position="2"><hidden/></field>
         <field name="custRequestId" title="${uiLabelMap.PageTitleUnplanBacklogItem}" position="1" use-when="showPosition1&amp;&amp;&quot;${custRequestTypeId}&quot;!=&quot;RF_SCRUM_MEETINGS&quot;">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description=" ">
-                <sub-hyperlink  target="ViewProdBacklogItem" description="${context.description} - [${custRequestId}]" link-type="hidden-form" target-window="_BLANK" link-style="${styles.link_record_desc}">
+                <sub-hyperlink  target="ViewProdBacklogItem" description="${context.description} - [${custRequestId}]" link-type="hidden-form" target-window="_BLANK" link-style="${styles.link_nav_record_desc}">
                     <parameter param-name="custRequestId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -3075,7 +3075,7 @@ under the License.
                 <parameter param-name="productId"/>
             </hyperlink>
         </field>
-        <field name="newTask" title=" " use-when="showPosition1&amp;&amp;!&quot;CRQ_COMPLETED&quot;.equals(&quot;${custRequest.statusId}&quot;)" widget-style="${styles.link_nav} ${styles.action_create}">
+        <field name="newTask" title=" " use-when="showPosition1&amp;&amp;!&quot;CRQ_COMPLETED&quot;.equals(&quot;${custRequest.statusId}&quot;)" widget-style="${styles.link_nav} ${styles.action_add}">
             <hyperlink target="NewUnplanBacklogTask" description="Add Task" link-type="hidden-form">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="productId"/>

@@ -281,7 +281,7 @@ ${wrappedContent?if_exists}
             <#assign ofbizRequest="EditLayoutSubContent"/>
         </#if>
     </#if>
-    <a class="${styles.link_nav!} ${styles.action_create!}" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&mode=add</@ofbizUrl>">[New]</a>
+    <a class="${styles.link_nav!} ${styles.action_add!}" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&mode=add</@ofbizUrl>">[New]</a>
     <#if subContentId?exists && (0 < subContentId?length)>
         <a class="${styles.link_nav!} ${styles.action_update!}" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&contentId=${subContentId}&drData
 ResourceId=${subDataResourceId?if_exists}</@ofbizUrl>">[Edit]</a>

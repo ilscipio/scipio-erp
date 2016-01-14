@@ -41,7 +41,7 @@ under the License.
         </row-actions>
         <field name="itemID"><display description="${itemID} - ${title}"/></field>
         <field name="userID"><display description="${userID}"/></field>
-        <field name="actions" use-when="&quot;${commentType}&quot; == &quot;&quot;" widget-style="${styles.link_nav} ${styles.action_create}">
+        <field name="actions" use-when="&quot;${commentType}&quot; == &quot;&quot;" widget-style="${styles.link_nav} ${styles.action_add}">
             <hyperlink target="LeaveFeedback" description="Leave Feedback">
                 <parameter param-name="itemId" value="${itemID}"/>
                 <parameter param-name="transactionId" value="${transactionID}"/>

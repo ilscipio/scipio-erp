@@ -27,7 +27,7 @@ under the License.
         ${uiLabelMap.CommonAdd}
         <input type="text" name="featureNum" value="1" size="3" />
         ${uiLabelMap.ProductAddFeatureToCategory}
-        <input class="${styles.link_action!}" type="submit" value="${uiLabelMap.CommonCreate}" />
+        <input class="${styles.link_action_sys!} ${styles.action_add!}" type="submit" value="${uiLabelMap.CommonCreate}" />
       </div>
       <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
     </form>
@@ -76,7 +76,7 @@ under the License.
             <#assign curProductFeatureType = productFeature.getRelatedOne("ProductFeatureType", true)>
             <@tr id="productFeatureId_tableRow_${rowCount}" valign="middle">
               <@td><input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
-              <a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.link_record_id!}">${productFeature.productFeatureId}</a></@td>
+              <a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${productFeature.productFeatureId}</a></@td>
               <@td><input type="text" size='15' name="description_o_${rowCount}" value="${productFeature.description}" /></@td>
               <@td><select name='productFeatureTypeId_o_${rowCount}' size="1">
                 <#if productFeature.productFeatureTypeId?has_content>

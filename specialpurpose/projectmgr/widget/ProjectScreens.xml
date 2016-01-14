@@ -341,7 +341,7 @@ under the License.
                 <decorator-screen name="CommonProjectDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container>
-                             <link target="EditPartySkill" text="${uiLabelMap.HumanResNewPartySkill}" style="${styles.link_nav} ${styles.action_create}"/>
+                             <link target="EditPartySkill" text="${uiLabelMap.HumanResNewPartySkill}" style="${styles.link_nav} ${styles.action_add}"/>
                         </container>
                         <screenlet title="${uiLabelMap.HumanResEditPartySkill}">
                             <include-form name="ListPartySkills" location="component://humanres/widget/forms/PartySkillForms.xml"/>
@@ -770,11 +770,11 @@ under the License.
                                 <section>
                                     <widgets>
                                         <container>
-                                            <link style="${styles.link_nav} ${styles.action_create}" target="EditCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}">
+                                            <link style="${styles.link_nav} ${styles.action_add}" target="EditCommunicationEvent" text="${uiLabelMap.PartyNewCommunication}">
                                                 <parameter param-name="partyId"/>
                                                 <parameter param-name="partyIdFrom" from-field="partyId"/>
                                             </link>
-                                            <link style="${styles.link_nav} ${styles.action_create}" target="EditCommunicationEvent" text="${uiLabelMap.PartyReply}">
+                                            <link style="${styles.link_nav} ${styles.action_add}" target="EditCommunicationEvent" text="${uiLabelMap.PartyReply}">
                                                 <parameter param-name="partyId"/>
                                                 <parameter param-name="parentCommEventId" from-field="communicationEventId"/>
                                             </link>

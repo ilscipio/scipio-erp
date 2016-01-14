@@ -158,7 +158,7 @@ under the License.
                 <parameter param-name="rootContentRevisionSeqId"/>
             </hyperlink>
         </field>
-        <field name="create" title=" " widget-style="${styles.link_nav} ${styles.action_create}">
+        <field name="create" title=" " widget-style="${styles.link_nav} ${styles.action_add}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreate}" target="EditContentRevision">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentRevisionSeqId"/>
@@ -212,7 +212,7 @@ under the License.
                 <parameter param-name="rootContentRevisionSeqId"/>
             </hyperlink>
         </field>
-        <field name="create" title=" " widget-style="${styles.link_nav} ${styles.action_create}">
+        <field name="create" title=" " widget-style="${styles.link_nav} ${styles.action_add}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreate}" target="EditContentRevisionItem">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentRevisionSeqId"/>
@@ -342,7 +342,7 @@ under the License.
         <field name="rootContentId"><hidden/></field>
         <field name="rootContentRevisionId"><hidden/></field>
             -->
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="EditRootCompDocInstance" default-map-name="content" type="single" target="updateRootCompDocTemplate"
@@ -360,7 +360,7 @@ under the License.
         <field name="contentTypeId" map-name="dummy"><hidden value="COMPDOC_TEMPLATE"/></field>
         <field name="rootTemplateContentId"><hidden/></field>
         <field name="rootTemplateRevSeqId"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="EditRootCompDocTemplate" default-map-name="content" type="single" target="updateRootCompDocTemplate"
@@ -411,7 +411,7 @@ under the License.
         </field>
         <field name="rootContentId"><hidden/></field>
         <field name="rootContentRevisionSeqId"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="EditChildCompDoc" default-map-name="contentAssoc" type="single" target="${childCompDocTarget}"
@@ -468,7 +468,7 @@ under the License.
                 </sub-hyperlink>
             </lookup>
         </field>
-        <field name="addSurveyResponse" map-name="dummy" widget-style="${styles.link_action_long}"
+        <field name="addSurveyResponse" map-name="dummy" widget-style="${styles.link_nav_long} ${styles.action_add}"
             use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)==null &amp;&amp; templateDataResource!=null &amp;&amp; templateDataResource.get(&quot;relatedDetailId&quot;)!=null">
             <hyperlink description="${uiLabelMap.CommonCreate} ${uiLabelMap.ContentSurveyResponse} (${uiLabelMap.CommonFor} ${uiLabelMap.ContentSurvey} ${templateDataResource.relatedDetailId})" target="EditSurveyResponse" also-hidden="false" target-window="_blank">
                 <parameter param-name="surveyId" from-field="templateDataResource.relatedDetailId"/>
@@ -476,7 +476,7 @@ under the License.
                 <parameter param-name="rootContentId"/>
             </hyperlink>
         </field>
-        <field name="updateSurveyResponse" map-name="dummy" widget-style="${styles.link_action_long}"
+        <field name="updateSurveyResponse" map-name="dummy" widget-style="${styles.link_nav_long} ${styles.action_update}"
             use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)!=null &amp;&amp; templateDataResource!=null &amp;&amp; templateDataResource.get(&quot;relatedDetailId&quot;)!=null">
             <hyperlink description="${uiLabelMap.CommonUpdate} ${uiLabelMap.ContentSurveyResponse} (${uiLabelMap.CommonFor} ${uiLabelMap.ContentSurvey} ${templateDataResource.relatedDetailId}, Response ${dataResource.relatedDetailId})" target="EditSurveyResponse" also-hidden="false" target-window="_blank">
                 <parameter param-name="surveyId" from-field="templateDataResource.relatedDetailId"/>
@@ -523,14 +523,14 @@ under the License.
         <auto-fields-entity entity-name="ContentRevision"/>
         <auto-fields-entity entity-name="ContentRevisionItem"/>
 
-        <field name="contentId" widget-style="${styles.link_record_id}"><text/></field>
+        <field name="contentId" widget-style="${styles.link_nav_record_id}"><text/></field>
         <field name="contentRevisionSeqId"><hidden/></field>
         <field name="committedByPartyId" widget-style="inputBox"></field>
         <field name="comments" widget-style="inputBox"></field>
         <field name="itemContentId" widget-style="inputBox"></field>
         <field name="oldDataResourceId" widget-style="inputBox"></field>
         <field name="newDataResourceId" widget-style="inputBox"></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <!-- TO BE REMOVED
     <form name="ListContentRevisionItemApproval" type="list"
@@ -557,7 +557,7 @@ under the License.
                 <parameter param-name="rootContentRevisionSeqId" from-field="rootContentRevisionSeqId/>
             </hyperlink>
         </field>
-        <field name="create" title=" " widget-style="${styles.link_nav} ${styles.action_create}">
+        <field name="create" title=" " widget-style="${styles.link_nav} ${styles.action_add}">
             <hyperlink also-hidden="false" description="Create" target="EditContentRevisionItem"/>
         </field>
     </form>

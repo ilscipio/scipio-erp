@@ -61,7 +61,7 @@ function lookupBom() {
               <@htmlTemplate.lookupField value="${productId!}" formName="searchform" name="productId" id="productId" fieldFormName="LookupProduct"/>
             </@field>
             <@field type="generic">
-                <span><a href="javascript:document.searchform.submit();" class="${styles.link_action!}">${uiLabelMap.ManufacturingShowBOMAssocs}</a></span>
+                <span><a href="javascript:document.searchform.submit();" class="${styles.link_action_sys!} ${styles.action_find!}">${uiLabelMap.ManufacturingShowBOMAssocs}</a></span>
             </@field>
         </@cell>
     </@row>
@@ -71,7 +71,7 @@ function lookupBom() {
                 <@htmlTemplate.lookupField formName="searchform" name="copyToProductId" id="copyToProductId" fieldFormName="LookupProduct"/>
             </@field>
             <@field type="generic">
-                <span><a href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="${styles.link_action!}">${uiLabelMap.ManufacturingCopyBOMAssocs}</a></span>
+                <span><a href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="${styles.link_action_sys!} ${styles.action_copy!}">${uiLabelMap.ManufacturingCopyBOMAssocs}</a></span>
             </@field>
         </@cell>
     </@row>
@@ -215,8 +215,8 @@ function lookupBom() {
     <#assign listToProduct = assocFromProduct.getRelatedOne("AssocProduct", true)>
     <#assign curProductAssocType = assocFromProduct.getRelatedOne("ProductAssocType", true)>
       <@tr>
-        <@td><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_record_id!}">${(assocFromProduct.productIdTo)!}</a></@td>
-        <@td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_record_name!}">${(listToProduct.internalName)!}</a></#if>&nbsp;</@td>
+        <@td><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_nav_record_id!}">${(assocFromProduct.productIdTo)!}</a></@td>
+        <@td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_nav_record_name!}">${(listToProduct.internalName)!}</a></#if>&nbsp;</@td>
         <#assign class><#if (assocFromProduct.getTimestamp("fromDate"))?? && nowDate.before(assocFromProduct.getTimestamp("fromDate"))>alert</#if></#assign>
         <@td class=class>
         ${(assocFromProduct.fromDate)!}&nbsp;</@td>
@@ -229,10 +229,10 @@ function lookupBom() {
         <@td>&nbsp;${(assocFromProduct.estimateCalcMethod)!}</@td>
         <@td>&nbsp;${(assocFromProduct.routingWorkEffortId)!}</@td>
         <@td>
-        <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a>
+        <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
         </@td>
         <@td>
-        <a href="<@ofbizUrl>EditProductBom?productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonEdit}</a>
+        <a href="<@ofbizUrl>EditProductBom?productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
         </@td>
       </@tr>
     </#list>
@@ -256,14 +256,14 @@ function lookupBom() {
         <#assign listToProduct = assocToProduct.getRelatedOne("MainProduct", true)>
         <#assign curProductAssocType = assocToProduct.getRelatedOne("ProductAssocType", true)>
         <@tr>
-            <@td><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_record_id!}">${(assocToProduct.productId)!}</a></@td>
-<#--                <@td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="${styles.link_record_name!}">${(listToProduct.internalName)!}</a></#if></@td> -->
-            <@td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_record_name!}">${(listToProduct.internalName)!}</a></#if></@td>
+            <@td><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_nav_record_id!}">${(assocToProduct.productId)!}</a></@td>
+<#--                <@td><#if listToProduct??><a href="<@ofbizUrl>EditProduct?productId=${(assocToProduct.productId)!}</@ofbizUrl>" class="${styles.link_nav_record_name!}">${(listToProduct.internalName)!}</a></#if></@td> -->
+            <@td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocToProduct.productId)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_nav_record_name!}">${(listToProduct.internalName)!}</a></#if></@td>
             <@td>${(assocToProduct.getTimestamp("fromDate"))!}&nbsp;</@td>
             <@td>${(assocToProduct.getTimestamp("thruDate"))!}&nbsp;</@td>
             <@td>${(assocToProduct.quantity)!}&nbsp;</@td>
             <@td>
-                <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${(assocToProduct.productId)!}&amp;productIdTo=${(assocToProduct.productIdTo)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}&amp;fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&amp;useValues=true</@ofbizUrl>" class="${styles.link_action!}">
+                <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${(assocToProduct.productId)!}&amp;productIdTo=${(assocToProduct.productIdTo)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}&amp;fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&amp;useValues=true</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_remove!}">
                 ${uiLabelMap.CommonDelete}</a>
             </@td>
         </@tr>

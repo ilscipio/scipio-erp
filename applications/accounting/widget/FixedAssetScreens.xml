@@ -40,7 +40,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="EditFixedAsset" text="${uiLabelMap.AccountingNewFixedAsset}" style="${styles.link_nav} ${styles.action_create}"/>
+                                            <link target="EditFixedAsset" text="${uiLabelMap.AccountingNewFixedAsset}" style="${styles.link_nav} ${styles.action_add}"/>
                                         </container>
                                     </widgets>
                                 </section>
@@ -139,7 +139,7 @@ under the License.
                                 <if-service-permission service-name="fixedAssetPermissionCheck" main-action="CREATE"/>
                             </condition>
                             <widgets>
-                                <container style="button-bar"><link target="EditFixedAsset" text="${uiLabelMap.AccountingNewFixedAsset}" style="${styles.link_nav} ${styles.action_create}"/></container>
+                                <container style="button-bar"><link target="EditFixedAsset" text="${uiLabelMap.AccountingNewFixedAsset}" style="${styles.link_nav} ${styles.action_add}"/></container>
                             </widgets>
                         </section>
                         <include-form name="EditFixedAsset" location="component://accounting/widget/FixedAssetForms.xml"/>
@@ -356,7 +356,7 @@ under the License.
                 <decorator-screen name="CommonFixedAssetDecorator" location="${parameters.fixedAssetDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="button-bar">
-                            <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.link_nav} ${styles.action_create}">
+                            <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.link_nav} ${styles.action_add}">
                                 <parameter param-name="fixedAssetId"/>
                             </link>
                         </container>
@@ -395,7 +395,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.link_nav} ${styles.action_create}">
+                                    <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.link_nav} ${styles.action_add}">
                                         <parameter param-name="fixedAssetId"/>
                                     </link>
                                 </container>
@@ -562,7 +562,7 @@ under the License.
                                         </actions>
                                         <widgets>
                                             <container>
-                                                <link text="${uiLabelMap.AccountingCreateAnAccountingTransaction}: ${assetDepreciationResultMap.plannedPastDepreciationTotal}" style="${styles.link_action_long}" target="CreateAcctgTransAndEntries">
+                                                <link text="${uiLabelMap.AccountingCreateAnAccountingTransaction}: ${assetDepreciationResultMap.plannedPastDepreciationTotal}" style="${styles.link_nav_long} ${styles.action_add}" target="CreateAcctgTransAndEntries">
                                                     <parameter param-name="fixedAssetId" from-field="fixedAsset.fixedAssetId"/>
                                                     <parameter param-name="organizationPartyId" from-field="fixedAsset.partyId"/>
                                                     <parameter param-name="acctgTransTypeId" value="DEPRECIATION"/>

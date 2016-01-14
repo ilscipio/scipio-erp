@@ -67,7 +67,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <label style="h2">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${example.exampleName} [${exampleId}]</label>
-                                        <container style="button-bar"><link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="${styles.link_nav} ${styles.action_create}"/></container>
+                                        <container style="button-bar"><link target="EditExample" text="${uiLabelMap.ExampleNewExample}" style="${styles.link_nav} ${styles.action_add}"/></container>
                                     </widgets>
                                 </section>
                                 <decorator-section-include name="body"/>

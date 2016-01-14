@@ -121,10 +121,10 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.CommonSearchOptions}">
                           <!--   <container>
-                                <link text="${uiLabelMap.AccountingCreateAnAccountingTransaction}" style="${styles.link_nav} ${styles.action_create}" target="newAcctgTrans">
+                                <link text="${uiLabelMap.AccountingCreateAnAccountingTransaction}" style="${styles.link_nav} ${styles.action_add}" target="newAcctgTrans">
                                     <parameter param-name="organizationPartyId"/>
                                 </link>
-                                <link text="${uiLabelMap.AccountingCreateAcctgTransAndEntries}" style="${styles.link_nav} ${styles.action_create}" target="CreateAcctgTransAndEntries">
+                                <link text="${uiLabelMap.AccountingCreateAcctgTransAndEntries}" style="${styles.link_nav} ${styles.action_add}" target="CreateAcctgTransAndEntries">
                                     <parameter param-name="organizationPartyId"/>
                                 </link>
                                 <link text="${uiLabelMap.PageTitleUnpostedTransactions}" style="${styles.link_nav} ${styles.action_view}" target="ListUnpostedAcctgTrans">

@@ -55,9 +55,9 @@ under the License.
         <@tbody>
         <#list visitList as visitObj>
           <@tr>
-            <@td class="button-col"><a href="<@ofbizUrl>visitdetail?visitId=${visitObj.visitId}</@ofbizUrl>" class="${styles.link_record_id!}">${visitObj.visitId}</a></@td>
+            <@td class="button-col"><a href="<@ofbizUrl>visitdetail?visitId=${visitObj.visitId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${visitObj.visitId}</a></@td>
             <@td>${visitObj.visitorId!}</@td>
-            <@td class="button-col"><a href="<@ofbizUrl>viewprofile?partyId=${visitObj.partyId!}</@ofbizUrl>" class="${styles.link_record_id!}">${visitObj.partyId!}</a></@td>
+            <@td class="button-col"><a href="<@ofbizUrl>viewprofile?partyId=${visitObj.partyId!}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${visitObj.partyId!}</a></@td>
             <@td>${visitObj.userLoginId!}</@td>
             <@td>${visitObj.userCreated!}</@td>
             <@td>${visitObj.webappName!}</@td>

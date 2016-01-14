@@ -28,6 +28,6 @@ under the License.
         ${uiLabelMap.OrderOrderQuoteCoefficients}&nbsp;<input type="checkbox" name="copyQuoteCoefficients" value="Y" checked="checked" />
         ${uiLabelMap.OrderOrderQuoteTerms}&nbsp;<input type="checkbox" name="copyQuoteTerms" value="Y" checked="checked" />
     </div>
-    <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonCopy}"/>
+    <input type="submit" class="${styles.link_action_sys!} ${styles.action_copy!}" value="${uiLabelMap.CommonCopy}"/>
 </form>
 </#if>

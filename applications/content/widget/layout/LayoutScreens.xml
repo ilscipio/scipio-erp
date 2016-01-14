@@ -38,7 +38,7 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="EditLayoutSubContent" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_create}">
+                                            <link target="EditLayoutSubContent" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}">
                                                 <parameter param-name="mode" value="add"/>
                                                 <parameter param-name="contentIdTo" value="TEMPLATE_MASTER"/>
                                             </link>
@@ -76,7 +76,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListLayout}">
                             <container>
-                                <link target="EditLayoutSubContent" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_create}">
+                                <link target="EditLayoutSubContent" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="mode" value="add"/>
                                     <parameter param-name="contentIdTo" value="TEMPLATE_MASTER"/>
                                 </link>

@@ -67,7 +67,7 @@ under the License.
   <#assign curProductFeatureType = productFeature.getRelatedOne("ProductFeatureType", true)>
     <@tr id="productFeatureId_tableRow_${rowCount}" valign="middle">
         <input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
-        <@td><a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.link_record_id!}">${productFeature.productFeatureId}</a></@td>
+        <@td><a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${productFeature.productFeatureId}</a></@td>
         <@td>${productFeature.description!}</@td>
         <@td><#if curProductFeatureType??>${curProductFeatureType.description!}<#else> [${productFeature.productFeatureTypeId}]</#if></@td>
         <@td>

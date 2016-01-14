@@ -52,13 +52,13 @@ under the License.
             </service>
         </actions>
         
-        <field name="visitId" widget-style="${styles.link_record_id}" sort-field="true">
+        <field name="visitId" widget-style="${styles.link_nav_record_id}" sort-field="true">
             <hyperlink description="${visitId}" target="visitdetail">
                 <parameter param-name="visitId"/>
             </hyperlink>
         </field>
         <field name="visitorId" title="${uiLabelMap.PartyVisitorId}" sort-field="true"><display/></field>
-        <field name="partyId" widget-style="${styles.link_record_id}" sort-field="true">
+        <field name="partyId" widget-style="${styles.link_nav_record_id}" sort-field="true">
             <hyperlink description="${partyId}" target="viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -85,7 +85,7 @@ under the License.
         </actions>
         
         <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}" sort-field="true"><display/></field>
-        <field name="partyId" widget-style="${styles.link_record_id}" sort-field="true">
+        <field name="partyId" widget-style="${styles.link_nav_record_id}" sort-field="true">
             <hyperlink description="${partyId}" target="viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>

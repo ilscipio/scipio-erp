@@ -43,7 +43,7 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="EditSubscription" text="${uiLabelMap.ProductNewSubscription}" style="${styles.link_nav} ${styles.action_create}"/>
+                                            <link target="EditSubscription" text="${uiLabelMap.ProductNewSubscription}" style="${styles.link_nav} ${styles.action_add}"/>
                                             <link target="FindSubscriptionResource" text="${uiLabelMap.PageTitleFindSubscriptionResource}" style="${styles.link_nav} ${styles.action_find}"/>
                                         </container>
                                     </decorator-section>
@@ -90,7 +90,7 @@ under the License.
                                     <widgets>
                                     <include-menu name="EditSubscription" location="component://product/widget/catalog/SubscriptionMenus.xml"/>
                                         <container style="button-bar">
-                                            <link target="EditSubscription" text="${uiLabelMap.ProductNewSubscription}" style="${styles.link_nav} ${styles.action_create}"/>
+                                            <link target="EditSubscription" text="${uiLabelMap.ProductNewSubscription}" style="${styles.link_nav} ${styles.action_add}"/>
                                         </container>
                                         <label style="heading">${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${subscription.description} [${subscriptionId}]</label>
                                     </widgets>
@@ -100,7 +100,7 @@ under the License.
                                                 <if-compare operator="not-equals" value="EditSubscription" field="tabButtonItem"/>
                                             </condition>
                                             <widgets>
-                                                <container style="button-bar"><link target="EditSubscription" text="${uiLabelMap.ProductNewSubscription}" style="${styles.link_nav} ${styles.action_create}"/></container>
+                                                <container style="button-bar"><link target="EditSubscription" text="${uiLabelMap.ProductNewSubscription}" style="${styles.link_nav} ${styles.action_add}"/></container>
                                             </widgets>
                                         </section>
                                     </fail-widgets>
@@ -187,7 +187,7 @@ under the License.
                                     <label text="${uiLabelMap.PageTitleFindSubscriptionResource}"/>
                                 </container>
                                 <container style="button-bar">
-                                    <link target="EditSubscriptionResource" text="${uiLabelMap.ProductNewSubscriptionResource}" style="${styles.link_nav} ${styles.action_create}"/>
+                                    <link target="EditSubscriptionResource" text="${uiLabelMap.ProductNewSubscriptionResource}" style="${styles.link_nav} ${styles.action_add}"/>
                                 </container>
                                 <include-form name="ListSubscriptionResources" location="component://product/widget/catalog/SubscriptionForms.xml"/>
                             </widgets>
@@ -226,7 +226,7 @@ under the License.
                                     <widgets>
                                         <include-menu name="EditSubscriptionResource" location="component://product/widget/catalog/SubscriptionMenus.xml"/>
                                         <container style="button-bar">
-                                            <link target="EditSubscriptionResource" text="${uiLabelMap.ProductNewSubscriptionResource}" style="${styles.link_nav} ${styles.action_create}"/>
+                                            <link target="EditSubscriptionResource" text="${uiLabelMap.ProductNewSubscriptionResource}" style="${styles.link_nav} ${styles.action_add}"/>
                                             <link target="FindSubscription" text="${uiLabelMap.ProductFindResourceSubscriptions}" style="${styles.link_nav} ${styles.action_find}">
                                                 <parameter param-name="subscriptionResourceId"/>
                                             </link>

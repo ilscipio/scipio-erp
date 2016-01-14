@@ -75,7 +75,7 @@ under the License.
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="newPayment" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonPayment}" style="${styles.link_nav} ${styles.action_create}"/>
+                                            <link target="newPayment" text="${uiLabelMap.CommonNew} ${uiLabelMap.CommonPayment}" style="${styles.link_nav} ${styles.action_add}"/>
                                             <link target="FindSalesInvoicesByDueDate" text="${uiLabelMap.AccountingFindSalesInvoicesByDueDate}" style="${styles.link_nav} ${styles.action_find}"/>
                                             <link target="FindPurchaseInvoicesByDueDate" text="${uiLabelMap.AccountingFindPurchaseInvoicesByDueDate}" style="${styles.link_nav} ${styles.action_find}"/>
                                         </container>

@@ -45,7 +45,7 @@ under the License.
                   <input type="hidden" name="partyId" value="${pContent.partyId}" />
                   <input type="hidden" name="partyContentTypeId" value="${pContent.partyContentTypeId}" />
                   <input type="hidden" name="fromDate" value="${pContent.fromDate}" />
-                  <a href="javascript:document.removePartyContent_${pContent_index}.submit()" class="${styles.link_action!}">${uiLabelMap.CommonRemove}</a>
+                  <a href="javascript:document.removePartyContent_${pContent_index}.submit()" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
                 </form>
               </@td>
             </@tr>

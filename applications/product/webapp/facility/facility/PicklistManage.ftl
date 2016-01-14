@@ -59,10 +59,10 @@ under the License.
                 <option value="${statusValidChangeToDetail.get("statusIdTo", locale)}">${statusValidChangeToDetail.get("description", locale)} (${statusValidChangeToDetail.get("transitionName", locale)})</option>
               </#list>
             </select>
-            <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action!}"/>
+            <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action_sys!} ${styles.action_update!}"/>
           </form>
           <span>${uiLabelMap.ProductCreatedModifiedBy}</span> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
-          <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" target="_blank" class="${styles.link_action!}">${uiLabelMap.ProductPick}/${uiLabelMap.ProductPacking} ${uiLabelMap.CommonReports}</a>
+          <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" target="_blank" class="${styles.link_action_sys!} ${styles.action_export!}">${uiLabelMap.ProductPick}/${uiLabelMap.ProductPacking} ${uiLabelMap.CommonReports}</a>
           <hr />
         </div>
         <#if picklistInfo.shipmentMethodType?has_content>
@@ -133,7 +133,7 @@ under the License.
                     <option value="${picklistActive.picklistId}"<#if picklistActive.picklistId == picklist.picklistId> selected="selected"</#if>>${picklistActive.picklistId} [${uiLabelMap.CommonDate}:${picklistActive.picklistDate},${uiLabelMap.CommonStatus}:${picklistActiveStatusItem.get("description",locale)}]</option>
                   </#list>
                 </select>
-                <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action!}"/>
+                <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action_sys!} ${styles.action_update!}"/>
               </form>
             </div>
             <#if picklistBinInfo.picklistItemInfoList?has_content>
@@ -172,7 +172,7 @@ under the License.
                             <input type="hidden" name="shipGroupSeqId" value="${picklistItemInfo.picklistItem.shipGroupSeqId}"/>
                             <input type="hidden" name="inventoryItemId" value="${picklistItemInfo.picklistItem.inventoryItemId}"/>
                             <input type="hidden" name="facilityId" value="${facilityId!}"/>
-                            <a href="javascript:document.deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a>
+                            <a href="javascript:document.deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                           </form>
                         </@td>
                       </#if>
@@ -228,7 +228,7 @@ under the License.
                                 <#if inventoryItemAndLocation.lotId?has_content>
                                   <input type="hidden" name="oldLotId" value="${inventoryItemAndLocation.lotId}" />
                                 </#if>
-                                <a href="javascript:document.editPicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()" class="${styles.link_action!}">${uiLabelMap.CommonEdit}</a>
+                                <a href="javascript:document.editPicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
                               </@td>
                             </@tr>
                           </form>

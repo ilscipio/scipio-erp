@@ -73,7 +73,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
         </@tr>
         <@tr>
          <@td>
-            <a class="${styles.link_action!}" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${rootForumId}</@ofbizUrl>">Add Top Level Forum</a>
+            <a class="${styles.link_nav!} ${styles.action_add!}" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${rootForumId}</@ofbizUrl>">Add Top Level Forum</a>
          </@td >
         </@tr>
 
@@ -127,20 +127,20 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
             ${plusMinus} ${content.contentName!}
          </@td >
          <@td>
-            <a class="${styles.link_action!}" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;moderatedSiteId=${content.contentId}</@ofbizUrl>">Moderate</a>
+            <a class="${styles.link_nav!} ${styles.action_update!}" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;moderatedSiteId=${content.contentId}</@ofbizUrl>">Moderate</a>
          </@td >
          <@td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </@td >
          <@td>
-            <a class="${styles.link_action!}" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;permRoleSiteId=${content.contentId}</@ofbizUrl>">User Roles</a>
+            <a class="${styles.link_nav!} ${styles.action_view!}" href="<@ofbizUrl>CMSSites?rootForumId=${rootForumId}&amp;permRoleSiteId=${content.contentId}</@ofbizUrl>">User Roles</a>
          </@td >
          <@td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </@td >
          <@td>
-            <a class="${styles.link_action!}" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${content.contentId}</@ofbizUrl>">Add Child Forum</a>
+            <a class="${styles.link_nav!} ${styles.action_add!}" href="<@ofbizUrl>addSubSite?rootForumId=${rootForumId}&amp;parentForumId=${content.contentId}</@ofbizUrl>">Add Child Forum</a>
          </@td >
          <@td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </@td >
          <@td>
-            <a class="${styles.link_action!}" href="<@ofbizUrl>removeSite?rootForumId=${rootForumId}&amp;contentId=${content.contentId}&amp;contentIdTo=${forumId}&amp;contentAssocTypeId=SUBSITE</@ofbizUrl>">RemoveSite</a>
-         </@td >
+            <a class="${styles.link_action_sys!} ${styles.action_remove!}" href="<@ofbizUrl>removeSite?rootForumId=${rootForumId}&amp;contentId=${content.contentId}&amp;contentIdTo=${forumId}&amp;contentAssocTypeId=SUBSITE</@ofbizUrl>">Remove Site</a>
+         </@td>
        </@tr>
        <#assign rowCount = rowCount + 1 />
        <@showSites forumId=subContentId indentIndex=(indentIndex + 1)/>

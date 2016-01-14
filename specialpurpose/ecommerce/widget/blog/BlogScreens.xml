@@ -51,7 +51,7 @@
                                 <if-service-permission service-name="genericContentPermission" main-action="CREATE" context-map="crPerm"/>
                             </condition>
                             <widgets>
-                                <link text="${uiLabelMap.CommonAddNew}" target="NewBlogArticle" style="${styles.link_nav} ${styles.action_create}">
+                                <link text="${uiLabelMap.CommonAddNew}" target="NewBlogArticle" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="blogContentId"/>
                                 </link>
                             </widgets>

@@ -21,8 +21,8 @@ under the License.
             <div class="errorMessage">${illegalInventoryItem}</div>
       </#if>
         <div class="button-bar">
-          <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.ProductNewFacility}</a>
-          <a href="<@ofbizUrl>PickMoveStockSimple?facilityId=${facilityId!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonPrint}</a>
+          <a href="<@ofbizUrl>EditFacility</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductNewFacility}</a>
+          <a href="<@ofbizUrl>PickMoveStockSimple?facilityId=${facilityId!}</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_export!}">${uiLabelMap.CommonPrint}</a>
         </div>
        <#if !(inventoryItem??)>
             <form method="post" action="<@ofbizUrl>TransferInventoryItem</@ofbizUrl>">
@@ -66,7 +66,7 @@ under the License.
             </@field>
             <@field type="generic" label="${uiLabelMap.ProductProductId}">
                 <#if inventoryItem?? && (inventoryItem.productId)??>
-                        <a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)!}" class="${styles.link_record_id!}">${(inventoryItem.productId)!}</a>
+                        <a href="/catalog/control/EditProduct?productId=${(inventoryItem.productId)!}" class="${styles.link_nav_record_id!}">${(inventoryItem.productId)!}</a>
                     </#if>
             </@field>
             <@field type="generic" label="${uiLabelMap.CommonStatus}">

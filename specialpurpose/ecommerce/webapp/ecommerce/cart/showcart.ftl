@@ -121,7 +121,7 @@ function setAlternateGwp(field) {
                     &nbsp;&nbsp;${uiLabelMap.OrderNbrPersons}: <input type="text" class="inputBox" size="3" name="reservPersons" value="${requestParameters.reservPersons?default("1")}" />
                 </#if>
                 ${uiLabelMap.CommonQuantity}: <input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity?default("1")}" />
-                <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.OrderAddToCart}" />
+                <input type="submit" class="${styles.link_action_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddToCart}" />
                 <#-- <a href="javascript:document.quickaddform.submit()" class="button"><span>[${uiLabelMap.OrderAddToCart}]</span></a> -->
                 </fieldset>
             </form>
@@ -241,7 +241,7 @@ function setAlternateGwp(field) {
                     </#if>
                     <#-- end code to display a small image of the product -->
                     <#-- ${cartLineIndex} - -->
-                    <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_record_idname!}">${cartLine.getProductId()} -
+                    <a href="<@ofbizCatalogAltUrl productId=parentProductId/>" class="${styles.link_nav_record_idname!}">${cartLine.getProductId()} -
                     ${cartLine.getName()!}</a> : ${cartLine.getDescription()!}
                     <#-- For configurable products, the selected options are shown -->
                     <#if cartLine.getConfigWrapper()??>
@@ -292,7 +292,7 @@ function setAlternateGwp(field) {
                   <ul>
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                     <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductWorker"].getGwpAlternativeOptionName(delegator, alternativeOptionProductId, requestAttributes.locale) />
-                    <li><a href="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="${styles.link_action_long!}">Select: ${alternativeOptionName?default(alternativeOptionProductId)}</a></li>
+                    <li><a href="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="${styles.link_action_sys_long!} ${styles.action_update!}">Select: ${alternativeOptionName?default(alternativeOptionProductId)}</a></li>
                   </#list>
                   </ul>
                   -->
@@ -466,7 +466,7 @@ function setAlternateGwp(field) {
             <form method="post" action="<@ofbizUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform">
                 <fieldset>
                 <input type="text" class="inputBox" size="15" name="productPromoCodeId" value="" />
-                <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.OrderAddCode}" />
+                <input type="submit" class="${styles.link_action_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddCode}" />
                 <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())! />
                 <#if productPromoCodeIds?has_content>
                     ${uiLabelMap.ProductPromoCodesEntered}

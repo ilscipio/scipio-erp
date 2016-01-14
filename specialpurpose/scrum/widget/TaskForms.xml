@@ -256,7 +256,7 @@
         <field name="partyId" title="${uiLabelMap.ScrumAssignedTo}" use-when="partyId==null"><display/></field>
         <field name="partyId" title="${uiLabelMap.ScrumAssignedTo}" use-when="partyId!=null">
             <display-entity entity-name="Person" description="${lastName} ${firstName} ${middleName}" key-field-name="partyId">
-                <sub-hyperlink target="viewprofile" description="[${partyId}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="viewprofile" description="[${partyId}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -581,7 +581,7 @@
         <field name="roleTypeId"><hidden value="SCRUM_MEMBER"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListTaskParties" type="list" list-name="taskMembers" target="deleteTaskPartyAssign"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true">
@@ -629,7 +629,7 @@
             <set field="fromDate" from-field="listWorkAssignment[0].fromDate"/>
         </row-actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="taskName" title="${uiLabelMap.ScrumTaskName}" widget-style="${styles.link_record_idname}">
+        <field name="taskName" title="${uiLabelMap.ScrumTaskName}" widget-style="${styles.link_nav_record_idname}">
             <hyperlink also-hidden="false" description="${taskName} - [${taskId}] " target="taskView">
                 <parameter param-name="taskId" from-field="workEffortId"/>
             </hyperlink>
@@ -834,7 +834,7 @@
             <set field="partyId" value="${contentRole[0].partyId}"/>
             <property-to-field resource="revision" property="revision.url" field="url"/>
         </row-actions>
-        <field name="contentName" title="${uiLabelMap.ScrumRevision}" widget-style="${styles.link_record_name}">
+        <field name="contentName" title="${uiLabelMap.ScrumRevision}" widget-style="${styles.link_nav_record_name}">
                 <hyperlink target="RevisionInfo?repository=${url}${drObjectInfo}" description="${contentName}" link-type="anchor" target-window="_BLANK" target-type="plain"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonMessage}"><display description="${groovy:description.toString().substring(0,Math.min(description.toString().length(),100))}"/></field>

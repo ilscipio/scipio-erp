@@ -136,7 +136,7 @@ under the License.
                   </#if>
             </@field>
             <@field type="submitarea">
-                <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action!}"/>
+                <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action_sys!} ${styles.action_update!}"/>
             </@field>
         </form>
         <@script>

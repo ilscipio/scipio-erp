@@ -101,12 +101,12 @@ under the License.
             <text/>
         </field>
         
-        <field name="estimatedShipWorkEffId" title="${uiLabelMap.ProductEstimatedShipWorkEffId}" widget-style="${styles.link_record_id}">
+        <field name="estimatedShipWorkEffId" title="${uiLabelMap.ProductEstimatedShipWorkEffId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="/workeffort/control/WorkEffortSummary" also-hidden="false" description="${shipment.estimatedShipWorkEffId}" target-type="inter-app">
                 <parameter param-name="workEffortId" from-field="shipment.estimatedShipWorkEffId"/>
             </hyperlink>
         </field>
-        <field name="estimatedArrivalWorkEffId" title="${uiLabelMap.ProductEstimatedArrivalWorkEffId}" widget-style="${styles.link_record_id}" position="2">
+        <field name="estimatedArrivalWorkEffId" title="${uiLabelMap.ProductEstimatedArrivalWorkEffId}" widget-style="${styles.link_nav_record_id}" position="2">
             <hyperlink target="/workeffort/control/WorkEffortSummary" also-hidden="false" description="${shipment.estimatedArrivalWorkEffId}" target-type="inter-app">
                 <parameter param-name="workEffortId" from-field="shipment.estimatedArrivalWorkEffId"/>
             </hyperlink>
@@ -307,12 +307,12 @@ under the License.
         <auto-fields-entity entity-name="ShipmentReceipt" map-name="shipmentReceipt" default-field-type="display"/>
         <field name="shipmentId"><hidden/></field>
         <field name="orderItemSeqId"><hidden/></field>
-        <field name="orderId" widget-style="${styles.link_record_id_long}">
+        <field name="orderId" widget-style="${styles.link_nav_record_id_long}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId} - ${orderItemSeqId}" >
                 <parameter param-name="orderId"/>
             </hyperlink>
         </field>
-        <field name="inventoryItemId" widget-style="${styles.link_record_id}">
+        <field name="inventoryItemId" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="EditInventoryItem" description="${inventoryItemId}">
                 <parameter param-name="inventoryItemId"/>
             </hyperlink>
@@ -369,12 +369,12 @@ under the License.
             <display description="${destinationTelecomNumber.countryCode}  ${destinationTelecomNumber.areaCode} ${destinationTelecomNumber.contactNumber}"/>
         </field>
         
-        <field name="estimatedShipWorkEffId" title="${uiLabelMap.ProductEstimatedShipWorkEffId}" widget-style="${styles.link_record_id}">
+        <field name="estimatedShipWorkEffId" title="${uiLabelMap.ProductEstimatedShipWorkEffId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="/workeffort/control/WorkEffortSummary" also-hidden="false" description="${shipment.estimatedShipWorkEffId}" target-type="inter-app">
                 <parameter param-name="workEffortId" from-field="shipment.estimatedShipWorkEffId"/>
             </hyperlink>
         </field>
-        <field name="estimatedArrivalWorkEffId" title="${uiLabelMap.ProductEstimatedArrivalWorkEffId}" widget-style="${styles.link_record_id}" position="2">
+        <field name="estimatedArrivalWorkEffId" title="${uiLabelMap.ProductEstimatedArrivalWorkEffId}" widget-style="${styles.link_nav_record_id}" position="2">
             <hyperlink target="/workeffort/control/WorkEffortSummary" also-hidden="false" description="${shipment.estimatedArrivalWorkEffId}" target-type="inter-app">
                 <parameter param-name="workEffortId" from-field="shipment.estimatedArrivalWorkEffId"/>
             </hyperlink>

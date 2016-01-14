@@ -43,7 +43,7 @@ under the License.
             </select>
         </@field>
         <@field type="submitarea">
-            <a href="javascript:document.selectShoppingList.submit();" class="${styles.link_action!}">${uiLabelMap.CommonEdit}</a>
+            <a href="javascript:document.selectShoppingList.submit();" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
         </@field>
         </@fields>
       </form>

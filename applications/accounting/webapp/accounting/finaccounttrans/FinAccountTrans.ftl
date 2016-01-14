@@ -115,7 +115,7 @@ function getFinAccountTransRunningTotalAndBalances() {
             						
         						</@field>	              					              			
 		            		<#else>
-		              			${uiLabelMap.AccountingNoGlReconciliatio??} <a href="<@ofbizUrl>EditFinAccountReconciliations?finAccountId=${parameters.finAccountId!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonClickHere}</a>
+		              			${uiLabelMap.AccountingNoGlReconciliatio??} <a href="<@ofbizUrl>EditFinAccountReconciliations?finAccountId=${parameters.finAccountId!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonClickHere}</a>
 		            		</#if>
 	          			<#else>
 	          				<@field type="submitarea">
@@ -229,33 +229,33 @@ function getFinAccountTransRunningTotalAndBalances() {
 						                        	</#if>
 					                      		</#if>
 					                      		<@tr valign="middle">
-					                        		<@td><#if paymentGroupMember?has_content><a href="<@ofbizUrl>EditDepositSlipAndMembers?paymentGroupId=${paymentGroupMember.paymentGroupId!}&amp;finAccountId=${parameters.finAccountId!}</@ofbizUrl>" class="${styles.link_record_id!}">${paymentGroupMember.paymentGroupId!}</a></#if></@td>
-					                        		<@td><#if payment?has_content><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId!}</@ofbizUrl>" class="${styles.link_record_id!}">${payment.paymentId!}</a></#if></@td>
+					                        		<@td><#if paymentGroupMember?has_content><a href="<@ofbizUrl>EditDepositSlipAndMembers?paymentGroupId=${paymentGroupMember.paymentGroupId!}&amp;finAccountId=${parameters.finAccountId!}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${paymentGroupMember.paymentGroupId!}</a></#if></@td>
+					                        		<@td><#if payment?has_content><a href="<@ofbizUrl>paymentOverview?paymentId=${payment.paymentId!}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${payment.paymentId!}</a></#if></@td>
 					                        		<@td><#if paymentType?has_content>${paymentType.description!}</#if></@td>
 					                        		<@td><#if paymentMethodType?has_content>${paymentMethodType.description!}</#if></@td>
 					                        		<@td><@ofbizCurrency amount=payment.amount!/></@td>
-					                        		<@td><#if fromPartyName?has_content>${fromPartyName.groupName!}${fromPartyName.firstName!} ${fromPartyName.lastName!} <a href="/partymgr/control/viewprofile?partyId=${fromPartyName.partyId!}" class="${styles.link_record_id!}">${fromPartyName.partyId!}</a></#if></@td>
-					                        		<@td><#if toPartyName?has_content>${toPartyName.groupName!}${toPartyName.firstName!} ${toPartyName.lastName!} <a href="/partymgr/control/viewprofile?partyId=${toPartyName.partyId!}" class="${styles.link_record_id!}">${toPartyName.partyId!}</a></#if></@td>
+					                        		<@td><#if fromPartyName?has_content>${fromPartyName.groupName!}${fromPartyName.firstName!} ${fromPartyName.lastName!} <a href="/partymgr/control/viewprofile?partyId=${fromPartyName.partyId!}" class="${styles.link_nav_record_id!}">${fromPartyName.partyId!}</a></#if></@td>
+					                        		<@td><#if toPartyName?has_content>${toPartyName.groupName!}${toPartyName.firstName!} ${toPartyName.lastName!} <a href="/partymgr/control/viewprofile?partyId=${toPartyName.partyId!}" class="${styles.link_nav_record_id!}">${toPartyName.partyId!}</a></#if></@td>
 					                      		</@tr>
 					                    	</#list>
 			                  			</@table>
 			                		</@modal>
 			                		
 			                		<#-- FIXME: I dunno where to put this, maybe in a new column?  -->
-					               <a href="<@ofbizUrl>DepositSlip.pdf?finAccountTransId=${finAccountTrans.finAccountTransId}</@ofbizUrl>" target="_BLANK" class="${styles.link_action!}">${uiLabelMap.AccountingDepositSlip}</a>
+					               <a href="<@ofbizUrl>DepositSlip.pdf?finAccountTransId=${finAccountTrans.finAccountTransId}</@ofbizUrl>" target="_BLANK" class="${styles.link_action_sys!} ${styles.action_export!}">${uiLabelMap.AccountingDepositSlip}</a>
 			              		<#else>
 			                		${finAccountTrans.finAccountTransId}<#t>
 			              		</#if>
 			            	</@td>
 				            <@td>${finAccountTransType.description!}</@td>
-				            <@td><#if partyName?has_content>${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!} <a href="/partymgr/control/viewprofile?partyId=${partyName.partyId}" class="${styles.link_record_id!}">${(partyName.partyId)!}</a></#if></@td>
-				            <@td><#if glReconciliation?has_content>${glReconciliation.glReconciliationName!} <a href="ViewGlReconciliationWithTransaction?glReconciliationId=${glReconciliation.glReconciliationId!}&amp;finAccountId=${parameters.finAccountId!}" class="${styles.link_record_id!}">${glReconciliation.glReconciliationId!}</a></#if></@td>
+				            <@td><#if partyName?has_content>${(partyName.firstName)!} ${(partyName.lastName)!} ${(partyName.groupName)!} <a href="/partymgr/control/viewprofile?partyId=${partyName.partyId}" class="${styles.link_nav_record_id!}">${(partyName.partyId)!}</a></#if></@td>
+				            <@td><#if glReconciliation?has_content>${glReconciliation.glReconciliationName!} <a href="ViewGlReconciliationWithTransaction?glReconciliationId=${glReconciliation.glReconciliationId!}&amp;finAccountId=${parameters.finAccountId!}" class="${styles.link_nav_record_id!}">${glReconciliation.glReconciliationId!}</a></#if></@td>
 				            <@td>${finAccountTrans.transactionDate!}</@td>
 				            <@td>${finAccountTrans.entryDate!}</@td>
 				            <@td class="amount">${finAccountTrans.amount!}</@td>
 			            	<@td>
 				              	<#if finAccountTrans.paymentId?has_content>
-				                	<a href="<@ofbizUrl>paymentOverview?paymentId=${finAccountTrans.paymentId}</@ofbizUrl>" class="${styles.link_record_id!}">${finAccountTrans.paymentId}</a>
+				                	<a href="<@ofbizUrl>paymentOverview?paymentId=${finAccountTrans.paymentId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${finAccountTrans.paymentId}</a>
 				              	</#if>
 			            	</@td>
 				            <@td><#if paymentType?has_content>${paymentType.description!}</#if></@td>
@@ -265,7 +265,7 @@ function getFinAccountTransRunningTotalAndBalances() {
 			            	<#if grandTotal??>
 			              		<@td>
 			                		<#if finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED'>
-			                  			<a href="javascript:document.cancelFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonCancel}</a>
+			                  			<a href="javascript:document.cancelFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="${styles.link_action_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
 			                		</#if>
 			              		</@td>
 			            	</#if>
@@ -277,7 +277,7 @@ function getFinAccountTransRunningTotalAndBalances() {
 			            	<#if !(grandTotal??)>
 			              		<#if (parameters.glReconciliationId?has_content && parameters.glReconciliationId != "_NA_")>
 			                		<#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
-			                  			<@td><a href="javascript:document.removeFinAccountTransFromReconciliation_${finAccountTrans.finAccountTransId}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonRemove}</a></@td>
+			                  			<@td><a href="javascript:document.removeFinAccountTransFromReconciliation_${finAccountTrans.finAccountTransId}.submit();" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a></@td>
 			                		</#if>
 			              		</#if>
 			            	</#if>

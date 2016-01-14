@@ -521,7 +521,7 @@ under the License.
                             <widgets>
                                 <screenlet title="${uiLabelMap.ProjectMgrTaskContentList}">
                                     <container>
-                                        <link target="EditTaskContents" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_create}">
+                                        <link target="EditTaskContents" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}">
                                             <parameter param-name="workEffortId"/>
                                         </link>
                                     </container>

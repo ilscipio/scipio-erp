@@ -38,7 +38,7 @@
             </service>
         </actions>
         <auto-fields-service default-field-type="display" service-name="updatePayGrade"/>
-        <field name="payGradeId" title="${uiLabelMap.HumanResPayGradeID}" widget-style="${styles.link_record_id}">
+        <field name="payGradeId" title="${uiLabelMap.HumanResPayGradeID}" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="true" target="EditPayGrade" target-type="plain" description="${payGradeId}">
                 <parameter param-name="payGradeId"/>
             </hyperlink>
@@ -56,7 +56,7 @@
         <field use-when="payGrade!=null" name="payGradeId" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field use-when="payGrade==null" name="payGradeId"><text/></field>
         <field name="payGradeName" required-field="true"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="payGrade!=null" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListSalarySteps" type="multi" target="updateSalaryStep?salaryStepSeqId=${salaryStepSeqId}&amp;payGradeId=${payGradeId}" paginate-target="findSalarySteps"
@@ -82,6 +82,6 @@
         <auto-fields-service service-name="createSalaryStep"/>
         <field name="salaryStepSeqId"><ignored/></field>
         <field name="payGradeId"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 </forms>

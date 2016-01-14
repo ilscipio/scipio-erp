@@ -263,9 +263,9 @@ under the License.
                                         <a href="#" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>updateProductExportDetail</@ofbizUrl>';document.ProductsExportToEbay.submit();" class="${styles.link_action!}">${uiLabelMap.CommonSave}</a>
                                     <#-- request.setAttribute("isSaved")-->
                                     <#if isSaved?? && isSaved=="Y">
-                                        <a href="#" class="${styles.link_action!}" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>verifyItemBeforeAddAndExportToEbay</@ofbizUrl>';document.ProductsExportToEbay.submit();">Verifly Item</a>
+                                        <a href="#" class="${styles.link_action_sys!} ${styles.action_verify!}" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>verifyItemBeforeAddAndExportToEbay</@ofbizUrl>';document.ProductsExportToEbay.submit();">Verify Item</a>
                                     </#if>
-                                        <a href="#" class="${styles.link_action!}" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>removeProductFromListing</@ofbizUrl>';document.ProductsExportToEbay.submit();">Remove</a>
+                                        <a href="#" class="${styles.link_action_sys!} ${styles.action_remove!}" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>removeProductFromListing</@ofbizUrl>';document.ProductsExportToEbay.submit();">Remove</a>
                                         <#--a href="#" class="${styles.link_action!}">Save and ${uiLabelMap.EbayExportToEbay}</a-->
                                         <!-- end buttons bar -->
                                 </@td>

@@ -24,7 +24,7 @@ under the License.
     <form name="FindFacilityGroup" type="list" title="" list-name="facilityGroups" paginate-target="FindFacilityGroup"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="FacilityGroup" default-field-type="display"/>
-        <field name="facilityGroupId" widget-style="${styles.link_record_id}">
+        <field name="facilityGroupId" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${facilityGroupId}" target="EditFacilityGroup">
                 <parameter param-name="facilityGroupId"/>
             </hyperlink>

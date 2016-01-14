@@ -87,7 +87,7 @@ under the License.
             </entity-and>
         </actions>
         <auto-fields-entity entity-name="OrderHeader" default-field-type="display"/>
-        <field name="orderId" widget-style="${styles.link_record_id}">
+        <field name="orderId" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="EditOrderHeader" description="[${orderId}]">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -121,7 +121,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="addAction" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="addAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="LookupBulkAddSupplierProductsInApprovedOrder" type="multi" use-row-submit="true" list-name="productList" title="" target="bulkAddProductsInApprovedOrder"
             odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="LookupBulkAddSupplierProductsInApprovedOrder" view-size="10">
@@ -130,7 +130,7 @@ under the License.
         </actions>
         <field name="orderId"><hidden/></field>
         <field name="shipGroupSeqId"><hidden/></field>
-        <field name="productId" widget-style="${styles.link_record_id}">
+        <field name="productId" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${productId}" target="/catalog/control/EditProductInventoryItems" target-type="inter-app">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -229,7 +229,7 @@ under the License.
         <field name="orderTypeId" title="${uiLabelMap.FormFieldTitle_orderTypeId}">
             <display-entity entity-name="OrderType" description="${description}"/>
         </field>
-        <field name="orderId" title="${uiLabelMap.OrderOrderId}" widget-style="${styles.link_record_id}">
+        <field name="orderId" title="${uiLabelMap.OrderOrderId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="orderview" description="${orderId}">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -256,7 +256,7 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
 </forms>

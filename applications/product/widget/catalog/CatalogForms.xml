@@ -34,13 +34,13 @@
                 <field-map field-name="noConditionFind" value="Y" />
             </service>
         </actions>
-        <field name="prodCatalogId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_record_id}">
+        <field name="prodCatalogId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" description="${prodCatalogId}" target="EditCatalog">
                 <parameter param-name="prodCatalogId" />
             </hyperlink>
         </field>
 
-        <field name="prodCatalogId" sort-field="true" widget-style="${styles.link_record_id}">
+        <field name="prodCatalogId" sort-field="true" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="EditProdCatalog?prodCatalogId=${prodCatalogId}" description="${prodCatalogId}" />
         </field>
         <field name="catalogName" title="${uiLabelMap.CommonName}" sort-field="true">
@@ -132,7 +132,7 @@
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}" position="2">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button" />
         </field>
     </form>
@@ -149,7 +149,7 @@
         <!-- three possibilities for the Party: person, partyGroup, neither... just print everything and if it's empty, no biggie -->
         <field name="partyId" title="${uiLabelMap.PartyParty}">
             <display-entity entity-name="PartyNameView" description=" " also-hidden="true" cache="false">
-                <sub-hyperlink target-type="inter-app" link-style="${styles.link_record_name_long}" target="/partymgr/control/viewprofile"
+                <sub-hyperlink target-type="inter-app" link-style="${styles.link_nav_record_name_long}" target="/partymgr/control/viewprofile"
                     description="${catalogParty.groupName}${catalogParty.personalTitle} ${catalogParty.firstName} ${catalogParty.middleName} ${catalogParty.lastName} ${suffix}">
                     <parameter param-name="party_id" from-field="partyId" />
                 </sub-hyperlink>
@@ -198,7 +198,7 @@
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}" position="2">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button" />
         </field>
     </form>
@@ -213,7 +213,7 @@
         </field>
         <field name="productStoreId" title="${uiLabelMap.CommonStore}">
             <display-entity entity-name="ProductStore" description=" " also-hidden="true" cache="true">
-                <sub-hyperlink link-style="${styles.link_record_idname}" target="EditProductStore"
+                <sub-hyperlink link-style="${styles.link_nav_record_idname}" target="EditProductStore"
                     description="${catalogStore.storeName} - ${productStoreId}">
                     <parameter param-name="productStoreId" />
                 </sub-hyperlink>
@@ -248,7 +248,7 @@
         </field>
         <field name="productCategoryId" title="${uiLabelMap.CommonCategory}">
             <display-entity entity-name="ProductCategory" description=" " also-hidden="true" cache="true">
-                <sub-hyperlink link-style="${styles.link_record_idname}" target="EditCategory"
+                <sub-hyperlink link-style="${styles.link_nav_record_idname}" target="EditCategory"
                     description="${productCategory.categoryName} - ${productCategoryId}">
                     <parameter param-name="productCategoryId" />
                 </sub-hyperlink>
@@ -311,7 +311,7 @@
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}" position="2">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button" />
         </field>
     </form>

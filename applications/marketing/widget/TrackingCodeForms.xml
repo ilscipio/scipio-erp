@@ -72,7 +72,7 @@ under the License.
         <actions>
             <entity-condition entity-name="TrackingCode"/>
         </actions>
-        <field name="trackingCodeId" widget-style="${styles.link_record_id}" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}">
+        <field name="trackingCodeId" widget-style="${styles.link_nav_record_id}" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}">
             <hyperlink target="EditTrackingCode" description="${trackingCodeId}" also-hidden="false">
                 <parameter param-name="trackingCodeId"/>
             </hyperlink>
@@ -191,7 +191,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="visitId" title="${uiLabelMap.MarketingTrackingCodeVisitVisitId}" widget-style="${styles.link_record_id}">
+        <field name="visitId" title="${uiLabelMap.MarketingTrackingCodeVisitVisitId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${visitId}" target="/partymgr/control/visitdetail" target-type="inter-app">
                 <parameter param-name="visitId"/>
                 <parameter param-name="DONE_PAGE" from-field="donePage"/>
@@ -240,7 +240,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="trackingCodeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}" widget-style="${styles.link_record_id}">
+        <field name="trackingCodeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" description="${trackingCodeId}" target="javascript:set_value('${trackingCodeId}')" target-type="plain"/>
         </field>
         <field name="description" title="${uiLabelMap.MarketingTrackingCodeDescription}"><display/></field>
@@ -267,7 +267,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="visitId" title="${uiLabelMap.MarketingTrackingCodeVisitVisitId}" widget-style="${styles.link_record_id}">
+        <field name="visitId" title="${uiLabelMap.MarketingTrackingCodeVisitVisitId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" description="${visitId}" target="javascript:set_value('${visitId}')" target-type="plain"/>
         </field>
         <field name="partyId" title="${uiLabelMap.MarketingTrackingCodeVisitPartyId}">
@@ -305,7 +305,7 @@ under the License.
         <actions>
             <entity-condition entity-name="TrackingCodeType"/>
         </actions>
-        <field name="trackingCodeTypeId" widget-style="${styles.link_record_id}" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeTypeId}">
+        <field name="trackingCodeTypeId" widget-style="${styles.link_nav_record_id}" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeTypeId}">
             <hyperlink target="EditTrackingCodeType" description="${trackingCodeTypeId}" also-hidden="false">
                 <parameter param-name="trackingCodeTypeId"/>
             </hyperlink>
@@ -334,7 +334,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="trackingCodeTypeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeTypeId}" widget-style="${styles.link_record_id}">
+        <field name="trackingCodeTypeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeTypeId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" description="${trackingCodeTypeId}" target="javascript:set_value('${trackingCodeTypeId}')" target-type="plain"/>
         </field>
         <field name="description" title="${uiLabelMap.MarketingTrackingCodeTypeDescription}"><display/></field>

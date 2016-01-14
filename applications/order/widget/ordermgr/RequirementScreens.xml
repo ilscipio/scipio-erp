@@ -288,7 +288,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListRequirementRoles}">
                             <container>
-                                <link target="EditRequirementRole" text="${uiLabelMap.CommonNew}" style="${styles.link_nav} ${styles.action_create}">
+                                <link target="EditRequirementRole" text="${uiLabelMap.CommonNew}" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="requirementId"/>
                                 </link>
                                 <link target="autoAssignRequirementToSupplier" text="${uiLabelMap.OrderAutoAssign}" style="${styles.link_action_sys} ${styles.action_update}">

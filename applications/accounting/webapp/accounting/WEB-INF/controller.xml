@@ -2132,7 +2132,7 @@ under the License.
         <response name="success" type="view" value="BankReconciliation"/>
         <response name="error" type="view" value="BankReconciliation"/>
     </request-map>
-    <request-map uri="reomveFinAccountTransAssociation">
+    <request-map uri="removeFinAccountTransAssociation">
         <security auth="true" https="true"/>
         <event type="service" invoke="removeFinAccountTransFromReconciliation"/>
         <response name="success" type="view" value="ViewGlReconciliationWithTransaction"/>

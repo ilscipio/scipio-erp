@@ -33,15 +33,15 @@ under the License.
       </@thead>
       <#list items as item>
         <@tr>
-          <@td><a href="/ordermgr/control/returnMain?returnId=${item.returnId}" class="${styles.link_record_id!}">${item.returnId}</a> [${item.returnItemSeqId}]</@td>
-          <@td><a href="/catalog/control/EditProductInventoryItems?productId=${item.productId}" class="${styles.link_record_id!}">${item.productId}</a> ${item.internalName!}</@td>
+          <@td><a href="/ordermgr/control/returnMain?returnId=${item.returnId}" class="${styles.link_nav_record_id!}">${item.returnId}</a> [${item.returnItemSeqId}]</@td>
+          <@td><a href="/catalog/control/EditProductInventoryItems?productId=${item.productId}" class="${styles.link_nav_record_id!}">${item.productId}</a> ${item.internalName!}</@td>
           <@td>${item.returnQuantity}</@td>
           <@td>${item.shipmentItemQty}</@td>
           <@td>${item.totalQtyIssued}</@td>
           <@td>
             <#if item.issuedItems?has_content>
               <#list item.issuedItems as issuedItem>
-                <div><a href="/facility/control/EditInventoryItem?inventoryItemId=${issuedItem.inventoryItemId}" class="${styles.link_record_id!}">${issuedItem.inventoryItemId}</a> ${issuedItem.quantity}</div>
+                <div><a href="/facility/control/EditInventoryItem?inventoryItemId=${issuedItem.inventoryItemId}" class="${styles.link_nav_record_id!}">${issuedItem.inventoryItemId}</a> ${issuedItem.quantity}</div>
               </#list>
             </#if>
           </@td>

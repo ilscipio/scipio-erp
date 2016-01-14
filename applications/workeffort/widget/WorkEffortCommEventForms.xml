@@ -30,7 +30,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="workEffortId"><hidden/></field>
-        <field name="communicationEventId" widget-style="${styles.link_record_id}">
+        <field name="communicationEventId" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="/partymgr/control/EditCommunicationEvent" target-type="inter-app" description="${communicationEventId}">
                 <parameter param-name="communicationEventId"/>
             </hyperlink>
@@ -54,7 +54,7 @@ under the License.
         <field name="workEffortId"><hidden/></field>
         <field name="description"><textarea/></field>
         <field name="communicationEventId"><lookup target-form-name="LookupCommEvent"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="text-link"/></field>
         <sort-order>
             <banner left-text="${uiLabelMap.WorkEffortBanner3}"/>
             <sort-field name="workEffortId"/>

@@ -51,7 +51,7 @@ under the License.
                             <widgets>
                                 <screenlet title="${uiLabelMap.PageTitleFindSegmentGroup}">
                                     <container style="button-bar">
-                                        <link text="${uiLabelMap.MarketingSegmentGroupCreate}" target="viewSegmentGroup" style="${styles.link_nav} ${styles.action_create}"/>
+                                        <link text="${uiLabelMap.MarketingSegmentGroupCreate}" target="viewSegmentGroup" style="${styles.link_nav} ${styles.action_add}"/>
                                     </container>
                                     <include-form name="FindSegmentGroup" location="component://marketing/widget/SegmentForms.xml"/>
                                 </screenlet>
@@ -102,7 +102,7 @@ under the License.
                                     <condition><not><if-empty field="segmentGroupId"/></not></condition>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link text="${uiLabelMap.MarketingSegmentGroupCreate}" target="viewSegmentGroup" style="${styles.link_nav} ${styles.action_create}"/>
+                                            <link text="${uiLabelMap.MarketingSegmentGroupCreate}" target="viewSegmentGroup" style="${styles.link_nav} ${styles.action_add}"/>
                                         </container>
                                     </widgets>
                                 </section>

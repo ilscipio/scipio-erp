@@ -29,7 +29,7 @@ under the License.
                 <order-by field-name="${parameters.sortField}"/>
             </entity-condition>
         </actions>
-        <field name="productStoreId" title="${uiLabelMap.ProductStoreId}" widget-style="${styles.link_record_idname}" sort-field="true">
+        <field name="productStoreId" title="${uiLabelMap.ProductStoreId}" widget-style="${styles.link_nav_record_idname}" sort-field="true">
             <hyperlink target="EditProductStore" description="${storeName} [${productStoreId}]">
                 <parameter param-name="productStoreId"/>
             </hyperlink>
@@ -69,7 +69,7 @@ under the License.
         </actions>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyId}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyId}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -112,7 +112,7 @@ under the License.
         <field name="fromDate" use-when="productStoreRole!=null" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
         <field name="sequenceNum"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" use-when="productStoreRole==null" widget-style="${styles.link_action_sys} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" use-when="productStoreRole==null" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="productStoreRole!=null" widget-style="${styles.link_action_sys} ${styles.action_update}">
@@ -244,7 +244,7 @@ under the License.
                 <field-map field-name="productStoreGroupId" from-field="productStoreGroup.productStoreGroupId"/>
             </entity-and>
         </actions>
-        <field name="productStoreId" widget-style="${styles.link_record_id}">
+        <field name="productStoreId" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="EditProductStore" description="${productStoreId}">
                 <parameter param-name="productStoreId"/>
             </hyperlink>
@@ -263,7 +263,7 @@ under the License.
             </drop-down>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date" default-value="${nowTimestamp}"/></field>
-        <field name="addAction" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit/></field>
+        <field name="addAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
         <on-event-update-area area-target="EditProductStoreGroupAndAssoc" event-type="submit" area-id="centerdiv">
             <parameter param-name="productStoreGroupId" from-field="productStoreGroup.productStoreGroupId"/>
         </on-event-update-area>

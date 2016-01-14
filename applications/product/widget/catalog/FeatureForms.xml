@@ -126,7 +126,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productFeatureTypeId" widget-style="${styles.link_record_id}">
+        <field name="productFeatureTypeId" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="EditFeatureType" description="${productFeatureTypeId}">
                 <parameter param-name="productFeatureTypeId"/>
             </hyperlink>
@@ -258,7 +258,7 @@
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="productFeatureGroupId"><hidden/></field>
         <field name="productFeatureId" title="${uiLabelMap.ProductFeatureId}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -309,7 +309,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productFeatureCategoryId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_record_id}">
+        <field name="productFeatureCategoryId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="EditFeatureCategoryFeatures" description="${productFeatureCategoryId}">
                 <parameter param-name="productFeatureCategoryId"/>
             </hyperlink>
@@ -326,7 +326,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListFeaturePrice" type="list" target="updateFeaturePrice" list-name="productFeaturePrice"
@@ -376,6 +376,6 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 </forms>

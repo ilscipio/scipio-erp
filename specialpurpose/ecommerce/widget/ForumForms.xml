@@ -35,7 +35,7 @@ under the License.
         <field name="textData" map-name="dummy">
         <textarea  rows="10" visual-editor-enable="true" visual-editor-buttons="compact"/>
         </field>
-        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="EditCombo" target="uploadContentAndImage" title="" type="upload"
@@ -183,7 +183,7 @@ under the License.
         <field name="contentName"><text-find/></field>
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
 <!--
-        <field name="createAction" title=" " widget-style="${styles.link_nav} ${styles.action_create}">
+        <field name="createAction" title=" " widget-style="${styles.link_nav} ${styles.action_add}">
             <hyperlink also-hidden="false" description="Create New" target="AddContent"/>
         </field>
 -->
@@ -372,7 +372,7 @@ under the License.
         <field name="lastModifiedByUserLogin" position="1"><display/></field>
         <field name="lastModifiedDate" position="2"><display/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="createAction" title=" " widget-style="${styles.link_nav} ${styles.action_create}" position="1">
+        <field name="createAction" title=" " widget-style="${styles.link_nav} ${styles.action_add}" position="1">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonCreateNew}" target="AddContent"/>
         </field>
         <field name="findContent" title=" " widget-style="${styles.link_nav} ${styles.action_find}" position="2">
@@ -435,7 +435,7 @@ under the License.
             <display description="ELECTRONIC_TEXT" also-hidden="false"/>
         </field>
         <field name="textData" title="${uiLabelMap.ContentText}" id-name="textData"><textarea rows="20" cols="120"/> </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ImageUpload" target="uploadImage" title="" type="upload"
         default-title-style="tableheadtext" default-widget-style="inputBox">

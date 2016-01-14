@@ -91,7 +91,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container>
-                                            <link style="${styles.link_nav} ${styles.action_create}" text="${uiLabelMap.ProductReceiveInventory}" target="ReceiveInventory">
+                                            <link style="${styles.link_nav} ${styles.action_add}" text="${uiLabelMap.ProductReceiveInventory}" target="ReceiveInventory">
                                                 <parameter param-name="shipmentId" from-field="shipment.shipmentId"/>
                                                 <parameter param-name="facilityId" from-field="facility.facilityId"/>
                                                 <parameter param-name="purchaseOrderId" from-field="shipment.primaryOrderId"/>
@@ -111,7 +111,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container>
-                                            <link style="${styles.link_nav} ${styles.action_create}" text="${uiLabelMap.ProductReceiveInventoryAgainstPO}" target="ReceiveInventoryAgainstPurchaseOrder">
+                                            <link style="${styles.link_nav} ${styles.action_add}" text="${uiLabelMap.ProductReceiveInventoryAgainstPO}" target="ReceiveInventoryAgainstPurchaseOrder">
                                                 <parameter param-name="shipmentId" from-field="shipment.shipmentId"/>
                                                 <parameter param-name="purchaseOrderId" from-field="shipment.primaryOrderId"/>
                                             </link>
@@ -257,7 +257,7 @@ under the License.
                                 <if-compare field="shipment.shipmentTypeId" operator="equals" value="SALES_SHIPMENT"/>
                             </condition>
                             <widgets>
-                                <link style="${styles.link_nav} ${styles.action_create}" text="${uiLabelMap.ProductShipmentPlanToOrderItems}" target="AddItemsFromOrder">
+                                <link style="${styles.link_nav} ${styles.action_add}" text="${uiLabelMap.ProductShipmentPlanToOrderItems}" target="AddItemsFromOrder">
                                     <parameter param-name="shipmentId"/>
                                     <parameter param-name="selectFromShipmentPlan" value="true"/>
                                 </link>

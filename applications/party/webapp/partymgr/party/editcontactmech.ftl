@@ -30,7 +30,7 @@ under the License.
             </select>
         </@field>
         <@field type="submitarea">
-            <a href="javascript:document.createcontactmechform.submit()" class="${styles.link_action!}">${uiLabelMap.CommonCreate}</a>
+            <a href="javascript:document.createcontactmechform.submit()" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.CommonCreate}</a>
         </@field>
       </form>
     </@section>
@@ -88,7 +88,7 @@ under the License.
                          <input type="hidden" name="fromDate" value="${partyContactMechPurpose.fromDate.toString()}" />
                          <input type="hidden" name="DONE_PAGE" value="${donePage?replace("=","%3d")}" />
                          <input type="hidden" name="useValues" value="true" />
-                         <a href="javascript:document.deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}.submit()" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a> 
+                         <a href="javascript:document.deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}.submit()" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a> 
                        </form>
                     </@td>
                   </@tr>

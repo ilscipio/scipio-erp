@@ -128,7 +128,7 @@ function submitForm(form, mode, value) {
                     <@heading>${uiLabelMap.OrderGiftMessage}</@heading>
                     <textarea class='textAreaBox' cols="30" rows="3" wrap="hard" name="giftMessage">${cart.getGiftMessage(groupIdx)!}</textarea>
                   </@td>
-                  <@td><input type="button" class="${styles.link_action!}" value="${uiLabelMap.CommonSave}" onclick="javascript:submitForm(document.editgroupform${groupIdx}, 'SV', null);"/></@td>
+                  <@td><input type="button" class="${styles.link_action_session!} ${styles.action_update!}" value="${uiLabelMap.CommonSave}" onclick="javascript:submitForm(document.editgroupform${groupIdx}, 'SV', null);"/></@td>
                 </@tr>
                 <#assign groupIdx = groupIdx + 1>
                 <#if group_has_next>
@@ -173,7 +173,7 @@ function submitForm(form, mode, value) {
                         </a>
                       </#if>
                       <#-- end code to display a small image of the product -->
-                      <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="${styles.link_record_id!}">${cartLine.getProductId()} -
+                      <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${cartLine.getProductId()} -
                       ${cartLine.getName()!}</a> : ${cartLine.getDescription()!}
 
                       <#-- display the registered ship groups and quantity -->
@@ -228,7 +228,7 @@ function submitForm(form, mode, value) {
                     </select>
                   </div>
                 </@td>
-                <@td><input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonSubmit}"/></@td>
+                <@td><input type="submit" class="${styles.link_action_session!} ${styles.action_update!}" value="${uiLabelMap.CommonSubmit}"/></@td>
               </form>
             </@tr>
           </#list>

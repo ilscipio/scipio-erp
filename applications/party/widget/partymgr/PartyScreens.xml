@@ -888,7 +888,7 @@ under the License.
                         <screenlet title="${uiLabelMap.PageTitleListContent}">
                             <!-- links to same page
                             <container>
-                                <link target="EditPartyContents" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_create}">
+                                <link target="EditPartyContents" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="partyId"/>
                                 </link>
                             </container>-->
@@ -1191,7 +1191,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <container style="button-bar">
-                                    <link target="addGeoLocation" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_create}">
+                                    <link target="addGeoLocation" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}">
                                         <parameter param-name="partyId" from-field="parameters.partyId"/>
                                     </link>
                                 </container>

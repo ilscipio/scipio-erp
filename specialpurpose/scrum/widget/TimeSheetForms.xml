@@ -63,7 +63,7 @@
         <row-actions>
             <set field="completeAction" value="${bsh:&quot;TIMESHEET_IN_PROCESS&quot;.equals(statusId)?complete:&quot;&quot;}"/>
         </row-actions>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_record_id}">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" description="${timesheetId}" target="ViewTimeSheet">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -92,7 +92,7 @@
         <actions>
             <set field="complete" value="${uiLabelMap.ScrumToComplete}"/>
         </actions>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_record_id}">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" description="${timesheetId}" target="${my}Timesheet">
                 <parameter param-name="timesheetId"/>
             </hyperlink>

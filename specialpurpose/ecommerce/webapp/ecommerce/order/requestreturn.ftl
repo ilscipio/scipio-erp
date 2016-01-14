@@ -39,7 +39,7 @@ under the License.
           </#if>
           <@table border="0" width="100%" cellpadding="2" cellspacing="0">
             <@tr>
-              <@td colspan="5"><h3>${uiLabelMap.OrderReturnItemsFromOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderId}</@ofbizUrl>" class="${styles.link_record_id!}">${orderId}</a></h3></@td>
+              <@td colspan="5"><h3>${uiLabelMap.OrderReturnItemsFromOrder} ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${orderId}</a></h3></@td>
               <@td align="right">
                 <span class="tableheadtext">${uiLabelMap.CommonSelectAll}</span>&nbsp;
                 <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this, 'selectAllForm');"/>
@@ -75,7 +75,7 @@ under the License.
                 <@tr>
                   <@td>
                       <#if orderItem.productId??>
-                        &nbsp;<a href="<@ofbizUrl>product?product_id=${orderItem.productId}</@ofbizUrl>" class="${styles.link_record_id!}">${orderItem.productId}</a>
+                        &nbsp;<a href="<@ofbizUrl>product?product_id=${orderItem.productId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${orderItem.productId}</a>
                         <input type="hidden" name="productId_o_${rowCount}" value="${orderItem.productId}"/>
                       </#if>
                       ${orderItem.itemDescription}
@@ -130,7 +130,7 @@ under the License.
                             <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                             <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                             <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                            <a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="${styles.link_action!}">[${uiLabelMap.CommonUpdate}]</a>
+                            <a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">[${uiLabelMap.CommonUpdate}]</a>
                         </@td>
                       </@tr>
                     </#list>

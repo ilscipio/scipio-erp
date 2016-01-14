@@ -29,7 +29,7 @@
                                 <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                                     <decorator-section name="menu-bar">
                                         <container style="button-bar">
-                                            <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}" style="${styles.link_nav} ${styles.action_create}" />
+                                            <link target="EditAgreement" text="${uiLabelMap.AccountingNewAgreement}" style="${styles.link_nav} ${styles.action_add}" />
                                         </container>
                                     </decorator-section>
                                     <decorator-section name="search-options">

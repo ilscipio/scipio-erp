@@ -30,7 +30,7 @@
             <service service-name="getPartyEmail" result-map="emailResult"/>
             <service service-name="getPartyTelephone" result-map="telResult"/>
         </row-actions>
-        <field name="resourceName" parameter-name="partyId" title="${uiLabelMap.ProjectMgrResourceName}" widget-style="${styles.link_record_name}">
+        <field name="resourceName" parameter-name="partyId" title="${uiLabelMap.ProjectMgrResourceName}" widget-style="${styles.link_nav_record_name}">
             <hyperlink also-hidden="false" description="${lastName}, ${firstName} ${middleName} ${groupName}" target="viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>

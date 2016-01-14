@@ -64,7 +64,7 @@ under the License.
         <row-actions>
             <set field="amountToApply" value="${groovy:org.ofbiz.accounting.payment.PaymentWorker.getPaymentNotApplied(delegator,paymentId);}"/>            
         </row-actions>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_record_id}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -74,7 +74,7 @@ under the License.
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}" use-when="isReduced==false">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}">
                 <!-- 
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
                  -->
@@ -83,7 +83,7 @@ under the License.
         <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${firstName} ${lastName}">
                 <!-- 
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyIdTo"/>
                 </sub-hyperlink>
                  -->
@@ -108,7 +108,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_record_id}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_record_id}">
        		 <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -188,7 +188,7 @@ under the License.
         <field name="comments" position="2"><text size="70"/></field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="WITHDRAWAL"/></field>
-        <field position="1" name="createAction" widget-style="${styles.link_action_sys} ${styles.action_create}" title="${uiLabelMap.CommonCreate}">
+        <field position="1" name="createAction" widget-style="${styles.link_action_sys} ${styles.action_add}" title="${uiLabelMap.CommonCreate}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -235,7 +235,7 @@ under the License.
         </field>
         <field name="isDepositWithDrawPayment"><hidden value="Y"/></field>
         <field name="finAccountTransTypeId"><hidden value="DEPOSIT"/></field>
-        <field position="1" name="createAction" widget-style="${styles.link_action_sys} ${styles.action_create}" title="${uiLabelMap.CommonCreate}">
+        <field position="1" name="createAction" widget-style="${styles.link_action_sys} ${styles.action_add}" title="${uiLabelMap.CommonCreate}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -338,7 +338,7 @@ under the License.
     <form name="listInvoicesNotApplied" type="list" list-name="invoices" target="createPaymentApplication" title=""
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="paymentId"><hidden/></field>
-        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" widget-style="${styles.link_record_id}">
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="invoiceOverview" description="${invoiceId}">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
@@ -360,7 +360,7 @@ under the License.
     <form name="listPaymentsNotApplied" type="list" list-name="payments" target="createPaymentApplication" title=""
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="paymentId"><hidden/></field>
-        <field name="toPaymentId" widget-style="${styles.link_record_id}">
+        <field name="toPaymentId" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="paymentOverview" description="[${toPaymentId}]">
                 <parameter param-name="paymentId" from-field="toPaymentId"/>
             </hyperlink>
@@ -426,7 +426,7 @@ under the License.
         <field name="effectiveDate" position="1"><display type="date"/></field>
         <field name="comments" position="2"><display/></field>
         <field name="overrideGlAccountId" position="1"><display/></field>
-        <field name="paymentGatewayResponseId" position="2" widget-style="${styles.link_record_id}">
+        <field name="paymentGatewayResponseId" position="2" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${payment.paymentGatewayResponseId}" target="ViewGatewayResponse">
                 <parameter param-name="paymentGatewayResponseId" from-field="payment.paymentGatewayResponseId"/>
             </hyperlink>
@@ -451,23 +451,23 @@ under the License.
         <auto-fields-entity entity-name="PaymentApplication" default-field-type="display"/>
         <field name="paymentApplicationId"><hidden/></field>
         <field name="paymentId"><hidden/></field>
-        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" widget-style="${styles.link_record_id}">
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="invoiceOverview" description="${invoiceId}">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
-        <field name="invoiceItemSeqId" widget-style="${styles.link_record_id}">
+        <field name="invoiceItemSeqId" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="listInvoiceItems" description="${invoiceItemSeqId}">
                 <parameter param-name="invoiceId"/>
                 <parameter param-name="invoiceItemSeqId"/>
             </hyperlink>
         </field>
-        <field name="toPaymentId" widget-style="${styles.link_record_id}">
+        <field name="toPaymentId" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="paymentOverview" description="${toPaymentId}">
                 <parameter param-name="paymentId" from-field="toPaymentId"/>
             </hyperlink>
         </field>
-        <field name="billingAccountId" widget-style="${styles.link_record_id}">
+        <field name="billingAccountId" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="EditBillingAccount" description="${billingAccountId}">
                 <parameter param-name="billingAccountId"/>
             </hyperlink>
@@ -478,15 +478,15 @@ under the License.
 
     <form name="AcctgTransAndEntries" type="list" list-name="AcctgTransAndEntries"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" widget-style="${styles.link_record_id}">
+        <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="invoiceOverview?invoiceId=${invoiceId}" description="${invoiceId}"/>
         </field>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_record_id}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="paymentOverview?paymentId=${paymentId}" description="${paymentId}"/>
         </field>
         <field name="amount" title="${uiLabelMap.CommonAmount}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
         <field name="origAmount" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${origCurrencyUomId}"/></field>
-        <field name="acctgTransId" widget-style="${styles.link_record_id}">
+        <field name="acctgTransId" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${acctgTransId}" target="EditAcctgTrans?acctgTransId=${acctgTransId}&amp;organizationPartyId=${organizationPartyId}"/>
         </field>
         <field name="acctgTransTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="AcctgTransType"/></field>
@@ -512,7 +512,7 @@ under the License.
 
     <form name="ListChecksToPrint" type="multi" list-name="payments" target="printChecks" separate-columns="true"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_record_id}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -530,7 +530,7 @@ under the License.
     <form name="ListChecksToSend" type="multi" use-row-submit="true" list-name="payments" target="quickSendPayment?organizationPartyId=${organizationPartyId}" separate-columns="true"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="paymentId"><hidden/></field>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_record_id}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -586,7 +586,7 @@ under the License.
         <row-actions>
             <entity-one entity-name="Invoice" value-field="invoice" ></entity-one>
         </row-actions>
-        <field name="invoiceId"  title="${uiLabelMap.CommonInvoice}" widget-style="${styles.link_record_id}">
+        <field name="invoiceId"  title="${uiLabelMap.CommonInvoice}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="invoiceOverview" description="${invoiceId}">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
@@ -606,7 +606,7 @@ under the License.
             <display-entity entity-name="FinAccountTransType" description="${description}"/>
         </field>
         <field name="amount" title="${uiLabelMap.CommonAmount}" position="1"><display type="currency" currency="${payment.currencyUomId}"/></field>
-        <field name="glReconciliationId" position="2" widget-style="${styles.link_record_id}">
+        <field name="glReconciliationId" position="2" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="ViewGlReconciliationWithTransaction" description="${finAccountTrans.glReconciliationId}">
                 <parameter param-name="glReconciliationId" from-field="finAccountTrans.glReconciliationId"/>
                 <parameter param-name="finAccountId" from-field="finAccountTrans.finAccountId"/>

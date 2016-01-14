@@ -89,7 +89,7 @@ function clickAll(e) {
                 </@td>
                 <@td>
                     <#list existingVariantProductIds as existingVariantProductId>
-                        <a href="<@ofbizUrl>EditProduct?productId=${existingVariantProductId}</@ofbizUrl>" class="${styles.link_record_id!}">${existingVariantProductId}</a>
+                        <a href="<@ofbizUrl>EditProduct?productId=${existingVariantProductId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${existingVariantProductId}</a>
                     </#list>
                 </@td>
                 <@td align="right">
@@ -105,7 +105,7 @@ function clickAll(e) {
             <#assign columns = featureTypes.size() + 4>
             <@td colspan="${columns}" align="center">
                 <input type="hidden" name="_rowCount" value="${rowCount}" />
-                <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonCreate}"/>
+                <input type="submit" class="${styles.link_action_sys!} ${styles.action_add!}" value="${uiLabelMap.CommonCreate}"/>
             </@td>
           </@tr>
         </@tfoot>
@@ -121,7 +121,7 @@ function clickAll(e) {
             <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
         </@field>
         <@field type="submitarea">
-            <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.ProductVariantAdd}"/>
+            <input type="submit" class="${styles.link_action_sys!} ${styles.action_add!}" value="${uiLabelMap.ProductVariantAdd}"/>
         </@field>
     </form>
 </@section>

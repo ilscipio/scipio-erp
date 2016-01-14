@@ -51,7 +51,7 @@ under the License.
             <@tr>
                 <@td>${product.internalName?default("-no internal name-")} [${product.productId}]</@td>
                 <@td>${product.productName?default("-no name-")} [${product.productId}]</@td>
-                <@td width="10%"><a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.link_action!}">[${uiLabelMap.ProductThisIsIt}]</a></@td>
+                <@td width="10%"><a href="<@ofbizUrl>EditProduct?productId=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">[${uiLabelMap.ProductThisIsIt}]</a></@td>
             </@tr>
           </#list>
           </@tbody>
@@ -103,7 +103,7 @@ under the License.
                 </@field>
                 <@field type="input" label="${uiLabelMap.ProductNewProductId}" name="productId" value="" />
                 <@field type="submitarea">
-                    <input type="submit" value="${uiLabelMap.ProductCreateNewProduct}" class="${styles.link_action!}"/>
+                    <input type="submit" value="${uiLabelMap.ProductCreateNewProduct}" class="${styles.link_action_sys!} ${styles.action_add!}"/>
                 </@field>
         </form>
         </@cell>

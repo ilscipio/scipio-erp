@@ -34,7 +34,7 @@
                                 <section>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="EditEmplPosition" text="${uiLabelMap.HumanResNewEmplPosition}" style="${styles.link_nav} ${styles.action_create}"/>
+                                            <link target="EditEmplPosition" text="${uiLabelMap.HumanResNewEmplPosition}" style="${styles.link_nav} ${styles.action_add}"/>
                                         </container>
                                     </widgets>
                                 </section>
@@ -160,7 +160,7 @@
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.HumanResListValidResponsibility}">
                             <container>
-                                <link target="EditValidResponsibility" text="${uiLabelMap.HumanResAddValidResponsibility}" style="${styles.link_nav} ${styles.action_create}"/>
+                                <link target="EditValidResponsibility" text="${uiLabelMap.HumanResAddValidResponsibility}" style="${styles.link_nav} ${styles.action_add}"/>
                             </container>
                             <include-form name="ListValidResponsibilities" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
                         </screenlet>
@@ -179,7 +179,7 @@
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.HumanResAddValidResponsibility}">
                             <container>
-                                <link target="EditValidResponsibility" text="${uiLabelMap.HumanResAddValidResponsibility}" style="${styles.link_nav} ${styles.action_create}"/>
+                                <link target="EditValidResponsibility" text="${uiLabelMap.HumanResAddValidResponsibility}" style="${styles.link_nav} ${styles.action_add}"/>
                             </container>
                             <include-form name="AddValidResponsibility" location="component://humanres/widget/forms/EmplPositionForms.xml"/>
                         </screenlet>

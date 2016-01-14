@@ -86,7 +86,7 @@ under the License.
                     <@td>${Static["org.ofbiz.party.party.PartyWorker"].makeMatchingString(delegator, match.address2?default("N/A"))}</@td>
                     <@td>${match.city}</@td>
                     <@td>${match.postalCode}</@td>
-                    <@td class="button-col"><a href="<@ofbizUrl>viewprofile?partyId=${match.partyId}</@ofbizUrl>" class="${styles.link_record_id!}">${match.partyId}</a></@td>
+                    <@td class="button-col"><a href="<@ofbizUrl>viewprofile?partyId=${match.partyId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${match.partyId}</a></@td>
                   </@tr>
                 </#list>
                 </@tbody>

@@ -69,7 +69,7 @@ under the License.
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "CONTENT">
      <#if (answer.contentId)?has_content>
       <#assign content = answer.getRelatedOne("Content", false)>
-      <a href="/content/control/img?imgId=${content.dataResourceId}" class="${styles.link_record_id!}">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName!}&nbsp;&nbsp;&nbsp;
+      <a href="/content/control/img?imgId=${content.dataResourceId}" class="${styles.link_nav_record_id!}">${answer.contentId}</a>&nbsp;-&nbsp;${content.contentName!}&nbsp;&nbsp;&nbsp;
     </#if>
     <input type="file" size="15" name="${questionFieldName}" class="inputBox"/>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "OPTION">
@@ -301,6 +301,6 @@ under the License.
   <@tr>
     <@td>&nbsp;</@td>
     <@td>&nbsp;</@td>
-    <@td colspan="2"><input type="submit" class="${styles.link_action!}" value="<#if survey.submitCaption?has_content>${survey.submitCaption}<#else>Submit</#if>"/></@td>
+    <@td colspan="2"><input type="submit" class="${styles.link_action_sys!} ${styles.action_update!}" value="<#if survey.submitCaption?has_content>${survey.submitCaption}<#else>Submit</#if>"/></@td>
   </@tr>
 </@table>

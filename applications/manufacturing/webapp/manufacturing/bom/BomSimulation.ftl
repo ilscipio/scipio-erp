@@ -82,7 +82,7 @@ under the License.
               </@td>
               <@td>${node.product.internalName?default("&nbsp;")}</@td>
               <@td align="right">${node.quantity}</@td>
-              <@td align="right"><a href="<@ofbizUrl>EditProductBom?productId=${(node.product.productId)!}&amp;productAssocTypeId=${(node.bomTypeId)!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonEdit}</a></@td>
+              <@td align="right"><a href="<@ofbizUrl>EditProductBom?productId=${(node.product.productId)!}&amp;productAssocTypeId=${(node.bomTypeId)!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a></@td>
             </@tr>
           </#list>
         </@tbody>
@@ -110,7 +110,7 @@ under the License.
           <#list productsData as productData>
             <#assign node = productData.node>
             <@tr valign="middle">
-              <@td><a href="/catalog/control/EditProduct?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_record_id!}">${node.product.productId}</a></@td>
+              <@td><a href="/catalog/control/EditProduct?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_record_id!} ${styles.action_update!}">${node.product.productId}</a></@td>
               <@td>${node.product.internalName?default("&nbsp;")}</@td>
               <@td align="right">${node.quantity}</@td>
               <@td align="right">${productData.qoh!}</@td>
@@ -118,7 +118,7 @@ under the License.
               <#if productData.unitCost?? && (productData.unitCost > 0)>
               <@td align="right">${productData.unitCost!}</@td>
               <#else>
-              <@td align="right"><a href="/catalog/control/EditProductCosts?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_action!}">NA</a></@td>
+              <@td align="right"><a href="/catalog/control/EditProductCosts?productId=${node.product.productId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav!} ${styles.action_update!}">NA</a></@td>
               </#if>
               <@td align="right">${productData.totalCost!}</@td>
             </@tr>

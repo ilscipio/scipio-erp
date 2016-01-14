@@ -139,7 +139,7 @@ under the License.
               			<@td><#if status?has_content>${status.description!}</#if></@td>
               			<@td>${finAccountTrans.comments!}</@td>
               			<#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
-                			<@td align="center"><a href="javascript:document.reomveFinAccountTransAssociation_${finAccountTrans.finAccountTransId}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonRemove}</a></@td>
+                			<@td align="center"><a href="javascript:document.removeFinAccountTransAssociation_${finAccountTrans.finAccountTransId}.submit();" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a></@td>
               			<#else>
                 			<@td/>
               			</#if>
@@ -170,7 +170,7 @@ under the License.
   	<input name="glReconciliationId" type="hidden" value="${glReconciliationId}"/>
 </form>
 <#list finAccountTransList as finAccountTrans>
-  	<form name="reomveFinAccountTransAssociation_${finAccountTrans.finAccountTransId}" method="post" action="<@ofbizUrl>reomveFinAccountTransAssociation</@ofbizUrl>">
+  	<form name="removeFinAccountTransAssociation_${finAccountTrans.finAccountTransId}" method="post" action="<@ofbizUrl>removeFinAccountTransAssociation</@ofbizUrl>">
     	<input name="finAccountTransId" type="hidden" value="${finAccountTrans.finAccountTransId}"/>
     	<input name="finAccountId" type="hidden" value="${finAccountTrans.finAccountId}"/>
     	<input name="glReconciliationId" type="hidden" value="${glReconciliationId}"/>

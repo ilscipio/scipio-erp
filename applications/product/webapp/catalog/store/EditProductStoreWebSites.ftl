@@ -35,11 +35,11 @@ under the License.
            <@tbody>
               <#list storeWebSites as webSite>
                 <@tr valign="middle">
-                  <@td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.link_record_idname!}">${webSite.siteName!} [${webSite.webSiteId}]</a></@td>
+                  <@td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.link_nav_record_idname!}">${webSite.siteName!} [${webSite.webSiteId}]</a></@td>
                   <@td>${webSite.httpHost?default('&nbsp;')}</@td>
                   <@td>${webSite.httpPort?default('&nbsp;')}</@td>
                   <@td align="center">
-                    <a href="javascript:document.storeUpdateWebSite_${webSite_index}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.storeUpdateWebSite_${webSite_index}.submit();" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                     <form name="storeUpdateWebSite_${webSite_index}" method="post" action="<@ofbizUrl>storeUpdateWebSite</@ofbizUrl>">
                         <input type="hidden" name="viewProductStoreId" value="${productStoreId}"/>
                         <input type="hidden" name="productStoreId" value=""/>
@@ -61,6 +61,6 @@ under the License.
                 <option value="${webSite.webSiteId}">${webSite.siteName!} [${webSite.webSiteId}]</option>
               </#list>
             </select>
-            <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonUpdate}" />
+            <input type="submit" class="${styles.link_action_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonUpdate}" />
         </form>
 </@section>

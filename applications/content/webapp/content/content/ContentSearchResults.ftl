@@ -18,10 +18,10 @@ under the License.
 -->
 <@section title="${uiLabelMap.ContentSearchContents}, ${uiLabelMap.ProductSearchFor}:">
     <#list searchConstraintStrings as searchConstraintString>
-        <div><a href="<@ofbizUrl>ContentSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_action!}">X</a>&nbsp;${searchConstraintString}</div>
+        <div><a href="<@ofbizUrl>ContentSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_action_session!} ${styles.action_remove!}">X</a>&nbsp;${searchConstraintString}</div>
     </#list>
     <div><span>${uiLabelMap.CommonSortedBy}</span> ${searchSortOrderString}</div>
-    <div><a href="<@ofbizUrl>ContentSearchOptions</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonRefineSearch}</a></div>
+    <div><a href="<@ofbizUrl>ContentSearchOptions</@ofbizUrl>" class="${styles.link_nav!} ${styles.link_update!} ${styles.action_scope_session!}">${uiLabelMap.CommonRefineSearch}</a></div>
 
     <#if !contentIds?has_content>
       <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
@@ -47,7 +47,7 @@ under the License.
           <#assign content = delegator.findOne("Content", Static["org.ofbiz.base.util.UtilMisc"].toMap("contentId", contentId), false)>
           <@tr>
             <@td>
-              <a href="<@ofbizUrl>editContent?contentId=${contentId}</@ofbizUrl>" class="${styles.link_record_idname!}">${contentId} ${(content.contentName)!}</a>
+              <a href="<@ofbizUrl>editContent?contentId=${contentId}</@ofbizUrl>" class="${styles.link_nav_record_idname!}">${contentId} ${(content.contentName)!}</a>
             </@td>
           </@tr>
         </#list>

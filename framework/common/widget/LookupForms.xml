@@ -47,7 +47,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="geoId" widget-style="${styles.link_record_id}" title="${uiLabelMap.CommonGeoId}">
+        <field name="geoId" widget-style="${styles.link_nav_record_id}" title="${uiLabelMap.CommonGeoId}">
             <hyperlink also-hidden="false" target-type="plain" description="${geoId}" target="javascript:set_value('${geoId}')"/>
         </field>
         <field name="geoTypeId" title="${uiLabelMap.CommonGeoTypeId}">
@@ -62,7 +62,7 @@ under the License.
 
     <form name="LookupGeoName" extends="LookupGeo" target="LookupGeoName"/>
     <form name="listLookupGeoName" extends="listLookupGeo" paginate-target="LookupGeoName">
-        <field name="geoId" widget-style="${styles.link_record_id}" title="${uiLabelMap.CommonGeoId}">
+        <field name="geoId" widget-style="${styles.link_nav_record_id}" title="${uiLabelMap.CommonGeoId}">
             <hyperlink also-hidden="false" target-type="plain" description="${geoId}" target="javascript:set_values('${geoName}', '${geoId}')"/>
         </field>
     </form>
@@ -123,7 +123,7 @@ under the License.
 
     <form name="ListLocales" type="list" list-name="locales" paginate-target="LookupLocale"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="localeString" widget-style="${styles.link_record_id}">
+        <field name="localeString" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${localeString}" target="javascript:set_value('${localeString}', '${localeName}')"/>
         </field>
         <field name="localeName" title="${uiLabelMap.CommonLanguageTitle}"><display/></field>

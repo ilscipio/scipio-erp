@@ -49,7 +49,7 @@ under the License.
       </@cell>
       <@cell columns=3>
         <@field type="submitarea">
-            <a href="javascript:document.createcontactmechform.submit()" class="${styles.link_action!}">${uiLabelMap.CommonCreate}</a>
+            <a href="javascript:document.createcontactmechform.submit()" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.CommonCreate}</a>
         </@field>
       </@cell>
     </@row>
@@ -99,7 +99,7 @@ under the License.
                       </#if>
                       (${uiLabelMap.CommonSince}: ${facilityContactMechPurpose.fromDate})
                       <#if facilityContactMechPurpose.thruDate?has_content>(${uiLabelMap.CommonExpires}: ${facilityContactMechPurpose.thruDate.toString()}</#if>
-                      <a href="javascript:document.getElementById('deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}').submit();" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a>
+                      <a href="javascript:document.getElementById('deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}').submit();" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                   
                     <form id="deleteFacilityContactMechPurpose_${facilityContactMechPurpose_index}" method="post" action="<@ofbizUrl>deleteFacilityContactMechPurpose</@ofbizUrl>">
                       <input type="hidden" name="facilityId" value="${facilityId!}" />

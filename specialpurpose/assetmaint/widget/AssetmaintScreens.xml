@@ -114,7 +114,7 @@
                                             </condition>
                                             <widgets>
                                                 <container style="button-bar">
-                                                    <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.link_nav} ${styles.action_create}"/>
+                                                    <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.link_nav} ${styles.action_add}"/>
                                                 </container>
                                             </widgets>
                                         </section>
@@ -170,7 +170,7 @@
                             <condition><not><if-empty field="maintHistSeqId"/></not></condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.link_nav} ${styles.action_create}">
+                                    <link target="EditFixedAssetMaint" text="${uiLabelMap.AccountingNewFixedAssetMaint}" style="${styles.link_nav} ${styles.action_add}">
                                         <parameter param-name="fixedAssetId"/>
                                     </link>
                                     <link target="printFixedAssetMaint.pdf" target-window="_blank" text="${uiLabelMap.CommonPrint}" style="${styles.link_action_sys} ${styles.action_export}">
@@ -234,7 +234,7 @@
                                     </widgets>
                                     <fail-widgets>
                                         <container style="button-bar">
-                                            <link target="EditWorkEfforts" style="${styles.link_nav} ${styles.action_create}"  text="${uiLabelMap.CommonNew}">
+                                            <link target="EditWorkEfforts" style="${styles.link_nav} ${styles.action_add}"  text="${uiLabelMap.CommonNew}">
                                                 <parameter param-name="fixedAssetId" from-field="fixedAssetMaint.fixedAssetId"/>
                                                 <parameter param-name="maintHistSeqId" from-field="fixedAssetMaint.maintHistSeqId"/>
                                                 <parameter param-name="workEffortId"/>
@@ -258,7 +258,7 @@
                                     </widgets>
                                     <fail-widgets>
                                         <container style="button-bar">
-                                            <link target="EditWorkEfforts" style="${styles.link_nav} ${styles.action_create}" text="${uiLabelMap.CommonNew}">
+                                            <link target="EditWorkEfforts" style="${styles.link_nav} ${styles.action_add}" text="${uiLabelMap.CommonNew}">
                                             <parameter param-name="fixedAssetId" from-field="fixedAssetMaint.fixedAssetId"/>
                                             <parameter param-name="maintHistSeqId" from-field="fixedAssetMaint.maintHistSeqId"/>
                                               <parameter param-name="workEffortId"/>

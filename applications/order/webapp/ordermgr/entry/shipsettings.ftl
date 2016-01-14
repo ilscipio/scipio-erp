@@ -84,7 +84,7 @@ under the License.
                         <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                     </@td>
-                    <@td><a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;contactMechId=${shippingAddress.contactMechId}" target="_blank" class="${styles.link_action!}">${uiLabelMap.CommonUpdate}</a></@td>
+                    <@td><a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;contactMechId=${shippingAddress.contactMechId}" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
                   </@tr>
                   <#if shippingContactMech_has_next>
                   <@tr type="util"><@td colspan="4"><hr /></@td></@tr>
@@ -98,7 +98,7 @@ under the License.
                     </@td>
                     <@td></@td>
                     <@td>
-                        <a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;preContactMechTypeId=POSTAL_ADDRESS" target="_blank" class="${styles.link_action!}">${uiLabelMap.CommonNew}</a>
+                        <a href="/facility/control/EditContactMech?facilityId=${facility.facilityId}&amp;preContactMechTypeId=POSTAL_ADDRESS" target="_blank" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.CommonNew}</a>
                     </@td>
                   </@tr>
                 </#if>
@@ -134,7 +134,7 @@ under the License.
                   <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                   <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                 </@td>
-              <@td><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="${styles.link_action!}">${uiLabelMap.CommonUpdate}</a></@td>
+              <@td><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
             </@tr>
             <#if shippingContactMech_has_next>
               <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
@@ -234,7 +234,7 @@ under the License.
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                     </@td>
                     <@td>
-                      <a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="${styles.link_action!}">${uiLabelMap.CommonUpdate}</a>
+                      <a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                     </@td>
                   </@tr>
                   <#if shippingContactMech_has_next>
@@ -262,7 +262,7 @@ under the License.
                         <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                         <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
                       </@td>
-                    <@td><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="${styles.link_action!}">${uiLabelMap.CommonUpdate}</a></@td>
+                    <@td><a href="/partymgr/control/editcontactmech?partyId=${orderParty.partyId}&amp;contactMechId=${shippingContactMech.contactMechId}" target="_blank" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a></@td>
                   </@tr>
                   <#if shippingContactMech_has_next>
                   <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
@@ -292,7 +292,7 @@ under the License.
                 </@cell>
                 <@cell columns=3>                 
                     <@field type="submitarea">
-                        <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonContinue}" />
+                        <input type="submit" class="${styles.link_action_session!} ${styles.action_update!}" value="${uiLabelMap.CommonContinue}" />
                     </@field>
                 </@cell>
               </@row>

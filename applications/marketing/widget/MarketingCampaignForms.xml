@@ -68,7 +68,7 @@ under the License.
         <actions>
             <entity-condition entity-name="MarketingCampaign"/>
         </actions>
-        <field name="marketingCampaignId" widget-style="${styles.link_record_id}" title="${uiLabelMap.MarketingCampaignId}">
+        <field name="marketingCampaignId" widget-style="${styles.link_nav_record_id}" title="${uiLabelMap.MarketingCampaignId}">
             <hyperlink target="EditMarketingCampaign" description="${marketingCampaignId}" also-hidden="false">
                 <parameter param-name="marketingCampaignId"/>
             </hyperlink>
@@ -92,7 +92,7 @@ under the License.
         </field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="&quot;${lastName}&quot;!=null">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName}" also-hidden="true">
-                <sub-hyperlink target="/partymgr/control/viewprofile" description="${partyId}" link-style="${styles.link_record_id}" target-type="inter-app">
+                <sub-hyperlink target="/partymgr/control/viewprofile" description="${partyId}" link-style="${styles.link_nav_record_id}" target-type="inter-app">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -100,7 +100,7 @@ under the License.
 <!-- Currently not working for PartyGroup
         <field name="partyId" title="${uiLabelMap.PartyPartyId}" use-when="&quot;${groupName}&quot;!=null">
             <display-entity entity-name="PartyNameView" description="${groupName}" also-hidden="true">
-                <sub-hyperlink target="/partymgr/control/viewProfile" description="${partyId}" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="/partymgr/control/viewProfile" description="${partyId}" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -108,7 +108,7 @@ under the License.
         -->
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleTypeId}">
             <display-entity entity-name="RoleType" description="${description}" also-hidden="true"/>
-                <!--<sub-hyperlink target="/partymgr/control/viewProfile" description="${partyId}" link-style="${styles.link_record_id}">
+                <!--<sub-hyperlink target="/partymgr/control/viewProfile" description="${partyId}" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>-->

@@ -200,7 +200,7 @@ under the License.
                                             <widgets>
                                                 <include-menu name="EmploymentBar" location="component://humanres/widget/HumanresMenus.xml"/>
                                                 <container style="button-bar">
-                                                    <link target="EditEmployment" text="${uiLabelMap.HumanResNewEmployment}" style="${styles.link_nav} ${styles.action_create}"/>
+                                                    <link target="EditEmployment" text="${uiLabelMap.HumanResNewEmployment}" style="${styles.link_nav} ${styles.action_add}"/>
                                                 </container>
                                                 <label style="heading" text="${emplName.lastName},${emplName.firstName} ${emplName.middleName} [${emplName.partyId}] ${uiLabelMap.CommonFor}"></label>
                                                 <label style="heading" text="${orgName.groupName} [${orgName.partyId}]"></label>

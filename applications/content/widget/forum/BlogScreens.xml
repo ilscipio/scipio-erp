@@ -73,7 +73,7 @@ under the License.
                             <widgets>
                                 <include-menu name="BlogSubTabBar" location="component://content/widget/content/ContentMenus.xml"/>
                                 <label text="${blogContent.contentName}"/>
-                                <link style="${styles.link_record_id}" text=" [${blogContent.contentId}]" target="blogContent">
+                                <link style="${styles.link_nav_record_id}" text=" [${blogContent.contentId}]" target="blogContent">
                                     <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
                                 </link>
                             </widgets>

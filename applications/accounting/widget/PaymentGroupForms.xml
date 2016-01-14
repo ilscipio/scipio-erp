@@ -47,7 +47,7 @@ under the License.
                 <field-map field-name="paymentGroupId"/>
             </entity-and>
         </row-actions>
-        <field name="paymentGroupId" title="${uiLabelMap.CommonId} - " widget-style="${styles.link_record_id}">
+        <field name="paymentGroupId" title="${uiLabelMap.CommonId} - " widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${paymentGroupId}" target="PaymentGroupOverview">
                 <parameter param-name="paymentGroupId"/>
             </hyperlink>
@@ -139,7 +139,7 @@ under the License.
             <set field="paymentRefNum" from-field="payment.paymentRefNum"/>
         </row-actions>
         <field name="paymentGroupId"><hidden/></field>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_record_id}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -147,14 +147,14 @@ under the License.
         <field name="paymentRefNum" title="${uiLabelMap.AccountingReferenceNumber}"><display/></field>
         <field name="partyIdFrom" title="${uiLabelMap.CommonFrom}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${lastName} ${firstName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="partyIdTo" title="${uiLabelMap.CommonTo}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${lastName} ${firstName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyIdTo"/>
                 </sub-hyperlink>
             </display-entity>
@@ -199,21 +199,21 @@ under the License.
             <set field="partyIdFrom" from-field="payment.partyIdFrom"/>
             <set field="partyIdTo" from-field="payment.partyIdTo"/>
         </row-actions>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_record_id}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>
         <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${lastName} ${firstName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdFrom}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} ${lastName} ${firstName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyIdTo}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyIdTo"/>
                 </sub-hyperlink>
             </display-entity>

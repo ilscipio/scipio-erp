@@ -65,7 +65,7 @@ under the License.
           <#assign orderItems = delegator.findByAnd("OrderItem", {"orderId" : order.orderId, "productId" : productId}, null, false)/>
           <#list orderItems as orderItem>
             <@tr>
-              <@td><a href="/ordermgr/control/orderview?orderId=${orderItem.orderId}" class="${styles.link_record_id!}">${orderItem.orderId}</a></@td>
+              <@td><a href="/ordermgr/control/orderview?orderId=${orderItem.orderId}" class="${styles.link_nav_record_id!}">${orderItem.orderId}</a></@td>
               <#assign currentItemStatus = orderItem.getRelatedOne("StatusItem", false)/>
               <@td>${currentItemStatus.get("description",locale)?default(currentItemStatus.statusId)}</@td>
               <@td>${orderItem.orderItemSeqId}</@td>

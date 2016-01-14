@@ -36,7 +36,7 @@ under the License.
               <@tr valign="middle">
                 <@td>${surveyType.get("description",locale)}</@td>
                 <@td>${storeSurvey.groupName!}</@td>
-                <@td><a href="/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}" class="${styles.link_record_desc!}">${survey.description?default("[" + survey.surveyId + "]")}</a></@td>
+                <@td><a href="/content/control/EditSurvey?surveyId=${storeSurvey.surveyId}" class="${styles.link_nav_record_desc!}">${survey.description?default("[" + survey.surveyId + "]")}</a></@td>
                 <@td>${storeSurvey.productId?default("${uiLabelMap.CommonNA}")}</@td>
                 <@td>${storeSurvey.productCategoryId?default("${uiLabelMap.CommonNA}")}</@td>
                 <@td>${storeSurvey.fromDate!?string}</@td>
@@ -45,7 +45,7 @@ under the License.
                   <form name="deleteProductStoreSurveyAppl_${storeSurvey_index}" method="post" action="<@ofbizUrl>deleteProductStoreSurveyAppl</@ofbizUrl>">
                     <input type="hidden" name="productStoreId" value="${productStoreId}" />
                     <input type="hidden" name="productStoreSurveyId" value="${storeSurvey.productStoreSurveyId}" />
-                    <a href="javascript:document.deleteProductStoreSurveyAppl_${storeSurvey_index}.submit()" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.deleteProductStoreSurveyAppl_${storeSurvey_index}.submit()" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                   </form>
                 </@td>
               </@tr>
@@ -95,7 +95,7 @@ under the License.
                   <input type="text" size="5" name="sequenceNum" />
               </@field>
               <@field type="submitarea">
-                  <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonAdd}" />
+                  <input type="submit" class="${styles.link_action_sys!} ${styles.action_add!}" value="${uiLabelMap.CommonAdd}" />
               </@field>
         </form>
 </@section>

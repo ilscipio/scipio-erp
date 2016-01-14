@@ -80,11 +80,11 @@ under the License.
             <@td valign="top">
                     ${shipmentRouteSegment.shipmentRouteSegmentId}
                     <br />
-                    <a href="javascript:document.updateShipmentRouteSegmentForm${shipmentRouteSegmentData_index}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonUpdate}</a>
+                    <a href="javascript:document.updateShipmentRouteSegmentForm${shipmentRouteSegmentData_index}.submit();" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                     <br />
-                    <a href="javascript:document.duplicateShipmentRouteSegment_${shipmentRouteSegmentData_index}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonDuplicate}</a>
+                    <a href="javascript:document.duplicateShipmentRouteSegment_${shipmentRouteSegmentData_index}.submit();" class="${styles.link_action_sys!} ${styles.action_copy!}">${uiLabelMap.CommonDuplicate}</a>
                     <br />
-                    <a href="javascript:document.deleteShipmentRouteSegment_${shipmentRouteSegmentData_index}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.deleteShipmentRouteSegment_${shipmentRouteSegmentData_index}.submit();" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
             </@td>
             <@td valign="top">
                 <div>
@@ -309,8 +309,8 @@ under the License.
                    <input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber!}"/>
             </@td>
             <@td valign="top">
-                    <a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}${shipmentPackageRouteSeg_index}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonUpdate}</a>
-                    <a href="javascript:document.deleteRouteSegmentShipmentPackage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}${shipmentPackageRouteSeg_index}.submit();" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                    <a href="javascript:document.deleteRouteSegmentShipmentPackage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}.submit();" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
             </@td>
         </@tr>
         </form>
@@ -359,7 +359,7 @@ under the License.
                 <@td valign="top">
                         <span>${uiLabelMap.ProductNewSegment}</span>
                         <br />
-                        <a href="javascript:document.createShipmentRouteSegmentForm.submit();" class="${styles.link_action!}">${uiLabelMap.CommonCreate}</a>
+                        <a href="javascript:document.createShipmentRouteSegmentForm.submit();" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.CommonCreate}</a>
                 </@td>
                 <@td valign="top">
                         <select name="carrierPartyId">

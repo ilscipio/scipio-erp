@@ -31,7 +31,7 @@ under the License.
               <@htmlTemplate.lookupField formName="searchRemoveFromCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
           </@field>
           <@field type="submitarea">
-              <input type="submit" value="${uiLabelMap.CommonRemove}" class="${styles.link_action!}" />
+              <input type="submit" value="${uiLabelMap.CommonRemove}" class="${styles.link_action_session!} ${styles.action_remove!}" />
           </@field>
         </form>
     </@section>
@@ -46,7 +46,7 @@ under the License.
               <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
           </@field>
           <@field type="submitarea">
-              <input type="submit" value="${uiLabelMap.CommonExpire}" class="${styles.link_action!}" />
+              <input type="submit" value="${uiLabelMap.CommonExpire}" class="${styles.link_action_session!} ${styles.action_terminate!}" />
           </@field>
         </form>
     </@section>
@@ -61,7 +61,7 @@ under the License.
               <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
           </@field>
           <@field type="submitarea">
-              <input type="submit" value="${uiLabelMap.ProductAddToCategory}" class="${styles.link_action!}" />
+              <input type="submit" value="${uiLabelMap.ProductAddToCategory}" class="${styles.link_action_session!} ${styles.action_add!}" />
           </@field>
         </form>
     </@section>
@@ -98,7 +98,7 @@ under the License.
               </select>
           </@field>
           
-          <@field type="submitarea"><input type="submit" value="${uiLabelMap.ProductAddFeature}" class="${styles.link_action!}" /></@field>
+          <@field type="submitarea"><input type="submit" value="${uiLabelMap.ProductAddFeature}" class="${styles.link_action_session!} ${styles.action_add!}" /></@field>
         </form>
     </@section>
 
@@ -109,7 +109,7 @@ under the License.
               <input type="text" size="10" name="productFeatureId" value="" />
           </@field>
           
-          <@field type="submitarea"><input type="submit" value="${uiLabelMap.ProductRemoveFeature}" class="${styles.link_action!}" /></@field>
+          <@field type="submitarea"><input type="submit" value="${uiLabelMap.ProductRemoveFeature}" class="${styles.link_action_session!} ${styles.action_remove!}" /></@field>
         </form>
     </@section>
 

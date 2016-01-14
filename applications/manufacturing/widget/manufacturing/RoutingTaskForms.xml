@@ -44,7 +44,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="workEffortId" widget-style="${styles.link_record_id}" title="${uiLabelMap.ManufacturingRoutingId}">
+        <field name="workEffortId" widget-style="${styles.link_nav_record_id}" title="${uiLabelMap.ManufacturingRoutingId}">
             <hyperlink description="${workEffortId}" target="EditRouting">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
@@ -98,7 +98,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="workEffortId" title="${uiLabelMap.ManufacturingTaskId}" widget-style="${styles.link_record_id}">
+        <field name="workEffortId" title="${uiLabelMap.ManufacturingTaskId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${workEffortId}" target="EditRoutingTask">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
@@ -218,7 +218,7 @@ under the License.
         <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
         <field name="workEffortIdFrom"><hidden/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
-        <field name="workEffortIdTo" title="${uiLabelMap.ManufacturingTaskName}" widget-style="${styles.link_record_idname}">
+        <field name="workEffortIdTo" title="${uiLabelMap.ManufacturingTaskName}" widget-style="${styles.link_nav_record_idname}">
             <hyperlink target="EditRoutingTask" description="[${workEffortIdTo}] ${workEffortToName}" also-hidden="false">
                 <parameter param-name="workEffortId" from-field="workEffortIdTo"/>
             </hyperlink>
@@ -285,7 +285,7 @@ under the License.
 
    <form name="ListRoutingProductAction" type="list" target="EditRoutingProductAction" title="" list-name="allRoutingProductLinks"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
-        <field name="productId" widget-style="${styles.link_record_id}">
+        <field name="productId" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${productId}" target="/catalog/control/ViewProductManufacturing" also-hidden="false" target-type="inter-app">
                 <parameter param-name="productId"/>
             </hyperlink>

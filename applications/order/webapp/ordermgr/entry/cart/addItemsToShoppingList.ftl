@@ -39,7 +39,7 @@ under the License.
           </@field>
           
           <@field type="submitarea">
-            <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.OrderAddToShoppingList}"/>
+            <input type="submit" class="${styles.link_action_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderAddToShoppingList}"/>
           </@field>
         </form>
     </@section>

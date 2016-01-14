@@ -55,25 +55,25 @@ under the License.
                 <div style="color: red;">${uiLabelMap.ProductNoLongerAvailable}</div>
     <#-- check to see if it is a rental item; will enter parameters on the detail screen-->
     <#elseif product.productTypeId! == "ASSET_USAGE"/>
-                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_action!}">${uiLabelMap.OrderMakeBooking}...</a>
+                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.OrderMakeBooking}...</a>
     <#elseif product.productTypeId! == "ASSET_USAGE_OUT_IN"/>
-                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_action!}">${uiLabelMap.OrderRent}...</a>
+                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.OrderRent}...</a>
     <#-- check to see if it is an aggregated or configurable product; will enter parameters on the detail screen-->
     <#elseif product.productTypeId! == "AGGREGATED" || product.productTypeId! == "AGGREGATED_SERVICE"/>
-                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_action!}">${uiLabelMap.OrderConfigure}...</a>
+                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_configure!}">${uiLabelMap.OrderConfigure}...</a>
     <#-- check to see if the product is a virtual product -->
     <#elseif product.isVirtual?? && product.isVirtual == "Y"/>
-                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_action!}">${uiLabelMap.OrderChooseVariations}...</a>
+                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseVariations}...</a>
     <#-- check to see if the product requires an amount -->
     <#elseif product.requireAmount?? && product.requireAmount == "Y"/>
-                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_action!}">${uiLabelMap.OrderChooseAmount}...</a>
+                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseAmount}...</a>
     <#else>
                 <form method="post" action="<@ofbizUrl secure="${request.isSecure()?string}">additem</@ofbizUrl>" name="compareFormAdd${product_index}">
                     <input type="hidden" name="add_product_id" value="${product.productId}"/>
                     <input type="text" size="5" name="quantity" value="1"/>
                     <input type="hidden" name="clearSearch" value="N"/>
                 </form>
-                <a href="javascript:doPostViaParent('compareFormAdd${product_index}');" class="${styles.link_action!}">${uiLabelMap.OrderAddToCart}</a>
+                <a href="javascript:doPostViaParent('compareFormAdd${product_index}');" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
 
         <#if prodCatMem?? && prodCatMem.quantity?? && 0.00 < prodCatMem.quantity?double>
                 <form method="post" action="<@ofbizUrl secure="${request.isSecure()?string}">additem</@ofbizUrl>" name="compareFormAddDefault${product_index}">
@@ -81,7 +81,7 @@ under the License.
                     <input type="hidden" name="quantity" value="${prodCatMem.quantity!}"/>
                     <input type="hidden" name="clearSearch" value="N"/>
                 </form>
-                <a href="javascript:doPostViaParent('compareFormAddDefault${product_index}');" class="${styles.link_action!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
+                <a href="javascript:doPostViaParent('compareFormAddDefault${product_index}');" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
         </#if>
     </#if>
             </div>
@@ -159,27 +159,27 @@ under the License.
                 <div style="color: red;">${uiLabelMap.ProductNoLongerAvailable}</div>
     <#-- check to see if it is a rental item; will enter parameters on the detail screen-->
     <#elseif product.productTypeId! == "ASSET_USAGE"/>
-                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_action!}">${uiLabelMap.OrderMakeBooking}...</a>
+                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.OrderMakeBooking}...</a>
     <#elseif product.productTypeId! == "ASSET_USAGE_OUT_IN"/>
-                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_action!}">${uiLabelMap.OrderRent}...</a>
+                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.OrderRent}...</a>
     <#-- check to see if it is an aggregated or configurable product; will enter parameters on the detail screen-->
     <#elseif product.productTypeId! == "AGGREGATED" || product.productTypeId! == "AGGREGATED_SERVICE"/>
-                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_action!}">${uiLabelMap.OrderConfigure}...</a>
+                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_configure!}">${uiLabelMap.OrderConfigure}...</a>
     <#-- check to see if the product is a virtual product -->
     <#elseif product.isVirtual?? && product.isVirtual == "Y"/>
-                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_action!}">${uiLabelMap.OrderChooseVariations}...</a>
+                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseVariations}...</a>
     <#-- check to see if the product requires an amount -->
     <#elseif product.requireAmount?? && product.requireAmount == "Y"/>
-                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_action!}">${uiLabelMap.OrderChooseAmount}...</a>
+                <a href="javascript:doGetViaParent('${productUrl}');" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseAmount}...</a>
     <#else>
                 <form method="post" action="<@ofbizUrl secure="${request.isSecure()?string}">additem</@ofbizUrl>" name="compare2FormAdd${product_index}">
                     <input type="hidden" name="add_product_id" value="${product.productId}"/>
                     <input type="text" size="5" name="quantity" value="1"/>
                     <input type="hidden" name="clearSearch" value="N"/>
                 </form>
-                <a href="javascript:doPostViaParent('compare2FormAdd${product_index}');" class="${styles.link_action!}">${uiLabelMap.OrderAddToCart}</a>
+                <a href="javascript:doPostViaParent('compare2FormAdd${product_index}');" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
         <#if prodCatMem?? && prodCatMem.quantity?? && 0.00 < prodCatMem.quantity?double>
-                <a href="javascript:doPostViaParent('compareFormAddDefault${product_index}');" class="${styles.link_action!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
+                <a href="javascript:doPostViaParent('compareFormAddDefault${product_index}');" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
         </#if>
     </#if>
             </div>

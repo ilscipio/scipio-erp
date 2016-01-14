@@ -42,7 +42,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="billingAccountId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_record_id}">
+        <field name="billingAccountId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${billingAccountId}" target="EditBillingAccount">
                 <parameter param-name="billingAccountId"/>
             </hyperlink>
@@ -58,7 +58,7 @@ under the License.
 
     <form name="ListBillingAccountsByParty" type="list" list-name="billingAccounts" paginate-target="FindBillingAccount"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="billingAccountId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_record_id}">
+        <field name="billingAccountId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${billingAccountId}" target="EditBillingAccount">
                 <parameter param-name="billingAccountId"/>
             </hyperlink>
@@ -104,7 +104,7 @@ under the License.
                 return(NumberFormat.getNumberInstance(context.get(&quot;locale&quot;)).format(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceId)));}"/>
         </row-actions>
         <field name="billingAccountId"><hidden/></field>
-        <field name="invoiceId" widget-style="${styles.link_record_id}">
+        <field name="invoiceId" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${invoiceId}" target="invoiceOverview">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
@@ -170,7 +170,7 @@ under the License.
         <field name="availableBalance" title="${uiLabelMap.AccountingBillingAvailableBalance}" tooltip="${uiLabelMap.AccountingBillingAvailableBalanceMessage}" position="2">
             <display type="currency" currency="${billingAccount.accountCurrencyUomId}"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="billingAccount == null" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="billingAccount == null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="billingAccount!=null" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
@@ -186,7 +186,7 @@ under the License.
             <entity-one value-field="party" entity-name="PartyNameView"/>
         </row-actions>
         <field name="billingAccountId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_record_idname_long}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_record_idname_long}">
            <hyperlink also-hidden="true" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
                 <parameter param-name="partyId"/>
                 <parameter param-name="agreementId"/>
@@ -224,7 +224,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListBillingAccountTerms" type="list" list-name="billingAccountTermsList" default-entity-name="BillingAccountTerm" paginate-target="EditBillingAccountTerms"
@@ -235,7 +235,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="billingAccountId"><hidden/></field>
-        <field name="billingAccountTermId" title="${uiLabelMap.CommonTerm}" widget-style="${styles.link_record_id}">
+        <field name="billingAccountTermId" title="${uiLabelMap.CommonTerm}" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${billingAccountTermId}" target="EditBillingAccountTerms">
                 <parameter param-name="billingAccountId"/>
                 <parameter param-name="billingAccountTermId"/>
@@ -277,7 +277,7 @@ under the License.
             </drop-down>
         </field>
         <field name="termValue" title="${uiLabelMap.PartyTermValue}"><text size="10"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListBillingAccountPayments" type="list" list-name="payments" paginate-target="BillingAccountPayments"
@@ -287,7 +287,7 @@ under the License.
                 <condition-expr field-name="billingAccountId" from-field="billingAccountId"/>
             </entity-condition>
         </actions>
-        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_record_id}">
+        <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
             </hyperlink>
@@ -345,7 +345,7 @@ under the License.
     <form name="ListBillingAccountOrders" type="list" list-name="orderPaymentPreferencesList" paginate-target="BillingAccountOrders"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">    
         <field name="billingAccountId"><hidden/></field>
-        <field name="orderId" title="${uiLabelMap.CommonOrder}" widget-style="${styles.link_record_id}">
+        <field name="orderId" title="${uiLabelMap.CommonOrder}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}" also-hidden="false">
                 <parameter param-name="orderId"/>
             </hyperlink>

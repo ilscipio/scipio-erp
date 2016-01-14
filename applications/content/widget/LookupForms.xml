@@ -28,7 +28,7 @@ under the License.
                 <condition-expr field-name="caContentIdTo" value="TEMPLATE_MASTER"/>
             </entity-condition>
         </actions>
-        <field name="contentId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_record_id}">
+        <field name="contentId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" description="${contentId}" target-type="plain" target="javascript:execRemoteCall('cloneLayout', '${drDataResourceId}', '${contentId}', 'TEMPLATE_MASTER', '')"/>
         </field>
         <field name="contentName"><display/></field>
@@ -83,19 +83,19 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="replaceAction" widget-style="${styles.link_action_page} ${styles.action_copy}" >
+        <field name="replaceAction" widget-style="${styles.link_action_local} ${styles.action_copy}" >
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.FormFieldTitle_replace} [${dataResourceId}/${coContentId}]"
                target="javascript:execRemoteCall('replaceSubContent','${dataResourceId}','${coContentId}', '${contentIdTo}', '${mapKey}')"
             />
         </field>
-        <field name="pasteContentAction" widget-style="${styles.link_action_page} ${styles.action_copy}" >
+        <field name="pasteContentAction" widget-style="${styles.link_action_local} ${styles.action_copy}" >
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.ContentPaste} [${dataResourceId}/${coContentId}]"
                target="javascript:execRemoteCall('pasteContent','${dataResourceId}','${coContentId}')"/>
         </field>
-        <field name="dataResourceName" widget-style="${styles.link_record_name}">
+        <field name="dataResourceName" widget-style="${styles.link_nav_record_name}">
             <display/>
         </field>
-        <field name="dataCategoryId" widget-style="${styles.link_record_id}">
+        <field name="dataCategoryId" widget-style="${styles.link_nav_record_id}">
             <display/>
         </field>
     </form>

@@ -50,7 +50,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="finAccountId" title="${uiLabelMap.CommonName}" widget-style="${styles.link_record_idname}">
+        <field name="finAccountId" title="${uiLabelMap.CommonName}" widget-style="${styles.link_nav_record_idname}">
             <hyperlink description="${finAccountName} ${finAccountCode}" target="EditFinAccount">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
@@ -60,12 +60,12 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
         <field name="currencyUomId"><display/></field>
         <field name="actualBalance" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="organizationPartyId" title="${uiLabelMap.CommonOrganisation}" widget-style="${styles.link_record_id}">
+        <field name="organizationPartyId" title="${uiLabelMap.CommonOrganisation}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="/partymgr/control/viewprofile" description="${organizationPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="organizationPartyId"/>
             </hyperlink>
         </field>
-        <field name="ownerPartyId" title="${uiLabelMap.CommonOwner}" widget-style="${styles.link_record_id}">
+        <field name="ownerPartyId" title="${uiLabelMap.CommonOwner}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="/partymgr/control/viewprofile" description="${ownerPartyId}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="ownerPartyId"/>
             </hyperlink>
@@ -135,7 +135,7 @@ under the License.
         <field name="postToGlAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
         <field name="replenishPaymentId"><text/></field>
         <field name="replenishLevel" position="2"><text/></field>
-        <field name="submitAction" use-when="finAccountId==null" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="finAccountId==null" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="submitAction" use-when="finAccountId!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="actualBalance"><display type="currency" currency="${finAccount.currencyUomId}"/></field>
         <field name="availableBalance" position="2"><display type="currency" currency="${finAccount.currencyUomId}"/></field>
@@ -153,7 +153,7 @@ under the License.
             <entity-one value-field="party" entity-name="PartyNameView"/>
         </row-actions>
         <field name="finAccountId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_record_idname_long}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_record_idname_long}">
            <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
                 <parameter param-name="partyId"/>
                 <parameter param-name="agreementId"/>
@@ -187,7 +187,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddFinAccountTrans" type="single" target="createFinAccountTrans"
@@ -226,7 +226,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>        
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListFinAccountAuths" type="list" list-name="finAccountauths" target="expireFinAccountAuth" separate-columns="true"
@@ -256,7 +256,7 @@ under the License.
         <field name="authorizationDate"><date-time/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="PaymentsDepositWithdraw" type="single" target="FindPaymentsForDepositOrWithdraw" extends="FindBatchPayments" extends-resource="component://accounting/widget/ar/forms/ArPaymentForms.xml">
@@ -272,7 +272,7 @@ under the License.
     
     <form name="ListDepositSlips" type="list" target="FindDepositSlips" extends="ListPaymentGroup" extends-resource="component://accounting/widget/PaymentGroupForms.xml" list-name="paymentGroupList"
             odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2">
-        <field name="paymentGroupId" widget-style="${styles.link_record_id}">
+        <field name="paymentGroupId" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${paymentGroupId}" target="EditDepositSlipAndMembers">
                 <parameter param-name="paymentGroupId"/>
                 <parameter param-name="finAccountId"/>
@@ -439,7 +439,7 @@ under the License.
         <field name="reconciledBalance" use-when="${reconciledBalance == null}" position="2"><hidden/></field>
         <field name="reconciledBalance" use-when="&quot;GLREC_RECONCILED&quot;.equals(&quot;${glReconciliation.statusId}&quot;)" position="2"><display type="currency" currency="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field name="reconciledDate" title="${uiLabelMap.AccountingReconciliationDate}" position="2"><date-time/></field>
-        <field name="createAction" use-when="glReconciliationId == null" widget-style="${styles.link_action_sys} ${styles.action_create}">
+        <field name="createAction" use-when="glReconciliationId == null" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
         <field name="updateAction" use-when="glReconciliationId != null" widget-style="${styles.link_action_sys} ${styles.action_update}">

@@ -155,7 +155,7 @@ under the License.
     <@tr>
       <@td>${uiLabelMap.OrderImage}</@td>
       <@td colspan="3">
-        <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.link_image!}">${uiLabelMap.OrderViewImage}</a>
+        <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.link_nav_image!}">${uiLabelMap.OrderViewImage}</a>
       </@td>
     </@tr>
   </#if>
@@ -167,11 +167,11 @@ under the License.
          <form name="setOrderReservationPriority" method="post" action="<@ofbizUrl>setOrderReservationPriority</@ofbizUrl>">
          <input type = "hidden" name="orderId" value="${orderId}"/>
         <select name="priority">
-          <option value="1" <#if (orderHeader.priority)! == "1">selected="selected" </#if>>${uiLabelMap.CommonHigh}</option>
-          <option value="2" <#if (orderHeader.priority)! == "2">selected="selected" <#elseif !(orderHeader.priority)?has_content>selected="selected"</#if>>${uiLabelMap.CommonNormal}</option>
-          <option value="3" <#if (orderHeader.priority)! == "3">selected="selected" </#if>>${uiLabelMap.CommonLow}</option>
+          <option value="1"<#if (orderHeader.priority)! == "1"> selected="selected"</#if>>${uiLabelMap.CommonHigh}</option>
+          <option value="2"<#if (orderHeader.priority)! == "2"> selected="selected"<#elseif !(orderHeader.priority)?has_content> selected="selected"</#if>>${uiLabelMap.CommonNormal}</option>
+          <option value="3"<#if (orderHeader.priority)! == "3"> selected="selected"</#if>>${uiLabelMap.CommonLow}</option>
         </select>
-        <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.FormFieldTitle_reserveInventory}"/>
+        <input type="submit" class="${styles.link_action_sys!} ${styles.action_update!}" value="${uiLabelMap.FormFieldTitle_reserveInventory}"/>
         </form>
       </@td>
     </@tr>
@@ -185,7 +185,7 @@ under the License.
           <option value="Y" <#if (orderHeader.invoicePerShipment)! == "Y">selected="selected" </#if>>${uiLabelMap.CommonYes}</option>
           <option value="N" <#if (orderHeader.invoicePerShipment)! == "N">selected="selected" </#if>>${uiLabelMap.CommonNo}</option>
         </select>
-        <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonUpdate}"/>
+        <input type="submit" class="${styles.link_action_session!} ${styles.action_update!}" value="${uiLabelMap.CommonUpdate}"/>
         </form>
       </@td>
     </@tr>

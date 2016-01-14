@@ -39,7 +39,7 @@ under the License.
                                     <widgets>
                                         <include-menu name="PromoTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                         <container style="button-bar">
-                                            <link target="EditProductPromo" text="${uiLabelMap.ProductNewProductPromo}" style="${styles.link_nav} ${styles.action_create}"/>
+                                            <link target="EditProductPromo" text="${uiLabelMap.ProductNewProductPromo}" style="${styles.link_nav} ${styles.action_add}"/>
                                         </container>
                                         <label style="heading">${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${productPromo.promoName} [${uiLabelMap.CommonId}:${productPromoId}]  ${${extraFunctionName}}</label>
                                     </widgets>
@@ -74,7 +74,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditProductPromotionCode}">
                             <container style="button-bar">
-                                <link target="EditProductPromo" text="${uiLabelMap.ProductNewProductPromo}" style="${styles.link_nav} ${styles.action_create}"/>
+                                <link target="EditProductPromo" text="${uiLabelMap.ProductNewProductPromo}" style="${styles.link_nav} ${styles.action_add}"/>
                             </container>
                             <container>
                                 <label style="label">${uiLabelMap.CommonView}</label>
@@ -252,7 +252,7 @@ under the License.
                 <decorator-screen name="CommonPromoDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditProductPromoCode" text="${uiLabelMap.ProductNewPromotionCode}" style="${styles.link_nav} ${styles.action_create}">
+                            <link target="EditProductPromoCode" text="${uiLabelMap.ProductNewPromotionCode}" style="${styles.link_nav} ${styles.action_add}">
                                 <parameter param-name="productPromoId"/>
                             </link>
                         </container>
@@ -302,7 +302,7 @@ under the License.
                 <decorator-screen name="CommonPromoDecorator">
                     <decorator-section name="body">
                         <container>
-                            <link target="EditProductPromoCode" text="${uiLabelMap.ProductNewPromotionCode}" style="${styles.link_nav} ${styles.action_create}"/>
+                            <link target="EditProductPromoCode" text="${uiLabelMap.ProductNewPromotionCode}" style="${styles.link_nav} ${styles.action_add}"/>
                         </container>
 
                         <screenlet title="${uiLabelMap.PageTitleEditProductPromotionCode}">

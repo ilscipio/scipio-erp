@@ -42,10 +42,10 @@ under the License.
             <#assign totalQuantityToPackage = shipmentItemData.totalQuantityToPackage>
             <@tr valign="middle" alt=alt_row>
                 <@td>${shipmentItem.shipmentItemSeqId}</@td>
-                <@td colspan="2"><a href="/catalog/control/EditProduct?productId=${shipmentItem.productId!}" target="_blank" class="${styles.link_record_idname!}">${shipmentItem.productId!} - ${(product.internalName)!}</a></@td>
+                <@td colspan="2"><a href="/catalog/control/EditProduct?productId=${shipmentItem.productId!}" target="_blank" class="${styles.link_nav_record_idname!}">${shipmentItem.productId!} - ${(product.internalName)!}</a></@td>
                 <@td>${shipmentItem.quantity?default("&nbsp;")}</@td>
                 <@td colspan="2">${shipmentItem.shipmentContentDescription?default("&nbsp;")}</@td>
-                <@td><a href="javascript:document.deleteShipmentItem${shipmentItemData_index}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a></@td>
+                <@td><a href="javascript:document.deleteShipmentItem${shipmentItemData_index}.submit();" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
             </@tr>
             <form name="deleteShipmentItem${shipmentItemData_index}" method="post" action="<@ofbizUrl>deleteShipmentItem</@ofbizUrl>">
                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
@@ -54,23 +54,23 @@ under the License.
             <#list orderShipments as orderShipment>
                 <@tr valign="middle" alt=alt_row>
                     <@td>&nbsp;</@td>
-                    <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${orderShipment.orderId!}" class="${styles.link_record_id!}">${orderShipment.orderId!}</a> ${orderShipment.orderItemSeqId!}</@td>
+                    <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${orderShipment.orderId!}" class="${styles.link_nav_record_id!}">${orderShipment.orderId!}</a> ${orderShipment.orderItemSeqId!}</@td>
                     <@td>&nbsp;</@td>
                     <@td>${orderShipment.quantity!}</@td>
                     <@td>&nbsp;</@td>
                     <@td>&nbsp;</@td>
-                    <@td>&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>deleteShipmentItemIssuance?shipmentId=${shipmentId}&amp;itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a> --></@td>
+                    <@td>&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>deleteShipmentItemIssuance?shipmentId=${shipmentId}&amp;itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a> --></@td>
                 </@tr>
             </#list>
             <#list itemIssuances as itemIssuance>
                 <@tr valign="middle" alt=alt_row>
                     <@td>&nbsp;</@td>
-                    <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}" target="_blank" class="${styles.link_record_id_long!}">${itemIssuance.orderId!} -  ${itemIssuance.orderItemSeqId!}</a></@td>
-                    <@td><span>${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" target="_blank" class="${styles.link_record_id!}">${itemIssuance.inventoryItemId!}</a></@td>
+                    <@td><span>${uiLabelMap.ProductOrderItem}</span> <a href="/ordermgr/control/orderview?orderId=${itemIssuance.orderId!}" target="_blank" class="${styles.link_nav_record_id_long!}">${itemIssuance.orderId!} -  ${itemIssuance.orderItemSeqId!}</a></@td>
+                    <@td><span>${uiLabelMap.ProductInventory}</span> <a href="<@ofbizUrl>EditInventoryItem?inventoryItemId=${itemIssuance.inventoryItemId!}</@ofbizUrl>" target="_blank" class="${styles.link_nav_record_id!}">${itemIssuance.inventoryItemId!}</a></@td>
                     <@td>${itemIssuance.quantity!}</@td>
                     <@td>${itemIssuance.issuedDateTime!}</@td>
                     <@td>${uiLabelMap.ProductFuturePartyRoleList}</@td>
-                    <@td>&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>deleteShipmentItemIssuance?shipmentId=${shipmentId}&amp;itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a> --></@td>
+                    <@td>&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>deleteShipmentItemIssuance?shipmentId=${shipmentId}&amp;itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a> --></@td>
                 </@tr>
             </#list>
             <#list shipmentPackageContents as shipmentPackageContent>
@@ -84,7 +84,7 @@ under the License.
                     <#else>
                     <@td colspan="2">&nbsp;</@td>
                     </#if>
-                    <@td><a href="javascript:document.deleteShipmentItemPackageContent${shipmentItemData_index}${shipmentPackageContent_index}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a></@td>
+                    <@td><a href="javascript:document.deleteShipmentItemPackageContent${shipmentItemData_index}${shipmentPackageContent_index}.submit();" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
                 </@tr>
                 <form name="deleteShipmentItemPackageContent${shipmentItemData_index}${shipmentPackageContent_index}" method="post" action="<@ofbizUrl>deleteShipmentItemPackageContent</@ofbizUrl>">
                     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
@@ -127,7 +127,7 @@ under the License.
                 </@td>
                 <@td><span>${uiLabelMap.CommonQty}</span> <input type="text" name="quantity" size="5" value="0"/></@td>
                 <@td colspan="2"><span>${uiLabelMap.ProductProductDescription}</span> <input name="shipmentContentDescription" size="30" maxlength="255"/></@td>
-                <@td><a href="javascript:document.createShipmentItemForm.submit()" class="${styles.link_action!}">${uiLabelMap.CommonCreate}</a></@td>
+                <@td><a href="javascript:document.createShipmentItemForm.submit()" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.CommonCreate}</a></@td>
             </form>
         </@tr>
         </@table>

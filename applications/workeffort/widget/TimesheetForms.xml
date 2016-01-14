@@ -28,7 +28,7 @@ under the License.
             </entity-and>
         </actions>
         <auto-fields-entity entity-name="Timesheet"/>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_record_id}">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${timesheetId}" target="EditTimesheet" also-hidden="false">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -62,7 +62,7 @@ under the License.
         <field name="workEffortId"><lookup target-form-name="LookupWorkEffort"/></field>
         <field name="hours"><text size="5"/></field>
         <field name="comments"><text size="40"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="FindTimesheet" default-map-name="timesheet" target="FindTimesheet" title="" type="single"
@@ -85,7 +85,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="Timesheet"/>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_record_id}">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${timesheetId}" target="EditTimesheet" also-hidden="false">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -133,12 +133,12 @@ under the License.
         <field name="rateTypeId" title="${uiLabelMap.WorkEffortTimesheetRateType}"><display-entity entity-name="RateType"/></field>
         <field name="workEffortId">
             <display-entity entity-name="WorkEffort" description="${workEffortName}">
-                <sub-hyperlink target="WorkEffortSummary" description="${workEffortId}" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="WorkEffortSummary" description="${workEffortId}" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="workEffortId"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="invoiceId" widget-style="${styles.link_record_id}">
+        <field name="invoiceId" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="/accounting/control/invoiceOverview" target-type="inter-app" description="${invoiceId}">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
@@ -148,14 +148,14 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="timesheetId"><hidden/></field>
         <field name="invoiceId"><lookup target-form-name="LookupInvoice"/></field>
-        <field name="submitAction" title="${uiLabelMap.PageTitleAddWorkEffortTimeToInvoice}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PageTitleAddWorkEffortTimeToInvoice}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="AddTimesheetToNewInvoice" target="addTimesheetToNewInvoice" title="" type="single"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="timesheetId"><hidden/></field>
         <field name="partyIdFrom" title="${uiLabelMap.WorkEffortTimeBillFromParty}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="partyId" title="${uiLabelMap.WorkEffortTimeBillToParty}"><lookup target-form-name="LookupPartyName" default-value="${timesheet.clientPartyId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.PageTitleAddWorkEffortTimeToNewInvoice}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PageTitleAddWorkEffortTimeToNewInvoice}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <!-- TimesheetRole -->
@@ -193,7 +193,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <!-- TimesheetEntry -->
@@ -223,7 +223,7 @@ under the License.
 
         <field name="workEffortId">
             <lookup size="10" target-form-name="LookupWorkEffort">
-                <sub-hyperlink target="EditWorkEffort" link-style="${styles.link_record_id_long}" description="${uiLabelMap.WorkEffortWorkEffort}:${workEffortId}">
+                <sub-hyperlink target="EditWorkEffort" link-style="${styles.link_nav_record_id_long}" description="${uiLabelMap.WorkEffortWorkEffort}:${workEffortId}">
                 <parameter param-name="workEffortId"/>
             </sub-hyperlink>
             </lookup>
@@ -264,6 +264,6 @@ under the License.
         <field name="invoiceId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
         <field name="invoiceItemSeqId"><ignored/><!-- don't pass, will be populated when this is added to an invoice later --></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 </forms>

@@ -43,7 +43,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productCategoryId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_record_id}">
+        <field name="productCategoryId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" description="${productCategoryId}" target="EditCategory">
                 <parameter param-name="productCategoryId"/>
             </hyperlink>
@@ -79,7 +79,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}" position="2"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="AddCategoryChild" type="single" target="addProductCategoryToCategory">
@@ -91,7 +91,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}" position="2"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="AddCategoryParent" type="single" target="addProductCategoryToCategory">
@@ -103,7 +103,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" required-field="true"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}" position="2"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="AddCategoryParty" type="single" target="addPartyToCategory">
@@ -121,7 +121,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="comment" title="${uiLabelMap.CommonComment}"><textarea/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="UpdateCategoryCatalogs" type="list" target="category_updateProductCategoryToProdCatalog" list-name="prodCatalogCategories"
@@ -132,7 +132,7 @@ under the License.
         <field name="productCategoryId"><hidden/></field>
         <field name="prodCatalogId" title="${uiLabelMap.ProductCatalog}">
             <display-entity entity-name="ProdCatalog" description=" " also-hidden="true" cache="true">
-                <sub-hyperlink link-style="${styles.link_record_name}" target="EditProdCatalog" description="${categoryCatalog.catalogName}">
+                <sub-hyperlink link-style="${styles.link_nav_record_name}" target="EditProdCatalog" description="${categoryCatalog.catalogName}">
                     <parameter param-name="prodCatalogId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -163,7 +163,7 @@ under the License.
         <field name="showProductCategoryId"><hidden/></field>
         <field name="productCategoryId" title="${uiLabelMap.ProductCategory}">
             <display-entity entity-name="ProductCategory" description=" " also-hidden="true" cache="true">
-                <sub-hyperlink link-style="${styles.link_record_idname}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
+                <sub-hyperlink link-style="${styles.link_nav_record_idname}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
                     <parameter param-name="productCategoryId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -191,7 +191,7 @@ under the License.
         <field name="showProductCategoryId"><hidden/></field>
         <field name="productCategoryId" title="${uiLabelMap.ProductCategory}">
             <display-entity entity-name="ProductCategory" description=" " also-hidden="true" cache="true">
-                <sub-hyperlink link-style="${styles.link_record_idname}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
+                <sub-hyperlink link-style="${styles.link_nav_record_idname}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
                     <parameter param-name="productCategoryId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -218,7 +218,7 @@ under the License.
         <field name="productCategoryId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.CommonParty}">
             <display-entity entity-name="PartyNameView" description=" " also-hidden="true" cache="true">
-                <sub-hyperlink link-style="${styles.link_record_name_long}" target="/partymgr/control/viewprofile" target-type="inter-app" target-window="_blank" description="${categoryParty.groupName}${categoryParty.firstName} ${categoryParty.middleInitial} ${categoryParty.lastName}">
+                <sub-hyperlink link-style="${styles.link_nav_record_name_long}" target="/partymgr/control/viewprofile" target-type="inter-app" target-window="_blank" description="${categoryParty.groupName}${categoryParty.firstName} ${categoryParty.middleInitial} ${categoryParty.lastName}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -274,7 +274,7 @@ under the License.
         <field name="purchaseThruDate" position="2"><date-time type="date"/></field>
         <field name="useCountLimit"><text/></field>
         <field name="useDaysLimit" position="2"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="PrepareAddCategoryContentAssoc" type="single" target="prepareAddContentToCategory" title="${uiLabelMap.ProductAddProductCategoryContentFromDate}"
@@ -289,7 +289,7 @@ under the License.
             </drop-down>
         </field>
         <!-- <field name="description"><text size="40"/></field> -->
-        <field name="submitAction" title="${uiLabelMap.ProductPrepareCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.ProductPrepareCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="UpdateCategoryContentAssoc" type="list" target="updateContentToCategory" title="" list-name="productCategoryContentList"
@@ -297,7 +297,7 @@ under the License.
         <field name="productCategoryId"><hidden/></field>
         <field name="contentId" title="${uiLabelMap.ProductContent}">
             <display-entity entity-name="Content" description="${description}" also-hidden="true">
-                <sub-hyperlink target="EditCategoryContentContent" description="${contentId}" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="EditCategoryContentContent" description="${contentId}" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="productCategoryId"/>
                     <parameter param-name="contentId"/>
                     <parameter param-name="prodCatContentTypeId"/>
@@ -358,7 +358,7 @@ under the License.
         <field name="purchaseThruDate"><hidden/></field>
         <field name="purchaseFromDate"><hidden/></field>
         <field name="productCategoryId"><hidden/></field>
-        <field use-when="content == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field use-when="content == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field use-when="content != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
@@ -428,7 +428,7 @@ under the License.
         <field name="detailSubScreen" tooltip="${uiLabelMap.ProductDetailSubScreenTooltip}"><text size="60" maxlength="255"/></field>
         <field name="submitAction" use-when="productCategoryLink==null" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
         <field name="submitAction" use-when="productCategoryLink!=null" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
-        <field name="clearFormAction" title=" " use-when="productCategoryLink!=null" widget-style="${styles.link_action_page} ${styles.action_clear}">
+        <field name="clearFormAction" title=" " use-when="productCategoryLink!=null" widget-style="${styles.link_action_local} ${styles.action_clear}">
             <hyperlink target="EditProductCategoryLinks" target-type="intra-app" description="${uiLabelMap.CommonClear}">
                 <parameter param-name="productCategoryId"/>
             </hyperlink>
@@ -436,7 +436,7 @@ under the License.
     </form>
 
     <form name="ListTopCategory" type="list" list-name="noParentCategories" odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
-        <field name="productCategoryId" widget-style="${styles.link_record_id}">
+        <field name="productCategoryId" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="EditCategory" description="${productCategoryId}" also-hidden="false">
                 <parameter param-name="CATALOG_TOP_CATEGORY" value="${productCategoryId}"/>
                 <parameter param-name="productCategoryId" value="${productCategoryId}"/>
@@ -476,7 +476,7 @@ under the License.
         <field name="useCountLimit"><hidden/></field>
         <field name="useDaysLimit"><hidden/></field>
         <field name="productCategoryId"><hidden/></field>
-        <field use-when="content == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field use-when="content == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field use-when="content != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
@@ -503,7 +503,7 @@ under the License.
         <field name="productCategoryId"><hidden/></field>
         <field name="prodCatContentTypeId"><hidden/></field>
         <field name="dataResourceTypeId"><hidden/></field>
-        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field use-when="contentId == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field use-when="contentId != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 </forms>

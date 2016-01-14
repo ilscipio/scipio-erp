@@ -179,7 +179,7 @@ under the License.
         <field name="saveAction" title=" " position="2" use-when="communicationEvent!=null" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonSave}" target="javascript:(document.EditEmail.form.value='list'),(document.EditEmail.statusId.value='COM_PENDING'),(document.EditEmail.submit())"/>
         </field>
-        <field name="createAction" use-when="communicationEvent==null" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit/></field>
+        <field name="createAction" use-when="communicationEvent==null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="EditInternalNote" type="single" target="createCommunicationEvent" default-map-name="communicationEvent">
         <actions>
@@ -212,7 +212,7 @@ under the License.
         <field name="saveAction" title=" " position="2" use-when="communicationEvent!=null" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <hyperlink also-hidden="true" target-type="plain" description="${uiLabelMap.CommonSave}" target="javascript:(document.EditInternalNote.form.value='list'),(document.EditInternalNote.submit())"/>
         </field>
-        <field name="createAction" use-when="communicationEvent==null" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit/></field>
+        <field name="createAction" use-when="communicationEvent==null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
 
     <form name="ViewEmail" type="single" default-map-name="communicationEvent">
@@ -224,7 +224,7 @@ under the License.
                 <field-map field-name="contactMechId" from-field="communicationEvent.contactMechIdTo"/>
             </entity-one>
         </actions>
-        <field name="communicationEventId" widget-style="${styles.link_record_id}">
+        <field name="communicationEventId" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${communicationEvent.communicationEventId}" target="ViewCommunicationEvent">
                 <parameter param-name="communicationEventId" from-field="communicationEvent.communicationEventId"/>
             </hyperlink>
@@ -233,14 +233,14 @@ under the License.
         <field name="contactListId" use-when="communicationEvent.get(&quot;contactListId&quot;)!=null"><display/></field>
         <field name="partyIdFrom" use-when="communicationEvent.get(&quot;partyIdFrom&quot;)!=null">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} (${contactMechFrom.infoString})">
-                <sub-hyperlink description="[${communicationEvent.partyIdFrom}]" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_record_id}">
+                <sub-hyperlink description="[${communicationEvent.partyIdFrom}]" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="communicationEvent.partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="partyIdTo">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} (${contactMechTo.infoString})">
-                <sub-hyperlink description="[${communicationEvent.partyIdTo}]" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_record_id}">
+                <sub-hyperlink description="[${communicationEvent.partyIdTo}]" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="communicationEvent.partyIdTo"/>
                 </sub-hyperlink>
             </display-entity>
@@ -251,7 +251,7 @@ under the License.
         <field name="datetimeEnded" title="${uiLabelMap.CommonEndDate}"><display type="date"/></field>
         <field name="subject"><display also-hidden="false"/></field>
         <field name="content" title="${uiLabelMap.CommonContent}"><display also-hidden="false"/></field>
-        <field name="parentCommEventId" widget-style="${styles.link_record_id}">
+        <field name="parentCommEventId" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${communicationEvent.parentCommEventId}" target="ViewCommunicationEvent">
                 <parameter param-name="communicationEventId" from-field="communicationEvent.parentCommEventId"/>
             </hyperlink>
@@ -290,14 +290,14 @@ under the License.
         </field>
         <field name="partyIdFrom" use-when="&quot;my&quot;==void" title="${uiLabelMap.PartyPartyFrom}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="viewprofile" description="[${partyIdFrom}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="viewprofile" description="[${partyIdFrom}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="partyIdTo" use-when="&quot;my&quot;==void" title="${uiLabelMap.PartyPartyTo}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="viewprofile" description="[${communicationEvent.partyIdTo}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="viewprofile" description="[${communicationEvent.partyIdTo}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="communicationEvent.partyIdTo"/>
                 </sub-hyperlink>
             </display-entity>
@@ -419,7 +419,7 @@ under the License.
         </field>
         <field name="partyId" title="${uiLabelMap.CommonPartyId}" sort-field="true">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView" key-field-name="partyId">
-                <sub-hyperlink target="/partymgr/control/viewprofile" description="[${partyIdFrom}]" target-type="inter-app" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" description="[${partyIdFrom}]" target-type="inter-app" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>
@@ -467,10 +467,10 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="orderId" title="${uiLabelMap.FormFieldTitle_orderId}" widget-style="${styles.link_record_id}">
+        <field name="orderId" title="${uiLabelMap.FormFieldTitle_orderId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="/ordermgr/control/orderview?orderId=${orderId}" description="${orderId}" target-type="inter-app"/>
         </field>
-        <field name="communicationEventId" widget-style="${styles.link_record_id}">
+        <field name="communicationEventId" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${communicationEventId}" target="ViewCommunicationEvent">
                 <parameter param-name="communicationEventId"/>
             </hyperlink>
@@ -509,7 +509,7 @@ under the License.
         <field name="delContentDataResource"><hidden value="Y"/></field>
         <field name="partyId"><hidden/></field>
         <field name="communicationEventId"><hidden/></field>
-        <field name="subject" widget-style="${styles.link_text}" widget-area-style="fieldWidth300" sort-field="true">
+        <field name="subject" widget-style="${styles.link_nav_text}" widget-area-style="fieldWidth300" sort-field="true">
             <hyperlink description="${subject}[${communicationEventId}] " target="${parameters._LAST_VIEW_NAME_}">
                 <parameter param-name="communicationEventId"/>
                 <parameter param-name="partyId"/>
@@ -524,19 +524,19 @@ under the License.
         </field>
         <field name="partyIdFrom" title="${uiLabelMap.CommonPartyId} ${uiLabelMap.CommonFrom}" sort-field="true">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView" key-field-name="partyId">
-                <sub-hyperlink target="/partymgr/control/viewprofile" description="[${partyIdFrom}]" target-type="inter-app" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" description="[${partyIdFrom}]" target-type="inter-app" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="partyIdTo" title="${uiLabelMap.CommonPartyId} ${uiLabelMap.CommonTo}" sort-field="true">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView" key-field-name="partyId">
-                <sub-hyperlink target="/partymgr/control/viewprofile" description="[${partyIdTo}]" target-type="inter-app" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" description="[${partyIdTo}]" target-type="inter-app" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyIdTo"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" entry-name="roleStatusId" widget-style="${styles.link_record_desc}" widget-area-style="fieldWidth300">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" entry-name="roleStatusId" widget-style="${styles.link_nav_record_desc}" widget-area-style="fieldWidth300">
             <display-entity entity-name="StatusItem" description="${description}">
                 <sub-hyperlink target="setCommunicationEventRoleStatus"
                     description="${uiLabelMap[toComplete]}">
@@ -622,7 +622,7 @@ under the License.
         </actions>
         <field name="workEffortId" title="${uiLabelMap.WorkEffort}">
             <display-entity entity-name="WorkEffort" description="${workEffortName}">
-                <sub-hyperlink description="${workEffortId}" target="/workeffort/control/WorkEffortSummary" target-type="inter-app" link-style="${styles.link_record_id}">
+                <sub-hyperlink description="${workEffortId}" target="/workeffort/control/WorkEffortSummary" target-type="inter-app" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="workEffortId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -686,7 +686,7 @@ under the License.
         <field name="communicationEventId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
-                <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_record_id}">
+                <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -729,7 +729,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_create}">
+        <field name="submitAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_add}">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.PartyAddRole}"
                 target="${AddEventRole_submitAction}"/>
@@ -845,7 +845,7 @@ under the License.
                 </sub-hyperlink>
             </lookup>
         </field>
-        <field name="surveyResponseAction" map-name="dummy" widget-style="${styles.link_nav} ${styles.action_create}"
+        <field name="surveyResponseAction" map-name="dummy" widget-style="${styles.link_nav} ${styles.action_add}"
             use-when="&quot;DOCUMENT&quot;.equals(contentTypeId) &amp;&amp; dataResource!=null &amp;&amp; dataResource.get(&quot;relatedDetailId&quot;)==null &amp;&amp; templateDataResource!=null &amp;&amp; templateDataResource.get(&quot;relatedDetailId&quot;)!=null">
             <hyperlink description="Create Response (for Survey ${templateDataResource.relatedDetailId})" target="EditSurveyResponse" also-hidden="false" target-window="_blank">
                 <parameter param-name="surveyId" from-field="templateDataResource.relatedDetailId"/>
@@ -932,7 +932,7 @@ under the License.
         </row-actions>
         <field name="delContentDataResource"><hidden value="Y"/></field>
         <field name="communicationEventId"><hidden/></field>
-        <field name="subject" widget-style="${styles.link_text}" widget-area-style="fieldWidth300">
+        <field name="subject" widget-style="${styles.link_nav_text}" widget-area-style="fieldWidth300">
             <hyperlink description="${subject}" target="${parameters._LAST_VIEW_NAME_}" also-hidden="true">
                 <parameter param-name="communicationEventId"/>
                 <parameter param-name="partyId"/>
@@ -962,7 +962,7 @@ under the License.
         <field name="firstName" position="1"><text/></field>
         <field name="middleName" position="2"><text/></field>
         <field name="lastName"><text/></field>
-        <field name="submit" title="${uiLabelMap.PartyCreateAddEmail}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submit" title="${uiLabelMap.PartyCreateAddEmail}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="deleteEmail" type="single" title="delete the email"
         target="deleteUnknownCommunicationEvent">
@@ -986,7 +986,7 @@ under the License.
         <field name="custRequestName" entry-name="subject"><text size="60"/></field>
         <field name="contentMimeTypeId"><hidden/></field>
         <field name="content" title="${uiLabelMap.CommonContent}"><textarea cols="70" rows="20"/></field>
-        <field name="submit" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submit" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListRequests" extends="ListRequests" extends-resource="component://order/widget/ordermgr/CustRequestForms.xml">
         <field name="custRequestName">
@@ -1036,7 +1036,7 @@ under the License.
             <entity-one entity-name="OrderHeader" value-field="orderHeader" auto-field-map="true"/>
             <set field="orderTypeId" from-field="orderHeader.orderTypeId"/>
         </row-actions>
-        <field name="orderId" title="${uiLabelMap.FormFieldTitle_orderId}" widget-style="${styles.link_record_id}">
+        <field name="orderId" title="${uiLabelMap.FormFieldTitle_orderId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="/ordermgr/control/orderview?orderId=${orderId}" description="${orderId}" target-type="inter-app"/>
         </field>
         <field name="communicationEventId"><hidden/></field>
@@ -1051,7 +1051,7 @@ under the License.
     <form name="AddCommOrder" type="single" target="createCommunicationEventOrder" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="communicationEventId"><hidden/></field>
         <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
-        <field name="submitAction" title="${uiLabelMap.PartyOrderAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PartyOrderAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListCommProducts" list-name="productsList" type="list" target="deleteCommunicationEventProduct" paginate-target="ListCommProducts" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" view-size="20">
         <actions>
@@ -1072,6 +1072,6 @@ under the License.
     <form name="AddCommProduct" type="single" target="createCommunicationEventProduct" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="communicationEventId"><hidden/></field>
         <field name="productId" title="${uiLabelMap.PartyProductId}"><lookup target-form-name="LookupProduct"/></field>
-        <field name="submitAction" title="${uiLabelMap.PartyProductAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PartyProductAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 </forms>

@@ -113,7 +113,7 @@ under the License.
                                       <a href="/catalog/control/EditProduct?productId=${productId}" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
                                       <a href="/ecommerce/control/product?product_id=${productId}" class="${styles.link_nav!}" target="_blank">${uiLabelMap.OrderEcommerce}</a>
                                       <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
-                                      <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.link_image!}">${uiLabelMap.OrderViewImage}</a>
+                                      <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.link_nav_image!}">${uiLabelMap.OrderViewImage}</a>
                                       </#if>
                                   </div>
                                   </#if>
@@ -148,7 +148,7 @@ under the License.
                                     <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader", false)>
                                     <#if returnHeader.statusId != "RETURN_CANCELLED">
                                                 <font color="red">${uiLabelMap.OrderReturned}</font>
-                                                ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="${styles.link_record_id!}">${returnItem.returnId}</a>
+                                                ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${returnItem.returnId}</a>
                                     </#if>
                                   </#list>
                                 </#if>
@@ -419,8 +419,8 @@ under the License.
                             <@td><input type="text" name="amount" size="6" value="<@ofbizAmount amount=adjustmentAmount/>" class="${styles.text_right!}"/></@td>
                             <@td nowrap="nowrap">
                                 <#if (allowPriceChange)>
-                                    <input class="${styles.link_action!}" type="submit" value="${uiLabelMap.CommonUpdate}"/>
-                                    <a href="javascript:document.deleteOrderAdjustment${orderAdjustmentId}.submit();" class="${styles.link_action!}">${uiLabelMap.CommonDelete}</a>
+                                    <input class="${styles.link_action_session!} ${styles.action_update!}" type="submit" value="${uiLabelMap.CommonUpdate}"/>
+                                    <a href="javascript:document.deleteOrderAdjustment${orderAdjustmentId}.submit();" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                                 <#else>
                                     <@ofbizAmount amount=adjustmentAmount/>
                                 </#if>
@@ -462,8 +462,7 @@ under the License.
                         <@td><input type="text" name="description" value="" size="30" maxlength="60" class="${styles.text_right!}"/></@td>
                         <@td><input type="text" name="amount" size="6" value="<@ofbizAmount amount=0.00/>" class="${styles.text_right!}"/></@td>
                         <@td>
-                            
-                            <input class="${styles.link_action!}" type="submit" value="${uiLabelMap.CommonAdd}"/>
+                            <input class="${styles.link_action_sys!} ${styles.action_add!}" type="submit" value="${uiLabelMap.CommonAdd}"/>
                         </@td>
                     </@tr>
             </form>

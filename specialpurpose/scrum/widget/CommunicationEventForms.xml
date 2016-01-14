@@ -69,14 +69,14 @@ under the License.
         </field>
         <field name="partyIdFrom" title="${uiLabelMap.CommonFrom}">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView" key-field-name="partyId">
-                <sub-hyperlink target="viewprofile" description="[${partyIdFrom}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="viewprofile" description="[${partyIdFrom}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>
         </field>
         <field name="partyIdTo" title="${uiLabelMap.CommonTo}">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView" key-field-name="partyId">
-                <sub-hyperlink target="viewprofile" description="[${partyIdTo}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="viewprofile" description="[${partyIdTo}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyIdTo"/>
                 </sub-hyperlink>
             </display-entity>
@@ -153,7 +153,7 @@ under the License.
         </field>
         <field name="partyId" title="${uiLabelMap.CommonFrom}">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView" key-field-name="partyId">
-                <sub-hyperlink target="viewprofile" description="[${partyIdFrom}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="viewprofile" description="[${partyIdFrom}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>
@@ -228,7 +228,7 @@ under the License.
         </field>
         <field name="partyId" title="${uiLabelMap.CommonFrom}">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView" key-field-name="partyId">
-                <sub-hyperlink target="viewprofile" description="[${partyIdFrom}]" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="viewprofile" description="[${partyIdFrom}]" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>

@@ -40,7 +40,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container style="button-bar">
-                                    <link text="${uiLabelMap.ScrumCreateProject}" target="editScrumProject" style="${styles.link_nav} ${styles.action_create}"/>
+                                    <link text="${uiLabelMap.ScrumCreateProject}" target="editScrumProject" style="${styles.link_nav} ${styles.action_add}"/>
                                 </container>
                             </widgets>
                         </section>
@@ -2377,7 +2377,7 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar">
-                                            <link target="EditSprintTask" text="${uiLabelMap.ScrumNewTask}" style="${styles.link_nav} ${styles.action_create}" link-type="hidden-form">
+                                            <link target="EditSprintTask" text="${uiLabelMap.ScrumNewTask}" style="${styles.link_nav} ${styles.action_add}" link-type="hidden-form">
                                                 <parameter param-name="sprintId" from-field="parameters.sprintId"/>
                                             </link>
                                         </container>

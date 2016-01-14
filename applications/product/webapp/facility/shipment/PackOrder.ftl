@@ -43,8 +43,8 @@ under the License.
             <#if invoiceIds?has_content>
               <@row>
                 <@cell>
-                ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.link_action!}">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
-                ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/ShipmentBarCode.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.link_action!}">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.link_record_id!}">${shipmentId}</a>
+                ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/PackingSlip.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.link_action_sys!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a> ${uiLabelMap.CommonOr}
+                ${uiLabelMap.CommonView} <a href="<@ofbizUrl>/ShipmentBarCode.pdf?shipmentId=${shipmentId}</@ofbizUrl>" target="_blank" class="${styles.link_action_sys!} ${styles.action_export!}">${uiLabelMap.ProductBarcode}</a> ${uiLabelMap.CommonFor} ${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>/ViewShipment?shipmentId=${shipmentId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${shipmentId}</a>
                 </@cell>
               </@row>
                 <#if invoiceIds?exists && invoiceIds?has_content>
@@ -270,9 +270,9 @@ under the License.
                               </#if>
                           </@td>
                           <@td>
-                              <a href="/catalog/control/EditProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_record_name!}" target="_blank">${(orderProduct.internalName)!}</a>
+                              <a href="/catalog/control/EditProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_record_name!}" target="_blank">${(orderProduct.internalName)!}</a>
                               <#if orderProduct.productId != product.productId>
-                                  &nbsp;[<a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_record_name!}" target="_blank">${(product.internalName)!}</a>]
+                                  &nbsp;[<a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_record_name!}" target="_blank">${(product.internalName)!}</a>]
                               </#if>
                           </@td>
                           <@td align="right">${orderItemQuantity}</@td>
@@ -431,7 +431,7 @@ under the License.
                       <@td>${line.getOrderItemSeqId()}</@td>
                       <@td>${line.getProductId()?default("N/A")}</@td>
                       <@td>
-                          <a href="/catalog/control/EditProduct?productId=${line.getProductId()!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_record_name!}" target="_blank">${product.internalName!?default("[N/A]")}</a>
+                          <a href="/catalog/control/EditProduct?productId=${line.getProductId()!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_record_name!}" target="_blank">${product.internalName!?default("[N/A]")}</a>
                       </@td>
                       <@td>${line.getInventoryItemId()}</@td>
                       <@td align="right">${line.getQuantity()}</@td>
@@ -467,7 +467,7 @@ under the License.
                       <@td>${line.getOrderItemSeqId()}</@td>
                       <@td>${line.getProductId()?default("N/A")}</@td>
                       <@td>
-                          <a href="/catalog/control/EditProduct?productId=${line.getProductId()!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_record_name!}" target="_blank">${product.internalName!?default("[N/A]")}</a>
+                          <a href="/catalog/control/EditProduct?productId=${line.getProductId()!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_record_name!}" target="_blank">${product.internalName!?default("[N/A]")}</a>
                       </@td>
                       <@td>${line.getInventoryItemId()}</@td>
                       <@td align="right">${line.getQuantity()}</@td>

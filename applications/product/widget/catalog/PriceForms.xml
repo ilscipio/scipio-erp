@@ -33,7 +33,7 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productPriceRuleId" title="${uiLabelMap.ProductPriceRuleNameId}" widget-style="${styles.link_record_idname}">
+        <field name="productPriceRuleId" title="${uiLabelMap.ProductPriceRuleNameId}" widget-style="${styles.link_nav_record_idname}">
             <hyperlink target="EditProductPriceRules" description="${ruleName}[${productPriceRuleId}]" >
                 <parameter param-name="productPriceRuleId"/>
             </hyperlink>
@@ -130,7 +130,7 @@
                 <list-options list-name="productPriceRulesCondValues" key-name="condValue"/>                
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit/></field>        
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>        
     </form>
     <form name="EditProductPriceRulesAction" type="list" target="updateProductPriceAction" title="" list-name="productPriceActions" 
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" separate-columns="true">
@@ -160,7 +160,7 @@
             </drop-down>
         </field>        
         <field name="amount" title="${uiLabelMap.ProductValue}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>        
     
 </forms>

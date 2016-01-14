@@ -198,7 +198,7 @@
           would mean, "this function will indirectly modify this scope once it's actually run"), though not really useful. -->
     "action_scope_system" : "action-scope-system",        <#-- action that changes system state, usually database -->
     "action_scope_session" : "action-scope-session",      <#-- action that changes user session state -->
-    "action_scope_page" : "action-scope-page",            <#-- action that changes state on a page or form only (usually with javascript or input reset button) -->
+    "action_scope_local" : "action-scope-local",          <#-- action that changes state on a page or form only (usually with javascript or input reset button) -->
     
   <#-- Specific action types -->
     "action_generic" : "action-generic",                  <#-- generic action class; avoid using; always use more specific where possible -->
@@ -206,26 +206,36 @@
                                                               is only for actions that cancel other actions in progress, not new requests for modifying system state. -->
     <#-- state-changing actions -->
     "action_modify" : "action-modify",                    <#-- generic modify action, can also be a collection of modifications -->
-    "action_create" : "action-modify action-create",      <#-- create item action link: "Create Entity", "New Value", "Add", etc. -->
-    "action_update" : "action-modify action-update",      <#-- update item action link: "Update Entity", "Edit", etc. -->
-    "action_remove" : "action-modify action-remove",      <#-- (logical) remove item action link: "Delete", "Remove", etc. -->
-    "action_clear" : "action-modify action-clear",        <#-- clear action link: "Clear", "Reset", "Empty Fields", etc. -->
-    "action_copy" : "action-modify action-copy",          <#-- copy action link: "Copy", "Duplicate", etc. -->
-    "action_configure" : "action-modify action-configure",<#-- configure action link: "Configure", "Setup", etc. -->
-    "action_begin" : "action-modify action-begin",        <#-- begin action link: "Begin", "Start", "Start Job", etc. -->
-    "action_terminate" : "action-modify action-terminate",<#-- terminate action link: "Cancel Order", "Expire", "Stop", "Stop Job", etc. -->
-    "action_complete" : "action-modify action-complete",  <#-- complete action link: "Complete Order", "Mark Success", etc. -->
-    "action_import" : "action-modify action-import",      <#-- upload action link: "Import", "Upload", etc. -->
-    "action_transfer" : "action-modify action-transfer",  <#-- transfer action link: "Transfer", "Send", "Send Email", etc. -->
+    "action_add" : "action-modify action-add",            <#-- add item action: "Create Entity", "New Value", "Add", etc. -->
+    "action_update" : "action-modify action-update",      <#-- update item action: "Update Entity", "Edit", etc. -->
+    "action_remove" : "action-modify action-remove",      <#-- (logical) remove item action: "Delete", "Remove", etc. -->
+    "action_clear" : "action-modify action-clear",        <#-- clear action: "Clear", "Reset", "Empty Fields", etc. -->
+    "action_copy" : "action-modify action-copy",          <#-- copy action: "Copy", "Duplicate", etc. -->
+    "action_configure" : "action-modify action-configure",<#-- configure action: "Configure", "Setup", etc. -->
+    "action_begin" : "action-modify action-begin",        <#-- begin action: "Begin", "Start", "Start Job", etc. -->
+    "action_terminate" : "action-modify action-terminate",<#-- terminate action: "Cancel Order", "Expire", "Stop", "Stop Job", etc. -->
+    "action_complete" : "action-modify action-complete",  <#-- complete action: "Complete Order", "Mark Success", etc. -->
+    "action_import" : "action-modify action-import",      <#-- upload action: "Import", "Upload", etc. -->
+    "action_transfer" : "action-modify action-transfer",  <#-- transfer action: "Transfer", "Send", "Send Email", "Receive", etc. -->
+    "action_register" : "action-modify action-login action-scope-system",   <#-- register action: "Register", etc.; implies system scope -->
+    "action_login" : "action-modify action-login action-scope-session",     <#-- login action: "Login", etc.; implies session scope -->
+    "action_logout" : "action-modify action-logout action-scope-session",   <#-- logout action: "Logout", etc.; implies session scope -->
 
-    <#-- read-only actions -->
-    "action_read" : "action-read",                        <#-- generic read action, can also be a collection of read actions -->
-    "action_find" : "action-read action-find",            <#-- find action link: "Find", "Search", "Lookup", etc. -->
-    "action_select" : "action-read action-select",        <#-- select action link: "Select", "Choose", "Pick", etc. -->
-    "action_view" : "action-read action-view",            <#-- view item action link: "View PDF", etc. -->
-    "action_export" : "action-read action-export",        <#-- export action link: "Export", "Download", "Stream", "Print", etc. -->
-    "action_reload" : "action-read action-reload",        <#-- reload action link: "Refresh", etc. -->
-
+    <#-- read-only actions (may or retrieve or submit data for analysis without changing state meaningfully) -->
+    "action_readonly" : "action-readonly",                                <#-- readonly action or actions -->
+    "action_read" : "action-readonly action-read",                        <#-- generic read action, can also be a collection of read actions -->
+    "action_find" : "action-readonly action-read action-find",            <#-- find action: "Find", "Search", "Lookup", etc. -->
+    "action_view" : "action-readonly action-read action-view",            <#-- view item action: "View PDF", etc. -->
+    "action_export" : "action-readonly action-read action-export",        <#-- export action: "Export", "Download", "Stream", "Print", etc. -->
+    
+    "action_select" : "action-readonly action-select",                    <#-- select action: "Select", "Choose", "Pick", etc. -->
+    "action_reload" : "action-readonly action-reload",                    <#-- reload action: "Refresh", etc. -->
+    "action_verify" : "action-readonly action-verify",                    <#-- verify action (should not change system state!): "Verify", "Validate", etc. -->
+    "action_close" : "action-readonly action-close",                      <#-- close action (should not change system state!): "Close Popup", etc. -->
+    
+  <#-- other action flags -->
+    "action_external" : "action-external",                <#-- action external, notably for marking external links -->
+    
   <#-- Standalone link styles (includes links in tables)
     DEV NOTE: 2016-01-07: the old use of link_nav and link_action made no real sense and has been ratified below.
       the old link_action will be removed and turned mostly into link_nav(+action_xxx) and link_action_sys(+action_xxx)
@@ -236,65 +246,68 @@
       * the main classes of links are nav and run-action links. everything else is a specialization of these.
         * nav can be (and is) classified as a "navigation action" (link_action_nav) but called nav for short and for clarity.
       * if the link's text designates a record (usually entity value) by name or ID alone or some combination of these, and basically "points to" a record,
-        usually it should have link_record_xxx. see "record identifiers and sorting fields" below.
+        usually it should have link_nav_record_xxx. see "record identifiers and sorting fields" below.
         e.g. a link with an order ID (<a...>WS10000</a>) as its text that points to an order summary.
         * this is a special form/case of nav link, emphasized for styling needs.
       * if it's another basic navigation link or a link that leads to another page that leads to or encourages an action, see "navigation link".
         e.g., a "New" button that leads to a new page with a form where you can create a new entity value.
       * if it's a link that directly performs an action, see "run actions".
         e.g., the submit button ("Submit" or "Create New") on a form that trigger a new entity value creation.
-      * a few rarer types have their own link_xxx styles such as link_url further below.
-        * link_url would be a link with a URL as its text.
+      * a few rarer types have their own link_xxx styles such as link_nav_uri further below.
+        * link_nav_uri would be a link with a URL as its text.
         * TODO: clarify how these fall in with the others
    
-    navigation link (class="${styles.link_nav!} ${styles.action_create!}"):
+    navigation link (class="${styles.link_nav!} ${styles.action_add!}"):
       * these perform basic navigation, including navigation to pages from which run-actions are triggered and opening pop-up windows.
       * any basic navigation link can have link_nav (though note, link_nav like the other link_xxx may contain a core style like button style). 
       * if the navigation link leads to a page intended to perform a specific action, the link should be given link_nav
-        along with an appropriate specific action_xxx action type style (see above), such as action_create, action_view, etc.
+        along with an appropriate specific action_xxx action type style (see above), such as action_add, action_view, etc.
         * this is similar to some stock Ofbiz classes, but more generalized and better and supersedes the Ofbiz classes. 
-          in original ofbiz you see such classes as link-style="create". they should be replaced by link-style="${styles.action_create}" or appropriate.
+          in original ofbiz you see such classes as link-style="create". they should be replaced by link-style="${styles.action_add}" or appropriate.
           the action_xxx classes can be applied to any interactive element, not only <a> links.
         * in principle, you could add a third action_scope_xxx style to "predict" the action scope, but is not very useful for nav links.
       * back pages and cancel buttons, even if they seem to be part of a form, as long as they behave as navigation links,
         should have the link_nav_cancel style. they need no extra styles.
       * action_view is more or less the default on link_nav and may be omitted.
       
-    run-actions (class="${styles.link_action_sys!} ${styles.action_create!}"):
-      * these trigger actual actions in either system, session or page scopes.
+    run-actions (class="${styles.link_action_sys!} ${styles.action_add!}"):
+      * these trigger actual actions in either system, session or local (page) scopes.
       * any link that performs an action that contacts the system to perform a new action should be given link_action_sys. this means
         form submits, PDF download, etc. link_action_sys contains the "action_run" class.
-        they should also be given a second, specific action_xxx action type style (see above), such as action_create, 
-        action_download, etc. or the more generic action_modify or action_read if not available.
+        they should also be given a second, specific action_xxx action type style (see above), such as action_add, 
+        action_download, etc. or the more generic action_modify or action_readonly (or action_read) if not available.
         * by default, link_action_sys with any modify action is assumed to change the state of the system (usually database).
           so it means the user is committing to something, and it's usually the last button in a chain of links, like a 
           submit button (whereas link_nav is used to open the page for the action).
           * if the link is local to the page (page scope) and/or simply prepares for a submit or other action, it should be given
-            link_action_page. this is mostly for javascript and input reset buttons. such links shouldn't
+            link_action_local. this is mostly for javascript and input reset buttons. such links shouldn't
             really perform actions on the system (except read-only actions). they prepare other incoming system actions.
           * if the link only changes the state of the user's session, it should given link_action_session instead.
+            NOTE: "session" is usually HTTP web session, but it extends to sessions which may be persisted. it is "logical" session.
         * the most important purpose of link_action_sys is to identify which links will change the state of the system,
           so user knows which changes are permanent and which functions don't commit anything.
           in the end, any link with the styles action_run, action_modify and action_scope_system (or not scope)
           will be assumed to change the system state, or with action_scope_session, the session state (rare).
       * if it's a link to cancel another action like an upload, use link_action_sys_cancel instead of link_action_sys.
         * link_action_sys_cancel should not be used for things like changing order statuses to cancelled.
-        * the same applies for link_action_session_cancel and link_action_page_cancel, though these are very rare.
+        * the same applies for link_action_session_cancel and link_action_local_cancel, though these are very rare.
       * should be used for buttons that change what's shown on the page, with action_view ("Show Old", visibility, etc.).
 
-    record identifiers and sorting fields (class="${styles.link_record_id!}"):
-      * these are essentially specific versions of link_nav for styling purposes.
-      * if the text is a simple single record (entity) id, name, date, or other record identifier, use link_record_id, link_record_name, link_record_date,
-        or if the text type is not listed or cannot be known in advance, link_record_value.
+    record identifiers and sorting fields (class="${styles.link_nav_record_id!}"):
+      * these are essentially specific versions of link_nav for styling purposes; they identify the text the links have as labels.
+        * such text can occasionally be found on non-nav (action) links, but this is rare, and to simplify some kinds of styling
+          these are integrated under link_nav_xxx.
+      * if the text is a simple single record (entity) id, name, date, or other record identifier, use link_nav_record_id, link_nav_record_name, link_nav_record_date,
+        or if the text type is not listed or cannot be known in advance, link_nav_record_value.
         * if the value is complex or very long (e.g. multiple-field primary key), or possibly if has introductory words ("Order Item: 1000000"),
           use the corresponding link_longxxx variant instead.
-      * if it's a combination of name and id, use link_record_idname (or link_record_idname_long). however, if it's
-        a name with a default value fallback to id, use link_record_name (or link_record_name_long).
-      * if it's a more complex combination or a description (other than id + name), use link_record_desc.
+      * if it's a combination of name and id, use link_nav_record_idname (or link_nav_record_idname_long). however, if it's
+        a name with a default value fallback to id, use link_nav_record_name (or link_nav_record_name_long).
+      * if it's a more complex combination or a description (other than id + name), use link_nav_record_desc.
       * simple extraneous characters like brackets around an id should not affect selection;
         but introductory words ("Order Item: WS10000") may warrant putting it under the link_longxxx variant.
-        in some cases, extra words means it should go under link_record_desc.
-      * it can sometimes optionally be given a second action_xxx style if it encourages an action, such as action_update, action_create, etc.
+        in some cases, extra words means it should go under link_nav_record_desc.
+      * it can sometimes optionally be given a second action_xxx style if it encourages an action, such as action_update, action_add, etc.
         action_view is the implied default, can be set explicitly.
       * these styles are for navigation links. if they directly perform actions, probably use run actions instead (see "run actions", e.g. link_action_sys).
       
@@ -305,15 +318,15 @@
       * action_view actions are often ambiguous and could be either link_nav or link_action_sys depending on UI functionality and perspective.
         * as a general rule, link_action_sys are for the "final" actions (like submit buttons), while link_nav are for links heading toward the action (or that open a page).
           however, for view action, sometimes the line is not clear and subjective or there is no distinction. should be judged based on context.
+          
+    DEV NOTES:
+      * regarding link_nav_record_xxx and similar: these could have had a second layer of categories such as link_record_xxx
+        which aren't bound to imply link_nav, so they could be reused on link_action_xxx, but it's so rare there's probably no real need (link_action_xxx with _long variants is enough for these rare cases).
+        the original link_record_xxx classes were renamed to link_nav_record_xxx because they practically all already implied link_nav everywhere, just wasn't clear enough.
+        this link_nav_record_xxx pattern is not consistent with the action_xxx pattern (above), which is not great, but this could be justified by styling needs.
+        if find there is a new need, can always create link_record_xxx add-on classes similar to action_xxx which don't imply link_nav.
   -->
-    "link_nav" : "button tiny action-nav",                              <#-- navigation link toward another page, usually with static text like "New" or "Edit" or "View".
-                                                                            the link should also be qualified with an "action_xxx" class where appropriate (see above), to indicate
-                                                                            the action that the link is leading the user to do. -->
-    "link_nav_long" : "action-nav link-long",                           <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
-    "link_nav_cancel" : "button tiny action-nav action-cancel",         <#-- back/cancel/done navigation link that leads back to another page (could be said as: "cancels" the nagivation action): "Back", "Cancel", "Done", etc. 
-                                                                            NOTE: can often appear as if is part of a form submit (run action), but is not really. -->
-    "link_nav_cancel_long" : "action-nav action-cancel link-long",
-
+    <#-- Action links (trigger an actual action in the system - NOT for use for opening pages toward actions!) -->
     "link_action_sys" : "button tiny action-run",                       <#-- link that actually performs an action (run-action), in system scope, such as most form submit buttons, "Create Order", "Download PDF", etc. -->
     "link_action_sys_long" : "action-run link-long",
     "link_action_sys_cancel" : "button tiny action-run action-cancel",  <#-- link that cancels a system action in progress, such as cancelling an upload (but NOT if only a button that leads back to previous page - use link_nav_action_cancel, 
@@ -323,10 +336,10 @@
     "link_action_session_long" : "action-run action-scope-session link-long",
     "link_action_session_cancel" : "button tiny action-run action-scope-session action-cancel",     <#-- link for any action that cancels another session action (rare). -->
     "link_action_session_cancel_long" : "action-run action-scope-session action-cancel link-long",
-    "link_action_page" : "button tiny action-run action-scope-page",                                <#-- link for any action (run-action) local to a page or that prepares a page for another action, such as "Clear" or "Reset" buttons that empty a form or form field. can also be used for heavily interactive javascript forms. -->
-    "link_action_page_long" : "action-run action-scope-page link-long",
-    "link_action_page_cancel" : "button tiny action-run action-scope-page action-cancel",           <#-- link for any action that cancels another page-scope action (rare). -->
-    "link_action_page_cancel_long" : "action-run action-scope-page action-cancel link-long",
+    "link_action_local" : "button tiny action-run action-scope-local",                              <#-- link for any action (run-action) local to a page or that prepares a page for another action, such as "Clear" or "Reset" buttons that empty a form or form field. also intended for heavily interactive javascript forms. -->
+    "link_action_local_long" : "action-run action-scope-local link-long",
+    "link_action_local_cancel" : "button tiny action-run action-scope-local action-cancel",         <#-- link for any action that cancels another page-scope action (rare). -->
+    "link_action_local_cancel_long" : "action-run action-scope-local action-cancel link-long",
 
     "link_action" : "button tiny action-generic",               <#-- DEPRECATED; TO BE REMOVED [use link_nav and link_action_sys instead]: action link: "Add", "Edit", "Remove", "Cancel", "Export as PDF", "Edit: WS10000", etc. not necessarily a verb, action may be implied, but should be an action. usually static text. 
                                                                     this may overlap with link_nav, but usually there is one more appropriate than the other.
@@ -334,25 +347,34 @@
                                                                     always prefer the more precise sub-categories below... -->
     "link_action_long" : "action-generic link-long",            <#-- DEPRECATED; TO BE REMOVED -->
 
-    "link_record_id" : "action-nav",                            <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
-    "link_record_id_long" : "action-nav link-long",             <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
-    "link_record_name" : "action-nav",                          <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
-    "link_record_name_long" : "action-nav link-long",           <#-- the long name of a record: "Mr. Title The Ambassador of Germany", etc. -->
-    "link_record_idname" : "action-nav",                        <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
-    "link_record_idname_long" : "action-nav link-long",         <#-- long combination of IDs and names: "Mr. John Alberton Smith Junior (ID: 10000) (Group: 20000)" -->
-    "link_record_desc" : "action-nav",                          <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. 
-                                                                    in general, as soon as a non-action link text contains more than one type of value, and not idname, it should be changed to link_record_desc.
+    <#-- General navigation links (basic navigation and navigation toward actions) -->
+    "link_nav" : "button tiny action-nav",                              <#-- navigation link toward another page, usually with static text like "New" or "Edit" or "View".
+                                                                            the link should also be qualified with an "action_xxx" class where appropriate (see above), to indicate
+                                                                            the action that the link is leading the user to do. -->
+    "link_nav_long" : "action-nav link-long",                           <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
+    "link_nav_cancel" : "button tiny action-nav action-cancel",         <#-- back/cancel/done navigation link that leads back to another page (could be said as: "cancels" the nagivation action): "Back", "Cancel", "Done", etc. 
+                                                                            NOTE: can often appear as if is part of a form submit (run action), but is not really. -->
+    "link_nav_cancel_long" : "action-nav action-cancel link-long",
+
+    <#-- Navigation links with specific label text -->
+    "link_nav_record_id" : "action-nav",                        <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
+    "link_nav_record_id_long" : "action-nav link-long",         <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
+    "link_nav_record_name" : "action-nav",                      <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
+    "link_nav_record_name_long" : "action-nav link-long",       <#-- the long name of a record: "Mr. Title The Ambassador of Germany", etc. -->
+    "link_nav_record_idname" : "action-nav",                    <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
+    "link_nav_record_idname_long" : "action-nav link-long",     <#-- long combination of IDs and names: "Mr. John Alberton Smith Junior (ID: 10000) (Group: 20000)" -->
+    "link_nav_record_desc" : "action-nav",                      <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. 
+                                                                    in general, as soon as a non-action link text contains more than one type of value, and not idname, it should be changed to link_nav_record_desc.
                                                                     however, if it contains a specific action(s), it may be more appropriate as link_action_long. -->
-    "link_record_date" : "action-nav",                          <#-- the date of a record (fromDate, thruDate, etc.) -->
-    "link_record_number" : "action-nav",                        <#-- the number of a record (index, sequence num, etc.) -->
-    "link_record_value" : "action-nav",                         <#-- link containing a value of type not previously listed (or cannot be known statically) -->
-    "link_record_value_long" : "action-nav link-long",          <#-- link containing a value of type not previously listed but that may be long (or cannot be known statically) -->
-    "link_url" : "",                                            <#-- link containing a URL or location as its text (<a href="http://ofbiz.apache.org">http://ofbiz.apache.org</a>) -->
-    "link_text" : "",                                           <#-- link containing any kind of free-form text -->
-    "link_image" : "",                                          <#-- link for an image (often omitted) -->
-    "link_default" : "",                                        <#-- general link, for anything that does not fall into the above types or cannot be determined.
-                                                                    always use the above types instead where possible.
-                                                                    usually this will be rarely used and the style here will be left empty. -->
+    "link_nav_record_date" : "action-nav",                      <#-- the date of a record (fromDate, thruDate, etc.) -->
+    "link_nav_record_number" : "action-nav",                    <#-- the number of a record (index, sequence num, etc.) -->
+    "link_nav_record_value" : "action-nav",                     <#-- link containing a value of type not previously listed (or cannot be known statically) -->
+    "link_nav_record_value_long" : "action-nav link-long",      <#-- link containing a value of type not previously listed but that may be long (or cannot be known statically) -->
+    "link_nav_uri" : "action-nav",                              <#-- link containing a URL or location as its text (<a href="http://ofbiz.apache.org">http://ofbiz.apache.org</a>); may be IP, hostname, etc. -->
+    "link_nav_text" : "action-nav",                             <#-- link containing any kind of free-form text -->
+    "link_nav_image" : "action-nav",                            <#-- link for an image (often omitted) -->
+
+    <#-- misc link styles -->
     "link_long" : "link-long",                                  <#-- style to identify long links -->
     
   <#-- Colors -->

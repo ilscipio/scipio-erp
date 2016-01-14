@@ -51,7 +51,7 @@ under the License.
                                     </a>
                                 </div>
                                 <div class="productbuy">
-                                    <a class="${styles.link_record_name!}"  style="font-size:12px" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">${productCategory.categoryName!productCategoryId}</a>
+                                    <a class="${styles.link_nav_record_name!}"  style="font-size:12px" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">${productCategory.categoryName!productCategoryId}</a>
                                 </div>
                                 <div class="productinfo">
                                     <ul>
@@ -69,7 +69,7 @@ under the License.
                                             <#if productCategoryMember?has_content>
                                                 <#assign product = delegator.findOne("Product", Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", productCategoryMember.productId), false)>
                                                 <li class="browsecategorytext">
-                                                    <a class="${styles.link_record_name!}" href="<@ofbizCatalogAltUrl productCategoryId="PROMOTIONS" productId="${product.productId}"/>">
+                                                    <a class="${styles.link_nav_record_name!}" href="<@ofbizCatalogAltUrl productCategoryId="PROMOTIONS" productId="${product.productId}"/>">
                                                         ${product.productName!product.productId}
                                                     </a>
                                                 </li>

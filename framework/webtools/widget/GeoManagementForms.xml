@@ -25,7 +25,7 @@
     
     <form name="ListGeos" extends-resource="component://common/widget/LookupForms.xml" extends="listLookupGeo" paginate-target="${currentUrl}"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar" separate-columns="true" >
-        <field name="geoId" widget-style="${styles.link_record_id}" title="${uiLabelMap.CommonGeoId}">
+        <field name="geoId" widget-style="${styles.link_nav_record_id}" title="${uiLabelMap.CommonGeoId}">
             <hyperlink also-hidden="false" target-type="plain" description="${geoId}" target="EditGeo">
                 <parameter param-name="geoId"/>
             </hyperlink>
@@ -58,7 +58,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListLookupGeo" extends="ListGeos">
-        <field name="geoId" title="${uiLabelMap.CommonGeoId}" widget-style="${styles.link_record_id}">
+        <field name="geoId" title="${uiLabelMap.CommonGeoId}" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${geoId}" target="javascript:set_value('${geoId}')"/>
         </field>
         <field name="deleteAction"><ignored/></field>

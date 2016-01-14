@@ -37,7 +37,7 @@ under the License.
                 <field-map field-name="fixedAssetId" from-field="fixedAssetId"/>
             </service>
         </row-actions>
-        <field name="fixedAssetId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_record_id}" sort-field="true">
+        <field name="fixedAssetId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_record_id}" sort-field="true">
             <hyperlink also-hidden="false" description="${fixedAssetId}" target="EditFixedAsset">
                 <parameter param-name="fixedAssetId"/>
             </hyperlink>
@@ -263,7 +263,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <!-- List all fixed asset idents  -->
@@ -302,7 +302,7 @@ under the License.
             </drop-down>
         </field>
         <field name="idValue" title="${uiLabelMap.CommonValue}" position="2"><text size="20" maxlength="20"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <!-- List all fixed asset Registration  -->
@@ -340,7 +340,7 @@ under the License.
         <field name="govAgencyPartyId" title="${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="registrationNumber" title="${uiLabelMap.AccountingFixedAssetRegNumber}" position="2"><text size="20"/></field>
         <field name="licenseNumber" title="${uiLabelMap.AccountingFixedAssetLicenseNumber}" position="2"><text size="20"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <!-- list all Fixed Asset Maintenance-->
@@ -355,7 +355,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="maintHistSeqId" widget-style="${styles.link_record_id}">
+        <field name="maintHistSeqId" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" description="${maintHistSeqId}" target="EditFixedAssetMaint">
                 <parameter param-name="fixedAssetId"/>
                 <parameter param-name="maintHistSeqId"/>
@@ -437,7 +437,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="scheduleWorkEffortId" widget-style="${styles.link_record_id}">
+        <field name="scheduleWorkEffortId" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="/workeffort/control/WorkEffortSummary" also-hidden="false" description="${fixedAssetMaint.scheduleWorkEffortId}" target-type="inter-app">
                 <parameter param-name="workEffortId" from-field="fixedAssetMaint.scheduleWorkEffortId"/>
             </hyperlink>
@@ -468,7 +468,7 @@ under the License.
         <field name="meterValue" title="${uiLabelMap.CommonValue}"><text/></field>
         <field name="readingReasonEnumId" title="${uiLabelMap.CommonReason}"><text size="20"/></field>
         <field name="workEffortId" title="${uiLabelMap.WorkEffort}"><lookup target-form-name="LookupWorkEffort"></lookup></field>
-        <field name="maintHistSeqId" title="${uiLabelMap.AccountingFixedAssetMaint}" widget-style="${styles.link_record_id}">
+        <field name="maintHistSeqId" title="${uiLabelMap.AccountingFixedAssetMaint}" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="EditFixedAssetMaint" description="${maintHistSeqId}" also-hidden="false">
                 <parameter param-name="fixedAssetId"/>
                 <parameter param-name="maintHistSeqId"/>
@@ -502,7 +502,7 @@ under the License.
         <field name="meterValue" title="${uiLabelMap.CommonValue}"><text size="20"/></field>
         <field name="readingReasonEnumId" title="${uiLabelMap.CommonReason}" position="2"><text size="20"/></field>
         <field name="workEffortId" title="${uiLabelMap.WorkEffort}" position="2"><lookup target-form-name="LookupWorkEffort"></lookup></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <!-- List all fixed asset Maintenance Order  -->
     <form name="ListFixedAssetMaintOrders" type="list" list-name="fixedAssetMaintOrders" target="updateFixedAssetMaintOrder"
@@ -518,7 +518,7 @@ under the License.
         <auto-fields-entity entity-name="FixedAssetMaintOrder"/>
         <field name="fixedAssetId"><hidden/></field>
         <field name="maintHistSeqId"><hidden/></field>
-        <field name="orderId" widget-style="${styles.link_record_id}">
+        <field name="orderId" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="/ordermgr/control/orderview" also-hidden="false" description="${orderId}" target-type="inter-app">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -540,7 +540,7 @@ under the License.
         <field name="maintHistSeqId"><hidden/></field>
         <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
         <field name="orderItemSeqId"><text size="20"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <!-- =====================Party Fixed Asset Assignment Forms============== -->
@@ -556,7 +556,7 @@ under the License.
         <field name="fixedAssetId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.CommonParty}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="${styles.link_record_id}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyId}" link-style="${styles.link_nav_record_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -614,7 +614,7 @@ under the License.
          <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>
          <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
          
-         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddFixedAssetDepMethod" type="single" target="createFixedAssetDepMethod" title=""
@@ -628,7 +628,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListFixedAssetDepMethods" type="list" list-name="fixedAssetDepMethods"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -669,7 +669,7 @@ under the License.
                 <order-by field-name="debitCreditFlag"/>
             </entity-condition>
         </actions>
-        <field name="acctgTransId" widget-style="${styles.link_record_id}">
+        <field name="acctgTransId" widget-style="${styles.link_nav_record_id}">
             <hyperlink target="EditAcctgTrans" description="${acctgTransId}" also-hidden="false">
                 <parameter param-name="acctgTransId"/>
                 <parameter param-name="organizationPartyId"/>
@@ -744,7 +744,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="GlobalFixedAssetTypeGlAccounts" type="list" list-name="globalFixedAssetTypeGlAccounts"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">

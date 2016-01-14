@@ -345,7 +345,7 @@ ${virtualVariantJavaScript!}
             <#if previousProductId??>
               <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=previousProductId!/>" class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
             </#if>
-            <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId!/>" class="${styles.link_record_name!}">${(category.categoryName)?default(category.description)!}</a>
+            <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId!/>" class="${styles.link_nav_record_name!}">${(category.categoryName)?default(category.description)!}</a>
             <#if nextProductId??>
               &nbsp;|&nbsp;<a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=nextProductId!/>" class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
             </#if>
@@ -655,16 +655,16 @@ ${virtualVariantJavaScript!}
                   </div>
                   <a href="javascript:addItem()" class="${styles.link_action!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                 <#else>
-                  <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="${styles.link_action!}">${uiLabelMap.OrderAddToCart}</a>
+                  <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
                   <@showUnavailableVarients/>
                 </#if>
                 <#else>
                   <#if productStore??>
                     <#if productStore.requireInventory?? && productStore.requireInventory == "N">
-                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="${styles.link_action!}">${uiLabelMap.OrderAddToCart}</a>
+                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
                       <@showUnavailableVarients/>
                     <#else>
-                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" disabled="disabled" /></span><a href="javascript:void(0);" disabled="disabled" class="${styles.link_action!}">${uiLabelMap.OrderAddToCart}</a><br />
+                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" disabled="disabled" /></span><a href="javascript:void(0);" disabled="disabled" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a><br />
                       <span>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage??>&mdash; ${product.inventoryMessage}</#if></span>
                     </#if>
                   </#if>
@@ -744,7 +744,7 @@ ${virtualVariantJavaScript!}
                     <#if !imageUrl?string?has_content>
                       <#assign imageUrl = "/images/defaultImage.jpg" />
                     </#if>
-                      <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_record_name!}">${key}</a>
+                      <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_nav_record_name!}">${key}</a>
                       <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a>
                       <br />
                   </#if>
@@ -819,7 +819,7 @@ ${virtualVariantJavaScript!}
                 <#assign assocProductId = productAssoc.productId />
             </#if>
             <div>
-              <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@ofbizUrl>" class="${styles.link_record_id!}">
+              <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">
                 ${assocProductId}
               </a>
             <#if productAssoc.reason?has_content>

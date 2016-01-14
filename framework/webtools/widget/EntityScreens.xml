@@ -199,7 +199,7 @@ under the License.
                                         <link target="ViewRelations" text="${uiLabelMap.WebtoolsViewRelations}" style="${styles.link_nav} ${styles.action_view}">
                                             <parameter param-name="entityName" from-field="entityName"/>
                                         </link>
-                                        <link target="ViewGeneric" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_create}">
+                                        <link target="ViewGeneric" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}">
                                             <parameter param-name="entityName" from-field="entityName"/>
                                             <parameter param-name="enableEdit" value="true"/>
                                         </link>

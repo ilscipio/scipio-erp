@@ -48,10 +48,10 @@
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
-        <field name="createBlog" title=" " widget-style="${styles.link_nav} ${styles.action_create}">
+        <field name="createBlog" title=" " widget-style="${styles.link_nav} ${styles.action_add}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonNew} ${uiLabelMap.ContentForum}" target="EditBlogArticle"/>
         </field>
-        <field name="createForum" title=" " widget-style="${styles.link_nav} ${styles.action_create}">
+        <field name="createForum" title=" " widget-style="${styles.link_nav} ${styles.action_add}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonNew} ${uiLabelMap.ContentForum}" target="EditForumArticle"/>
         </field>
     </form>
@@ -104,7 +104,7 @@
                 <option key="CTNT_INITIAL_DRAFT" description="${uiLabelMap.ContentBlogPreview}"/>
             </radio>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_create}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
         <field name="blogContentId" entry-name="blogContentId" map-name="rsp">

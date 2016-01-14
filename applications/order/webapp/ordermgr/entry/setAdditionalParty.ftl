@@ -70,7 +70,7 @@ under the License.
         <@htmlTemplate.lookupField value="${additionalPartyId!}" formName="quickAddPartyForm" name="additionalPartyId" id="additionalPartyId" fieldFormName="${lookupPartyView}"/>
       </@field>
       <@field type="submitarea">
-        <a href="javascript:document.quickAddPartyForm.submit()" class="${styles.link_action!}">${uiLabelMap.CommonApply}</a>
+        <a href="javascript:document.quickAddPartyForm.submit()" class="${styles.link_action_session!} ${styles.action_update!}">${uiLabelMap.CommonApply}</a>
       </@field>
     </@section>
 
@@ -92,7 +92,7 @@ under the License.
             </select>
           </@field>
           <@field type="submitarea">
-            <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonAdd} "/>
+            <input type="submit" class="${styles.link_action_session!} ${styles.action_add!}" value="${uiLabelMap.CommonAdd} "/>
           </@field>
         </form>
         </@fields>

@@ -99,25 +99,25 @@ ${virtualJavaScript!}
             <div style="color: red;">${uiLabelMap.ProductNoLongerAvailable}</div>
           <#-- check to see if it is a rental item; will enter parameters on the detail screen-->
           <#elseif product.productTypeId! == "ASSET_USAGE">
-            <a href="${productUrl}" class="${styles.link_action!}">${uiLabelMap.OrderMakeBooking}...</a>
+            <a href="${productUrl}" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.OrderMakeBooking}...</a>
           <#-- check to see if it is an aggregated or configurable product; will enter parameters on the detail screen-->
           <#elseif product.productTypeId! == "AGGREGATED" || product.productTypeId! == "AGGREGATED_SERVICE">
-            <a href="${productUrl}" class="${styles.link_action!}">${uiLabelMap.OrderConfigure}...</a>
+            <a href="${productUrl}" class="$${styles.link_nav!} ${styles.action_configure!}">${uiLabelMap.OrderConfigure}...</a>
           <#-- check to see if the product is a virtual product -->
           <#elseif product.isVirtual?? && product.isVirtual == "Y">
-            <a href="${productUrl}" class="${styles.link_action!}">${uiLabelMap.OrderChooseVariations}...</a>
+            <a href="${productUrl}" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseVariations}...</a>
           <#-- check to see if the product requires an amount -->
           <#elseif product.requireAmount?? && product.requireAmount == "Y">
-            <a href="${productUrl}" class="${styles.link_action!}">${uiLabelMap.OrderChooseAmount}...</a>
+            <a href="${productUrl}" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.OrderChooseAmount}...</a>
           <#elseif product.productTypeId! == "ASSET_USAGE_OUT_IN">
-            <a href="${productUrl}" class="${styles.link_action!}">${uiLabelMap.OrderRent}...</a>
+            <a href="${productUrl}" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.OrderRent}...</a>
           <#else>
             <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}form">
               <input type="hidden" name="add_product_id" value="${product.productId}"/>
               <input type="text" size="5" name="quantity" value="1"/>
               <input type="hidden" name="clearSearch" value="N"/>
               <input type="hidden" name="mainSubmitted" value="Y"/>
-              <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}form.submit()" class="${styles.link_action!}">${uiLabelMap.OrderAddToCart}</a>
+              <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}form.submit()" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
             <#if mainProducts?has_content>
                 <input type="hidden" name="product_id" value=""/>
                 <select name="productVariantId" onchange="javascript:displayProductVirtualId(this.value, '${product.productId}', this.form);">
@@ -139,7 +139,7 @@ ${virtualJavaScript!}
                   <input type="hidden" name="quantity" value="${prodCatMem.quantity!}"/>
                   <input type="hidden" name="clearSearch" value="N"/>
                   <input type="hidden" name="mainSubmitted" value="Y"/>
-                  <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}defaultform.submit()" class="${styles.link_action!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
+                  <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}defaultform.submit()" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
                 </form>
                 <#assign productCategory = delegator.findOne("ProductCategory", Static["org.ofbiz.base.util.UtilMisc"].toMap("productCategoryId", prodCatMem.productCategoryId), false)/>
                 <#if productCategory.productCategoryTypeId != "BEST_SELL_CATEGORY">
@@ -148,7 +148,7 @@ ${virtualJavaScript!}
                       <input type="hidden" name="quantity" value="${prodCatMem.quantity!}"/>
                       <input type="hidden" name="clearSearch" value="N"/>
                       <input type="hidden" name="mainSubmitted" value="Y"/>
-                      <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}defaultform.submit()" class="${styles.link_action!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
+                      <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}defaultform.submit()" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
                     </form>
                 </#if>
               </#if>
@@ -156,7 +156,7 @@ ${virtualJavaScript!}
         </div>
         <div class="productinfo">
           <div>
-            <a href="${productUrl}" class="${styles.link_record_name!}">${productContentWrapper.get("PRODUCT_NAME", "html")!}</a>
+            <a href="${productUrl}" class="${styles.link_nav_record_name!}">${productContentWrapper.get("PRODUCT_NAME", "html")!}</a>
           </div>
           <div>${productContentWrapper.get("DESCRIPTION", "html")!}<#if daysToShip??>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
 
@@ -223,7 +223,7 @@ ${virtualJavaScript!}
               <input type="hidden" name="productId" value="${product.productId}"/>
               <input type="hidden" name="mainSubmitted" value="Y"/>
           </form>
-          <a href="javascript:document.addToCompare${requestAttributes.listIndex!}form.submit()" class="${styles.link_action!}">${uiLabelMap.ProductAddToCompare}</a>
+          <a href="javascript:document.addToCompare${requestAttributes.listIndex!}form.submit()" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.ProductAddToCompare}</a>
         </div>
     </div>
 <#else>

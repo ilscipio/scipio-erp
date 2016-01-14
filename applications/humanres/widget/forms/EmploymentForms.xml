@@ -58,7 +58,7 @@
             </service>
         </actions>
         <field name="partyIdFrom" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}"><display></display></field>
-        <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" widget-style="${styles.link_record_id}">
+        <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" description="${partyIdTo}" target="EmployeeProfile">
                 <parameter param-name="partyId" from-field="partyIdTo"/>
             </hyperlink>
@@ -90,7 +90,7 @@
             </service>
         </actions>
         <field name="partyIdFrom" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}"><display></display></field>
-        <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" widget-style="${styles.link_record_id}">
+        <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" widget-style="${styles.link_nav_record_id}">
             <hyperlink also-hidden="false" description="${partyIdTo}" target="viewprofile">
                 <parameter param-name="partyId" from-field="partyIdTo"/>
             </hyperlink>
@@ -142,7 +142,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" use-when="employment==null" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="employment==null" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="submitAction" use-when="employment!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListPayHistories" type="list" target="updatePayHistory" title="" paginate-target="findPayHistories"
@@ -301,7 +301,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListPerformanceNotes" type="list" target="updatePerformanceNote" title="" paginate-target="findPerformanceNotes"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -311,7 +311,7 @@
         <auto-fields-service default-field-type="display" service-name="updatePerformanceNote"/>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
            <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
-               <sub-hyperlink target="/partymgr/control/viewprofile" link-style="${styles.link_record_id}" target-type="inter-app" description="${partyId}">
+               <sub-hyperlink target="/partymgr/control/viewprofile" link-style="${styles.link_nav_record_id}" target-type="inter-app" description="${partyId}">
                 <parameter param-name="partyId"/>
             </sub-hyperlink>
            </display-entity>
@@ -328,7 +328,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListUnemploymentClaims" type="multi" target="updateUnemploymentClaim?unemploymentClaimId=${unemploymentClaimId}&amp;roleTypeIdFrom=${roleTypeIdFrom}&amp;roleTypeIdTo=${roleTypeIdTo}&amp;partyIdFrom=${partyIdFrom}&amp;partyIdTo=${partyIdTo}&amp;fromDate=${fromDate}" paginate-target="FindUnemploymentClaim"
          odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -389,7 +389,7 @@
         <field name="partyIdFrom"><hidden/></field>
         <field name="partyIdTo"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListAgreementEmploymentAppls" type="multi" title="" target="updateAgreementEmploymentAppl?agreementId=${agreementId}&amp;partyIdTo=${partyIdTo}&amp;partyIdFrom=${partyIdFrom}&amp;roleTypeIdFrom=${roleTypeIdFrom}&amp;roleTypeIdTo=${roleTypeIdTo}&amp;fromDate=${fromDate}&amp;agreementItemSeqId=${agreementItemSeqId}" paginate-target="EditAgreementEmploymentAppls"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -443,6 +443,6 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
         <field name="agreementDate"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_create}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="text-link"/></field>
     </form>
 </forms>

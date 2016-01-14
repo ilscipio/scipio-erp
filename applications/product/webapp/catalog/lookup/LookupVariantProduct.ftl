@@ -41,7 +41,7 @@ under the License.
             </@field>
         </#list>
         <@field type="submitarea">
-            <input type="submit" value="${uiLabelMap.CommonSearch}" class="${styles.link_action!}" />
+            <input type="submit" value="${uiLabelMap.CommonSearch}" class="${styles.link_action_sys!} ${styles.action_find!}" />
         </@field>
   </form>
     </@cell>    
@@ -61,7 +61,7 @@ under the License.
         </@thead>
         <#list variantProducts as variant>
             <@tr>
-                <@td><a class="${styles.link_record_id!}" href="javascript:set_value('${variant.productId}')">${variant.productId}</a></@td>
+                <@td><a class="${styles.link_nav_record_id!}" href="javascript:set_value('${variant.productId}')">${variant.productId}</a></@td>
                 <@td>${variant.brandName!}</@td>
                 <@td>${variant.internalName!}</@td>
             </@tr>
@@ -79,7 +79,7 @@ under the License.
         <input type="hidden" name="productFeatureIds" value="${productFeatureIds}" />
         <@field type="input" name="productVariantId" value="${productVariantId}" />
         <@field type="submitarea">
-            <input type="submit" value="${uiLabelMap.ProductQuickAddVariants}" class="${styles.link_action!}" />
+            <input type="submit" value="${uiLabelMap.ProductQuickAddVariants}" class="${styles.link_action_session!} ${styles.action_add!}" />
         </@field>
         </@fields>
       </form>

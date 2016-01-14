@@ -20,7 +20,7 @@
                 </@field> 
           
                 <@field type="submitarea">
-                  <input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonGo}"/>
+                  <input type="submit" class="${styles.link_action_sys!} ${styles.action_copy!}" value="${uiLabelMap.CommonGo}"/>
                 </@field>  
             </form>
     </@section>

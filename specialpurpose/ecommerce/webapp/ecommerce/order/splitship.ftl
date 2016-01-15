@@ -65,7 +65,7 @@ function submitForm(form, mode, value) {
                   <@td>
                     <div>
                       <span class="tabletext">${uiLabelMap.CommonAdd}:</span>
-                      <a href="javascript:submitForm(document.editgroupform${groupIdx}, 'NA', '');" class="${styles.link_action!}">${uiLabelMap.PartyAddNewAddress}</a>
+                      <a href="javascript:submitForm(document.editgroupform${groupIdx}, 'NA', '');" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.PartyAddNewAddress}</a>
                     </div>
                     <div>
                       <#assign selectedContactMechId = cart.getShippingContactMechId(groupIdx)?default("")>
@@ -128,7 +128,7 @@ function submitForm(form, mode, value) {
                     <@heading>${uiLabelMap.OrderGiftMessage}</@heading>
                     <textarea class='textAreaBox' cols="30" rows="3" wrap="hard" name="giftMessage">${cart.getGiftMessage(groupIdx)!}</textarea>
                   </@td>
-                  <@td><input type="button" class="${styles.link_action!}" value="${uiLabelMap.CommonSave}" onclick="javascript:submitForm(document.editgroupform${groupIdx}, 'SV', null);"/></@td>
+                  <@td><input type="button" class="${styles.link_action_session!} ${styles.action_update!}" value="${uiLabelMap.CommonSave}" onclick="javascript:submitForm(document.editgroupform${groupIdx}, 'SV', null);"/></@td>
                 </@tr>
                 <#assign groupIdx = groupIdx + 1>
                 <#if group_has_next>
@@ -225,7 +225,7 @@ function submitForm(form, mode, value) {
                       <option value="-1">${uiLabelMap.CommonNew} ${uiLabelMap.CommonGroup}</option>
                     </select>
                 </@td>
-                <@td><input type="submit" class="${styles.link_action!}" value="${uiLabelMap.CommonSubmit}"/></@td>
+                <@td><input type="submit" class="${styles.link_action_session!} ${styles.action_update!}" value="${uiLabelMap.CommonSubmit}"/></@td>
               </form>
             </@tr>
           </#list>
@@ -235,10 +235,10 @@ function submitForm(form, mode, value) {
 <@table>
   <@tr valign="top">
     <@td>
-      &nbsp;<a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
+      &nbsp;<a href="<@ofbizUrl>view/showcart</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
     </@td>
     <@td align="right">
-      <a href="<@ofbizUrl>view/checkoutpayment</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonContinue}</a>
+      <a href="<@ofbizUrl>view/checkoutpayment</@ofbizUrl>" class="${styles.link_action_session!} ${styles.action_update!}">${uiLabelMap.CommonContinue}</a>
     </@td>
   </@tr>
 </@table>

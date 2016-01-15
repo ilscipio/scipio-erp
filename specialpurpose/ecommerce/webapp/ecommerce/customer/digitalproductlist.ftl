@@ -18,7 +18,7 @@ under the License.
 -->
 
 <@section title="${uiLabelMap.PageTitleDigitalProductList}" class="+screenlet">
-       <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
+       <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
         <@table width="100%" cellpadding="1" cellspacing="0" border="0">
           <@tr>
             <@td width="30%"><b>${uiLabelMap.ProductProductName}</b>
@@ -36,7 +36,7 @@ under the License.
               <@td>${(product.description)!}
               </@td>
               <@td align="right">
-                <a href="<@ofbizUrl>digitalproductedit?productId=${supplierProduct.productId}&amp;currencyUomId=${supplierProduct.currencyUomId}&amp;minimumOrderQuantity=${supplierProduct.minimumOrderQuantity}&amp;availableFromDate=${supplierProduct.availableFromDate}</@ofbizUrl>" class="${styles.link_action!}">Edit</a>
+                <a href="<@ofbizUrl>digitalproductedit?productId=${supplierProduct.productId}&amp;currencyUomId=${supplierProduct.currencyUomId}&amp;minimumOrderQuantity=${supplierProduct.minimumOrderQuantity}&amp;availableFromDate=${supplierProduct.availableFromDate}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">Edit</a>
               </@td>
             </@tr>
           </#list>
@@ -47,5 +47,5 @@ under the License.
 </@section>
 
 <@section title="${uiLabelMap.EcommerceDigitalProductPurchaseHistoryCommission}" class="+screenlet">
-       <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
+       <div>&nbsp;<a href="<@ofbizUrl>digitalproductedit</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.EcommerceDigitalNewProduct}</a></div>
 </@section>

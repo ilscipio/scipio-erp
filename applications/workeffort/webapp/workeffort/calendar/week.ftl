@@ -40,7 +40,7 @@ under the License.
   <@tr class=class>
     <@td class="centered">
       <a href="<@ofbizUrl>${parameters._LAST_VIEW_NAME_}?period=day&amp;start=${period.start.time?string("#")}${urlParam!}${addlParam!}</@ofbizUrl>">${period.start?date?string("EEEE")?cap_first}&nbsp;${period.start?date?string.short}</a><br />
-      <a href="<@ofbizUrl>${newCalEventUrl}?period=week&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${addlParam!}${urlParam!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonAddNew}</a>
+      <a href="<@ofbizUrl>${newCalEventUrl}?period=week&amp;form=edit&amp;start=${parameters.start!}&amp;parentTypeId=${parentTypeId!}&amp;currentStatusId=CAL_TENTATIVE&amp;estimatedStartDate=${period.start?string("yyyy-MM-dd HH:mm:ss")}&amp;estimatedCompletionDate=${period.end?string("yyyy-MM-dd HH:mm:ss")}${addlParam!}${urlParam!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.CommonAddNew}</a>
     </@td>
     <#list period.calendarEntries as calEntry>
         <#if calEntry.workEffort.actualStartDate??>

@@ -330,7 +330,7 @@ document.lookuporder.orderId.focus();
            <option value="${printer}">${printer}</option>
            </#list>
         </select>
-        <a href="javascript:runAction();" class="${styles.link_action!}">${uiLabelMap.OrderRunAction}</a>
+        <a href="javascript:runAction();" class="${styles.link_action_sys!} ${styles.action_modify!}">${uiLabelMap.OrderRunAction}</a>
         -->
       <#macro massOrderChangeButton id="1">  
           <@row>
@@ -462,7 +462,7 @@ document.lookuporder.orderId.focus();
                 </#if>
               </@td>
               <@td align='right'>
-                <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonView}</a>
+                <a href="<@ofbizUrl>orderview?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
               </@td>
             </@tr>
           </#list>

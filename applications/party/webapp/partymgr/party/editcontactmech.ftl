@@ -111,7 +111,7 @@ under the License.
                     </select>
                   </form>
                 </@td>
-                <@td><a href="javascript:document.newpurposeform.submit()" class="${styles.link_action!}">${uiLabelMap.PartyAddPurpose}</a></@td>
+                <@td><a href="javascript:document.newpurposeform.submit()" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.PartyAddPurpose}</a></@td>
               </@tr>
             </@tfoot>
           </@table>

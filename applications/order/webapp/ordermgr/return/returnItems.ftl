@@ -360,7 +360,7 @@ under the License.
               </@field>
             </#if>
             <@field type="submitarea">
-                <a href="javascript:document.returnItems.submit();" class="${styles.link_action!}">${uiLabelMap.OrderReturnLoadItems}</a>
+                <a href="javascript:document.returnItems.submit();" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.OrderReturnLoadItems}</a>
             </@field>
         </form>
         </@section>

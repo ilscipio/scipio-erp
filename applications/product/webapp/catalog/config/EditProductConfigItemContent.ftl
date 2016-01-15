@@ -96,9 +96,9 @@ function insertImageName(size,nameValue) {
                     <#if configItemId?has_content>
                         <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                        <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="${styles.link_action!}">.jpg</a>
-                        <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="${styles.link_action!}">.gif</a>
-                        <a href="javascript:insertImageName('small','');" class="${styles.link_action!}">${uiLabelMap.CommonClear}</a>
+                        <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="${styles.link_action_local!} ${styles.action_add!}">.jpg</a>
+                        <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="${styles.link_action_local!} ${styles.action_add!}">.gif</a>
+                        <a href="javascript:insertImageName('small','');" class="${styles.link_action_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
                         </div>
                     </#if>
                 </@field>

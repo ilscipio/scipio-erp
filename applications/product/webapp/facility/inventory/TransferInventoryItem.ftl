@@ -103,7 +103,7 @@ under the License.
             </@field>
         <@field type="generic" label="${uiLabelMap.ProductTransferSendDate}">
             <input type="text" name="sendDate" value="${(inventoryTransfer.sendDate)!}" size="22" />
-            <a href="#" onclick="setNow('sendDate')" class="${styles.link_action!}">${uiLabelMap.CommonNow}</a>
+            <a href="#" onclick="setNow('sendDate')" class="${styles.link_action_local!} ${styles.action_update!}">${uiLabelMap.CommonNow}</a>
         </@field>
         <#if !(inventoryTransfer??)>
             <@field type="generic" label="${uiLabelMap.ProductToFacilityContainer}">
@@ -136,7 +136,7 @@ under the License.
         <#else>
             <@field type="generic" label="${uiLabelMap.ProductTransferReceiveDate}">
                 <input type="text" name="receiveDate" value="${(inventoryTransfer.receiveDate)!}" size="22" />
-                <a href="#" onclick="setNow('receiveDate')" class="${styles.link_action!}">${uiLabelMap.CommonNow}</a>
+                <a href="#" onclick="setNow('receiveDate')" class="${styles.link_action_local!} ${styles.action_update!}">${uiLabelMap.CommonNow}</a>
             </@field>
             <@field type="generic" label="${uiLabelMap.ProductToFacilityContainer}">
                 <#assign fac = delegator.findOne("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", inventoryTransfer.facilityIdTo), false)> ${(fac.facilityName)?default("&nbsp;")}

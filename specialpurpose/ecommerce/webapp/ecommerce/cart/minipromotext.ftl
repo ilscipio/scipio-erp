@@ -24,7 +24,7 @@ under the License.
       <#list productPromos as productPromo>
         <li>
           <p>
-            <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonDetails}</a>
+            <a href="<@ofbizUrl>showPromotionDetails?productPromoId=${productPromo.productPromoId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a>
             ${StringUtil.wrapString(productPromo.promoText!)}
           </p>
         </li>

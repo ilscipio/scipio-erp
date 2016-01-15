@@ -531,7 +531,7 @@ ${virtualVariantJavaScript!}
           <#-- show tell a friend details only in ecommerce application -->
           <div>&nbsp;</div>
           <div>
-              <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}<#if categoryId??>&categoryId=${categoryId}/</#if></@ofbizUrl>','tellafriend');" class="${styles.link_action!}">${uiLabelMap.CommonTellAFriend}</a>
+              <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}<#if categoryId??>&categoryId=${categoryId}/</#if></@ofbizUrl>','tellafriend');" class="${styles.link_action_sys!} ${styles.action_send!}">${uiLabelMap.CommonTellAFriend}</a>
           </div>
     
           <#if disFeatureList?? && (0 < disFeatureList.size())>
@@ -574,13 +574,13 @@ ${virtualVariantJavaScript!}
                 <div id="addCart1" style="display:none;">
                   <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonQuantity}:</strong></span>&nbsp;
                   <input type="text" size="5" name="quantity" value="1" />
-                  <a href="javascript:javascript:addItem();" class="${styles.link_action!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+                  <a href="javascript:javascript:addItem();" class="${styles.link_action_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                   &nbsp;
                 </div>
                 <div id="addCart2" style="display:block;">
                   <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonQuantity}:</strong></span>&nbsp;
                   <input type="text" size="5" value="1" disabled="disabled" />
-                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");" class="${styles.link_action!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");" class="${styles.link_action_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                   &nbsp;
                 </div>
               </#if>
@@ -653,7 +653,7 @@ ${virtualVariantJavaScript!}
                     Number of persons<input type="text" size="4" name="reservPersons" value="2"/>
                     Number of rooms<input type="text" size="5" name="quantity" value="1"/>
                   </div>
-                  <a href="javascript:addItem()" class="${styles.link_action!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+                  <a href="javascript:addItem()" class="${styles.link_action_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                 <#else>
                   <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
                   <@showUnavailableVarients/>
@@ -714,11 +714,11 @@ ${virtualVariantJavaScript!}
                   <input type="text" size="5" name="quantity" value="1" />
                   <input type="hidden" name="reservStartStr" value= "" />
               </#if>
-              <a href="javascript:addShoplistSubmit();" class="${styles.link_action!}">${uiLabelMap.OrderAddToShoppingList}</a>
+              <a href="javascript:addShoplistSubmit();" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.OrderAddToShoppingList}</a>
               </fieldset>
             </form>
           <#else> <br />
-            ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonBeLogged}</a>
+            ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>
             ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.&nbsp;
           </#if>
           </div>
@@ -792,12 +792,12 @@ ${virtualVariantJavaScript!}
                     <hr />
             </#list>
             <div>
-                <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.ProductReviewThisProduct}!</a>
+                <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductReviewThisProduct}!</a>
             </div>
           <#else>
             <div>${uiLabelMap.ProductProductNotReviewedYet}.</div>
             <div>
-                <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}</a>
+                <a href="<@ofbizUrl>reviewProduct?category_id=${categoryId!}&amp;product_id=${product.productId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.ProductBeTheFirstToReviewThisProduct}</a>
             </div>
         </div>
       </#if>

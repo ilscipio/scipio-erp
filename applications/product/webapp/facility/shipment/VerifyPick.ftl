@@ -315,7 +315,7 @@ under the License.
               </#list>
             </@table>
             <div align="right">
-              <a href="javascript:document.completePickForm.submit()" class="${styles.link_action!}">${uiLabelMap.ProductComplete}</a>
+              <a href="javascript:document.completePickForm.submit()" class="${styles.link_action_sys!} ${styles.action_complete!}">${uiLabelMap.ProductComplete}</a>
             </div>
         </@section>
       </#if>

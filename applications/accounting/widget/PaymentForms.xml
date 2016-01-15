@@ -542,7 +542,7 @@ under the License.
         <field name="effectiveDate"><display/></field>
         <field name="paymentRefNum"><text/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSend}" widget-style="${styles.link_action_sys} ${styles.action_transfer}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSend}" widget-style="${styles.link_action_sys} ${styles.action_send}"><submit/></field>
     </form>
 
     <form name="FindSalesInvoicesByDueDate" type="single" target="findSalesInvoicesByDueDate"

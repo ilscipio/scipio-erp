@@ -95,7 +95,7 @@ under the License.
                               <@td align="right"><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orderHeaderAndRole.currencyUom!/></@td>
                               <@td width="1">&nbsp;&nbsp;</@td>
                               <@td align='right'>
-                                <a href="<@ofbizUrl>OrderDeliveryScheduleInfo?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class="${styles.link_action!}">Schedule&nbsp;Delivery</a>
+                                <a href="<@ofbizUrl>OrderDeliveryScheduleInfo?orderId=${orderHeaderAndRole.orderId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">Schedule&nbsp;Delivery</a>
                               </@td>
                             </@tr>
                           </#list>

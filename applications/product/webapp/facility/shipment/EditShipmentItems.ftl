@@ -107,8 +107,8 @@ under the License.
                         </select>
                     </@td>
                     <@td>
-                            <input type="text" name="quantity" size="5" value="${totalQuantityToPackage}"/>
-                            <a href="javascript:document.createShipmentPackageContentForm${shipmentItemData_index}.submit()" class="${styles.link_action!}">${uiLabelMap.CommonAdd}</a>
+                        <input type="text" name="quantity" size="5" value="${totalQuantityToPackage}"/>
+                        <a href="javascript:document.createShipmentPackageContentForm${shipmentItemData_index}.submit()" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.CommonAdd}</a>
                     </@td>
                     <@td colspan="2">&nbsp;</@td>
                     <@td>&nbsp;</@td>

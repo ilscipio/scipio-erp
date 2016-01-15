@@ -45,6 +45,6 @@ under the License.
   </head>
   <body>
     <div data-role="header">
-      <a href="<@ofbizUrl>/menu?facilityId=${parameters.facilityId!}</@ofbizUrl>" class="${styles.link_action!}">Main</a>
+      <a href="<@ofbizUrl>/menu?facilityId=${parameters.facilityId!}</@ofbizUrl>" class="${styles.link_nav!}">Main</a>
       <h1>${title!}</h1>
     </div>

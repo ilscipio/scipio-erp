@@ -60,7 +60,7 @@ under the License.
       <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="advancedsearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
     </div>
     <div>
-    <a href="javascript:document.getElementById('advancedSearchForm').submit()" class="${styles.link_action!}">${uiLabelMap.ProductAdvancedSearch}</a>
+    <a href="javascript:document.getElementById('advancedSearchForm').submit()" class="${styles.link_action_sys!} ${styles.action_find!}">${uiLabelMap.ProductAdvancedSearch}</a>
     </div>
   </fieldset>
 </form>

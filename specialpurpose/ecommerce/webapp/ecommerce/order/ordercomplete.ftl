@@ -21,7 +21,7 @@ under the License.
 <#if orderHeader?has_content>
   ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderheader")}
   ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderitems")}
-  <a href="<@ofbizUrl>main</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.EcommerceContinueShopping}</a>
+  <a href="<@ofbizUrl>main</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.EcommerceContinueShopping}</a>
 <#else>
   <@alert type="error">${uiLabelMap.OrderSpecifiedNotFound}.</@alert>
 </#if>

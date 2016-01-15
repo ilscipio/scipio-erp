@@ -185,10 +185,10 @@ function submitForm(form, mode, value) {
 <@table width="100%">
   <@tr valign="top">
     <@td>
-      &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="${styles.link_action!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
+      &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="${styles.link_nav_cancel!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
     </@td>
     <@td align="right">
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="${styles.link_action!}">${uiLabelMap.CommonNext}</a>
+      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="${styles.link_action_session!} ${styles.action_update!}">${uiLabelMap.CommonNext}</a>
     </@td>
   </@tr>
 </@table>

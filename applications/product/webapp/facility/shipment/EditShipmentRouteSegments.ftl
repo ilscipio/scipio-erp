@@ -164,28 +164,28 @@ under the License.
             <@td valign="top">
                     <#if "UPS" == shipmentRouteSegment.carrierPartyId!>
                         <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId!>
-                            <a href="javascript:document.upsShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action!}">${uiLabelMap.ProductConfirmShipmentUps}</a>
+                            <a href="javascript:document.upsShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action_sys!} ${styles.action_updatestatus!}">${uiLabelMap.ProductConfirmShipmentUps}</a>
                             <br />
                             ${uiLabelMap.ProductShipmentUpsResidential}:
                             <input type="checkbox" name="homeDeliveryType" value="Y" ${(shipmentRouteSegment.homeDeliveryType?has_content)?string("checked=\"checked\"","")} />
                         <#elseif "SHRSCS_CONFIRMED" == shipmentRouteSegment.carrierServiceStatusId!>
-                            <a href="javascript:document.upsShipmentAccept_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action!}">${uiLabelMap.ProductAcceptUpsShipmentConfirmation}</a>
+                            <a href="javascript:document.upsShipmentAccept_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action_sys!} ${styles.action_updatestatus!}">${uiLabelMap.ProductAcceptUpsShipmentConfirmation}</a>
                             <br />
-                            <a href="javascript:document.upsVoidShipment_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action!}">${uiLabelMap.ProductVoidUpsShipmentConfirmation}</a>
+                            <a href="javascript:document.upsVoidShipment_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action_sys!} ${styles.action_terminate!}">${uiLabelMap.ProductVoidUpsShipmentConfirmation}</a>
                         <#elseif "SHRSCS_ACCEPTED" == shipmentRouteSegment.carrierServiceStatusId!>
-                            <a href="javascript:document.upsTrackShipment_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action!}">${uiLabelMap.ProductTrackUpsShipment}</a>
+                            <a href="javascript:document.upsTrackShipment_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action_sys!} ${styles.action_view!}">${uiLabelMap.ProductTrackUpsShipment}</a>
                             <br />
-                            <a href="javascript:document.upsVoidShipment_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action!}">${uiLabelMap.ProductVoidUpsShipment}</a>
+                            <a href="javascript:document.upsVoidShipment_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action_sys!} ${styles.action_terminate!}">${uiLabelMap.ProductVoidUpsShipment}</a>
                         </#if>
                     </#if>
                     <#if "DHL" == shipmentRouteSegment.carrierPartyId!>
                         <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId!>
-                            <a href="javascript:document.dhlShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action!}">${uiLabelMap.ProductConfirmShipmentDHL}</a>
+                            <a href="javascript:document.dhlShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action_sys!} ${styles.action_updatestatus!}">${uiLabelMap.ProductConfirmShipmentDHL}</a>
                         </#if>
                     </#if>
                     <#if "FEDEX" == shipmentRouteSegment.carrierPartyId!>
                         <#if !shipmentRouteSegment.carrierServiceStatusId?has_content || "SHRSCS_NOT_STARTED" == shipmentRouteSegment.carrierServiceStatusId!>
-                            <a href="javascript:document.fedexShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action!}">${uiLabelMap.ProductConfirmShipmentFedex}</a>
+                            <a href="javascript:document.fedexShipmentConfirm_${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action_sys!} ${styles.action_updatestatus!}">${uiLabelMap.ProductConfirmShipmentFedex}</a>
                             <br />
                             <#if shipmentMethodType?? && shipmentMethodType.shipmentMethodTypeId=="GROUND_HOME">
                                 <select name="homeDeliveryType">
@@ -300,7 +300,7 @@ under the License.
             <@td valign="top">
                     <span>${uiLabelMap.ProductPackage}</span> ${shipmentPackageRouteSeg.shipmentPackageSeqId}
                     <#if shipmentPackageRouteSeg.labelImage??>
-                        <a href="javascript:document.viewShipmentPackageRouteSegLabelImage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}.submit();" class="${styles.link_action!}">${uiLabelMap.ProductViewLabelImage}</a>
+                        <a href="javascript:document.viewShipmentPackageRouteSegLabelImage_${shipmentRouteSegmentData_index}_${shipmentPackageRouteSeg_index}.submit();" class="${styles.link_action_sys!} ${styles.action_view!}">${uiLabelMap.ProductViewLabelImage}</a>
                     </#if>
                     <span>${uiLabelMap.ProductTrack} ${uiLabelMap.CommonNbr}</span><input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode!}"/>
             </@td>
@@ -340,7 +340,7 @@ under the License.
             </@td>
             <@td><span>Track#:</span><input type="text" size="22" name="trackingCode"/></@td>
             <@td><span>Box#:</span><input type="text" size="5" name="boxNumber"/></@td>
-            <@td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action!}">${uiLabelMap.CommonAdd}</a></@td>
+            <@td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}.submit()" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.CommonAdd}</a></@td>
             <@td>&nbsp;</@td>
             </form>
         </@tr>

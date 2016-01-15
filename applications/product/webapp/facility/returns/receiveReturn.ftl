@@ -219,13 +219,13 @@ under the License.
                   </@tr>
                   <@tr>
                     <@td colspan="2" align="right">
-                      <a href="<@ofbizUrl>ReceiveReturn?facilityId=${requestParameters.facilityId!}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.ProductReturnToReceiving}</a>
+                      <a href="<@ofbizUrl>ReceiveReturn?facilityId=${requestParameters.facilityId!}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.ProductReturnToReceiving}</a>
                     </@td>
                   </@tr>
                 <#else>
                   <@tr>
                     <@td colspan="2" align="right">
-                      <a href="javascript:document.selectAllForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductReceiveSelectedProduct}</a>
+                      <a href="javascript:document.selectAllForm.submit();" class="${styles.link_action_sys!} ${styles.action_receive!}">${uiLabelMap.ProductReceiveSelectedProduct}</a>
                     </@td>
                   </@tr>
                 </#if>
@@ -245,7 +245,7 @@ under the License.
                   <input type="text" name="returnId" size="20" maxlength="20" value="${requestParameters.returnId!}" />
               </@field>
               <@field type="submitarea">
-                  <a href="javascript:document.selectAllForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductReceiveProduct}</a>
+                  <a href="javascript:document.selectAllForm.submit();" class="${styles.link_action_sys!} ${styles.action_receive!}">${uiLabelMap.ProductReceiveProduct}</a>
               </@field>
           </form>
           </@section>

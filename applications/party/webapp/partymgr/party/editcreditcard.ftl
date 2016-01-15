@@ -47,7 +47,7 @@ under the License.
           <@td>${uiLabelMap.AccountingBillingAddress}</@td>
           <@td>
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
-            <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_action!}">
+            <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
               [Create New Address]</a>&nbsp;&nbsp;
             -->
             <@table type="data-complex" cellspacing="0">

@@ -36,7 +36,7 @@ under the License.
         <input type="hidden" name="minimumOrderQuantity" value="${parameters.minimumOrderQuantity}" />
         <input type="hidden" name="availableFromDate" value="${parameters.availableFromDate}" />
     </#if>
-    &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonBackToList}</a>
+    &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBackToList}</a>
 
     <@table width="90%" border="0" cellpadding="2" cellspacing="0">
     <@tr>
@@ -53,7 +53,7 @@ under the License.
     </@tr>
     <@tr>
       <@td width="26%" align="right" valign="top">&nbsp;</@td>
-      <@td width="74%"><a href="javascript:document.editdigitaluploadform.submit()" class="${styles.link_action!}">${uiLabelMap.CommonSave}</a></@td>
+      <@td width="74%"><a href="javascript:document.editdigitaluploadform.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a></@td>
     </@tr>
   </@table>
   </form>
@@ -82,9 +82,9 @@ under the License.
               <option value="${ownerContentAndRole.contentId}">${ownerContentAndRole.contentName}</option>
             </#list>
           </select>
-          <a href="javascript:document.adddigitaluploadfile.submit()" class="${styles.link_action!}">${uiLabelMap.CommonAdd}</a>
+          <a href="javascript:document.adddigitaluploadfile.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonAdd}</a>
         </form>
         </div>
-    &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonBackToList}</a>
+    &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBackToList}</a>
 </@section>
 </#if>

@@ -200,26 +200,36 @@
     "action_scope_session" : "action-scope-session",      <#-- action that changes user session state -->
     "action_scope_local" : "action-scope-local",          <#-- action that changes state on a page or form only (usually with javascript or input reset button) -->
     
-  <#-- Specific action types -->
+  <#-- Specific action types 
+      DEV NOTE: these are intended to support specific actions, but only specific actions that are reusable/applicable to many situations, such that while specific they should be able to apply to a number of different elements (from entity values to something farfetched like media playback) -->
     "action_generic" : "action-generic",                  <#-- generic action class; avoid using; always use more specific where possible -->
     "action_cancel" : "action-cancel",                    <#-- cancel (another) action class. WARN: this is only for cancelling other actions or navigations. it does not mean "set order status to cancelled" (use an action_modify for that, like action_terminate); 
                                                               is only for actions that cancel other actions in progress, not new requests for modifying system state. -->
     <#-- state-changing actions -->
     "action_modify" : "action-modify",                    <#-- generic modify action, can also be a collection of modifications -->
     "action_add" : "action-modify action-add",            <#-- add item action: "Create Entity", "New Value", "Add", etc. -->
-    "action_update" : "action-modify action-update",      <#-- update item action: "Update Entity", "Edit", etc. -->
+    "action_update" : "action-modify action-update",      <#-- update item action: "Update Entity", "Edit", etc. 
+                                                              NOTE: this tends to be used for any action that updates, but it's better to use more specific ones -->
     "action_remove" : "action-modify action-remove",      <#-- (logical) remove item action: "Delete", "Remove", etc. -->
-    "action_clear" : "action-modify action-clear",        <#-- clear action: "Clear", "Reset", "Empty Fields", etc. -->
+    "action_clear" : "action-modify action-clear",        <#-- clear action: "Clear", "Empty Fields", "Wipe", etc. -->
+    "action_move" : "action-modify action-move",          <#-- move action: "Move", etc. -->
     "action_copy" : "action-modify action-copy",          <#-- copy action: "Copy", "Duplicate", etc. -->
     "action_configure" : "action-modify action-configure",<#-- configure action: "Configure", "Setup", etc. -->
     "action_begin" : "action-modify action-begin",        <#-- begin action: "Begin", "Start", "Start Job", etc. -->
+    "action_reset" : "action-modify action-reset",        <#-- reset action: "Reset", "Restart", etc. -->
+    "action_hold" : "action-modify action-hold",          <#-- hold action: "Hold", "Pause", etc. -->
     "action_terminate" : "action-modify action-terminate",<#-- terminate action: "Cancel Order", "Expire", "Stop", "Stop Job", etc. -->
     "action_complete" : "action-modify action-complete",  <#-- complete action: "Complete Order", "Mark Success", etc. -->
+    "action_updatestatus" : "action-modify action-updatestatus",  <#-- update status action (any status not better accounted for in previous): "Approve", "Set to Xxx", etc. 
+                                                                        NOTE: this type was added later, so may be underused (action_update, action_terminate, action_complete usually found instead) -->
     "action_import" : "action-modify action-import",      <#-- upload action: "Import", "Upload", etc. -->
-    "action_transfer" : "action-modify action-transfer",  <#-- transfer action: "Transfer", "Send", "Send Email", "Receive", etc. -->
-    "action_register" : "action-modify action-login action-scope-system",   <#-- register action: "Register", etc.; implies system scope -->
-    "action_login" : "action-modify action-login action-scope-session",     <#-- login action: "Login", etc.; implies session scope -->
-    "action_logout" : "action-modify action-logout action-scope-session",   <#-- logout action: "Logout", etc.; implies session scope -->
+    "action_transfer" : "action-modify action-transfer",  <#-- generic transfer action: "Transfer", "Send", "Send Email", "Receive", etc. -->
+    "action_send" : "action-modify action-send",          <#-- send action (transfer in send direction): "Send", "Send Email", etc. -->
+    "action_receive" : "action-modify action-receive",    <#-- receive action (transfer in receive direction): "Receive", etc. -->
+    "action_sync" : "action-modify action-sync",          <#-- sync action (two-way transfer): "Sync", etc. -->
+    "action_register" : "action-modify action-login",     <#-- register action: "Register", etc.; usually goes with system scope -->
+    "action_login" : "action-modify action-login",        <#-- login action: "Login", etc.; usually goes with session scope -->
+    "action_logout" : "action-modify action-logout",      <#-- logout action: "Logout", etc.; usually goes with session scope -->
 
     <#-- read-only actions (may or retrieve or submit data for analysis without changing state meaningfully) -->
     "action_readonly" : "action-readonly",                                <#-- readonly action or actions -->
@@ -237,9 +247,8 @@
     "action_external" : "action-external",                <#-- action external, notably for marking external links -->
     
   <#-- Standalone link styles (includes links in tables)
-    DEV NOTE: 2016-01-07: the old use of link_nav and link_action made no real sense and has been ratified below.
-      the old link_action will be removed and turned mostly into link_nav(+action_xxx) and link_action_sys(+action_xxx)
-      (link_action_sys might then be renamed again or not, but have to go through this process).
+    DEV NOTE: 2016-01-14: the old use of link_nav and link_action made no real sense and has been ratified below.
+      the old link_action has now been removed and turned mostly into link_nav(+action_xxx) and link_action_sys(+action_xxx).
     TODO: move documentation and compactify what's left here
   
     how to decide which style to use on a link:
@@ -332,20 +341,14 @@
     "link_action_sys_cancel" : "button tiny action-run action-cancel",  <#-- link that cancels a system action in progress, such as cancelling an upload (but NOT if only a button that leads back to previous page - use link_nav_action_cancel, 
                                                                             and NOT for changing an order status to cancelled - use link_action_sys with appropriate action_xxx appended) -->
     "link_action_sys_cancel_long" : "action-run action-cancel link-long",
-    "link_action_session" : "button tiny action-run action-scope-session",                          <#-- link for any action (run-action) that only modifies current session, not the system. -->
+    "link_action_session" : "button tiny action-run action-scope-session",                          <#-- link for any action (run-action) that only modifies current session (logical, not necessarily HTTP session), not meaningful permanent system data. -->
     "link_action_session_long" : "action-run action-scope-session link-long",
     "link_action_session_cancel" : "button tiny action-run action-scope-session action-cancel",     <#-- link for any action that cancels another session action (rare). -->
     "link_action_session_cancel_long" : "action-run action-scope-session action-cancel link-long",
-    "link_action_local" : "button tiny action-run action-scope-local",                              <#-- link for any action (run-action) local to a page or that prepares a page for another action, such as "Clear" or "Reset" buttons that empty a form or form field. also intended for heavily interactive javascript forms. -->
+    "link_action_local" : "button tiny action-run action-scope-local",                              <#-- link for any action (run-action) local to a page or that prepares a page for another action, such as "Clear" or "Reset" buttons that empty a form or form field and interactive javascript forms. -->
     "link_action_local_long" : "action-run action-scope-local link-long",
     "link_action_local_cancel" : "button tiny action-run action-scope-local action-cancel",         <#-- link for any action that cancels another page-scope action (rare). -->
     "link_action_local_cancel_long" : "action-run action-scope-local action-cancel link-long",
-
-    "link_action" : "button tiny action-generic",               <#-- DEPRECATED; TO BE REMOVED [use link_nav and link_action_sys instead]: action link: "Add", "Edit", "Remove", "Cancel", "Export as PDF", "Edit: WS10000", etc. not necessarily a verb, action may be implied, but should be an action. usually static text. 
-                                                                    this may overlap with link_nav, but usually there is one more appropriate than the other.
-                                                                    if it's a static action like "View", somewhat ambiguous (TODO: clarify)
-                                                                    always prefer the more precise sub-categories below... -->
-    "link_action_long" : "action-generic link-long",            <#-- DEPRECATED; TO BE REMOVED -->
 
     <#-- General navigation links (basic navigation and navigation toward actions) -->
     "link_nav" : "button tiny action-nav",                              <#-- navigation link toward another page, usually with static text like "New" or "Edit" or "View".

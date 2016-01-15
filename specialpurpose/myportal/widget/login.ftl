@@ -83,7 +83,7 @@ under the License.
             </@cell>
             <@cell class="${styles.grid_large!}6 ${styles.text_right!}">
                 <input type="submit" value="${uiLabelMap.CommonLogin}"/>
-                <a href="<@ofbizUrl>newRegisterLogin</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.MyPortalNewRegistration}</a>
+                <a href="<@ofbizUrl>newRegisterLogin</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_register!}">${uiLabelMap.MyPortalNewRegistration}</a>
             </@cell>
         </@row>
 

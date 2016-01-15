@@ -111,7 +111,7 @@ under the License.
                 <@td colspan="2">
                         <span>${uiLabelMap.ProductQuantity}</span>
                         <input type="text" name="quantity" size="5" value="0"/>
-                        <a href="javascript:document.createShipmentPackageContentForm${shipmentPackageData_index}.submit()" class="${styles.link_action!}">${uiLabelMap.CommonAdd}</a>
+                        <a href="javascript:document.createShipmentPackageContentForm${shipmentPackageData_index}.submit()" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.CommonAdd}</a>
                 </@td>
                 <@td>&nbsp;</@td>
                 <@td>&nbsp;</@td>
@@ -156,7 +156,7 @@ under the License.
                 </@td>
                 <@td><span>Track ${uiLabelMap.CommonNbr}</span><input type="text" size="22" name="trackingCode"/></@td>
                 <@td><span>Box ${uiLabelMap.CommonNbr}</span><input type="text" size="5" name="boxNumber"/></@td>
-                <@td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentPackageData_index}.submit()" class="${styles.link_action!}">${uiLabelMap.CommonAdd}</a></@td>
+                <@td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentPackageData_index}.submit()" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.CommonAdd}</a></@td>
                 <@td>&nbsp;</@td>
                 </form>
             </@tr>

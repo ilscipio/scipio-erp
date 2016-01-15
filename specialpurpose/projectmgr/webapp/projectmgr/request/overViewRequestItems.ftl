@@ -87,7 +87,7 @@ under the License.
                         </#list>
                     </@table>
                 </#if>
-                <a href="<@ofbizUrl>requestitemnotes?custRequestId=${custRequestItemList.custRequestId}&amp;custRequestItemSeqId=${custRequestItemList.custRequestItemSeqId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.OrderAddNote}</a>
+                <a href="<@ofbizUrl>requestitemnotes?custRequestId=${custRequestItemList.custRequestId}&amp;custRequestItemSeqId=${custRequestItemList.custRequestItemSeqId}</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.OrderAddNote}</a>
             </@td>
         </@tr>
     </#if>

@@ -125,7 +125,7 @@ under the License.
                         <option value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.get("description",locale)}</option>
                       </#list>
                     </select>
-                    &nbsp;<a href='javascript:document.newpurposeform.submit()' class="${styles.link_action!}">${uiLabelMap.PartyAddPurpose}</a>
+                    &nbsp;<a href='javascript:document.newpurposeform.submit()' class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.PartyAddPurpose}</a>
                   </form>
                 </@td>
               </@tr>
@@ -201,7 +201,7 @@ under the License.
     </@field>
   </#if>
     <@field type="submitarea">
-        <a href="javascript:document.editcontactmechform.submit()" class="${styles.link_action!}">${uiLabelMap.CommonSave}</a>
+        <a href="javascript:document.editcontactmechform.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
     </@field>
   </form>
   </#if>

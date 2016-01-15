@@ -43,17 +43,17 @@ under the License.
                     <#if note.internalNote! == "N">
                         <div>${uiLabelMap.ProjectMgrPrintableNote}</div>
                           <#if project?has_content>
-                            <a href="<@ofbizUrl>updateProjectNote?workEffortId=${project.workEffortId!}&amp;noteId=${note.noteId}&amp;internalNote=Y</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.OrderNotesPrivate}</a>
+                            <a href="<@ofbizUrl>updateProjectNote?workEffortId=${project.workEffortId!}&amp;noteId=${note.noteId}&amp;internalNote=Y</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.OrderNotesPrivate}</a>
                           <#else>
-                            <a href="<@ofbizUrl>updateTaskNoteSummary?workEffortId=${task.workEffortId!}&amp;noteId=${note.noteId}&amp;internalNote=Y</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.OrderNotesPrivate}</a>
+                            <a href="<@ofbizUrl>updateTaskNoteSummary?workEffortId=${task.workEffortId!}&amp;noteId=${note.noteId}&amp;internalNote=Y</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.OrderNotesPrivate}</a>
                           </#if>
                     </#if>
                     <#if note.internalNote! == "Y">
                         <div>${uiLabelMap.OrderNotPrintableNote}</div>
                            <#if project?has_content>
-                             <a href="<@ofbizUrl>updateProjectNote?workEffortId=${project.workEffortId!}&amp;noteId=${note.noteId}&amp;internalNote=N</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.OrderNotesPublic}</a>
+                             <a href="<@ofbizUrl>updateProjectNote?workEffortId=${project.workEffortId!}&amp;noteId=${note.noteId}&amp;internalNote=N</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.OrderNotesPublic}</a>
                           <#else>
-                            <a href="<@ofbizUrl>updateTaskNoteSummary?workEffortId=${task.workEffortId!}&amp;noteId=${note.noteId}&amp;internalNote=N</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.OrderNotesPublic}</a>
+                            <a href="<@ofbizUrl>updateTaskNoteSummary?workEffortId=${task.workEffortId!}&amp;noteId=${note.noteId}&amp;internalNote=N</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.OrderNotesPublic}</a>
                           </#if>
                     </#if>
                   </@td>
@@ -99,9 +99,9 @@ under the License.
               </@field>
               <@field type="submitarea">
                 <#if project?has_content>
-                  <a href="javascript:document.createnoteform.submit()" class="${styles.link_action!}">${uiLabelMap.CommonSave}</a>
+                  <a href="javascript:document.createnoteform.submit()" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.CommonSave}</a>
                 <#else>
-                  <a href="javascript:document.createnoteform.submit()" class="${styles.link_action!}">${uiLabelMap.CommonSave}</a>
+                  <a href="javascript:document.createnoteform.submit()" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.CommonSave}</a>
                 </#if>
               </@field>
           </form>

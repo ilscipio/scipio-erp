@@ -27,8 +27,8 @@ under the License.
     <#macro saveCancelMenu>
       <@menu type="button">
         <#-- this was used at bottom in original FTL, is an error?
-        <a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonCancelDone}</a>-->
-        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") text="${uiLabelMap.CommonCancelDone}" />
+        <a href="<@ofbizUrl>backHome</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancelDone}</a>-->
+        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") class="+${styles.action_nav} ${styles.action_cancel}" text="${uiLabelMap.CommonCancelDone}" />
         <@menuitem type="link" href="javascript:document.editeftaccountform.submit()" text="${uiLabelMap.CommonSave}" />
       </@menu>
     </#macro>
@@ -77,7 +77,7 @@ under the License.
         </@field>
         <@field type="generic" label="${uiLabelMap.PartyBillingAddress}">
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
-            <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_action!}">
+            <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
               [Create New Address]</a>&nbsp;&nbsp;
             -->
             <@table type="data-list" autoAltRows=true cellspacing="0">

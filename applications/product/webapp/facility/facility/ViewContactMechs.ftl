@@ -63,7 +63,7 @@ under the License.
                     <#if contactMechPurposeType?has_content>
                       <#assign popUptitle = contactMechPurposeType.get("description",locale) + uiLabelMap.CommonGeoLocation>
                     </#if>
-                    <br /><a href="javascript:popUp('<@ofbizUrl>geoLocation?geoPointId=${postalAddress.geoPointId}</@ofbizUrl>', '${popUptitle!}', '450', '550')" class="${styles.link_action!}">${uiLabelMap.CommonGeoLocation}</a>
+                    <br /><a href="javascript:popUp('<@ofbizUrl>geoLocation?geoPointId=${postalAddress.geoPointId}</@ofbizUrl>', '${popUptitle!}', '450', '550')" class="${styles.link_nav!} ${styles.action_select!}">${uiLabelMap.CommonGeoLocation}</a>
                   </#if>
               <#elseif "TELECOM_NUMBER" = contactMech.contactMechTypeId>
                   <#assign telecomNumber = contactMechMap.telecomNumber!>
@@ -76,12 +76,12 @@ under the License.
                     </#if>
               <#elseif "EMAIL_ADDRESS" = contactMech.contactMechTypeId>
                     ${contactMech.infoString!}
-                    <a href='mailto:${contactMech.infoString!}' class="${styles.link_action!}">${uiLabelMap.CommonSendEmail}</a>
+                    <a href='mailto:${contactMech.infoString!}' class="${styles.link_action_sys!} ${styles.action_send!} ${styles.action_external!}">${uiLabelMap.CommonSendEmail}</a>
               <#elseif "WEB_ADDRESS" = contactMech.contactMechTypeId>
                     ${contactMech.infoString!}
                     <#assign openAddress = contactMech.infoString?default("")>
                     <#if !openAddress?starts_with("http") && !openAddress?starts_with("HTTP")><#assign openAddress = "http://" + openAddress></#if>
-                    <a target='_blank' href='${openAddress}' class="${styles.link_action!}">((${uiLabelMap.CommonOpenPageNewWindow})</a>
+                    <a target='_blank' href='${openAddress}' class="${styles.link_nav!}">((${uiLabelMap.CommonOpenPageNewWindow})</a>
               <#else>
                     ${contactMech.infoString!}
               </#if>

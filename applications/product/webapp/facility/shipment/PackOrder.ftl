@@ -76,8 +76,8 @@ under the License.
                 </@field>
                 <@field type="submitarea">
                     <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.selectOrderForm.submit();" />
-                    <a href="javascript:document.selectOrderForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductPackOrder}</a>
-                    <a href="javascript:document.selectOrderForm.action='<@ofbizUrl>WeightPackageOnly</@ofbizUrl>';document.selectOrderForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductWeighPackageOnly}</a>
+                    <a href="javascript:document.selectOrderForm.submit();" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.ProductPackOrder}</a>
+                    <a href="javascript:document.selectOrderForm.action='<@ofbizUrl>WeightPackageOnly</@ofbizUrl>';document.selectOrderForm.submit();" class="${styles.link_action_sys!} ${styles.action_verify!}">${uiLabelMap.ProductWeighPackageOnly}</a>
                 </@field>
             </form>
             </@section>
@@ -92,8 +92,8 @@ under the License.
                 </@field>
                 <@field type="submitarea">
                     <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.selectPicklistBinForm.submit();" />
-                    <a href="javascript:document.selectPicklistBinForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductPackOrder}</a>
-                    <a href="javascript:document.selectPicklistBinForm.action='<@ofbizUrl>WeightPackageOnly</@ofbizUrl>';document.selectPicklistBinForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductWeighPackageOnly}</a>
+                    <a href="javascript:document.selectPicklistBinForm.submit();" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.ProductPackOrder}</a>
+                    <a href="javascript:document.selectPicklistBinForm.action='<@ofbizUrl>WeightPackageOnly</@ofbizUrl>';document.selectPicklistBinForm.submit();" class="${styles.link_action_sys!} ${styles.action_verify!}">${uiLabelMap.ProductWeighPackageOnly}</a>
                 </@field>
             </form>
             </@section>
@@ -202,7 +202,7 @@ under the License.
                             <input type="text" name="productId" size="20" maxlength="20" value=""/>
                             @
                             <input type="text" name="quantity" size="6" maxlength="6" value="1"/>
-                            <a href="javascript:document.singlePackForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductPackItem}</a>
+                            <a href="javascript:document.singlePackForm.submit();" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.ProductPackItem}</a>
                     </@cell>
                     <@cell columns=6>
                           <span>${uiLabelMap.ProductCurrentPackageSequence}</span>
@@ -380,7 +380,7 @@ under the License.
                             <br />
                             <input type="text" name="additionalShippingCharge" value="${packingSession.getAdditionalShippingCharge()!}" size="20"/>
                             <#if packageSeqIds?has_content>
-                                <a href="javascript:document.completePackForm.action='<@ofbizUrl>calcPackSessionAdditionalShippingCharge</@ofbizUrl>';document.completePackForm.submit();" class="${styles.link_action!}">${uiLabelMap.ProductEstimateShipCost}</a>
+                                <a href="javascript:document.completePackForm.action='<@ofbizUrl>calcPackSessionAdditionalShippingCharge</@ofbizUrl>';document.completePackForm.submit();" class="${styles.link_action_sys!} ${styles.action_verify!}">${uiLabelMap.ProductEstimateShipCost}</a>
                                 <br />
                             </#if>
                         </@td>
@@ -437,7 +437,7 @@ under the License.
                       <@td align="right">${line.getQuantity()}</@td>
                       <@td align="right">${line.getWeight()} (${packingSession.getPackageWeight(line.getPackageSeq()?int)!})</@td>
                       <@td align="right">${line.getPackageSeq()}</@td>
-                      <@td align="right"><a href="javascript:clearLine('${facilityId}', '${line.getOrderId()}', '${line.getOrderItemSeqId()}', '${line.getProductId()?default("")}', '${line.getShipGroupSeqId()}', '${line.getInventoryItemId()}', '${line.getPackageSeq()}')" class="${styles.link_action!}">${uiLabelMap.CommonClear}</a></@td>
+                      <@td align="right"><a href="javascript:clearLine('${facilityId}', '${line.getOrderId()}', '${line.getOrderItemSeqId()}', '${line.getProductId()?default("")}', '${line.getShipGroupSeqId()}', '${line.getInventoryItemId()}', '${line.getPackageSeq()}')" class="${styles.link_action_sys!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a></@td>
                     </@tr>
                   </#list>
                 </@table>
@@ -473,7 +473,7 @@ under the License.
                       <@td align="right">${line.getQuantity()}</@td>
                       <@td align="right">${line.getWeight()} (${packingSession.getPackageWeight(line.getPackageSeq()?int)!})</@td>
                       <@td align="right">${line.getPackageSeq()}</@td>
-                      <@td align="right"><a href="javascript:clearLine('${facilityId}', '${line.getOrderId()}', '${line.getOrderItemSeqId()}', '${line.getProductId()?default("")}', '${line.getShipGroupSeqId()}', '${line.getInventoryItemId()}', '${line.getPackageSeq()}')" class="${styles.link_action!}">${uiLabelMap.CommonClear}</a></@td>
+                      <@td align="right"><a href="javascript:clearLine('${facilityId}', '${line.getOrderId()}', '${line.getOrderItemSeqId()}', '${line.getProductId()?default("")}', '${line.getShipGroupSeqId()}', '${line.getInventoryItemId()}', '${line.getPackageSeq()}')" class="${styles.link_action_sys!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a></@td>
                   </@tr>
               </#list>
             </@table>

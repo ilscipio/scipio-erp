@@ -60,7 +60,7 @@ under the License.
                                         <#list productCategoryMembers as productCategoryMember>
                                             <#if (i > 2)>
                                                 <#if productCategoryMembers[i]?has_content>
-                                                    <a class="${styles.link_action!}" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">
+                                                    <a class="${styles.link_nav!} ${styles.action_view!}" href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">
                                                         <span>More...</span>
                                                     </a>
                                                 </#if>

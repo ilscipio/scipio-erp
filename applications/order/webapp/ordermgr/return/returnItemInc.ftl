@@ -269,7 +269,7 @@ under the License.
     <@row>
       <@cell>
         <input type="hidden" name="_rowCount" value="${rowCount}"/>
-        <a href="javascript:document.${selectAllFormName}.submit()" class="${styles.link_action!}">${uiLabelMap.OrderReturnSelectedItems}</a>
+        <a href="javascript:document.${selectAllFormName}.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.OrderReturnSelectedItems}</a>
       </@cell>
     </@row>
 

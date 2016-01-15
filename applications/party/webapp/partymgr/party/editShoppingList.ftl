@@ -107,12 +107,12 @@ under the License.
               </#list>
             </select>
             <#if parentShoppingList??>
-              <a href="<@ofbizUrl>editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName?default(parentShoppingList.shoppingListId)})</a>
+              <a href="<@ofbizUrl>editShoppingList?shoppingListId=${parentShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonGotoParent} (${parentShoppingList.listName?default(parentShoppingList.shoppingListId)})</a>
             </#if>
         </@field>
         <#if shoppingList.listName?default("") != "auto-save">
           <@field type="submitarea">
-              <a href="javascript:document.updateList.submit();" class="${styles.link_action!}">${uiLabelMap.CommonSave}</a>
+              <a href="javascript:document.updateList.submit();" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
           </@field>
         </#if>
     </form>

@@ -260,13 +260,13 @@ under the License.
                                 <@td>
                                         <input type="text" readonly="readonly" name="itemFee" value="${request.getAttribute("itemFee")!}"/>
                                         <!-- itemlisting buttons bar -->
-                                        <a href="#" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>updateProductExportDetail</@ofbizUrl>';document.ProductsExportToEbay.submit();" class="${styles.link_action!}">${uiLabelMap.CommonSave}</a>
+                                        <a href="#" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>updateProductExportDetail</@ofbizUrl>';document.ProductsExportToEbay.submit();" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
                                     <#-- request.setAttribute("isSaved")-->
                                     <#if isSaved?? && isSaved=="Y">
                                         <a href="#" class="${styles.link_action_sys!} ${styles.action_verify!}" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>verifyItemBeforeAddAndExportToEbay</@ofbizUrl>';document.ProductsExportToEbay.submit();">Verify Item</a>
                                     </#if>
                                         <a href="#" class="${styles.link_action_sys!} ${styles.action_remove!}" onclick="javascript:document.ProductsExportToEbay.action='<@ofbizUrl>removeProductFromListing</@ofbizUrl>';document.ProductsExportToEbay.submit();">Remove</a>
-                                        <#--a href="#" class="${styles.link_action!}">Save and ${uiLabelMap.EbayExportToEbay}</a-->
+                                        <#--a href="#" class="${styles.link_action_sys!} ${styles.action_send!} ${styles.action_external!}">Save and ${uiLabelMap.EbayExportToEbay}</a-->
                                         <!-- end buttons bar -->
                                 </@td>
                             </@tr>
@@ -314,7 +314,7 @@ under the License.
                                                             </#if>
                                                         </#if>
                                                   </select>
-                                                  <a class="${styles.link_action!}" href="javascript:retrieveEbayCategoryByParent('<@ofbizUrl>retrieveEbayCategoryByParent</@ofbizUrl>','CH_<#if primaryCate?has_content>${primaryCate.getCategoryID()!}</#if>','${productStoreId}','ebayCategory')">${uiLabelMap.EbayChangeCategory}</a> <a class="${styles.link_action!}" href="javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>setSelectedCategory</@ofbizUrl>?isProductId=${isProductId!}';document.getElementById('ProductsExportToEbay').submit();">${uiLabelMap.EbaySet}</a>
+                                                  <a class="${styles.link_action_local!} ${styles.action_update!}" href="javascript:retrieveEbayCategoryByParent('<@ofbizUrl>retrieveEbayCategoryByParent</@ofbizUrl>','CH_<#if primaryCate?has_content>${primaryCate.getCategoryID()!}</#if>','${productStoreId}','ebayCategory')">${uiLabelMap.EbayChangeCategory}</a> <a class="${styles.link_action_sys!} ${styles.action_update!}" href="javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>setSelectedCategory</@ofbizUrl>?isProductId=${isProductId!}';document.getElementById('ProductsExportToEbay').submit();">${uiLabelMap.EbaySet}</a>
                                               </div>
                                               <input type="hidden" name="primaryCateId" value="${primaryCateId!}"/>
                                               <div id="ebayCategory_Name">${priCateName!}</div>
@@ -812,8 +812,8 @@ under the License.
         <@table type="fields" cellspacing="0"> <#- orig: class="basic-table" ->
             <@tr>
                 <@td align="center" colspan="2">
-                    <a href="#" class="${styles.link_action!}">${uiLabelMap.EbayExportToEbay}</a>
-                    <a href="#" class="${styles.link_action!}">Verify Item</a>
+                    <a href="#" class="${styles.link_action_sys!} ${styles.action_send!} ${styles.action_external!}">${uiLabelMap.EbayExportToEbay}</a>
+                    <a href="#" class="${styles.link_action_sys!} ${styles.action_verify!} ${styles.action_external!}">Verify Item</a>
                 
     </#if-->
 </form>

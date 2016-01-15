@@ -29,7 +29,7 @@ under the License.
                 <parameter param-name="organizationPartyId" from-field="partyId"/>
             </hyperlink>
         </field>
-        <field name="accounting" title=" " use-when="hasBasicPermission" widget-style="${styles.link_nav} ${styles.action_view}">
+        <field name="accounting" title=" " use-when="hasBasicPermission" widget-style="${styles.link_nav}">
             <hyperlink target="PartyAccountsSummary" description="${uiLabelMap.AccountingAccounting}">
                 <parameter param-name="organizationPartyId" from-field="partyId"/>
             </hyperlink>

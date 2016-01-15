@@ -21,7 +21,7 @@ under the License.
         <div>&nbsp;<a href="<@ofbizUrl>WorkEffortSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_action_session!} ${styles.action_remove!}">X</a>&nbsp;${searchConstraintString}</div>
     </#list>
     <div><span>${uiLabelMap.CommonSortedBy}</span> ${searchSortOrderString}</div>
-    <div><a href="<@ofbizUrl>WorkEffortSearchOptions</@ofbizUrl>" class="${styles.link_action!}">${uiLabelMap.CommonRefineSearch}</a></div>
+    <div><a href="<@ofbizUrl>WorkEffortSearchOptions</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonRefineSearch}</a></div>
 
     <#if !workEffortIds?has_content>
       <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>

@@ -61,7 +61,7 @@ under the License.
       <@td colspan="2">&nbsp;</@td>
     </@tr>
     <@tr>
-      <@td colspan="2" align="center"><input type="submit" class="${styles.link_action!}" value="${uiLabelMap.EcommerceLinkCards}" /></@td>
+      <@td colspan="2" align="center"><input type="submit" class="${styles.link_action_sys!} ${styles.action_update!}" value="${uiLabelMap.EcommerceLinkCards}" /></@td>
     </@tr>
   </@table>
 </form>

@@ -51,15 +51,15 @@ under the License.
           <@td align="right" width="1%" nowrap="nowrap" background=background>
             <div class="insideHeaderText">
                 <#if userLogin?has_content>
-                  Logged in as&nbsp;<a href="#" class="${styles.link_nav_record_id!}">${userLogin.userLoginId}</a>&nbsp;|&nbsp;<a href="<@ofbizUrl>/logoff</@ofbizUrl>" class="${styles.link_action!}">Logout</a>&nbsp;|&nbsp;<a href="#" class="${styles.link_action!}">Help Center</a>
+                  Logged in as&nbsp;<a href="#" class="${styles.link_nav_record_id!}">${userLogin.userLoginId}</a>&nbsp;|&nbsp;<a href="<@ofbizUrl>/logoff</@ofbizUrl>" class="${styles.link_action_session!} ${styles.action_logout!}">Logout</a>&nbsp;|&nbsp;<a href="#" class="${styles.link_nav!} ${styles.action_view!}">Help Center</a>
                 <#else>
-                  Sign up <a href="#" class="${styles.link_action!}">Now!</a>&nbsp;|&nbsp;<a href="#" class="${styles.link_action!}">Help Center</a>
+                  Sign up <a href="#" class="${styles.link_action_sys!} ${styles.action_register!}">Now!</a>&nbsp;|&nbsp;<a href="#" class="${styles.link_nav!} ${styles.action_view!}">Help Center</a>
                 </#if>
             </div>
             <div style="padding-top: 10px;" class="insideHeaderText">
                 <form action="#">
                     <input type="text" class="inputBox" name="search" size="20" />
-                    <input type="submit" class="${styles.link_action!}" value="Search" />
+                    <input type="submit" class="${styles.link_action_sys!} ${styles.action_find!}" value="Search" />
                 </form>
             </div>
           </@td>

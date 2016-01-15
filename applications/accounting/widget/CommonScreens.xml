@@ -394,7 +394,7 @@ under the License.
 						</screenlet>
 					</decorator-section>
 					<decorator-section name="topRight">
-						<screenlet title="${uiLabelMap.AccountingFinantialInformation}">
+						<screenlet title="${uiLabelMap.AccountingFinancialInformation}">
 							<section>
 								<actions> 
 					               	<set field="chartType" value="bar"/>					                

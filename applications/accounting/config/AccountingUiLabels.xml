@@ -5326,8 +5326,8 @@
         <value xml:lang="zh">外汇汇率</value>
         <value xml:lang="zh_TW">外匯匯率</value>
     </property>
-    <property key="AccountingFinantialInformation">
-    	<value xml:lang="en">Finantial Information</value>
+    <property key="AccountingFinancialInformation">
+    	<value xml:lang="en">Financial Information</value>
     </property>
     <property key="AccountingFinAccount">
         <value xml:lang="de">Finanzkonto</value>
@@ -7214,7 +7214,7 @@
         <value xml:lang="zh_TW">隱藏欄位</value>
     </property>
     <property key="AccountingIncomesExpenses">
-    	<value xml:lang="en">Incomes &amp; Expenses</value>
+    	<value xml:lang="en">Income &amp; Expenses</value>
     </property>
     <property key="AccountingIgnoreInvoiceItems">
         <value xml:lang="ar">تجاهل بنود الفاتورة</value>

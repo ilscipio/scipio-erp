@@ -894,7 +894,7 @@
         <menu-item name="createNew" title="${uiLabelMap.AccountingCreateNewInvoice}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="newInvoice" />
         </menu-item>
-        <menu-item name="copyInvoice" title="${uiLabelMap.CommonCopy}">
+        <menu-item name="copyInvoice" title="${uiLabelMap.CommonCopy}" widget-style="+${styles.action_run_sys} ${styles.action_copy}">
             <condition>
                 <not>
                     <if-empty field="invoice.invoiceId" />
@@ -904,7 +904,7 @@
                 <parameter param-name="invoiceIdToCopyFrom" from-field="invoiceId" />
             </link>
         </menu-item>
-        <menu-item name="statusToApproved" title="${uiLabelMap.AccountingInvoiceStatusToApproved}">
+        <menu-item name="statusToApproved" title="${uiLabelMap.AccountingInvoiceStatusToApproved}" widget-style="+${styles.action_run_sys} ${styles.action_updatestatus}">
             <condition>
                 <and>
                     <not>
@@ -922,7 +922,7 @@
                 <parameter param-name="statusId" value="INVOICE_APPROVED" />
             </link>
         </menu-item>
-        <menu-item name="statusToReceived" title="${uiLabelMap.AccountingInvoiceStatusToReceived}">
+        <menu-item name="statusToReceived" title="${uiLabelMap.AccountingInvoiceStatusToReceived}" widget-style="+${styles.action_run_sys} ${styles.action_updatestatus}">
             <condition>
                 <and>
                     <not>
@@ -940,7 +940,7 @@
                 <parameter param-name="statusId" value="INVOICE_RECEIVED" />
             </link>
         </menu-item>
-        <menu-item name="statusToSent" title="${uiLabelMap.AccountingInvoiceStatusToSent}">
+        <menu-item name="statusToSent" title="${uiLabelMap.AccountingInvoiceStatusToSent}" widget-style="+${styles.action_run_sys} ${styles.action_updatestatus}">
             <condition>
                 <or>
                     <and>
@@ -964,7 +964,7 @@
                 <parameter param-name="statusId" value="INVOICE_SENT" />
             </link>
         </menu-item>
-        <menu-item name="statusToReady" title="${uiLabelMap.AccountingInvoiceStatusToReady}">
+        <menu-item name="statusToReady" title="${uiLabelMap.AccountingInvoiceStatusToReady}" widget-style="+${styles.action_run_sys} ${styles.action_updatestatus}">
             <condition>
                 <and>
                     <not>
@@ -983,7 +983,7 @@
                 <parameter param-name="statusId" value="INVOICE_READY" />
             </link>
         </menu-item>
-        <menu-item name="statusToPaid" title="${uiLabelMap.AccountingInvoiceStatusToPaid}">
+        <menu-item name="statusToPaid" title="${uiLabelMap.AccountingInvoiceStatusToPaid}" widget-style="+${styles.action_run_sys} ${styles.action_complete}">
             <condition>
                 <and>
                     <not>
@@ -999,7 +999,7 @@
                 <parameter param-name="statusId" value="INVOICE_PAID" />
             </link>
         </menu-item>
-        <menu-item name="statusToWriteoff" title="${uiLabelMap.AccountingInvoiceStatusToWriteoff}">
+        <menu-item name="statusToWriteoff" title="${uiLabelMap.AccountingInvoiceStatusToWriteoff}" widget-style="+${styles.action_run_sys} ${styles.action_terminate}">
             <condition>
                 <and>
                     <not>
@@ -1016,7 +1016,7 @@
                 <parameter param-name="statusId" value="INVOICE_WRITEOFF" />
             </link>
         </menu-item>
-        <menu-item name="statusToInProcess" title="${uiLabelMap.AccountingInvoiceStatusToInProcess}">
+        <menu-item name="statusToInProcess" title="${uiLabelMap.AccountingInvoiceStatusToInProcess}" widget-style="+${styles.action_run_sys} ${styles.action_updatestatus}">
             <condition>
                 <and>
                     <not>
@@ -1033,7 +1033,7 @@
                 <parameter param-name="statusId" value="INVOICE_IN_PROCESS" />
             </link>
         </menu-item>
-        <menu-item name="statusToCancelled" title="${uiLabelMap.AccountingInvoiceStatusToCancelled}">
+        <menu-item name="statusToCancelled" title="${uiLabelMap.AccountingInvoiceStatusToCancelled}" widget-style="+${styles.action_run_sys} ${styles.action_terminate}">
             <condition>
                 <and>
                     <not>
@@ -1052,7 +1052,7 @@
                 <parameter param-name="statusId" value="INVOICE_CANCELLED" />
             </link>
         </menu-item>
-        <menu-item name="saveInvoiceAsTemplate" title="${uiLabelMap.AccountingInvoiceSaveAsTemplate}">
+        <menu-item name="saveInvoiceAsTemplate" title="${uiLabelMap.AccountingInvoiceSaveAsTemplate}" widget-style="+${styles.action_run_sys} ${styles.action_copy}">
             <condition>
                 <and>
                     <not>

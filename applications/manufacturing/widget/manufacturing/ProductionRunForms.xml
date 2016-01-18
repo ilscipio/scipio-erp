@@ -41,7 +41,7 @@ under the License.
                 <option key="Y" description="${uiLabelMap.CommonYes}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -66,7 +66,7 @@ under the License.
                 </entity-options>
              </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="listFindProductionRun" list-name="listIt" title="" type="list" paginate-target="FindProductionRun"
@@ -118,7 +118,7 @@ under the License.
         <field name="estimatedCompletionDate" title="${uiLabelMap.ManufacturingEstimatedCompletionDate}"><display/></field>
         <field name="workEffortName" title="${uiLabelMap.ManufacturingProductionRunName}"><text/></field>
         <field name="description"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListProductionRunOrderItems" type="list" target="EditProductionRun" title="" list-name="orderItems"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -258,7 +258,7 @@ under the License.
         <field name="estimatedMilliSeconds" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}">
             <text/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonEdit}">
+        <field name="submitAction" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -301,7 +301,7 @@ under the License.
             </drop-down>
         </field>
         <field name="lotId"><text default-value="${lastLotId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -352,7 +352,7 @@ under the License.
             </drop-down>
         </field>
         <field name="_rowSubmit"><hidden value="Y"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
 
     <form name="ListProductionRunDeclRoutingTasks" type="list" target="ProductionRunDeclaration" title="" list-name="productionRunRoutingTasks"
@@ -444,7 +444,7 @@ under the License.
         <field name="lotId">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="ListReturnProductionRunDeclComponents" type="multi" use-row-submit="true" target="productionRunTaskReturnMaterials?productionRunId=${productionRunId}" title="" list-name="productionRunComponentsAlreadyIssued"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -464,7 +464,7 @@ under the License.
         <field name="lotId" title="${uiLabelMap.ProductLotId}"><text /></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><text/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelected}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
 
      <form name="EditProductionRunDeclRoutingTask" type="single" target="updateProductionRunTask" title="" default-map-name="routingTaskData"
@@ -536,7 +536,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.ManufacturingWorker}">
             <text/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -556,7 +556,7 @@ under the License.
         <field name="lotId" title="${uiLabelMap.ProductLotId}">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -580,7 +580,7 @@ under the License.
         <field name="roleTypeId">
             <hidden value="CONTENT_USER"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -645,7 +645,7 @@ under the License.
         </field>
         <field name="workEffortContentTypeId"><drop-down><entity-options description="${description}" entity-name="WorkEffortContentType"></entity-options></drop-down></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelected}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="ProductionRunTaskFixedAssets" type="list" target="updateWorkEffortFixedAssetAssign" paginate-target="" title="" list-name="records"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -735,7 +735,7 @@ under the License.
             </drop-down> -->
             <hidden />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -765,7 +765,7 @@ under the License.
             </drop-down> -->
             <hidden />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -825,7 +825,7 @@ under the License.
     <form name="SelectMrpName" type="single" target="ManufacturingReports" title=""
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="mrpName" title="${uiLabelMap.ManufacturingMrpName}"><text size="20"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_select}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -849,7 +849,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>

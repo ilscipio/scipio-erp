@@ -112,8 +112,8 @@
         </field>
         <field name="estimatedStartDate" title="${uiLabelMap.FormFieldTitle_estimatedStartDate}" position="1"><date-time type="date"/></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.FormFieldTitle_estimatedCompletionDate}" position="2"><date-time type="date"/></field>
-        <field name="add" title="${uiLabelMap.CommonAdd}" use-when="task==void || task==null"><submit/></field>
-        <field name="add" title="${uiLabelMap.CommonSave}" use-when="task!=void @and task!=null"><submit/></field> 
+        <field name="add" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}" use-when="task==void || task==null"><submit/></field>
+        <field name="add" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}" use-when="task!=void @and task!=null"><submit/></field> 
     </form>
 
     <form name="AssignTaskOtherProject" type="single" target="updateTask" default-map-name="task">
@@ -128,7 +128,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="save" title="${uiLabelMap.CommonSave}"><submit/></field>
+        <field name="save" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     
     <form name="AddProjectPhase" type="single" target="createProjectTaskOrPhase">
@@ -139,7 +139,7 @@
         <field name="phaseName" parameter-name="workEffortName" title="${uiLabelMap.ProjectMgrPhaseName}*" tooltip="${uiLabelMap.CommonRequired}"><text/></field>
         <field name="phaseSeqId" entry-name="sequenceNum" parameter-name="sequenceNum" title="${uiLabelMap.FormFieldTitle_sequenceNum}"><text size="3"/></field>
         <field name="phaseDdescription" parameter-name="description" title="${uiLabelMap.CommonDescription}" tooltip="${uiLabelMap.CommonMax250Chars}"><textarea/></field>
-        <field name="add" title="${uiLabelMap.CommonAdd}"><submit/></field>
+        <field name="add" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="AddPhase" type="single" target="createProjectPhase">
         <field name="projectId"><hidden value="${parameters.projectId}"/></field>
@@ -149,7 +149,7 @@
         <field name="sequenceNum"><text size="3"/></field>
         <field name="phaseName" parameter-name="workEffortName" title="${uiLabelMap.ProjectMgrPhaseName}*" tooltip="${uiLabelMap.CommonRequired}"><text/></field>
         <field name="phaseDdescription" parameter-name="description" title="${uiLabelMap.CommonDescription}"><text/></field>
-        <field name="save" title="${uiLabelMap.CommonSave}"><submit/></field>
+        <field name="save" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="FindTask" type="single" target="FindTask">
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -179,7 +179,7 @@
         </field>
         <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}"><text-find ignore-case="true"/></field>
         <field name="estimatedStartDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
-        <field name="find" title="${uiLabelMap.CommonFind}"><submit/></field>
+        <field name="find" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit/></field>
     </form>
     <form name="ListTasks" type="list" separate-columns="true" title="Task List" list-name="listIt" paginate-target="FindTask"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -276,7 +276,7 @@
         </field>
         <field name="workEffortId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden/></field>
-        <field name="updateAction"><submit/></field>
+        <field name="updateAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
         <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="updateTaskAssigment" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="workEffortId"/>
@@ -325,7 +325,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="addAction"><submit/></field>
+        <field name="addAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="DependenciesBefore" target="removeDependency" title="" list-name="depList" type="list" separate-columns="true" paginate-target="Dependencies"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -349,7 +349,7 @@
         <field name="estimatedCompletionDate" entry-name="r.taskInfo.estimatedCompletionDate" title="${uiLabelMap.WorkEffortEstimatedCompletionDate}"><display type="date"/></field>
         <field name="actualStartDate" entry-name="r.taskInfo.actualStartDate" title="${uiLabelMap.FormFieldTitle_actualStartDate}"><display type="date"/></field>
         <field name="actualCompletionDate" entry-name="r.taskInfo.actualCompletionDate" title="${uiLabelMap.FormFieldTitle_actualCompletionDate}"><display type="date"/></field>
-        <field name="deleteAction"><submit button-type="button"/></field>
+        <field name="deleteAction" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit button-type="button"/></field>
     </form>
     
     <form name="DependenciesAfter" target="removeDependency" title="" list-name="depList" type="list" separate-columns="true" paginate-target="Dependencies"
@@ -374,7 +374,7 @@
         <field name="estimatedCompletionDate" entry-name="r.taskInfo.estimatedCompletionDate" title="${uiLabelMap.WorkEffortEstimatedCompletionDate}"><display type="date"/></field>
         <field name="actualStartDate" entry-name="r.taskInfo.actualStartDate" title="${uiLabelMap.FormFieldTitle_actualStartDate}"><display type="date"/></field>
         <field name="actualCompletionDate" entry-name="r.taskInfo.actualCompletionDate" title="${uiLabelMap.FormFieldTitle_actualCompletionDate}"><display type="date"/></field>
-        <field name="deleteAction"><submit button-type="button"/></field>
+        <field name="deleteAction" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit button-type="button"/></field>
     </form>
     <form name="AddDependencyBefore" type="single" target="addDependency">
         <field name="workEffortId"><hidden/></field>
@@ -390,7 +390,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="addAction"><submit/></field>
+        <field name="addAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="AddDependencyAfter" type="single" target="addDependency">
         <field name="workEffortIdFrom"><hidden value="${workEffortId}"/></field>
@@ -406,7 +406,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="addAction"><submit/></field>
+        <field name="addAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="ListTaskSkills" type="list" target="updateTaskSkillStandard" list-name="workEffortSkillStandards" paginate-target="EditTaskSkills" separate-columns="true"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -421,7 +421,7 @@
         <field name="estimatedNumPeople" title="${uiLabelMap.ProjectMgrEstimatedNumPeople}"><text/></field>
         <field name="estimatedDuration" title="${uiLabelMap.ProjectMgrEstimatedDuration}"><text/></field>
         <field name="estimatedCost" title="${uiLabelMap.ProjectMgrEstimatedCost}" widget-style="${styles.link_nav_text}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="AddTaskSkill" type="single" target="createTaskSkillStandard">
         <field name="workEffortId"><hidden value="${workEffortId}"/></field>
@@ -432,7 +432,7 @@
         <field name="estimatedNumPeople" title="${uiLabelMap.ProjectMgrEstimatedNumPeople}"><text/></field>
         <field name="estimatedDuration" title="${uiLabelMap.ProjectMgrEstimatedDuration}"><text/></field>
         <field name="estimatedCost" title="${uiLabelMap.ProjectMgrEstimatedCost}" widget-style="${styles.link_nav_text}"><text/></field>
-        <field name="add" title="${uiLabelMap.CommonAdd}"><submit/></field>
+        <field name="add" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="ListTimeEntries" type="list" list-name="timesheetEntries" target="updateTimeEntry" paginate-target="EditTimeEntries"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -475,7 +475,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><ignored/></field><!-- not used in project manager -->
         <field name="invoiceInfo"><hidden/></field>
         <field name="comments"><text size="60"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteTimeEntry" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="workEffortId"/>
@@ -510,7 +510,7 @@
         </field>
         <field name="comments"><text size="40"/></field>
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
-        <field name="addAction" title="${uiLabelMap.CommonAdd}"><submit/></field>
+        <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="ListTaskNotes" extends="ListWorkEffortNotes" extends-resource="component://workeffort/widget/WorkEffortForms.xml" type="list" list-name="taskNotes" paginate-target="EditTaskNotes"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -738,7 +738,7 @@
             </field>
         <field name="estimatedStartDate" title="${uiLabelMap.FormFieldTitle_estimatedStartDate}"><date-time type="date"/></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.FormFieldTitle_estimatedCompletionDate}"><date-time type="date"/></field>
-        <field name="save" title="${uiLabelMap.CommonSave}"><submit/></field>
+        <field name="save" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="CreateCustRequestWorkEffortByExistingTaskForm" type="single" target="acceptRequestAndConnectToTask">
         <field name="custRequestId"><hidden value="${parameters.custRequestId}"/></field>
@@ -753,7 +753,7 @@
                 </entity-options>
             </drop-down>
           </field>
-        <field name="save" title="${uiLabelMap.CommonSave}"><submit/></field>
+        <field name="save" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     
     <form name="AddWorkEffortSurveyAppl" type="single" target="createWorkEffortSurveyAppl">
@@ -764,6 +764,6 @@
                 <entity-options entity-name="Survey" description="${surveyName}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 </forms>

@@ -318,8 +318,8 @@ under the License.
         <field name="workEffortName" title="${uiLabelMap.HumanHolidayName}" tooltip="${uiLabelMap.CommonRequired}"><text size="50"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><textarea/></field>
         <field name="estimatedStartDate" title="${uiLabelMap.CommonFrom}" tooltip="${uiLabelMap.CommonRequired}"><date-time type="date"/></field>
-        <field name="addAction" title="${uiLabelMap.CommonSubmit}" use-when="workEffort==null"><submit/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" use-when="workEffort!=null"><submit/></field>
+        <field name="addAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}" use-when="workEffort==null"><submit/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}" use-when="workEffort!=null"><submit/></field>
     </form>
     <form name="ListPublicHoliday" type="list" target="PublicHoliday" list-name="listIt" separate-columns="true"
         odd-row-style="alternate-row" default-table-style="hover-bar basic-table">
@@ -344,7 +344,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.CommonBy}">
             <display-entity entity-name="PartyNameView" description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId"/>
         </field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
         <field name="removeAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="deletePublicHoliday">
                 <parameter param-name="workEffortId" from-field="workEffortId"/>

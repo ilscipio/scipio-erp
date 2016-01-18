@@ -163,7 +163,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}"><submit button-type="button"/>        </field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/>        </field>
         <field name="cancelAction" title="${uiLabelMap.CommonCancel}" widget-style="${styles.link_nav_cancel}"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
     <form name="FindTrackingCodeVisits" target="ListTrackingCodeVisits" title="" type="single"
@@ -255,7 +255,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.MarketingTrackingCodeVisitPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-find/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListLookupVisit" target="" title="" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

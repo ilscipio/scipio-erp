@@ -29,7 +29,7 @@ under the License.
         <field name="workEffortName" title="${uiLabelMap.ManufacturingRoutingName}">
             <text-find/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -62,7 +62,7 @@ under the License.
         <field name="workEffortName" title="${uiLabelMap.ManufacturingRoutingName}"><text/></field>
         <field name="description"><text/></field>
         <field name="quantityToProduce" title="${uiLabelMap.ManufacturingQuantityToProduce}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -83,7 +83,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -146,7 +146,7 @@ under the License.
             </drop-down>
         </field>
         <field name="reservPersons"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -193,7 +193,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -255,7 +255,7 @@ under the License.
         <field name="workEffortAssocTypeId" ><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" ></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <sort-order>
             <sort-field name="workEffortIdFrom"/>
             <sort-field name="workEffortIdTo"/>
@@ -278,7 +278,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="routingProductLink!=null"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"></field>
         <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -352,7 +352,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" use-when="routingProductLink!=null"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -365,7 +365,7 @@ under the License.
         <field name="fixedAssetTypeId">
             <display-entity entity-name="FixedAssetType"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
@@ -384,7 +384,7 @@ under the License.
                 <entity-options entity-name="FixedAssetType" description="${description}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>

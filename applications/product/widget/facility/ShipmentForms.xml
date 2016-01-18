@@ -131,7 +131,7 @@ under the License.
         <field use-when="shipment!=null" name="createdDate" title="${uiLabelMap.ProductCreatedDate}"><display also-hidden="false" description="${shipment.createdDate}"/></field>
         <field use-when="shipment!=null" name="lastModifiedDate" title="${uiLabelMap.ProductLastModifiedDate}" position="2"><display also-hidden="false" description="${shipment.lastModifiedDate}"/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="FindShipment" type="single" target="FindShipment" title="" default-map-name="Shipment"
@@ -279,7 +279,7 @@ under the License.
         <!-- planned volume -->
         <field name="volume" title="${uiLabelMap.CommonVolume}"><display/></field>
         <field name="volumeUom" title="${uiLabelMap.CommonUom}"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -293,7 +293,7 @@ under the License.
             <lookup target-form-name="LookupOrderHeaderAndShipInfo"/>
         </field>
         <field name="shipGroupSeqId" entry-name="shipment.primaryShipGroupSeqId"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>

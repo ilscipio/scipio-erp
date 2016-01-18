@@ -67,8 +67,8 @@ under the License.
         </field>
         <field name="customTimePeriodId" title="${uiLabelMap.CommonPeriod}" position="2"><lookup target-form-name="LookupCustomTimePeriod"/></field>
         <field name="comments" ><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="budget == null"><submit /></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="budget != null"><submit /></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}" use-when="budget == null"><submit /></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}" use-when="budget != null"><submit /></field>
     </form>
 
     <form name="BudgetHeader" type="single" title="Budget header information" default-map-name="budget"

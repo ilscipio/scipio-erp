@@ -318,7 +318,7 @@ under the License.
         <field use-when="contactMechTypeId.equals(&quot;TELECOM_NUMBER&quot;)" name="contactNumber" map-name="telephone"><display/></field>
         <field use-when="contactMechTypeId.equals(&quot;TELECOM_NUMBER&quot;)" name="extension" map-name="telephone"><display/></field>
         <field use-when="!contactMechTypeId.equals(&quot;POSTAL_ADDRESS&quot;)&amp;&amp;!contactMechTypeId.equals(&quot;TELECOM_NUMBER&quot;)" name="infoString" map-name="contactMech"><display/></field>
-        <field name="submitAction" title="${uiLabel.CommonSubmit}"><submit/></field>
+        <field name="submitAction" title="${uiLabel.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_copy}"><submit/></field>
     </form>
 
     <form name="EditContactListCommEvent" default-map-name="communicationEvent" target="updateContactListCommEvent" title="" type="single"
@@ -408,7 +408,7 @@ under the License.
         </field>
         <field name="content" title="${uiLabelMap.CommonContent} -- ${communicationEventType.description}"><textarea cols="60" rows="10" visual-editor-enable="true"/></field>
         <field name="note" title="${uiLabelMap.CommonNote}"><textarea cols="60" rows="3"/></field>
-        <field name="submitAction" title=" ${uiLabelMap.CommonSave} "><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
 
         <sort-order>
@@ -556,7 +556,7 @@ under the License.
         <field name="datetimeStarted" title="${uiLabelMap.CommonStartDate}"><date-find/></field>
         <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}"><date-find/></field>
         <field map-name="subjectMap" name="subject" title="${uiLabelMap.PartyCommEventSubject}"><text-find/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListLookupCommEvent" target="" title="" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -633,7 +633,7 @@ under the License.
                 <entity-options description="${siteName} [${webSiteId}]" entity-name="WebSite" key-field-name="webSiteId"></entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="ViewWebSiteContactList" type="list" target="updateWebSiteContactList" list-name="webSiteContactLists" title="" 
             header-row-style="header-row" default-table-style="${styles.table_basic}">

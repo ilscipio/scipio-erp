@@ -160,7 +160,7 @@
         <field name="d6" parameter-name="hoursDay6" title="${uiLabelMap.ScrumSun}" title-style="alert"><text size="2"/></field>
         <field name="acualTotal" title="${uiLabelMap.ScrumActualHours}"><display/></field>
         <field name="actualHours" title="${uiLabelMap.ScrumActualTotal}"><display/></field>
-        <field name="updateAction"><submit button-type="button"/></field>
+        <field name="updateAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.ScrumRowSubmit}"><hidden value="Y"/></field>
     </form>
 </forms>

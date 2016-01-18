@@ -156,7 +156,7 @@
             </display-entity>
         </field>
         <field name="leaveStatus"><display-entity entity-name="StatusItem" key-field-name="statusId"/></field>
-        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_nav_record_id}">
+        <field name="UpdateStatus" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_nav_record_id} ${styles.action_update}">
             <hyperlink target="EditEmplLeaveStatus" description="${uiLabelMap.CommonUpdate}" >
                 <parameter param-name="partyId"/>
                 <parameter param-name="fromDate"/>

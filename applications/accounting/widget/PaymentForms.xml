@@ -132,7 +132,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="saveAction"><submit/></field>
+        <field name="saveAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
 
     <form name="NewPaymentOut" type="single" target="createPayment" default-map-name="payment"
@@ -307,7 +307,7 @@ under the License.
         </field>
         <field name="invoiceItemSeqId"><display/></field>
         <field name="amountApplied"><display/></field>
-        <field name="removeAction"><submit/></field>
+        <field name="removeAction" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="editPaymentApplicationsPay" default-entity-name="PaymentApplication" list-name="paymentApplicationsPay" target="removePaymentApplication" type="list" separate-columns="false"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -315,7 +315,7 @@ under the License.
         <field name="paymentId"><hidden/></field>
         <field name="toPaymentId"><display/></field>
         <field name="amountApplied"><display/></field>
-        <field name="removeAction"><submit/></field>
+        <field name="removeAction" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="editPaymentApplicationsBil" default-entity-name="PaymentApplication" list-name="paymentApplicationsBil" target="removePaymentApplication" type="list" separate-columns="false"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -324,7 +324,7 @@ under the License.
         <field name="billingAccountId"><display/></field>
         <field name="invoiceId"><hidden/></field>
         <field name="amountApplied"><display/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}"><submit/></field>
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="editPaymentApplicationsTax" default-entity-name="PaymentApplication" list-name="paymentApplicationsTax" target="removePaymentApplication" type="list" separate-columns="false"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -332,7 +332,7 @@ under the License.
         <field name="paymentId"><hidden/></field>
         <field name="taxAuthGeoId"><display/></field>
         <field name="amountApplied"><display/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}"><submit/></field>
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
     </form>
 
     <form name="listInvoicesNotApplied" type="list" list-name="invoices" target="createPaymentApplication" title=""
@@ -558,7 +558,7 @@ under the License.
         </field>
         <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="daysOffset"><text default-value="0"/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonSelect}">
+        <field name="searchAction" title="${uiLabelMap.CommonSelect}" widget-style="${styles.link_action_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -576,7 +576,7 @@ under the License.
         </field>
         <field name="partyIdFrom"><lookup target-form-name="LookupPartyName"/></field>
         <field name="daysOffset"><text default-value="0"/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonSelect}">
+        <field name="searchAction" title="${uiLabelMap.CommonSelect}" widget-style="${styles.link_action_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>

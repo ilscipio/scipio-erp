@@ -109,7 +109,7 @@ under the License.
         <field name="partyId"><display-entity entity-name="PartyNameView" description="${groupName}${firstName} ${lastName}"/></field>
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="text-link"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteForumGroupRole">
                 <parameter param-name="forumGroupId"/>
@@ -242,6 +242,6 @@ under the License.
         <field name="rsp.caContentAssocTypeId" parameter-name="caContentAssocTypeId"><hidden/></field>
         <field name="dataResourceTypeId"><hidden value="ELECTRONIC_TEXT"/></field>
         <field name="textData" title="${uiLabelMap.FormFieldTitle_textDataTitle}"><textarea rows="8"/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     </forms>

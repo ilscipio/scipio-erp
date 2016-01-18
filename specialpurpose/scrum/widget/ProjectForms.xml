@@ -96,6 +96,6 @@
         <field name="plannedHours" widget-area-style="centered"><display/></field>
         <field name="actualHours" widget-area-style="centered"><display/></field>
         <field name="createdStamp" ><display type="date"/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}"><submit/></field>
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
     </form>
  </forms>

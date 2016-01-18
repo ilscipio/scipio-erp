@@ -116,7 +116,7 @@ under the License.
         </field>
         <field name="emplPositionId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/> </field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/> </field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteEmplPositionFulfillment" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="emplPositionId"/>
@@ -131,7 +131,7 @@ under the License.
         <field name="emplPositionId"><hidden /></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" tooltip="${uiLabelMap.CommonRequired}" required-field="true"/>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListReportsToEmplPositionReportingStructs" type="list" target="updateEmplPositionReportingStruct" title="" paginate-target="EditReportsToEmplPositionReportingStruct"
@@ -148,7 +148,7 @@ under the License.
         <field name="emplPositionIdManagedBy"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="comments"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/> </field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/> </field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteEmplPositionReportingStruct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="emplPositionIdReportingTo"/>
@@ -165,7 +165,7 @@ under the License.
         <field name="emplPositionIdReportingTo" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmplPosition"/></field>
         <field name="emplPositionIdManagedBy" tooltip="${uiLabelMap.CommonRequired}"><hidden value="${parameters.emplPositionId}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" tooltip="${uiLabelMap.CommonRequired}" required-field="true"/>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListReportedToEmplPositionReportingStructs" type="list" target="updateEmplPositionReportingStruct" title="" paginate-target="EditReportedToEmplPositionReportingStruct"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar" list-name="emplPositionReportingStructList">
@@ -181,7 +181,7 @@ under the License.
         <field name="emplPositionIdReportingTo"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="comments"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/> </field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/> </field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteEmplPositionReportingStruct" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="emplPositionIdReportingTo"/>
@@ -198,7 +198,7 @@ under the License.
         <field name="emplPositionIdReportingTo"><hidden value="${parameters.emplPositionId}"/></field>
         <field name="emplPositionIdManagedBy" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmplPosition"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" tooltip="${uiLabelMap.CommonRequired}" required-field="true"/>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplPositionResponsibilities" type="list" target="updateEmplPositionResponsibility" title="" paginate-target="findEmplPositionResponsibilities"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -212,7 +212,7 @@ under the License.
         <field name="emplPositionId"><hidden/></field>
         <field name="responsibilityTypeId" title="${uiLabelMap.HumanResResponsibilityTypeId}"><display /></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display /></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/> </field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/> </field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteEmplPositionResponsibility" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="emplPositionId"/>
@@ -232,7 +232,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListValidResponsibilities" type="list" target="updateValidResponsibility" title="" paginate-target="findValidResponsibilities"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -243,7 +243,7 @@ under the License.
         <field name="emplPositionTypeId" title="${uiLabelMap.HumanResEmployeePositionTypeId}"><display /></field>
         <field name="responsibilityTypeId" title="${uiLabelMap.HumanResResponsibilityTypeId}"><display /></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display /></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/> </field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/> </field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteValidResponsibility" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="emplPositionTypeId" from-field="emplPositionId"/>
@@ -269,7 +269,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="FindEmplPositions" type="single" target="FindEmplPositions" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="EmplPosition" default-field-type="find"/>

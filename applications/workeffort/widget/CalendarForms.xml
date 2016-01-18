@@ -55,7 +55,7 @@ under the License.
             </drop-down>
         </field>
         <field name="hideEvents"><check/></field>
-        <field name="viewAction" title="${uiLabelMap.CommonView}"><submit/></field>
+        <field name="viewAction" title="${uiLabelMap.CommonView}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit/></field>
     </form>
 
     <!-- Forms Specific to portlet -->
@@ -67,7 +67,7 @@ under the License.
                 <option key="month" description="${uiLabelMap.WorkEffortMonthView}"/>
             </drop-down>
         </field>
-        <field name="updateAction"><submit/></field>
+        <field name="updateAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
 
     <form name="editCalEvent" type="single" default-map-name="workEffort">
@@ -123,14 +123,14 @@ under the License.
         <field name="estimatedCompletionDate"><date-time input-method="time-dropdown" /></field>
         <field name="actualStartDate" use-when="workEffort!=null"><date-time input-method="time-dropdown" /></field>
         <field name="actualCompletionDate" use-when="workEffort!=null"><date-time input-method="time-dropdown" /></field>
-        <field name="addAction" use-when="workEffort==null"><submit /></field>
-        <field name="updateAction" use-when="workEffort!=null"><submit /></field>
+        <field name="addAction" widget-style="${styles.link_action_sys} ${styles.action_add}" use-when="workEffort==null"><submit /></field>
+        <field name="updateAction" widget-style="${styles.link_action_sys} ${styles.action_update}" use-when="workEffort!=null"><submit /></field>
     </form>
 
     <form name="cancelEvent" type="single" target="updateWorkEffort">
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
         <field name="currentStatusId"><hidden value="CAL_CANCELLED"/></field>
-        <field name="cancel" title="${uiLabelMap.WorkEffortCancelCalendarEvent}"><submit/></field>
+        <field name="cancel" title="${uiLabelMap.WorkEffortCancelCalendarEvent}" widget-style="${styles.link_action_sys} ${styles.action_terminate}"><submit/></field>
     </form>
 
     <form name="showCalEvent" type="single" default-map-name="workEffort">
@@ -169,7 +169,7 @@ under the License.
         </field>
     </form>
     <form name="showCalEventRolesDel" type="list" extends="showCalEventRoles" target="deleteWorkEffortPartyAssign">
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}"><submit/></field>
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="addCalEventRole" type="single" target="createWorkEffortPartyAssign">
         <field name="workEffortId"><hidden value="${parameters.workEffortId}"/></field>
@@ -183,7 +183,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="add" title="${uiLabelMap.CommonAdd}"><submit/></field>
+        <field name="add" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     
 </forms>

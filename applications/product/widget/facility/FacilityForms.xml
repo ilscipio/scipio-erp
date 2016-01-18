@@ -45,18 +45,18 @@ under the License.
         <on-event-update-area event-type="paginate" area-id="search-results" area-target="FacilitySearchResults"/>
     </form>
 
-    <form name="FindFacility10" type="single" target="EditFacility"
+    <form name="FindFacility10" method="get" type="single" target="EditFacility"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <field name="facilityId">
             <drop-down allow-empty="false">
                 <entity-options description="${facilityName}" entity-name="Facility" key-field-name="facilityId"/>
             </drop-down>
         </field>
-        <field name="selectAction" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
+        <field name="selectAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_nav} ${styles.action_view}"><submit button-type="button"/></field>
     </form>
 
     <form name="FindFacilityOptions" extends="lookupFacility" extends-resource="component://product/widget/facility/FieldLookupForms.xml" target="FindFacility">
-        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="SearchInventoryItemsParams" type="single" target="EditFacilityInventoryItems"
@@ -90,7 +90,7 @@ under the License.
         <field name="lotId" title="${uiLabelMap.ProductLotId}"><text/></field>
         <!-- the content of the softIdentifier field is converted from hex to int if it starts with "0x";
              this is a nice example of using JavaScript in a form widget definition -->
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" event="onclick" action="javascript:var field=document.SearchInventoryItemsParams.softIdentifier;var tmp=field.value;if (tmp.substring(0, 2) == '0x') {tmp=parseInt(tmp, 16)};if (!isNaN(tmp)) {field.value=tmp};return true;">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}" event="onclick" action="javascript:var field=document.SearchInventoryItemsParams.softIdentifier;var tmp=field.value;if (tmp.substring(0, 2) == '0x') {tmp=parseInt(tmp, 16)};if (!isNaN(tmp)) {field.value=tmp};return true;">
             <submit button-type="button"/>
         </field>
     </form>
@@ -213,7 +213,7 @@ under the License.
                 <option key="BY_DATE" description="${uiLabelMap.ProductByDate}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" event="onclick" action="javascript:var field=document.SearchInventoryItemsParams.softIdentifier;var tmp=field.value;if (tmp.substring(0, 2) == '0x') {tmp=parseInt(tmp, 16)};if (!isNaN(tmp)) {field.value=tmp};return true;">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}" event="onclick" action="javascript:var field=document.SearchInventoryItemsParams.softIdentifier;var tmp=field.value;if (tmp.substring(0, 2) == '0x') {tmp=parseInt(tmp, 16)};if (!isNaN(tmp)) {field.value=tmp};return true;">
             <submit button-type="button"/>
         </field>
     </form>
@@ -609,7 +609,7 @@ under the License.
             </display-entity>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="removeGroupFromFacility" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="facilityId"/>
@@ -627,7 +627,7 @@ under the License.
                 <entity-options entity-name="FacilityGroup" key-field-name="facilityGroupId" description="${facilityGroupName}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <!-- FacilityParty -->
@@ -663,7 +663,7 @@ under the License.
                 <entity-options entity-name="RoleType" description="${description}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListInventoryItemTotals" type="list" target="" title="" list-name="inventoryItemTotals"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar"
@@ -849,7 +849,7 @@ under the License.
         <field name="receiveDate"><display also-hidden="false"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><hidden value="IXF_COMPLETE"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_complete}">
             <submit/>
         </field>
     </form>
@@ -878,7 +878,7 @@ under the License.
         </field>
         <field name="dataResourceName" title="${uiLabelMap.CommonUpload}"><file/></field>
         <field name="contentIdFrom" title="${uiLabelMap.ContentCompDocParentContentId}"><lookup target-form-name="LookupContent"/></field>
-        <field name="createAction"><submit button-type="button"/></field>
+        <field name="createAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListFacilityContent" type="list" list-name="facilityContentDetails" 
@@ -926,7 +926,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="selectAction" title="${uiLabelMap.CommonSubmit}"><submit button-type="button"/></field>
+        <field name="selectAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListFacilityAgreements" type="list" list-name="facilityAgreements"

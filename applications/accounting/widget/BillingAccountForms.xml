@@ -338,7 +338,7 @@ under the License.
             </drop-down>
         </field>
         <field name="amount" title="${uiLabelMap.CommonAmount}" position="2"><text/></field>
-        <field name="createAction" title="${uiLabelMap.CommonAdd}">
+        <field name="createAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>

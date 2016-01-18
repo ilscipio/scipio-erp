@@ -155,8 +155,8 @@ under the License.
         <field name="accountPartyId" use-when="communicationEvent!=null" title="${uiLabelMap.SfaInitialAccount}" ><lookup target-form-name="LookupPartyGroup" default-value="${accountPartyId}"/></field>
         <field name="leadPartyId" use-when="communicationEvent==null" title="${uiLabelMap.SfaLead}" widget-style="required"><lookup target-form-name="LookupPerson" default-value="${leadPartyId}"/></field>
         <field name="leadPartyId" use-when="communicationEvent!=null" title="${uiLabelMap.SfaLead}" widget-style="required"><lookup target-form-name="LookupPerson" default-value="${communicationEvent.partyIdFrom}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" use-when="salesOpportunity==null"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="salesOpportunity!=null"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_add}" use-when="salesOpportunity==null"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}" use-when="salesOpportunity!=null"><submit button-type="button"/></field>
     </form>
 
     <form name="ViewSalesOpportunity" type="single" default-map-name="salesOpportunity"

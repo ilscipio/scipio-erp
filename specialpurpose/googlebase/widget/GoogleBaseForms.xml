@@ -68,7 +68,7 @@ under the License.
             </drop-down>
         </field>
         <field name="allowRecommended" title="${uiLabelMap.GoogleBaseRecommended}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.GoogleBaseExportToGoogle}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.GoogleBaseExportToGoogle}" widget-style="${styles.link_action_sys} ${styles.action_send}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListGoogleBaseConfigs" type="list" list-name="googleBaseConfigs" target="updateGoogleBaseConfig"
@@ -86,7 +86,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="accountPassword"><password/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <form name="AddGoogleBaseConfig" type="single" target="createGoogleBaseConfig" title="">
@@ -105,7 +105,7 @@ under the License.
         <field name="utmTerm" title="Campaign Term" tooltip="Used for paid search. Use to note the keywords for this ad. Example: utm_term=running+shoes"></field>
         <field name="utmContent" title="Campaign Content" tooltip="Used for A/B testing and content-targeted ads. Use to differentiate ads or links that point to the same URL. Examples: utm_content=logolink or utm_content=textlink"></field>
         <field name="utmCampaign" title="Campaign Name" tooltip="Used for keyword analysis. Use to identify a specific product promotion or strategic campaign. Example: utm_campaign=spring_sale"></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="GooglebaseAutoUpdateConfig" type="list" list-name="configList" header-row-style="header-row-2" 
@@ -146,6 +146,6 @@ under the License.
         <field name="runTime" use-when="${groovy: return context.pendingList[0] != null;}"><display description="${pendingList[0].runTime}"/></field>
         <field name="status" use-when="${groovy: return context.pendingList[0] == null;}"><display description="STOP"/></field>
         <field name="StoppedTime" use-when="${groovy: return context.pendingList[0] == null;}"><display description="${cancelledList[0].cancelDateTime}"/></field>
-        <field name="Start/Stop Scheduled"><submit button-type="button"/></field>
+        <field name="Start/Stop Scheduled" widget-style="${styles.link_action_sys} ${styles.action_begin}"><submit button-type="button"/></field>
     </form>
 </forms>

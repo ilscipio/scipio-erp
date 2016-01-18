@@ -24,7 +24,7 @@ under the License.
     <form name="FindSalesForecast" type="single" target="FindSalesForecast" extends="LookupSalesForecast"
             extends-resource="component://marketing/widget/LookupForms.xml"
             header-row-style="header-row" default-table-style="${styles.table_basic}">
-        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="SalesForecastSearchResults" type="list" list-name="listIt" paginate-target="FindForecasts" view-size="5"
             odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2" separate-columns="true">
@@ -76,8 +76,8 @@ under the License.
         </field>
         <field name="createdByUserLoginId"><hidden/></field>
         <field name="modifiedByUserLoginId"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" use-when="salesForecast==null"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="salesForecast!=null"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_add}" use-when="salesForecast==null"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}" use-when="salesForecast!=null"><submit button-type="button"/></field>
     </form>
 
     <form name="ListSalesForecastDetails" type="list" target="updateSalesForecastDetail" view-size="10"
@@ -103,7 +103,7 @@ under the License.
         <field name="productCategoryId" title="${uiLabelMap.ProductProductCategoryId}">
             <lookup target-form-name="LookupProductCategory"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="deleteAction" title="" widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteSalesForecastDetail" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="salesForecastId"/>
@@ -129,6 +129,6 @@ under the License.
         <field name="productCategoryId" title="${uiLabelMap.ProductProductCategoryId}">
             <lookup target-form-name="LookupProductCategory"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 </forms>

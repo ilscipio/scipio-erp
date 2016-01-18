@@ -108,8 +108,8 @@
                 <list-options key-name="partyId" list-name="sprintMembers" description="${lastName}, ${firstName} ${middleName}"/>
             </drop-down>
         </field>
-        <field name="createAction" use-when="task==null" title="${uiLabelMap.CommonCreate}"><submit/></field>
-        <field name="UpdateAction" use-when="task!=null" title="${uiLabelMap.CommonUpdate}"><submit/></field>
+        <field name="createAction" use-when="task==null" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
+        <field name="UpdateAction" use-when="task!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="SprintTasksList" target="updateSprintTask?projectId=${parameters.projectId}" type="list" list-name="tasksList" separate-columns="true" odd-row-style="alternate-row" even-row-style="even-row" 
         header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true">
@@ -153,7 +153,7 @@
         </field>
         <field name="estimatedStartDate"><date-time type="timestamp"/></field>
         <field name="estimatedCompletionDate"><date-time type="timestamp"/></field>
-        <field name="update" title="${uiLabelMap.CommonUpdate}"><submit/></field>
+        <field name="update" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="SprintTasksListNoAction" extends="SprintTasksList" type="list">
         <field name="estimatedHours"><display description="${groovy: if (estimatedMilliSeconds != null) return estimatedMilliSeconds/3600000}"/></field>
@@ -161,7 +161,7 @@
         <field name="priority" title="${uiLabelMap.CommonPriority}"><display/></field>
         <field name="estimatedStartDate"><display type="date-time"/></field>
         <field name="estimatedCompletionDate"><display type="date-time"/></field>
-        <field name="update" title="${uiLabelMap.CommonUpdate}"><hidden/></field>
+        <field name="update" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><hidden/></field>
     </form>
     
     <form name="TaskInfo" type="single">
@@ -341,7 +341,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonDelete}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
         <field name="projectId"><hidden value="${parameters.projectId}"/></field>
         <field name="taskId"><hidden value="${parameters.taskId}"/></field>
     </form>
@@ -363,7 +363,7 @@
         <field name="roleTypeId"><hidden value="SCRUM_TEAM"/></field>
         <field name="statusId"><hidden value="SCAS_ASSIGNED"/></field>
         <field name="workEffortId"><hidden value="${parameters.taskId}"/></field>
-        <field name="submitAction" title="Assign"><submit button-type="button"/></field>
+        <field name="submitAction" title="Assign" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="projectId"><hidden value="${parameters.projectId}"/></field>
         <field name="taskId"><hidden value="${parameters.taskId}"/></field>
     </form>
@@ -379,7 +379,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="save" title="${uiLabelMap.CommonSave}"><submit/></field>
+        <field name="save" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="EditTask" type="single" target="updateTask" default-map-name="task">
         <actions>
@@ -522,15 +522,15 @@
         </field>
         <!--<field name="estimatedStartDate"><date-time type="timestamp"/></field>
         <field name="estimatedCompletionDate"><date-time type="timestamp"/></field>-->
-        <field name="create" title="${uiLabelMap.CommonCreate}" use-when="task==null" action="javascript:document.EditTask.action='createTask';document.EditTask.enctype='multipart/form-data';document.EditTask.submit();" event="onclick"><submit/></field>
-        <field name="update" title="${uiLabelMap.CommonUpdate}" use-when="task!=null"><submit/></field>
+        <field name="create" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}" use-when="task==null" action="javascript:document.EditTask.action='createTask';document.EditTask.enctype='multipart/form-data';document.EditTask.submit();" event="onclick"><submit/></field>
+        <field name="update" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}" use-when="task!=null"><submit/></field>
     </form>
     <form name="AddTaskNote" type="single" header-row-style="header-row" default-table-style="${styles.table_basic}" 
         target="createTaskNote?taskId=${parameters.taskId}">
         <field name="workEffortId"><hidden/></field>
         <field name="noteName"><text/> </field>
         <field name="noteInfo"><textarea/></field>
-        <field name="createAction"><submit button-type="button"/></field>
+        <field name="createAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListTaskNote" type="list" list-name="workNoteList"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="TaskNote">
@@ -604,7 +604,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <field name="roleTypeId"><hidden/></field>
-        <field name="remove"><submit/></field>
+        <field name="remove" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="ListTaskPartiesNoAction" extends="ListTaskParties">
         <field name="remove"><hidden/></field>
@@ -666,7 +666,7 @@
                 <list-options key-name="taskId" list-name="taskList" description="${projectName}${productName} - ${sprintName} - ${groovy:description.substring(0,Math.min(description.length(),30))} - ${groovy:taskName.substring(0,Math.min(taskName.length(),20))} [${taskId}]"/>
             </drop-down>
         </field>
-        <field name="addAction"><submit/></field>
+        <field name="addAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     
     <form name="TasksList" type="list" list-name="projectSprintBacklogAndTasks" target="updateTaskList" paginate-target="FindTask" separate-columns="true"
@@ -798,7 +798,7 @@
         <field name="sprintName" position="2"><text/></field>
         <field name="projectId"><text/></field>
         <field name="projectName" position="2"><text/></field>
-        <field name="findAction" title="${uiLabelMap.CommonFind}"><submit/></field>
+        <field name="findAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit/></field>
     </form>
     <form name="TasksListNoAction" extends="TasksList">
         <field name="partyId">
@@ -822,7 +822,7 @@
         <field name="productId"><text/> </field>
         <field name="custRequestId" title="${uiLabelMap.ScrumBacklogId}"><text/> </field>
         <field name="workEffortId" title="${uiLabelMap.ScrumTaskId}"><text/> </field>
-        <field name="findAction" title="${uiLabelMap.CommonFind}"><submit/></field>
+        <field name="findAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit/></field>
      </form>
     <form name="ListTaskRevisions" list-name="listIt" title="" type="list" paginate-target="TaskView" separate-columns="true"
         odd-row-style="alternate-row" even-row-style="even-row" default-table-style="${styles.table_basic} hover-bar">
@@ -934,7 +934,7 @@
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     
     <form name="taskMemberList" type="list" target="removeMemberTask" list-name="taskMembers" use-row-submit="true" paginate-target="taskMember" separate-columns="true"
@@ -959,17 +959,17 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate"><display type="date"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonRemove}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="taskMemberListInfo" type="list" extends="taskMemberList" separate-columns="true"
         odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><hidden/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><hidden/></field>
     </form>
     <form name="taskMemberListInfoForStakeholder" type="list" extends="taskMemberList" separate-columns="true"
         odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="memberName" title="${uiLabelMap.ScrumMembersName}">
             <display description="${lastName} ${firstName} ${middleName} [${partyId}]"></display>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><hidden/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><hidden/></field>
     </form>
 </forms>

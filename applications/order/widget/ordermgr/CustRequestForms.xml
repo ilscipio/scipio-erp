@@ -708,7 +708,7 @@ under the License.
             </drop-down>
             </field>-->
         <field name="contentIdFrom" title="${uiLabelMap.ContentCompDocParentContentId}"><lookup target-form-name="LookupDetailContentTree"/></field>
-        <field name="createAction"><submit button-type="button"/></field>
+        <field name="createAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListCustRequestContent" type="list" list-name="custRequestAndContents"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="EditCustRequestContent">
@@ -739,7 +739,7 @@ under the License.
             </drop-down>
         </field>
         <field name="otherContacts"><drop-down allow-empty="false"><option key="Y" description="Yes"/><option key="N" description="No"/></drop-down></field>
-        <field name="saveAction"><submit/></field>
+        <field name="saveAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="ListCustRequests" type="list" list-name="custRequests" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" target="updaterequest">
         <row-actions>
@@ -828,7 +828,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="saveAction"><submit/></field>
+        <field name="saveAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="ListReturns" type="list" title="" list-name="listIt"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

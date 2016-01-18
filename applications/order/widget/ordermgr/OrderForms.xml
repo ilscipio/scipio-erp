@@ -196,7 +196,7 @@ under the License.
                 <option key="BILL_TO_CUSTOMER" description="${uiLabelMap.MyPortalBillToCustomer}"/>
             </drop-down>
         </field>
-        <field name="updateAction"><submit/></field>
+        <field name="updateAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="ListCustomerOrders" type="list" target="" list-name="listIt" title="" odd-row-style="alternate-row" 
         header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">

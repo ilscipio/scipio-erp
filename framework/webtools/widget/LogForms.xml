@@ -29,7 +29,7 @@ under the License.
     <field name="info" title="${uiLabelMap.WebtoolsInfoLogLevel}" tooltip="${uiLabelMap.WebtoolsInfoLogLevelTooltip}"><check/></field>
     <field name="timing" title="${uiLabelMap.WebtoolsTimingLogLevel}" tooltip="${uiLabelMap.WebtoolsTimingLogLevelTooltip}"><check/></field>
     <field name="verbose" title="${uiLabelMap.WebtoolsVerboseLogLevel}" tooltip="${uiLabelMap.WebtoolsVerboseLogLevelTooltip}"><check/></field>
-    <field name="submit" title="${uiLabelMap.CommonUpdate}"><submit/></field>
+    <field name="submit" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
   </form>
 
 </forms>

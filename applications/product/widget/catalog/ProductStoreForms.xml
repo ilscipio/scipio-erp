@@ -304,7 +304,7 @@
         <field name="orderDecimalQuantity" tooltip="${uiLabelMap.ProductOrderDecimalQuantityExistsToOverride}">
             <drop-down allow-empty="true" ><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <sort-order>
             <field-group>
                 <sort-field name="productStoreId"/>
@@ -1017,7 +1017,7 @@
                 <option key="N" description="${uiLabelMap.CommonN}"/>
             </drop-down>
         </field>
-         <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="CreateProductStorePromo" type="single" target="createProductStorePromoAppl"
         header-row-style="header-row" default-table-style="${styles.table_basic}">

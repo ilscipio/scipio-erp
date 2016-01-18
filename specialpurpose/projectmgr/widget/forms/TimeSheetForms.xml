@@ -64,7 +64,7 @@
         <field name="total" title="${uiLabelMap.ProjectMgrActualHours}"><display/></field>
         <field name="actualHours" title="${uiLabelMap.ProjectMgrActualTotal}"><display/></field>
         <field name="plannedHours" title="${uiLabelMap.ProjectMgrPlanHours}"><display/></field>
-        <field name="updateAction"><submit button-type="button"/></field>
+        <field name="updateAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.ProjectMgrRowSubmit}"><hidden value="Y"/></field>
     </form>
 
@@ -115,7 +115,7 @@
             </drop-down>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
-        <field name="find" title="${uiLabelMap.CommonFind}"><submit/></field>
+        <field name="find" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit/></field>
     </form>
     <form name="ListFindTimeSheet" type="list" list-name="listIt" paginate-target="FindTimeSheet"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -156,7 +156,7 @@
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="partyId"><hidden value="${userLogin.partyId}"/></field>
         <field entry-name="dummy" name="requiredDate" title="${uiLabelMap.ProjectMgrSelectedDate}"><date-time type="date"/></field>
-        <field name="addAction"><submit/></field>
+        <field name="addAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
 
     <form name="AddWeeklyTimesheet" type="single" target="createWeeklyTimesheet" title=""
@@ -171,7 +171,7 @@
             </drop-down>
         </field>
         <field entry-name="dummy" name="requiredDate" title="${uiLabelMap.ProjectMgrSelectedDate}"><date-time type="date"/></field>
-        <field name="addAction"><submit/></field>
+        <field name="addAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
 
     <form name="AddTimesheetEntry" type="single" target="createTimesheetEntry" title=""

@@ -47,8 +47,8 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="product!=null"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="product==null"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="product!=null" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="product==null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field use-when="product!=null" name="lastUpdatedByText" title="${uiLabelMap.ProductLastModifiedBy}:">
             <display description="[${product.lastModifiedByUserLogin}] ${uiLabelMap.CommonOn} ${product.lastModifiedDate}" also-hidden="false"/>
         </field>
@@ -88,7 +88,7 @@
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><text-find ignore-case="true"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
        <!-- <field name="isVariant"><hidden value="N"/></field>  -->
-        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="listLookupProduct" list-name="listIt" paginate-target="${submitTarget}" title="" type="list"

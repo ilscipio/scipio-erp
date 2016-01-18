@@ -61,7 +61,7 @@ under the License.
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="AddPartySkills" type="single" target="createPartySkill" default-map-name="partySkill"
         header-row-style="header-row" default-table-style="${styles.table_basic}">

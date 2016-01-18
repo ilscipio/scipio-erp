@@ -140,7 +140,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="dataSourceTypeId" title="${uiLabelMap.DataSourceDataSourceTypeId}"><text-find/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><lookup target-form-name="LookupDataSourceType"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListLookupDataSourceType" target="" title="" type="list"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

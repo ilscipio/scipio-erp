@@ -29,7 +29,7 @@ under the License.
         <field name="workEffortId"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date-time"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date-time"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonApply}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="editTrainingCalendar" type="single" target="createTrainingCalendar" default-map-name="workEffort">
         <alt-target use-when="workEffort!=null" target="updateTrainingCalendar"/>
@@ -50,7 +50,7 @@ under the License.
         <field name="scopeEnumId"><hidden value="WES_PUBLIC"/></field>
         <field name="estimatedStartDate" title="${uiLabelMap.CommonFrom}"><date-time input-method="time-dropdown" /></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.CommonThru}"><date-time input-method="time-dropdown"/></field>
-        <field name="add" title="${uiLabelMap.CommonAdd}"><submit/></field>
+        <field name="add" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="AssignTraining" type="single" target="assignTraining">
         <field name="approverId"><hidden value="${loginPartyId}"/></field>
@@ -61,7 +61,7 @@ under the License.
         <field name="approvalStatus"><hidden value="TRAINING_ASSIGNED"/></field>
         <field name="partyId" position="1"><lookup target-form-name="LookupPartyName" size="10"/></field>
         <field name="roleTypeId"> <hidden value="CAL_ATTENDEE"/></field>
-        <field name="add" title="${uiLabelMap.CommonAdd}"><submit/></field>
+        <field name="add" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="ListTrainingParticipants" list-name="listIt" title="" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>

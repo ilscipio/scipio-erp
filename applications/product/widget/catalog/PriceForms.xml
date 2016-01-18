@@ -49,7 +49,7 @@
     </form>
     <form name="AddPriceRules" type="single" target="createProductPriceRule">
         <field name="ruleName" title="${uiLabelMap.ProductName}"><text size="30"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <!-- Below, I tried also single forms but lists are better as long as we have not introduced a better way to handle positions -->   

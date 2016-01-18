@@ -606,7 +606,7 @@ under the License.
                 <entity-options description="${description}" entity-name="MetaDataPredicate"/>
             </drop-down>
         </field>
-        <field name="submit" title="${uiLabelMap.CommonSubmit}"><submit/></field>
+        <field name="submit" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="ViewContentDetail" type="single" default-map-name="lookupContentDetail">
         <field name="contentId" widget-style="${styles.link_nav_record_id}">
@@ -631,7 +631,7 @@ under the License.
                 </entity-options>    
             </drop-down>
         </field>
-        <field name="saveAction"><submit/></field>
+        <field name="saveAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     
     <!-- Content Keyword Forms -->
@@ -651,6 +651,6 @@ under the License.
         </actions>
         <auto-fields-entity entity-name="ContentKeyword" default-field-type="display"/>
         <field name="contentId"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonDelete}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit button-type="button"/></field>
     </form>
 </forms>

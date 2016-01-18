@@ -72,7 +72,7 @@
         <field map-name="fixedAssetMaint" name="fixedAssetId"><hidden/></field>
         <field map-name="workEffort" name="moneyUomId" title="${uiLabelMap.CommonCurrency}"><ignored/></field>
         <field map-name="workEffort" name="workEffortTypeId"><hidden value="TASK"/></field>
-        <field map-name="workEffort" name="submitAction" title="${uiLabelMap.CommonSave}"><submit/></field>
+        <field map-name="workEffort" name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
 
     <form name="EditWorkEffortPartyAssign" extends="EditWorkEffortPartyAssign" extends-resource="component://workeffort/widget/WorkEffortPartyAssignForms.xml"
@@ -152,7 +152,7 @@
         </field>
         <field name="actualStartDate"><date-time/></field>
         <field name="actualCompletionDate"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListWorkEffortChildren" type="list"

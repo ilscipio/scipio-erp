@@ -97,7 +97,7 @@
         <field use-when="projectId!=null" name="actualStartDate" title="${uiLabelMap.FormFieldTitle_actualStartDate}"><date-time/></field>
         <field use-when="projectId!=null" name="actualCompletionDate" title="${uiLabelMap.FormFieldTitle_actualCompletionDate}"><date-time/></field>
         <field name="emailAddress" title="${uiLabelMap.FormFieldTitle_mailingListEmail}"><text/></field>
-        <field name="save" title="${uiLabelMap.CommonSave}"><submit/></field>
+        <field name="save" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="AddSubProject" type="single" target="AddSubProject"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -111,14 +111,14 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="add" title="${uiLabelMap.CommonAdd}"><submit/></field>
+        <field name="add" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="FindProject" type="single" target="FindProject" title="Find and List Project"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="projectId" title="${uiLabelMap.ProjectMgrProjectId}" parameter-name="workEffortId"><text-find size="25"/></field>
         <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" parameter-name="workEffortName"><text-find size="25"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" parameter-name="createdStamp"><date-find/></field>
-        <field name="find" title="${uiLabelMap.CommonFind}"><submit/></field>
+        <field name="find" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit/></field>
     </form>
     <form name="hoursNotYetBilled" type="list" list-name="entryList"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -298,7 +298,7 @@
         </field>
         <field name="actualStartDate" entry-name="workEffortToActualStartDate" title="${uiLabelMap.FormFieldTitle_actualStartDate}"><date-time/></field>
         <field name="actualCompletionDate" entry-name="workEffortToActualCompletionDate" title="${uiLabelMap.FormFieldTitle_actualCompletionDate}"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="EditProjectTasks" target="updateProjectTask" title="" list-name="tasks" type="list" separate-columns="true" paginate-target="EditProjectTasks"
@@ -354,7 +354,7 @@
         <field name="editAction" title=" " widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink target="EditTask?workEffortId=${workEffortId}" description="${uiLabelMap.CommonEdit}"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListUnassignedTasks" target="updateTaskAndAssoc" title="" list-name="tasks" type="list" separate-columns="true" paginate-target="FindTask"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -392,7 +392,7 @@
                 <option key="9" description="${uiLabelMap.WorkEffortPriorityNine}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListPhases" target="updateProjectPhase" title="" list-name="phases" type="list" separate-columns="true" paginate-target="FindPhase"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -409,7 +409,7 @@
         <field name="estimatedCompletionDate" title="${uiLabelMap.FormFieldTitle_estimatedCompletionDate}"><display type="date"/></field>
         <field name="actualStartDate" title="${uiLabelMap.FormFieldTitle_actualStartDate}"><display type="date"/></field>
         <field name="actualCompletionDate" title="${uiLabelMap.FormFieldTitle_actualCompletionDate}"><display type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListPhaseInfo" type="list" list-name="phases"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -956,8 +956,8 @@
                 <entity-options description="${categoryName}" entity-name="DataCategory" key-field-name="dataCategoryId"/>
             </drop-down>
         </field-->
-        <field name="createAction" use-when="workEffortContent==null"><submit button-type="button"/></field>
-        <field name="updateAction" use-when="workEffortContent!=null"><submit button-type="button"/></field>
+        <field name="createAction" use-when="workEffortContent==null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="updateAction" use-when="workEffortContent!=null" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListPhaseInfo" extends="ListPhaseInfo" extends-resource="component://projectmgr/widget/forms/ProjectForms.xml">
         <field name="phase"><display description="${phaseName}"/></field>

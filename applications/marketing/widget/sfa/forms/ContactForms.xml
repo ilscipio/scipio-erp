@@ -179,6 +179,6 @@ under the License.
             </drop-down>
         </field>
         <field name="quickAdd"><hidden value="Y"/></field>
-        <field name="submitAction"><submit/></field>
+        <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
 </forms>

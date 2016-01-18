@@ -693,7 +693,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
         <field name="viewHistoryAction" title=" " widget-style="${styles.link_nav} ${styles.action_view}">
@@ -1077,7 +1077,7 @@
         <field name="text">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button" />
         </field>
     </form>
@@ -1433,10 +1433,10 @@
                 <option key="N" description="${uiLabelMap.CommonN}" />
             </drop-down>
         </field>
-        <field use-when="supplierProduct == null" name="submitAction" title="${uiLabelMap.CommonCreate}">
+        <field use-when="supplierProduct == null" name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button" />
         </field>
-        <field use-when="supplierProduct != null" name="submitAction" title="${uiLabelMap.CommonUpdate}">
+        <field use-when="supplierProduct != null" name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2400,7 +2400,7 @@
         <field name="description">
             <textarea />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2436,7 +2436,7 @@
                 <parameter param-name="geoId" />
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2894,7 +2894,7 @@
         <field name="lastInventoryCount">
             <hidden />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2933,7 +2933,7 @@
         <field name="moveQuantity">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
@@ -2967,7 +2967,7 @@
         <field name="moveQuantity" position="2">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button" />
         </field>
     </form>
@@ -2987,7 +2987,7 @@
             </drop-down>
         </field>
         <field name="idValue"  title="${uiLabelMap.CommonValue}" position="2"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button" />
         </field>
     </form>
@@ -3001,7 +3001,7 @@
             <display-entity entity-name="GoodIdentificationType" />
         </field>
         <field name="idValue"  title="${uiLabelMap.CommonValue}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
@@ -3040,7 +3040,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button" />
         </field>
     </form>
@@ -3077,7 +3077,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
@@ -3104,7 +3104,7 @@
         <field name="attrValue" title="${uiLabelMap.CommonValue}" position="2">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button" />
         </field>
     </form>
@@ -3122,7 +3122,7 @@
         <field name="attrValue" title="${uiLabelMap.CommonValue}">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
@@ -3156,7 +3156,7 @@
                 <list-options key-name="accountCode" list-name="organizationGlAccounts" description="${accountCode} ${accountName}" />
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
         <field name="deleteAction" title="" widget-style="${styles.link_action_sys} ${styles.action_remove}">
@@ -3190,7 +3190,7 @@
                 <list-options key-name="accountCode" list-name="glAccounts" description="${accountCode} ${accountName}" />
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit button-type="button" />
         </field>
     </form>
@@ -3479,7 +3479,7 @@
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}">
             <check />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit button-type="button" />
         </field>
     </form>

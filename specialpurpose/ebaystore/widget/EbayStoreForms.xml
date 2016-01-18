@@ -21,14 +21,14 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-    <form name="EbayStoreList" type="single" list-name="ebayStoreList" target="ebayAccount"
+    <form name="EbayStoreList" method="get" type="single" list-name="ebayStoreList" target="ebayAccount"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="productStoreId" title="${uiLabelMap.ProductProductStore}" >
             <drop-down current="selected" >
                 <list-options list-name="ebayStoreList" description="${storeName} [${productStoreId}]" key-name="productStoreId"/>
             </drop-down>
         </field>
-        <field name="submitAction" ><submit button-type="button"/></field>
+        <field name="submitAction" widget-style="${styles.link_nav} ${styles.action_view}"><submit button-type="button"/></field>
     </form>
     <form name="EbayAccountSelection" type="single" list-name="ebayAccountList" target="ebayAccount"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -41,7 +41,7 @@ under the License.
             </drop-down>
         </field>
     </form>
-    <form name="EbayAccountList" type="single" list-name="ebayAccountList" target="ebayAccount"
+    <form name="EbayAccountList" method="get" type="single" list-name="ebayAccountList" target="ebayAccount"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
             <script location="component://ebaystore/webapp/ebaystore/WEB-INF/actions/store/StoreAccount.groovy"/>
@@ -51,7 +51,7 @@ under the License.
                 <list-options list-name="stores" description="${firstName} ${lastName}" key-name="productStoreId"/>
             </drop-down>
         </field>
-        <field name="submitAction" ><submit button-type="button"/></field>
+        <field name="submitAction" widget-style="${styles.link_nav} ${styles.action_view}"><submit button-type="button"/></field>
     </form>
     <form name="ListCurrentStores" type="single" target="exportCategoryEbayStore"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -69,7 +69,7 @@ under the License.
                     </entity-options-->
             </drop-down>
         </field>
-        <field name="submitAction" title="Find"><submit button-type="button"/></field>
+        <field name="submitAction" title="Find" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListCategories" type="multi" use-row-submit="true" target="deleteCategoriesFromEbayStore" title="" list-name="categoriesList"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -104,7 +104,7 @@ under the License.
         </field>
         <field name="comments" title="Ebay Category Id"><display description="${ebayCategoryId}"></display></field>
         <field name="subCategory"><display description="${groovy:prodCategoryRollup.size()}"></display></field>
-        <field name="updateAction" title="${uiLabelMap.CommonDelete}"><submit button-type="button"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit button-type="button"/></field>
     </form>
     <form name="NewEbayAccount" type="single" target="createEbayAccount">
         <auto-fields-service service-name="createEbayAccount"/>
@@ -117,7 +117,7 @@ under the License.
         </field>
         <field name="currentPassword"><password/></field>
         <field name="currentPasswordVerify"><password/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="AddCatalog" type="single" target="associateCatalogToStore">
         <field name="productStoreId"><hidden /></field>
@@ -126,7 +126,7 @@ under the License.
                 <list-options list-name="prodCatalogList" key-name="prodCatalogId" description="${catalogName}"/>
             </drop-down>
         </field>
-        <field name="submit" title="${uiLabelMap.CommonAdd}"><submit/></field>
+        <field name="submit" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="CatalogList" type="list" list-name="prodStoreCatalogList" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="productStoreId"><display/></field>

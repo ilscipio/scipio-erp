@@ -72,15 +72,15 @@ under the License.
         </field>
     </form>
 
-     <form name="UpdateCalendarExceptionDay" type="single" target="UpdateCalendarExceptionDay" title=""
+    <form name="UpdateCalendarExceptionDay" type="single" target="UpdateCalendarExceptionDay" title=""
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="updateCalendarExceptionDay" map-name="calendarExceptionDay"/>
         <field name="calendarId" ><hidden/></field>
-         <field name="exceptionDateStartTime" title="${uiLabelMap.ManufacturingExceptionDateStartTime}" position="1"><display/></field>
+        <field name="exceptionDateStartTime" title="${uiLabelMap.ManufacturingExceptionDateStartTime}" position="1"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}" position="2" ></field>
-         <field name="exceptionCapacity" title="${uiLabelMap.ManufacturingCalendarCapacity}" position="3" ></field>
-         <field name="usedCapacity" title="${uiLabelMap.ManufacturingUsedCapacity}" position="4" ></field>
-         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" position="5" ><submit button-type="button"/></field>
+        <field name="exceptionCapacity" title="${uiLabelMap.ManufacturingCalendarCapacity}" position="3" ></field>
+        <field name="usedCapacity" title="${uiLabelMap.ManufacturingUsedCapacity}" position="4" ></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}" position="5" ><submit button-type="button"/></field>
         <sort-order>
             <sort-field name="exceptionDateStartTime"/>
             <sort-field name="description"/>
@@ -89,7 +89,7 @@ under the License.
         </sort-order>
     </form>
 
-     <form name="AddCalendarExceptionDay" type="single" target="CreateCalendarExceptionDay" title=""
+    <form name="AddCalendarExceptionDay" type="single" target="CreateCalendarExceptionDay" title=""
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-service service-name="createCalendarExceptionDay" map-name="calendarExceptionDay"/>
         <field name="calendarId" map-name="techDataCalendar"><hidden/></field>
@@ -97,10 +97,10 @@ under the License.
         <field name="exceptionDateStartTime" title="${uiLabelMap.ManufacturingExceptionDateStartTime}" ></field>
         <field name="exceptionCapacity" title="${uiLabelMap.ManufacturingCalendarCapacity}"></field>
         <field name="usedCapacity" title="${uiLabelMap.ManufacturingUsedCapacity}"></field>                 
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
-     <form name="ListCalendarExceptionWeek" type="list" target="UpdateCalendarExceptionWeek" title="" list-name="calendarExceptionWeeksDatas"
+    <form name="ListCalendarExceptionWeek" type="list" target="UpdateCalendarExceptionWeek" title="" list-name="calendarExceptionWeeksDatas"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-service service-name="updateCalendarExceptionWeek" map-name="calendarExceptionWeek"/>
         <field name="calendarId"><hidden/></field>
@@ -135,7 +135,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" position="4" ><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}" position="4" ><submit button-type="button"/></field>
         <sort-order>
             <sort-field name="exceptionDateStart"/>
             <sort-field name="description"/>
@@ -155,7 +155,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="UpdateCalendarWeek" type="single" target="updateCalendarWeek" title=""
@@ -177,6 +177,6 @@ under the License.
         <field name="saturdayCapacity" position="2"><text/></field>
         <field name="sundayStartTime" position="1"><text/></field>
         <field name="sundayCapacity" position="2"><text/></field>
-        <field name="submitAction"><submit button-type="button"/></field>
+        <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
  </forms>

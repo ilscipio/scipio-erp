@@ -31,7 +31,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(nowTimestamp)}"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(nowTimestamp)}"/></field>
-        <field name="submitAction" title="${uiLabelMap.EbayImportSearchSingleTransactionFromEbay}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.EbayImportSearchSingleTransactionFromEbay}" widget-style="${styles.link_action_sys} ${styles.action_receive}"><submit button-type="button"/></field>
     </form>
     <form name="ListOrdersFromEbay" type="multi" use-row-submit="true" list-name="orderList" target="ImportOrderFromEbay"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -99,7 +99,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayStart(nowTimestamp)}"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time default-value="${groovy: org.ofbiz.base.util.UtilDateTime.getDayEnd(nowTimestamp)}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListEbayOrders" type="multi" use-row-submit="true" list-name="orderList" target="importEbayOrders"
@@ -185,8 +185,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" use-when="ebayConfig == null"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="ebayConfig != null"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" use-when="ebayConfig == null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="ebayConfig != null" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListEbayShippingMethods" type="list" list-name="eBayShippingMethods" target="updateEbayShippingMethod"
@@ -220,7 +220,7 @@ under the License.
                 <parameter param-name="productStoreId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <form name="AddEbayShippingMethod" type="single" target="createEbayShippingMethod" title="">
@@ -247,7 +247,7 @@ under the License.
                 <entity-options entity-name="ShipmentMethodType" description="${description}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="FindEbayConfig" type="single" target="FindEbayConfigurations">

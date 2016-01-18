@@ -22,7 +22,7 @@
     <form name="FindResource" type="single" target="FindResource"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="resourceName" parameter-name="partyId" title="${uiLabelMap.ProjectMgrResourceName}"><text/></field>
-        <field name="find" title="${uiLabelMap.CommonFind}"><submit/></field>
+        <field name="find" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit/></field>
     </form>
     <form name="ListResources" type="list" list-name="resources" paginate-target="FindResource"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -76,7 +76,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="addAction" ><submit/></field>
+        <field name="addAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="AddPartyRole" extends="AddPartyRole" extends-resource="component://party/widget/partymgr/PartyForms.xml">
         <field name="roleTypeId">

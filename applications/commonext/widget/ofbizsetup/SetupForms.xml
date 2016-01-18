@@ -184,7 +184,7 @@
         <field name="defaultPassword"><hidden/></field>
         <field name="inventoryFacilityAction"><hidden/></field>
         <field name="paymentList"><hidden value="${paymentList}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="EditWebSite" extends="EditWebSite" extends-resource="component://content/widget/website/WebSiteForms.xml">

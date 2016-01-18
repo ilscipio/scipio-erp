@@ -115,10 +115,10 @@ under the License.
             <display description="${inventoryItem.availableToPromiseTotal} / ${inventoryItem.quantityOnHandTotal}"/>
         </field>
 
-        <field use-when="inventoryItem!=null" name="submit" title="${uiLabelMap.CommonUpdate}">
+        <field use-when="inventoryItem!=null" name="submit" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
             <submit/>
         </field>
-        <field use-when="inventoryItem==null" name="submit" title="${uiLabelMap.CommonCreate}">
+        <field use-when="inventoryItem==null" name="submit" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}">
             <submit/>
         </field>
         <sort-order>
@@ -230,7 +230,7 @@ under the License.
         <field name="inventoryItemLabelTypeId">
             <display-entity entity-name="InventoryItemLabelType" description="${description} [${inventoryItemLabelTypeId}]"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
             <hyperlink target="deleteInventoryItemLabelApplFromItem" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="inventoryItemId"/>
@@ -253,7 +253,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
 </forms>

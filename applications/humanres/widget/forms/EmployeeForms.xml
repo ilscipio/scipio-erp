@@ -103,7 +103,7 @@
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="AddEmployeeQualification" type="single" target="createEmployeeQualification">
         <auto-fields-service service-name="createPartyQual"/>
@@ -220,7 +220,7 @@
         <field name="emplLeaveReasonTypeId"><display/></field>
         <field name="leaveTypeId"><display-entity description="${description}" entity-name="EmplLeaveType"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="CurrentEmploymentData" default-map-name="employmentData" type="single">
         <field name="company" entry-name="employment.partyIdFrom">

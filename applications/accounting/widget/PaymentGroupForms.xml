@@ -85,7 +85,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="EditPaymentGroup" type="single" target="updatePaymentGroup" title="" default-map-name="paymentGroup">
@@ -119,7 +119,7 @@ under the License.
             <display description="${finAccount.ownerPartyId}" type="text"/>
         </field>
 		<field name="paymentGroupName" use-when="display==true"><display/></field>
-        <field name="submitAction" use-when="paymentGroup!=null @and display==false" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="paymentGroup!=null @and display==false" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <!-- Payment Group Member -->
@@ -178,7 +178,7 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddPaymentGroupMember" type="single" target="createPaymentGroupMember">
@@ -187,7 +187,7 @@ under the License.
         <field name="sequenceNum" position="2"><text/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date" default-value="${nowTimestamp}"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date" default-value="${nowTimestamp}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="PaymentGroupMembers" type="list" list-name="paymentGroupMembers"
             odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

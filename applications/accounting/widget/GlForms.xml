@@ -220,7 +220,7 @@ under the License.
         <field name="lastModifiedDate" position="2"><display/></field>
         <field name="createdByUserLogin" position="1"><display/></field>
         <field name="lastModifiedByUserLogin" position="2"><display/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <sort-order>
             <field-group>
                 <sort-field name="organisationPartyId"/>
@@ -625,7 +625,7 @@ under the License.
         </field>
         <field name="origAmount"><display type="currency" currency="${origCurrencyUomId}"/></field>
         <field name="amount" title="${uiLabelMap.CommonAmount}"><display type="currency" currency="${currencyUomId}"/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}"><submit button-type="button"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
            <hyperlink description="${uiLabelMap.CommonRemove}" target="deleteAcctgTransEntry">
                 <parameter param-name="acctgTransId"/>
@@ -947,7 +947,7 @@ under the License.
         <field name="amount" title="${uiLabelMap.CommonAmount}"><text size="20" maxlength="20"/></field>
         <field name="transactionDate"><date-time/></field>
         <field name="description"><text size="60"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="ViewAcctgTransEntries" type="list" list-name="acctgTransEntries" default-entity-name="AcctgTransEntry"

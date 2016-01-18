@@ -70,7 +70,7 @@ under the License.
     <form name="LookupUserLogin" type="single" target="LookupUserLogin">
         <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListLookedUpUserLogins" type="list" list-name="listIt" paginate-target="LookupUserLogin"
@@ -95,7 +95,7 @@ under the License.
     <form name="LookupPortalPage" type="single" target="LookupPortalPage">
         <auto-fields-entity entity-name="PortalPage" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListPortalPages" type="list" list-name="listIt" paginate-target="LookupPortalPage"
@@ -118,7 +118,7 @@ under the License.
     <form name="LookupLocale" type="single" target="LookupLocale">
         <field name="localeString"><text-find hide-options="true"/></field>
         <field name="localeName" title="${uiLabelMap.CommonLanguageTitle}"><text-find hide-options="true"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListLocales" type="list" list-name="locales" paginate-target="LookupLocale"

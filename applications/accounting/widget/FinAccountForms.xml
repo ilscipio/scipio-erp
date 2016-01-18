@@ -402,9 +402,8 @@ under the License.
         <field name="currencyUomId" position="2"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field name="isDepositWithDrawPayment" title="${uiLabelMap.AccountingDepositPaymentInFinAccount}" ><check/></field>
         <field name="paymentGroupTypeId"><hidden value="BATCH_PAYMENT"/></field>
-        <field name="updateAction"><ignored/></field>
-        <field name="createAction" title="${uiLabelMap.CommonCreate}"><submit button-type="button"/></field>
-
+        <field name="updateAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><ignored/></field>
+        <field name="createAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="EditWithdrawalPayment" type="single" extends="EditDepositPayment" target="createWithdrawalPayment">
         <field name="partyIdFrom" position="1"><lookup target-form-name="LookupInternalOrganization"/></field>

@@ -1085,8 +1085,8 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                       label: "",
                       data: []
                     }
-                    <#if chartDatasets == 2>,
-                    {
+                    <#if chartDatasets == 2>
+                    ,{
                       fillColor: chartData.secondaryFillColor,
                       strokeColor: chartData.secondaryStrokeColor,
                       pointColor: chartData.pointColor,

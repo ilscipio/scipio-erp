@@ -994,6 +994,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#local dummy = setRequestVar("catoChartIdNum", chartIdNum)>
   <#global chartId = "chart_${renderSeqNumber!}_${chartIdNum!}"/>
   <#global chartType = type/>
+  <#global chartDataIndex = 0/>
   <#-- Allow just one or two datasets for now -->
   <#if (datasets <= 0) || (datasets > 2)>
   	<#global chartDatasets = 1/>
@@ -1127,7 +1128,8 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 <#macro chartdata_markup title="" value="" value2="" chartId="" chartType="" chartLibrary="" origArgs={} passArgs={} catchArgs...>
   <#if chartLibrary=="foundation">
 	<#if chartType = "line">
-		<li<#if value2?has_content> data-y="${value!}" data-x="${value2!}"<#else> data-value="${value!}"</#if>>${title!}</li>
+		<#global chartDataIndex =  chartDataIndex + 1 />
+		<li data-y="${value!}" data-x="${chartDataIndex + 1}">${title!}</li>
 	<#else>
 		<li data-value="${value!}">${title!}</li>
 	</#if>

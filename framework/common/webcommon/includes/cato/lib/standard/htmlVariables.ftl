@@ -200,6 +200,14 @@
     "action_scope_session" : "action-scope-session",      <#-- action that changes user session state -->
     "action_scope_local" : "action-scope-local",          <#-- action that changes state on a page or form only (usually with javascript or input reset button) -->
     
+  <#-- Convenience combinations of the above, useful on menu items -->
+    "action_nav_sys" : "action-nav action-scope-sys",
+    "action_nav_session" : "action-nav action-scope-session",
+    "action_nav_local" : "action-nav action-scope-local",
+    "action_run_sys" : "action-run action-scope-sys",
+    "action_run_session" : "action-run action-scope-session",
+    "action_run_local" : "action-run action-scope-local",
+    
   <#-- Specific action types 
       DEV NOTE: these are intended to support specific actions, but only specific actions that are reusable/applicable to many situations, such that while specific they should be able to apply to a number of different elements (from entity values to something farfetched like media playback) -->
     "action_generic" : "action-generic",                  <#-- generic action class; avoid using; always use more specific where possible -->

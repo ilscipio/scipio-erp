@@ -107,7 +107,7 @@ under the License.
     <menu name="QuoteSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
         
-        <menu-item name="NewQuote" title="${uiLabelMap.OrderNewQuote}" widget-style="+create">
+        <menu-item name="NewQuote" title="${uiLabelMap.OrderNewQuote}" widget-style="+${styles.action_add}">
             <link target="EditQuote"/>
         </menu-item>
         <menu-item name="EditQuote" title="${uiLabelMap.CommonEdit}">

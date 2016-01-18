@@ -122,7 +122,7 @@
             </link>
         </menu-item>
          -->
-        <menu-item name="NewItem" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonItem}" widget-style="+create">
+        <menu-item name="NewItem" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonItem}" widget-style="+${styles.action_add}">
             <link target="EditAgreementItem">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
             </link>
@@ -891,7 +891,7 @@
 
     <menu name="InvoiceSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
-        <menu-item name="createNew" title="${uiLabelMap.AccountingCreateNewInvoice}" widget-style="+create">
+        <menu-item name="createNew" title="${uiLabelMap.AccountingCreateNewInvoice}" widget-style="+${styles.action_add}">
             <link target="newInvoice" />
         </menu-item>
         <menu-item name="copyInvoice" title="${uiLabelMap.CommonCopy}">
@@ -1137,7 +1137,7 @@
 
     <menu name="OrganizationSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
-        <menu-item name="addCompany" title="${uiLabelMap.AccountingNewCompany}" widget-style="+create">
+        <menu-item name="addCompany" title="${uiLabelMap.AccountingNewCompany}" widget-style="+${styles.action_add}">
             <condition>
                 <if-compare field="hasPrefPermission" operator="equals" value="true" type="Boolean" />
             </condition>
@@ -1481,7 +1481,7 @@
         <actions>
             <set field="isDisbursement" value="${groovy:if(payment!=void)return org.ofbiz.accounting.util.UtilAccounting.isDisbursement(payment)}" />
         </actions>
-        <menu-item name="createNew" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonPayment}" widget-style="+create" >
+        <menu-item name="createNew" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonPayment}" widget-style="+${styles.action_add}" >
             <condition>
                 <not>
                     <if-empty field="payment.paymentId" />
@@ -1635,7 +1635,7 @@
 
     <menu name="PaymentGroupSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
-        <menu-item name="createNew" title="${uiLabelMap.AccountingCreateNewPaymentGroup}" widget-style="+create">
+        <menu-item name="createNew" title="${uiLabelMap.AccountingCreateNewPaymentGroup}" widget-style="+${styles.action_add}">
             <condition>
                 <not>
                     <if-empty field="paymentGroup" />

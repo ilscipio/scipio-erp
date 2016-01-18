@@ -41,7 +41,7 @@ under the License.
         </#if>
       </#list>
       <#if isLastStep == "N">
-        <@menuitem type="link" href="javascript:document.checkoutsetupform.submit();" text="${uiLabelMap.CommonContinue}" contentClass="+ success" />
+        <@menuitem type="link" href="javascript:document.checkoutsetupform.submit();" text="${uiLabelMap.CommonContinue}" contentClass="+${styles.color_success!}" />
       <#else>
         <@menuitem type="link" href=makeOfbizUrl("processorder") text="${uiLabelMap.OrderCreateOrder}" contentClass="+alert" />
       </#if>

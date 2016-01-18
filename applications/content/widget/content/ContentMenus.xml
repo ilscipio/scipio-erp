@@ -221,10 +221,10 @@ under the License.
     <menu name="BlogSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
-        <menu-item name="NewBlog" title="${uiLabelMap.ContentCreateNewBlog}" widget-style="+${styles.action_add}">
+        <menu-item name="NewBlog" title="${uiLabelMap.ContentCreateNewBlog}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="editBlog"/>
         </menu-item>
-        <menu-item name="NewBlogArticle" title="${uiLabelMap.ContentCreateNewBlogArticle}" widget-style="+${styles.action_add}">
+        <menu-item name="NewBlogArticle" title="${uiLabelMap.ContentCreateNewBlogArticle}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <if-compare field="tabButtonItem" operator="equals" value="Articles"/>
             </condition>
@@ -294,7 +294,7 @@ under the License.
         </menu-item>
     </menu>
     <menu name="contentMenu" menu-container-style="button-bar button-style-2" default-selected-style="selected">
-        <menu-item name="EditContent" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_add}">
+        <menu-item name="EditContent" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditContent"/>
         </menu-item>
         <menu-item name="ContentSearchOptions" title="${uiLabelMap.CommonAdvancedSearch}">
@@ -305,7 +305,7 @@ under the License.
         </menu-item>
     </menu>
     <menu name="websiteMenu" menu-container-style="button-bar button-style-2" default-selected-style="selected">
-        <menu-item name="EditWebSite" title="${uiLabelMap.ContentCreateNewWebSite}" widget-style="+${styles.action_add}">
+        <menu-item name="EditWebSite" title="${uiLabelMap.ContentCreateNewWebSite}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditWebSite"/>
         </menu-item>
     </menu>

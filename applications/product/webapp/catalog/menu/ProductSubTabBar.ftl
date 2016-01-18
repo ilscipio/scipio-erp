@@ -19,10 +19,10 @@ under the License.
 <@row>
     <@cell>
     <@menu type="subtab">
-        <@menuitem type="link" href=makeOfbizUrl("EditProduct") text="${uiLabelMap.ProductNewProduct}" contentClass="+success" />
+        <@menuitem type="link" href=makeOfbizUrl("EditProduct") text="${uiLabelMap.ProductNewProduct}" contentClass="+${styles.action_nav!} ${styles.action_add!}" />
         <#if product?has_content>
-          <@menuitem type="link" href=makeOfbizUrl("CreateVirtualWithVariantsForm?product_id=${productId!}") text="${uiLabelMap.ProductNewVirtualProduct}" contentClass="+success" />
-          <@menuitem type="link" href="/ecommerce/control/product?product_id=${productId!}" text="${uiLabelMap.ProductProductPage}" contentClass="+success" />
+          <@menuitem type="link" href=makeOfbizUrl("CreateVirtualWithVariantsForm?product_id=${productId!}") text="${uiLabelMap.ProductNewVirtualProduct}" contentClass="+${styles.action_nav!} ${styles.action_add!}" />
+          <@menuitem type="link" href="/ecommerce/control/product?product_id=${productId!}" text="${uiLabelMap.ProductProductPage}" contentClass="+${styles.action_nav!} ${styles.action_add!}" />
           <@menuitem type="link" href=makeOfbizUrl("ProductBarCode.pdf?productId=${productId!}") text="${uiLabelMap.ProductBarcode}" target="_blank" />
         </#if>
         <@menuitem type="link" href=makeOfbizUrl("EditProductTag") text="${uiLabelMap.ProductTags}" />

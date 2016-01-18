@@ -193,10 +193,10 @@
     "action_run" : "action-run",                          <#-- identifies a link or item that actually runs an action, such as a form submit button, or download PDF button, or intermediate action like clearing a form. nav links should never have this. -->
     
   <#-- Action state scope styles 
-      By default, most actions are assumed to be action_scope_system (database updates). 
+      By default, most actions are assumed to be action_scope_sys (database updates). 
       NOTE: these are decoupled from action_run, such that you could have these on a nav link (which 
           would mean, "this function will indirectly modify this scope once it's actually run"), though not really useful. -->
-    "action_scope_system" : "action-scope-system",        <#-- action that changes system state, usually database -->
+    "action_scope_sys" : "action-scope-sys",              <#-- action that changes system state, usually database -->
     "action_scope_session" : "action-scope-session",      <#-- action that changes user session state -->
     "action_scope_local" : "action-scope-local",          <#-- action that changes state on a page or form only (usually with javascript or input reset button) -->
     
@@ -295,7 +295,7 @@
             NOTE: "session" is usually HTTP web session, but it extends to sessions which may be persisted. it is "logical" session.
         * the most important purpose of link_action_sys is to identify which links will change the state of the system,
           so user knows which changes are permanent and which functions don't commit anything.
-          in the end, any link with the styles action_run, action_modify and action_scope_system (or not scope)
+          in the end, any link with the styles action_run, action_modify and action_scope_sys (or not scope)
           will be assumed to change the system state, or with action_scope_session, the session state (rare).
       * if it's a link to cancel another action like an upload, use link_action_sys_cancel instead of link_action_sys.
         * link_action_sys_cancel should not be used for things like changing order statuses to cancelled.
@@ -336,11 +336,11 @@
         if find there is a new need, can always create link_record_xxx add-on classes similar to action_xxx which don't imply link_nav.
   -->
     <#-- Action links (trigger an actual action in the system - NOT for use for opening pages toward actions!) -->
-    "link_action_sys" : "button tiny action-run",                       <#-- link that actually performs an action (run-action), in system scope, such as most form submit buttons, "Create Order", "Download PDF", etc. -->
-    "link_action_sys_long" : "action-run link-long",
-    "link_action_sys_cancel" : "button tiny action-run action-cancel",  <#-- link that cancels a system action in progress, such as cancelling an upload (but NOT if only a button that leads back to previous page - use link_nav_action_cancel, 
-                                                                            and NOT for changing an order status to cancelled - use link_action_sys with appropriate action_xxx appended) -->
-    "link_action_sys_cancel_long" : "action-run action-cancel link-long",
+    "link_action_sys" : "button tiny action-run action-scope-sys",                                  <#-- link that actually performs an action (run-action), in system scope, such as most form submit buttons, "Create Order", "Download PDF", etc. -->
+    "link_action_sys_long" : "action-run action-scope-sys link-long",
+    "link_action_sys_cancel" : "button tiny action-run action-scope-sys action-cancel",             <#-- link that cancels a system action in progress, such as cancelling an upload (but NOT if only a button that leads back to previous page - use link_nav_action_cancel, 
+                                                                                                        and NOT for changing an order status to cancelled - use link_action_sys with appropriate action_xxx appended) -->
+    "link_action_sys_cancel_long" : "action-run action-scope-sys action-cancel link-long",
     "link_action_session" : "button tiny action-run action-scope-session",                          <#-- link for any action (run-action) that only modifies current session (logical, not necessarily HTTP session), not meaningful permanent system data. -->
     "link_action_session_long" : "action-run action-scope-session link-long",
     "link_action_session_cancel" : "button tiny action-run action-scope-session action-cancel",     <#-- link for any action that cancels another session action (rare). -->

@@ -10243,6 +10243,61 @@ div.scrollable-table-container > table {
   margin-left: 1rem;
 }
 
+/* ACTION (LINK) STYLES */
+/* 2016-01-18: DEV NOTE: colors here are not final style choices, only demos of things that can be done for action links. 
+  not all links and menu items have the appropriate classes yet, but many do. 
+  the most important is probably to have a different visual indication for .action-run.action-scope-sys.action-modify (see below) so that
+  actions that modify state of system are made clear to user. In stock ofbiz these are ambiguous and easily confused with nav links.
+  note that system- vs session- vs page- changing actions can be styled separately. */
+/* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
+  NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
+/* line 379, ../scss/_base.scss */
+.action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
+  background-color: #43ac6a;
+  border-color: #368a55;
+  color: white;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-nav.action-modify.action-add.button:hover, .action-nav.action-modify.action-add.button:focus, .action-nav.action-modify.action-add .button:hover, .action-nav.action-modify.action-add .button:focus {
+  background-color: #368a55;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-nav.action-modify.action-add.button:hover, .action-nav.action-modify.action-add.button:focus, .action-nav.action-modify.action-add .button:hover, .action-nav.action-modify.action-add .button:focus {
+  color: white;
+}
+
+/* individual run/submit creation links and run creation links in menu items (i.e., the submit button on the form) */
+/* line 384, ../scss/_base.scss */
+.action-run.action-scope-sys.action-modify.action-add.button, .action-run.action-scope-sys.action-modify.action-add .button {
+  background-color: #43ac6a;
+  border-color: #368a55;
+  color: white;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-sys.action-modify.action-add.button:hover, .action-run.action-scope-sys.action-modify.action-add.button:focus, .action-run.action-scope-sys.action-modify.action-add .button:hover, .action-run.action-scope-sys.action-modify.action-add .button:focus {
+  background-color: #368a55;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-sys.action-modify.action-add.button:hover, .action-run.action-scope-sys.action-modify.action-add.button:focus, .action-run.action-scope-sys.action-modify.action-add .button:hover, .action-run.action-scope-sys.action-modify.action-add .button:focus {
+  color: white;
+}
+
+/* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) */
+/* line 389, ../scss/_base.scss */
+.action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
+  background-color: #f08a24;
+  border-color: #cf6e0e;
+  color: white;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-sys.action-modify.button:hover, .action-run.action-scope-sys.action-modify.button:focus, .action-run.action-scope-sys.action-modify .button:hover, .action-run.action-scope-sys.action-modify .button:focus {
+  background-color: #cf6e0e;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-sys.action-modify.button:hover, .action-run.action-scope-sys.action-modify.button:focus, .action-run.action-scope-sys.action-modify .button:hover, .action-run.action-scope-sys.action-modify .button:focus {
+  color: white;
+}
+
 /* line 1, ../scss/_ui_autocomplete.scss */
 .ui-helper-hidden-accessible {
   display: none;

@@ -261,7 +261,7 @@
   
     how to decide which style to use on a link:
       * the main classes of links are nav and run-action links. everything else is a specialization of these.
-        * nav can be (and is) classified as a "navigation action" (link_action_nav) but called nav for short and for clarity.
+        * nav can be (and is) classified as a "navigation action" but called nav for short and for clarity.
       * if the link's text designates a record (usually entity value) by name or ID alone or some combination of these, and basically "points to" a record,
         usually it should have link_nav_record_xxx. see "record identifiers and sorting fields" below.
         e.g. a link with an order ID (<a...>WS10000</a>) as its text that points to an order summary.
@@ -375,8 +375,8 @@
     "link_nav_record_idname" : "action-nav",                    <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
     "link_nav_record_idname_long" : "action-nav link-long",     <#-- long combination of IDs and names: "Mr. John Alberton Smith Junior (ID: 10000) (Group: 20000)" -->
     "link_nav_record_desc" : "action-nav",                      <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. 
-                                                                    in general, as soon as a non-action link text contains more than one type of value, and not idname, it should be changed to link_nav_record_desc.
-                                                                    however, if it contains a specific action(s), it may be more appropriate as link_action_long. -->
+                                                                    in general, as soon as a link text contains more than one type of value, and not idname, it should be changed to link_nav_record_desc.
+                                                                    however, if it contains a specific action(s), it may be more appropriate as link_action_xxx_long. -->
     "link_nav_record_date" : "action-nav",                      <#-- the date of a record (fromDate, thruDate, etc.) -->
     "link_nav_record_number" : "action-nav",                    <#-- the number of a record (index, sequence num, etc.) -->
     "link_nav_record_value" : "action-nav",                     <#-- link containing a value of type not previously listed (or cannot be known statically) -->

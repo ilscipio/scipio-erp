@@ -10315,7 +10315,7 @@ div.scrollable-table-container > table {
   color: #333333;
 }
 
-/* special run-action cancel/back/return action button (warning color) */
+/* special run-action cancel action button (warning color) */
 /* line 400, ../scss/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;

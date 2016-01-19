@@ -396,7 +396,7 @@ div.scrollable-table-container > table {
    @include button-style($bg:$secondary-button-bg-color, $bg-hover:$secondary-button-bg-hover, $border-color:$secondary-button-border-color);
 }
 
-/* special run-action cancel/back/return action button (warning color) */
+/* special run-action cancel action button (warning color) */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
    @include button-style($bg:$warning-button-bg-color, $bg-hover:$warning-button-bg-hover, $border-color:$warning-button-border-color);
 }

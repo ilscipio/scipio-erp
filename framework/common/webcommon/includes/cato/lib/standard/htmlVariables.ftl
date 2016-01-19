@@ -200,7 +200,7 @@
     "action_scope_session" : "action-scope-session",      <#-- action that changes user session state -->
     "action_scope_local" : "action-scope-local",          <#-- action that changes state on a page or form only (usually with javascript or input reset button) -->
     
-  <#-- Convenience combinations of the above, useful on menu items -->
+  <#-- Convenience combinations of the above, useful on menu items; also sometimes needed on links that have images instead of text (so buttons that come with link_(nav|run.*) wouldn't make sense) -->
     "action_nav_sys" : "action-nav action-scope-sys",
     "action_nav_session" : "action-nav action-scope-session",
     "action_nav_local" : "action-nav action-scope-local",

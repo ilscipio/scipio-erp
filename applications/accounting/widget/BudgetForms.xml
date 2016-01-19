@@ -32,7 +32,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="budgetId" widget-style="${styles.link_nav_record_id}" sort-field="true">
+        <field name="budgetId" widget-style="${styles.link_nav_info_id}" sort-field="true">
             <hyperlink also-hidden="false" description="${budgetId}" target="EditBudget">
                 <parameter param-name="budgetId"/>
             </hyperlink>
@@ -92,7 +92,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="InvoiceRole" default-field-type="display"/>
         <field name="budgetId"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_record_id}">
+        <field name="partyId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -119,7 +119,7 @@ under the License.
     <form name="BudgetReviews" list-name="budgetReviews" target="" title="" type="list" separate-columns="true" paginate-target="BudgetOverview"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="budgetReviewId"><display/></field>
-        <field name="partyId" widget-style="${styles.link_nav_record_id}">
+        <field name="partyId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -138,7 +138,7 @@ under the License.
        <field name="viewSize"><hidden value="${viewSize}"/></field>
        <field name="viewIndex"><hidden value="${viewIndex}"/></field>
        <field name="budgetId"><hidden/></field>
-       <field name="budgetItemSeqId" widget-style="${styles.link_nav_record_id}">
+       <field name="budgetItemSeqId" widget-style="${styles.link_nav_info_id}">
            <hyperlink target="EditBudgetItems" description="${budgetItemSeqId}">
                 <parameter param-name="budgetId"/>
                 <parameter param-name="budgetItemSeqId"/>
@@ -200,7 +200,7 @@ under the License.
     <form name="ListBudgetRoles" type="list" use-row-submit="true" title="" list-name="budgetRoles" paginate-target="BudgetRoles"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <field name="budgetId"><hidden/></field>
-        <field name="partyId" widget-style="${styles.link_nav_record_id}">
+        <field name="partyId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -241,7 +241,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <field name="budgetId"><hidden/></field>
         <field name="budgetReviewId"><display/></field>
-        <field name="partyId" widget-style="${styles.link_nav_record_id}">
+        <field name="partyId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>

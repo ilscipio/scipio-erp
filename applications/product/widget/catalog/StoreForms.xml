@@ -29,7 +29,7 @@ under the License.
                 <order-by field-name="${parameters.sortField}"/>
             </entity-condition>
         </actions>
-        <field name="productStoreId" title="${uiLabelMap.ProductStoreId}" widget-style="${styles.link_nav_record_idname}" sort-field="true">
+        <field name="productStoreId" title="${uiLabelMap.ProductStoreId}" widget-style="${styles.link_nav_info_idname}" sort-field="true">
             <hyperlink target="EditProductStore" description="${storeName} [${productStoreId}]">
                 <parameter param-name="productStoreId"/>
             </hyperlink>
@@ -69,7 +69,7 @@ under the License.
         </actions>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName},${firstName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyId}]" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="[${partyId}]" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -184,7 +184,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="productStoreGroupId"><hidden/></field>
-        <field name="productStoreGroupName" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="productStoreGroupName" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="ListParentProductStoreGroup" description="${productStoreGroupName} [${productStoreGroupId}]">
                 <parameter param-name="productStoreGroupId"/>
             </hyperlink>
@@ -244,7 +244,7 @@ under the License.
                 <field-map field-name="productStoreGroupId" from-field="productStoreGroup.productStoreGroupId"/>
             </entity-and>
         </actions>
-        <field name="productStoreId" widget-style="${styles.link_nav_record_id}">
+        <field name="productStoreId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="EditProductStore" description="${productStoreId}">
                 <parameter param-name="productStoreId"/>
             </hyperlink>

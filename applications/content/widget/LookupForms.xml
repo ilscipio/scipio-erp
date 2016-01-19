@@ -28,7 +28,7 @@ under the License.
                 <condition-expr field-name="caContentIdTo" value="TEMPLATE_MASTER"/>
             </entity-condition>
         </actions>
-        <field name="contentId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_record_id}">
+        <field name="contentId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${contentId}" target-type="plain" target="javascript:execRemoteCall('cloneLayout', '${drDataResourceId}', '${contentId}', 'TEMPLATE_MASTER', '')"/>
         </field>
         <field name="contentName"><display/></field>
@@ -92,10 +92,10 @@ under the License.
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.ContentPaste} [${dataResourceId}/${coContentId}]"
                target="javascript:execRemoteCall('pasteContent','${dataResourceId}','${coContentId}')"/>
         </field>
-        <field name="dataResourceName" widget-style="${styles.link_nav_record_name}">
+        <field name="dataResourceName" widget-style="${styles.link_nav_info_name}">
             <display/>
         </field>
-        <field name="dataCategoryId" widget-style="${styles.link_nav_record_id}">
+        <field name="dataCategoryId" widget-style="${styles.link_nav_info_id}">
             <display/>
         </field>
     </form>

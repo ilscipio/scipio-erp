@@ -345,7 +345,7 @@ ${virtualVariantJavaScript!}
             <#if previousProductId??>
               <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=previousProductId!/>" class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
             </#if>
-            <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId!/>" class="${styles.link_nav_record_name!}">${(category.categoryName)?default(category.description)!}</a>
+            <a href="<@ofbizCatalogAltUrl productCategoryId=categoryId!/>" class="${styles.link_nav_info_name!}">${(category.categoryName)?default(category.description)!}</a>
             <#if nextProductId??>
               &nbsp;|&nbsp;<a href="<@ofbizCatalogAltUrl productCategoryId=categoryId! productId=nextProductId!/>" class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
             </#if>
@@ -744,7 +744,7 @@ ${virtualVariantJavaScript!}
                     <#if !imageUrl?string?has_content>
                       <#assign imageUrl = "/images/defaultImage.jpg" />
                     </#if>
-                      <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_nav_record_name!}">${key}</a>
+                      <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_nav_info_name!}">${key}</a>
                       <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a>
                       <br />
                   </#if>
@@ -819,7 +819,7 @@ ${virtualVariantJavaScript!}
                 <#assign assocProductId = productAssoc.productId />
             </#if>
             <div>
-              <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">
+              <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${assocProductId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">
                 ${assocProductId}
               </a>
             <#if productAssoc.reason?has_content>

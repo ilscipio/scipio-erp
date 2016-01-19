@@ -329,7 +329,7 @@ under the License.
         <field name="taxAuthGeoId"><display-entity entity-name="Geo" key-field-name="geoId" description="[${geoId}] ${geoName}" also-hidden="true"/></field>
         <field name="taxAuthPartyId">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}" also-hidden="true">
-                <sub-hyperlink target="viewprofile" description="${taxAuthPartyId}" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink target="viewprofile" description="${taxAuthPartyId}" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId" from-field="taxAuthPartyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -509,7 +509,7 @@ under the License.
         </actions>
         <field name="segmentGroupId" title="${uiLabelMap.PartySegmentGroupId}">
             <display-entity entity-name="SegmentGroup">
-                <sub-hyperlink description="${segmentGroupId}" target="/marketing/control/viewSegmentGroup" target-type="inter-app" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink description="${segmentGroupId}" target="/marketing/control/viewSegmentGroup" target-type="inter-app" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="segmentGroupId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -767,7 +767,7 @@ under the License.
         <field name="description"><display/></field>
         <field name="productId">
             <display-entity entity-name="Product" description="${productName}">
-                <sub-hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${productId}" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${productId}" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="productId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -779,7 +779,7 @@ under the License.
     <form name="ListRelatedContacts" type="list" list-name="contacts" default-table-style="${styles.table_basic}">
         <field name="partyIdTo">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId">
-                <sub-hyperlink description="[${partyIdTo}]" target="viewprofile" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink description="[${partyIdTo}]" target="viewprofile" link-style="${styles.link_nav_info_id}">
                 <parameter param-name="partyId" from-field="partyIdTo"/>
             </sub-hyperlink>
             </display-entity>
@@ -791,7 +791,7 @@ under the License.
     <form name="ListRelatedAccounts" type="list" list-name="accounts" default-table-style="${styles.table_basic}">
         <field name="partyIdFrom">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId">
-                <sub-hyperlink description="[${partyIdFrom}]" target="viewprofile" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink description="[${partyIdFrom}]" target="viewprofile" link-style="${styles.link_nav_info_id}">
                 <parameter param-name="partyId" from-field="partyIdFrom"/>
             </sub-hyperlink>
             </display-entity>
@@ -804,7 +804,7 @@ under the License.
         <field name="partyId"><hidden value="${parameters.partyId}"/></field>
         <field name="partyIdTo" title="${uiLabelMap.PartyPartyId}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId">
-                <sub-hyperlink description="[${partyIdTo}]" target="viewprofile" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink description="[${partyIdTo}]" target="viewprofile" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId" from-field="partyIdTo"/>
                 </sub-hyperlink>
             </display-entity>
@@ -815,7 +815,7 @@ under the License.
         <field name="partyRelationshipTypeId" title="${uiLabelMap.PartyIsA}"><display-entity entity-name="PartyRelationshipType" description="${partyRelationshipName}"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.PartyOfParty}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}" key-field-name="partyId">
-                <sub-hyperlink description="[${partyIdFrom}]" target="viewprofile" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink description="[${partyIdFrom}]" target="viewprofile" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId" from-field="partyIdFrom"/>
                 </sub-hyperlink>
             </display-entity>
@@ -1092,7 +1092,7 @@ under the License.
         <field name="toPartyId"><display/></field>
     </form>
     <form name="PartySalesOpportunities" type="list" list-name="salesOpportunities" default-table-style="${styles.table_basic} hover-bar">
-        <field name="opportunityName" title="${uiLabelMap.SfaOpportunityName}" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="opportunityName" title="${uiLabelMap.SfaOpportunityName}" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="ViewSalesOpportunity" description="${opportunityName} [${salesOpportunityId}]">
                 <parameter param-name="salesOpportunityId"/>
             </hyperlink>

@@ -73,7 +73,7 @@
         <actions>
             <set field="complete" value="${uiLabelMap.ProjectMgrToComplete}"/>
         </actions>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_nav_record_id}">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${timesheetId}" target="${my}Timesheet">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -133,7 +133,7 @@
             <set field="actualHours" value="${bsh:org.ofbiz.project.Various.calculateActualHours(delegator, timesheetId)}"/>
             <set field="completeAction" value="${bsh:&quot;TIMESHEET_IN_PROCESS&quot;.equals(statusId)?complete:&quot;&quot;}"/>
         </row-actions>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_nav_record_id}">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${timesheetId}" target="Timesheet">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -284,13 +284,13 @@
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="timesheetId"><hidden/></field>
         <field name="taskWbsId"><display/></field>
-        <field name="workEffortName" title="${uiLabelMap.ProjectMgrTaskName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+        <field name="workEffortName" title="${uiLabelMap.ProjectMgrTaskName}" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink target="taskView" description="${workEffortName}">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
         </field>
         <field name="phaseName" title="${uiLabelMap.ProjectMgrPhaseName}"><display/></field>
-        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink target="projectView" description="${projectName}">
                 <parameter param-name="projectId"/>
             </hyperlink>

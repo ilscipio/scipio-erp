@@ -190,7 +190,7 @@ function runAction() {
         <#assign invoicePaymentInfo = invoicePaymentInfoList.get("invoicePaymentInfoList").get(0)!>
           <#assign statusItem = invoice.getRelatedOne("StatusItem", true)>
           <@tr valign="middle">
-            <@td><a class="${styles.link_nav_record_id!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></@td>
+            <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></@td>
             <@td><#if invoice.get("invoiceDate")?has_content>${invoice.get("invoiceDate")?date?string.short}</#if></@td>
             <@td><#if invoice.get("dueDate")?has_content>${invoice.get("dueDate")?date?string.short}</#if></@td>
             <@td>${statusItem.description?default(invoice.statusId)}</@td>

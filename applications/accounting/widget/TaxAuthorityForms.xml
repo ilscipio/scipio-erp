@@ -63,7 +63,7 @@ under the License.
         <field name="taxAuthGeoId"><display-entity entity-name="Geo" key-field-name="geoId" description="${geoName} [${geoCode}] [${geoId}]"/></field>
         <field name="taxAuthPartyId">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${taxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink description="${taxAuthPartyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId" from-field="taxAuthPartyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -94,7 +94,7 @@ under the License.
             <entity-one value-field="party" entity-name="PartyNameView"/>
         </row-actions>
         
-        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_record_idname_long}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">
            <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditTaxAuthority">
                 <parameter param-name="taxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId"/>
@@ -163,7 +163,7 @@ under the License.
         </row-actions>
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
-        <field name="productCategoryId" title="${uiLabelMap.CommonCategory}" widget-style="${styles.link_nav_record_idname}">
+        <field name="productCategoryId" title="${uiLabelMap.CommonCategory}" widget-style="${styles.link_nav_info_idname}">
            <hyperlink also-hidden="false" description="${productCategoryId} - ${category.categoryName}" target="/catalog/control/EditCategory" target-type="inter-app" >
                 <parameter param-name="productCategoryId"/>
             </hyperlink>
@@ -205,7 +205,7 @@ under the License.
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
 
-        <field name="toTaxAuthPartyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_record_idname_long}">
+        <field name="toTaxAuthPartyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">
            <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditTaxAuthority">
                 <parameter param-name="taxAuthPartyId" from-field="toTaxAuthPartyId"/>
                 <parameter param-name="taxAuthGeoId" from-field="toTaxAuthGeoId"/>
@@ -273,12 +273,12 @@ under the License.
         </row-actions>
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
-        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccount}" widget-style="${styles.link_nav_record_idname}">
+        <field name="glAccountId" title="${uiLabelMap.AccountingGlAccount}" widget-style="${styles.link_nav_info_idname}">
             <hyperlink also-hidden="false" description="${glAccount.accountCode} - ${glAccount.accountName}" target="GlAccountNavigate">
                 <parameter param-name="glAccountId"/>
             </hyperlink>
         </field>
-        <field name="organizationPartyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_record_idname_long}">
+        <field name="organizationPartyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">
            <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
                 <parameter param-name="partyId"/>
                 <parameter param-name="agreementId"/>
@@ -445,7 +445,7 @@ under the License.
         <field name="taxAuthPartyId"><hidden/></field>
         <field name="taxAuthGeoId"><hidden/></field>
         
-        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_record_idname_long}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">
            <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
                 <parameter param-name="partyId"/>
                 <parameter param-name="agreementId"/>
@@ -484,7 +484,7 @@ under the License.
 
         <field use-when="partyTaxAuthInfo!=null" name="partyId" title="${uiLabelMap.CommonParty}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink description="${partyId}" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>

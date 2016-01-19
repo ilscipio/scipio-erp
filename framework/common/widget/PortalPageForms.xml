@@ -123,7 +123,7 @@ under the License.
                 <field-map field-name="portalPageId" from-field="parameters.portalPageId"/>
             </entity-and>
         </actions>
-        <field name="portletName" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+        <field name="portletName" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink also-hidden="false" target="showHelp?helpTopic=HELP_${portalPortletId}" description="${portletName}"></hyperlink>
         </field>
         <field name="description"><display/></field>

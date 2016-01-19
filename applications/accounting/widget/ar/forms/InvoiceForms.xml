@@ -41,7 +41,7 @@ under the License.
                 import java.text.NumberFormat;
                 return(NumberFormat.getNumberInstance(context.get(&quot;locale&quot;)).format(org.ofbiz.accounting.invoice.InvoiceWorker.getInvoiceTotal(delegator,invoiceId)));}"/>
         </row-actions>
-        <field name="invoiceId" widget-style="${styles.link_nav_record_id}">
+        <field name="invoiceId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${invoiceId}" target="invoiceOverview">
                 <parameter param-name="invoiceId"/>
             </hyperlink>
@@ -50,12 +50,12 @@ under the License.
         <field name="invoiceDate"><display type="date"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="isReduced==false"><display-entity entity-name="StatusItem"/></field>
         <field name="description" use-when="isReduced==false"><display/></field>
-        <field name="partyIdFrom" use-when="isReduced==false" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="partyIdFrom" use-when="isReduced==false" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyNameResultFrom.fullName} [${partyIdFrom}]" target-type="inter-app">
                 <parameter param-name="partyId" from-field="partyIdFrom"/>
             </hyperlink>
         </field>
-        <field name="partyIdTo" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="partyIdTo" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyNameResultTo.fullName} [${partyId}]" target-type="inter-app">
                 <parameter param-name="partyId"/>
             </hyperlink>

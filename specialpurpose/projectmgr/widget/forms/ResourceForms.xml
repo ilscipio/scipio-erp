@@ -30,13 +30,13 @@
             <service service-name="getPartyEmail" result-map="emailResult"/>
             <service service-name="getPartyTelephone" result-map="telResult"/>
         </row-actions>
-        <field name="resourceName" parameter-name="partyId" title="${uiLabelMap.ProjectMgrResourceName}" widget-style="${styles.link_nav_record_name}">
+        <field name="resourceName" parameter-name="partyId" title="${uiLabelMap.ProjectMgrResourceName}" widget-style="${styles.link_nav_info_name}">
             <hyperlink also-hidden="false" description="${lastName}, ${firstName} ${middleName} ${groupName}" target="viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
         <field name="roleTypeId"><hidden/></field>
-        <field name="emailAddress" title="${uiLabelMap.PartyEmailAddress}" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
+        <field name="emailAddress" title="${uiLabelMap.PartyEmailAddress}" widget-style="${styles.link_nav_info_desc} ${styles.action_view}">
             <hyperlink target="/partymgr/control/EditCommunicationEvent" description="${emailResult.emailAddress}" target-type="inter-app">
                 <parameter param-name="partyIdFrom" from-field="userLogin.partyId"/>
                 <parameter param-name="partyIdTo" from-field="partyId"/>
@@ -56,7 +56,7 @@
     </form>
     <form name="ListBillingHours" type="list" list-name="billingList" paginate-target="ListResourcesBillingHours"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="projectName" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="projectName" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="projectView" description="${projectName} [${projectId}]">
                 <parameter param-name="projectId"/>
             </hyperlink>

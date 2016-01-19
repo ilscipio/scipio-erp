@@ -61,7 +61,7 @@ under the License.
         </@thead>
         <#list variantProducts as variant>
             <@tr>
-                <@td><a class="${styles.link_nav_record_id!}" href="javascript:set_value('${variant.productId}')">${variant.productId}</a></@td>
+                <@td><a class="${styles.link_nav_info_id!}" href="javascript:set_value('${variant.productId}')">${variant.productId}</a></@td>
                 <@td>${variant.brandName!}</@td>
                 <@td>${variant.internalName!}</@td>
             </@tr>

@@ -33,7 +33,7 @@ function insertImageName(size,nameValue) {
         <div>${uiLabelMap.ProductTheFileOnYourComputer}: <b>${clientFileName!}</b></div>
         <div>${uiLabelMap.ProductServerFileName}: <b>${fileNameToUse!}</b></div>
         <div>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath!}</b></div>
-        <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>" class="${styles.link_nav_uri!}">${imageUrl!}</a></b></div>
+        <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>" class="${styles.link_nav_info_uri!}">${imageUrl!}</a></b></div>
     </#if>
   </@section>
 </#if>
@@ -57,7 +57,7 @@ function insertImageName(size,nameValue) {
         <#assign productContent=entry.productContent/>
         <#assign productContentType=productContent.getRelatedOne("ProdConfItemContentType", true)/>
         <@tr valign="middle">
-            <@td><a href="<@ofbizUrl>EditProductConfigItemContentContent?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="${styles.link_nav_record_desc!}">${entry.content.description?default("[${uiLabelMap.ProductNoDescription}]")} [${entry.content.contentId}]</@td>
+            <@td><a href="<@ofbizUrl>EditProductConfigItemContentContent?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">${entry.content.description?default("[${uiLabelMap.ProductNoDescription}]")} [${entry.content.contentId}]</@td>
             <@td>${productContentType.description?default(productContent.confItemContentTypeId)}</@td>
             <@td>${productContent.fromDate?default("N/A")}</@td>
             <@td>${productContent.thruDate?default("N/A")}</@td>

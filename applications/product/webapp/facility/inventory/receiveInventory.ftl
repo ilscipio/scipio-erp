@@ -55,10 +55,10 @@ under the License.
                 <input type="hidden" name="purchaseOrderId" value ="${(item.orderId)!}"/>
                 <input type="hidden" name="facilityId" value ="${facilityId!}"/>
                 <@tr>
-                  <@td><a href="<@ofbizUrl>ViewShipment?shipmentId=${item.shipmentId!}</@ofbizUrl>" class="${styles.link_nav_record_id_long!}">${item.shipmentId!} ${item.shipmentItemSeqId!}</a></@td>
+                  <@td><a href="<@ofbizUrl>ViewShipment?shipmentId=${item.shipmentId!}</@ofbizUrl>" class="${styles.link_nav_info_id_long!}">${item.shipmentId!} ${item.shipmentItemSeqId!}</a></@td>
                   <@td>${item.receiptId}</@td>
                   <@td>${item.getString("datetimeReceived").toString()}</@td>
-                  <@td><a href="/ordermgr/control/orderview?orderId=${item.orderId}" class="${styles.link_nav_record_id!}">${item.orderId}</a></@td>
+                  <@td><a href="/ordermgr/control/orderview?orderId=${item.orderId}" class="${styles.link_nav_info_id!}">${item.orderId}</a></@td>
                   <@td>${item.orderItemSeqId}</@td>
                   <@td>${item.productId?default("Not Found")}</@td>
                   <@td>${item.lotId?default("")}</@td>
@@ -104,7 +104,7 @@ under the License.
                   <b>${requestParameters.productId!}</b>
               </@field>
               <@field type="generic" label="${uiLabelMap.ProductProductName}">
-                  <a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.link_nav_record_name!}">${product.internalName!}</a>
+                  <a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.link_nav_info_name!}">${product.internalName!}</a>
               </@field>
               <@field type="generic" label="${uiLabelMap.ProductProductDescription}">
                   ${product.description!}
@@ -324,7 +324,7 @@ under the License.
                             <#assign product = orderItem.getRelatedOne("Product", true)/>
                             <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}"/>
                             <@td width="45%">
-                                ${orderItem.orderItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.link_nav_record_desc!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a> : ${product.description!}
+                                ${orderItem.orderItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.link_nav_info_desc!}">${product.productId}&nbsp;-&nbsp;${orderItem.itemDescription!}</a> : ${product.description!}
                             </@td>
                           <#else>
                             <@td width="45%">

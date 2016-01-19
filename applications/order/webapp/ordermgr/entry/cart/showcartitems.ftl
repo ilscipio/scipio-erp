@@ -22,7 +22,7 @@ under the License.
   <#assign productAssocType = (delegator.findOne("ProductAssocType", {"productAssocTypeId" : productAssoc.productAssocTypeId}, false))/>
   <#assign assocProduct = (delegator.findOne("Product", {"productId" : productAssoc.productIdTo}, false))/>
   <#if assocProduct?has_content>
-    <@td><a href="<@ofbizUrl>/product?product_id=${productAssoc.productIdTo}</@ofbizUrl>"class="${styles.link_nav_record_id!}">${productAssoc.productIdTo}</a></@td>
+    <@td><a href="<@ofbizUrl>/product?product_id=${productAssoc.productIdTo}</@ofbizUrl>"class="${styles.link_nav_info_id!}">${productAssoc.productIdTo}</a></@td>
     <@td>- ${(assocProduct.productName)!}<i>(${(productAssocType.description)?default("Unknown")})</i></@td>
   </#if>
 </#macro>
@@ -75,7 +75,7 @@ under the License.
           <@tr><@td colspan="2">
                   <#if cartLine.getProductId()??>
                     <#-- product item -->
-                    <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${cartLine.getProductId()}</a> -
+                    <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${cartLine.getProductId()}</a> -
                     <input size="60" type="text" name="description_${cartLineIndex}" value="${cartLine.getName()?default("")}"/><br />
                     <i>${cartLine.getDescription()!}</i>
                     <#if shoppingCart.getOrderType() != "PURCHASE_ORDER">
@@ -105,7 +105,7 @@ under the License.
                     <#if cartLine.getAttribute("surveyResponses")?has_content>
                         <br />Surveys:
                        <#list cartLine.getAttribute("surveyResponses") as surveyResponseId>
-                        <a href="/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_record_id!}" style="font-size: xx-small;">${surveyResponseId}</a>
+                        <a href="/content/control/ViewSurveyResponses?surveyResponseId=${surveyResponseId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_id!}" style="font-size: xx-small;">${surveyResponseId}</a>
                        </#list>
                     </#if>
             </@td></@tr>

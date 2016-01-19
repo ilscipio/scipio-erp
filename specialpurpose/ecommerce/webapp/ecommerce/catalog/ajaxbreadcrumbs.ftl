@@ -32,7 +32,7 @@ under the License.
         <#list productCategoryTrail as trail>
           <#if !isDefaultTheme>                 
             <li>
-              <a href="<@ofbizCatalogAltUrl productCategoryId=trail.productCategoryId previousCategoryId=trail.parentCategory!""/>" class="${styles.link_nav_record_name!}">
+              <a href="<@ofbizCatalogAltUrl productCategoryId=trail.productCategoryId previousCategoryId=trail.parentCategory!""/>" class="${styles.link_nav_info_name!}">
                 <#if trail.title??>
                   ${trail.title}
                 <#else>
@@ -41,7 +41,7 @@ under the License.
               </a>
             </li>
           <#else>
-            <a href="<@ofbizCatalogAltUrl productCategoryId=trail.productCategoryId previousCategoryId=trail.parentCategory!""/>" class="${styles.link_nav_record_name!}">
+            <a href="<@ofbizCatalogAltUrl productCategoryId=trail.productCategoryId previousCategoryId=trail.parentCategory!""/>" class="${styles.link_nav_info_name!}">
               <#if trail.title??>
                 ${trail.title} >
               <#else>
@@ -53,7 +53,7 @@ under the License.
     </#if>
     <#if !isDefaultTheme>                 
       <li>
-        <a href="<@ofbizCatalogAltUrl productCategoryId=currentCategoryId previousCategoryId=parameters.parentCategoryStr/>" class="${styles.link_nav_record_name!}">
+        <a href="<@ofbizCatalogAltUrl productCategoryId=currentCategoryId previousCategoryId=parameters.parentCategoryStr/>" class="${styles.link_nav_info_name!}">
           <#if currentCategoryName??>
             ${currentCategoryName}
           <#elseif currentCategoryDescription??>
@@ -64,7 +64,7 @@ under the License.
         </a>
       </li>
     <#else>
-      <a href="<@ofbizCatalogAltUrl productCategoryId=currentCategoryId previousCategoryId=parameters.parentCategoryStr/>" class="${styles.link_nav_record_name!}">
+      <a href="<@ofbizCatalogAltUrl productCategoryId=currentCategoryId previousCategoryId=parameters.parentCategoryStr/>" class="${styles.link_nav_info_name!}">
         <#if currentCategoryName??>
           ${currentCategoryName}
         <#elseif currentCategoryDescription??>

@@ -24,7 +24,7 @@
     <form name="ListQuantityBreaks" target="" title="" type="list" list-name="quantityBreaks"
         paginate-target="ListQuantityBreaks" odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="QuantityBreak" default-field-type="display"/>
-        <field name="quantityBreakId" widget-style="${styles.link_nav_record_id}">
+        <field name="quantityBreakId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="ListQuantityBreaks" description="${quantityBreakId}" also-hidden="false">
                 <parameter param-name="quantityBreakId"/>
             </hyperlink>
@@ -53,7 +53,7 @@
     <form name="ListShipmentMethodTypes" target="" title="" type="list" list-name="shipmentMethodTypes"
         paginate-target="ListShipmentMethodTypes" odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="ShipmentMethodType" default-field-type="display"/>
-        <field name="shipmentMethodTypeId" widget-style="${styles.link_nav_record_id}">
+        <field name="shipmentMethodTypeId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="ListShipmentMethodTypes" description="${shipmentMethodTypeId}" also-hidden="false">
                 <parameter param-name="shipmentMethodTypeId"/>
             </hyperlink>

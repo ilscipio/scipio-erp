@@ -36,7 +36,7 @@ under the License.
                <#list productContentEntry.approved as show>). but we'll just integrate it into the tiles as title. -->
           <@tile size="normal" image=thumbSrc title="${productContentEntry.date} - ${show.productId}" link=targetLink>
             <#--link whole tile instead and put product ID in title
-            <a href="${targetLink}" class="${styles.link_nav_record_id!}">${show.productId}</a> - ${productContentEntry.time[show_index]}-->
+            <a href="${targetLink}" class="${styles.link_nav_info_id!}">${show.productId}</a> - ${productContentEntry.time[show_index]}-->
             ${productContentEntry.time[show_index]}
           </@tile>
         </#list>

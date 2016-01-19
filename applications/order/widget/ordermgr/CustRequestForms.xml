@@ -145,7 +145,7 @@ under the License.
 
     <form name="ListRequestList" type="list" use-row-submit="true" list-name="custRequests" title="List of customer requests" sort-field-parameter-name="custRequestSortField"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
-        <field name="custRequestId" sort-field="true" widget-style="${styles.link_nav_record_id}">
+        <field name="custRequestId" sort-field="true" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${custRequestId}" target="ViewRequest">
                 <parameter param-name="custRequestId"/>
             </hyperlink>
@@ -155,7 +155,7 @@ under the License.
         <field name="responseRequiredDate" sort-field="true"><display/></field>
         <field name="fromPartyId" sort-field="true">
             <display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="[${fromPartyId}]" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink description="[${fromPartyId}]" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId" from-field="fromPartyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -177,7 +177,7 @@ under the License.
         <auto-fields-entity entity-name="CustRequestItem" default-field-type="display"/>
         <field name="sequenceNum"></field>
         <field name="custRequestId"><hidden/></field>
-        <field name="custRequestItemSeqId" widget-style="${styles.link_nav_record_id}">
+        <field name="custRequestItemSeqId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${custRequestItemSeqId}" target="requestitem">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
@@ -214,7 +214,7 @@ under the License.
     <form name="ListRequestQuoteItems" type="list" use-row-submit="true" title="" list-name="quotes"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="RequestItemQuotes">
         <auto-fields-entity entity-name="QuoteItem" default-field-type="display"/>
-        <field name="quoteId" widget-style="${styles.link_nav_record_id}">
+        <field name="quoteId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${quoteItemSeqId}" target="EditQuoteItemForRequest">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
@@ -238,7 +238,7 @@ under the License.
 
     <form name="ViewRequestCommunicationEvents" type="list" extends="ListCommEvents"
             extends-resource="component://party/widget/partymgr/CommunicationEventForms.xml">
-        <field name="subject" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
+        <field name="subject" widget-style="${styles.link_nav_info_desc} ${styles.action_view}">
             <hyperlink description="${subject}" target="/partymgr/control/ViewCommunicationEvent" target-type="inter-app" link-type="hidden-form">
                 <parameter param-name="communicationEventId"/>
             </hyperlink>
@@ -277,7 +277,7 @@ under the License.
 
     <form name="ViewRequestWorkEfforts" type="list" list-name="requestWorkEfforts"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="workEffortId" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="workEffortId" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="/workeffort/control/WorkEffortSummary" description="${workEffortName} [${workEffortId}]" target-type="inter-app">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
@@ -541,7 +541,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar" paginate-target="RequestRoles">
         <auto-fields-entity entity-name="CustRequestParty" default-field-type="display"/>
         <field name="custRequestId"><hidden/></field>
-        <field name="partyId" widget-style="${styles.link_nav_record_id}">
+        <field name="partyId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${partyId}" target-type="inter-app" target="/partymgr/control/viewprofile">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -583,7 +583,7 @@ under the License.
     <form name="ListRequestItemRequirements" type="list" title="" list-name="custRequestRequirements"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="RequestItemRequirements">
         <auto-fields-entity entity-name="Requirement" default-field-type="display"/>
-        <field name="requirementId" widget-style="${styles.link_nav_record_id}">
+        <field name="requirementId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${requirementId}" target="EditRequirement">
                 <parameter param-name="requirementId"/>
             </hyperlink>
@@ -595,7 +595,7 @@ under the License.
         <field name="custRequestItemSeqId"><hidden/></field>
         <field name="workEffortId">
             <display-entity entity-name="WorkEffort" description="${workEffortName}">
-                <sub-hyperlink description="[${workEffortId}]" target="/workeffort/control/EditWorkEffort" target-type="inter-app" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink description="[${workEffortId}]" target="/workeffort/control/EditWorkEffort" target-type="inter-app" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="workEffortId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -633,7 +633,7 @@ under the License.
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestTypeId" title="${uiLabelMap.CommonType}"><display-entity entity-name="CustRequestType" description="${description}"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
-        <field name="fromPartyId" title="${uiLabelMap.PartyPartyId}" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="fromPartyId" title="${uiLabelMap.PartyPartyId}" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultTo.fullName} [${custRequest.fromPartyId}]">
                 <parameter param-name="partyId" from-field="custRequest.fromPartyId"/>
             </hyperlink>
@@ -715,7 +715,7 @@ under the License.
         <field name="custRequestId"><hidden/></field>
         <field name="contentId">
             <display-entity entity-name="Content" key-field-name="contentId" description="${contentName}" also-hidden="true">
-                <sub-hyperlink target="/content/control/ViewSimpleContent" description="[${contentId}]" link-style="${styles.link_nav_record_id}" target-type="inter-app">
+                <sub-hyperlink target="/content/control/ViewSimpleContent" description="[${contentId}]" link-style="${styles.link_nav_info_id}" target-type="inter-app">
                     <parameter param-name="contentId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -748,7 +748,7 @@ under the License.
             </service>
         </row-actions>
         <field name="custRequestId"><hidden/></field>
-        <field name="custRequestName" encode-output="false" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="custRequestName" encode-output="false" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink description="${custRequestName} [${custRequestId}]" target="ViewRequest">
                 <parameter param-name="custRequestId"/>
             </hyperlink>
@@ -774,7 +774,7 @@ under the License.
             </service>
         </row-actions>
         <field name="custRequestId"><hidden/></field>
-        <field name="custRequestName" encode-output="false" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="custRequestName" encode-output="false" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink description="${custRequestName} [${custRequestId}]" target="ViewRequest">
                 <parameter param-name="custRequestId"/>
             </hyperlink>

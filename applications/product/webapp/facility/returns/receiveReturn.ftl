@@ -27,7 +27,7 @@ under the License.
         <#-- Receiving Results -->
         <#if receivedItems?has_content>
           <@section>
-          <p>${uiLabelMap.ProductReceiptForReturn} ${uiLabelMap.CommonNbr}<a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}" class="${styles.link_nav_record_id!}">${returnHeader.returnId}</a></p>
+          <p>${uiLabelMap.ProductReceiptForReturn} ${uiLabelMap.CommonNbr}<a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}" class="${styles.link_nav_info_id!}">${returnHeader.returnId}</a></p>
           <#if "RETURN_RECEIVED" == returnHeader.getString("statusId")>
             <@resultMsg>${uiLabelMap.ProductReturnCompletelyReceived}</@resultMsg>
           </#if>
@@ -76,8 +76,8 @@ under the License.
                 <@tr>
                   <@td>
                     <@heading>
-                      ${uiLabelMap.ProductReceiveReturn} <a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}" class="${styles.link_nav_record_id!}">#${returnHeader.returnId}</a>
-                      <#if parameters.shipmentId?has_content>${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>ViewShipment?shipmentId=${parameters.shipmentId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${parameters.shipmentId}</a></#if>
+                      ${uiLabelMap.ProductReceiveReturn} <a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}" class="${styles.link_nav_info_id!}">#${returnHeader.returnId}</a>
+                      <#if parameters.shipmentId?has_content>${uiLabelMap.ProductShipmentId} <a href="<@ofbizUrl>ViewShipment?shipmentId=${parameters.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${parameters.shipmentId}</a></#if>
                     </@heading>
                   </@td>
                   <@td align="right">
@@ -114,7 +114,7 @@ under the License.
                             <#assign serializedInv = product.getRelated("InventoryItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("inventoryItemTypeId", "SERIALIZED_INV_ITEM"), null, false)>
                             <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}" />
                             <@td width="45%">
-                                ${returnItem.returnItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.link_nav_record_idname!}">${product.productId}&nbsp;-&nbsp;${product.internalName!}</a> : ${product.description!}
+                                ${returnItem.returnItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.link_nav_info_idname!}">${product.productId}&nbsp;-&nbsp;${product.internalName!}</a> : ${product.description!}
                                 <#if serializedInv?has_content><font color='red'>**${uiLabelMap.ProductSerializedInventoryFound}**</font></#if>
                             </@td>
                           <#elseif orderItem?has_content>

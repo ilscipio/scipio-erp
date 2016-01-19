@@ -40,14 +40,14 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="PartyResume" default-field-type="display"/>
-        <field name="resumeId" widget-style="${styles.link_nav_record_id}">
+        <field name="resumeId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${resumeId}" target="EditPartyResume">
                 <parameter param-name="resumeId"/>
             </hyperlink>
         </field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
-                <sub-hyperlink target="viewprofile" link-style="${styles.link_nav_record_id}" target-type="inter-app" description="${partyId}">
+                <sub-hyperlink target="viewprofile" link-style="${styles.link_nav_info_id}" target-type="inter-app" description="${partyId}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>

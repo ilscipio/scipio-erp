@@ -53,7 +53,7 @@ under the License.
         </actions>
         <alt-row-style use-when="&quot;EXST_APPROVED&quot;.equals(statusId)" style="Validate"/>
         <alt-row-style use-when="&quot;EXST_CANCELLED&quot;.equals(statusId)" style="Warn"/>
-        <field name="exampleId" title="${uiLabelMap.ExampleExampleId}" widget-style="${styles.link_nav_record_id}">
+        <field name="exampleId" title="${uiLabelMap.ExampleExampleId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${exampleId}" target="EditExample">
                 <parameter param-name="exampleId"/>
             </hyperlink>
@@ -211,7 +211,7 @@ under the License.
         <field name="exampleId"><hidden/></field>
         <field name="exampleFeatureId" title="${uiLabelMap.ExampleFeature}">
             <display-entity entity-name="ExampleFeature" description="${description}">
-                <sub-hyperlink target="EditExampleFeature" description="${exampleFeatureId}" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink target="EditExampleFeature" description="${exampleFeatureId}" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="exampleFeatureId"/>
                 </sub-hyperlink>
             </display-entity>

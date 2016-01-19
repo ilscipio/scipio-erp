@@ -148,7 +148,7 @@ function lookupShipments() {
             <#assign statusItem = delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", shipment.statusId), true)!/>
             <#assign shipmentType = delegator.findOne("ShipmentType", Static["org.ofbiz.base.util.UtilMisc"].toMap("shipmentTypeId", shipment.shipmentTypeId), true)!/>
             <@tr valign="middle">
-              <@td><a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${shipment.shipmentId}</a></@td>
+              <@td><a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a></@td>
               <@td>${(shipmentType.get("description",locale))?default(shipmentType.shipmentTypeId?default(""))}</@td>
               <@td>${(statusItem.get("description",locale))?default(statusItem.statusId?default("N/A"))}</@td>
               <@td>${(originFacility.facilityName)!} [${shipment.originFacilityId!}]</@td>

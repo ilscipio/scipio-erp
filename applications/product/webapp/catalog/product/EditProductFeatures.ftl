@@ -50,12 +50,12 @@ under the License.
             <input type="hidden" name="productId_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.productId)!}" />
             <input type="hidden" name="productFeatureId_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.productFeatureId)!}" />
             <input type="hidden" name="fromDate_o_${productFeatureAndAppl_index}" value="${(productFeatureAndAppl.fromDate)!}" />
-            <a href="<@ofbizUrl>EditFeature?productFeatureId=${(productFeatureAndAppl.productFeatureId)!}</@ofbizUrl>" class="${styles.link_nav_record_id!}">
+            <a href="<@ofbizUrl>EditFeature?productFeatureId=${(productFeatureAndAppl.productFeatureId)!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">
                 ${(productFeatureAndAppl.productFeatureId)!}</a></@td>
           <@td>${(productFeatureAndAppl.get("description",locale))!}</@td>
           <@td><#if productFeatureAndAppl.uomId??>${curProductFeatureUom.abbreviation!}</#if></@td>
           <@td>${(curProductFeatureType.get("description",locale))?default((productFeatureAndAppl.productFeatureTypeId)!)}</@td>
-          <@td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)!}&amp;productId=${(productFeatureAndAppl.productId)!}</@ofbizUrl>" class="${styles.link_nav_record_desc!}">
+          <@td><a href="<@ofbizUrl>EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)!}&amp;productId=${(productFeatureAndAppl.productId)!}</@ofbizUrl>" class="${styles.link_nav_info_desc!}">
               ${(curProductFeatureCategory.description)!}
               [${(productFeatureAndAppl.productFeatureCategoryId)!}]</a></@td>
     <#assign hasntStarted = false>

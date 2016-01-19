@@ -251,6 +251,9 @@
     <#-- Misc action flags (fragments) -->
     "action_external" : "action-external",                <#-- external action, notably for marking external links -->
     
+    "action_primary" : "action-primary",                  <#-- indicates the UI elem's primary reason for existing is to provide this action. usually implied for action_run. most action_nav that are part of a menu or with a static word like "View" fall into this category. -->
+    "action_secondary" : "action-secondary",              <#-- indicates the UI elem is providing this action as a secondary or convenience function, secondary to something else like providing information. for example, many action_nav (link_nav) text links with an entity value ID would fall into here. -->
+    
   <#-- Link styles (fragments) -->
     <#-- misc/short link styles -->
     "link_long" : "link-long",                            <#-- style to identify long links -->
@@ -259,7 +262,6 @@
         DEV NOTE (2016-01-19): these are not currently used enough to be useful, but they add clarification.
             they _should_ be used because it's difficult to impossible to select links based on child content in CSS without using javascript. -->
     "link_type_text" : "link-type-text",
-    "link_type_textspecial" : "link-type-textspecial",
     "link_type_image" : "link-type-image",
     
   <#-- Link styles (standalone/full)
@@ -273,34 +275,16 @@
         instead, use action_nav and action_run_xxx. otherwise the CSS may assume wrongly that it's a link containing text and add a button.
         * e.g., <a href="remove" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_remove!}" ><img .../></a>
         * DEV NOTE: having link_nav_image was not useful and confusing because most of the images were run-action links and few were nav links.
-      * if the link's text designates a record (usually entity value) by name or ID alone or some combination of these, and basically "points to" a record,
-        usually it should have link_nav_record_xxx. see "record identifiers and sorting fields" below.
+      * if the link's text is informational by nature but also nagivational and designates a record (usually entity value) by name or ID alone or some combination of these, and basically "points to" a record,
+        it is an informational navigation link (link_nav_info). usually it should have link_nav_info or link_nav_info_xxx. see "informational navigation links" below.
         e.g. a link with an order ID (<a...>WS10000</a>) as its text that points to an order summary.
         * this is a special form/case of nav link, emphasized for styling needs.
-      * if it's another basic navigation link or a link that leads to another page that leads to or encourages an action, see "navigation link".
+      * if it's another basic navigation link or a link that leads to another page that leads to or encourages an action, see "primary navigation links".
         e.g., a "New" button that leads to a new page with a form where you can create a new entity value.
       * if it's a link that directly performs an action, see "run actions".
         e.g., the submit button ("Submit" or "Create New") on a form that trigger a new entity value creation.
-      * a few rarer types have their own link_xxx styles such as link_nav_uri further below.
-        * link_nav_uri would be a link with a URL as its text.
-        * TODO: clarify how these fall in with the others
    
-    navigation link (class="${styles.link_nav!} ${styles.action_add!}"):
-      * these perform basic navigation, including navigation to pages from which run-actions are triggered and opening pop-up windows.
-      * any basic navigation link can have link_nav (though note, link_nav like the other link_xxx may contain a core style like button style). 
-      * if the navigation link leads to a page intended to perform a specific action, the link should be given link_nav
-        along with an appropriate specific action_xxx action type style (see above), such as action_add, action_view, etc.
-        * this is similar to some stock Ofbiz classes, but more generalized and better and supersedes the Ofbiz classes. 
-          in original ofbiz you see such classes as link-style="create". they should be replaced by link-style="${styles.action_add}" or appropriate.
-          the action_xxx classes can be applied to any interactive element, not only <a> links.
-        * in principle, you could add a third action_scope_xxx style to "predict" the action scope, but is not very useful for nav links.
-      * back pages and cancel buttons, even if they seem to be part of a form, as long as they behave as navigation links,
-        should have the link_nav_cancel style. they need no extra styles.
-      * action_view is more or less the default on link_nav and may be omitted.
-      * for links containing images instead of text, use action_nav instead of link_nav
-        e.g.: class="${styles.link_type_image!} ${styles.action_nav!} ${styles.action_add!}"
-      
-    run-actions (class="${styles.link_run_sys!} ${styles.action_add!}"):
+    run-actions (link_run_xxx: class="${styles.link_run_sys!} ${styles.action_add!}"):
       * these trigger actual actions in either system, session or local (page) scopes.
       * any link that performs an action that contacts the system to perform a new action should be given link_run_sys. this means
         form submits, PDF download, etc. link_run_sys contains the "action_run" class.
@@ -324,21 +308,37 @@
       * should be used for buttons that change what's shown on the page, with action_view ("Show Old", visibility, etc.).
       * for links containing images instead of text, use action_run_xxx instead of link_run_xxx
         * e.g.: class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_add!}"
-
-    record identifiers and sorting fields (class="${styles.link_nav_record_id!}"):
-      * these are essentially specific versions of link_nav for styling purposes; they identify the text the links have as labels.
+   
+    primary navigation links (link_nav: class="${styles.link_nav!} ${styles.action_add!}"):
+      * these perform basic navigation, including navigation to pages from which run-actions are triggered and opening pop-up windows.
+      * any basic navigation link can have link_nav (though note, link_nav like the other link_xxx may contain a core style like button style). 
+      * if the navigation link leads to a page intended to perform a specific action, the link should be given link_nav
+        along with an appropriate specific action_xxx action type style (see above), such as action_add, action_view, etc.
+        * this is similar to some stock Ofbiz classes, but more generalized and better and supersedes the Ofbiz classes. 
+          in original ofbiz you see such classes as link-style="create". they should be replaced by link-style="${styles.action_add}" or appropriate.
+          the action_xxx classes can be applied to any interactive element, not only <a> links.
+        * in principle, you could add a third action_scope_xxx style to "predict" the action scope, but is not very useful for nav links.
+      * back pages and cancel buttons, even if they seem to be part of a form, as long as they behave as navigation links,
+        should have the link_nav_cancel style. they need no extra styles.
+      * action_view is more or less the default on link_nav and may be omitted.
+      * for links containing images instead of text, use action_nav instead of link_nav
+        e.g.: class="${styles.link_type_image!} ${styles.action_nav!} ${styles.action_add!}"
+      
+    informational navigation links (link_nav_info: class="${styles.link_nav_info!}"):
+      * link_nav_info is the base type. the others following it are specializations of it.
+      * the specializations are these are essentially specific versions of link_nav for styling purposes; they identify the text the links have as labels.
         * such text can occasionally be found on non-nav (action) links, but this is rare, and to simplify some kinds of styling
           these are integrated under link_nav_xxx.
-      * if the text is a simple single record (entity) id, name, date, or other record identifier, use link_nav_record_id, link_nav_record_name, link_nav_record_date,
-        or if the text type is not listed or cannot be known in advance, link_nav_record_value.
+      * if the text is a simple single record (entity) id, name, date, or other record identifier, use link_nav_info_id, link_nav_info_name, link_nav_info_date,
+        or if the text type is not listed or cannot be known in advance, link_nav_info_value.
         * if the value is complex or very long (e.g. multiple-field primary key), or possibly if has introductory words ("Order Item: 1000000"),
           use the corresponding link_longxxx variant instead.
-      * if it's a combination of name and id, use link_nav_record_idname (or link_nav_record_idname_long). however, if it's
-        a name with a default value fallback to id, use link_nav_record_name (or link_nav_record_name_long).
-      * if it's a more complex combination or a description (other than id + name), use link_nav_record_desc.
+      * if it's a combination of name and id, use link_nav_info_idname (or link_nav_info_idname_long). however, if it's
+        a name with a default value fallback to id, use link_nav_info_name (or link_nav_info_name_long).
+      * if it's a more complex combination or a description (other than id + name), use link_nav_info_desc.
       * simple extraneous characters like brackets around an id should not affect selection;
         but introductory words ("Order Item: WS10000") may warrant putting it under the link_longxxx variant.
-        in some cases, extra words means it should go under link_nav_record_desc.
+        in some cases, extra words means it should go under link_nav_info_desc.
       * it can sometimes optionally be given a second action_xxx style if it encourages an action, such as action_update, action_add, etc.
         action_view is the implied default, can be set explicitly.
       * these styles are for navigation links. if they directly perform actions, probably use run actions instead (see "run actions", e.g. link_run_sys).
@@ -353,55 +353,58 @@
       * external links and actions should be marked with ${styles.action_external!}    
           
     DEV NOTES:
-      * regarding link_nav_record_xxx and similar: these could have had a second layer of categories such as link_record_xxx
+      * regarding link_nav_info_xxx and similar: these could have had a second layer of categories such as link_record_xxx
         which aren't bound to imply link_nav, so they could be reused on link_run_xxx, but it's so rare there's probably no real need (link_run_xxx with _long variants is enough for these rare cases).
-        the original link_record_xxx classes were renamed to link_nav_record_xxx because they practically all already implied link_nav everywhere, just wasn't clear enough.
-        this link_nav_record_xxx pattern is not consistent with the action_xxx pattern (above), which is not great, but this could be justified by styling needs.
+        the original link_record_xxx classes were renamed to link_nav_info_xxx because they practically all already implied link_nav everywhere, just wasn't clear enough.
+        this link_nav_info_xxx pattern is not consistent with the action_xxx pattern (above), which is not great, but this could be justified by styling needs.
         if find there is a new need, can always create link_record_xxx add-on classes similar to action_xxx which don't imply link_nav.
         
     TODO:
       * move documentation and compactify what's left here
   -->
     <#-- Action text links (trigger an actual action in the system - NOT for use for opening pages toward actions!) -->
-    "link_run_sys" : "link-type-text button tiny action-run action-scope-sys",                                  <#-- link that actually performs an action (run-action), in system scope, such as most form submit buttons, "Create Order", "Download PDF", etc. -->
-    "link_run_sys_long" : "link-type-text action-run action-scope-sys link-long",
-    "link_run_sys_cancel" : "link-type-text button tiny action-run action-scope-sys action-cancel",             <#-- link that cancels a system action in progress, such as cancelling an upload (but NOT if only a button that leads back to previous page - use link_nav_action_cancel, and NOT for changing an order status to cancelled - use link_run_sys with appropriate action_xxx appended) -->
-    "link_run_sys_cancel_long" : "link-type-text action-run action-scope-sys action-cancel link-long",
-    "link_run_session" : "link-type-text button tiny action-run action-scope-session",                          <#-- link for any action (run-action) that only modifies current session (logical, not necessarily HTTP session), not meaningful permanent system data. -->
-    "link_run_session_long" : "link-type-text action-run action-scope-session link-long",
-    "link_run_session_cancel" : "link-type-text button tiny action-run action-scope-session action-cancel",     <#-- link for any action that cancels another session action (rare). -->
-    "link_run_session_cancel_long" : "link-type-text action-run action-scope-session action-cancel link-long",
-    "link_run_local" : "link-type-text button tiny action-run action-scope-local",                              <#-- link for any action (run-action) local to a page or that prepares a page for another action, such as "Clear" or "Reset" buttons that empty a form or form field and interactive javascript forms. -->
-    "link_run_local_long" : "link-type-text action-run action-scope-local link-long",
-    "link_run_local_cancel" : "link-type-text button tiny action-run action-scope-local action-cancel",         <#-- link for any action that cancels another page-scope action (rare). -->
-    "link_run_local_cancel_long" : "link-type-text action-run action-scope-local action-cancel link-long",
+    "link_run_sys" : "link-type-text button tiny action-run action-primary action-scope-sys",                                  <#-- link that actually performs an action (run-action), in system scope, such as most form submit buttons, "Create Order", "Download PDF", etc. -->
+    "link_run_sys_long" : "link-type-text action-run action-primary action-scope-sys link-long",
+    "link_run_sys_cancel" : "link-type-text button tiny action-run action-primary action-scope-sys action-cancel",             <#-- link that cancels a system action in progress, such as cancelling an upload (but NOT if only a button that leads back to previous page - use link_nav_action_cancel, and NOT for changing an order status to cancelled - use link_run_sys with appropriate action_xxx appended) -->
+    "link_run_sys_cancel_long" : "link-type-text action-run action-primary action-scope-sys action-cancel link-long",
+    "link_run_session" : "link-type-text button tiny action-run action-primary action-scope-session",                          <#-- link for any action (run-action) that only modifies current session (logical, not necessarily HTTP session), not meaningful permanent system data. -->
+    "link_run_session_long" : "link-type-text action-run action-primary action-scope-session link-long",
+    "link_run_session_cancel" : "link-type-text button tiny action-run action-primary action-scope-session action-cancel",     <#-- link for any action that cancels another session action (rare). -->
+    "link_run_session_cancel_long" : "link-type-text action-run action-primary action-scope-session action-cancel link-long",
+    "link_run_local" : "link-type-text button tiny action-run action-primary action-scope-local",                              <#-- link for any action (run-action) local to a page or that prepares a page for another action, such as "Clear" or "Reset" buttons that empty a form or form field and interactive javascript forms. -->
+    "link_run_local_long" : "link-type-text action-run action-primary action-scope-local link-long",
+    "link_run_local_cancel" : "link-type-text button tiny action-run action-primary action-scope-local action-cancel",         <#-- link for any action that cancels another page-scope action (rare). -->
+    "link_run_local_cancel_long" : "link-type-text action-run action-primary action-scope-local action-cancel link-long",
 
-    <#-- General navigation text links (basic navigation and navigation toward actions; note that navigation itself is considered an action)
+    <#-- General primary navigation text links (basic navigation and navigation toward actions; note that navigation itself is considered an action)
         NOTE: unlike link_run_xxx, we omit sys/session/local scope from these because "predicting" the scope of an action in a nav link is not really useful in a UI. -->
-    "link_nav" : "link-type-text button tiny action-nav",                             <#-- navigation link toward another page, usually with static text like "New" or "Edit" or "View". the link should also be qualified with an "action_xxx" class where appropriate (see above), to indicate the action that the link is leading the user to do. -->
-    "link_nav_long" : "link-type-text action-nav link-long",                          <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
-    "link_nav_cancel" : "link-type-text button tiny action-nav action-cancel",        <#-- back/cancel/done navigation link that leads back to another page (could be said as: "cancels" the nagivation action): "Back", "Cancel", "Done", etc. NOTE: may often appear as if is part of a form submit (run action), but is not really. -->
-    "link_nav_cancel_long" : "link-type-text action-nav action-cancel link-long",
+    "link_nav" : "link-type-text button tiny action-nav action-primary",                             <#-- navigation link toward another page, usually with static text like "New" or "Edit" or "View". the link should also be qualified with an "action_xxx" class where appropriate (see above), to indicate the action that the link is leading the user to do. -->
+    "link_nav_long" : "link-type-text action-nav action-primary link-long",                          <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
+    "link_nav_cancel" : "link-type-text button tiny action-nav action-primary action-cancel",        <#-- back/cancel/done navigation link that leads back to another page (could be said as: "cancels" the nagivation action): "Back", "Cancel", "Done", etc. NOTE: may often appear as if is part of a form submit (run action), but is not really. -->
+    "link_nav_cancel_long" : "link-type-text action-nav action-primary action-cancel link-long",
 
-    <#-- Navigation text links with specific label text 
-        DEV NOTE (2016-01-19): these have become less important with the new categorizations (the categories above are more important to be followed for good user UI) and because all the categories above support _long versions. however I see no real harm in leaving these in for now (except for consistency concerns)... adds extra configure options. if found to be not needed, they could simply be all changed back to simple link_nav[_long].
-            there is also an issue where "button tiny" is not often wanted within form widget tables apparently (was removed from these)... changing them back to link_nav would readd it...
-            TOOD? may need CSS to identify to style differently depending on if these land within form tables vs outside. but should probably do that with CSS selectors instead of here...
-                maybe remove "button tiny" from all link_nav and link_run_xxx and delegate to SCSS.
-        FIXME: a few of these that were used in templates earlier may actually belong as link_run_xxx instead of link_nav... should review templates again... -->
-    "link_nav_record_id" : "link-type-textspecial action-nav",                          <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
-    "link_nav_record_id_long" : "link-type-textspecial action-nav link-long",           <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
-    "link_nav_record_name" : "link-type-textspecial action-nav",                        <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
-    "link_nav_record_name_long" : "link-type-textspecial action-nav link-long",         <#-- the long name of a record: "Mr. Title The Ambassador of Germany", etc. -->
-    "link_nav_record_idname" : "link-type-textspecial action-nav",                      <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
-    "link_nav_record_idname_long" : "link-type-textspecial action-nav link-long",       <#-- long combination of IDs and names: "Mr. John Alberton Smith Junior (ID: 10000) (Group: 20000)" -->
-    "link_nav_record_desc" : "link-type-textspecial action-nav",                        <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. In general, as soon as a link text contains more than one type of value, and not idname, it should be changed to link_nav_record_desc. -->
-    "link_nav_record_date" : "link-type-textspecial action-nav",                        <#-- the date of a record (fromDate, thruDate, etc.) -->
-    "link_nav_record_number" : "link-type-textspecial action-nav",                      <#-- the number of a record (index, sequence num, etc.) -->
-    "link_nav_record_value" : "link-type-textspecial action-nav",                       <#-- link containing a value of type not previously listed (or cannot be known statically) -->
-    "link_nav_record_value_long" : "link-type-textspecial action-nav link-long",        <#-- link containing a value of type not previously listed but that may be long (or cannot be known statically) -->
-    "link_nav_uri" : "link-type-textspecial action-nav",                                <#-- link containing a URL, path or other location as its text (<a href="http://ofbiz.apache.org">http://ofbiz.apache.org</a>); may be IP, hostname, etc. -->
-    "link_nav_text" : "link-type-textspecial action-nav",                               <#-- link containing any kind of free-form text -->
+    <#-- Informational navigation text links -->
+    "link_nav_info" : "link-type-text action-nav action-secondary",                             <#-- a link whose main purpose is to show information and is secondarily a navigation link. the types below are specializations of this. -->
+    "link_nav_info_long" : "link-type-text action-nav action-secondary link-long",              <#-- long version of link_nav_info -->
+    <#-- DEV NOTE (2016-01-19): the categories below have become less important with the new categorizations (the categories above are more important to be followed for good user UI) and because all the categories above support _long versions. however I see no real harm in leaving these in for now (except for consistency concerns)... adds extra configure options. 
+            if found to be not needed, they could simply be all changed back to simple link_nav_info[_long].
+        TODO? may need CSS to identify to style differently depending on if these land within form tables vs outside. but should probably do that with CSS selectors instead of here...
+            maybe remove "button tiny" from all link_nav and link_run_xxx and delegate to SCSS...but not trivial...
+        FIXME: a few of these that were used in templates earlier may actually belong as link_run_xxx instead of link_nav... should review templates again... 
+        FIXME: a bunch of link_nav in templates should be converted to link_nav_info (or more specific)... forgot about them... -->
+    "link_nav_info_id" : "link-type-text action-nav action-secondary",                          <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
+    "link_nav_info_id_long" : "link-type-text action-nav action-secondary link-long",           <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
+    "link_nav_info_name" : "link-type-text action-nav action-secondary",                        <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
+    "link_nav_info_name_long" : "link-type-text action-nav action-secondary link-long",         <#-- the long name of a record: "Mr. Title The Ambassador of Germany", etc. -->
+    "link_nav_info_idname" : "link-type-text action-nav action-secondary",                      <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
+    "link_nav_info_idname_long" : "link-type-text action-nav action-secondary link-long",       <#-- long combination of IDs and names: "Mr. John Alberton Smith Junior (ID: 10000) (Group: 20000)" -->
+    "link_nav_info_desc" : "link-type-text action-nav action-secondary",                        <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. In general, as soon as a link text contains more than one type of value, and not idname, it should be changed to link_nav_info_desc. -->
+    "link_nav_info_date" : "link-type-text action-nav action-secondary",                        <#-- the date of a record (fromDate, thruDate, etc.) -->
+    "link_nav_info_number" : "link-type-text action-nav action-secondary",                      <#-- the number of a record (index, sequence num, etc.) -->
+    "link_nav_info_value" : "link-type-text action-nav action-secondary",                       <#-- link containing a value of type not previously listed (or cannot be known statically) -->
+    "link_nav_info_value_long" : "link-type-text action-nav action-secondary link-long",        <#-- link containing a value of type not previously listed but that may be long (or cannot be known statically) -->
+    "link_nav_info_uri" : "link-type-text action-nav action-secondary",                         <#-- link containing a URL, path or other location as its text (<a href="http://ofbiz.apache.org">http://ofbiz.apache.org</a>); may be IP, hostname, etc. -->
+    "link_nav_info_text" : "link-type-text action-nav action-secondary",                        <#-- link containing any kind of free-form text -->
     
   <#-- Colors -->
     "color_green" : "success",

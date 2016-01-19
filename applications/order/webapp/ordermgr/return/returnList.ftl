@@ -41,11 +41,11 @@ under the License.
         <#assign facility = returnHeader.getRelatedOne("Facility", false)>
       </#if>
       <@tr>
-        <@td><a href="<@ofbizUrl>returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${returnHeader.returnId}</a></@td>
+        <@td><a href="<@ofbizUrl>returnMain?returnId=${returnHeader.returnId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${returnHeader.returnId}</a></@td>
         <@td>${returnHeader.entryDate.toString()}</@td>
         <@td>
           <#if returnHeader.fromPartyId??>
-            <a href="${customerDetailLink}${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_record_id!}">${returnHeader.fromPartyId}</a>
+            <a href="${customerDetailLink}${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_id!}">${returnHeader.fromPartyId}</a>
           <#else>
             <span>${uiLabelMap.CommonNA}</span>
           </#if>

@@ -32,12 +32,12 @@ under the License.
         <field name="workEffortTypeId"><hidden/></field>
         <field name="deleteAction"><hidden/></field>
         <field name="currentStatusId"><hidden/></field>
-        <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="${styles.link_nav_record_idname}">
+        <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}" widget-style="${styles.link_nav_info_idname}">
             <hyperlink also-hidden="false" description="${workEffortName} [${workEffortId}]" target="/workeffort/control/WorkEffortSummary" target-type="inter-app">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
         </field>
-        <field name="assignedByUserLoginId" title="${uiLabelMap.SfaAssignedBy}" widget-style="${styles.link_nav_record_idname_long} ${styles.action_view}">
+        <field name="assignedByUserLoginId" title="${uiLabelMap.SfaAssignedBy}" widget-style="${styles.link_nav_info_idname_long} ${styles.action_view}">
             <hyperlink target="/partymgr/control/viewprofile" description="${assignByPartyName.firstName} ${assignByPartyName.middleName} ${assignByPartyName.lastName} ${assignByPartyName.groupName} [${assignByPartyName.partyId}]" target-type="inter-app">
                 <parameter param-name="partyId" from-field="assignByPartyName.partyId"/>
             </hyperlink>
@@ -53,7 +53,7 @@ under the License.
         <field name="assignedByUserLoginId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.FormFieldTitle_toPartyId}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink description="[${partyId}]" target="/partymgr/control/viewprofile" target-type="inter-app" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>

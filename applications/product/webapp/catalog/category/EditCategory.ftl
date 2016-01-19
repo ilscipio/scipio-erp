@@ -32,7 +32,7 @@ function insertImageName(type,nameValue) {
             <div>${uiLabelMap.ProductTheFileOnYourComputer}: <b>${clientFileName!}</b></div>
             <div>${uiLabelMap.ProductServerFileName}: <b>${fileNameToUse!}</b></div>
             <div>${uiLabelMap.ProductServerDirectory}: <b>${imageServerPath!}</b></div>
-            <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>" class="${styles.link_nav_uri!}">${imageUrl!}</a></b></div>
+            <div>${uiLabelMap.ProductTheUrlOfYourUploadedFile}: <b><a href="<@ofbizContentUrl>${imageUrl!}</@ofbizContentUrl>" class="${styles.link_nav_info_uri!}">${imageUrl!}</a></b></div>
         </#if>
     </@section>
 </#if>

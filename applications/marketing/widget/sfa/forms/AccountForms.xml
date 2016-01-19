@@ -137,7 +137,7 @@ under the License.
             <set field="relatedCompanyPartyId" from-field="relatedCompanies[0].partyIdFrom" type="Object"/>
             <set field="existRelationship" from-field="existRelationships[0]"/>
         </row-actions>
-        <field name="partyId" title="${uiLabelMap.PartyPartyId}" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="partyId" title="${uiLabelMap.PartyPartyId}" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="viewprofile" description="${partyName} [${partyId}]">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -150,7 +150,7 @@ under the License.
         <field name="countryGeoId" title="${uiLabelMap.FormFieldTitle_country}">
             <display-entity entity-name="Geo" description="${geoName}" key-field-name="geoId"/>
         </field>
-        <field name="relatedCompany" use-when="relatedCompanyPartyId!=null" title="${uiLabelMap.PartyRelatedCompany}" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="relatedCompany" use-when="relatedCompanyPartyId!=null" title="${uiLabelMap.PartyRelatedCompany}" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="viewprofile" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator,relatedCompanyPartyId,true);} [${relatedCompanyPartyId}]">
                 <parameter param-name="partyId" from-field="relatedCompanyPartyId"/>
             </hyperlink>

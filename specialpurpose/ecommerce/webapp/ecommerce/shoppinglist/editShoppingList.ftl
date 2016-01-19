@@ -388,7 +388,7 @@ under the License.
               <#assign totalPrice = childShoppingListData.totalPrice/>
               <@tr>
                 <@td nowrap="nowrap">
-                  <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.link_nav_record_name!}">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a>
+                  <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${childShoppingList.listName?default(childShoppingList.shoppingListId)}</a>
                 </@td>
                 <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=totalPrice isoCode=currencyUomId/>
                 </@td>
@@ -442,7 +442,7 @@ under the License.
                 <#assign isVirtual = product.isVirtual?? && product.isVirtual.equals("Y")/>
                   <@tr>
                     <@td>
-                         <a href="<@ofbizUrl>product?product_id=${shoppingListItem.productId}</@ofbizUrl>" class="${styles.link_nav_record_idname!}">${shoppingListItem.productId} -
+                         <a href="<@ofbizUrl>product?product_id=${shoppingListItem.productId}</@ofbizUrl>" class="${styles.link_nav_info_idname!}">${shoppingListItem.productId} -
                          ${productContentWrapper.get("PRODUCT_NAME", "html")?default("No Name")}</a> : ${productContentWrapper.get("DESCRIPTION", "html")!}
                     </@td>
                     <@td nowrap="nowrap" align="center">

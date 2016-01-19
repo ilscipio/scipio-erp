@@ -148,7 +148,7 @@ under the License.
                                     <#assign returnHeader = returnItem.getRelatedOne("ReturnHeader", false)>
                                     <#if returnHeader.statusId != "RETURN_CANCELLED">
                                                 <font color="red">${uiLabelMap.OrderReturned}</font>
-                                                ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${returnItem.returnId}</a>
+                                                ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>returnMain?returnId=${returnItem.returnId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${returnItem.returnId}</a>
                                     </#if>
                                   </#list>
                                 </#if>

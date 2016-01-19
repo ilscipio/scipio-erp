@@ -95,7 +95,7 @@ under the License.
         <field name="productStoreId"><hidden/></field>
         <field name="prodCatalogId"><hidden/></field>
         <field name="productCategoryId"><display></display></field>
-        <field name="categoryName" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+        <field name="categoryName" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink target="getChildCategory" description="${prodCategory.categoryName}">
                 <parameter param-name="productStoreId"/>
                 <parameter from-field="parameters.prodCatalogId" param-name="prodCatalogId"/>

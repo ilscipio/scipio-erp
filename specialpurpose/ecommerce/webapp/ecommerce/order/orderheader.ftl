@@ -34,7 +34,7 @@ under the License.
     </#if>
     ${uiLabelMap.OrderOrder}
     <#if orderHeader?has_content>
-      ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl fullPath="true">orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${orderHeader.orderId}</a>
+      ${uiLabelMap.CommonNbr}<a href="<@ofbizUrl fullPath="true">orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a>
     </#if>
     ${uiLabelMap.CommonInformation}
     <#if (orderHeader.orderId)??>

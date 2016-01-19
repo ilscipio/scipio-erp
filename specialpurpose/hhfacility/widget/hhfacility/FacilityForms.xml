@@ -23,7 +23,7 @@ under the License.
 
     <form name="ListFacilities" type="list" list-name="facilities" paginate-target="main"
              default-title-style="tableheadtext">
-        <field name="facilityId" widget-style="${styles.link_nav_record_id}">
+        <field name="facilityId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${facilityId}" target="menu">
                 <parameter param-name="facilityId"/>
             </hyperlink>

@@ -118,7 +118,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="fixedAssetId" widget-style="${styles.link_nav_record_idname}">
+        <field name="fixedAssetId" widget-style="${styles.link_nav_info_idname}">
             <hyperlink also-hidden="false" description="${fixedAssetName} ${fixedAssetId}" target="EditComputerHardware">
                 <parameter param-name="fixedAssetId"/>
             </hyperlink>
@@ -150,7 +150,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="fixedAssetId" widget-style="${styles.link_nav_record_idname}">
+        <field name="fixedAssetId" widget-style="${styles.link_nav_info_idname}">
             <hyperlink also-hidden="false" description="${fixedAssetName} ${fixedAssetId}" target="EditComputerSoftware">
                 <parameter param-name="fixedAssetId"/>
             </hyperlink>
@@ -179,7 +179,7 @@ under the License.
                 </condition-list>
             </entity-condition>
         </actions>
-        <field name="fixedAssetId" widget-style="${styles.link_nav_record_idname}">
+        <field name="fixedAssetId" widget-style="${styles.link_nav_info_idname}">
             <hyperlink also-hidden="false" description="${fixedAssetName} ${fixedAssetId}" target="EditComputerHardware">
                 <parameter param-name="fixedAssetId"/>
             </hyperlink>

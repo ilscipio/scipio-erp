@@ -172,7 +172,7 @@ under the License.
                 <order-by field-name="groupId"/>
             </entity-condition>
         </actions>
-        <field name="groupId" title="${uiLabelMap.CommonSecurityGroupId}" widget-style="${styles.link_nav_record_id}">
+        <field name="groupId" title="${uiLabelMap.CommonSecurityGroupId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${groupId}" target="EditSecurityGroup">
                 <parameter param-name="groupId"/>
             </hyperlink>
@@ -190,7 +190,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="groupId"><hidden/></field>
-        <field name="userLoginId" sort-field="true" widget-style="${styles.link_nav_record_id} ${styles.action_view}">
+        <field name="userLoginId" sort-field="true" widget-style="${styles.link_nav_info_id} ${styles.action_view}">
             <hyperlink also-hidden="false" description="${userLoginId}" target="editlogin">
                 <parameter param-name="userLoginId"/>
             </hyperlink>
@@ -216,7 +216,7 @@ under the License.
                 <order-by field-name="${sortField}"/>
             </entity-condition>
         </actions>
-        <field name="userLoginId" widget-style="${styles.link_nav_record_id}" sort-field="true">
+        <field name="userLoginId" widget-style="${styles.link_nav_info_id}" sort-field="true">
             <hyperlink also-hidden="false" description="${userLoginId}" target="editlogin">
                 <parameter param-name="userLoginId"/>
             </hyperlink>
@@ -236,7 +236,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="partyId"><hidden value="${partyId}"/></field>
-        <field name="groupIdCol" title="${uiLabelMap.CommonSecurityGroupId}" widget-style="${styles.link_nav_record_id}">
+        <field name="groupIdCol" title="${uiLabelMap.CommonSecurityGroupId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${groupId}" target="EditSecurityGroup">
                     <parameter param-name="groupId"/>
             </hyperlink>
@@ -276,7 +276,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}" widget-style="${styles.link_nav_record_id}">
+        <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${userLoginId}" target="javascript:set_value('${userLoginId}', '${userLoginId}', '${parameters.webSitePublishPoint}')"/>
         </field>
         <field name="enabled"><display/></field>

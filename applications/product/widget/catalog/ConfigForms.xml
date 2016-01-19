@@ -50,7 +50,7 @@ under the License.
         <row-actions>
             <set field="typeDescription" value="${groovy: return &quot;SINGLE&quot;.equals(configItemTypeId) ? uiLabelMap.get(&quot;ProductSingleChoice&quot;) : uiLabelMap.get(&quot;ProductMultiChoice&quot;)}"/>
         </row-actions>
-        <field name="configItemId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_record_id}">
+        <field name="configItemId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="EditProductConfigItem" description="${configItemId}">
                 <parameter param-name="configItemId"/>
             </hyperlink>
@@ -158,7 +158,7 @@ under the License.
         <!-- each entry in the list will be a Map with the entries: productContent and content -->
         <auto-fields-service service-name="updateProductConfigItemContent" map-name="productContent"/>
         <field name="configItemId"><hidden/></field>
-        <field name="contentId" title="${uiLabelMap.ProductContent_Id}" widget-style="${styles.link_nav_record_desc}">
+        <field name="contentId" title="${uiLabelMap.ProductContent_Id}" widget-style="${styles.link_nav_info_desc}">
             <hyperlink target="EditProductConfigItemContentContent" description="${content.description} [${productContent.contentId}]">
                 <parameter param-name="configItemId" from-field="productContent.configItemId"/>
                 <parameter param-name="contentId" from-field="productContent.contentId"/>
@@ -214,7 +214,7 @@ under the License.
             </entity-condition>
         </actions>
         <auto-fields-entity entity-name="ProductConfigAndProduct" default-field-type="hidden"/>
-        <field name="productId" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_nav_record_id}" >
+        <field name="productId" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_nav_info_id}" >
             <hyperlink target="EditProductConfigs" description="${productId}">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -227,7 +227,7 @@ under the License.
         default-table-style="${styles.table_basic}" odd-row-style="alternate-row" paginate-target="FindProductConfigItems"
         target="" header-row-style="header-row-2" paginate="true">
         <auto-fields-entity entity-name="ProductConfigOption" default-field-type="display"/>
-        <field name="configItemId" widget-style="${styles.link_nav_record_idname}" title="${uiLabelMap.ProductConfigItem}">
+        <field name="configItemId" widget-style="${styles.link_nav_info_idname}" title="${uiLabelMap.ProductConfigItem}">
             <hyperlink target="EditProductConfigOptions" description="${configOptionId} - ${configOptionName}">
                 <parameter param-name="configItemId"/>
                 <parameter param-name="configOptionId"/>
@@ -254,7 +254,7 @@ under the License.
         <auto-fields-service service-name="createProductConfigProduct" default-field-type="display"/>
         <field name="configItemId" ><hidden/></field>
         <field name="configOptionId" ><hidden/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_nav_record_idname}">
+        <field name="productId" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_nav_info_idname}">
             <hyperlink target="EditProduct" description="${product.productId} - ${product.productName}">
                 <parameter param-name="productId" from-field="product.productId"/>
             </hyperlink>

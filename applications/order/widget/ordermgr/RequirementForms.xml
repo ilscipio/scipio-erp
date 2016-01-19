@@ -76,7 +76,7 @@ under the License.
             <set field="facilityQuantityOnHandTotal" from-field="resultQoh.quantityOnHandTotal"/>
             <set field="quantityOnHandTotal" from-field="resultQohTotal.quantityOnHandTotal"/>
         </row-actions>
-        <field name="requirementId" widget-style="${styles.link_nav_record_id}">
+        <field name="requirementId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target-type="inter-app" description="${requirementId}" target="/ordermgr/control/EditRequirement">
                 <parameter param-name="requirementId"/>
             </hyperlink>
@@ -145,13 +145,13 @@ under the License.
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="RequirementCustRequest" default-field-type="display"/>
         <field name="requirementId"><hidden/></field>
-        <field name="custRequestId" widget-style="${styles.link_nav_record_id}">
+        <field name="custRequestId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${custRequestId}" target="request">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
             </hyperlink>
         </field>
-        <field name="custRequestItemSeqId" widget-style="${styles.link_nav_record_id}">
+        <field name="custRequestItemSeqId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${custRequestItemSeqId}" target="requestitem">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="custRequestItemSeqId"/>
@@ -163,7 +163,7 @@ under the License.
     <form name="ListRequirementOrders" type="list" title="" list-name="orderRequirements" paginate-target="ListRequirementOrders"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="OrderRequirementCommitment" default-field-type="display"/>
-        <field name="orderId" widget-style="${styles.link_nav_record_id}">
+        <field name="orderId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${orderId}" target-type="inter-app" target="/ordermgr/control/orderview">
                 <parameter param-name="orderId"/>
             </hyperlink>
@@ -235,7 +235,7 @@ under the License.
     </form>
     <form name="ApproveRequirements" type="multi" use-row-submit="true" target="approveRequirements" title="" list-name="requirements"
         paginate-target="ApproveRequirements" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="requirementId" widget-style="${styles.link_nav_record_id}">
+        <field name="requirementId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="true" description="${requirementId}" target="EditRequirement">
                 <parameter param-name="requirementId"/>
             </hyperlink>
@@ -299,12 +299,12 @@ under the License.
                 <field-map field-name="unassignedRequirements" from-field="parameters.unassignedRequirements"/>
             </service>
         </actions>
-        <field name="requirementId" widget-style="${styles.link_nav_record_id}">
+        <field name="requirementId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="true" description="${requirementId}" target="EditRequirement">
                 <parameter param-name="requirementId"/>
             </hyperlink>
         </field>
-        <field name="productId" widget-style="${styles.link_nav_record_id}">
+        <field name="productId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="true" target-type="inter-app" description="${productId}" target="/catalog/control/EditProductInventoryItems" target-window="top">
                 <parameter param-name="productId"/>
             </hyperlink>
@@ -315,10 +315,10 @@ under the License.
         <field name="facilityId"><display/></field>
         <field name="partyId" title="${uiLabelMap.ProductSupplier}">
             <display-entity entity-name="PartyNameView" description="${LastName} ${firstName} ${middleName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile?partyId=${partyId}" description="[${partyId}]" target-type="inter-app" link-style="${styles.link_nav_record_id}"/>
+                <sub-hyperlink target="/partymgr/control/viewprofile?partyId=${partyId}" description="[${partyId}]" target-type="inter-app" link-style="${styles.link_nav_info_id}"/>
             </display-entity>
         </field>
-        <field name="supplierProductId" title="${uiLabelMap.ProductSupplierProductId}" widget-style="${styles.link_nav_record_id}">
+        <field name="supplierProductId" title="${uiLabelMap.ProductSupplierProductId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="/catalog/control/EditProductSuppliers?productId=${productId}" description="${supplierProductId}" target-type="inter-app"/>
         </field>
         <field name="idValue" title="${uiLabelMap.ProductUPCA}"><display/></field>
@@ -333,12 +333,12 @@ under the License.
         <field name="orderId" id-name="orderId"><hidden/></field>
         <field name="billToCustomerPartyId"><hidden value="${parameters.billToCustomerPartyId}"/></field>
         <field name="supplierPartyId"><hidden value="${parameters.partyId}"/></field>
-        <field name="requirementId" widget-style="${styles.link_nav_record_id}">
+        <field name="requirementId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="true" description="${requirementId}" target="EditRequirement">
                 <parameter param-name="requirementId"/>
             </hyperlink>
         </field>
-        <field name="productId" widget-style="${styles.link_nav_record_id}">
+        <field name="productId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="true" target-type="inter-app" description="${productId}" target="/catalog/control/EditProductInventoryItems" target-window="top">
                 <parameter param-name="productId"/>
             </hyperlink>

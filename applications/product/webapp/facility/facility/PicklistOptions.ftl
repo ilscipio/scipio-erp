@@ -129,23 +129,23 @@ under the License.
                 <@td>
                   ${viewGroupDetailForm}
                   <#if groupName1?has_content>
-                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.link_nav_record_name!}">${groupName1}</a>
+                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.link_nav_info_name!}">${groupName1}</a>
                   </#if>
                 </@td>
                 <@td>
                   <#if groupName2?has_content>
-                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.link_nav_record_name!}">${groupName2}</a>
+                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.link_nav_info_name!}">${groupName2}</a>
                   </#if>
                 </@td>
                 <@td>
                   <#if groupName3?has_content>
-                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.link_nav_record_name!}">${groupName3}</a>
+                    <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.link_nav_info_name!}">${groupName3}</a>
                   </#if>
                 </@td>
               <#else>
                 <@td>
                   ${viewGroupDetailForm}
-                  <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.link_nav_record_name!}">${groupName!}</a>
+                  <a href="javascript:document.viewGroupDetail_${pickMoveInfo_index}.submit()" class="${styles.link_nav_info_name!}">${groupName!}</a>
                 </@td>
               </#if>
             <@td>
@@ -281,14 +281,14 @@ under the License.
             <#assign orderProduct = oiasga.getRelatedOne("OrderItem", false).getRelatedOne("Product", false)!>
             <#assign product = oiasga.getRelatedOne("InventoryItem", false).getRelatedOne("Product", false)!>
             <@tr valign="middle">
-              <@td><a href="/ordermgr/control/orderview?orderId=${oiasga.orderId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_record_id!}" target="_blank">${oiasga.orderId}</a></@td>
+              <@td><a href="/ordermgr/control/orderview?orderId=${oiasga.orderId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_id!}" target="_blank">${oiasga.orderId}</a></@td>
               <@td>${header.orderDate?string}</@td>
               <@td>${(channel.description)!}</@td>
               <@td>${oiasga.orderItemSeqId}</@td>
               <@td>
-                <a href="/catalog/control/EditProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_record_name!}" target="_blank">${(orderProduct.internalName)!}</a>
+                <a href="/catalog/control/EditProduct?productId=${orderProduct.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_name!}" target="_blank">${(orderProduct.internalName)!}</a>
                 <#if orderProduct.productId != product.productId>
-                  &nbsp;[<a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_record_name!}" target="_blank">${(product.internalName)!}</a>]
+                  &nbsp;[<a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>]
                 </#if>
               </@td>
               <@td>${oiasga.shipGroupSeqId}</@td>

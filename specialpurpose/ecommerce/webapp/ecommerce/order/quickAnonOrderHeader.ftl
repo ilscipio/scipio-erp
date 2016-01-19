@@ -33,7 +33,7 @@ under the License.
                     <a href="<@ofbizUrl>makeReturn?orderId=${orderHeader.orderId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderRequestReturn}</a>
                 </#if>
             </div>
-            <div class="h3">${uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${orderHeader.orderId}</a>&nbsp;</#if>${uiLabelMap.CommonInformation}</div>
+            <div class="h3">${uiLabelMap.OrderOrder}&nbsp;<#if orderHeader?has_content>${uiLabelMap.CommonNbr}<a href="<@ofbizUrl>orderstatus?orderId=${orderHeader.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${orderHeader.orderId}</a>&nbsp;</#if>${uiLabelMap.CommonInformation}</div>
         </div>
         <div class="screenlet-body">
             <@table width="100%" border="0" cellpadding="1">

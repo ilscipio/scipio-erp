@@ -523,7 +523,7 @@ under the License.
         <auto-fields-entity entity-name="ContentRevision"/>
         <auto-fields-entity entity-name="ContentRevisionItem"/>
 
-        <field name="contentId" widget-style="${styles.link_nav_record_id}"><text/></field>
+        <field name="contentId" widget-style="${styles.link_nav_info_id}"><text/></field>
         <field name="contentRevisionSeqId"><hidden/></field>
         <field name="committedByPartyId" widget-style="inputBox"></field>
         <field name="comments" widget-style="inputBox"></field>

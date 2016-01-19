@@ -23,7 +23,7 @@ under the License.
     <form name="ListCostComponentCalc" type="list" title="" list-name="allCostComponentCalcs"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <auto-fields-entity entity-name="CostComponentCalc" default-field-type="display"/>
-        <field name="costComponentCalcId" widget-style="${styles.link_nav_record_id}">
+        <field name="costComponentCalcId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="EditCostCalcs" description="${costComponentCalcId}" also-hidden="false">
                 <parameter param-name="costComponentCalcId"/>
             </hyperlink>

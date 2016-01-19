@@ -472,7 +472,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true" separate-columns="true">
         <field name="itemId"><display/></field>
         <field name="SKU" title="Product ID"><display/></field>
-        <field name="title" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
+        <field name="title" widget-style="${styles.link_nav_info_desc} ${styles.action_view}">
             <hyperlink target="${viewItemURL}" description="${title}" target-type="plain" target-window="_BLANK"/>
         </field>
         <field name="buyItNowPrice"><display/></field>
@@ -703,7 +703,7 @@ under the License.
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true" separate-columns="true" view-size="100">
         <field name="itemId" title="Item ID" sort-field="true"><display description="${itemId}"/></field>
         <field name="SKU" title="Product ID"><display description="${SKU}"/></field>
-        <field name="title" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
+        <field name="title" widget-style="${styles.link_nav_info_desc} ${styles.action_view}">
             <hyperlink target="${viewItemURL}" description="${title}" target-type="plain" target-window="_BLANK"/>
         </field>
         <field name="sellingStatus" title="Status"><display description="${sellingStatus}"/></field>
@@ -720,7 +720,7 @@ under the License.
         </row-actions>
         <field name="_rowSubmit" position="1" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="productStoreId"><hidden value="${productStoreId}"/></field>
-        <field name="orderId" title="Order ID" widget-style="${styles.link_nav_record_id}">
+        <field name="orderId" title="Order ID" widget-style="${styles.link_nav_info_id}">
             <!-- FIXME: horrible hardcoded URL -->
             <hyperlink target="https://localhost:8443/ordermgr/control/orderview?orderId=${orderId}" description="${orderId}" target-type="plain" target-window="_BLANK"/>
         </field>
@@ -762,7 +762,7 @@ under the License.
         </row-actions>
         <field name="productStoreId"><hidden value="${productStoreId}"/></field>
         <field name="_rowSubmit" position="1" title="${uiLabelMap.CommonSelect}" use-when="${bsh:String prev=(String)previousItem.get(&quot;externalId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(externalId)));}"><check/></field>
-        <field name="orderId" position="1" title="Order ID" use-when="${bsh:String prev=(String)previousItem.get(&quot;externalId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(externalId)));}" widget-style="${styles.link_nav_record_id}">
+        <field name="orderId" position="1" title="Order ID" use-when="${bsh:String prev=(String)previousItem.get(&quot;externalId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(externalId)));}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="https://localhost:8443/ordermgr/control/orderview?orderId=${orderId}" description="${orderId}" target-type="plain" target-window="_BLANK"/>
         </field>
         <field name="externalId" title="External ID" position="1" use-when="${bsh:String prev=(String)previousItem.get(&quot;externalId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(externalId)));}"><display description="${externalId}"></display></field>

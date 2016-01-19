@@ -153,13 +153,13 @@ under the License.
                   <field-map field-name="viewSize" from-field="viewSize"/>
               </service>
           </actions>
-        <field name="contentId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_nav_record_id}">
+        <field name="contentId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${contentId}" target="EditLayout">
                 <parameter param-name="contentId"/>
                 <parameter param-name="drDataResourceId"/>
             </hyperlink>
         </field>
-        <field name="dummy" title="${uiLabelMap.ContentClip}" widget-style="${styles.link_nav_record_id}" map-name="dummy">
+        <field name="dummy" title="${uiLabelMap.ContentClip}" widget-style="${styles.link_nav_info_id}" map-name="dummy">
             <hyperlink also-hidden="false" description="${contentId}" target="clipFindLayout">
                 <parameter param-name="contentId"/>
                 <parameter param-name="drDataResourceId"/>
@@ -185,7 +185,7 @@ under the License.
 
     <form name="listListLayout" default-entity-name="ContentAssocDataResourceViewFrom" list-name="layoutList" target="" title="" type="list" paginate-target="FindLayout"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="contentId" widget-style="${styles.link_nav_record_id}">
+        <field name="contentId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${contentId}" target="EditLayout">
                 <parameter param-name="contentId"/>
                 <parameter param-name="drDataResourceId"/>
@@ -387,7 +387,7 @@ under the License.
     </form>
     <form name="ListRelatedLayouts" default-entity-name="ContentDataResourceView" list-name="entityList" target="" title="" type="list" paginate-target="FindLayout"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="contentId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_nav_record_id}">
+        <field name="contentId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${contentId}" target="EditLayout">
                 <parameter param-name="contentId"/>
                 <parameter param-name="drDataResourceId"/>

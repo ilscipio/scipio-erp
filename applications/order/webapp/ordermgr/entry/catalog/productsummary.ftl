@@ -156,7 +156,7 @@ ${virtualJavaScript!}
         </div>
         <div class="productinfo">
           <div>
-            <a href="${productUrl}" class="${styles.link_nav_record_name!}">${productContentWrapper.get("PRODUCT_NAME", "html")!}</a>
+            <a href="${productUrl}" class="${styles.link_nav_info_name!}">${productContentWrapper.get("PRODUCT_NAME", "html")!}</a>
           </div>
           <div>${productContentWrapper.get("DESCRIPTION", "html")!}<#if daysToShip??>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
 

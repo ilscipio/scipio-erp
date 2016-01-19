@@ -107,7 +107,7 @@ function enableSubmitButton() {
         <#assign statusItem = delegator.findOne("StatusItem", {"statusId" : invoice.statusId}, false)!/>
         <@tr valign="middle">
           <@td><input type="checkbox" id="invoiceId_${invoice_index}" name="invoiceIds" value="${invoice.invoiceId}" onclick="javascript:enableSubmitButton();"/></@td>
-          <@td><a class="${styles.link_nav_record_id!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></@td>
+          <@td><a class="${styles.link_nav_info_id!}" href="<@ofbizUrl>invoiceOverview?invoiceId=${invoice.invoiceId}</@ofbizUrl>">${invoice.get("invoiceId")}</a></@td>
           <@td><a href="/partymgr/control/viewprofile?partyId=${invoice.partyIdFrom}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.partyIdFrom, false)!}</a></@td>
           <@td><a href="/partymgr/control/viewprofile?partyId=${invoice.invoiceRolePartyId}">${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, invoice.invoiceRolePartyId, false)!}</a></@td>
           <@td>${statusItem.get("description")!}</@td>

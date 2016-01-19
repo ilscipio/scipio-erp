@@ -81,8 +81,8 @@ under the License.
         <#list foundLocations as location>
         <#assign locationTypeEnum = location.getRelatedOne("TypeEnumeration", true)!>
         <@tr valign="middle">
-            <@td><a href="<@ofbizUrl>EditFacility?facilityId=${(location.facilityId)!}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${(location.facilityId)!}</a></@td>
-            <@td><a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${(location.locationSeqId)!}</a></@td>
+            <@td><a href="<@ofbizUrl>EditFacility?facilityId=${(location.facilityId)!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${(location.facilityId)!}</a></@td>
+            <@td><a href="<@ofbizUrl>EditFacilityLocation?facilityId=${facilityId}&locationSeqId=${(location.locationSeqId)!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${(location.locationSeqId)!}</a></@td>
             <@td>${(locationTypeEnum.get("description",locale))?default(location.locationTypeEnumId!)}</@td>
             <@td>${(location.areaId)!}</@td>
             <@td>${(location.aisleId)!}</@td>

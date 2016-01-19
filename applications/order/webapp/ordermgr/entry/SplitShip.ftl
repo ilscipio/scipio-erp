@@ -173,7 +173,7 @@ function submitForm(form, mode, value) {
                         </a>
                       </#if>
                       <#-- end code to display a small image of the product -->
-                      <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="${styles.link_nav_record_id!}">${cartLine.getProductId()} -
+                      <a href="<@ofbizUrl>product?product_id=${cartLine.getProductId()}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${cartLine.getProductId()} -
                       ${cartLine.getName()!}</a> : ${cartLine.getDescription()!}
 
                       <#-- display the registered ship groups and quantity -->

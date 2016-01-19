@@ -43,7 +43,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productCategoryId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_nav_record_id}">
+        <field name="productCategoryId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${productCategoryId}" target="EditCategory">
                 <parameter param-name="productCategoryId"/>
             </hyperlink>
@@ -132,7 +132,7 @@ under the License.
         <field name="productCategoryId"><hidden/></field>
         <field name="prodCatalogId" title="${uiLabelMap.ProductCatalog}">
             <display-entity entity-name="ProdCatalog" description=" " also-hidden="true" cache="true">
-                <sub-hyperlink link-style="${styles.link_nav_record_name}" target="EditProdCatalog" description="${categoryCatalog.catalogName}">
+                <sub-hyperlink link-style="${styles.link_nav_info_name}" target="EditProdCatalog" description="${categoryCatalog.catalogName}">
                     <parameter param-name="prodCatalogId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -163,7 +163,7 @@ under the License.
         <field name="showProductCategoryId"><hidden/></field>
         <field name="productCategoryId" title="${uiLabelMap.ProductCategory}">
             <display-entity entity-name="ProductCategory" description=" " also-hidden="true" cache="true">
-                <sub-hyperlink link-style="${styles.link_nav_record_idname}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
+                <sub-hyperlink link-style="${styles.link_nav_info_idname}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
                     <parameter param-name="productCategoryId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -191,7 +191,7 @@ under the License.
         <field name="showProductCategoryId"><hidden/></field>
         <field name="productCategoryId" title="${uiLabelMap.ProductCategory}">
             <display-entity entity-name="ProductCategory" description=" " also-hidden="true" cache="true">
-                <sub-hyperlink link-style="${styles.link_nav_record_idname}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
+                <sub-hyperlink link-style="${styles.link_nav_info_idname}" target="EditCategory" description="${category.categoryName} [${productCategoryId}]">
                     <parameter param-name="productCategoryId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -218,7 +218,7 @@ under the License.
         <field name="productCategoryId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.CommonParty}">
             <display-entity entity-name="PartyNameView" description=" " also-hidden="true" cache="true">
-                <sub-hyperlink link-style="${styles.link_nav_record_name_long}" target="/partymgr/control/viewprofile" target-type="inter-app" target-window="_blank" description="${categoryParty.groupName}${categoryParty.firstName} ${categoryParty.middleInitial} ${categoryParty.lastName}">
+                <sub-hyperlink link-style="${styles.link_nav_info_name_long}" target="/partymgr/control/viewprofile" target-type="inter-app" target-window="_blank" description="${categoryParty.groupName}${categoryParty.firstName} ${categoryParty.middleInitial} ${categoryParty.lastName}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -297,7 +297,7 @@ under the License.
         <field name="productCategoryId"><hidden/></field>
         <field name="contentId" title="${uiLabelMap.ProductContent}">
             <display-entity entity-name="Content" description="${description}" also-hidden="true">
-                <sub-hyperlink target="EditCategoryContentContent" description="${contentId}" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink target="EditCategoryContentContent" description="${contentId}" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="productCategoryId"/>
                     <parameter param-name="contentId"/>
                     <parameter param-name="prodCatContentTypeId"/>
@@ -436,7 +436,7 @@ under the License.
     </form>
 
     <form name="ListTopCategory" type="list" list-name="noParentCategories" odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
-        <field name="productCategoryId" widget-style="${styles.link_nav_record_id}">
+        <field name="productCategoryId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="EditCategory" description="${productCategoryId}" also-hidden="false">
                 <parameter param-name="CATALOG_TOP_CATEGORY" value="${productCategoryId}"/>
                 <parameter param-name="productCategoryId" value="${productCategoryId}"/>
@@ -493,7 +493,7 @@ under the License.
         
         <field name="description" title="${uiLabelMap.ProductCategoryDescription}" map-name="content"><text size="40"/></field>
         <field use-when="contentId == null" name="contentId" title="${uiLabelMap.ProductContentId}" tooltip="${uiLabelMap.ProductOptional}"><text maxlength="20"/></field>
-        <field use-when="contentId != null" name="contentId" title="${uiLabelMap.ProductContentId}" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="productContentData" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field use-when="contentId != null" name="contentId" title="${uiLabelMap.ProductContentId}" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="productContentData" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink description="${contentId} ${contentName}" target="/content/control/editContent" target-type="inter-app">
                 <parameter param-name="contentId"/>
             </hyperlink>

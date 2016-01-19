@@ -41,11 +41,11 @@ under the License.
         </@tr>
         <@tr>
           <@td>${uiLabelMap.PartyServer}</@td>
-          <@td><a href="http://uptime.netcraft.com/up/graph/?site=${visit.serverIpAddress!}" target="_blank" class="${styles.link_nav_uri!} ${styles.action_external!}">${visit.serverIpAddress!}</a> / <a href="http://uptime.netcraft.com/up/graph/?site=${visit.serverIpAddress!}" target="_blank" class="${styles.link_nav_uri!} ${styles.action_external!}">${visit.serverHostName!}</a></@td>
+          <@td><a href="http://uptime.netcraft.com/up/graph/?site=${visit.serverIpAddress!}" target="_blank" class="${styles.link_nav_info_uri!} ${styles.action_external!}">${visit.serverIpAddress!}</a> / <a href="http://uptime.netcraft.com/up/graph/?site=${visit.serverIpAddress!}" target="_blank" class="${styles.link_nav_info_uri!} ${styles.action_external!}">${visit.serverHostName!}</a></@td>
         </@tr>
         <@tr>
           <@td>${uiLabelMap.PartyClient}</@td>
-          <@td><a href="http://ws.arin.net/cgi-bin/whois.pl?queryinput=${visit.clientIpAddress!}" target="_blank" class="${styles.link_nav_uri!} ${styles.action_external!}">${visit.clientIpAddress!}</a> / <a href="http://www.networksolutions.com/cgi-bin/whois/whois?STRING=${visit.clientHostName!}&amp;SearchType=do" target="_blank" class="${styles.link_nav_uri!} ${styles.action_external!}">${visit.clientHostName!}</a></@td>
+          <@td><a href="http://ws.arin.net/cgi-bin/whois.pl?queryinput=${visit.clientIpAddress!}" target="_blank" class="${styles.link_nav_info_uri!} ${styles.action_external!}">${visit.clientIpAddress!}</a> / <a href="http://www.networksolutions.com/cgi-bin/whois/whois?STRING=${visit.clientHostName!}&amp;SearchType=do" target="_blank" class="${styles.link_nav_info_uri!} ${styles.action_external!}">${visit.clientHostName!}</a></@td>
         </@tr>
         <@tr>
           <@td>${uiLabelMap.PartyClientUser}</@td>

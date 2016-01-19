@@ -25,7 +25,7 @@
         <actions>
             <set field="complete" value="${uiLabelMap.ScrumToComplete}"/>
         </actions>
-        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_nav_record_id}">
+        <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${timesheetId}" target="MyWork">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -80,7 +80,7 @@
             </display-entity>
         </field>
         <field name="sprintName" ><display description="${result.sprintName}"></display> </field>
-        <field name="projectName" title="${uiLabelMap.ScrumProjectName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+        <field name="projectName" title="${uiLabelMap.ScrumProjectName}" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink target="viewScrumProject" description="${projectName}">
                 <parameter param-name="projectId"/>
             </hyperlink>

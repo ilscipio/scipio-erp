@@ -68,7 +68,7 @@ under the License.
             <entity-one entity-name="SalesOpportunity"/>
         </row-actions>
         <field name="salesOpportunityId"><hidden/></field>
-        <field name="opportunityName" title="${uiLabelMap.SfaOpportunityName}" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="opportunityName" title="${uiLabelMap.SfaOpportunityName}" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="ViewSalesOpportunity" description="${opportunityName} [${salesOpportunityId}]">
                 <parameter param-name="salesOpportunityId"/>
             </hyperlink>
@@ -76,7 +76,7 @@ under the License.
         <field name="opportunityStageId" title="${uiLabelMap.SfaInitialStage}"><display-entity entity-name="SalesOpportunityStage" description="${description}"/></field>
         <field name="partyId" title="${uiLabelMap.SfaLead}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} ${middleName} ${groupName}" key-field-name="partyId">
-                <sub-hyperlink target="viewprofile" description="[${partyId}]" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink target="viewprofile" description="[${partyId}]" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId" from-field="partyId"/>
                 </sub-hyperlink>
             </display-entity> 

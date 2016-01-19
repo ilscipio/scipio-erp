@@ -175,7 +175,7 @@ function getConfigDetails() {
         <#if previousProductId??>
           <a href='<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${previousProductId!}</@ofbizUrl>' class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
         </#if>
-        <a href="<@ofbizUrl>category/~category_id=${categoryId!}</@ofbizUrl>" class="${styles.link_nav_record_name!}">${(category.categoryName)?default(category.description)!}</a>
+        <a href="<@ofbizUrl>category/~category_id=${categoryId!}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${(category.categoryName)?default(category.description)!}</a>
         <#if nextProductId??>
           &nbsp;|&nbsp;<a href='<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${nextProductId!}</@ofbizUrl>' class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
         </#if>
@@ -615,7 +615,7 @@ function getConfigDetails() {
     <@tr type="util"><@td><hr /></@td></@tr>
     <#list assocProducts as productAssoc>
       <@tr><@td>
-          <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo!}</@ofbizUrl>" class="${styles.link_nav_record_id!}">
+          <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">
             ${productAssoc.productIdTo!}
           </a>
           - <b>${productAssoc.reason!}</b>

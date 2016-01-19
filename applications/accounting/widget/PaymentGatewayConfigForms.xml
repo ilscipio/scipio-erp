@@ -49,7 +49,7 @@ under the License.
         </actions>
         <auto-fields-entity entity-name="PaymentGatewayConfig" default-field-type="display"/>
         <field name="paymentGatewayConfigId"><hidden/></field>
-        <field name="description" title="${uiLabelMap.AccountingPaymentGatewayConfigDescription}" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
+        <field name="description" title="${uiLabelMap.AccountingPaymentGatewayConfigDescription}" widget-style="${styles.link_nav_info_desc} ${styles.action_view}">
             <hyperlink description="${description}" target="EditPaymentGatewayConfig?paymentGatewayConfigId=${paymentGatewayConfigId}"/>
         </field>
         <field name="paymentGatewayConfigTypeId" title="${uiLabelMap.AccountingPaymentGatewayConfigTypeId}">
@@ -429,7 +429,7 @@ under the License.
         </actions>
         <auto-fields-entity entity-name="PaymentGatewayConfigType" default-field-type="display"/>
         <field name="paymentGatewayConfigTypeId"><hidden/></field>
-        <field name="description" title="${uiLabelMap.AccountingPaymentGatewayConfigTypeDescription}" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
+        <field name="description" title="${uiLabelMap.AccountingPaymentGatewayConfigTypeDescription}" widget-style="${styles.link_nav_info_desc} ${styles.action_view}">
             <hyperlink description="${description}" target="EditPaymentGatewayConfigType?paymentGatewayConfigTypeId=${paymentGatewayConfigTypeId}"/>
         </field>
     </form>

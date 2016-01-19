@@ -85,7 +85,7 @@ under the License.
             </service>
         </actions>
         <field name="jobName" title="${uiLabelMap.WebtoolsJob}" sort-field="true"><display/></field>
-        <field name="jobId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_nav_record_id} ${styles.action_view}">
+        <field name="jobId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_nav_info_id} ${styles.action_view}">
             <hyperlink also-hidden="false" description="${jobId}" target="JobDetails">
                 <parameter param-name="jobId" from-field="jobId"/>
             </hyperlink>

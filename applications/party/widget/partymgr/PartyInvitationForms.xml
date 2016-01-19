@@ -57,7 +57,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="partyInvitationId" widget-style="${styles.link_nav_record_id}">
+        <field name="partyInvitationId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${partyInvitationId}" target="editPartyInvitation">
                 <parameter param-name="partyInvitationId"/>
             </hyperlink>
@@ -106,14 +106,14 @@ under the License.
                 <order-by field-name="partyInvitationId"/>
             </entity-condition>
         </actions>
-        <field name="partyInvitationId" widget-style="${styles.link_nav_record_id}">
+        <field name="partyInvitationId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${partyInvitationId}" target="editPartyInvitation">
                 <parameter param-name="partyInvitationId"/>
             </hyperlink>
         </field>
         <field name="partyId" entry-name="partyIdTo">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}">
-                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyIdTo}" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyIdTo}" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId" from-field="partyIdTo"/>
                 </sub-hyperlink>
             </display-entity>
@@ -149,7 +149,7 @@ under the License.
                 <order-by field-name="partyInvitationId"/>
             </entity-condition>
         </actions>
-        <field name="partyInvitationId" widget-style="${styles.link_nav_record_id}">
+        <field name="partyInvitationId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${partyInvitationId}" target="editPartyInvitation">
                 <parameter param-name="partyInvitationId"/>
             </hyperlink>

@@ -32,14 +32,14 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="EmplPosition" default-field-type="display"/>
-        <field name="emplPositionId" title="${uiLabelMap.HumanResEmployeePositionId}" widget-style="${styles.link_nav_record_id}">
+        <field name="emplPositionId" title="${uiLabelMap.HumanResEmployeePositionId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${emplPositionId}" target="emplPositionView">
                 <parameter param-name="emplPositionId"/>
             </hyperlink>
         </field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
-                <sub-hyperlink target="viewprofile" link-style="${styles.link_nav_record_id}" target-type="inter-app" description="${partyId}">
+                <sub-hyperlink target="viewprofile" link-style="${styles.link_nav_info_id}" target-type="inter-app" description="${partyId}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -73,7 +73,7 @@ under the License.
         </field>
         <!--<field name="partyId" title="Organization PartyId">
             <display-entity description="${groupName}" entity-name="PartyNameView">
-                <sub-hyperlink target="viewprofile" link-style="${styles.link_nav_record_id}" target-type="inter-app" description="${partyId}">
+                <sub-hyperlink target="viewprofile" link-style="${styles.link_nav_info_id}" target-type="inter-app" description="${partyId}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -109,7 +109,7 @@ under the License.
         <auto-fields-service service-name="updateEmplPositionFulfillment"/>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
             <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
-                <sub-hyperlink target="EmployeeProfile" link-style="${styles.link_nav_record_id}" description="${partyId}">
+                <sub-hyperlink target="EmployeeProfile" link-style="${styles.link_nav_info_id}" description="${partyId}">
                     <parameter param-name="partyId"/>
                 </sub-hyperlink>
             </display-entity>

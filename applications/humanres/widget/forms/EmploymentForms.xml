@@ -58,7 +58,7 @@
             </service>
         </actions>
         <field name="partyIdFrom" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}"><display></display></field>
-        <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" widget-style="${styles.link_nav_record_id}">
+        <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${partyIdTo}" target="EmployeeProfile">
                 <parameter param-name="partyId" from-field="partyIdTo"/>
             </hyperlink>
@@ -90,7 +90,7 @@
             </service>
         </actions>
         <field name="partyIdFrom" title="${uiLabelMap.HumanResEmploymentPartyIdFrom}"><display></display></field>
-        <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" widget-style="${styles.link_nav_record_id}">
+        <field name="partyIdTo" title="${uiLabelMap.HumanResEmployeePartyIdTo}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${partyIdTo}" target="viewprofile">
                 <parameter param-name="partyId" from-field="partyIdTo"/>
             </hyperlink>
@@ -311,7 +311,7 @@
         <auto-fields-service default-field-type="display" service-name="updatePerformanceNote"/>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}">
            <display-entity description="${firstName} ${middleName} ${lastName} ${groupName}" entity-name="PartyNameView">
-               <sub-hyperlink target="/partymgr/control/viewprofile" link-style="${styles.link_nav_record_id}" target-type="inter-app" description="${partyId}">
+               <sub-hyperlink target="/partymgr/control/viewprofile" link-style="${styles.link_nav_info_id}" target-type="inter-app" description="${partyId}">
                 <parameter param-name="partyId"/>
             </sub-hyperlink>
            </display-entity>

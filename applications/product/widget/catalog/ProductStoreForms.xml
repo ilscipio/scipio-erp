@@ -476,7 +476,7 @@
         <field name="productStoreId"><hidden/></field>
         <field name="prodCatalogId" title="${uiLabelMap.ProductCatalogId}">
             <display-entity entity-name="ProdCatalog" description="${catalogName}" also-hidden="true">
-                <sub-hyperlink target="EditProdCatalog" description="${prodCatalogId}" link-style="${styles.link_nav_record_id}">
+                <sub-hyperlink target="EditProdCatalog" description="${prodCatalogId}" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="prodCatalogId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -575,7 +575,7 @@
                 <field-map field-name="productStoreId"/>
             </entity-and>
         </actions>
-        <field name="segmentGroupId" widget-style="${styles.link_nav_record_id}" title="${uiLabelMap.ProductSegmentGroupId}">
+        <field name="segmentGroupId" widget-style="${styles.link_nav_info_id}" title="${uiLabelMap.ProductSegmentGroupId}">
             <hyperlink also-hidden="false" target-type="inter-app" description="${segmentGroupId}" target="/marketing/control/viewSegmentGroup">
                 <parameter param-name="segmentGroupId"/>
             </hyperlink>
@@ -592,7 +592,7 @@
         paginate-target="EditProductStoreShipSetup" odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="ProductStoreShipmentMeth" default-field-type="display"/>
         <field name="productStoreId"><hidden/></field>
-        <field name="productStoreShipMethId" title=" " widget-style="${styles.link_nav_record_id}">
+        <field name="productStoreShipMethId" title=" " widget-style="${styles.link_nav_info_id}">
             <hyperlink target="EditProductStoreShipSetup" description="${productStoreShipMethId}" also-hidden="false">
                 <parameter param-name="productStoreId"/>
                 <parameter param-name="productStoreShipMethId"/>
@@ -698,7 +698,7 @@
         <auto-fields-entity entity-name="ShipmentCostEstimate" default-field-type="display"/>
         <field name="productStoreId"><hidden/></field>
         <field name="carrierRoleTypeId"><hidden/></field>
-        <field name="shipmentCostEstimateId" title=" " widget-style="${styles.link_nav_record_id}">
+        <field name="shipmentCostEstimateId" title=" " widget-style="${styles.link_nav_info_id}">
             <hyperlink target="EditProductStoreShipmentCostEstimates" description="${shipmentCostEstimateId}" also-hidden="false">
                 <parameter param-name="productStoreId"/>
                 <parameter param-name="shipmentCostEstimateId"/>
@@ -1002,7 +1002,7 @@
     <form name="ListProductStorePromos" type="list" list-name="productStorePromoAndAppls" target="updateProductStorePromoAppl"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <field name="productStoreId"><hidden/></field>
-        <field name="productPromoId" widget-style="${styles.link_nav_record_id}">
+        <field name="productPromoId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="EditProductPromo" description="${productPromoId}" also-hidden="true">
                 <parameter param-name="productPromoId"/>
             </hyperlink>

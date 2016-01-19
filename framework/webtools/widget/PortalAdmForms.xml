@@ -43,7 +43,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="portalPageId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_nav_record_id} ${styles.action_view}">
+        <field name="portalPageId" title="${uiLabelMap.CommonId}" sort-field="true" widget-style="${styles.link_nav_info_id} ${styles.action_view}">
             <hyperlink description="${portalPageId}" target="EditPortalPage">
                 <parameter param-name="portalPageId"/>
             </hyperlink>

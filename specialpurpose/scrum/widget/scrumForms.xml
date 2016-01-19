@@ -40,7 +40,7 @@ under the License.
         </row-actions>
         <field name="projectId"><hidden value="${parameters.projectId}"/></field>
         <field name="workEffortId"><hidden value="${workEffortId}"/></field>
-        <field name="workEffortName" title="Sprint Name" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+        <field name="workEffortName" title="Sprint Name" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink target="ViewSprint" description="${workEffortName}">
                 <parameter param-name="sprintId" from-field="workEffortId"/>
                 <parameter param-name="projectId" from-field="projectWorkEffort.workEffortId"/>
@@ -85,7 +85,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="custRequestId"><hidden/></field>
-        <field name="description" title="${uiLabelMap.ScrumProductBacklogName}" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
+        <field name="description" title="${uiLabelMap.ScrumProductBacklogName}" widget-style="${styles.link_nav_info_desc} ${styles.action_view}">
             <hyperlink target="ViewProdBacklogItem" description="${context.description} - [${custRequestId}]">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="productId"/>
@@ -151,7 +151,7 @@ under the License.
         <field name="VIEW_INDEX_2" position="2"><hidden value="${parameters.VIEW_INDEX_2}"/></field>
         <field name="custRequestId" title="${uiLabelMap.ScrumSprintBacklog}" position="1" use-when="showPosition1&amp;&amp;&quot;${custRequestTypeId}&quot;!=&quot;RF_SCRUM_MEETINGS&quot;">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description=" ">
-                <sub-hyperlink  target="ViewProdBacklogItem" description="${context.description} - [${custRequestId}]" link-type="hidden-form" target-window="_BLANK" link-style="${styles.link_nav_record_desc}">
+                <sub-hyperlink  target="ViewProdBacklogItem" description="${context.description} - [${custRequestId}]" link-type="hidden-form" target-window="_BLANK" link-style="${styles.link_nav_info_desc}">
                     <parameter param-name="custRequestId"/>
                     <parameter param-name="productId"/>
                 </sub-hyperlink>
@@ -302,12 +302,12 @@ under the License.
             <set field="actualStartDate" from-field="sprint.actualStartDate" type="Timestamp"/>
             <set field="actualCompletionDate" from-field="sprint.actualCompletionDate" type="Timestamp"/>
         </actions>
-        <field name="productId" title="${uiLabelMap.ScrumProductName}" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="productId" title="${uiLabelMap.ScrumProductName}" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="ViewProduct" description="${resultProduct.internalName} [${resultProduct.productId}]">
                 <parameter param-name="productId" from-field="resultProduct.productId"/>
             </hyperlink>
         </field>
-        <field name="projectId" title="${uiLabelMap.ScrumProjectName}" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="projectId" title="${uiLabelMap.ScrumProjectName}" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="viewScrumProject" description="${project.workEffortName} [${project.workEffortId}]">
                 <parameter param-name="projectId" from-field="parameters.projectId"/>
             </hyperlink>
@@ -465,7 +465,7 @@ under the License.
         <field name="sprintId"> <hidden value="${parameters.sprintId}"/></field>
         <field name="partyId"><hidden/></field>
         <field name="workEffortId"><hidden value="${parameters.sprintId}"/></field>
-        <field name="memberName" title="${uiLabelMap.ScrumMembersName}" widget-style="${styles.link_nav_record_idname_long} ${styles.action_view}">
+        <field name="memberName" title="${uiLabelMap.ScrumMembersName}" widget-style="${styles.link_nav_info_idname_long} ${styles.action_view}">
             <hyperlink target="viewprofile" description="${lastName}, ${firstName} ${middleName} [${partyId}]">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -764,7 +764,7 @@ under the License.
         <field name="partyIdTo" title="${uiLabelMap.ScrumRequestName}" parameter-name="partyIdTo" use-when="custRequest!=null&amp;&amp;isTeamMember==true">
             <display description="${request[0].lastName} ${request[0].firstName} ${request[0].middleName}"/>
         </field>
-        <field name="Sprint" title="${uiLabelMap.ScrumSprintName}" use-when="sprintName!=null" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="Sprint" title="${uiLabelMap.ScrumSprintName}" use-when="sprintName!=null" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="ViewSprint" description="${sprintName} [${workEffortlist[0].workEffortId}]">
                <parameter param-name="prjectId" from-field="projectId"/>
                <parameter param-name="sprintId" from-field="workEffortlist[0].workEffortId"/>
@@ -1023,7 +1023,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="custSequenceNum" position="2" title="${uiLabelMap.ScrumSeq}"><display/></field>
-        <field name="custRequestId" position="2" title="${uiLabelMap.ScrumProductBacklogItem}" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
+        <field name="custRequestId" position="2" title="${uiLabelMap.ScrumProductBacklogItem}" widget-style="${styles.link_nav_info_desc} ${styles.action_view}">
             <hyperlink target="ViewProdBacklogItem" description="${description} [${custRequestId}]">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="productId"/>
@@ -1138,7 +1138,7 @@ under the License.
         <field name="custSequenceNum" position="1" title="${uiLabelMap.ScrumSeq}"><display/></field>
         <field name="realSequenceNum"><hidden/></field>
         <field name="custRequestId"><hidden/></field>
-        <field name="backlogId" position="1" title="${uiLabelMap.ScrumBacklogId}" widget-style="${styles.link_nav_record_id}">
+        <field name="backlogId" position="1" title="${uiLabelMap.ScrumBacklogId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="ViewProdBacklogItem" description="${custRequestId}">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="productId"/>
@@ -1229,12 +1229,12 @@ under the License.
                 <field-map field-name="productId" from-field="productId"/>
             </entity-one>
         </row-actions>
-        <field name="companyId" title="${uiLabelMap.ScrumOwnerCompany}" position="1" use-when="!isCurrentCompany" widget-style="${styles.link_nav_record_idname}">
+        <field name="companyId" title="${uiLabelMap.ScrumOwnerCompany}" position="1" use-when="!isCurrentCompany" widget-style="${styles.link_nav_info_idname}">
             <hyperlink target="viewprofile" description="${companyName} [${companyId}]">
                 <parameter param-name="partyId" from-field="companyId"/>
             </hyperlink>
         </field>
-        <field name="projectName" title="${uiLabelMap.ScrumProject}" position="1" use-when="!isCurrentProject" widget-style="${styles.link_nav_record_idname}">
+        <field name="projectName" title="${uiLabelMap.ScrumProject}" position="1" use-when="!isCurrentProject" widget-style="${styles.link_nav_info_idname}">
             <hyperlink target="viewScrumProject" description="${projectName} [${projectId}]">
                 <parameter param-name="projectId"/>
             </hyperlink>
@@ -1246,13 +1246,13 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="productOwnerName" title="${uiLabelMap.ScrumProductOwner}" position="1" use-when="!isCurrentProject" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="productOwnerName" title="${uiLabelMap.ScrumProductOwner}" position="1" use-when="!isCurrentProject" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="viewprofile" description="${productOwnerName} [${productOwnerId}]">
                 <parameter param-name="partyId" from-field="productOwnerId"/>
             </hyperlink>
         </field>
         <field name="dummy" title=" " position="2"   use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display description=" "/></field>
-        <field name="sprintName" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumSprint}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="sprintName" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumSprint}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="ViewSprint" description="${uiLabelMap.ScrumTab} ${sprintName} [${sprintId}]">
                 <parameter param-name="projectId"/>
                 <parameter param-name="sprintId"/>
@@ -1269,7 +1269,7 @@ under the License.
         <field name="sprintActualCompletionDate" title="${uiLabelMap.CommonEndDate}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display type="date"></display></field>
     </form>
     <form name="projectListWithNoLinkProfile" extends="projectList">
-        <field name="companyId" title="${uiLabelMap.ScrumOwnerCompany}" position="1" use-when="!isCurrentCompany" widget-style="${styles.link_nav_record_idname}">
+        <field name="companyId" title="${uiLabelMap.ScrumOwnerCompany}" position="1" use-when="!isCurrentCompany" widget-style="${styles.link_nav_info_idname}">
             <display description="${companyName} [${companyId}]"/>
         </field>
         <field name="productOwnerName" title="${uiLabelMap.ScrumProductOwner}" position="1" use-when="!isCurrentProject">
@@ -1319,12 +1319,12 @@ under the License.
             <!-- get project info -->
         </row-actions>
         
-        <field name="projectName" title="${uiLabelMap.ScrumProject}" position="1" use-when="!isCurrentProject" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="projectName" title="${uiLabelMap.ScrumProject}" position="1" use-when="!isCurrentProject" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="viewScrumProject" description="${projectName} [${projectId}]">
                 <parameter param-name="projectId" from-field="workEffortId"/>
             </hyperlink>
         </field>
-        <field name="sprintName" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumSprint}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="sprintName" title="${uiLabelMap.ScrumTab} ${uiLabelMap.ScrumSprint}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="ViewSprint" description="${uiLabelMap.ScrumTab} ${sprintName} [${sprintId}]">
                 <parameter param-name="projectId"/>
                 <parameter param-name="sprintId"/>
@@ -1354,7 +1354,7 @@ under the License.
             </service>
         </actions>
         <field name="projectId"><hidden value="${parameters.projectId}"/></field>
-        <field name="workEffortName" title="${uiLabelMap.ScrumSprintName}" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="workEffortName" title="${uiLabelMap.ScrumSprintName}" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="ViewSprint" description="${workEffortName} [${workEffortId}]">
                 <parameter param-name="sprintId" from-field="workEffortId"/>
                  <parameter param-name="projectId" from-field="project.workEffortId"/>
@@ -1568,7 +1568,7 @@ under the License.
             <set field="supportDiscontinuationDate" from-field="product.supportDiscontinuationDate"/>
             <set field="statusMap.statusId" value="${groovy: if(supportDiscontinuationDate == null) return 'PRODUCT_ACTIVE' else return 'PRODUCT_CLOSED'}"/>
         </actions>
-        <field name="productOwerId" title="${uiLabelMap.ScrumCompanyAndProductOwner}" widget-style="${styles.link_nav_record_name_long} ${styles.action_view}">
+        <field name="productOwerId" title="${uiLabelMap.ScrumCompanyAndProductOwner}" widget-style="${styles.link_nav_info_name_long} ${styles.action_view}">
             <hyperlink target="viewprofile" description="${parties[0].groupName} -- ${parties[0].lastName} ${parties[0].firstName} ${parties[0].middleName}">
                 <parameter param-name="partyId" from-field="productRole[0].partyId"/>
             </hyperlink>
@@ -1821,12 +1821,12 @@ under the License.
             <set field="backlogItemName" from-field="backlogItem.description" default-value="No Backlog Item Name"/>
             <set field="billed" from-field="backlogItem.billed"/>
         </row-actions>
-        <field name="projectId" position="1" use-when="${groovy:showPosition1==true}" title="${uiLabelMap.ScrumProject}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+        <field name="projectId" position="1" use-when="${groovy:showPosition1==true}" title="${uiLabelMap.ScrumProject}" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink target="viewScrumProject" description="${projectName}">
                 <parameter param-name="projectId"/>
             </hyperlink>
         </field>
-        <field name="sprintId" position="1" use-when="${groovy:showPosition1==true}" title="${uiLabelMap.ScrumSprint}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+        <field name="sprintId" position="1" use-when="${groovy:showPosition1==true}" title="${uiLabelMap.ScrumSprint}" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink target="ViewSprint" description="${sprintName}">
                 <parameter param-name="projectId"/>
                 <parameter param-name="sprintId"/>
@@ -1856,7 +1856,7 @@ under the License.
         <field name="hours" position="2"><display/></field>
         <field name="timesheetPartyId" position="2"><display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName}" key-field-name="partyId"/></field>
         <field name="dummy4" title=" " position="2" ><display description=" "/></field>
-        <field name="timesheetId" position="2" widget-style="${styles.link_nav_record_id} ${styles.action_view}">
+        <field name="timesheetId" position="2" widget-style="${styles.link_nav_info_id} ${styles.action_view}">
             <hyperlink description="${timesheetId}" target="ViewTimeSheet">
                 <parameter param-name="timesheetId"/>
             </hyperlink>
@@ -1990,7 +1990,7 @@ under the License.
         <field name="parentCustRequestId" title="${uiLabelMap.ScrumBacklogItemCategory}" use-when="${groovy: categoryList.size() > 0}">
             <display  description="${categoryList[0].custRequestName} [${categoryList[0].custRequestId}]"/>
         </field>
-         <field name="Sprint" title="${uiLabelMap.ScrumSprintName}" use-when="sprintName!=null" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+         <field name="Sprint" title="${uiLabelMap.ScrumSprintName}" use-when="sprintName!=null" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="ViewSprint" description="${sprintName} [${productBacklogs[0].workEffortId}]">
                 <parameter param-name="prjectId" from-field="projectId"/>
                 <parameter param-name="sprintId" from-field="workEffortlist[0].workEffortId"/>
@@ -2020,7 +2020,7 @@ under the License.
             <set field="showPosition1" value="${groovy:String prev=(String)previousItem.get(&quot;parentCustRequestId&quot;);return new Boolean(!(prev!=null&amp;&amp;prev.equals(parentCustRequestId)));}" type="Boolean"/>
         </row-actions>
         <field name="custSequenceNum" position="2" title="${uiLabelMap.ScrumSeq}"><display/></field>
-        <field name="custRequestId" position="2" title="${uiLabelMap.ScrumProductBacklogItem}" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
+        <field name="custRequestId" position="2" title="${uiLabelMap.ScrumProductBacklogItem}" widget-style="${styles.link_nav_info_desc} ${styles.action_view}">
             <hyperlink target="ViewProdBacklogItem" description="${description} [${custRequestId}]">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="productId"/>
@@ -2060,7 +2060,7 @@ under the License.
             </display-entity>
         </field>
         <field name="custSequenceNum" position="2" title="${uiLabelMap.ScrumSeq}"><display/></field>
-        <field name="custRequestId" position="2" title="${uiLabelMap.ScrumProductBacklogItem}" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
+        <field name="custRequestId" position="2" title="${uiLabelMap.ScrumProductBacklogItem}" widget-style="${styles.link_nav_info_desc} ${styles.action_view}">
             <hyperlink target="ViewProdBacklogItem" description="${description} [${custRequestId}]">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="productId"/>
@@ -2141,7 +2141,7 @@ under the License.
             <set field="taskEstimatedMilliSeconds" from-field="resultMap.planHours"/>
         </row-actions>
         <field name="sprintId"><hidden value="${parameters.sprintId}"/></field>
-        <field name="taskId" title="${uiLabelMap.ScrumTask}" parameter-name="workEffortId" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
+        <field name="taskId" title="${uiLabelMap.ScrumTask}" parameter-name="workEffortId" widget-style="${styles.link_nav_info_desc} ${styles.action_view}">
             <hyperlink target="SprintTaskView" description="${taskName} [${taskId}]">
                 <parameter param-name="sprintId"/>
                 <parameter param-name="taskId"/>
@@ -2448,7 +2448,7 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" description="${description}"/>
         </field>
-        <field name="companyNameId" title="${uiLabelMap.ScrumOwnerCompany}" use-when="!isCurrentCompany" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="companyNameId" title="${uiLabelMap.ScrumOwnerCompany}" use-when="!isCurrentCompany" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="viewprofile" description="${resultCompanyGroup.groupName} [${companyNameId}]">
                 <parameter param-name="partyId" from-field="companyNameId"/>
             </hyperlink>
@@ -2456,7 +2456,7 @@ under the License.
         <field name="longDescription" title="${uiLabelMap.CommonDescription}"><display/></field>
         <field name="productId" title="${uiLabelMap.ScrumProduct}">
             <display-entity entity-name="Product" key-field-name="productId" description=" " >
-                <sub-hyperlink target="${productTartget}" description="${internalName} [${productId}]" link-style="${styles.link_nav_record_idname}" >
+                <sub-hyperlink target="${productTartget}" description="${internalName} [${productId}]" link-style="${styles.link_nav_info_idname}" >
                     <parameter param-name="productId"/>
                 </sub-hyperlink>
             </display-entity>
@@ -2498,7 +2498,7 @@ under the License.
                 </condition-list>
             </entity-condition>
     </actions>
-    <field name="taskName" title="Task Name" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+    <field name="taskName" title="Task Name" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
         <hyperlink target="taskView" description="${taskName}">
             <parameter param-name="taskId" from-field="taskId"/>
         </hyperlink>
@@ -2514,7 +2514,7 @@ under the License.
    
    <form name="ListTaskSprint" list-name="notes" title="" type="list" paginate-target="backlogView"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="custRequestId" title="Backlog ID" widget-style="${styles.link_nav_record_id}">
+        <field name="custRequestId" title="Backlog ID" widget-style="${styles.link_nav_info_id}">
         <hyperlink target="backlogView" description="${custRequestId}">
             <parameter param-name="custRequestId" from-field="${custRequestId}"/>
         </hyperlink>
@@ -2588,7 +2588,7 @@ under the License.
             </entity-and>
         </actions>
         <field name="contentTypeId"><display-entity entity-name="ContentType" description="${description}"/></field>
-        <field name="contentName" widget-style="${styles.link_nav_record_idname}">
+        <field name="contentName" widget-style="${styles.link_nav_info_idname}">
             <display description="${contentName}[${contentId}]"/>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
@@ -2651,7 +2651,7 @@ under the License.
             </entity-one>
         </row-actions>
         <field name="contentTypeId"><display description="${descContent.description}"/></field>
-        <field name="contentName" widget-style="${styles.link_nav_record_idname}">
+        <field name="contentName" widget-style="${styles.link_nav_info_idname}">
              <display description="${contentMap.contentName} [${contentId}]"/>
         </field>
         <field name="deleteAction"><ignored/></field>
@@ -2743,7 +2743,7 @@ under the License.
             </entity-one>
         </row-actions>
         <field name="contentTypeId"><display description="${descContent.description}"/></field>
-        <field name="contentName" widget-style="${styles.link_nav_record_idname}">
+        <field name="contentName" widget-style="${styles.link_nav_info_idname}">
              <display description="${contentMap.contentName} [${contentId}]"/>
         </field>
         <field name="deleteAction"><ignored/> </field>
@@ -2794,7 +2794,7 @@ under the License.
             <set field="taskEstimatedStartDate" from-field="resultTask.estimatedStartDate"/>
             <set field="taskName" from-field="resultTask.workEffortName"/>
         </row-actions>
-        <field name="taskId" title="${uiLabelMap.ScrumTask}" parameter-name="workEffortId" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+        <field name="taskId" title="${uiLabelMap.ScrumTask}" parameter-name="workEffortId" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="taskView" link-type="hidden-form" description="${taskName} [${taskId}]" target-window="_BLANK" target-type="intra-app">
                 <parameter param-name="taskId" from-field="taskId"/>
             </hyperlink>
@@ -3038,7 +3038,7 @@ under the License.
         <field name="productId" position="2"><hidden/></field>
         <field name="custRequestId" title="${uiLabelMap.PageTitleUnplanBacklogItem}" position="1" use-when="showPosition1&amp;&amp;&quot;${custRequestTypeId}&quot;!=&quot;RF_SCRUM_MEETINGS&quot;">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description=" ">
-                <sub-hyperlink  target="ViewProdBacklogItem" description="${context.description} - [${custRequestId}]" link-type="hidden-form" target-window="_BLANK" link-style="${styles.link_nav_record_desc}">
+                <sub-hyperlink  target="ViewProdBacklogItem" description="${context.description} - [${custRequestId}]" link-type="hidden-form" target-window="_BLANK" link-style="${styles.link_nav_info_desc}">
                     <parameter param-name="custRequestId"/>
                 </sub-hyperlink>
             </display-entity>

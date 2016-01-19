@@ -58,7 +58,7 @@ under the License.
         <row-actions>            
             <set field="hasVariants" value="${groovy: org.ofbiz.entity.util.EntityUtil.filterByDate(delegator.findByAnd('ProductAssoc', org.ofbiz.base.util.UtilMisc.toMap('productId', productId, 'productAssocTypeId', 'PRODUCT_VARIANT'), null, true)).size() > 0}" type="Boolean"/>
         </row-actions>
-        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.link_nav_record_id}">
+        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
@@ -96,7 +96,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.link_nav_record_id}">
+        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
@@ -120,7 +120,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.link_nav_record_id}">
+        <field name="productId" title="${uiLabelMap.ProductProductId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><display/></field>
@@ -189,12 +189,12 @@ under the License.
             <set field="hasVariants" value="${groovy: delegator.findByAnd('ProductAssoc', org.ofbiz.base.util.UtilMisc.toMap('productId', productId, 'productAssocTypeId', 'PRODUCT_VARIANT'), null, true).size() > 0}" type="Boolean"/>
         </row-actions>
         <!--
-        <field name="productId" title=" " widget-style="${styles.link_nav_record_id}" use-when="isVirtual==null||&quot;${isVirtual}&quot;.equals(&quot;N&quot;)">
+        <field name="productId" title=" " widget-style="${styles.link_nav_info_id}" use-when="isVirtual==null||&quot;${isVirtual}&quot;.equals(&quot;N&quot;)">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="isVirtual!=null&amp;&amp;&quot;${isVirtual}&quot;.equals(&quot;Y&quot;)"><display/></field>
         -->
-        <field name="productId" widget-style="${styles.link_nav_record_id}">
+        <field name="productId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><display/></field>
@@ -259,7 +259,7 @@ under the License.
         </actions>
         <auto-fields-entity entity-name="ProductCategory" default-field-type="display"/>
         <field name="productCategoryTypeId"><display-entity entity-name="ProductCategoryType"/></field>
-        <field name="productCategoryId" title=" " widget-style="${styles.link_nav_record_id}">
+        <field name="productCategoryId" title=" " widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${productCategoryId}" target="javascript:set_value('${productCategoryId}')"/>
         </field>
         <field name="longDescription"><ignored/></field>
@@ -301,7 +301,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="ProductFeature" default-field-type="display"/>
-        <field name="productFeatureId" title=" " widget-style="${styles.link_nav_record_id}">
+        <field name="productFeatureId" title=" " widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${productFeatureId}" target="javascript:set_value('${productFeatureId}')"/>
         </field>
     </form>
@@ -331,7 +331,7 @@ under the License.
 
         <!-- <auto-fields-entity entity-name="ProductStore" default-field-type="display"/> -->
 
-        <field name="productStoreId" widget-style="${styles.link_nav_record_id}">
+        <field name="productStoreId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${productStoreId}" target="javascript:set_value('${productStoreId}')"/>
         </field>
         <field name="primaryStoreGroupId"><display/></field>
@@ -369,7 +369,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="costComponentCalcId" title="${uiLabelMap.ProductCostComponentCalcId}" widget-style="${styles.link_nav_record_id}">
+        <field name="costComponentCalcId" title="${uiLabelMap.ProductCostComponentCalcId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${costComponentCalcId}" target="javascript:set_value('${costComponentCalcId}')"/>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><display/></field>

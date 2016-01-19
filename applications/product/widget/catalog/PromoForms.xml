@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="ListProductPromos" type="list" title="" list-name="productPromos"
         paginate-target="FindProductPromo" odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
-        <field name="productPromoId" widget-style="${styles.link_nav_record_id}">
+        <field name="productPromoId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="EditProductPromo" description="${productPromoId}" also-hidden="false">
                 <parameter param-name="productPromoId"/>
             </hyperlink>
@@ -106,7 +106,7 @@ under the License.
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="ProductPromoCode" default-field-type="display"/>
         <field name="productPromoId"><hidden/></field>
-        <field name="productPromoCodeId" widget-style="${styles.link_nav_record_id}">
+        <field name="productPromoCodeId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="EditProductPromoCode" description="${productPromoCodeId}" also-hidden="false">
                 <parameter param-name="productPromoCodeId"/>
             </hyperlink>
@@ -133,7 +133,7 @@ under the License.
 
     <form name="ListProductPromoContent" type="list" list-name="productPromoContents"
             odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
-        <field name="editProductPromoContent" title="${uiLabelMap.ProductContent}" widget-style="${styles.link_nav_record_desc}">
+        <field name="editProductPromoContent" title="${uiLabelMap.ProductContent}" widget-style="${styles.link_nav_info_desc}">
             <hyperlink target="EditProductPromoContent" description="${description} [${contentId}]" also-hidden="false">
                 <parameter param-name="productPromoId"/>
                 <parameter param-name="contentId"/>

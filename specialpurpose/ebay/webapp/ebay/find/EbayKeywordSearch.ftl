@@ -75,7 +75,7 @@ under the License.
               <@tr>
                 <@td>
                   <input type="checkbox" name="selectResult" value="${productId}"/>
-                  <a href="<@ofbizUrl>EditProduct?productId=${productId}</@ofbizUrl>" class="${styles.link_nav_record_idname!}">[${productId}] ${(product.internalName)!}</a>
+                  <a href="<@ofbizUrl>EditProduct?productId=${productId}</@ofbizUrl>" class="${styles.link_nav_info_idname!}">[${productId}] ${(product.internalName)!}</a>
                 </@td>
               </@tr>
             </#list>

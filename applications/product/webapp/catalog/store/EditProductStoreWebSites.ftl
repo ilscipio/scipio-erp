@@ -35,7 +35,7 @@ under the License.
            <@tbody>
               <#list storeWebSites as webSite>
                 <@tr valign="middle">
-                  <@td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.link_nav_record_idname!}">${webSite.siteName!} [${webSite.webSiteId}]</a></@td>
+                  <@td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&amp;externalLoginKey=${requestAttributes.externalLoginKey}" class="${styles.link_nav_info_idname!}">${webSite.siteName!} [${webSite.webSiteId}]</a></@td>
                   <@td>${webSite.httpHost?default('&nbsp;')}</@td>
                   <@td>${webSite.httpPort?default('&nbsp;')}</@td>
                   <@td align="center">

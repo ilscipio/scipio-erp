@@ -36,7 +36,7 @@ under the License.
         <field name="webAnalyticsTypeId" title="${uiLabelMap.CommonType}">
             <display-entity entity-name="WebAnalyticsType" description="${description} [${webAnalyticsTypeId}]"/>
         </field>
-        <field name="webAnalyticsCode" widget-style="${styles.link_nav_record_id} ${styles.action_view}">
+        <field name="webAnalyticsCode" widget-style="${styles.link_nav_info_id} ${styles.action_view}">
             <hyperlink target="EditWebAnalyticsConfig" description="${webAnalyticsCode}">
                 <parameter param-name="productStoreId"/>
                 <parameter param-name="webAnalyticsTypeId"/>

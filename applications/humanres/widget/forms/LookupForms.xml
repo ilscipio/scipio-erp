@@ -45,7 +45,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="Budget" default-field-type="display"/>
-        <field name="budgetId" widget-style="${styles.link_nav_record_id}">
+        <field name="budgetId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${budgetId}" target="javascript:set_value('${budgetId}')"/>
         </field>
     </form>
@@ -73,7 +73,7 @@ under the License.
             </service>
         </actions>
         <auto-fields-entity entity-name="BudgetItem" default-field-type="display"/>
-        <field name="budgetItemSeqId" widget-style="${styles.link_nav_record_id}">
+        <field name="budgetItemSeqId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${budgetItemSeqId}" target="javascript:set_value('${budgetItemSeqId}')"/>
         </field>
     </form>
@@ -107,7 +107,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="emplPositionId" widget-style="${styles.link_nav_record_id}">
+        <field name="emplPositionId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${emplPositionId}" target="javascript:set_value('${emplPositionId}')"/>
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display/></field>
@@ -133,7 +133,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="terminationReasonId" widget-style="${styles.link_nav_record_id}">
+        <field name="terminationReasonId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${terminationReasonId}" target="javascript:set_value('${terminationReasonId}')"/>
         </field>
         <field name="description"><display/></field>
@@ -155,7 +155,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="salaryStepSeqId" title="${uiLabelMap.HumanResLookupSalaryStepSeqId}" widget-style="${styles.link_nav_record_id}">
+        <field name="salaryStepSeqId" title="${uiLabelMap.HumanResLookupSalaryStepSeqId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${salaryStepSeqId}" target="javascript:set_value('${salaryStepSeqId}')"/>
         </field>
         <field name="description"><display/></field>
@@ -177,7 +177,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="payGradeId" widget-style="${styles.link_nav_record_id}">
+        <field name="payGradeId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${payGradeId}" target="javascript:set_value('${payGradeId}')"/>
         </field>
         <field name="description"><display/></field>
@@ -199,7 +199,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="payrollPreferenceSeqId" title="${uiLabelMap.HumanResLookupPayrollPreferenceSeqId}" widget-style="${styles.link_nav_record_id}">
+        <field name="payrollPreferenceSeqId" title="${uiLabelMap.HumanResLookupPayrollPreferenceSeqId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${payrollPreferenceSeqId}" target="javascript:set_value('${payrollPreferenceSeqId}')"/>
         </field>
         <field name="description"><display/></field>
@@ -221,7 +221,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="unemploymentClaimId" widget-style="${styles.link_nav_record_id}">
+        <field name="unemploymentClaimId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${unemploymentClaimId}" target="javascript:set_value('${unemploymentClaimId}')"/>
         </field>
         <field name="description"><display/></field>
@@ -243,7 +243,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="agreementItemSeqId" widget-style="${styles.link_nav_record_id}">
+        <field name="agreementItemSeqId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${agreementItemSeqId}" target="javascript:set_value('${agreementItemSeqId}')"/>
         </field>
         <field name="description"><display/></field>
@@ -265,7 +265,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="perfReviewId" widget-style="${styles.link_nav_record_id}">
+        <field name="perfReviewId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${perfReviewId}" target="javascript:set_value('${perfReviewId}')"/>
         </field>
         <field name="description"><display/></field>
@@ -287,7 +287,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="resumeId" widget-style="${styles.link_nav_record_id}">
+        <field name="resumeId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${resumeId}" target="javascript:set_value('${resumeId}')"/>
         </field>
         <field name="description"><display/></field>
@@ -309,7 +309,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="applicationId" widget-style="${styles.link_nav_record_id}">
+        <field name="applicationId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${applicationId}" target="javascript:set_value('${applicationId}')"/>
         </field>
         <field name="description"><display/></field>
@@ -345,7 +345,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="jobRequisitionId" widget-style="${styles.link_nav_record_id}">
+        <field name="jobRequisitionId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${jobRequisitionId}" target="javascript:set_value('${jobRequisitionId}')"/>
         </field>
         <field name="jobPostingTypeEnumId"><display/></field>
@@ -369,7 +369,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}" widget-style="${styles.link_nav_record_id}">
+        <field name="trainingClassTypeId" title="${uiLabelMap.HumanResTrainingClassType}" widget-style="${styles.link_nav_info_id}">
              <hyperlink also-hidden="false" target-type="plain" description="${trainingClassTypeId}" target="javascript:set_value('${trainingClassTypeId}')"/>
         </field>        
         <field name="parentTypeId" title="${uiLabelMap.HumanResPreRequisiteSkill}"><display/></field>

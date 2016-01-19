@@ -86,7 +86,7 @@ under the License.
                 <field-map field-name="lastNameFirst" value="Y"/>
             </service>
         </row-actions>
-        <field name="agreementId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_record_id}" sort-field="true">
+        <field name="agreementId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_info_id}" sort-field="true">
             <hyperlink also-hidden="false" description="${agreementId}" target="EditAgreement">
                 <parameter param-name="agreementId"/>
             </hyperlink>
@@ -94,12 +94,12 @@ under the License.
         <field name="agreementTypeId" title="${uiLabelMap.CommonType}" sort-field="true">
             <display-entity entity-name="AgreementType"/>
         </field>
-        <field name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}" sort-field="true" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+        <field name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}" sort-field="true" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyNameResultFrom.fullName}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="partyIdFrom"/>
             </hyperlink> 
         </field>
-        <field name="partyIdTo" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}" sort-field="true" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+        <field name="partyIdTo" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}" sort-field="true" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyNameResultTo.fullName}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="partyIdTo"/>
             </hyperlink>
@@ -167,7 +167,7 @@ under the License.
         <auto-fields-entity entity-name="AgreementItem" default-field-type="display"/>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId"  title="${uiLabelMap.CommonItem} ${uiLabelMap.ProductSeqId}" 
-        widget-style="${styles.link_nav_record_id}" widget-area-style="align-right" title-area-style="align-right">
+        widget-style="${styles.link_nav_info_id}" widget-area-style="align-right" title-area-style="align-right">
             <hyperlink also-hidden="false" description="${agreementItemSeqId}" target="EditAgreementItem">
                 <parameter param-name="agreementId"/>
                 <parameter param-name="agreementItemSeqId"/>
@@ -344,7 +344,7 @@ under the License.
         </row-actions>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
-        <field name="facilityId" title="${uiLabelMap.Facility}" widget-style="${styles.link_nav_record_idname}">
+        <field name="facilityId" title="${uiLabelMap.Facility}" widget-style="${styles.link_nav_info_idname}">
            <hyperlink also-hidden="false" description="${facilityId} - ${facility.facilityName}" target="EditAgreementItemFacility">
                 <parameter param-name="agreementId"/>
                 <parameter param-name="agreementItemSeqId"/>
@@ -399,7 +399,7 @@ under the License.
         </row-actions>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
-        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_record_idname_long}">
+        <field name="partyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_info_idname_long}">
            <hyperlink also-hidden="false" description="${partyId} - ${party.groupName} ${party.firstName} ${party.lastName}" target="EditAgreementItemParty">
                 <parameter param-name="partyId"/>
                 <parameter param-name="agreementId"/>
@@ -439,7 +439,7 @@ under the License.
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
         <field name="productId" title="${uiLabelMap.CommonProduct}">
             <display-entity entity-name="Product" description=" ">
-                <sub-hyperlink target="EditAgreementItemProduct" description="${productId} - ${product.internalName}" link-style="${styles.link_nav_record_idname}">
+                <sub-hyperlink target="EditAgreementItemProduct" description="${productId} - ${product.internalName}" link-style="${styles.link_nav_info_idname}">
                 <parameter param-name="agreementId"/>
                 <parameter param-name="agreementItemSeqId"/>
                 <parameter param-name="productId"/>
@@ -496,7 +496,7 @@ under the License.
         </row-actions>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
-        <field name="productPromoId" title="${uiLabelMap.ProductPromotion}" widget-style="${styles.link_nav_record_idname}">
+        <field name="productPromoId" title="${uiLabelMap.ProductPromotion}" widget-style="${styles.link_nav_info_idname}">
             <hyperlink also-hidden="false" description="${productPromoId} - ${productPromo.promoName}" target="EditAgreementPromoAppl">
                 <parameter param-name="agreementId"/>
                 <parameter param-name="agreementItemSeqId"/>
@@ -577,7 +577,7 @@ under the License.
         <field name="agreementItemSeqId"><hidden/></field>
         <field name="partyId"><hidden/></field>
         <field name="currencyUomId"><hidden/></field>
-        <field name="productId" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_nav_record_id}">
+        <field name="productId" title="${uiLabelMap.CommonProduct}" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${productId}" target="EditAgreementItemSupplierProduct">
                 <parameter param-name="minimumOrderQuantity"/>
                 <parameter param-name="currencyUomId"/>
@@ -651,7 +651,7 @@ under the License.
         
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
-        <field name="agreementTermId" title=" " widget-style="${styles.link_nav_record_id}">
+        <field name="agreementTermId" title=" " widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${agreementTermId}" target="EditAgreementItemTerm">
                 <parameter param-name="agreementTermId"/>
                 <parameter param-name="agreementId"/>

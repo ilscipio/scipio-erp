@@ -45,7 +45,7 @@ under the License.
             </entity-and>
         </row-actions>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
-        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink target="${currentFormName}" description="${drDataResourceName}">
                 <parameter param-name="productId"/>
                 <parameter param-name="contentId"/>
@@ -663,7 +663,7 @@ under the License.
             </entity-and>
         </row-actions>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
-        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_nav_record_name}">
+        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_nav_info_name}">
             <hyperlink also-hidden="false" target-type="plain" description="${drDataResourceName}" target="javascript:set_value('${contentId}')"/>
         </field>
         <field name="contentId"><display/></field>
@@ -751,7 +751,7 @@ under the License.
             </entity-and>
         </row-actions>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
-        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink target="ListImageReplace" description="${drDataResourceName}">
                 <parameter param-name="productId"/>
                 <parameter param-name="contentIdExist" from-field="contentId"/>
@@ -792,7 +792,7 @@ under the License.
             </entity-and>
         </row-actions>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
-        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink target="ListImageReplace" description="${drDataResourceName}">
                 <parameter param-name="productId"/>
                 <parameter param-name="contentIdReplace" from-field="contentId"/>
@@ -817,7 +817,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="drObjectInfo" title="${uiLabelMap.CommonImage}"><image style="cssImgLarge"/></field>
-        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_nav_record_name}">
+        <field name="drDataResourceName" title="${uiLabelMap.ImageManagementImageName}" widget-style="${styles.link_nav_info_name}">
             <hyperlink also-hidden="false" target-type="plain" description="${drDataResourceName}" target="javascript:set_value('${contentId}')"/>
         </field>
         <field name="contentId"><display/></field>

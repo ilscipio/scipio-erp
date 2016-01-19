@@ -28,7 +28,7 @@ under the License.
     <form name="searchList" type="list" target="" list-name="queryResults"
         default-title-style="tableheadtext" default-widget-style="inputBox"
         paginate-target="/AdminSearch">
-        <field name="editContent" title=" ">
+        <field name="editContent" title=" " widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonEdit}" target="CMSContentEdit">
                 <parameter param-name="contentId"/>
                 <parameter param-name="drDataResourceId"/>

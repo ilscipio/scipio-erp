@@ -284,13 +284,13 @@
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="timesheetId"><hidden/></field>
         <field name="taskWbsId"><display/></field>
-        <field name="workEffortName" title="${uiLabelMap.ProjectMgrTaskName}">
+        <field name="workEffortName" title="${uiLabelMap.ProjectMgrTaskName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="taskView" description="${workEffortName}">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
         </field>
         <field name="phaseName" title="${uiLabelMap.ProjectMgrPhaseName}"><display/></field>
-        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}">
+        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="projectView" description="${projectName}">
                 <parameter param-name="projectId"/>
             </hyperlink>

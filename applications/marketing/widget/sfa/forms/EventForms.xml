@@ -37,7 +37,7 @@ under the License.
                 <parameter param-name="workEffortId"/>
             </hyperlink>
         </field>
-        <field name="assignedByUserLoginId" title="${uiLabelMap.SfaAssignedBy}">
+        <field name="assignedByUserLoginId" title="${uiLabelMap.SfaAssignedBy}" widget-style="${styles.link_nav_record_idname_long} ${styles.action_view}">
             <hyperlink target="/partymgr/control/viewprofile" description="${assignByPartyName.firstName} ${assignByPartyName.middleName} ${assignByPartyName.lastName} ${assignByPartyName.groupName} [${assignByPartyName.partyId}]" target-type="inter-app">
                 <parameter param-name="partyId" from-field="assignByPartyName.partyId"/>
             </hyperlink>

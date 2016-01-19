@@ -397,9 +397,9 @@ function getConfigDetails() {
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
                 <@td align="center" valign="bottom">
-                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_nav_image!}"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class="cssImgStandard" alt="" /></a>
+                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.action_run_local!} ${styles.action_select!}">les.<img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class="cssImgStandard" alt="" /></a>
                   <br />
-                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_nav_record_name!}">${key}</a>
+                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_run_local!} ${styles.action_select!}">${key}</a>
                 </@td>
               </#if>
               <#assign indexer = indexer + 1>

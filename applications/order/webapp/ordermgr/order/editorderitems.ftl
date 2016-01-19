@@ -113,7 +113,7 @@ under the License.
                                       <a href="/catalog/control/EditProduct?productId=${productId}" class="${styles.link_nav!}" target="_blank">${uiLabelMap.ProductCatalog}</a>
                                       <a href="/ecommerce/control/product?product_id=${productId}" class="${styles.link_nav!}" target="_blank">${uiLabelMap.OrderEcommerce}</a>
                                       <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
-                                      <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.link_nav_image!}">${uiLabelMap.OrderViewImage}</a>
+                                      <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.action_run_sys!} ${styles.action_view!}">${uiLabelMap.OrderViewImage}</a>
                                       </#if>
                                   </div>
                                   </#if>

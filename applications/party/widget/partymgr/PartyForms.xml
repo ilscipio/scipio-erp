@@ -1092,7 +1092,7 @@ under the License.
         <field name="toPartyId"><display/></field>
     </form>
     <form name="PartySalesOpportunities" type="list" list-name="salesOpportunities" default-table-style="${styles.table_basic} hover-bar">
-        <field name="opportunityName" title="${uiLabelMap.SfaOpportunityName}">
+        <field name="opportunityName" title="${uiLabelMap.SfaOpportunityName}" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="ViewSalesOpportunity" description="${opportunityName} [${salesOpportunityId}]">
                 <parameter param-name="salesOpportunityId"/>
             </hyperlink>

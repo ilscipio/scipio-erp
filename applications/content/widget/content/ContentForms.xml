@@ -551,10 +551,10 @@ under the License.
     </form>
     <!--form name="ListDocument" target="" type="list" list-name="contentAssoc" paginate-target="navigateContent"
         odd-row-style="alternate-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="contentId" use-when="&quot;application/pdf&quot;.equals(mimeTypeId)">
+        <field name="contentId" use-when="&quot;application/pdf&quot;.equals(mimeTypeId)" widget-style="${styles.link_run_sys} ${styles.action_export}">
             <hyperlink also-hidden="false" description="${contentName} [${contentId}]" target="showContentPdf?contentId=${contentId}" target-window="_blank"/>
         </field>
-        <field name="contentId" use-when="&quot;text/html&quot;.equals(mimeTypeId)">
+        <field name="contentId" use-when="&quot;text/html&quot;.equals(mimeTypeId)" widget-style="${styles.link_run_sys} ${styles.action_view}">
             <hyperlink also-hidden="false" description="${contentName} [${contentId}]" target="showContent?contentId=${contentId}" target-window="_blank"/>
         </field>
         <field name="contentTypeId">

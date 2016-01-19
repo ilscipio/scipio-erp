@@ -68,8 +68,8 @@ under the License.
             <entity-one entity-name="SalesOpportunity"/>
         </row-actions>
         <field name="salesOpportunityId"><hidden/></field>
-        <field name="opportunityName" title="${uiLabelMap.SfaOpportunityName}">
-            <hyperlink target="ViewSalesOpportunity" description="${opportunityName}[${salesOpportunityId}]">
+        <field name="opportunityName" title="${uiLabelMap.SfaOpportunityName}" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
+            <hyperlink target="ViewSalesOpportunity" description="${opportunityName} [${salesOpportunityId}]">
                 <parameter param-name="salesOpportunityId"/>
             </hyperlink>
         </field>

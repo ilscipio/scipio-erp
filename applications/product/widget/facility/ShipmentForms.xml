@@ -194,7 +194,7 @@ under the License.
                 <field-map field-name="noConditionFind" value="Y"/>
             </service>
         </actions>
-        <field name="shipmentId" title="${uiLabelMap.CommonId}">
+        <field name="shipmentId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_record_id} ${styles.action_view}">
             <hyperlink target="ViewShipment" description="${shipmentId}">
                 <parameter param-name="shipmentId"/>
             </hyperlink>

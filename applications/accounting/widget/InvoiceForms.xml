@@ -84,12 +84,12 @@ under the License.
         <field name="invoiceDate" title="${uiLabelMap.CommonDate}" sort-field="true"><display type="date"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" sort-field="true"><display-entity entity-name="StatusItem"/></field>
         <field name="description" sort-field="true"><display/></field>
-        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}" sort-field="true">
+        <field name="partyIdFrom" title="${uiLabelMap.AccountingFromParty}" sort-field="true" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="/partymgr/control/PartyFinancialHistory" target-type="inter-app" description="${partyNameResultFrom.fullName} [${partyIdFrom}]">
                 <parameter param-name="partyId" from-field="partyIdFrom"/>
             </hyperlink>
         </field>
-        <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}" parameter-name="partyId">
+        <field name="partyIdTo" title="${uiLabelMap.AccountingToParty}" parameter-name="partyId" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="/partymgr/control/PartyFinancialHistory" target-type="inter-app" description="${partyNameResultTo.fullName} [${partyId}]">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -118,12 +118,12 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2"><display-entity entity-name="StatusItem"/></field>
         <field position="1" name="description"><display/></field>
         <field position="2" name="invoiceMessage"><display/></field>
-        <field position="1" name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}">
+        <field position="1" name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultFrom.fullName} [${invoice.partyIdFrom}]">
                 <parameter param-name="partyId" from-field="invoice.partyIdFrom"/>
             </hyperlink>
         </field>
-        <field  title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}" position="2" name="partyIdTo" entry-name="partyId">
+        <field  title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}" position="2" name="partyIdTo" entry-name="partyId" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyNameResultTo.fullName} [${invoice.partyId}]">
                 <parameter param-name="partyId" from-field="invoice.partyId"/>
             </hyperlink>

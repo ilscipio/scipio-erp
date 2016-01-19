@@ -1435,7 +1435,7 @@ under the License.
                 <parameter param-name="workEffortId"/>
             </hyperlink>
         </field>
-        <field name="iCalendarUrl" title="${uiLabelMap.WorkEffortICalendarUrl}">
+        <field name="iCalendarUrl" title="${uiLabelMap.WorkEffortICalendarUrl}" widget-style="${styles.link_nav_uri} ${styles.action_view}">
             <hyperlink also-hidden="false" description="${serverRootUrl}/iCalendar/${workEffortId}/" target="${serverRootUrl}/iCalendar/${workEffortId}/" target-type="plain"/>
         </field>
         <field name="workEffortName" title="${uiLabelMap.WorkEffortICalendarName}"><display/></field>

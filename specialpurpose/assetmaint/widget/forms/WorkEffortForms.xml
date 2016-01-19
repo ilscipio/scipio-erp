@@ -209,7 +209,7 @@
 		   <set field="workEffortService" value="getWorkEffortAssignedTasks"/>
 		   <script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/assetmaint/WorkEffortTaskAndActivities.groovy"/>
     	</actions>
-    	<field name="workEffortId" field-name="workEffortId">
+    	<field name="workEffortId" field-name="workEffortId" widget-style="${styles.link_nav_record_id} ${styles.action_view}">
     		<hyperlink also-hidden="false" description="${workEffortId}" target="EditWorkEfforts">
                 <parameter param-name="workEffortId" from-field="workEffortId"/>
     		</hyperlink>    		
@@ -225,7 +225,7 @@
 		    <set field="workEffortService" value="getWorkEffortCompletedTasks"/>
 		   	<script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/assetmaint/WorkEffortTaskAndActivities.groovy"/>
     	</actions>
-    	<field name="workEffortId" field-name="workEffortId">
+    	<field name="workEffortId" field-name="workEffortId" widget-style="${styles.link_nav_record_id} ${styles.action_view}">
     		<hyperlink also-hidden="false" description="${workEffortId}" target="EditWorkEfforts">
                 <parameter param-name="workEffortId" from-field="workEffortId"/>
     		</hyperlink>    		
@@ -241,7 +241,7 @@
 		  	<set field="workEffortService" value="getWorkEffortAssignedActivities"/>
 		   	<script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/assetmaint/WorkEffortTaskAndActivities.groovy"/>
     	</actions>
-    	<field name="workEffortId" field-name="workEffortId">
+    	<field name="workEffortId" field-name="workEffortId" widget-style="${styles.link_nav_record_id} ${styles.action_view}">
     		<hyperlink also-hidden="false" description="${workEffortId}" target="EditWorkEfforts">
                 <parameter param-name="workEffortId" from-field="workEffortId"/>
     		</hyperlink>    		
@@ -257,7 +257,7 @@
 		   <set field="workEffortService" value="getWorkEffortCompletedActivities"/>
 		   <script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/assetmaint/WorkEffortTaskAndActivities.groovy"/>
     	</actions>
-    	<field name="workEffortId" field-name="workEffortId">
+    	<field name="workEffortId" field-name="workEffortId" widget-style="${styles.link_nav_record_id} ${styles.action_view}">
     		<hyperlink also-hidden="false" description="${workEffortId}" target="EditWorkEfforts">
                 <parameter param-name="workEffortId" from-field="workEffortId"/>
     		</hyperlink>    		

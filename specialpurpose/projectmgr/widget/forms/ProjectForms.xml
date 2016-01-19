@@ -140,7 +140,7 @@
         </row-actions>
         <field name="workEffortId"><hidden/></field>
         <field name="phaseName" position="1" use-when="showPosition1"><display description="${phaseName}[${phaseId}]"/></field>
-        <field name="workEffortName" title="${uiLabelMap.FormFieldTitle_taskName}" position="1" use-when="showPosition1"><hyperlink target="taskView?workEffortId=${workEffortId}" description="${workEffortName}[${workEffortId}]"/></field>
+        <field name="workEffortName" title="${uiLabelMap.FormFieldTitle_taskName}" position="1" use-when="showPosition1" widget-style="${styles.link_nav_record_idname} ${styles.action_view}"><hyperlink target="taskView?workEffortId=${workEffortId}" description="${workEffortName} [${workEffortId}]"/></field>
         <field name="timesheetId" position="2" widget-style="${styles.link_nav_record_id}">
             <hyperlink description="${timesheetId}" target="Timesheet">
                 <parameter param-name="timesheetId"/>
@@ -414,7 +414,7 @@
     <form name="ListPhaseInfo" type="list" list-name="phases"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="wbsId"><display description="${projectId}.${phaseSeqNum}"/></field>
-        <field name="phase">
+        <field name="phase" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="FindPhase" description="${phaseName}">
                 <parameter param-name="projectId"/>
             </hyperlink>
@@ -434,7 +434,7 @@
             </entity-and>
         </row-actions>
         <field name="wbsId"><display description="${projectId}.${phaseSeqNum}.${sequenceNum}"/></field>
-        <field name="task">
+        <field name="task" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="taskView" description="${workEffortName}">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
@@ -515,7 +515,7 @@
             </service>
         </row-actions>
         <field name="projectId"><hidden/></field>
-        <field name="partyName" title="${uiLabelMap.CommonName}">
+        <field name="partyName" title="${uiLabelMap.CommonName}" widget-style="${styles.link_nav_record_idname_long} ${styles.action_view}">
             <hyperlink target="viewprofile" description="${lastName}, ${firstName} ${middleName} ${groupName} [${partyId}]">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -529,7 +529,7 @@
     <form name="ListProjectClientParties" type="list" list-name="clientAssigns"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="projectId"><hidden/></field>
-        <field name="partyName" title="${uiLabelMap.CommonName}">
+        <field name="partyName" title="${uiLabelMap.CommonName}" widget-style="${styles.link_nav_record_idname_long} ${styles.action_view}">
             <hyperlink target="viewprofile" description="${lastName}, ${firstName} ${middleName} ${groupName} [${partyId}]">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -547,7 +547,7 @@
             <set field="currencyUomId" value="${groovy: clientParty?.getString('preferredCurrencyUomId') ?: currencyUomId}"/>
         </row-actions>
         <field name="projectId"><hidden/></field>
-        <field name="partyName" title="${uiLabelMap.CommonName}">
+        <field name="partyName" title="${uiLabelMap.CommonName}" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="viewprofile" description="${groupName} [${partyId}]">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -696,7 +696,7 @@
             </hyperlink>
         </field>
         <field name="phaseName" title="${uiLabelMap.ProjectMgrPhaseName}"><display description="${resultProject.phaseName}"/></field>
-        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}">
+        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="projectView" description="${resultProject.projectName}">
                 <parameter param-name="projectId" from-field="resultProject.projectId"/>
             </hyperlink>
@@ -995,8 +995,8 @@
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="subject">
-            <hyperlink description="${subject}[${communicationEventId}]" target="ViewMailingList">
+        <field name="subject" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
+            <hyperlink description="${subject} [${communicationEventId}]" target="ViewMailingList">
                 <parameter param-name="projectId" from-field="parameters.projectId"/>
                 <parameter param-name="communicationEventId"/>
             </hyperlink>

@@ -22,19 +22,19 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="listLookupAccount" extends="listAccounts" extends-resource="component://marketing/widget/sfa/forms/AccountForms.xml">
-        <field name="partyId">
+        <field name="partyId" widget-style="${styles.link_run_local} ${styles.action_select}">
             <hyperlink also-hidden="false" target-type="plain" description="${partyName} [${partyId}]" target="javascript:set_value('${partyId}')"/>
         </field>
         <field name="relatedCompany"><hidden/></field>
     </form>
     <form name="listLookupLead" extends="listLeads" extends-resource="component://marketing/widget/sfa/forms/LeadForms.xml">
-        <field name="partyId">
+        <field name="partyId" widget-style="${styles.link_run_local} ${styles.action_select}">
             <hyperlink also-hidden="false" target-type="plain" description="${partyName} [${partyId}]" target="javascript:set_value('${partyId}')"/>
         </field>
         <field name="relatedCompany"><hidden/></field>
     </form>
     <form name="listLookupAccountLead" extends="listAccountLeads" extends-resource="component://marketing/widget/sfa/forms/AccountForms.xml">
-        <field name="partyId">
+        <field name="partyId" widget-style="${styles.link_run_local} ${styles.action_select}">
             <hyperlink also-hidden="false" target-type="plain" description="${partyName} [${partyId}]" target="javascript:set_value('${partyId}')"/>
         </field>
         <field name="relatedCompany"><hidden/></field>

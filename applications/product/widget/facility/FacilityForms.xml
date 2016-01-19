@@ -541,7 +541,7 @@ under the License.
         <field name="shipmentMethodTypeId" title="${uiLabelMap.ProductShipmentMethodType}">
             <display-entity entity-name="ShipmentMethodType"/>
         </field>
-        <field name="label" title="${uiLabelMap.ProductLabel}">
+        <field name="label" title="${uiLabelMap.ProductLabel}" widget-style="${styles.link_nav} ${styles.action_view}">
           <hyperlink target="viewShipmentPackageRouteSegLabelImage" description="${uiLabelMap.ProductLabel}">
                 <parameter param-name="shipmentId"/>
                 <parameter param-name="shipmentRouteSegmentId"/>

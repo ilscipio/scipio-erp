@@ -455,7 +455,7 @@ under the License.
             <set field="currencyUomId" from-field="defaultOrganizationPartyCurrencyUomId"/>
         </row-actions>
         <auto-fields-service service-name="updateGlReconciliation" default-field-type="display" map-name="glReconciliation"/>
-        <field name="glReconciliationId" title="${uiLabelMap.CommonId}">
+        <field name="glReconciliationId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_record_id} ${styles.action_view}">
             <hyperlink target="ViewGlReconciliationWithTransaction" description="${glReconciliation.glReconciliationId}">
                 <parameter param-name="glReconciliationId" from-field="glReconciliation.glReconciliationId"/>
                 <parameter param-name="finAccountId"/>
@@ -463,7 +463,7 @@ under the License.
         </field>
         <field name="glReconciliationName" title="${uiLabelMap.CommonName}"><display/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem"/></field>
-        <field name="organizationPartyId" title="${uiLabelMap.CommonParty}">
+        <field name="organizationPartyId" title="${uiLabelMap.CommonParty}" widget-style="${styles.link_nav_record_idname_long} ${styles.action_view}">
             <hyperlink target="/partymgr/control/viewprofile" target-type="inter-app" description="${partyName.firstName} ${partyName.lastName}${partyName.groupName} [${partyName.partyId}]">
                 <parameter param-name="partyId" from-field="partyName.partyId"/>
             </hyperlink>

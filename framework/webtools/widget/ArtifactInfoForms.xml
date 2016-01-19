@@ -22,8 +22,8 @@
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
         <form name="ComponentList" type="list" separate-columns="true" title="Component List" list-name="componentList" target=""
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
-        <field name="compName">
-            <hyperlink target="TestSuiteInfo?compName=${compName}" description="${compName}" ></hyperlink>
+        <field name="compName" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+            <hyperlink target="TestSuiteInfo?compName=${compName}" description="${compName}"></hyperlink>
         </field>
         <field name="rootLocation"><display/></field>
         <field name="enabled"><display/></field>
@@ -36,11 +36,11 @@
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <field name="compName"><hidden value="${parameters.compName}"/></field>
         <field name="suiteName"><display/></field>
-        <field name="runSuite" use-when="suiteName!=void">
+        <field name="runSuite" use-when="suiteName!=void" widget-style="${styles.link_run_sys} ${styles.action_begin}">
             <hyperlink target="RunTest?compName=${parameters.compName}&amp;suiteName=${suiteNameSave}" description="run suite"/>
         </field>
         <field name="caseName"><display/></field>
-        <field name="runCase">
+        <field name="runCase" widget-style="${styles.link_run_sys} ${styles.action_begin}">
             <hyperlink target="RunTest?compName=${parameters.compName}&amp;suiteName=${suiteNameSave}&amp;caseName=${caseName}" description="run case"/>
         </field>
     </form>

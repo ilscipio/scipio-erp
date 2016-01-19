@@ -190,7 +190,7 @@ under the License.
             </entity-condition>
         </actions>
         <field name="groupId"><hidden/></field>
-        <field name="userLoginId" sort-field="true">
+        <field name="userLoginId" sort-field="true" widget-style="${styles.link_nav_record_id} ${styles.action_view}">
             <hyperlink also-hidden="false" description="${userLoginId}" target="editlogin">
                 <parameter param-name="userLoginId"/>
             </hyperlink>

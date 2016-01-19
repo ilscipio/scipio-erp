@@ -155,7 +155,7 @@ under the License.
     <@tr>
       <@td>${uiLabelMap.OrderImage}</@td>
       <@td colspan="3">
-        <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.link_nav_image!}">${uiLabelMap.OrderViewImage}</a>
+        <a href="<@ofbizUrl>viewimage?orderId=${orderId}&amp;orderContentTypeId=IMAGE_URL</@ofbizUrl>" target="_orderImage" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.OrderViewImage}</a>
       </@td>
     </@tr>
   </#if>

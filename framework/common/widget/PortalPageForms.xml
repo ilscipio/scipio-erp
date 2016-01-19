@@ -23,7 +23,7 @@ under the License.
 
     <form name="ListPortalPages" type="list" list-name="portalPages" separate-columns="true"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
-        <field name="portalPageId" title="${uiLabelMap.CommonEdit}">
+        <field name="portalPageId" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink description="${uiLabelMap.CommonEdit}" target="ManagePortalPages">
                 <parameter param-name="portalPageId"/>
                 <parameter param-name="parentPortalPageId" from-field="parameters.parentPortalPageId"/>
@@ -33,28 +33,28 @@ under the License.
         <field name="bot" title=" " use-when="(ownerUserLoginId.equals(&quot;_NA_&quot;))||(itemIndex == listSize-1)"><hyperlink target="" description=""/></field>
         <field name="up" title=" " use-when="(ownerUserLoginId.equals(&quot;_NA_&quot;))||(itemIndex == 0)"><hyperlink target="" description=""/></field>
         <field name="dwn" title=" " use-when="(ownerUserLoginId.equals(&quot;_NA_&quot;))||(itemIndex == listSize-1)"><hyperlink target="" description=""/></field>
-        <field name="top" title=" " use-when="(!ownerUserLoginId.equals(&quot;_NA_&quot;))&amp;&amp;(itemIndex &gt; 0)">
+        <field name="top" title=" " use-when="(!ownerUserLoginId.equals(&quot;_NA_&quot;))&amp;&amp;(itemIndex &gt; 0)" widget-style="${styles.action_run_sys} ${styles.action_update}">
             <hyperlink target="updatePortalPageSeq" image-location="/images/arrow-end-up-green.png">
                 <parameter param-name="mode" value="TOP"/>
                 <parameter param-name="portalPageId"/>
                 <parameter param-name="parentPortalPageId" from-field="parameters.parentPortalPageId"/>
             </hyperlink>
         </field>
-        <field name="bot" title=" " use-when="(!ownerUserLoginId.equals(&quot;_NA_&quot;))&amp;&amp;(itemIndex &lt; listSize-1)">
+        <field name="bot" title=" " use-when="(!ownerUserLoginId.equals(&quot;_NA_&quot;))&amp;&amp;(itemIndex &lt; listSize-1)" widget-style="${styles.action_run_sys} ${styles.action_update}">
             <hyperlink target="updatePortalPageSeq" image-location="/images/arrow-end-down-green.png">
                 <parameter param-name="mode" value="BOT"/>
                 <parameter param-name="portalPageId"/>
                 <parameter param-name="parentPortalPageId" from-field="parameters.parentPortalPageId"/>
             </hyperlink>
         </field>
-        <field name="up" title=" " use-when="(!ownerUserLoginId.equals(&quot;_NA_&quot;))&amp;&amp;(itemIndex &gt; 0)">
+        <field name="up" title=" " use-when="(!ownerUserLoginId.equals(&quot;_NA_&quot;))&amp;&amp;(itemIndex &gt; 0)" widget-style="${styles.action_run_sys} ${styles.action_update}">
             <hyperlink target="updatePortalPageSeq" image-location="/images/arrow-single-up-green.png">
                 <parameter param-name="mode" value="UP"/>
                 <parameter param-name="portalPageId"/>
                 <parameter param-name="parentPortalPageId" from-field="parameters.parentPortalPageId"/>
             </hyperlink>
         </field>
-        <field name="dwn" title=" " use-when="(!ownerUserLoginId.equals(&quot;_NA_&quot;))&amp;&amp;(itemIndex &lt; listSize-1)">
+        <field name="dwn" title=" " use-when="(!ownerUserLoginId.equals(&quot;_NA_&quot;))&amp;&amp;(itemIndex &lt; listSize-1)" widget-style="${styles.action_run_sys} ${styles.action_update}">
             <hyperlink target="updatePortalPageSeq" image-location="/images/arrow-single-down-green.png">
                 <parameter param-name="mode" value="DWN"/>
                 <parameter param-name="portalPageId"/>
@@ -104,7 +104,7 @@ under the License.
 
     <form name="PortletCategoryAndPortlet" type="list" list-name="portletCat" paginate-target="addPortlet" separate-columns="true"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
-        <field name="portletCategoryId" title="Category">
+        <field name="portletCategoryId" title="Category" widget-style="${styles.link_nav} ${styles.action_add}">
             <hyperlink description="${portletCategoryId}" target="addPortlet">
                 <parameter param-name="portletCategoryId"/>
                 <parameter param-name="portalPortletId"/>
@@ -123,19 +123,19 @@ under the License.
                 <field-map field-name="portalPageId" from-field="parameters.portalPageId"/>
             </entity-and>
         </actions>
-        <field name="portletName">
-            <hyperlink also-hidden="false" target="showHelp?helpTopic=HELP_${portalPortletId}" description="${portletName}" ></hyperlink>
+        <field name="portletName" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
+            <hyperlink also-hidden="false" target="showHelp?helpTopic=HELP_${portalPortletId}" description="${portletName}"></hyperlink>
         </field>
         <field name="description"><display/></field>
     </form>
 
     <form name="FindGenericEntity" type="single" target="list${entity}" title="" focus-field-name="idName">
         <field name="idName" title="${uiLabelMap.FormFieldTitle_${pkIdName}"><text size="16"/></field>
-        <field name="idName_op" ><hidden value="contains"/></field>
-        <field name="idName_ic" ><hidden value="Y"/></field>
-        <field name="description" ><text size="16"/></field>
-        <field name="description_op" ><hidden value="contains"/></field>
-        <field name="description_ic" ><hidden value="Y"/></field>
+        <field name="idName_op"><hidden value="contains"/></field>
+        <field name="idName_ic"><hidden value="Y"/></field>
+        <field name="description"><text size="16"/></field>
+        <field name="description_op"><hidden value="contains"/></field>
+        <field name="description_ic"><hidden value="Y"/></field>
         <field name="submitAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_find}">
             <hyperlink target="javascript:ajaxUpdateArea('List${entity}Area', 'list${entity}', $(FindGenericEntity).serialize());" target-type="plain" description="${uiLabelMap.CommonSearch}"/>
         </field>

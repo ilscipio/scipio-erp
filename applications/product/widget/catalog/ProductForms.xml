@@ -1166,7 +1166,7 @@
             <text maxlength="20" />
         </field>
         <field use-when="contentId != null" name="contentId" title="${uiLabelMap.ProductContentId}"
-            tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="productContentData">
+            tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="productContentData" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink description="${contentId} ${contentName}" target="/content/control/editContent" target-type="inter-app">
                 <parameter param-name="contentId" />
             </hyperlink>

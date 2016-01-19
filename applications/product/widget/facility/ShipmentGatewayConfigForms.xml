@@ -49,7 +49,7 @@ under the License.
         </actions>
         <auto-fields-entity entity-name="ShipmentGatewayConfig" default-field-type="display"/>
         <field name="shipmentGatewayConfigId"><hidden/></field>
-        <field name="description" title="${uiLabelMap.FacilityShipmentGatewayConfigDescription}">
+        <field name="description" title="${uiLabelMap.FacilityShipmentGatewayConfigDescription}" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
             <hyperlink description="${description}" target="EditShipmentGatewayConfig?shipmentGatewayConfigId=${shipmentGatewayConfigId}"/>
         </field>
         <field name="shipmentGatewayConfTypeId" title="${uiLabelMap.FacilityShipmentGatewayConfigTypeId}">
@@ -325,7 +325,7 @@ under the License.
         </actions>
         <auto-fields-entity entity-name="ShipmentGatewayConfigType" default-field-type="display"/>
         <field name="shipmentGatewayConfTypeId"><hidden/></field>
-        <field name="description" title="${uiLabelMap.FacilityShipmentGatewayConfigTypeDescription}">
+        <field name="description" title="${uiLabelMap.FacilityShipmentGatewayConfigTypeDescription}" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
             <hyperlink description="${description}" target="EditShipmentGatewayConfigType?shipmentGatewayConfTypeId=${shipmentGatewayConfTypeId}"/>
         </field>
     </form>

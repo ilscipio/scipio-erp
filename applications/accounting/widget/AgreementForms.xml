@@ -94,12 +94,12 @@ under the License.
         <field name="agreementTypeId" title="${uiLabelMap.CommonType}" sort-field="true">
             <display-entity entity-name="AgreementType"/>
         </field>
-        <field name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}" sort-field="true">
+        <field name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}" sort-field="true" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyNameResultFrom.fullName}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="partyIdFrom"/>
             </hyperlink> 
         </field>
-        <field name="partyIdTo" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}"  sort-field="true">
+        <field name="partyIdTo" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}" sort-field="true" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyNameResultTo.fullName}" target-type="inter-app">
                 <parameter param-name="partyId" from-field="partyIdTo"/>
             </hyperlink>

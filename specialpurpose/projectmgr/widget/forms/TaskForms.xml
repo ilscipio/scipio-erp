@@ -244,7 +244,7 @@
             </hyperlink>
         </field>
         <field name="phaseName" title="${uiLabelMap.ProjectMgrPhaseName}"><display description="${resultProject.phaseName}"/></field>
-        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}">
+        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="projectView" description="${resultProject.projectName}">
                 <parameter param-name="projectId" from-field="resultProject.projectId"/>
             </hyperlink>
@@ -338,7 +338,7 @@
         <field name="workEffortAssocTypeId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden/></field>
         <field name="workEffortId"><hidden/></field>
-        <field name="workEffortIdFrom" title="${uiLabelMap.CommonName}">
+        <field name="workEffortIdFrom" title="${uiLabelMap.CommonName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="taskView" description="${r.taskInfo.taskName}">
                 <parameter param-name="workEffortId" from-field="workEffortIdFrom"/>
             </hyperlink>
@@ -363,7 +363,7 @@
         <field name="workEffortAssocTypeId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden/></field>
         <field name="workEffortId"><hidden/></field>
-        <field name="workEffortIdTo" title="${uiLabelMap.CommonName}">
+        <field name="workEffortIdTo" title="${uiLabelMap.CommonName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="taskView" description="${r.taskInfo.taskName}">
                 <parameter param-name="workEffortId" from-field="workEffortIdTo"/>
             </hyperlink>
@@ -543,7 +543,7 @@
     <form name="TaskInfo" type="single" default-map-name="task">
         <field name="taskName" title="${uiLabelMap.ProjectMgrTaskName}"><display description="${task.taskName} [${task.taskId}]"/></field>
         <field name="phaseName" title="${uiLabelMap.ProjectMgrPhaseName}"><display description="${projectResult.phaseName} [${projectResult.phaseId}]"/></field>
-        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}">
+        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="projectView" description="${projectResult.projectName} [${projectResult.projectId}]">
                 <parameter param-name="projectId" from-field="projectResult.projectId"/>
             </hyperlink>
@@ -597,7 +597,7 @@
     </form>
     <form name="ListTaskParties" type="list" list-name="taskParties"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
-        <field name="partyId" title="${uiLabelMap.CommonName}">
+        <field name="partyId" title="${uiLabelMap.CommonName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="viewprofile" description="${partyName}">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -659,7 +659,7 @@
         <field name="workEffortAssocTypeId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden/></field>
         <field name="workEffortId"><hidden/></field>
-        <field name="workEffortIdFrom" title="${uiLabelMap.CommonName}">
+        <field name="workEffortIdFrom" title="${uiLabelMap.CommonName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="Dependencies" description="${result.taskInfo.taskName}">
                 <parameter param-name="workEffortId" from-field="workEffortIdFrom"/>
             </hyperlink>
@@ -686,7 +686,7 @@
         <field name="workEffortAssocTypeId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><hidden/></field>
         <field name="workEffortId"><hidden/></field>
-        <field name="workEffortIdTo" title="${uiLabelMap.CommonName}">
+        <field name="workEffortIdTo" title="${uiLabelMap.CommonName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="Dependencies" description="${result.taskInfo.taskName}">
                 <parameter param-name="workEffortId" from-field="workEffortIdFrom"/>
             </hyperlink>

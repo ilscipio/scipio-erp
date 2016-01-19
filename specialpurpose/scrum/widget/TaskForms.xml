@@ -222,29 +222,29 @@
         </actions>
         <field name="workEffortName" title="${uiLabelMap.ScrumTaskName}"><display description="${resultTask.workEffortName}"/></field>
         <field name="workEffortTypeId" title="${uiLabelMap.ScrumTaskType}" ><display description="${workEffortType.description}"/></field>
-        <field name="custRequestId" title="${uiLabelMap.ScrumProductBacklog}">
+        <field name="custRequestId" title="${uiLabelMap.ScrumProductBacklog}" widget-style="${styles.link_nav_record_desc} ${styles.action_view}">
             <hyperlink target="ViewProdBacklogItem" description="${custRequest.description} [${custRequest.custRequestId}]">
                 <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
                 <parameter param-name="productId" from-field="productId"/>
             </hyperlink>
         </field>
-        <field name="sprintName" title="${uiLabelMap.ScrumSprint}" use-when="sprintId!=null">
+        <field name="sprintName" title="${uiLabelMap.ScrumSprint}" use-when="sprintId!=null" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="ViewSprint" description="${sprintName} [${sprintId}]">
                 <parameter param-name="projectId" from-field="projectId"/>
                 <parameter param-name="sprintId" from-field="sprintId"/>
             </hyperlink>
         </field>
-        <field name="projectName" title="${uiLabelMap.ScrumProject}" use-when="projectId!=null">
+        <field name="projectName" title="${uiLabelMap.ScrumProject}" use-when="projectId!=null" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="viewScrumProject" description="${projectName} [${projectId}]">
                 <parameter param-name="projectId"/>
             </hyperlink>
         </field>
-        <field name="productId" title="${uiLabelMap.PageTitleProduct}">
+        <field name="productId" title="${uiLabelMap.PageTitleProduct}" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="ViewProduct" description="${product.internalName} [${productId}]">
                 <parameter param-name="productId" from-field="productId"/>
             </hyperlink>
         </field>
-        <field name="groupName" title="${uiLabelMap.ScrumCompany}">
+        <field name="groupName" title="${uiLabelMap.ScrumCompany}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="viewprofile" description="${companyList[0].groupName}">
                 <parameter param-name="partyId" from-field="companyList[0].partyId"/>
             </hyperlink>
@@ -594,7 +594,7 @@
                 <order-by field-name="groupName"/>
             </entity-condition>
         </actions>
-        <field name="partyId" title="${uiLabelMap.CommonName}">
+        <field name="partyId" title="${uiLabelMap.CommonName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="viewprofile" description="${lastName} ${firstName}">
                 <parameter param-name="partyId"/>
             </hyperlink>
@@ -692,7 +692,7 @@
             </service>
             <set field="taskEstimatedMilliSeconds" from-field="resultMap.initPlanHours"/>
         </row-actions>
-        <field name="taskId" title="${uiLabelMap.ScrumTask}" parameter-name="workEffortId">
+        <field name="taskId" title="${uiLabelMap.ScrumTask}" parameter-name="workEffortId" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="taskView" link-type="hidden-form" description="${taskName} - [${taskId}]">
                 <parameter param-name="taskId"/>
             </hyperlink>
@@ -705,7 +705,7 @@
                 </sub-hyperlink>
             </display-entity>
         </field>
-        <field name="sprintId" use-when="sprintId==null">
+        <field name="sprintId" use-when="sprintId==null" widget-style="${styles.link_nav} ${styles.action_terminate}">
             <hyperlink target="unplanBacklog" description="${uiLabelMap.ScrumUnplanSprint}">
                 <parameter param-name="productId" from-field="productId"/>
             </hyperlink>
@@ -948,7 +948,7 @@
         <field name="taskId"><hidden value="${parameters.taskId}"/></field>
         <field name="sprintId"><hidden value="${parameters.sprintId}"/></field>
         <field name="partyId"><hidden/></field>
-        <field name="memberName" title="${uiLabelMap.ScrumMembersName}">
+        <field name="memberName" title="${uiLabelMap.ScrumMembersName}" widget-style="${styles.link_nav_record_idname_long} ${styles.action_view}">
             <hyperlink target="viewprofile" description="${lastName} ${firstName} ${middleName} [${partyId}]">
                 <parameter param-name="partyId"/>
             </hyperlink>

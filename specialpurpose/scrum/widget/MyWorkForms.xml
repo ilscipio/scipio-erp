@@ -80,7 +80,7 @@
             </display-entity>
         </field>
         <field name="sprintName" ><display description="${result.sprintName}"></display> </field>
-        <field name="projectName" title="${uiLabelMap.ScrumProjectName}">
+        <field name="projectName" title="${uiLabelMap.ScrumProjectName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="viewScrumProject" description="${projectName}">
                 <parameter param-name="projectId"/>
             </hyperlink>

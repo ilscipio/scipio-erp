@@ -100,13 +100,13 @@ under the License.
         </field>
         <field name="custRequestName"><display/></field>
         <field name="description"><display/></field>
-        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}">
+        <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink also-hidden="false" description="${projectName}" target="projectView">
                 <parameter param-name="projectId"/>
             </hyperlink>
         </field>
         <field name="phaseName"><display description="${result.phaseName}"/></field>
-        <field name="taskName">
+        <field name="taskName" widget-style="${styles.link_nav_record_name} ${styles.action_view}">
             <hyperlink target="taskView" description="${workEffort.workEffortName}">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
@@ -152,12 +152,12 @@ under the License.
                 <field-map field-name="taskId" from-field="workEffortId"/>
             </service>
         </row-actions>
-        <field name="custRequestId">
+        <field name="custRequestId" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="ViewRequest" description="${custRequestName} [${custRequestId}]">
                 <parameter param-name="custRequestId"/>
             </hyperlink>
          </field>
-        <field name="projectId" title="${uiLabelMap.ProjectMgrProjectId}" map-name="sResult" sort-field="true">
+        <field name="projectId" title="${uiLabelMap.ProjectMgrProjectId}" map-name="sResult" sort-field="true" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="projectView" description="${sResult.projectName} [${sResult.projectId}]">
                 <parameter param-name="projectId" from-field="sResult.projectId"/>
             </hyperlink>
@@ -165,7 +165,7 @@ under the License.
         <field name="phaseId" map-name="sResult">
             <display description="${sResult.phaseName} [${sResult.phaseId}]"/>
         </field>
-        <field name="workEffortId">
+        <field name="workEffortId" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="taskView" description="${workEffortName} [${workEffortId}]">
                 <parameter param-name="workEffortId"/>
             </hyperlink>
@@ -184,7 +184,7 @@ under the License.
         </field>
     </form>
     <form name="ViewRequestWorkEfforts" extends="ViewRequestWorkEfforts" extends-resource="component://order/widget/ordermgr/CustRequestForms.xml">
-        <field name="workEffortId">
+        <field name="workEffortId" widget-style="${styles.link_nav_record_idname} ${styles.action_view}">
             <hyperlink target="taskView" description="${workEffortName} [${workEffortId}]">
                 <parameter param-name="workEffortId"/>
             </hyperlink>

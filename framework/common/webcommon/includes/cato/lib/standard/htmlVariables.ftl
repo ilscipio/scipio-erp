@@ -363,24 +363,24 @@
       * move documentation and compactify what's left here
   -->
     <#-- Action text links (trigger an actual action in the system - NOT for use for opening pages toward actions!) -->
-    "link_run_sys" : "link-type-text button tiny action-run action-primary action-scope-sys",                                  <#-- link that actually performs an action (run-action), in system scope, such as most form submit buttons, "Create Order", "Download PDF", etc. -->
+    "link_run_sys" : "link-type-text action-run action-primary action-scope-sys button tiny",                                  <#-- link that actually performs an action (run-action), in system scope, such as most form submit buttons, "Create Order", "Download PDF", etc. -->
     "link_run_sys_long" : "link-type-text action-run action-primary action-scope-sys link-long",
-    "link_run_sys_cancel" : "link-type-text button tiny action-run action-primary action-scope-sys action-cancel",             <#-- link that cancels a system action in progress, such as cancelling an upload (but NOT if only a button that leads back to previous page - use link_nav_action_cancel, and NOT for changing an order status to cancelled - use link_run_sys with appropriate action_xxx appended) -->
+    "link_run_sys_cancel" : "link-type-text action-run action-primary action-scope-sys action-cancel button tiny",             <#-- link that cancels a system action in progress, such as cancelling an upload (but NOT if only a button that leads back to previous page - use link_nav_action_cancel, and NOT for changing an order status to cancelled - use link_run_sys with appropriate action_xxx appended) -->
     "link_run_sys_cancel_long" : "link-type-text action-run action-primary action-scope-sys action-cancel link-long",
-    "link_run_session" : "link-type-text button tiny action-run action-primary action-scope-session",                          <#-- link for any action (run-action) that only modifies current session (logical, not necessarily HTTP session), not meaningful permanent system data. -->
+    "link_run_session" : "link-type-text action-run action-primary action-scope-session button tiny",                          <#-- link for any action (run-action) that only modifies current session (logical, not necessarily HTTP session), not meaningful permanent system data. -->
     "link_run_session_long" : "link-type-text action-run action-primary action-scope-session link-long",
-    "link_run_session_cancel" : "link-type-text button tiny action-run action-primary action-scope-session action-cancel",     <#-- link for any action that cancels another session action (rare). -->
+    "link_run_session_cancel" : "link-type-text action-run action-primary action-scope-session action-cancel button tiny",     <#-- link for any action that cancels another session action (rare). -->
     "link_run_session_cancel_long" : "link-type-text action-run action-primary action-scope-session action-cancel link-long",
-    "link_run_local" : "link-type-text button tiny action-run action-primary action-scope-local",                              <#-- link for any action (run-action) local to a page or that prepares a page for another action, such as "Clear" or "Reset" buttons that empty a form or form field and interactive javascript forms. -->
+    "link_run_local" : "link-type-text action-run action-primary action-scope-local button tiny",                              <#-- link for any action (run-action) local to a page or that prepares a page for another action, such as "Clear" or "Reset" buttons that empty a form or form field and interactive javascript forms. -->
     "link_run_local_long" : "link-type-text action-run action-primary action-scope-local link-long",
-    "link_run_local_cancel" : "link-type-text button tiny action-run action-primary action-scope-local action-cancel",         <#-- link for any action that cancels another page-scope action (rare). -->
+    "link_run_local_cancel" : "link-type-text action-run action-primary action-scope-local action-cancel button tiny",         <#-- link for any action that cancels another page-scope action (rare). -->
     "link_run_local_cancel_long" : "link-type-text action-run action-primary action-scope-local action-cancel link-long",
 
-    <#-- General primary navigation text links (basic navigation and navigation toward actions; note that navigation itself is considered an action)
+    <#-- Primary navigation text links (basic navigation and navigation toward actions; note that navigation itself is considered an action)
         NOTE: unlike link_run_xxx, we omit sys/session/local scope from these because "predicting" the scope of an action in a nav link is not really useful in a UI. -->
-    "link_nav" : "link-type-text button tiny action-nav action-primary",                             <#-- navigation link toward another page, usually with static text like "New" or "Edit" or "View". the link should also be qualified with an "action_xxx" class where appropriate (see above), to indicate the action that the link is leading the user to do. -->
+    "link_nav" : "link-type-text action-nav action-primary button tiny",                             <#-- navigation link toward another page, usually with static text like "New" or "Edit" or "View". the link should also be qualified with an "action_xxx" class where appropriate (see above), to indicate the action that the link is leading the user to do. -->
     "link_nav_long" : "link-type-text action-nav action-primary link-long",                          <#-- very long or complex/non-static nav/viewing link: "Categories: All Products Sorted by Name" -->
-    "link_nav_cancel" : "link-type-text button tiny action-nav action-primary action-cancel",        <#-- back/cancel/done navigation link that leads back to another page (could be said as: "cancels" the nagivation action): "Back", "Cancel", "Done", etc. NOTE: may often appear as if is part of a form submit (run action), but is not really. -->
+    "link_nav_cancel" : "link-type-text action-nav action-primary action-cancel button tiny",        <#-- back/cancel/done navigation link that leads back to another page (could be said as: "cancels" the nagivation action): "Back", "Cancel", "Done", etc. NOTE: may often appear as if is part of a form submit (run action), but is not really. -->
     "link_nav_cancel_long" : "link-type-text action-nav action-primary action-cancel link-long",
 
     <#-- Informational navigation text links -->
@@ -389,9 +389,7 @@
     <#-- DEV NOTE (2016-01-19): the categories below have become less important with the new categorizations (the categories above are more important to be followed for good user UI) and because all the categories above support _long versions. however I see no real harm in leaving these in for now (except for consistency concerns)... adds extra configure options. 
             if found to be not needed, they could simply be all changed back to simple link_nav_info[_long].
         TODO? may need CSS to identify to style differently depending on if these land within form tables vs outside. but should probably do that with CSS selectors instead of here...
-            maybe remove "button tiny" from all link_nav and link_run_xxx and delegate to SCSS...but not trivial...
-        FIXME: a few of these that were used in templates earlier may actually belong as link_run_xxx instead of link_nav... should review templates again... 
-        FIXME: a bunch of link_nav in templates should be converted to link_nav_info (or more specific)... forgot about them... -->
+            maybe remove "button tiny" from all link_nav and link_run_xxx and delegate to SCSS...but not trivial... -->
     "link_nav_info_id" : "link-type-text action-nav action-secondary",                          <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
     "link_nav_info_id_long" : "link-type-text action-nav action-secondary link-long",           <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
     "link_nav_info_name" : "link-type-text action-nav action-secondary",                        <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->

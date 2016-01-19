@@ -10282,8 +10282,9 @@ div.scrollable-table-container > table {
   color: white;
 }
 
-/* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) */
-/* line 389, ../scss/_base.scss */
+/* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
+  FIXME: this should have an emphasis, but warning color is probably not appropriate... */
+/* line 390, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10295,6 +10296,38 @@ div.scrollable-table-container > table {
 }
 /* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
 .action-run.action-scope-sys.action-modify.button:hover, .action-run.action-scope-sys.action-modify.button:focus, .action-run.action-scope-sys.action-modify .button:hover, .action-run.action-scope-sys.action-modify .button:focus {
+  color: white;
+}
+
+/* special nav cancel/back/return action button (alt regular color) */
+/* line 395, ../scss/_base.scss */
+.action-nav.action-cancel.button, .action-nav.action-cancel .button {
+  background-color: #e7e7e7;
+  border-color: #b9b9b9;
+  color: #333333;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-nav.action-cancel.button:hover, .action-nav.action-cancel.button:focus, .action-nav.action-cancel .button:hover, .action-nav.action-cancel .button:focus {
+  background-color: #b9b9b9;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-nav.action-cancel.button:hover, .action-nav.action-cancel.button:focus, .action-nav.action-cancel .button:hover, .action-nav.action-cancel .button:focus {
+  color: #333333;
+}
+
+/* special run-action cancel/back/return action button (warning color) */
+/* line 400, ../scss/_base.scss */
+.action-run.action-cancel.button, .action-run.action-cancel .button {
+  background-color: #f08a24;
+  border-color: #cf6e0e;
+  color: white;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-cancel.button:hover, .action-run.action-cancel.button:focus, .action-run.action-cancel .button:hover, .action-run.action-cancel .button:focus {
+  background-color: #cf6e0e;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-cancel.button:hover, .action-run.action-cancel.button:focus, .action-run.action-cancel .button:hover, .action-run.action-cancel .button:focus {
   color: white;
 }
 

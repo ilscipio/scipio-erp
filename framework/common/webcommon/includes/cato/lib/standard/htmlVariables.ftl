@@ -258,7 +258,8 @@
     <#-- classes to identify content type of links 
         DEV NOTE (2016-01-19): these are not currently used enough to be useful, but they add clarification.
             they _should_ be used because it's difficult to impossible to select links based on child content in CSS without using javascript. -->
-    "link_type_text" : "link-type-text",  
+    "link_type_text" : "link-type-text",
+    "link_type_textspecial" : "link-type-textspecial",
     "link_type_image" : "link-type-image",
     
   <#-- Link styles (standalone/full)
@@ -388,19 +389,19 @@
             TOOD? may need CSS to identify to style differently depending on if these land within form tables vs outside. but should probably do that with CSS selectors instead of here...
                 maybe remove "button tiny" from all link_nav and link_run_xxx and delegate to SCSS.
         FIXME: a few of these that were used in templates earlier may actually belong as link_run_xxx instead of link_nav... should review templates again... -->
-    "link_nav_record_id" : "link-type-text action-nav",                         <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
-    "link_nav_record_id_long" : "link-type-text action-nav link-long",          <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
-    "link_nav_record_name" : "link-type-text action-nav",                       <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
-    "link_nav_record_name_long" : "link-type-text action-nav link-long",        <#-- the long name of a record: "Mr. Title The Ambassador of Germany", etc. -->
-    "link_nav_record_idname" : "link-type-text action-nav",                     <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
-    "link_nav_record_idname_long" : "link-type-text action-nav link-long",      <#-- long combination of IDs and names: "Mr. John Alberton Smith Junior (ID: 10000) (Group: 20000)" -->
-    "link_nav_record_desc" : "link-type-text action-nav",                       <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. In general, as soon as a link text contains more than one type of value, and not idname, it should be changed to link_nav_record_desc. -->
-    "link_nav_record_date" : "link-type-text action-nav",                       <#-- the date of a record (fromDate, thruDate, etc.) -->
-    "link_nav_record_number" : "link-type-text action-nav",                     <#-- the number of a record (index, sequence num, etc.) -->
-    "link_nav_record_value" : "link-type-text action-nav",                      <#-- link containing a value of type not previously listed (or cannot be known statically) -->
-    "link_nav_record_value_long" : "link-type-text action-nav link-long",       <#-- link containing a value of type not previously listed but that may be long (or cannot be known statically) -->
-    "link_nav_uri" : "link-type-text action-nav",                               <#-- link containing a URL, path or other location as its text (<a href="http://ofbiz.apache.org">http://ofbiz.apache.org</a>); may be IP, hostname, etc. -->
-    "link_nav_text" : "link-type-text action-nav",                              <#-- link containing any kind of free-form text -->
+    "link_nav_record_id" : "link-type-textspecial action-nav",                          <#-- the short ID or unique code of a record (1-20 chars): "WS10000", "10000", "ORDER_CANCELLED", etc. -->
+    "link_nav_record_id_long" : "link-type-textspecial action-nav link-long",           <#-- the long ID of a record (more than 20-30 chars), records that do not have single IDs, and IDs with long extraneous words: "WS10000-ITEM10000", "Workspace-Timesheet: TS100000" -->
+    "link_nav_record_name" : "link-type-textspecial action-nav",                        <#-- the name of a record: "My Order 23", "Some Value", "Cancelled", etc. -->
+    "link_nav_record_name_long" : "link-type-textspecial action-nav link-long",         <#-- the long name of a record: "Mr. Title The Ambassador of Germany", etc. -->
+    "link_nav_record_idname" : "link-type-textspecial action-nav",                      <#-- the name and id of a record: "My Order 23 (WS10000)", "WS10000 (My Order 23)" etc. -->
+    "link_nav_record_idname_long" : "link-type-textspecial action-nav link-long",       <#-- long combination of IDs and names: "Mr. John Alberton Smith Junior (ID: 10000) (Group: 20000)" -->
+    "link_nav_record_desc" : "link-type-textspecial action-nav",                        <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. In general, as soon as a link text contains more than one type of value, and not idname, it should be changed to link_nav_record_desc. -->
+    "link_nav_record_date" : "link-type-textspecial action-nav",                        <#-- the date of a record (fromDate, thruDate, etc.) -->
+    "link_nav_record_number" : "link-type-textspecial action-nav",                      <#-- the number of a record (index, sequence num, etc.) -->
+    "link_nav_record_value" : "link-type-textspecial action-nav",                       <#-- link containing a value of type not previously listed (or cannot be known statically) -->
+    "link_nav_record_value_long" : "link-type-textspecial action-nav link-long",        <#-- link containing a value of type not previously listed but that may be long (or cannot be known statically) -->
+    "link_nav_uri" : "link-type-textspecial action-nav",                                <#-- link containing a URL, path or other location as its text (<a href="http://ofbiz.apache.org">http://ofbiz.apache.org</a>); may be IP, hostname, etc. -->
+    "link_nav_text" : "link-type-textspecial action-nav",                               <#-- link containing any kind of free-form text -->
     
   <#-- Colors -->
     "color_green" : "success",

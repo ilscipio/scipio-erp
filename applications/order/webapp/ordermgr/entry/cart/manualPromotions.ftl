@@ -33,7 +33,7 @@ under the License.
               <option value="${productPromo.productPromoId}">${productPromo.promoName!}</option>
             </#list>
           </select>
-          <input type="submit" class="${styles.link_action_sys!} ${styles.action_update!}" value="${uiLabelMap.OrderDoPromotions}" />
+          <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.OrderDoPromotions}" />
         </form>
     </@section>
 </#if>

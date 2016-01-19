@@ -112,7 +112,7 @@ under the License.
         </@field>
         <#if shoppingList.listName?default("") != "auto-save">
           <@field type="submitarea">
-              <a href="javascript:document.updateList.submit();" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
+              <a href="javascript:document.updateList.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
           </@field>
         </#if>
     </form>

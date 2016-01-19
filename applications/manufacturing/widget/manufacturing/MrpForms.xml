@@ -35,7 +35,7 @@ under the License.
             </drop-down>
         </field>
         <field name="defaultYearsOffset"><text size="5" default-value="1"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_begin}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_begin}">
             <submit button-type="button"/>
         </field>
     </form>

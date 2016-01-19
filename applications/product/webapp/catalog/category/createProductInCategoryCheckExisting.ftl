@@ -103,7 +103,7 @@ under the License.
                 </@field>
                 <@field type="input" label="${uiLabelMap.ProductNewProductId}" name="productId" value="" />
                 <@field type="submitarea">
-                    <input type="submit" value="${uiLabelMap.ProductCreateNewProduct}" class="${styles.link_action_sys!} ${styles.action_add!}"/>
+                    <input type="submit" value="${uiLabelMap.ProductCreateNewProduct}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
                 </@field>
         </form>
         </@cell>

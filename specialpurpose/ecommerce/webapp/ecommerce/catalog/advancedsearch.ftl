@@ -102,7 +102,7 @@ under the License.
     </#if>
     <@tr>
       <@td>&nbsp;</@td>
-      <@td><a href="javascript:document.advtokeywordsearchform.submit()" class="${styles.link_action_sys!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a></@td>
+      <@td><a href="javascript:document.advtokeywordsearchform.submit()" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a></@td>
     </@tr>
   </@table>
 
@@ -112,14 +112,14 @@ under the License.
     <@heading>${uiLabelMap.OrderLastSearches}...</@heading>
 
     <div>
-      <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="${styles.link_action_session!} ${styles.action_clear!}">${uiLabelMap.OrderClearSearchHistory}</a>
+      <a href="<@ofbizUrl>clearSearchOptionsHistoryList</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_clear!}">${uiLabelMap.OrderClearSearchHistory}</a>
       ${uiLabelMap.OrderClearSearchHistoryNote}
     </div>
     <#list searchOptionsHistoryList as searchOptions>
     <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
         <div>
           ${uiLabelMap.EcommerceSearchNumber}${searchOptions_index + 1}
-          <a href="<@ofbizUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_find!}">${uiLabelMap.CommonSearch}</a>
+          <a href="<@ofbizUrl>setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonSearch}</a>
           <a href="<@ofbizUrl>setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonRefine}</a>
         </div>
         <#assign constraintStrings = searchOptions.searchGetConstraintStrings(false, delegator, locale)>

@@ -32,7 +32,7 @@ under the License.
         </field>
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -63,7 +63,7 @@ under the License.
         <field name="paymentGatewayConfigTypeId" title="${uiLabelMap.AccountingPaymentGatewayConfigTypeId}">
             <display-entity entity-name="PaymentGatewayConfigType" key-field-name="paymentGatewayConfigTypeId" description="${description}"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -123,7 +123,7 @@ under the License.
         <field name="refundUrl" title="${uiLabelMap.AccountingSagePayRefundUrl}">
             <text size="100" maxlength="100"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -187,7 +187,7 @@ under the License.
         <field name="tranKey" title="${uiLabelMap.AccountingAuthorizeNetTransKey}">
             <text size="60" maxlength="60"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -248,7 +248,7 @@ under the License.
             </drop-down>
         </field>
         <field name="avsDeclineCodes" title="${uiLabelMap.AccountingCyberSourceAvsDeclineCodes}"><text size="20" maxlength="20"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -298,7 +298,7 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -320,7 +320,7 @@ under the License.
                 <option key="P" description="${uiLabelMap.AccountingPaymentGatewayProduction}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -346,7 +346,7 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
         </field>        
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -402,7 +402,7 @@ under the License.
                 <option key="0" description="${uiLabelMap.AccountingWorldPayLive}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -412,7 +412,7 @@ under the License.
         <field name="description" title="${uiLabelMap.AccountingPaymentGatewayConfigDescription}"><text-find ignore-case="true"/></field>
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -451,7 +451,7 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonNo}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -459,7 +459,7 @@ under the License.
     <form name="EditPaymentGatewayConfigPayPal" type="single" target="UpdatePaymentGatewayConfigPayPal" default-map-name="paymentGatewayPayPal" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="PaymentGatewayPayPal" default-field-type="edit"/>
         <field name="paymentGatewayConfigId"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -467,7 +467,7 @@ under the License.
     <form name="EditPaymentGatewayConfigSecurePay" type="single" target="UpdatePaymentGatewayConfigSecurePay" default-map-name="paymentGatewaySecurePay" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="PaymentGatewaySecurePay" default-field-type="edit"/>
         <field name="paymentGatewayConfigId"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -475,7 +475,7 @@ under the License.
     <form name="EditPaymentGatewayConfigiDEAL" type="single" target="UpdatePaymentGatewayConfigiDEAL" default-map-name="paymentGatewayiDEAL" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="PaymentGatewayiDEAL" default-field-type="edit"/>
         <field name="paymentGatewayConfigId"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>

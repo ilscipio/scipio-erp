@@ -130,7 +130,7 @@ function submitForm(form, mode, value) {
                              <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
                              <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
                              <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                             <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.link_action_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                             <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                            </@td>
                        </@tr>
                        <#if shippingContactMech_has_next>
@@ -352,7 +352,7 @@ function submitForm(form, mode, value) {
                         </@td>
                         <@td width="50%">
                           <span>CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${paymentMethod.paymentMethodId}');" class="${styles.link_action_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${paymentMethod.paymentMethodId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                           <#if paymentMethod.description?has_content><br /><span>(${paymentMethod.description})</span></#if>
                           &nbsp;${uiLabelMap.OrderCardSecurityCode}&nbsp;<input type="text" size="5" maxlength="10" name="securityCode_${paymentMethod.paymentMethodId}" value=""/>
                         </@td>
@@ -367,7 +367,7 @@ function submitForm(form, mode, value) {
                         </@td>
                         <@td width="50%">
                           <span>${uiLabelMap.AccountingEFTAccount}:&nbsp;${eftAccount.bankName!}: ${eftAccount.accountNumber!}</span>
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="${styles.link_action_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
                           <#if paymentMethod.description?has_content><br /><span>(${paymentMethod.description})</span></#if>
                         </@td>
                       </@tr>
@@ -398,7 +398,7 @@ function submitForm(form, mode, value) {
                         </@td>
                         <@td width="50%">
                           <span>${uiLabelMap.AccountingGift}:&nbsp;${giftCardNumber}</span>
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_action_session!} ${styles.action_update!}">[${uiLabelMap.CommonUpdate}]</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'EG', '${paymentMethod.paymentMethodId}');" class="${styles.link_run_session!} ${styles.action_update!}">[${uiLabelMap.CommonUpdate}]</a>
                           <#if paymentMethod.description?has_content><br /><span>(${paymentMethod.description})</span></#if>
                         </@td>
                       </@tr>

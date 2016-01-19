@@ -225,7 +225,7 @@ under the License.
                 <#else>
                   <@tr>
                     <@td colspan="2" align="right">
-                      <a href="javascript:document.selectAllForm.submit();" class="${styles.link_action_sys!} ${styles.action_receive!}">${uiLabelMap.ProductReceiveSelectedProduct}</a>
+                      <a href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.ProductReceiveSelectedProduct}</a>
                     </@td>
                   </@tr>
                 </#if>
@@ -245,7 +245,7 @@ under the License.
                   <input type="text" name="returnId" size="20" maxlength="20" value="${requestParameters.returnId!}" />
               </@field>
               <@field type="submitarea">
-                  <a href="javascript:document.selectAllForm.submit();" class="${styles.link_action_sys!} ${styles.action_receive!}">${uiLabelMap.ProductReceiveProduct}</a>
+                  <a href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.ProductReceiveProduct}</a>
               </@field>
           </form>
           </@section>

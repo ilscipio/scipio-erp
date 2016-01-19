@@ -105,7 +105,7 @@ function clickAll(e) {
             <#assign columns = featureTypes.size() + 4>
             <@td colspan="${columns}" align="center">
                 <input type="hidden" name="_rowCount" value="${rowCount}" />
-                <input type="submit" class="${styles.link_action_sys!} ${styles.action_add!}" value="${uiLabelMap.CommonCreate}"/>
+                <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.CommonCreate}"/>
             </@td>
           </@tr>
         </@tfoot>
@@ -121,7 +121,7 @@ function clickAll(e) {
             <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
         </@field>
         <@field type="submitarea">
-            <input type="submit" class="${styles.link_action_sys!} ${styles.action_add!}" value="${uiLabelMap.ProductVariantAdd}"/>
+            <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.ProductVariantAdd}"/>
         </@field>
     </form>
 </@section>

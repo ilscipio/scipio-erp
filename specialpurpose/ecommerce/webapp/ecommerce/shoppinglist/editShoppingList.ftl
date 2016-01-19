@@ -197,7 +197,7 @@ under the License.
               <@tr>
                 <@td><div class="tableheadtext">&nbsp;</div></@td>
                 <@td>
-                  <a href="javascript:document.updateList.submit();" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
+                  <a href="javascript:document.updateList.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
                 </@td>
               </@tr>
             </@table>
@@ -324,7 +324,7 @@ under the License.
               <@tr type="util"><@td colspan="9"><hr /></@td></@tr>
               <@tr>
                 <@td align="right" colspan="9">
-                    <a href="javascript:document.reorderinfo.submit();" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
+                    <a href="javascript:document.reorderinfo.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
                     <a href="<@ofbizUrl>editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&amp;contactMechPurposeTypeId=SHIPPING_LOCATION&amp;DONE_PAGE=editShoppingList</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.PartyAddNewAddress}</a>
                     <a href="<@ofbizUrl>editcreditcard?DONE_PAGE=editShoppingList</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.EcommerceNewCreditCard}</a>
                     <a href="<@ofbizUrl>editeftaccount?DONE_PAGE=editShoppingList</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.EcommerceNewEFTAccount}</a>
@@ -394,7 +394,7 @@ under the License.
                 </@td>
                 <@td align="right">
                   <a href="<@ofbizUrl>editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.EcommerceGoToList}</a>
-                  <a href="<@ofbizUrl>addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.EcommerceAddListToCart}</a>
+                  <a href="<@ofbizUrl>addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.EcommerceAddListToCart}</a>
                 </@td>
               </@tr>
             </form>
@@ -491,8 +491,8 @@ under the License.
                     <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=totalPrice isoCode=currencyUomId/>
                     </@td>
                     <@td align="right">
-                        <a href="#" onclick="javascript:TimestampSubmit(listform_${shoppingListItem.shoppingListItemSeqId});" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                        <a href="<@ofbizUrl>removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&amp;shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
+                        <a href="#" onclick="javascript:TimestampSubmit(listform_${shoppingListItem.shoppingListItemSeqId});" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                        <a href="<@ofbizUrl>removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&amp;shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
                       <#if isVirtual && productVariantAssocs?has_content>
                         <#assign replaceItemAction = "/replaceShoppingListItem/" + requestAttributes._CURRENT_VIEW_!>
                         <#assign addToCartAction = "/additem/" + requestAttributes._CURRENT_VIEW_!>
@@ -511,12 +511,12 @@ under the License.
                               </#list>
                           </select>
                           <br />
-                          <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${replaceItemAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.EcommerceReplaceWithVariation}</a>
+                          <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${replaceItemAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.EcommerceReplaceWithVariation}</a>
                           <br />
-                          <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${addToCartAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.CommonAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.EcommerceVariationToCart}</a>
+                          <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${addToCartAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.CommonAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.EcommerceVariationToCart}</a>
                         </form>
                       <#else>
-                        <a href="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if>?shoppingListId=${shoppingListItem.shoppingListId}&amp;shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}&amp;quantity=${shoppingListItem.quantity}&amp;reservStart=${shoppingListItem.reservStart!}&amp;reservPersons=${shoppingListItem.reservPersons!}&amp;reservLength=${shoppingListItem.reservLength!}&amp;configId=${shoppingListItem.configId!}&amp;add_product_id=${shoppingListItem.productId}</@ofbizUrl>" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.CommonAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.OrderToCart}</a>
+                        <a href="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if>?shoppingListId=${shoppingListItem.shoppingListId}&amp;shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}&amp;quantity=${shoppingListItem.quantity}&amp;reservStart=${shoppingListItem.reservStart!}&amp;reservPersons=${shoppingListItem.reservPersons!}&amp;reservLength=${shoppingListItem.reservLength!}&amp;configId=${shoppingListItem.configId!}&amp;add_product_id=${shoppingListItem.productId}</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.CommonAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.OrderToCart}</a>
                       </#if>
                     </@td>
                   </@tr>
@@ -582,7 +582,7 @@ under the License.
           <input type="text" class="inputBox" name="productId" value="${requestParameters.add_product_id!}"/>
           <@table><#if reservStart??><@tr><@td>${uiLabelMap.EcommerceStartDate}</@td><@td><input type="text" class="inputBox" size="10" name="reservStart" value="${requestParameters.reservStart?default("")}" /></@td><@td> ${uiLabelMap.EcommerceLength}:</@td><@td><input type="text" class="inputBox" size="2" name="reservLength" value="${requestParameters.reservLength?default("")}" /></@td></@tr></#if><@tr><#if reservStart??><@td>&nbsp;</@td><@td>&nbsp;</@td><@td>${uiLabelMap.OrderNbrPersons}:</@td><@td><input type="text" class="inputBox" size="3" name="reservPersons" value="${requestParameters.reservPersons?default("1")}" /></@td></#if><@td nowrap="nowrap">${uiLabelMap.CommonQuantity} :</@td><@td><input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity?default("1")}" /></@td></@tr></@table>
           <#-- <input type="text" class="inputBox" size="5" name="quantity" value="${requestParameters.quantity?default("1")}" />-->
-          <input type="submit" class="${styles.link_action_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderAddToShoppingList}"/>
+          <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderAddToShoppingList}"/>
         </form>
     </div>
 </div>

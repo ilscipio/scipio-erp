@@ -242,7 +242,7 @@ function getFinAccountTransRunningTotalAndBalances() {
 			                		</@modal>
 			                		
 			                		<#-- FIXME: I dunno where to put this, maybe in a new column?  -->
-					               <a href="<@ofbizUrl>DepositSlip.pdf?finAccountTransId=${finAccountTrans.finAccountTransId}</@ofbizUrl>" target="_BLANK" class="${styles.link_action_sys!} ${styles.action_export!}">${uiLabelMap.AccountingDepositSlip}</a>
+					               <a href="<@ofbizUrl>DepositSlip.pdf?finAccountTransId=${finAccountTrans.finAccountTransId}</@ofbizUrl>" target="_BLANK" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.AccountingDepositSlip}</a>
 			              		<#else>
 			                		${finAccountTrans.finAccountTransId}<#t>
 			              		</#if>
@@ -265,7 +265,7 @@ function getFinAccountTransRunningTotalAndBalances() {
 			            	<#if grandTotal??>
 			              		<@td>
 			                		<#if finAccountTrans.statusId?has_content && finAccountTrans.statusId == 'FINACT_TRNS_CREATED'>
-			                  			<a href="javascript:document.cancelFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="${styles.link_action_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
+			                  			<a href="javascript:document.cancelFinAccountTrans_${finAccountTrans.finAccountTransId}.submit();" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
 			                		</#if>
 			              		</@td>
 			            	</#if>
@@ -277,7 +277,7 @@ function getFinAccountTransRunningTotalAndBalances() {
 			            	<#if !(grandTotal??)>
 			              		<#if (parameters.glReconciliationId?has_content && parameters.glReconciliationId != "_NA_")>
 			                		<#if finAccountTrans.statusId == "FINACT_TRNS_CREATED">
-			                  			<@td><a href="javascript:document.removeFinAccountTransFromReconciliation_${finAccountTrans.finAccountTransId}.submit();" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a></@td>
+			                  			<@td><a href="javascript:document.removeFinAccountTransFromReconciliation_${finAccountTrans.finAccountTransId}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a></@td>
 			                		</#if>
 			              		</#if>
 			            	</#if>

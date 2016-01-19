@@ -56,7 +56,7 @@ under the License.
                     <@htmlTemplate.lookupField formName="issueInventoryItemToShipment_${item_index}" name="inventoryItemId" id="inventoryItemId" fieldFormName="LookupInventoryItem?orderId=${item.orderId}&amp;partyId=${item.partyId}&amp;productId=${item.productId}"/>
                   </span>
                   <input type="text" size="5" name="quantity"/>
-                  <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_action_sys!} ${styles.action_update!}"/>
+                  <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
                 </form>
             </@td>
           </#if>

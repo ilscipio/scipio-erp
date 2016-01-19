@@ -232,7 +232,7 @@ under the License.
             ${uiLabelMap.CommonComments}
             <input class="inputBox" type="text" name="icm_${orderItem.orderItemSeqId}" value="" size="30" maxlength="60"/>
           </@td>
-          <@td colspan="4"><a href="javascript:document.addCommonToCartForm.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.addCommonToCartForm.submit()" class="${styles.link_action_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
+          <@td colspan="4"><a href="javascript:document.addCommonToCartForm.action='<@ofbizUrl>cancelOrderItem</@ofbizUrl>';document.addCommonToCartForm.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
             <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
           </@td>
         </@tr>

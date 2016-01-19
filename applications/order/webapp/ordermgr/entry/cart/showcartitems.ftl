@@ -219,7 +219,7 @@ under the License.
                   <#list cartLine.getAlternativeOptionProductIds() as alternativeOptionProductId>
                     <#assign alternativeOptionProduct = delegator.findOne("Product", Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", alternativeOptionProductId), true)>
                     <#assign alternativeOptionName = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", locale, dispatcher, "html")!>
-                    <div><a href="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&amp;alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="${styles.link_action_sys_long!} ${styles.action_update!}">Select: ${alternativeOptionName?default(alternativeOptionProductId)}</a></div>
+                    <div><a href="<@ofbizUrl>setDesiredAlternateGwpProductId?alternateGwpProductId=${alternativeOptionProductId}&amp;alternateGwpLine=${cartLineIndex}</@ofbizUrl>" class="${styles.link_run_sys_long!} ${styles.action_update!}">Select: ${alternativeOptionName?default(alternativeOptionProductId)}</a></div>
                   </#list>
                 </#if>
             </@td>
@@ -287,7 +287,7 @@ under the License.
                 <@tr>
                   <@td colspan="6" nowrap="nowrap" align="right">
                       <i>${uiLabelMap.OrderAdjustment}</i> - ${adjustmentType.get("description",locale)!}
-                    <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a></#if>:
+                    <#if cartAdjustment.productPromoId?has_content><a href="<@ofbizUrl>showPromotionDetails?productPromoId=${cartAdjustment.productPromoId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonDetails}</a></#if>:
                   </@td>
                   <@td nowrap="nowrap" align="right"><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=currencyUomId/></@td>
                   <@td>&nbsp;</@td>

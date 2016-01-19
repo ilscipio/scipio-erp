@@ -72,7 +72,7 @@ under the License.
                 <entity-options entity-name="ContactList" description="${description}" key-field-name="contactListId"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="ConvertLead" type="single" target="convertLead">
@@ -90,7 +90,7 @@ under the License.
               </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="MergeLeads" type="single" target="MergeLeads">
@@ -110,13 +110,13 @@ under the License.
                <list-options list-name="partyList" key-name="lead.partyId" list-entry-name="lead" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, 'partyId', false)} ${lead.partyId}"/>
             </drop-down>
         </field>
-        <field name="submitAction" position="3" title="${uiLabelMap.SfaMergeLeads}" widget-style="${styles.link_action_sys} ${styles.action_update}" tooltip-style="button-text"><submit button-type="text-link"/></field>
+        <field name="submitAction" position="3" title="${uiLabelMap.SfaMergeLeads}" widget-style="${styles.link_run_sys} ${styles.action_update}" tooltip-style="button-text"><submit button-type="text-link"/></field>
     </form>
 
     <form name="NewLeadFromVCard" type="upload" target="createLeadFromVCard" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="infile" title="${uiLabelMap.SfaUploadVCard}"><file/></field>
         <field name="serviceName"><hidden value="createLead"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action_sys} ${styles.action_import}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_run_sys} ${styles.action_import}"><submit button-type="button"/></field>
     </form>
 
     <form name="QuickAddLead" type="single" target="quickAddLead">
@@ -130,7 +130,7 @@ under the License.
             </drop-down>
         </field>
         <field name="quickAdd"><hidden value="Y"/></field>
-        <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
+        <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="AddLeadPartyDataSource" type="single" target="createLeadPartyDataSource">
         <auto-fields-service service-name="createPartyDataSource"/>
@@ -143,7 +143,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ViewLeadPartyDataSources" type="list" list-name="partyDataSources" 
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2">
@@ -195,7 +195,7 @@ under the License.
 
     <form name="ListLeads" extends="listLeads">
         <field name="assignToMe" use-when="existRelationship==null&amp;&amp;!&quot;false&quot;.equals(parameters.get(&quot;all&quot;))"
-                title="${uiLabelMap.SfaAssignToMe}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+                title="${uiLabelMap.SfaAssignToMe}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <hyperlink target="createPartyRelationshipAndRole" description="${uiLabelMap.SfaAssignToMe}">
                 <parameter param-name="partyIdFrom" from-field="userLogin.partyId"/>
                 <parameter param-name="roleTypeIdFrom"/>
@@ -240,6 +240,6 @@ under the License.
         <field name="partyRelationshipTypeId"><hidden value="EMPLOYMENT"/></field>
         <field name="partyIdTo"><hidden value="${parameters.partyId}"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.PartyRelatedCompany}"><lookup target-form-name="LookupAccountLeads"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 </forms>

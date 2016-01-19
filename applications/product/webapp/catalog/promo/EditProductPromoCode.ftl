@@ -24,7 +24,7 @@ under the License.
                   <input type="hidden" name="productPromoCodeId" value="${productPromoCodeEmail.productPromoCodeId}"/>                
                   <input type="hidden" name="emailAddress" value="${productPromoCodeEmail.emailAddress}"/>                
                   <input type="hidden" name="productPromoId" value="${productPromoId}"/>                
-                  <a href="javascript:document.deleteProductPromoCodeEmail_${productPromoCodeEmail_index}.submit()" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>&nbsp;${productPromoCodeEmail.emailAddress}
+                  <a href="javascript:document.deleteProductPromoCodeEmail_${productPromoCodeEmail_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>&nbsp;${productPromoCodeEmail.emailAddress}
                 </form>
               </div>                
             </#list>
@@ -49,7 +49,7 @@ under the License.
     
     <@section title="${uiLabelMap.ProductPromoCodeParties}">
             <#list productPromoCodeParties as productPromoCodeParty>
-                <div><a href="<@ofbizUrl>deleteProductPromoCodeParty?productPromoCodeId=${productPromoCodeParty.productPromoCodeId}&amp;partyId=${productPromoCodeParty.partyId}&amp;productPromoId=${productPromoId}</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_remove!}">X</a>&nbsp;${productPromoCodeParty.partyId}</div>
+                <div><a href="<@ofbizUrl>deleteProductPromoCodeParty?productPromoCodeId=${productPromoCodeParty.productPromoCodeId}&amp;partyId=${productPromoCodeParty.partyId}&amp;productPromoId=${productPromoId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">X</a>&nbsp;${productPromoCodeParty.partyId}</div>
             </#list>
             <div>
                 <form method="post" action="<@ofbizUrl>createProductPromoCodeParty</@ofbizUrl>">

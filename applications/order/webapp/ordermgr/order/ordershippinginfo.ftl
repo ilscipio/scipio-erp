@@ -93,8 +93,8 @@ under the License.
                       <a name="display${index}" href="javascript:showEdit('edit', '${index}');" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
                   </div>
                   <div id="edit${index}" style="display: none">
-                      <a href="javascript:document.UpdateOrderItemShipGroupAssoc${index}.submit()" class="${styles.link_action_sys!} ${styles.action_verify!}">${uiLabelMap.CommonValidate}</a>
-                      <a href="javascript:showEdit('display', '${index}'); restoreEditField('${index}');" class="${styles.link_action_local_cancel!}">${uiLabelMap.CommonCancel}</a>
+                      <a href="javascript:document.UpdateOrderItemShipGroupAssoc${index}.submit()" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.CommonValidate}</a>
+                      <a href="javascript:showEdit('display', '${index}'); restoreEditField('${index}');" class="${styles.link_run_local_cancel!}">${uiLabelMap.CommonCancel}</a>
                   </div>
                   </#if>
               </@td>
@@ -190,7 +190,7 @@ under the License.
                      </@tr>
                      <@tr>
                          <@td>
-                             <a href="javascript:document.addOISGForm${index}.submit()" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.CommonAdd}</a>
+                             <a href="javascript:document.addOISGForm${index}.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.CommonAdd}</a>
                          </@td>
                      </@tr>
                  </@table>
@@ -290,7 +290,7 @@ under the License.
                 <@tr>
                     <@td scope="row" class="${styles.grid_large!}3">&nbsp;</@td>
                     <@td valign="top" width="80%">
-                        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action_sys!} ${styles.action_update!}"/>
+                        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
                         <a class="${styles.link_nav!} ${styles.action_add!}" id="newShippingAddress" href="javascript:void(0);">${uiLabelMap.OrderNewShippingAddress}</a>
                         <@script>
                             jQuery("#newShippingAddress").click(function(){jQuery("#newShippingAddressForm").dialog("open")});
@@ -356,7 +356,7 @@ under the License.
           <div class="form-row">
             <input id="submitAddShippingAddress" type="button" value="${uiLabelMap.CommonSubmit}" style="display:none"/>
             <form action="">
-              <input class="popup_closebox ${styles.link_action_local!} ${styles.action_close!}" type="button" value="${uiLabelMap.CommonClose}" style="display:none"/>
+              <input class="popup_closebox ${styles.link_run_local!} ${styles.action_close!}" type="button" value="${uiLabelMap.CommonClose}" style="display:none"/>
             </form>
           </div>
         </form>
@@ -384,7 +384,7 @@ under the License.
            <#if OISGAContent.size() == 0>
            <@tr>
               <@td colspan="2" valign="top" width="100%" align="center">
-                   <a href="javascript:document.deleteOISG_${shipGroup.shipGroupSeqId}.submit()" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.DeleteOrderItemShipGroup}</a>
+                   <a href="javascript:document.deleteOISG_${shipGroup.shipGroupSeqId}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.DeleteOrderItemShipGroup}</a>
                    <form name="deleteOISG_${shipGroup.shipGroupSeqId}" method="post" action="/ordermgr/control/DeleteOrderItemShipGroup">
                      <input type="hidden" name="orderId" value="${orderId}"/>
                      <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
@@ -440,7 +440,7 @@ under the License.
                     <input type="hidden" name="shippingAmount" value="${shippingAmount!}"/>
                     <@tr>
                       <@td valign="top" width="80%">
-                        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action_sys!} ${styles.action_update!}"/>
+                        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
                       </@td>
                     </@tr>
                   </form>
@@ -492,7 +492,7 @@ under the License.
                           <input type="hidden" name="orderId" value="${orderId}"/>
                           <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
                         </form>
-                        <a href="javascript:document.allowordersplit_${shipGroup.shipGroupSeqId}.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.OrderAllowSplit}</a>
+                        <a href="javascript:document.allowordersplit_${shipGroup.shipGroupSeqId}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderAllowSplit}</a>
                       </#if>
                     </#if>
                 <#else>
@@ -519,14 +519,14 @@ under the License.
                         ${shipGroup.shippingInstructions}
                       </@td>
                       <@td>
-                        <a href="javascript:editInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_action_local!} ${styles.action_update!}" id="editInstruction_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonEdit}</a>
+                        <a href="javascript:editInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_local!} ${styles.action_update!}" id="editInstruction_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonEdit}</a>
                       </@td>
                     </@tr>
                   </@table>
                 <#else>
-                  <a href="javascript:addInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_action_sys!} ${styles.action_add!}" id="addInstruction_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonAdd}</a>
+                  <a href="javascript:addInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_sys!} ${styles.action_add!}" id="addInstruction_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonAdd}</a>
                 </#if>
-                <a href="javascript:saveInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_action_sys!} ${styles.action_update!}" id="saveInstruction_${shipGroup.shipGroupSeqId}" style="display:none">${uiLabelMap.CommonSave}</a>
+                <a href="javascript:saveInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_sys!} ${styles.action_update!}" id="saveInstruction_${shipGroup.shipGroupSeqId}" style="display:none">${uiLabelMap.CommonSave}</a>
                 <textarea name="shippingInstructions" id="shippingInstructions_${shipGroup.shipGroupSeqId}" style="display:none" rows="0" cols="0">${shipGroup.shippingInstructions!}</textarea>
               </form>
             <#else>
@@ -551,12 +551,12 @@ under the License.
               <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
               <#if shipGroup.giftMessage?has_content>
                 <label>${shipGroup.giftMessage}</label>
-                <a href="javascript:editGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_action_local!} ${styles.action_update!}" id="editGiftMessage_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonEdit}</a>
+                <a href="javascript:editGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_local!} ${styles.action_update!}" id="editGiftMessage_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonEdit}</a>
               <#else>
-                <a href="javascript:addGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_action_local!} ${styles.action_add!}" id="addGiftMessage_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonAdd}</a>
+                <a href="javascript:addGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_local!} ${styles.action_add!}" id="addGiftMessage_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonAdd}</a>
               </#if>
               <textarea name="giftMessage" id="giftMessage_${shipGroup.shipGroupSeqId}" style="display:none" rows="0" cols="0">${shipGroup.giftMessage!}</textarea>
-              <a href="javascript:saveGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_action_sys!} ${styles.action_update!}" id="saveGiftMessage_${shipGroup.shipGroupSeqId}" style="display:none">${uiLabelMap.CommonSave}</a>
+              <a href="javascript:saveGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_sys!} ${styles.action_update!}" id="saveGiftMessage_${shipGroup.shipGroupSeqId}" style="display:none">${uiLabelMap.CommonSave}</a>
             </form>
           </@td>
         </@tr>
@@ -589,13 +589,13 @@ under the License.
                 <#list shipGroupShipments as shipment>
                     <div>
                       ${uiLabelMap.CommonNbr}<a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}">${shipment.shipmentId}</a>&nbsp;&nbsp;
-                      <a target="_BLANK" href="/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_action_sys!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>
+                      <a target="_BLANK" href="/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>
                       <#if "SALES_ORDER" == orderHeader.orderTypeId && "ORDER_COMPLETED" == orderHeader.statusId>
                         <#assign shipmentRouteSegments = delegator.findByAnd("ShipmentRouteSegment", {"shipmentId" : shipment.shipmentId}, null, false)>
                         <#if shipmentRouteSegments?has_content>
                           <#assign shipmentRouteSegment = Static["org.ofbiz.entity.util.EntityUtil"].getFirst(shipmentRouteSegments)>
                           <#if "UPS" == (shipmentRouteSegment.carrierPartyId)!>
-                            <a href="javascript:document.upsEmailReturnLabel${shipment_index}.submit();" class="${styles.link_action_sys!} ${styles.action_send!}">${uiLabelMap.ProductEmailReturnShippingLabelUPS}</a>
+                            <a href="javascript:document.upsEmailReturnLabel${shipment_index}.submit();" class="${styles.link_run_sys!} ${styles.action_send!}">${uiLabelMap.ProductEmailReturnShippingLabelUPS}</a>
                           </#if>
                           <form name="upsEmailReturnLabel${shipment_index}" method="post" action="<@ofbizUrl>upsEmailReturnLabelOrder</@ofbizUrl>">
                             <input type="hidden" name="orderId" value="${orderId}"/>
@@ -624,7 +624,7 @@ under the License.
                  <a href="/facility/control/PackOrder?facilityId=${storeFacilityId!}&amp;orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.OrderPackShipmentForShipGroup}</a>
                  <br />
                  </#if>
-                 <a href="javascript:document.createShipment_${shipGroup.shipGroupSeqId}.submit()" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.OrderNewShipmentForShipGroup}</a>
+                 <a href="javascript:document.createShipment_${shipGroup.shipGroupSeqId}.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.OrderNewShipmentForShipGroup}</a>
                  <form name="createShipment_${shipGroup.shipGroupSeqId}" method="post" action="/facility/control/createShipment">
                    <input type="hidden" name="primaryOrderId" value="${orderId}"/>
                    <input type="hidden" name="primaryShipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
@@ -650,12 +650,12 @@ under the License.
                            <option value="${facility.facilityId}">${facility.facilityName}</option>
                          </#list>
                        </select>
-                       <input type="submit" class="${styles.link_action_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderNewShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]"/>
+                       <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderNewShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]"/>
                     </form>
                     </div>
                <#else>
-                   <a href="javascript:document.quickDropShipOrder_${shipGroup_index}.submit();" class="${styles.link_action_sys!} ${styles.action_complete!}">${uiLabelMap.ProductShipmentQuickComplete}</a>
-                   <a href="javascript:document.createShipment3_${shipGroup.shipGroupSeqId}.submit();" class="${styles.link_action_sys_long!} ${styles.action_add!}">${uiLabelMap.OrderNewDropShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]</a>
+                   <a href="javascript:document.quickDropShipOrder_${shipGroup_index}.submit();" class="${styles.link_run_sys!} ${styles.action_complete!}">${uiLabelMap.ProductShipmentQuickComplete}</a>
+                   <a href="javascript:document.createShipment3_${shipGroup.shipGroupSeqId}.submit();" class="${styles.link_run_sys_long!} ${styles.action_add!}">${uiLabelMap.OrderNewDropShipmentForShipGroup} [${shipGroup.shipGroupSeqId}]</a>
                    <form name="quickDropShipOrder_${shipGroup_index}" method="post" action="<@ofbizUrl>quickDropShipOrder</@ofbizUrl>">
                         <input type="hidden" name="orderId" value="${orderId}"/>
                         <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>

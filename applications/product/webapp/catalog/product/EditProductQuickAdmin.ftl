@@ -133,7 +133,7 @@ function doPublish() {
                 </#if>
                 <@td><input type="radio" ${checked} name="useImages" value="${assocProduct.productId}"/></@td>
                 <#assign fromDate = Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productAssoc.getTimestamp("fromDate").toString())/>
-                <@td><a class="${styles.link_action_sys!} ${styles.action_remove!}" href="javascript:removeAssoc('${productAssoc.productIdTo}','${fromDate}');">x</a></@td>
+                <@td><a class="${styles.link_run_sys!} ${styles.action_remove!}" href="javascript:removeAssoc('${productAssoc.productIdTo}','${fromDate}');">x</a></@td>
             </@tr>
             <#assign idx = idx + 1>
         </#list>
@@ -143,7 +143,7 @@ function doPublish() {
                 <@td>
                     <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
                         <#list selectableFeatureTypes as selectableFeatureType>
-                        <@tr><@td nowrap="nowrap"><a class="${styles.link_action_sys!} ${styles.action_remove!}" href="javascript:removeSelectable('${(selectableFeatureType.get("description",locale))!}','${selectableFeatureType.productFeatureTypeId}','${product.productId}')">x</a>
+                        <@tr><@td nowrap="nowrap"><a class="${styles.link_run_sys!} ${styles.action_remove!}" href="javascript:removeSelectable('${(selectableFeatureType.get("description",locale))!}','${selectableFeatureType.productFeatureTypeId}','${product.productId}')">x</a>
                             <a class="${styles.link_nav_record_desc!}" href="<@ofbizUrl>EditProductQuickAdmin?productFeatureTypeId=${(selectableFeatureType.productFeatureTypeId)!}&amp;productId=${product.productId!}</@ofbizUrl>">${(selectableFeatureType.get("description",locale))!}</a></@td></@tr>
                         </#list>
                     </@table>
@@ -175,7 +175,7 @@ function doPublish() {
                 <#assign idx=0/>
                 <#list distinguishingFeatures as distinguishingFeature>
                 <@tr valign="middle">
-                    <@td><a href="<@ofbizUrl>quickAdminRemoveProductFeature?productId=${productId}&amp;productFeatureId=${distinguishingFeature.productFeatureId}</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_remove!}">x</a>&nbsp;
+                    <@td><a href="<@ofbizUrl>quickAdminRemoveProductFeature?productId=${productId}&amp;productFeatureId=${distinguishingFeature.productFeatureId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">x</a>&nbsp;
                     ${distinguishingFeature.productFeatureId} ${productFeatureTypeLookup.get(distinguishingFeature.productFeatureId).get("description",locale)}: ${distinguishingFeature.get("description",locale)}
                     &nbsp;
                     </@td>
@@ -303,7 +303,7 @@ function doPublish() {
                 <#list standardFeatureAppls as standardFeatureAppl>
                     <#assign featureId = standardFeatureAppl.productFeatureId/>
                     <@tr valign="middle">
-                        <@td colspan="2"><a href="<@ofbizUrl>quickAdminRemoveFeatureFromProduct?productId=${standardFeatureAppl.productId!}&amp;productFeatureId=${featureId!}&amp;fromDate=${(standardFeatureAppl.fromDate)!}</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_remove!}">x</a>
+                        <@td colspan="2"><a href="<@ofbizUrl>quickAdminRemoveFeatureFromProduct?productId=${standardFeatureAppl.productId!}&amp;productFeatureId=${featureId!}&amp;fromDate=${(standardFeatureAppl.fromDate)!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">x</a>
                         ${productFeatureTypeLookup.get(featureId).description}: ${standardFeatureLookup.get(featureId).description}
                         </@td>
                     </@tr>
@@ -371,7 +371,7 @@ function doPublish() {
                         <input type="hidden" name="productId" value="${prodCatMemb.productId!}" />
                         <input type="hidden" name="productCategoryId" value="${prodCatMemb.productCategoryId}" />
                         <input type="hidden" name="fromDate" value="${(prodCatMemb.fromDate)!}" />
-                        <a href="javascript:document.quickAdminRemoveProductFromCategory_${prodCatMemb_index}.submit();" class="${styles.link_action_sys!} ${styles.action_remove!}">x</a>
+                        <a href="javascript:document.quickAdminRemoveProductFromCategory_${prodCatMemb_index}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">x</a>
                         ${prodCat.description!} ${prodCat.productCategoryId}
                       </form>
                     </@td>

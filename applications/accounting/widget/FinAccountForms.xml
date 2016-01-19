@@ -37,7 +37,7 @@ under the License.
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="displayAdvancedSearch"><hidden value="true"></hidden></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListFinAccounts" type="list" separate-columns="true" default-entity-name="FinAccount" list-name="listIt" paginate-target="FindFinAccount" paginate="true"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -70,7 +70,7 @@ under the License.
                 <parameter param-name="partyId" from-field="ownerPartyId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteFinAccount" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="finAccountId"/>
             </hyperlink>
@@ -135,8 +135,8 @@ under the License.
         <field name="postToGlAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
         <field name="replenishPaymentId"><text/></field>
         <field name="replenishLevel" position="2"><text/></field>
-        <field name="submitAction" use-when="finAccountId==null" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
-        <field name="submitAction" use-when="finAccountId!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="finAccountId==null" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="finAccountId!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="actualBalance"><display type="currency" currency="${finAccount.currencyUomId}"/></field>
         <field name="availableBalance" position="2"><display type="currency" currency="${finAccount.currencyUomId}"/></field>
     </form>
@@ -163,8 +163,8 @@ under the License.
         <field name="roleTypeId" title="${uiLabelMap.CommonRole}"><display/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteFinAccountRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="partyId"/>
@@ -187,7 +187,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time type="date"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddFinAccountTrans" type="single" target="createFinAccountTrans"
@@ -226,7 +226,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>        
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListFinAccountAuths" type="list" list-name="finAccountauths" target="expireFinAccountAuth" separate-columns="true"
@@ -240,7 +240,7 @@ under the License.
         <auto-fields-entity entity-name="FinAccountAuth" default-field-type="display"/>
         <field name="finAccountAuthId"><display/></field>
         <field name="finAccountId"><hidden/></field>
-        <field name="expireAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_terminate}">
+        <field name="expireAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_terminate}">
             <hyperlink target="expireFinAccountAuth" description="${uiLabelMap.CommonExpire}" also-hidden="false">
                 <parameter param-name="finAccountId"/>
                 <parameter param-name="finAccountAuthId"/>
@@ -256,13 +256,13 @@ under the License.
         <field name="authorizationDate"><date-time/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="PaymentsDepositWithdraw" type="single" target="FindPaymentsForDepositOrWithdraw" extends="FindBatchPayments" extends-resource="component://accounting/widget/ar/forms/ArPaymentForms.xml">
         <field name="finAccountId"><hidden/></field>
         <field name="noConditionFind"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="FindDepositSlips" type="single" target="FindDepositSlips" extends="FindPaymentGroup" extends-resource="component://accounting/widget/PaymentGroupForms.xml">
@@ -278,7 +278,7 @@ under the License.
                 <parameter param-name="finAccountId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${paymentGroupMemberAndTransList[0].finAccountTransStatusId != 'FINACT_TRNS_APPROVED'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}" use-when="${paymentGroupTypeId == 'BATCH_PAYMENT'} @and ${paymentGroupMemberAndTransList[0].finAccountTransStatusId != 'FINACT_TRNS_APPROVED'} @and ${groovy:org.ofbiz.base.util.UtilValidate.isNotEmpty(paymentGroupMembers)}">
             <hyperlink target="deleteDepositSlip" description="${uiLabelMap.CommonCancel}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
                 <parameter param-name="finAccountId"/>
@@ -300,7 +300,7 @@ under the License.
                 <field-map field-name="paymentGroupId"/>
             </entity-and>
         </actions>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="expireDepositSlipMember" description="${uiLabelMap.CommonCancel}" also-hidden="false">
                 <parameter param-name="paymentGroupId"/>
                 <parameter param-name="paymentId"/>
@@ -322,7 +322,7 @@ under the License.
         </field>
         <field name="finAccountName" title="${uiLabelMap.CommonName}"><text-find ignore-case="true"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="FindFinAccountTransactions" type="single" target="FindFinAccountTrans">
@@ -360,7 +360,7 @@ under the License.
         <field name="thruTransactionDate" position="2"><date-time type="date"/></field>
         <field name="fromEntryDate" position="1"><date-time type="date"/></field>
         <field name="thruEntryDate" position="2"><date-time type="date"/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="FindBankReconciliationFinAcctTrans" target="BankReconciliation" 
@@ -402,8 +402,8 @@ under the License.
         <field name="currencyUomId" position="2"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field name="isDepositWithDrawPayment" title="${uiLabelMap.AccountingDepositPaymentInFinAccount}" ><check/></field>
         <field name="paymentGroupTypeId"><hidden value="BATCH_PAYMENT"/></field>
-        <field name="updateAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><ignored/></field>
-        <field name="createAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="updateAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><ignored/></field>
+        <field name="createAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="EditWithdrawalPayment" type="single" extends="EditDepositPayment" target="createWithdrawalPayment">
         <field name="partyIdFrom" position="1"><lookup target-form-name="LookupInternalOrganization"/></field>
@@ -438,10 +438,10 @@ under the License.
         <field name="reconciledBalance" use-when="${reconciledBalance == null}" position="2"><hidden/></field>
         <field name="reconciledBalance" use-when="&quot;GLREC_RECONCILED&quot;.equals(&quot;${glReconciliation.statusId}&quot;)" position="2"><display type="currency" currency="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field name="reconciledDate" title="${uiLabelMap.AccountingReconciliationDate}" position="2"><date-time/></field>
-        <field name="createAction" use-when="glReconciliationId == null" widget-style="${styles.link_action_sys} ${styles.action_add}">
+        <field name="createAction" use-when="glReconciliationId == null" widget-style="${styles.link_run_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
-        <field name="updateAction" use-when="glReconciliationId != null" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="updateAction" use-when="glReconciliationId != null" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -468,7 +468,7 @@ under the License.
                 <parameter param-name="partyId" from-field="partyName.partyId"/>
             </hyperlink>
         </field>
-        <field name="cancelAction" title="${uiLabelMap.AccountingCancelBankReconciliation}" use-when="${glReconciliation.statusId == 'GLREC_CREATED'}" widget-style="${styles.link_action_sys} ${styles.action_terminate}">
+        <field name="cancelAction" title="${uiLabelMap.AccountingCancelBankReconciliation}" use-when="${glReconciliation.statusId == 'GLREC_CREATED'}" widget-style="${styles.link_run_sys} ${styles.action_terminate}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonCancel}" target="cancelReconciliation">
                 <parameter param-name="glReconciliationId" from-field="glReconciliation.glReconciliationId"/>
                 <parameter param-name="finAccountId"/>
@@ -493,7 +493,7 @@ under the License.
             </drop-down>
         </field>
         <field name="glAccountId" position="2"><lookup target-form-name="LookupGlAccount"/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="FinAccountReconciliationBalance" default-map-name="currentGlReconciliation"

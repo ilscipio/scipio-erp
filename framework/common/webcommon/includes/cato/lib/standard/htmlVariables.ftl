@@ -256,7 +256,7 @@
     
   <#-- Standalone link styles (includes links in tables)
     DEV NOTE: 2016-01-14: the old use of link_nav and link_action made no real sense and has been ratified below.
-      the old link_action has now been removed and turned mostly into link_nav(+action_xxx) and link_action_sys(+action_xxx).
+      the old link_action has now been removed and turned mostly into link_nav(+action_xxx) and link_run_sys(+action_xxx).
     TODO: move documentation and compactify what's left here
   
     how to decide which style to use on a link:
@@ -287,27 +287,27 @@
         should have the link_nav_cancel style. they need no extra styles.
       * action_view is more or less the default on link_nav and may be omitted.
       
-    run-actions (class="${styles.link_action_sys!} ${styles.action_add!}"):
+    run-actions (class="${styles.link_run_sys!} ${styles.action_add!}"):
       * these trigger actual actions in either system, session or local (page) scopes.
-      * any link that performs an action that contacts the system to perform a new action should be given link_action_sys. this means
-        form submits, PDF download, etc. link_action_sys contains the "action_run" class.
+      * any link that performs an action that contacts the system to perform a new action should be given link_run_sys. this means
+        form submits, PDF download, etc. link_run_sys contains the "action_run" class.
         they should also be given a second, specific action_xxx action type style (see above), such as action_add, 
         action_download, etc. or the more generic action_modify or action_readonly (or action_read) if not available.
-        * by default, link_action_sys with any modify action is assumed to change the state of the system (usually database).
+        * by default, link_run_sys with any modify action is assumed to change the state of the system (usually database).
           so it means the user is committing to something, and it's usually the last button in a chain of links, like a 
           submit button (whereas link_nav is used to open the page for the action).
           * if the link is local to the page (page scope) and/or simply prepares for a submit or other action, it should be given
-            link_action_local. this is mostly for javascript and input reset buttons. such links shouldn't
+            link_run_local. this is mostly for javascript and input reset buttons. such links shouldn't
             really perform actions on the system (except read-only actions). they prepare other incoming system actions.
-          * if the link only changes the state of the user's session, it should given link_action_session instead.
+          * if the link only changes the state of the user's session, it should given link_run_session instead.
             NOTE: "session" is usually HTTP web session, but it extends to sessions which may be persisted. it is "logical" session.
-        * the most important purpose of link_action_sys is to identify which links will change the state of the system,
+        * the most important purpose of link_run_sys is to identify which links will change the state of the system,
           so user knows which changes are permanent and which functions don't commit anything.
           in the end, any link with the styles action_run, action_modify and action_scope_sys (or not scope)
           will be assumed to change the system state, or with action_scope_session, the session state (rare).
-      * if it's a link to cancel another action like an upload, use link_action_sys_cancel instead of link_action_sys.
-        * link_action_sys_cancel should not be used for things like changing order statuses to cancelled.
-        * the same applies for link_action_session_cancel and link_action_local_cancel, though these are very rare.
+      * if it's a link to cancel another action like an upload, use link_run_sys_cancel instead of link_run_sys.
+        * link_run_sys_cancel should not be used for things like changing order statuses to cancelled.
+        * the same applies for link_run_session_cancel and link_run_local_cancel, though these are very rare.
       * should be used for buttons that change what's shown on the page, with action_view ("Show Old", visibility, etc.).
 
     record identifiers and sorting fields (class="${styles.link_nav_record_id!}"):
@@ -326,37 +326,37 @@
         in some cases, extra words means it should go under link_nav_record_desc.
       * it can sometimes optionally be given a second action_xxx style if it encourages an action, such as action_update, action_add, etc.
         action_view is the implied default, can be set explicitly.
-      * these styles are for navigation links. if they directly perform actions, probably use run actions instead (see "run actions", e.g. link_action_sys).
+      * these styles are for navigation links. if they directly perform actions, probably use run actions instead (see "run actions", e.g. link_run_sys).
       
     other notes:  
       * every link style has a _long version for entries with long labels.
       * the cancel links are exceptions: they all have separate entries because often you might want a completely different button on them
-        (which you can do with CSS but not as easily with link_action_sys+action_cancel). they are not regular actions in and of themselves - they are anti-actions.
-      * action_view actions are often ambiguous and could be either link_nav or link_action_sys depending on UI functionality and perspective.
-        * as a general rule, link_action_sys are for the "final" actions (like submit buttons), while link_nav are for links heading toward the action (or that open a page).
+        (which you can do with CSS but not as easily with link_run_sys+action_cancel). they are not regular actions in and of themselves - they are anti-actions.
+      * action_view actions are often ambiguous and could be either link_nav or link_run_sys depending on UI functionality and perspective.
+        * as a general rule, link_run_sys are for the "final" actions (like submit buttons), while link_nav are for links heading toward the action (or that open a page).
           however, for view action, sometimes the line is not clear and subjective or there is no distinction. should be judged based on context.
           
     DEV NOTES:
       * regarding link_nav_record_xxx and similar: these could have had a second layer of categories such as link_record_xxx
-        which aren't bound to imply link_nav, so they could be reused on link_action_xxx, but it's so rare there's probably no real need (link_action_xxx with _long variants is enough for these rare cases).
+        which aren't bound to imply link_nav, so they could be reused on link_run_xxx, but it's so rare there's probably no real need (link_run_xxx with _long variants is enough for these rare cases).
         the original link_record_xxx classes were renamed to link_nav_record_xxx because they practically all already implied link_nav everywhere, just wasn't clear enough.
         this link_nav_record_xxx pattern is not consistent with the action_xxx pattern (above), which is not great, but this could be justified by styling needs.
         if find there is a new need, can always create link_record_xxx add-on classes similar to action_xxx which don't imply link_nav.
   -->
     <#-- Action links (trigger an actual action in the system - NOT for use for opening pages toward actions!) -->
-    "link_action_sys" : "button tiny action-run action-scope-sys",                                  <#-- link that actually performs an action (run-action), in system scope, such as most form submit buttons, "Create Order", "Download PDF", etc. -->
-    "link_action_sys_long" : "action-run action-scope-sys link-long",
-    "link_action_sys_cancel" : "button tiny action-run action-scope-sys action-cancel",             <#-- link that cancels a system action in progress, such as cancelling an upload (but NOT if only a button that leads back to previous page - use link_nav_action_cancel, 
-                                                                                                        and NOT for changing an order status to cancelled - use link_action_sys with appropriate action_xxx appended) -->
-    "link_action_sys_cancel_long" : "action-run action-scope-sys action-cancel link-long",
-    "link_action_session" : "button tiny action-run action-scope-session",                          <#-- link for any action (run-action) that only modifies current session (logical, not necessarily HTTP session), not meaningful permanent system data. -->
-    "link_action_session_long" : "action-run action-scope-session link-long",
-    "link_action_session_cancel" : "button tiny action-run action-scope-session action-cancel",     <#-- link for any action that cancels another session action (rare). -->
-    "link_action_session_cancel_long" : "action-run action-scope-session action-cancel link-long",
-    "link_action_local" : "button tiny action-run action-scope-local",                              <#-- link for any action (run-action) local to a page or that prepares a page for another action, such as "Clear" or "Reset" buttons that empty a form or form field and interactive javascript forms. -->
-    "link_action_local_long" : "action-run action-scope-local link-long",
-    "link_action_local_cancel" : "button tiny action-run action-scope-local action-cancel",         <#-- link for any action that cancels another page-scope action (rare). -->
-    "link_action_local_cancel_long" : "action-run action-scope-local action-cancel link-long",
+    "link_run_sys" : "button tiny action-run action-scope-sys",                                  <#-- link that actually performs an action (run-action), in system scope, such as most form submit buttons, "Create Order", "Download PDF", etc. -->
+    "link_run_sys_long" : "action-run action-scope-sys link-long",
+    "link_run_sys_cancel" : "button tiny action-run action-scope-sys action-cancel",             <#-- link that cancels a system action in progress, such as cancelling an upload (but NOT if only a button that leads back to previous page - use link_nav_action_cancel, 
+                                                                                                        and NOT for changing an order status to cancelled - use link_run_sys with appropriate action_xxx appended) -->
+    "link_run_sys_cancel_long" : "action-run action-scope-sys action-cancel link-long",
+    "link_run_session" : "button tiny action-run action-scope-session",                          <#-- link for any action (run-action) that only modifies current session (logical, not necessarily HTTP session), not meaningful permanent system data. -->
+    "link_run_session_long" : "action-run action-scope-session link-long",
+    "link_run_session_cancel" : "button tiny action-run action-scope-session action-cancel",     <#-- link for any action that cancels another session action (rare). -->
+    "link_run_session_cancel_long" : "action-run action-scope-session action-cancel link-long",
+    "link_run_local" : "button tiny action-run action-scope-local",                              <#-- link for any action (run-action) local to a page or that prepares a page for another action, such as "Clear" or "Reset" buttons that empty a form or form field and interactive javascript forms. -->
+    "link_run_local_long" : "action-run action-scope-local link-long",
+    "link_run_local_cancel" : "button tiny action-run action-scope-local action-cancel",         <#-- link for any action that cancels another page-scope action (rare). -->
+    "link_run_local_cancel_long" : "action-run action-scope-local action-cancel link-long",
 
     <#-- General navigation links (basic navigation and navigation toward actions) -->
     "link_nav" : "button tiny action-nav",                              <#-- navigation link toward another page, usually with static text like "New" or "Edit" or "View".
@@ -376,7 +376,7 @@
     "link_nav_record_idname_long" : "action-nav link-long",     <#-- long combination of IDs and names: "Mr. John Alberton Smith Junior (ID: 10000) (Group: 20000)" -->
     "link_nav_record_desc" : "action-nav",                      <#-- the description of a record: "Order that was placed by admin", "This is some value", "This means order cancelled", etc. 
                                                                     in general, as soon as a link text contains more than one type of value, and not idname, it should be changed to link_nav_record_desc.
-                                                                    however, if it contains a specific action(s), it may be more appropriate as link_action_xxx_long. -->
+                                                                    however, if it contains a specific action(s), it may be more appropriate as link_run_xxx_long. -->
     "link_nav_record_date" : "action-nav",                      <#-- the date of a record (fromDate, thruDate, etc.) -->
     "link_nav_record_number" : "action-nav",                    <#-- the number of a record (index, sequence num, etc.) -->
     "link_nav_record_value" : "action-nav",                     <#-- link containing a value of type not previously listed (or cannot be known statically) -->

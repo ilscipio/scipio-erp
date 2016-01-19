@@ -42,7 +42,7 @@ under the License.
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <!-- NOTE DEJ20070829 not sure why this is here, but it doesn't seem applicable for a general product lookup, also doesn't handle case where isVariant is null <field name="isVariant"><hidden value="N"/></field> -->
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProduct" list-name="listIt" title="" type="list" paginate-target="LookupProduct"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}" view-size="20">
@@ -83,7 +83,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupSupplierProduct" list-name="listIt" title="" type="list" paginate-target="LookupSupplierProduct"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}" view-size="20">
@@ -172,7 +172,7 @@ under the License.
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="filterByDate"><hidden value="Y"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductAndPrice" list-name="listIt" title="" type="list"
         paginate-target="LookupProductAndPrice" odd-row-style="alternate-row" default-table-style="${styles.table_basic}" view-size="20">
@@ -227,7 +227,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
 
         <sort-order>
             <field-group>
@@ -288,7 +288,7 @@ under the License.
         </field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductFeature" list-name="listIt" title="" type="list" paginate-target="LookupProductFeature"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}" view-size="20">
@@ -316,7 +316,7 @@ under the License.
         <field name="payToPartyId"><text-find/></field>
 
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductStore" list-name="listIt" target="" title="" type="list"
         paginate-target="LookupProductStore" odd-row-style="alternate-row" default-table-style="${styles.table_basic}" view-size="20">
@@ -357,7 +357,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupCostComponentCalc" list-name="listIt" title="" type="list" paginate-target="LookupCostComponentCalc"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic}" view-size="20">

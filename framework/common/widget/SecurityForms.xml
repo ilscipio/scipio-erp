@@ -32,7 +32,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddSecurityGroupPermissionManual" type="single" target="addSecurityPermissionToSecurityGroup"
@@ -40,7 +40,7 @@ under the License.
         <auto-fields-service service-name="addSecurityPermissionToSecurityGroup"/>
         <field name="groupId"><hidden/></field>
         <field name="permissionId" title="${uiLabelMap.PermissionId}"/>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddSecurityGroupProtectedView" type="single" target="addProtectedViewToSecurityGroup"
@@ -51,7 +51,7 @@ under the License.
         <field name="maxHits"><text size="20" maxlength="20"/></field>
         <field name="maxHitsDuration"><text size="20" maxlength="20"/></field>
         <field name="tarpitDuration"><text size="20" maxlength="20"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddSecurityGroupUserLogin" type="single" target="addUserLoginToSecurityGroup"
@@ -59,7 +59,7 @@ under the License.
         <auto-fields-service service-name="addUserLoginToSecurityGroup"/>
         <field name="groupId"><hidden/></field>
         <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}"><lookup target-form-name="LookupUserLogin" size="30"></lookup></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="AddUserLogin" type="single" target="${createUserLoginURI}"
@@ -75,7 +75,7 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonN}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">
             <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="partyId"/>
@@ -95,7 +95,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="CertIssuerList" type="list" list-name="issuerProvisions"
@@ -111,7 +111,7 @@ under the License.
     <form name="CreateSecurityGroup" type="single" target="createSecurityGroup" default-map-name="securityGroup">
         <field name="groupId" title="${uiLabelMap.CommonSecurityGroupId}" widget-style="required" tooltip="${uiLabelMap.CommonRequired}"><text size="20" maxlength="20"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text size="60" maxlength="250"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">
             <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="partyId"/>
@@ -122,7 +122,7 @@ under the License.
     <form name="EditSecurityGroup" type="single" target="updateSecurityGroup" default-map-name="securityGroup">
         <field name="groupId" title="${uiLabelMap.CommonSecurityGroupId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text size="60" maxlength="250"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListSecurityGroupPermissions" type="list" list-name="securityGroupPermissions"
@@ -135,7 +135,7 @@ under the License.
         </actions>
         <field name="groupId"><hidden/></field>
         <field name="permissionId" title="${uiLabelMap.PermissionId}"><display-entity entity-name="SecurityPermission" description="${permissionId} ${description}"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="removeSecurityPermissionFromSecurityGroup" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="permissionId"/>
                 <parameter param-name="groupId"/>
@@ -156,8 +156,8 @@ under the License.
         <field name="maxHits"><text/></field>
         <field name="maxHitsDuration"><text/></field>
         <field name="tarpitDuration"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeProtectedViewFromSecurityGroup" also-hidden="false">
                 <parameter param-name="groupId"/>
                 <parameter param-name="viewNameId"/>
@@ -197,8 +197,8 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" sort-field="true"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" sort-field="true"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="removeUserLoginFromSecurityGroup" also-hidden="false">
                 <parameter param-name="userLoginId"/>
                 <parameter param-name="groupId"/>
@@ -247,8 +247,8 @@ under the License.
         <field name="userLoginId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" red-when="before-now"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink description="${uiLabelMap.CommonRemove}" target="${removeUserLoginSecurityGroupURI}" also-hidden="false">
                 <parameter param-name="partyId"/>
                 <parameter param-name="userLoginId"/>
@@ -262,7 +262,7 @@ under the License.
     <form name="LookupUserLogin" type="single" target="LookupUserLogin">
         <field name="userLoginId" title="${uiLabelMap.CommonUserLoginId}"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListLookedUpUserLogins" type="list" list-name="listIt" paginate-target="LookupUserLogin"
@@ -295,7 +295,7 @@ under the License.
         <field name="currentPassword"><password/></field>
         <field name="newPassword"><password/></field>
         <field name="newPasswordVerify"><password/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">
             <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="userLoginId"/>
@@ -314,7 +314,7 @@ under the License.
         <field name="userLoginId"><hidden/></field>
         <field name="userLdapDn" use-when="&quot;true&quot;.equals(ldapEnabled)"><text/></field>
         <field name="userLdapDn" use-when="!&quot;true&quot;.equals(ldapEnabled)"><ignored/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">
             <hyperlink target="${cancelPage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="userLoginId"/>
@@ -328,7 +328,7 @@ under the License.
         <field name="certString">
             <textarea rows="10"/>
         </field>
-        <field name="View Cert" title="${uiLabelMap.ViewCert}" widget-style="${styles.link_action_sys} ${styles.action_view}"><submit/></field>
+        <field name="View Cert" title="${uiLabelMap.ViewCert}" widget-style="${styles.link_run_sys} ${styles.action_view}"><submit/></field>
     </form>
 
 </forms>

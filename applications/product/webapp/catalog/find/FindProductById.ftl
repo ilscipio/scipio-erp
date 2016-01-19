@@ -19,7 +19,7 @@ under the License.
 
 <@section title="${uiLabelMap.ProductFindProductWithIdValue}">
         <form name="idsearchform" method="post" action="<@ofbizUrl>FindProductById</@ofbizUrl>">
-          <span>${uiLabelMap.CommonId} ${uiLabelMap.CommonValue}:</span> <input type="text" name="idValue" size="20" maxlength="50" value="${idValue!}" />&nbsp;<a href="javascript:document.idsearchform.submit()" class="${styles.link_action_sys!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a>
+          <span>${uiLabelMap.CommonId} ${uiLabelMap.CommonValue}:</span> <input type="text" name="idValue" size="20" maxlength="50" value="${idValue!}" />&nbsp;<a href="javascript:document.idsearchform.submit()" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a>
         </form>
         
         <p>${uiLabelMap.ProductSearchResultsWithIdValue}: ${idValue!}</p>

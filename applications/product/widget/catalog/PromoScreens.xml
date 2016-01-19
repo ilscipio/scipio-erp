@@ -78,11 +78,11 @@ under the License.
                             </container>
                             <container>
                                 <label style="label">${uiLabelMap.CommonView}</label>
-                                <link target="FindProductPromo" text="${uiLabelMap.CommonAll}" style="${styles.link_action_sys} ${styles.action_find}"/>
-                                <link target="FindProductPromo" text="${uiLabelMap.CommonUserEnteredOnly}" style="${styles.link_action_sys} ${styles.action_find}">
+                                <link target="FindProductPromo" text="${uiLabelMap.CommonAll}" style="${styles.link_run_sys} ${styles.action_find}"/>
+                                <link target="FindProductPromo" text="${uiLabelMap.CommonUserEnteredOnly}" style="${styles.link_run_sys} ${styles.action_find}">
                                     <parameter param-name="userEntered" value="Y"/>
                                 </link>
-                                <link target="FindProductPromo" text="${uiLabelMap.ProductPromotionImported}" style="${styles.link_action_sys} ${styles.action_find}">
+                                <link target="FindProductPromo" text="${uiLabelMap.ProductPromotionImported}" style="${styles.link_run_sys} ${styles.action_find}">
                                     <parameter param-name="userEntered" value="N"/>
                                 </link>
                             </container>
@@ -262,7 +262,7 @@ under the License.
                             </condition>
                             <widgets>
                                 <container>
-                                    <link target="FindProductPromoCode" text="${uiLabelMap.ProductPromotionManualImported}" style="${styles.link_action_sys} ${styles.action_find}">
+                                    <link target="FindProductPromoCode" text="${uiLabelMap.ProductPromotionManualImported}" style="${styles.link_run_sys} ${styles.action_find}">
                                         <parameter param-name="manualOnly" value="N"/>
                                         <parameter param-name="productPromoId"/>
                                     </link>
@@ -270,7 +270,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <container>
-                                    <link target="FindProductPromoCode" text="${uiLabelMap.ProductPromotionManual}" style="${styles.link_action_sys} ${styles.action_find}">
+                                    <link target="FindProductPromoCode" text="${uiLabelMap.ProductPromotionManual}" style="${styles.link_run_sys} ${styles.action_find}">
                                         <parameter param-name="manualOnly" value="Y"/>
                                         <parameter param-name="productPromoId"/>
                                     </link>

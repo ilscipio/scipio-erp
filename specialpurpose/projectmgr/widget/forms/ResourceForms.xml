@@ -22,7 +22,7 @@
     <form name="FindResource" type="single" target="FindResource"
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="resourceName" parameter-name="partyId" title="${uiLabelMap.ProjectMgrResourceName}"><text/></field>
-        <field name="find" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit/></field>
+        <field name="find" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit/></field>
     </form>
     <form name="ListResources" type="list" list-name="resources" paginate-target="FindResource"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -47,7 +47,7 @@
         </field>
         <field name="telephone" title="${uiLabelMap.PartyPhoneNumber}"><display description="${telResult.countryCode} ${telResult.areaCode} ${telResult.contactNumber}${groovy:telResult.get(&quot;extension&quot;)!=null?&quot; Ext:&quot;:&quot; &quot;}${telResult.extension}"/></field>
         <field name="contactMechPurposeTypeId" entry-name="telResult.contactMechPurposeTypeId" title="${uiLabelMap.CommonPurpose}"><display-entity entity-name="ContactMechPurposeType"/></field>
-        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="removeResource" description="${uiLabelMap.CommonRemove}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>
@@ -76,7 +76,7 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="addAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
+        <field name="addAction" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="AddPartyRole" extends="AddPartyRole" extends-resource="component://party/widget/partymgr/PartyForms.xml">
         <field name="roleTypeId">

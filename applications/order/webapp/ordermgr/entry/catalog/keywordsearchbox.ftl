@@ -40,7 +40,7 @@ under the License.
           <@field type="radio" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_OR" value="OR" checked=(searchOperator == "OR") label="${uiLabelMap.CommonAny}"/>
           <@field type="radio" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_AND" value="AND" checked=(searchOperator == "AND") label="${uiLabelMap.CommonAll}"/>
           <@field type="submitarea">
-            <input type="submit" value="${uiLabelMap.CommonFind}" class="${styles.link_action_sys!} ${styles.action_find!}" />
+            <input type="submit" value="${uiLabelMap.CommonFind}" class="${styles.link_run_sys!} ${styles.action_find!}" />
           </@field>
       </@fields>
     </form>
@@ -61,7 +61,7 @@ under the License.
           <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId!}" />
         </#if>
           <@field type="submitarea">
-            <input type="submit" value="${uiLabelMap.ProductAdvancedSearch}" class="${styles.link_action_sys!} ${styles.action_find!}" />
+            <input type="submit" value="${uiLabelMap.ProductAdvancedSearch}" class="${styles.link_run_sys!} ${styles.action_find!}" />
           </@field>
       </@fieldset>
     </form>

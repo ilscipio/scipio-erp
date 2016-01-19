@@ -59,10 +59,10 @@ under the License.
                 <option value="${statusValidChangeToDetail.get("statusIdTo", locale)}">${statusValidChangeToDetail.get("description", locale)} (${statusValidChangeToDetail.get("transitionName", locale)})</option>
               </#list>
             </select>
-            <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action_sys!} ${styles.action_update!}"/>
+            <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
           </form>
           <span>${uiLabelMap.ProductCreatedModifiedBy}</span> ${picklist.createdByUserLogin}/${picklist.lastModifiedByUserLogin}
-          <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" target="_blank" class="${styles.link_action_sys!} ${styles.action_export!}">${uiLabelMap.ProductPick}/${uiLabelMap.ProductPacking} ${uiLabelMap.CommonReports}</a>
+          <a href="<@ofbizUrl>PicklistReport.pdf?picklistId=${picklist.picklistId}</@ofbizUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPick}/${uiLabelMap.ProductPacking} ${uiLabelMap.CommonReports}</a>
           <hr />
         </div>
         <#if picklistInfo.shipmentMethodType?has_content>
@@ -91,7 +91,7 @@ under the License.
                 <option value="${partyRoleAndPartyDetail.partyId}">${partyRoleAndPartyDetail.firstName!} ${partyRoleAndPartyDetail.middleName!} ${partyRoleAndPartyDetail.lastName!} ${partyRoleAndPartyDetail.groupName!} [${partyRoleAndPartyDetail.partyId}]</option>
               </#list>
             </select>
-            <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_action_sys!} ${styles.action_add!}"/>
+            <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
           </form>
         </div>
 
@@ -113,7 +113,7 @@ under the License.
               <span>${uiLabelMap.ProductBinNum}</span> ${picklistBinInfo.picklistBin.binLocationNumber}&nbsp;(${picklistBinInfo.picklistBin.picklistBinId})
               <#if picklistBinInfo.primaryOrderHeader??><span>${uiLabelMap.ProductPrimaryOrderId}</span> ${picklistBinInfo.primaryOrderHeader.orderId}</#if>
               <#if picklistBinInfo.primaryOrderItemShipGroup??><span>${uiLabelMap.ProductPrimaryShipGroupSeqId}</span> ${picklistBinInfo.primaryOrderItemShipGroup.shipGroupSeqId}</#if>
-              <#if !picklistBinInfo.picklistItemInfoList?has_content><a href="javascript:document.DeletePicklistBin_${picklistInfo_index}_${picklistBinInfo_index}.submit()" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></#if>
+              <#if !picklistBinInfo.picklistItemInfoList?has_content><a href="javascript:document.DeletePicklistBin_${picklistInfo_index}_${picklistBinInfo_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></#if>
               <form name="DeletePicklistBin_${picklistInfo_index}_${picklistBinInfo_index}" method="post" action="<@ofbizUrl>deletePicklistBin</@ofbizUrl>">
                 <input type="hidden" name="picklistBinId" value="${picklistBinInfo.picklistBin.picklistBinId}"/>
                 <input type="hidden" name="facilityId" value="${facilityId!}"/>
@@ -133,7 +133,7 @@ under the License.
                     <option value="${picklistActive.picklistId}"<#if picklistActive.picklistId == picklist.picklistId> selected="selected"</#if>>${picklistActive.picklistId} [${uiLabelMap.CommonDate}:${picklistActive.picklistDate},${uiLabelMap.CommonStatus}:${picklistActiveStatusItem.get("description",locale)}]</option>
                   </#list>
                 </select>
-                <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action_sys!} ${styles.action_update!}"/>
+                <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
               </form>
             </div>
             <#if picklistBinInfo.picklistItemInfoList?has_content>
@@ -172,7 +172,7 @@ under the License.
                             <input type="hidden" name="shipGroupSeqId" value="${picklistItemInfo.picklistItem.shipGroupSeqId}"/>
                             <input type="hidden" name="inventoryItemId" value="${picklistItemInfo.picklistItem.inventoryItemId}"/>
                             <input type="hidden" name="facilityId" value="${facilityId!}"/>
-                            <a href="javascript:document.deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
+                            <a href="javascript:document.deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                           </form>
                         </@td>
                       </#if>

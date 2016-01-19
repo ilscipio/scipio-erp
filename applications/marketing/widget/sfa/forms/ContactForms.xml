@@ -57,13 +57,13 @@ under the License.
                 <field-map field-name="distinct" value="Y"/>
             </service>
         </actions>
-        <field name="export" title="${uiLabelMap.SfaVCard}" widget-style="${styles.link_action_sys} ${styles.action_export}">
+        <field name="export" title="${uiLabelMap.SfaVCard}" widget-style="${styles.link_run_sys} ${styles.action_export}">
             <hyperlink target="createVCardFromContact" description="${uiLabelMap.SfaVCard}">
                 <parameter param-name="partyId"/>
             </hyperlink>
         </field>
         <field name="assignToMe" use-when="existRelationship==null&amp;&amp;!&quot;false&quot;.equals(parameters.get(&quot;all&quot;))"
-                title="${uiLabelMap.SfaAssignToMe}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+                title="${uiLabelMap.SfaAssignToMe}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <hyperlink target="createPartyRelationshipAndRole" description="${uiLabelMap.SfaAssignToMe}">
                 <parameter param-name="partyIdFrom" from-field="userLogin.partyId"/>
                 <parameter param-name="roleTypeIdFrom"/>
@@ -141,7 +141,7 @@ under the License.
                 <entity-options entity-name="ContactList" description="${description}" key-field-name="contactListId"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="MergeContacts" type="single" target="MergeContacts">
         <actions>
@@ -160,13 +160,13 @@ under the License.
                 <list-options list-name="partyList" key-name="contact.partyId" list-entry-name="contact" description="${groovy:org.ofbiz.party.party.PartyHelper.getPartyName(delegator, 'partyId', false)} ${contact.partyId}"/>
             </drop-down>
         </field>
-        <field name="submitAction" position="3" title="${uiLabelMap.SfaMergeContacts}" widget-style="${styles.link_action_sys} ${styles.action_update}" tooltip-style="button-text"><submit button-type="text-link"/></field>
+        <field name="submitAction" position="3" title="${uiLabelMap.SfaMergeContacts}" widget-style="${styles.link_run_sys} ${styles.action_update}" tooltip-style="button-text"><submit button-type="text-link"/></field>
     </form>
 
     <form name="NewContactFromVCard" type="upload" target="createContactFromVCard" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="infile" title="${uiLabelMap.SfaUploadVCard}"><file/></field>
         <field name="serviceName"><hidden value="createContact"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action_sys} ${styles.action_import}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_run_sys} ${styles.action_import}"><submit button-type="button"/></field>
     </form>
 
     <form name="QuickAddContact" type="single" target="quickAddContact">
@@ -179,6 +179,6 @@ under the License.
             </drop-down>
         </field>
         <field name="quickAdd"><hidden value="Y"/></field>
-        <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
+        <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
 </forms>

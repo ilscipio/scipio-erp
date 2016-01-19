@@ -74,9 +74,9 @@ jQuery(document).ready(function(){
         </#list>
         <#if userMap.checkUser == "REJECTED">
             <#-- Cato: too confusing:
-            <a href="javascript:void(0)" class="${styles.link_action_sys!} ${styles.action_find!} ${styles.disabled!}">Rejected</a>-->
+            <a href="javascript:void(0)" class="${styles.link_run_sys!} ${styles.action_find!} ${styles.disabled!}">Rejected</a>-->
         <#else>
-            <a href="<@ofbizUrl>ListPeopleRejected</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_find!}">Rejected</a>
+            <a href="<@ofbizUrl>ListPeopleRejected</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_find!}">Rejected</a>
         </#if>
 <#else>
   <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>

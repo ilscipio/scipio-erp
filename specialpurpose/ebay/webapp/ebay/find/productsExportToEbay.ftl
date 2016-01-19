@@ -135,7 +135,7 @@ under the License.
                 <textarea cols="60" rows="6" wrap="soft" name="customXml">${customXml!}</textarea>
             </@field>
             <@field type="submitarea">
-                <input type="submit" value="${uiLabelMap.EbayExportToEbay}" name="submitButton" class="${styles.link_action_sys!} ${styles.action_send!} ${styles.action_external!}" />
+                <input type="submit" value="${uiLabelMap.EbayExportToEbay}" name="submitButton" class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}" />
             </@field>
             </#if>
     </form>

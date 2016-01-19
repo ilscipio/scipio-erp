@@ -41,7 +41,7 @@ under the License.
                 <option key="Y" description="${uiLabelMap.CommonYes}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -66,7 +66,7 @@ under the License.
                 </entity-options>
              </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="listFindProductionRun" list-name="listIt" title="" type="list" paginate-target="FindProductionRun"
@@ -118,7 +118,7 @@ under the License.
         <field name="estimatedCompletionDate" title="${uiLabelMap.ManufacturingEstimatedCompletionDate}"><display/></field>
         <field name="workEffortName" title="${uiLabelMap.ManufacturingProductionRunName}"><text/></field>
         <field name="description"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListProductionRunOrderItems" type="list" target="EditProductionRun" title="" list-name="orderItems"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -195,7 +195,7 @@ under the License.
                 <parameter param-name="productionRunId" from-field="workEffortParentId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <!--<hyperlink target="RemoveRoutingTaskAssoc" description="[${uiLabelMap.CommonDelete}]" also-hidden="false">
                 <parameter param-name="workEffortIdFrom"/>
                 <parameter param-name="workEffortIdTo"/>
@@ -258,7 +258,7 @@ under the License.
         <field name="estimatedMilliSeconds" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}">
             <text/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -301,7 +301,7 @@ under the License.
             </drop-down>
         </field>
         <field name="lotId"><text default-value="${lastLotId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -352,7 +352,7 @@ under the License.
             </drop-down>
         </field>
         <field name="_rowSubmit"><hidden value="Y"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
 
     <form name="ListProductionRunDeclRoutingTasks" type="list" target="ProductionRunDeclaration" title="" list-name="productionRunRoutingTasks"
@@ -371,34 +371,34 @@ under the License.
         <field name="actualSetupMillis" title="${uiLabelMap.ManufacturingTaskActualSetupMillis}" ><display/></field>
         <field name="actualMilliSeconds" title="${uiLabelMap.ManufacturingTaskActualMilliSeconds}" ><display/></field>
         <field name="quantityProduced" title="${uiLabelMap.ManufacturingQuantityProduced}" ><display/></field>
-        <field name="startAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_begin}" use-when="&quot;${startTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
+        <field name="startAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_begin}" use-when="&quot;${startTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
             <hyperlink target="changeProductionRunTaskStatus" description="${uiLabelMap.ManufacturingStartProductionRunTask}" also-hidden="false">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="productionRunId" from-field="workEffortParentId"/>
             </hyperlink>
         </field>
-        <field name="issueLinkAtp" title=" " widget-style="${styles.link_action_sys} ${styles.action_add}" use-when="&quot;${issueTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
+        <field name="issueLinkAtp" title=" " widget-style="${styles.link_run_sys} ${styles.action_add}" use-when="&quot;${issueTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
             <hyperlink target="issueProductionRunRoutingTask" description="${uiLabelMap.ManufacturingIssueAvailableProductionRunTask}" also-hidden="false">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="productionRunId" from-field="workEffortParentId"/>
                 <parameter param-name="failIfItemsAreNotAvailable" value="Y"/>
             </hyperlink>
         </field>
-        <field name="issueLinkQoh" title=" " widget-style="${styles.link_action_sys} ${styles.action_add}" use-when="&quot;${issueTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
+        <field name="issueLinkQoh" title=" " widget-style="${styles.link_run_sys} ${styles.action_add}" use-when="&quot;${issueTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
             <hyperlink target="issueProductionRunRoutingTask" description="${uiLabelMap.ManufacturingIssueProductionRunTask}" also-hidden="false">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="productionRunId" from-field="workEffortParentId"/>
                 <parameter param-name="failIfItemsAreNotAvailable" value="N"/>
             </hyperlink>
         </field>
-        <field name="declareAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_view}" use-when="&quot;PRUN_RUNNING&quot;.equals(&quot;${currentStatusId}&quot;)">
+        <field name="declareAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_view}" use-when="&quot;PRUN_RUNNING&quot;.equals(&quot;${currentStatusId}&quot;)">
             <hyperlink target="ProductionRunDeclaration" description="${uiLabelMap.ManufacturingDeclareProductionRunTask}" also-hidden="false">
                 <parameter param-name="actionForm" value="EditRoutingTask"/>
                 <parameter param-name="routingTaskId" from-field="workEffortId"/>
                 <parameter param-name="productionRunId" from-field="workEffortParentId"/>
             </hyperlink>
         </field>
-        <field name="completeAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_complete}" use-when="&quot;${completeTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
+        <field name="completeAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_complete}" use-when="&quot;${completeTaskId}&quot;.equals(&quot;${workEffortId}&quot;)">
             <hyperlink target="changeProductionRunTaskStatus" description="${uiLabelMap.ManufacturingCompleteProductionRunTask}" also-hidden="false">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="productionRunId" from-field="workEffortParentId"/>
@@ -444,7 +444,7 @@ under the License.
         <field name="lotId">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="ListReturnProductionRunDeclComponents" type="multi" use-row-submit="true" target="productionRunTaskReturnMaterials?productionRunId=${productionRunId}" title="" list-name="productionRunComponentsAlreadyIssued"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -464,7 +464,7 @@ under the License.
         <field name="lotId" title="${uiLabelMap.ProductLotId}"><text /></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><text/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelected}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
 
      <form name="EditProductionRunDeclRoutingTask" type="single" target="updateProductionRunTask" title="" default-map-name="routingTaskData"
@@ -536,7 +536,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.ManufacturingWorker}">
             <text/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -556,7 +556,7 @@ under the License.
         <field name="lotId" title="${uiLabelMap.ProductLotId}">
             <text />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -580,7 +580,7 @@ under the License.
         <field name="roleTypeId">
             <hidden value="CONTENT_USER"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -611,7 +611,7 @@ under the License.
         <field name="drObjectInfo" title="${uiLabelMap.CommonContent}" entry-name="drDataResourceId" encode-output="true" use-when="${groovy: drDataResourceTypeId != null &amp;&amp; drDataResourceTypeId.equals(&quot;ELECTRONIC_TEXT&quot;)}">
             <display-entity entity-name="ElectronicText" key-field-name="dataResourceId" description="${textData}"></display-entity>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink description="${uiLabelMap.CommonDelete}" also-hidden="false" target="deleteProductionRunContent">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="workEffortContentTypeId"/>
@@ -645,7 +645,7 @@ under the License.
         </field>
         <field name="workEffortContentTypeId"><drop-down><entity-options description="${description}" entity-name="WorkEffortContentType"></entity-options></drop-down></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelected}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="ProductionRunTaskFixedAssets" type="list" target="updateWorkEffortFixedAssetAssign" paginate-target="" title="" list-name="records"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -665,8 +665,8 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}"
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}"
                     use-when="!&quot;${declarationScreen}&quot;.equals(&quot;Y&quot;)">
             <hyperlink description="${uiLabelMap.CommonDelete}" also-hidden="false" target="removeWorkEffortFixedAssetAssign">
                 <parameter param-name="workEffortId"/>
@@ -735,7 +735,7 @@ under the License.
             </drop-down> -->
             <hidden />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -765,7 +765,7 @@ under the License.
             </drop-down> -->
             <hidden />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}">
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -825,7 +825,7 @@ under the License.
     <form name="SelectMrpName" type="single" target="ManufacturingReports" title=""
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="mrpName" title="${uiLabelMap.ManufacturingMrpName}"><text size="20"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_select}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_select}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -849,7 +849,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -941,7 +941,7 @@ under the License.
         <field name="productId">
             <lookup target-form-name="LookupProduct"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ProductionRunTaskComponents" type="list" target="updateProductionRunComponent" paginate-target="ProductionRunComponents" title="" list-name="records"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -954,8 +954,8 @@ under the License.
         <field name="productionRunId"><hidden/></field>
         <field name="estimatedQuantity"><text/></field>
         <field name="quantityUomId" map-name="product" title="${uiLabelMap.CommonUom}"><display-entity entity-name="Uom" key-field-name="uomId" description="${abbreviation}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteProductionRunComponent" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="fromDate"/>
@@ -1018,7 +1018,7 @@ under the License.
             </drop-down>
         </field>
         <field name="description"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 </forms>
 

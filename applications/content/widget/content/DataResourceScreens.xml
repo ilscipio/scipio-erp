@@ -489,7 +489,7 @@ under the License.
             </condition>
             <widgets>
                 <container>
-                    <link target="ViewBinaryDataResource" text="${uiLabelMap.ContentDownload}" style="${styles.link_action_sys} ${styles.action_export}">
+                    <link target="ViewBinaryDataResource" text="${uiLabelMap.ContentDownload}" style="${styles.link_run_sys} ${styles.action_export}">
                         <parameter param-name="dataResourceId"/>
                    </link>
                 </container>

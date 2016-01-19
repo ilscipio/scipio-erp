@@ -27,7 +27,7 @@ under the License.
         ${uiLabelMap.CommonAdd}
         <input type="text" name="featureNum" value="1" size="3" />
         ${uiLabelMap.ProductAddFeatureToCategory}
-        <input class="${styles.link_action_sys!} ${styles.action_add!}" type="submit" value="${uiLabelMap.CommonCreate}" />
+        <input class="${styles.link_run_sys!} ${styles.action_add!}" type="submit" value="${uiLabelMap.CommonCreate}" />
       </div>
       <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
     </form>

@@ -91,7 +91,7 @@ under the License.
           <hr />
           
           <@field type="submitarea">
-              <a href="javascript:submit('productSearchform');" class="${styles.link_action_sys!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a>
+              <a href="javascript:submit('productSearchform');" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a>
           </@field>
       </fieldset>
     </form>

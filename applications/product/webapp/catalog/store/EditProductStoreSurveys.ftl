@@ -45,7 +45,7 @@ under the License.
                   <form name="deleteProductStoreSurveyAppl_${storeSurvey_index}" method="post" action="<@ofbizUrl>deleteProductStoreSurveyAppl</@ofbizUrl>">
                     <input type="hidden" name="productStoreId" value="${productStoreId}" />
                     <input type="hidden" name="productStoreSurveyId" value="${storeSurvey.productStoreSurveyId}" />
-                    <a href="javascript:document.deleteProductStoreSurveyAppl_${storeSurvey_index}.submit()" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
+                    <a href="javascript:document.deleteProductStoreSurveyAppl_${storeSurvey_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                   </form>
                 </@td>
               </@tr>
@@ -95,7 +95,7 @@ under the License.
                   <input type="text" size="5" name="sequenceNum" />
               </@field>
               <@field type="submitarea">
-                  <input type="submit" class="${styles.link_action_sys!} ${styles.action_add!}" value="${uiLabelMap.CommonAdd}" />
+                  <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.CommonAdd}" />
               </@field>
         </form>
 </@section>

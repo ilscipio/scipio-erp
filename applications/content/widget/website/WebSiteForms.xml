@@ -55,7 +55,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListWebSites" target="" title="" type="list" list-name="webSites" paginate-target="FindWebSite" paginate="true"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2">
@@ -78,7 +78,7 @@ under the License.
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="webSiteId"><hidden value="${webSiteId}"/></field>
         <field name="pathAlias"><text-find ignore-case="true"/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListWebSitePathAlias" target="" title="" list-name="listIt" type="list" paginate-target="WebSiteAliases"
@@ -134,8 +134,8 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="RemoveWebSiteContent" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="webSiteId"/>
                 <parameter param-name="contentId"/>
@@ -165,7 +165,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <!-- WebSite Role Forms -->
@@ -181,7 +181,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="UpdateWebSiteRole" type="list" target="updateWebSiteRole" title="" list-name="webSiteRoleDatas"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -198,8 +198,8 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="removeWebSiteRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="webSiteId" from-field="webSiteRole.webSiteId"/>
                 <parameter param-name="partyId" from-field="webSiteRole.partyId"/>
@@ -218,7 +218,7 @@ under the License.
                 </entity-options>
             </check>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <!-- WebSite SEO Form -->
@@ -240,7 +240,7 @@ under the License.
                 <option key="content" description="Content"/>
             </check>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="CreateWebSiteContactList" type="single" target="createWebSiteContactList" 
             default-map-name="webSite" title="" header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -255,7 +255,7 @@ under the License.
                 <entity-options description="${contactListName} [${contactListId}]" entity-name="ContactList" key-field-name="contactListId"></entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="ViewWebSiteContactList" type="list" target="updateWebSiteContactList" list-name="webSiteContactLists" title="" 
             header-row-style="header-row" default-table-style="${styles.table_basic}">
@@ -282,8 +282,8 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date-time"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteWebSiteContactList" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="webSiteId"/>
                 <parameter param-name="contactListId"/>

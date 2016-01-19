@@ -330,7 +330,7 @@ document.lookuporder.orderId.focus();
            <option value="${printer}">${printer}</option>
            </#list>
         </select>
-        <a href="javascript:runAction();" class="${styles.link_action_sys!} ${styles.action_modify!}">${uiLabelMap.OrderRunAction}</a>
+        <a href="javascript:runAction();" class="${styles.link_run_sys!} ${styles.action_modify!}">${uiLabelMap.OrderRunAction}</a>
         -->
       <#macro massOrderChangeButton id="1">  
           <@row>

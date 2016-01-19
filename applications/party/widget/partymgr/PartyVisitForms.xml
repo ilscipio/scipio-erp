@@ -34,7 +34,7 @@ under the License.
         <field name="webappName"><text-find ignore-case="true"/></field>
         <field name="clientIpAddress"><text-find ignore-case="true"/></field>
 
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListVisits" type="list" separate-columns="true" title="Visits List" list-name="listIt" target="" default-entity-name="Visit" paginate-target="findVisits"

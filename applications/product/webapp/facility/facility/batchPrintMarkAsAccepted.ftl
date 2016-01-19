@@ -41,4 +41,4 @@ under the License.
   }
 </@script>
 
-<input type="submit" class="${styles.link_action_sys!} ${styles.action_updatestatus!}" value="${uiLabelMap.ProductMarkAsAccepted}" onclick="javascript:markAsAccepted()"/>
+<input type="submit" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" value="${uiLabelMap.ProductMarkAsAccepted}" onclick="javascript:markAsAccepted()"/>

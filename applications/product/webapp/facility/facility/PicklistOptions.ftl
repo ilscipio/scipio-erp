@@ -43,7 +43,7 @@ under the License.
         <input type="text" size="4" name="maxNumberOfOrders" value="50"/>    
     </@field>      
     <@field type="submitarea">
-      <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_action_sys!} ${styles.action_select!}" align='right'/>
+      <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_select!}" align='right'/>
     </@field>
     </div>
   </form>

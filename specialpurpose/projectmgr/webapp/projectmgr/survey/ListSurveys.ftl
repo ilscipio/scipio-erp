@@ -55,7 +55,7 @@ under the License.
                         <input type="hidden" name="surveyId" value="${workEffortSurveyAppl.surveyId!}" />
                         <input type="hidden" name="workEffortId" value="${workEffortSurveyAppl.workEffortId!}" />
                         <input type="hidden" name="fromDate" value="${workEffortSurveyAppl.fromDate!}" />
-                        <a href="javascript:document.getElementById('deleteWorkEffortSurveyAppl_${workEffortSurveyAppl_index}').submit()" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
+                        <a href="javascript:document.getElementById('deleteWorkEffortSurveyAppl_${workEffortSurveyAppl_index}').submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                       </form>
                     </@td>
                   </#if>

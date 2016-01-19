@@ -53,9 +53,9 @@ under the License.
                     <decorator-section name="body">
                         <label style="heading" text="${uiLabelMap.ProductInventoryByProduct} ${uiLabelMap.CommonFor} ${facility.facilityName}"/>
                         <container>
-                            <link target="ViewFacilityInventoryByProductReport?${searchParameterString}" text="${uiLabelMap.CommonPrint}" style="${styles.link_action_sys} ${styles.action_export}"/>
-                            <link target="ViewFacilityInventoryByProductExport?${searchParameterString}" text="${uiLabelMap.CommonExport}" style="${styles.link_action_sys} ${styles.action_export}"/>
-                            <link target="ViewFacilityInventoryHistoryReport?${searchParameterString}" text="${uiLabelMap.BirtFacilityReportInventoryHistoryReport}" style="${styles.link_action_sys} ${styles.action_view}"/>
+                            <link target="ViewFacilityInventoryByProductReport?${searchParameterString}" text="${uiLabelMap.CommonPrint}" style="${styles.link_run_sys} ${styles.action_export}"/>
+                            <link target="ViewFacilityInventoryByProductExport?${searchParameterString}" text="${uiLabelMap.CommonExport}" style="${styles.link_run_sys} ${styles.action_export}"/>
+                            <link target="ViewFacilityInventoryHistoryReport?${searchParameterString}" text="${uiLabelMap.BirtFacilityReportInventoryHistoryReport}" style="${styles.link_run_sys} ${styles.action_view}"/>
                         </container>
                         <screenlet title="${uiLabelMap.PageTitleFindFacilityInventoryItemsByProduct}">
                             <include-form name="FindFacilityInventoryByProduct" location="component://product/widget/facility/FacilityForms.xml"/>
@@ -84,9 +84,9 @@ under the License.
                             <label style="heading" text="${uiLabelMap.ProductInventoryByProduct} ${uiLabelMap.CommonFor} ${facility.facilityName}"/>
                         </container>
                         <container>
-                            <link target="ViewFacilityInventoryByProductReport?facilityId=${parameters.facilityId}" text="${uiLabelMap.CommonPrint}" style="${styles.link_action_sys} ${styles.action_export}"/>
-                            <link target="ViewFacilityInventoryByProductExport?facilityId=${parameters.facilityId}" text="${uiLabelMap.CommonExport}" style="${styles.link_action_sys} ${styles.action_export}"/>
-                            <link target="ViewFacilityInventoryHistoryReport?facilityId=${parameters.facilityId}" text="${uiLabelMap.BirtFacilityReportInventoryHistoryReport}" style="${styles.link_action_sys} ${styles.action_view}"/>
+                            <link target="ViewFacilityInventoryByProductReport?facilityId=${parameters.facilityId}" text="${uiLabelMap.CommonPrint}" style="${styles.link_run_sys} ${styles.action_export}"/>
+                            <link target="ViewFacilityInventoryByProductExport?facilityId=${parameters.facilityId}" text="${uiLabelMap.CommonExport}" style="${styles.link_run_sys} ${styles.action_export}"/>
+                            <link target="ViewFacilityInventoryHistoryReport?facilityId=${parameters.facilityId}" text="${uiLabelMap.BirtFacilityReportInventoryHistoryReport}" style="${styles.link_run_sys} ${styles.action_view}"/>
                         </container>
                         <screenlet title="${uiLabelMap.BirtFacilityReportInventoryHistoryReport}">
                             <include-form name="ViewFacilityInventoryHistoryReportForm" location="component://birt/widget/facility/FacilityForms.xml"/>

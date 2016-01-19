@@ -35,7 +35,7 @@ under the License.
               </#if>
             </#list>
           </select>
-          <div><a href="javascript:document.choosequickaddform.submit()" class="${styles.link_action_session!} ${styles.action_select!}">${uiLabelMap.ProductChooseQuickAddCategory}</a></div>
+          <div><a href="javascript:document.choosequickaddform.submit()" class="${styles.link_run_session!} ${styles.action_select!}">${uiLabelMap.ProductChooseQuickAddCategory}</a></div>
         </form>
       </@td>
     </@tr>
@@ -59,7 +59,7 @@ under the License.
   <form method="post" action="<@ofbizUrl>addtocartbulk</@ofbizUrl>" name="bulkaddform">
     <input type='hidden' name='category_id' value='${categoryId}' />
     <div class="quickaddall">
-      <a href="javascript:document.bulkaddform.submit()" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddAllToCart}</a>
+      <a href="javascript:document.bulkaddform.submit()" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddAllToCart}</a>
     </div>
     <div class="quickaddtable">
       <#list productCategoryMembers as productCategoryMember>
@@ -71,7 +71,7 @@ under the License.
       </#list>
     </div>
     <div class="quickaddall">
-      <a href="javascript:document.bulkaddform.submit()" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddAllToCart}</a>
+      <a href="javascript:document.bulkaddform.submit()" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddAllToCart}</a>
     </div>
   </form>
   </center>

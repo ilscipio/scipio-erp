@@ -56,7 +56,7 @@ under the License.
     </form>
 
     <form name="FindFacilityOptions" extends="lookupFacility" extends-resource="component://product/widget/facility/FieldLookupForms.xml" target="FindFacility">
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="SearchInventoryItemsParams" type="single" target="EditFacilityInventoryItems"
@@ -90,7 +90,7 @@ under the License.
         <field name="lotId" title="${uiLabelMap.ProductLotId}"><text/></field>
         <!-- the content of the softIdentifier field is converted from hex to int if it starts with "0x";
              this is a nice example of using JavaScript in a form widget definition -->
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}" event="onclick" action="javascript:var field=document.SearchInventoryItemsParams.softIdentifier;var tmp=field.value;if (tmp.substring(0, 2) == '0x') {tmp=parseInt(tmp, 16)};if (!isNaN(tmp)) {field.value=tmp};return true;">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}" event="onclick" action="javascript:var field=document.SearchInventoryItemsParams.softIdentifier;var tmp=field.value;if (tmp.substring(0, 2) == '0x') {tmp=parseInt(tmp, 16)};if (!isNaN(tmp)) {field.value=tmp};return true;">
             <submit button-type="button"/>
         </field>
     </form>
@@ -138,7 +138,7 @@ under the License.
         <field name="serialNumber"><display/></field>
         <field name="softIdentifier"><display/></field>
         <field name="quantityOnHandTotal"><display description="${availableToPromiseTotal} / ${quantityOnHandTotal}"/></field>
-        <field name="transferAction" title="${uiLabelMap.ProductTransfer}" entry-name="inventoryItemId" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="transferAction" title="${uiLabelMap.ProductTransfer}" entry-name="inventoryItemId" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <hyperlink target="TransferInventoryItem" description="${uiLabelMap.ProductTransfer}">
                 <parameter param-name="facilityId"/>
                 <parameter param-name="inventoryItemId"/>
@@ -213,7 +213,7 @@ under the License.
                 <option key="BY_DATE" description="${uiLabelMap.ProductByDate}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}" event="onclick" action="javascript:var field=document.SearchInventoryItemsParams.softIdentifier;var tmp=field.value;if (tmp.substring(0, 2) == '0x') {tmp=parseInt(tmp, 16)};if (!isNaN(tmp)) {field.value=tmp};return true;">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}" event="onclick" action="javascript:var field=document.SearchInventoryItemsParams.softIdentifier;var tmp=field.value;if (tmp.substring(0, 2) == '0x') {tmp=parseInt(tmp, 16)};if (!isNaN(tmp)) {field.value=tmp};return true;">
             <submit button-type="button"/>
         </field>
     </form>
@@ -437,7 +437,7 @@ under the License.
         <field name="monthsInPastLimit" entry-name="monthsInPastLimit"><text/></field>
         <field name="fromDateSellThrough" title="${uiLabelMap.ProductFromDateSellThrough}"><date-time/></field>
         <field name="thruDateSellThrough" title="${uiLabelMap.ProductThruDateSellThrough}"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -514,7 +514,7 @@ under the License.
             </drop-down>
         </field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.ProductScheduleTheseRouteSegments}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.ProductScheduleTheseRouteSegments}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit/>
         </field>
     </form>
@@ -551,7 +551,7 @@ under the License.
         <!-- this is for multi-submitting the mark as accepted action (see batchPrintMarkAsAccepted.ftl) -->
         <field name="carrierServiceStatusId"><hidden value="SHRSCS_ACCEPTED"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonPrint}" widget-style="${styles.link_action_sys} ${styles.action_export}">
+        <field name="submitAction" title="${uiLabelMap.CommonPrint}" widget-style="${styles.link_run_sys} ${styles.action_export}">
             <submit/>
         </field>
     </form>
@@ -563,7 +563,7 @@ under the License.
         <field name="internalName" title="${uiLabelMap.ProductInternalName}">
             <text/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}">
             <submit/>
         </field>
     </form>
@@ -592,7 +592,7 @@ under the License.
         <field name="availableToPromiseVar" title="${uiLabelMap.ProductProductATPVar}" event="onchange" action="document.ListPhysicalInventory._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field>
         <field name="quantityOnHandVar" title="${uiLabelMap.ProductProductQOHVar}" event="onchange" action="document.ListPhysicalInventory._rowSubmit_o_${itemIndex}.checked = true"><text size="6"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit/>
         </field>
     </form>
@@ -609,8 +609,8 @@ under the License.
             </display-entity>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="removeGroupFromFacility" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="facilityId"/>
                 <parameter param-name="facilityGroupId"/>
@@ -627,7 +627,7 @@ under the License.
                 <entity-options entity-name="FacilityGroup" key-field-name="facilityGroupId" description="${facilityGroupName}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <!-- FacilityParty -->
@@ -642,7 +642,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="removePartyFromFacility" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="facilityId"/>
                 <parameter param-name="partyId"/>
@@ -663,7 +663,7 @@ under the License.
                 <entity-options entity-name="RoleType" description="${description}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListInventoryItemTotals" type="list" target="" title="" list-name="inventoryItemTotals"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar"
@@ -849,7 +849,7 @@ under the License.
         <field name="receiveDate"><display also-hidden="false"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><hidden value="IXF_COMPLETE"/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_complete}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_complete}">
             <submit/>
         </field>
     </form>
@@ -878,7 +878,7 @@ under the License.
         </field>
         <field name="dataResourceName" title="${uiLabelMap.CommonUpload}"><file/></field>
         <field name="contentIdFrom" title="${uiLabelMap.ContentCompDocParentContentId}"><lookup target-form-name="LookupContent"/></field>
-        <field name="createAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="createAction" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListFacilityContent" type="list" list-name="facilityContentDetails" 
@@ -893,7 +893,7 @@ under the License.
         <field name="mimeTypeId"><display/></field>
         <field name="contentTypeId" title="${uiLabelMap.FormFieldTitle_contentTypeId}"><display-entity entity-name="ContentType" also-hidden="false"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteFacilityContent">
                 <parameter param-name="facilityId"/>
                 <parameter param-name="contentId"/>
@@ -926,7 +926,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="selectAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="selectAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListFacilityAgreements" type="list" list-name="facilityAgreements"

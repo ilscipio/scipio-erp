@@ -60,12 +60,12 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="deleteGoogleCheckoutConfiguration" title="" widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteGoogleCheckoutConfiguration" title="" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteGoogleCheckoutConfiguration" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="productStoreId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <form name="AddGoogleCheckoutConfiguration" type="single" target="createGoogleCheckoutConfiguration" title="">
@@ -108,7 +108,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
         
     <form name="ListGoogleCheckoutShippingMethods" type="list" list-name="googleCheckoutShippingMethods" target="updateGoogleCheckoutShippingMethod"
@@ -136,13 +136,13 @@ under the License.
                 <entity-options entity-name="ShipmentMethodType" key-field-name="shipmentMethodTypeId" description="${description}"/>
             </drop-down>
         </field>
-        <field name="deleteGoogleCheckoutShippingMethod" title="" widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteGoogleCheckoutShippingMethod" title="" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteGoogleCheckoutShippingMethod" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="shipmentMethodName"/>
                 <parameter param-name="productStoreId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <form name="AddGoogleCheckoutShippingMethod" type="single" target="createGoogleCheckoutShippingMethod" title="">
@@ -169,6 +169,6 @@ under the License.
                 <entity-options entity-name="ShipmentMethodType" description="${description}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 </forms>

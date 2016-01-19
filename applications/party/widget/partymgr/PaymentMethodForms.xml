@@ -25,13 +25,13 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="partyId"><hidden/></field>
         <field name="avsDeclineString" title="${uiLabelMap.PartyAvsString}"><text size="60" maxlength="250"/></field>
-        <field name="submitAction" title="[${uiLabelMap.CommonSave}]" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="[${uiLabelMap.CommonSave}]" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}"><hyperlink target="backHome" also-hidden="false" description="[${uiLabelMap.CommonCancelDone}]"/></field>
     </form>
     
     <form name="EditBillingAccount" type="single" target="updateBillingAccount" extends="EditBillingAccount" extends-resource="component://accounting/widget/BillingAccountForms.xml">
         <field name="submitAction"><hidden/></field>
-        <field name="saveAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="saveAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">
             <hyperlink target="viewprofile" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="partyId" from-field="partyId"/>

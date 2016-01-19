@@ -117,7 +117,7 @@ ${virtualJavaScript!}
               <input type="text" size="5" name="quantity" value="1"/>
               <input type="hidden" name="clearSearch" value="N"/>
               <input type="hidden" name="mainSubmitted" value="Y"/>
-              <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}form.submit()" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
+              <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}form.submit()" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
             <#if mainProducts?has_content>
                 <input type="hidden" name="product_id" value=""/>
                 <select name="productVariantId" onchange="javascript:displayProductVirtualId(this.value, '${product.productId}', this.form);">
@@ -139,7 +139,7 @@ ${virtualJavaScript!}
                   <input type="hidden" name="quantity" value="${prodCatMem.quantity!}"/>
                   <input type="hidden" name="clearSearch" value="N"/>
                   <input type="hidden" name="mainSubmitted" value="Y"/>
-                  <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}defaultform.submit()" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
+                  <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}defaultform.submit()" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
                 </form>
                 <#assign productCategory = delegator.findOne("ProductCategory", Static["org.ofbiz.base.util.UtilMisc"].toMap("productCategoryId", prodCatMem.productCategoryId), false)/>
                 <#if productCategory.productCategoryTypeId != "BEST_SELL_CATEGORY">
@@ -148,7 +148,7 @@ ${virtualJavaScript!}
                       <input type="hidden" name="quantity" value="${prodCatMem.quantity!}"/>
                       <input type="hidden" name="clearSearch" value="N"/>
                       <input type="hidden" name="mainSubmitted" value="Y"/>
-                      <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}defaultform.submit()" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
+                      <a href="javascript:document.the${requestAttributes.formNamePrefix!}${requestAttributes.listIndex!}defaultform.submit()" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
                     </form>
                 </#if>
               </#if>
@@ -223,7 +223,7 @@ ${virtualJavaScript!}
               <input type="hidden" name="productId" value="${product.productId}"/>
               <input type="hidden" name="mainSubmitted" value="Y"/>
           </form>
-          <a href="javascript:document.addToCompare${requestAttributes.listIndex!}form.submit()" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.ProductAddToCompare}</a>
+          <a href="javascript:document.addToCompare${requestAttributes.listIndex!}form.submit()" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.ProductAddToCompare}</a>
         </div>
     </div>
 <#else>

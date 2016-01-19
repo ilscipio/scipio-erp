@@ -61,7 +61,7 @@ function insertImageName(size,nameValue) {
             <@td>${productContentType.description?default(productContent.confItemContentTypeId)}</@td>
             <@td>${productContent.fromDate?default("N/A")}</@td>
             <@td>${productContent.thruDate?default("N/A")}</@td>
-            <@td><a href="<@ofbizUrl>removeContentFromProductConfigItem?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
+            <@td><a href="<@ofbizUrl>removeContentFromProductConfigItem?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
             <@td><a href="/content/control/EditContent?contentId=${productContent.contentId}&amp;externalLoginKey=${requestAttributes.externalLoginKey!}" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.ProductEditContent} ${entry.content.contentId}</@td>
          </@tr>
          </#list>
@@ -96,9 +96,9 @@ function insertImageName(size,nameValue) {
                     <#if configItemId?has_content>
                         <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                        <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="${styles.link_action_local!} ${styles.action_add!}">.jpg</a>
-                        <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="${styles.link_action_local!} ${styles.action_add!}">.gif</a>
-                        <a href="javascript:insertImageName('small','');" class="${styles.link_action_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
+                        <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="${styles.link_run_local!} ${styles.action_add!}">.jpg</a>
+                        <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="${styles.link_run_local!} ${styles.action_add!}">.gif</a>
+                        <a href="javascript:insertImageName('small','');" class="${styles.link_run_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
                         </div>
                     </#if>
                 </@field>
@@ -112,7 +112,7 @@ function insertImageName(size,nameValue) {
             <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductConfigItemImage?configItemId=${configItemId}&amp;upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
                 <@field type="file" size="50" name="fname" />
                 <@field type="submitarea">
-                    <input type="submit" class="${styles.link_action_sys!} ${styles.action_import!}" value="${uiLabelMap.ProductUploadImage}" />
+                    <input type="submit" class="${styles.link_run_sys!} ${styles.action_import!}" value="${uiLabelMap.ProductUploadImage}" />
                 </@field>
             </form>
     </@section>

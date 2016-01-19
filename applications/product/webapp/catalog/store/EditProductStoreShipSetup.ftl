@@ -30,7 +30,7 @@ under the License.
             </select>
         </@field>
         <@field type="submitarea">
-            <input type="submit" class="${styles.link_action_sys!} ${styles.action_add!}" value="${uiLabelMap.CommonAdd}"/>
+            <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.CommonAdd}"/>
         </@field>
       </@fields>
     </form>

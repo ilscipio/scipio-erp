@@ -54,7 +54,7 @@ under the License.
           </#if>
           <input type="button" name="processButton" value="${uiLabelMap.OrderSubmitOrder}" onclick="processOrder();" class="mediumSubmit" />
         </form>
-        <#-- doesn't work with Safari, seems to work with IE, Mozilla <a href="#" onclick="processOrder();" class="${styles.link_action_sys!} ${styles.action_update!}">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a> -->
+        <#-- doesn't work with Safari, seems to work with IE, Mozilla <a href="#" onclick="processOrder();" class="${styles.link_run_sys!} ${styles.action_update!}">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a> -->
       </@td>
     </@tr>
   </@table>

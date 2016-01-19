@@ -20,7 +20,7 @@
                           <option value="${facility.facilityId}">${facility.facilityName}</option>
                         </#list>
                       </select>
-                      <input type="submit" class="${styles.link_action_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderQuickReceivePurchaseOrder}"/>
+                      <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.OrderQuickReceivePurchaseOrder}"/>
                      </form>
                   </@menuitem>
                   <@menuitem type="generic">
@@ -35,7 +35,7 @@
                         </#list>
                       </select>
                       </form>
-                      <a href="javascript:document.receivePurchaseOrderForm.submit()" class="${styles.link_action_sys!} ${styles.action_receive!}">${uiLabelMap.CommonReceive}</a>
+                      <a href="javascript:document.receivePurchaseOrderForm.submit()" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.CommonReceive}</a>
                   </@menuitem>
               <#else>
                   <@menuitem type="generic">
@@ -48,7 +48,7 @@
                         </#list>
                       </select>
                     </form>
-                    <a href="javascript:document.receiveInventoryForm.submit()" class="${styles.link_action_sys!} ${styles.action_receive!}">${uiLabelMap.OrderQuickReceivePurchaseOrder}</a>
+                    <a href="javascript:document.receiveInventoryForm.submit()" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.OrderQuickReceivePurchaseOrder}</a>
                   </@menuitem>
                   <@menuitem type="generic">
                     <form name="partialReceiveInventoryForm" action="/facility/control/ReceiveInventory" method="post">
@@ -61,7 +61,7 @@
                          </#list>
                        </select>
                     </form>
-                    <a href="javascript:document.partialReceiveInventoryForm.submit()" class="${styles.link_action_sys!} ${styles.action_receive!}">${uiLabelMap.CommonReceive}</a>
+                    <a href="javascript:document.partialReceiveInventoryForm.submit()" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.CommonReceive}</a>
                   </@menuitem>
               </#if>
               
@@ -74,7 +74,7 @@
                         <option value="${facility.facilityId}">${facility.facilityName}</option>
                       </#list>
                     </select>
-                    <input type="submit" class="${styles.link_action_sys!} ${styles.action_complete!}" value="${uiLabelMap.OrderForceCompletePurchaseOrder}"/>
+                    <input type="submit" class="${styles.link_run_sys!} ${styles.action_complete!}" value="${uiLabelMap.OrderForceCompletePurchaseOrder}"/>
                     </form>
                   </@menuitem>
               </#if>

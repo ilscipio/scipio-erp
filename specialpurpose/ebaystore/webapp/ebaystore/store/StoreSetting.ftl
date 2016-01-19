@@ -386,7 +386,7 @@ under the License.
                     </select>
             </@field>
             <@field type="generic" label="">
-                <input type="submit" value="${uiLabelMap.CommonSubmit}" name="submitButton" class="${styles.link_action_sys!} ${styles.action_update!}" />
+                <input type="submit" value="${uiLabelMap.CommonSubmit}" name="submitButton" class="${styles.link_run_sys!} ${styles.action_update!}" />
             </@field>
 
       <@script>

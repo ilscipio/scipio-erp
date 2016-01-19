@@ -60,7 +60,7 @@ under the License.
         <field name="contentAssocTypeId"><hidden value="SUB_CONTENT"/></field>
         <field name="contentName" title="${uiLabelMap.ContentBlogName}"><text size="30" maxlength="60"/></field>
         <field name="description" title="${uiLabelMap.ContentBlogDescription}"><text size="30" maxlength="60"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="EditArticle" target="createBlogArticle" title="" type="upload" skip-end="true" default-map-name="blogEntry"
@@ -85,7 +85,7 @@ under the License.
                 <option key="CTNT_INITIAL_DRAFT" description="${uiLabelMap.ContentBlogPreview}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
 

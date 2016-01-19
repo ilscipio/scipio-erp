@@ -38,14 +38,14 @@ under the License.
               <@td>${pContent.fromDate!}</@td>
               <@td class="button-col">
                 <#if (content.contentName?has_content)>
-                    <a href="<@ofbizUrl>img/${content.contentName}?imgId=${(content.dataResourceId)!}</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
+                    <a href="<@ofbizUrl>img/${content.contentName}?imgId=${(content.dataResourceId)!}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
                 </#if>
                 <form name="removePartyContent_${pContent_index}" method="post" action="<@ofbizUrl>removePartyContent/viewprofile</@ofbizUrl>">
                   <input type="hidden" name="contentId" value="${pContent.contentId}" />
                   <input type="hidden" name="partyId" value="${pContent.partyId}" />
                   <input type="hidden" name="partyContentTypeId" value="${pContent.partyContentTypeId}" />
                   <input type="hidden" name="fromDate" value="${pContent.fromDate}" />
-                  <a href="javascript:document.removePartyContent_${pContent_index}.submit()" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
+                  <a href="javascript:document.removePartyContent_${pContent_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
                 </form>
               </@td>
             </@tr>

@@ -75,7 +75,7 @@ under the License.
             <@htmlTemplate.lookupField value="${orderId!}" formName="ReceiveInventoryAgainstPurchaseOrder" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupOrderHeaderAndShipInfo"/>
         </span>
         <span>${uiLabelMap.ProductOrderShipGroupId}</span>&nbsp;<input type="text" size="20" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
-        <input type="submit" value="${uiLabelMap.CommonSelect}" class="${styles.link_action_sys!} ${styles.action_select!}"/>
+        <input type="submit" value="${uiLabelMap.CommonSelect}" class="${styles.link_run_sys!} ${styles.action_select!}"/>
     </div>
 </form>
 
@@ -180,7 +180,7 @@ under the License.
                                     </select>
                                 </@td>
                                 <@td align="right">
-                                    <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;productId=${product.productId}</@ofbizUrl>" class="${styles.link_action_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
+                                    <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;productId=${product.productId}</@ofbizUrl>" class="${styles.link_run_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
                                 </@td>
                                 <@td align="right">
                                   <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'orderItemData_tableRow_${rowCount}');" />
@@ -193,15 +193,15 @@ under the License.
                       <@tfoot>
                         <@tr>
                             <@td colspan="11" align="right">
-                                <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;clearAll=Y</@ofbizUrl>" class="${styles.link_action_local!} ${styles.action_clear!}">${uiLabelMap.CommonClearAll}</a>
+                                <a href="<@ofbizUrl>ReceiveInventoryAgainstPurchaseOrder?shipmentId=${shipmentId}&amp;purchaseOrderId=${orderId}&amp;clearAll=Y</@ofbizUrl>" class="${styles.link_run_local!} ${styles.action_clear!}">${uiLabelMap.CommonClearAll}</a>
                             </@td>
                             <@td align="right">
-                                <a class="${styles.link_action_sys!} ${styles.action_receive!}" href="javascript:populateQuantities(${rowCount - 1});document.selectAllForm.submit();">${uiLabelMap.ProductReceiveItem}</a>
+                                <a class="${styles.link_run_sys!} ${styles.action_receive!}" href="javascript:populateQuantities(${rowCount - 1});document.selectAllForm.submit();">${uiLabelMap.ProductReceiveItem}</a>
                             </@td>
                         </@tr>
                         <@tr>
                             <@td colspan="12" align="right">
-                                <a class="${styles.link_action_sys!} ${styles.action_update!}" href="<@ofbizUrl>completePurchaseOrder?orderId=${orderId}&amp;facilityId=${facilityId}&amp;shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.OrderForceCompletePurchaseOrder}</a>
+                                <a class="${styles.link_run_sys!} ${styles.action_update!}" href="<@ofbizUrl>completePurchaseOrder?orderId=${orderId}&amp;facilityId=${facilityId}&amp;shipmentId=${shipmentId}</@ofbizUrl>">${uiLabelMap.OrderForceCompletePurchaseOrder}</a>
                             </@td>
                         </@tr>
                       </@tfoot>
@@ -221,7 +221,7 @@ under the License.
                     <input type="text" size="20" id="productId" name="productId" value=""/>
                         @
                     <input type="text"  name="quantity" size="6" maxlength="6" value="1" tabindex="0"/>
-                    <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_action_sys!} ${styles.action_add!}"/>
+                    <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
                 </div>
             </form>
             <@script>

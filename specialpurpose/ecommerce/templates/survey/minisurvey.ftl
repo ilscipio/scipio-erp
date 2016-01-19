@@ -116,6 +116,6 @@ under the License.
     </@tr>
   </#list>
   <@tr>
-    <@td align="center"><input type="submit" value="<#if survey.submitCaption?has_content>${survey.submitCaption}<#else>Submit</#if>" class="${styles.link_action_sys!} ${styles.action_add!}"/></@td>
+    <@td align="center"><input type="submit" value="<#if survey.submitCaption?has_content>${survey.submitCaption}<#else>Submit</#if>" class="${styles.link_run_sys!} ${styles.action_add!}"/></@td>
   </@tr>
 </@table>

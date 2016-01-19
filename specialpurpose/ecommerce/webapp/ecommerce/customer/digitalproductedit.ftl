@@ -53,7 +53,7 @@ under the License.
     </@tr>
     <@tr>
       <@td width="26%" align="right" valign="top">&nbsp;</@td>
-      <@td width="74%"><a href="javascript:document.editdigitaluploadform.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a></@td>
+      <@td width="74%"><a href="javascript:document.editdigitaluploadform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a></@td>
     </@tr>
   </@table>
   </form>
@@ -65,7 +65,7 @@ under the License.
         <#list productContentAndInfoList as productContentAndInfo>
             <div>
               ${productContentAndInfo.contentName} (${uiLabelMap.CommonSince}: ${productContentAndInfo.fromDate})
-              <a href="<@ofbizUrl>removeCustomerDigitalDownloadProductFile?contentId=${productContentAndInfo.contentId}&amp;productContentTypeId=${productContentAndInfo.productContentTypeId}&amp;fromDate=${productContentAndInfo.fromDate}&amp;productId=${parameters.productId}&amp;currencyUomId=${parameters.currencyUomId}&amp;minimumOrderQuantity=${parameters.minimumOrderQuantity}&amp;availableFromDate=${parameters.availableFromDate}</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
+              <a href="<@ofbizUrl>removeCustomerDigitalDownloadProductFile?contentId=${productContentAndInfo.contentId}&amp;productContentTypeId=${productContentAndInfo.productContentTypeId}&amp;fromDate=${productContentAndInfo.fromDate}&amp;productId=${parameters.productId}&amp;currencyUomId=${parameters.currencyUomId}&amp;minimumOrderQuantity=${parameters.minimumOrderQuantity}&amp;availableFromDate=${parameters.availableFromDate}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
             </div>
         </#list>
 
@@ -82,7 +82,7 @@ under the License.
               <option value="${ownerContentAndRole.contentId}">${ownerContentAndRole.contentName}</option>
             </#list>
           </select>
-          <a href="javascript:document.adddigitaluploadfile.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonAdd}</a>
+          <a href="javascript:document.adddigitaluploadfile.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonAdd}</a>
         </form>
         </div>
     &nbsp;<a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBackToList}</a>

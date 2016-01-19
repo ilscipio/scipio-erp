@@ -60,7 +60,7 @@ under the License.
         <field name="locatedAtFacilityId"><lookup target-form-name="LookupFacility"/></field>
         <field name="locatedAtLocationSeqId"><lookup target-form-name="LookupFacilityLocation"/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="EditComputerSoftware" type="single" target="updateComputerSoftware" title="" default-map-name="fixedAsset">
         <alt-target use-when="fixedAsset==null" target="createComputerSoftware"/>
@@ -101,11 +101,11 @@ under the License.
         <field name="locatedAtFacilityId"><lookup target-form-name="LookupFacility"/></field>
         <field name="locatedAtLocationSeqId"><lookup target-form-name="LookupFacilityLocation"/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="FindComputerHardwareOptions" extends="LookupComputerHardware" extends-resource="component://assetmaint/widget/ismgr/FieldLookupForms.xml" target="ListComputerHardware">
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <!-- list all Computer Hardware in a tabular format -->
     <form name="ListComputerHardware" type="list" list-name="listIt" paginate-target="ListFixedAssets"
@@ -136,7 +136,7 @@ under the License.
     </form>
 
     <form name="FindComputerSoftwareOptions" extends="LookupComputerSoftware" extends-resource="component://assetmaint/widget/ismgr/FieldLookupForms.xml" target="ListComputerSoftware">
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <!-- list all Computer Software in a tabular format -->

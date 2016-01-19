@@ -129,7 +129,7 @@ under the License.
                     <@tfoot>
                     <@tr>
                         <@td colspan="13" align="right">
-                            <a href="javascript:document.selectAllForm.submit();" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.ProductConfirmSelectedMoves}</a>
+                            <a href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductConfirmSelectedMoves}</a>
                         </@td>
                     </@tr>
                     </@tfoot>
@@ -167,7 +167,7 @@ under the License.
                     <input type="text" name="quantityMoved" size="6" />
                 </@field>
                  <@field type="submitarea">
-                    <a href="javascript:document.quickStockMove.submit();" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.ProductQuickStockMove}</a>
+                    <a href="javascript:document.quickStockMove.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductQuickStockMove}</a>
                 </@field>
         </form>
 </@section>

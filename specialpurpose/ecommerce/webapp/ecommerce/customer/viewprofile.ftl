@@ -131,13 +131,13 @@ under the License.
                   <#if contactMechPurposeType??>
                     ${contactMechPurposeType.get("description",locale)}
                     <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (profiledefs.defaultShipAddr)?default("") == contactMech.contactMechId>
-                      <span class="${styles.link_action_sys!} ${styles.action_updatestatus!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
+                      <span class="${styles.link_run_sys!} ${styles.action_updatestatus!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
                     <#elseif contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION">
                       <form name="defaultShippingAddressForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
                         <input type="hidden" name="productStoreId" value="${productStoreId}" />
                         <input type="hidden" name="defaultShipAddr" value="${contactMech.contactMechId}" />
                         <input type="hidden" name="partyId" value="${party.partyId}" />
-                        <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_action_sys!} ${styles.action_updatestatus!}" />
+                        <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
                       </form>
                     </#if>
                   <#else>
@@ -185,7 +185,7 @@ under the License.
                 </div>
               <#elseif contactMech.contactMechTypeId! = "EMAIL_ADDRESS">
                   ${contactMech.infoString}
-                  <a href="mailto:${contactMech.infoString}" class="${styles.link_action_sys!} ${styles.action_send!} ${styles.action_external!}">(${uiLabelMap.PartySendEmail})</a>
+                  <a href="mailto:${contactMech.infoString}" class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}">(${uiLabelMap.PartySendEmail})</a>
               <#elseif contactMech.contactMechTypeId! = "WEB_ADDRESS">
                 <div>
                   ${contactMech.infoString}
@@ -306,13 +306,13 @@ under the License.
                 </@td>
                 <@td align="right" valign="top">
                   <#if (profiledefs.defaultPayMeth)?default("") == paymentMethod.paymentMethodId>
-                    <span class="${styles.link_action_sys!} ${styles.action_updatestatus!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
+                    <span class="${styles.link_run_sys!} ${styles.action_updatestatus!} ${styles.disabled!}">${uiLabelMap.EcommerceIsDefault}</span>
                   <#else>
                     <form name="defaultPaymentMethodForm" method="post" action="<@ofbizUrl>setprofiledefault/viewprofile</@ofbizUrl>">
                       <input type="hidden" name="productStoreId" value="${productStoreId}" />
                       <input type="hidden" name="defaultPayMeth" value="${paymentMethod.paymentMethodId}" />
                       <input type="hidden" name="partyId" value="${party.partyId}" />
-                      <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_action_sys!} ${styles.action_updatestatus!}" />
+                      <input type="submit" value="${uiLabelMap.EcommerceSetDefault}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
                     </form>
                   </#if>
                 </@td>
@@ -336,7 +336,7 @@ under the License.
       <div>
       <input type="hidden" name="partyId" value="${party.partyId}"/>
       ${screens.render("component://order/widget/ordermgr/OrderEntryOrderScreens.xml#customertaxinfo")}
-      <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_action_sys!} ${styles.action_add!}"/>
+      <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
       </div>
     </form>
   </div>
@@ -445,7 +445,7 @@ under the License.
             <option value="${mimeType.mimeTypeId}">${mimeType.get("description", locale)?default(mimeType.mimeTypeId)}</option>
           </#list>
         </select>
-        <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_action_sys!} ${styles.action_import!}"/>
+        <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_import!}"/>
         </div>
       </form>
     </div>
@@ -492,7 +492,7 @@ under the License.
               <input type="hidden" name="preferredContactMechId" value="${contactListParty.preferredContactMechId}"/>
               <input type="hidden" name="fromDate" value="${contactListParty.fromDate}"/>
               <input type="hidden" name="statusId" value="CLPT_REJECTED"/>
-              <input type="submit" value="${uiLabelMap.EcommerceUnsubscribe}" class="${styles.link_action_sys!} ${styles.action_remove!}"/>
+              <input type="submit" value="${uiLabelMap.EcommerceUnsubscribe}" class="${styles.link_run_sys!} ${styles.action_remove!}"/>
               </div>
             </form>
           <#elseif (contactListParty.statusId! == "CLPT_PENDING")>
@@ -504,7 +504,7 @@ under the License.
               <input type="hidden" name="fromDate" value="${contactListParty.fromDate}"/>
               <input type="hidden" name="statusId" value="CLPT_ACCEPTED"/>
               <input type="text" size="10" name="optInVerifyCode" value="" class="inputBox"/>
-              <input type="submit" value="${uiLabelMap.EcommerceVerifySubscription}" class="${styles.link_action_sys!} ${styles.action_update!}"/>
+              <input type="submit" value="${uiLabelMap.EcommerceVerifySubscription}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
               </div>
             </form>
           <#elseif (contactListParty.statusId! == "CLPT_REJECTED")>
@@ -515,7 +515,7 @@ under the License.
               <input type="hidden" name="preferredContactMechId" value="${contactListParty.preferredContactMechId}"/>
               <input type="hidden" name="fromDate" value="${contactListParty.fromDate}"/>
               <input type="hidden" name="statusId" value="CLPT_PENDING"/>
-              <input type="submit" value="${uiLabelMap.EcommerceSubscribe}" class="${styles.link_action_sys!} ${styles.action_add!}"/>
+              <input type="submit" value="${uiLabelMap.EcommerceSubscribe}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
               </div>
             </form>
           </#if>
@@ -542,7 +542,7 @@ under the License.
             <option value="${partyAndContactMech.contactMechId}"><#if partyAndContactMech.infoString?has_content>${partyAndContactMech.infoString}<#elseif partyAndContactMech.tnContactNumber?has_content>${partyAndContactMech.tnCountryCode!}-${partyAndContactMech.tnAreaCode!}-${partyAndContactMech.tnContactNumber}<#elseif partyAndContactMech.paAddress1?has_content>${partyAndContactMech.paAddress1}, ${partyAndContactMech.paAddress2!}, ${partyAndContactMech.paCity!}, ${partyAndContactMech.paStateProvinceGeoId!}, ${partyAndContactMech.paPostalCode!}, ${partyAndContactMech.paPostalCodeExt!} ${partyAndContactMech.paCountryGeoId!}</#if></option>
           </#list>
         </select>
-        <input type="submit" value="${uiLabelMap.EcommerceSubscribe}" class="${styles.link_action_sys!} ${styles.action_add!}"/>
+        <input type="submit" value="${uiLabelMap.EcommerceSubscribe}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
         </div>
       </form>
     </div>

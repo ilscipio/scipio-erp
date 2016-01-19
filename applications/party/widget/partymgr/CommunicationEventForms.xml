@@ -120,7 +120,7 @@ under the License.
 
         <field name="note" title="${uiLabelMap.CommonNote}" position-span="0"><textarea cols="60" rows="3"/></field>
         <field name="messageId" use-when="communicationEvent!=null"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="EditEmail" type="single" target="createCommunicationEvent" default-map-name="communicationEvent" id="EditEmail">
         <actions>
@@ -173,13 +173,13 @@ under the License.
         <field name="subject"><text size="74" default-value="${parameters.subject}"/></field>
         <field name="contentMimeTypeId"><hidden value="text/plain"/></field>
         <field name="content" title="${uiLabelMap.CommonContent}" encode-output="false"><textarea cols="72" rows="15" default-value="${parameters.content}"/></field>
-        <field name="sendAction" title=" " position="1" use-when="communicationEvent!=null" widget-style="${styles.link_action_sys} ${styles.action_send}">
+        <field name="sendAction" title=" " position="1" use-when="communicationEvent!=null" widget-style="${styles.link_run_sys} ${styles.action_send}">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonSend}" target="javascript:(document.EditEmail.form.value='list'),(document.EditEmail.submit())"/>
         </field>
-        <field name="saveAction" title=" " position="2" use-when="communicationEvent!=null" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="saveAction" title=" " position="2" use-when="communicationEvent!=null" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.CommonSave}" target="javascript:(document.EditEmail.form.value='list'),(document.EditEmail.statusId.value='COM_PENDING'),(document.EditEmail.submit())"/>
         </field>
-        <field name="createAction" use-when="communicationEvent==null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
+        <field name="createAction" use-when="communicationEvent==null" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="EditInternalNote" type="single" target="createCommunicationEvent" default-map-name="communicationEvent">
         <actions>
@@ -204,15 +204,15 @@ under the License.
         <field name="subject"><text size="60"/></field>
         <field name="contentMimeTypeId"><hidden value="text/plain"/></field>
         <field name="content" title="${uiLabelMap.CommonContent}" encode-output="false"><textarea cols="72" rows="15" default-value="${parameters.content}"/></field>
-        <field name="sendAction" title=" " position="1" use-when="communicationEvent!=null" widget-style="${styles.link_action_sys} ${styles.action_send}">
+        <field name="sendAction" title=" " position="1" use-when="communicationEvent!=null" widget-style="${styles.link_run_sys} ${styles.action_send}">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.CommonSend}"
                 target="javascript:(document.EditInternalNote.form.value='list'),(document.EditInternalNote.statusId.value='COM_ENTERED'),(document.EditInternalNote.datetimeStarted.value='${nowDate}'),(document.EditInternalNote.submit())"/>
         </field>
-        <field name="saveAction" title=" " position="2" use-when="communicationEvent!=null" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="saveAction" title=" " position="2" use-when="communicationEvent!=null" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <hyperlink also-hidden="true" target-type="plain" description="${uiLabelMap.CommonSave}" target="javascript:(document.EditInternalNote.form.value='list'),(document.EditInternalNote.submit())"/>
         </field>
-        <field name="createAction" use-when="communicationEvent==null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
+        <field name="createAction" use-when="communicationEvent==null" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
 
     <form name="ViewEmail" type="single" default-map-name="communicationEvent">
@@ -396,7 +396,7 @@ under the License.
             </drop-down>
         </field-->
         <field map-name="subjectMap" name="subject"><text-find/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListCommEvents" type="list" paginate="true" list-name="commEvents"
@@ -454,7 +454,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListCommunicationByOrder" type="list" list-name="listIt" extends="ListCommEvents" header-row-style="header-row-2">
@@ -550,7 +550,7 @@ under the License.
         </field>
         <field name="entryDate" sort-field="true"><display type="date-time"/></field>
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
-        <field name="removeAction" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
+        <field name="removeAction" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="ListPendingCommEvents" type="list" extends="ListCommEvents" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <actions>
@@ -579,7 +579,7 @@ under the License.
         <field name="_rowSubmit" title="${uiLabelMap.CommonYes}">
             <check/>
         </field>
-        <field name="deleteSelectedAction" widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteSelectedAction" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <submit />
         </field>
     </form>
@@ -609,7 +609,7 @@ under the License.
                 <field-map field-name="viewSize" from-field="viewSize"/>
             </service>
         </actions>
-        <field name="removeAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
+        <field name="removeAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
 
     <form name="ListCommWorkEfforts" type="list" paginate-target="ListCommWorkEfforts"
@@ -635,7 +635,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="communicationEventId"><display/></field>
         <field name="workEffortId"  use-when="workEffort==null&amp;&amp;workEffortId==null" ><lookup target-form-name="LookupWorkEffort"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <sort-order>
             <sort-field name="communicationEventId"/>
             <banner left-text="${uiLabelMap.WorkEffortBannerAddWorkEffortAndAssoc1}"/>
@@ -654,7 +654,7 @@ under the License.
         <field name="communicationEventPrpTypId">
             <display-entity description="${description}" entity-name="CommunicationEventPrpTyp"/>
         </field>
-        <field name="removeAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="removeAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeCommunicationEventPurpose">
                 <parameter param-name="communicationEventPrpTypId"/>
                 <parameter param-name="communicationEventId"/>
@@ -673,7 +673,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.PartyAddPurpose}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PartyAddPurpose}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListCommRoles" type="list" paginate-target="UpdateCommRoles" target="RemoveCommunicationEventRole"
@@ -694,7 +694,7 @@ under the License.
         <field name="contactMechId"><display-entity description="${infoString}" entity-name="ContactMech"/></field>
         <field name="roleTypeId"><display-entity description="${description}" entity-name="RoleType"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
-        <field name="removeAction" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
+        <field name="removeAction" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
     
     <form name="ListCommRolesInline" extends="ListCommRoles" hide-table-when="${!formHasListResult}" use-alternate-text-when="${false}" paginate="false">
@@ -729,7 +729,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_add}">
+        <field name="submitAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_add}">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.PartyAddRole}"
                 target="${AddEventRole_submitAction}"/>
@@ -755,7 +755,7 @@ under the License.
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit button-type="text-link"/></field>
+        <field name="deleteAction" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit button-type="text-link"/></field>
     </form>
 
     <form name="addCommContent" type="single" target="createCommContentDataResource"
@@ -788,7 +788,7 @@ under the License.
                 <option key="N" description="${uiLabelMap.CommonN}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="editCommContent" type="single" target="updateCommContentDataResource" default-map-name="commEventContentDataResource"
@@ -859,7 +859,7 @@ under the License.
         </field>
       -->
 
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="uploadCommContent" type="upload" target="uploadCommEventContent" default-map-name="commEventContentDataResource">
@@ -872,7 +872,7 @@ under the License.
         <field name="drObjectInfo"><text/></field>
         <!-- would show previous file name... doesn't make too much sense <field name="objectInfo" title="File Name" map-name="dataResource"><display also-hidden="false"/></field> -->
         <field name="imageData" map-name="empty"><file/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action_sys} ${styles.action_import}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_run_sys} ${styles.action_import}"><submit/></field>
     </form>
     
     <form name="uploadContent" type="upload" target="uploadAttachFiletoEmail"
@@ -898,7 +898,7 @@ under the License.
         <field name="contentId" title="${uiLabelMap.FormFieldTitle_existContentId}"><lookup target-form-name="LookupTreeContent"/></field>
         <field name="uploadedFile"><file/></field>
         <field name="contentIdFrom" title="${uiLabelMap.ContentCompDocParentContentId}"><lookup target-form-name="LookupDetailContentTree"/></field>        
-        <field name="sendAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_import}">
+        <field name="sendAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_import}">
             <hyperlink also-hidden="true"
                 target-type="plain" description="${uiLabelMap.CommonUpload}"
                 target="${uploadContent_submitAction}"/>
@@ -908,7 +908,7 @@ under the License.
     </form>
     <form name="uploadContent1" type="upload" extends="uploadContent" target="uploadAttachFile">
         <field name="send"><ignored/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_action_sys} ${styles.action_import}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_run_sys} ${styles.action_import}"><submit/></field>
     </form>      
 
     <form name="editCommTextContent" type="single" target="uploadCommEventContent" default-map-name="commEventContentDataResource"
@@ -920,7 +920,7 @@ under the License.
         <field name="communicationEventId"><hidden/></field>
         <field name="fromDate"><hidden/></field>
         <field name="textData" map-name="electronicText" title="${uiLabelMap.FormFieldTitle_textDataTitle}"><textarea rows="30" cols="60"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
 
     <form name="ListMyUnknownPartyEmails" type="multi" use-row-submit="true"
@@ -946,7 +946,7 @@ under the License.
         </field>
         <field name="note" widget-area-style="fieldWidth200"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonYes}"><check/></field>
-        <field name="deleteSelectedAction" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
+        <field name="deleteSelectedAction" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
 
     <form name="allocateMsgToPartyForm" type="single" target="allocateMsgToParty" title="create a new party for a unknown incoming email address">
@@ -962,7 +962,7 @@ under the License.
         <field name="firstName" position="1"><text/></field>
         <field name="middleName" position="2"><text/></field>
         <field name="lastName"><text/></field>
-        <field name="submit" title="${uiLabelMap.PartyCreateAddEmail}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submit" title="${uiLabelMap.PartyCreateAddEmail}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="deleteEmail" type="single" title="delete the email"
         target="deleteUnknownCommunicationEvent">
@@ -971,7 +971,7 @@ under the License.
         <field name="delContentDataResource"><hidden value="Y"/></field>
         <field name="dummy1" title=" " position="1"><display/></field>
         <field name="dummy2" title=" " position="2"><display/></field>
-        <field name="deleteEmail" widget-style="${styles.link_action_sys} ${styles.action_remove}" position="3"><submit/></field>
+        <field name="deleteEmail" widget-style="${styles.link_run_sys} ${styles.action_remove}" position="3"><submit/></field>
     </form>
     <form name="EditRequestFromCommEvent" type="single" target="createRequestFromCommEvent" default-map-name="communicationEvent">
         <field name="communicationEventId"><hidden value="${parameters.communicationEventId}"/></field>
@@ -986,7 +986,7 @@ under the License.
         <field name="custRequestName" entry-name="subject"><text size="60"/></field>
         <field name="contentMimeTypeId"><hidden/></field>
         <field name="content" title="${uiLabelMap.CommonContent}"><textarea cols="70" rows="20"/></field>
-        <field name="submit" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submit" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListRequests" extends="ListRequests" extends-resource="component://order/widget/ordermgr/CustRequestForms.xml">
         <field name="custRequestName">
@@ -1004,7 +1004,7 @@ under the License.
                 <option key="false" description="${uiLabelMap.CommonFalse}"/>
                 <option key="true" description="${uiLabelMap.CommonTrue}"/>
             </drop-down></field>
-        <field name="updateAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="updateAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
 
     <form name="ListDraftEmails" type="list" extends="ListCommEvents" extends-resource="component://party/widget/partymgr/CommunicationEventForms.xml" target="deleteCommunicationEvent"
@@ -1019,12 +1019,12 @@ under the License.
                 <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
             </hyperlink>
         </field>
-        <field name="removeAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
+        <field name="removeAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="ListProgressEmails" type="list" extends="ListPartyCommEvents" list-name="commEventProgress">
         <field name="partyIdFrom"><ignored/></field>
         <field name="startDate"><display type="date-time"/></field>
-        <field name="removeAction" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
+        <field name="removeAction" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="ListCommOrders" list-name="ordersList" type="list" target="deleteCommunicationEventOrder" paginate-target="UpdateCommOrders" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" view-size="20">
         <actions>
@@ -1046,12 +1046,12 @@ under the License.
         <field name="createdBy" title="${uiLabelMap.CommonCreatedBy}">
             <display description="${orderHeader.createdBy}"/>
         </field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="AddCommOrder" type="single" target="createCommunicationEventOrder" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="communicationEventId"><hidden/></field>
         <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
-        <field name="submitAction" title="${uiLabelMap.PartyOrderAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PartyOrderAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListCommProducts" list-name="productsList" type="list" target="deleteCommunicationEventProduct" paginate-target="ListCommProducts" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" view-size="20">
         <actions>
@@ -1067,11 +1067,11 @@ under the License.
         <field name="internalName">
             <display description="${product.internalName}"/>
         </field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit/></field>
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="AddCommProduct" type="single" target="createCommunicationEventProduct" header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="communicationEventId"><hidden/></field>
         <field name="productId" title="${uiLabelMap.PartyProductId}"><lookup target-form-name="LookupProduct"/></field>
-        <field name="submitAction" title="${uiLabelMap.PartyProductAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PartyProductAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 </forms>

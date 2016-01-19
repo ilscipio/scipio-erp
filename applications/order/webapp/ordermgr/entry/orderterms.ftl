@@ -45,8 +45,8 @@ under the License.
                                         <@td nowrap="nowrap">${orderTerm.textValue!}</@td>
                                         <@td nowrap="nowrap">${orderTerm.description?if_exists}</@td>
                                         <@td align="right">
-                                            <a href="<@ofbizUrl>setOrderTerm?termIndex=${orderTerm_index}&amp;createNew=Y</@ofbizUrl>" class="${styles.link_action_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
-                                            <a href="<@ofbizUrl>removeCartOrderTerm?termIndex=${orderTerm_index}</@ofbizUrl>" class="${styles.link_action_session!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
+                                            <a href="<@ofbizUrl>setOrderTerm?termIndex=${orderTerm_index}&amp;createNew=Y</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                                            <a href="<@ofbizUrl>removeCartOrderTerm?termIndex=${orderTerm_index}</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
                                         </@td>
                                     </@tr>
                                 </#list>
@@ -85,7 +85,7 @@ under the License.
                                         <input type="text" size="30" maxlength="255" name="description" value="${description?if_exists}" />
                                     </@field>
                                     <@field type="submitarea">
-                                        <input type="submit" class="${styles.link_action_sys!} ${styles.action_add!}" value="${uiLabelMap.CommonAdd}" />
+                                        <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.CommonAdd}" />
                                     </@field>
                             </form>
                         </#if>

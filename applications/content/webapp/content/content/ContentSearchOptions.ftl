@@ -79,7 +79,7 @@ under the License.
           </@field>
         </#if>
         <@field type="submitarea">
-            <a href="javascript:document.advToKeyWordSearchForm.submit()" class="${styles.link_action_sys!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a>
+            <a href="javascript:document.advToKeyWordSearchForm.submit()" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a>
         </@field>
         <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.advToKeyWordSearchForm.submit();"/>
     </form>

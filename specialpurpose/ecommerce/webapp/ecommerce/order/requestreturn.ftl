@@ -140,7 +140,7 @@ under the License.
               <@tr type="util"><@td colspan="6"><hr /></@td></@tr>
               <@tr>
                 <@td colspan="6" align="right">
-                  <a href="javascript:document.selectAllForm.submit();" class="${styles.link_action_sys!} ${styles.action_terminate!}">${uiLabelMap.OrderReturnSelectedItems}</a>
+                  <a href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.OrderReturnSelectedItems}</a>
                 </@td>
               </@tr>
             <#else>

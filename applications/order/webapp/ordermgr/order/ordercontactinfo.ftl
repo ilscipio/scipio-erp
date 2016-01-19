@@ -61,7 +61,7 @@ under the License.
           </#list>
         </#if>
       </select>
-      <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action_sys!} ${styles.action_update!}" />
+      <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
     </form>
   </#if>
 </#macro>
@@ -83,7 +83,7 @@ under the License.
                 <#if (orderHeader.salesChannelEnumId)?? && orderHeader.salesChannelEnumId != "POS_SALES_CHANNEL">
                 <div>
                    <a href="<@ofbizUrl>/orderentry?partyId=${partyId}&amp;orderTypeId=${orderHeader.orderTypeId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.OrderNewOrder}</a>
-                   <a href="javascript:document.searchOtherOrders.submit()" class="${styles.link_action_sys!} ${styles.action_find!}">${uiLabelMap.OrderOtherOrders}</a>
+                   <a href="javascript:document.searchOtherOrders.submit()" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.OrderOtherOrders}</a>
                 </div>
                   <form name="searchOtherOrders" method="post" action="<@ofbizUrl>searchorders</@ofbizUrl>">
                     <input type="hidden" name="lookupFlag" value="Y"/>
@@ -132,7 +132,7 @@ under the License.
                   <#if security.hasEntityPermission("ORDERMGR", "_SEND_CONFIRMATION", session)>
                      (<a href="<@ofbizUrl>confirmationmailedit?orderId=${orderId}&amp;partyId=${partyId}&amp;sendTo=${contactMech.infoString}</@ofbizUrl>">${uiLabelMap.OrderSendConfirmationEmail}</a>)
                   <#else>
-                     <a href="mailto:${contactMech.infoString}" class="${styles.link_action_sys!} ${styles.action_send!} ${styles.action_external!}">(${uiLabelMap.OrderSendEmail})</a>
+                     <a href="mailto:${contactMech.infoString}" class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}">(${uiLabelMap.OrderSendEmail})</a>
                   </#if>
                 </div>
                 <@updateOrderContactMech orderHeader=orderHeader! contactMechTypeId=contactMech.contactMechTypeId contactMechList=emailContactMechList! contactMechPurposeTypeId=contactMechPurpose.contactMechPurposeTypeId! contactMechAddress=contactMech! />

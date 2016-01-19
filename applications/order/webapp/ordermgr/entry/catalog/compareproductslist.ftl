@@ -29,7 +29,7 @@ under the License.
           <form method="post" action="<@ofbizUrl>removeFromCompare</@ofbizUrl>" name="removeFromCompare${product_index}form">
             <input type="hidden" name="productId" value="${product.productId}"/>
           </form>
-          <a href="javascript:document.removeFromCompare${product_index}form.submit()" class="${styles.link_action_session!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
+          <a href="javascript:document.removeFromCompare${product_index}form.submit()" class="${styles.link_run_session!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
         </@td>
       </@tr>
     </#list>

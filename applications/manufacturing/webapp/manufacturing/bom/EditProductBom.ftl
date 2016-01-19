@@ -61,7 +61,7 @@ function lookupBom() {
               <@htmlTemplate.lookupField value="${productId!}" formName="searchform" name="productId" id="productId" fieldFormName="LookupProduct"/>
             </@field>
             <@field type="generic">
-                <span><a href="javascript:document.searchform.submit();" class="${styles.link_action_sys!} ${styles.action_find!}">${uiLabelMap.ManufacturingShowBOMAssocs}</a></span>
+                <span><a href="javascript:document.searchform.submit();" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.ManufacturingShowBOMAssocs}</a></span>
             </@field>
         </@cell>
     </@row>
@@ -71,7 +71,7 @@ function lookupBom() {
                 <@htmlTemplate.lookupField formName="searchform" name="copyToProductId" id="copyToProductId" fieldFormName="LookupProduct"/>
             </@field>
             <@field type="generic">
-                <span><a href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="${styles.link_action_sys!} ${styles.action_copy!}">${uiLabelMap.ManufacturingCopyBOMAssocs}</a></span>
+                <span><a href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="${styles.link_run_sys!} ${styles.action_copy!}">${uiLabelMap.ManufacturingCopyBOMAssocs}</a></span>
             </@field>
         </@cell>
     </@row>
@@ -229,7 +229,7 @@ function lookupBom() {
         <@td>&nbsp;${(assocFromProduct.estimateCalcMethod)!}</@td>
         <@td>&nbsp;${(assocFromProduct.routingWorkEffortId)!}</@td>
         <@td>
-        <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
+        <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
         </@td>
         <@td>
         <a href="<@ofbizUrl>EditProductBom?productId=${productId}&amp;productIdTo=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}&amp;fromDate=${(assocFromProduct.fromDate)!}&amp;useValues=true</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
@@ -263,7 +263,7 @@ function lookupBom() {
             <@td>${(assocToProduct.getTimestamp("thruDate"))!}&nbsp;</@td>
             <@td>${(assocToProduct.quantity)!}&nbsp;</@td>
             <@td>
-                <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${(assocToProduct.productId)!}&amp;productIdTo=${(assocToProduct.productIdTo)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}&amp;fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&amp;useValues=true</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_remove!}">
+                <a href="<@ofbizUrl>UpdateProductBom?UPDATE_MODE=DELETE&amp;productId=${(assocToProduct.productId)!}&amp;productIdTo=${(assocToProduct.productIdTo)!}&amp;productAssocTypeId=${(assocToProduct.productAssocTypeId)!}&amp;fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(assocToProduct.getTimestamp("fromDate").toString())}&amp;useValues=true</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">
                 ${uiLabelMap.CommonDelete}</a>
             </@td>
         </@tr>

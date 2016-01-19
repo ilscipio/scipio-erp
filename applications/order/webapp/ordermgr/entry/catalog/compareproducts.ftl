@@ -73,7 +73,7 @@ under the License.
                     <input type="text" size="5" name="quantity" value="1"/>
                     <input type="hidden" name="clearSearch" value="N"/>
                 </form>
-                <a href="javascript:doPostViaParent('compareFormAdd${product_index}');" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
+                <a href="javascript:doPostViaParent('compareFormAdd${product_index}');" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
 
         <#if prodCatMem?? && prodCatMem.quantity?? && 0.00 < prodCatMem.quantity?double>
                 <form method="post" action="<@ofbizUrl secure="${request.isSecure()?string}">additem</@ofbizUrl>" name="compareFormAddDefault${product_index}">
@@ -81,7 +81,7 @@ under the License.
                     <input type="hidden" name="quantity" value="${prodCatMem.quantity!}"/>
                     <input type="hidden" name="clearSearch" value="N"/>
                 </form>
-                <a href="javascript:doPostViaParent('compareFormAddDefault${product_index}');" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
+                <a href="javascript:doPostViaParent('compareFormAddDefault${product_index}');" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
         </#if>
     </#if>
             </div>
@@ -177,9 +177,9 @@ under the License.
                     <input type="text" size="5" name="quantity" value="1"/>
                     <input type="hidden" name="clearSearch" value="N"/>
                 </form>
-                <a href="javascript:doPostViaParent('compare2FormAdd${product_index}');" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
+                <a href="javascript:doPostViaParent('compare2FormAdd${product_index}');" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
         <#if prodCatMem?? && prodCatMem.quantity?? && 0.00 < prodCatMem.quantity?double>
-                <a href="javascript:doPostViaParent('compareFormAddDefault${product_index}');" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
+                <a href="javascript:doPostViaParent('compareFormAddDefault${product_index}');" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.CommonAddDefault} (${prodCatMem.quantity?string.number}) ${uiLabelMap.OrderToCart}</a>
         </#if>
     </#if>
             </div>

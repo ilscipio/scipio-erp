@@ -41,7 +41,7 @@ under the License.
             </@field>
         </#list>
         <@field type="submitarea">
-            <input type="submit" value="${uiLabelMap.CommonSearch}" class="${styles.link_action_sys!} ${styles.action_find!}" />
+            <input type="submit" value="${uiLabelMap.CommonSearch}" class="${styles.link_run_sys!} ${styles.action_find!}" />
         </@field>
   </form>
     </@cell>    
@@ -79,7 +79,7 @@ under the License.
         <input type="hidden" name="productFeatureIds" value="${productFeatureIds}" />
         <@field type="input" name="productVariantId" value="${productVariantId}" />
         <@field type="submitarea">
-            <input type="submit" value="${uiLabelMap.ProductQuickAddVariants}" class="${styles.link_action_session!} ${styles.action_add!}" />
+            <input type="submit" value="${uiLabelMap.ProductQuickAddVariants}" class="${styles.link_run_session!} ${styles.action_add!}" />
         </@field>
         </@fields>
       </form>

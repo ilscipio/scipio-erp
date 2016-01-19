@@ -60,8 +60,8 @@ under the License.
           <#if (requestParameters.checkoutpage)?has_content>
             <input type="hidden" name="checkoutpage" value="${requestParameters.checkoutpage}" />
           </#if>
-          <input type="button" id="submitOrderReview" name="processButton" value="${uiLabelMap.OrderSubmitOrder}" onclick="aroundSubmitOrder();" class="${styles.link_action_sys!} ${styles.action_update!}" />
-        <#-- doesn't work with Safari, seems to work with IE, Mozilla <a href="#" onclick="processOrder();" class="${styles.link_action_sys!} ${styles.action_update!}">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a> -->
+          <input type="button" id="submitOrderReview" name="processButton" value="${uiLabelMap.OrderSubmitOrder}" onclick="aroundSubmitOrder();" class="${styles.link_run_sys!} ${styles.action_update!}" />
+        <#-- doesn't work with Safari, seems to work with IE, Mozilla <a href="#" onclick="processOrder();" class="${styles.link_run_sys!} ${styles.action_update!}">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a> -->
       </@td>
     </@tr>
   </@table>

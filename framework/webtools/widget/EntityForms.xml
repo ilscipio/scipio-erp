@@ -31,7 +31,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_export}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListPerformanceResults" type="list" list-name="performanceList" paginate-target="EntityPerformanceTest" separate-columns="true" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">

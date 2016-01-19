@@ -40,6 +40,6 @@ under the License.
             </drop-down>
         </field>
         <field name="attachmentName"><text/></field>
-        <field name="sendAction" widget-style="${styles.link_action_sys} ${styles.action_send}"><submit button-type="button"/></field>
+        <field name="sendAction" widget-style="${styles.link_run_sys} ${styles.action_send}"><submit button-type="button"/></field>
     </form>
 </forms>

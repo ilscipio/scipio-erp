@@ -56,7 +56,7 @@ under the License.
         </field>
         <field name="performSearch"><hidden value="Y"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -136,7 +136,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <auto-fields-entity entity-name="PaymentGatewayResponse" default-field-type="display"/>
         <!-- TODO: what is the correct way to ensure that the response was authorized?
-        <field name="submitAction" use-when="paymentGatewayResponse!=null&amp;&amp;paymentGatewayResponse.getString(&quot;gatewayFlag&quot;).equals(&quot;A&quot;)" title="${uiLabelMap.AccountingCapture}" widget-style="${styles.link_action_sys} ${styles.action_copy}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="paymentGatewayResponse!=null&amp;&amp;paymentGatewayResponse.getString(&quot;gatewayFlag&quot;).equals(&quot;A&quot;)" title="${uiLabelMap.AccountingCapture}" widget-style="${styles.link_run_sys} ${styles.action_copy}"><submit button-type="button"/></field>
         -->
         <field name="paymentServiceTypeEnumId">
             <display-entity entity-name="Enumeration" key-field-name="enumId" description="${description}"/>
@@ -160,7 +160,7 @@ under the License.
             </drop-down>
         </field>
         <field name="overrideAmount" title="${uiLabelMap.AccountingAmount}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.AccountingAuthorize}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.AccountingAuthorize}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <!-- form for capturing a transaction -->
@@ -181,6 +181,6 @@ under the License.
             </drop-down>
         </field>
         <field name="captureAmount" title="${uiLabelMap.AccountingAmount}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.AccountingCapture}" widget-style="${styles.link_action_sys} ${styles.action_copy}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.AccountingCapture}" widget-style="${styles.link_run_sys} ${styles.action_copy}"><submit button-type="button"/></field>
     </form>
 </forms>

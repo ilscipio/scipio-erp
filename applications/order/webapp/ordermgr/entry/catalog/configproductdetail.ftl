@@ -338,7 +338,7 @@ function getConfigDetails() {
               <div>[${uiLabelMap.EcommerceProductNotConfigured}]&nbsp;
               <input type="text" size="5" name="quantity" value="0" disabled="disabled" /></div>
             <#else>
-              <a href="javascript:addItem()" class="${styles.link_action_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>&nbsp;
+              <a href="javascript:addItem()" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>&nbsp;
               <input type="text" size="5" name="quantity" value="1" />
             </#if>
           </#if>
@@ -365,7 +365,7 @@ function getConfigDetails() {
           </select>
           &nbsp;&nbsp;
           <input type="text" size="5" name="quantity" value="1" />
-          <a href="javascript:document.addToShoppingList.submit();" class="${styles.link_action_sys!} ${styles.action_add!}">[${uiLabelMap.OrderAddToShoppingList}]</a>
+          <a href="javascript:document.addToShoppingList.submit();" class="${styles.link_run_sys!} ${styles.action_add!}">[${uiLabelMap.OrderAddToShoppingList}]</a>
         </form>
       <#else> <br />
         ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>
@@ -435,7 +435,7 @@ function getConfigDetails() {
         <@table type="fields" cellspacing=""> <#-- orig: class="" -->
           <@tr>
             <@td>
-                <a href="javascript:verifyConfig();" class="${styles.link_action_sys!} ${styles.action_verify!}">${uiLabelMap.OrderVerifyConfiguration}</a>
+                <a href="javascript:verifyConfig();" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.OrderVerifyConfiguration}</a>
             </@td>
           </@tr>
           <@tr type="util"><@td><hr /></@td></@tr>

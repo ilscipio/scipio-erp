@@ -48,7 +48,7 @@ under the License.
         <field name="lastModifiedDate">
             <date-find/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -90,7 +90,7 @@ under the License.
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
         <field name="createAction" title=" " widget-style="${styles.link_nav} ${styles.action_add}" position="1">
@@ -137,7 +137,7 @@ under the License.
         <field name="textData" title="${uiLabelMap.ContentText}" id-name="textData">
         <textarea rows="24" cols="80"/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -172,7 +172,7 @@ under the License.
         <field name="description"><display/></field>
         <field name="drObjectInfo"><display/></field>
         <!--
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeLayout">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentIdTo"/>
@@ -194,7 +194,7 @@ under the License.
         <field name="contentName"><display/></field>
         <field name="description"><display/></field>
         <field name="drObjectInfo"><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="removeLayout">
                 <parameter param-name="contentId"/>
                 <parameter param-name="contentIdTo" from-field="caContentIdTo"/>
@@ -261,7 +261,7 @@ under the License.
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -290,7 +290,7 @@ under the License.
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -326,7 +326,7 @@ under the License.
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -352,7 +352,7 @@ under the License.
         <field name="imageData" entity-name="ImageDataResource">
             <file />
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}">
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -381,7 +381,7 @@ under the License.
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -455,18 +455,18 @@ under the License.
         <field name="lastModifiedDate" position="2">
             <display/>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
 <!--
-        <field name="paste" title=" " widget-style="${styles.link_action_local} ${styles.action_copy}"
+        <field name="paste" title=" " widget-style="${styles.link_run_local} ${styles.action_copy}"
             use-when="!&quot;${contentIdTo}&quot;.equals(&quot;TEMPLATE_MASTER&quot;)" >
             <hyperlink target-type="plain"
               target="javascript:call_fieldlookup2(document.AddLayoutSubContent.drDataResourceId, 'ClipBoardContent')"
               description="${uiLabelMap.ContentPaste}"/>
         </field>
-        <field name="paste" title=" " widget-style="${styles.link_action_local} ${styles.action_copy}"
+        <field name="paste" title=" " widget-style="${styles.link_run_local} ${styles.action_copy}"
             use-when="&quot;${contentIdTo}&quot;.equals(&quot;TEMPLATE_MASTER&quot;)" >
             <hyperlink target-type="plain"
               target="javascript:call_fieldlookup2(document.AddLayoutSubContent.drDataResourceId, 'LookupListLayout')"

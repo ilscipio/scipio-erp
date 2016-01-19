@@ -23,7 +23,7 @@ under the License.
     <@cell>
     ${uiLabelMap.ProductYouSearchedFor}
     <#list searchConstraintStrings as searchConstraintString>
-      <a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_action_session!} ${styles.action_remove!}">X</a>&nbsp;${searchConstraintString}</li>
+      <a href="<@ofbizUrl>keywordsearch?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">X</a>&nbsp;${searchConstraintString}</li>
     </#list>
     </@cell>
 </@row>

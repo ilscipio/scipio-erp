@@ -89,6 +89,6 @@ under the License.
             </drop-down>
         </field>
         <field name="useFileSystemStore" title="${uiLabelMap.WebtoolsUseFileStore}"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>    
 </forms>

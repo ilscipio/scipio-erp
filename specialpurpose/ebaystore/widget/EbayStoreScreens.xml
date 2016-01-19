@@ -129,7 +129,7 @@ under the License.
                                     <screenlet navigation-form-name="ListCategories" title="List category in ${prodCatalog.catalogName}">
                                         <include-form name="ListCategories" location="component://ebaystore/widget/EbayStoreForms.xml"/>
                                     </screenlet>
-                                    <link name="exportCategoriesSelectedToEbayStore" target="exportCategoriesSelectedToEbayStore" style="${styles.link_action_sys} ${styles.action_transfer}" text="${uiLabelMap.EbayExportToEbayStore}">
+                                    <link name="exportCategoriesSelectedToEbayStore" target="exportCategoriesSelectedToEbayStore" style="${styles.link_run_sys} ${styles.action_transfer}" text="${uiLabelMap.EbayExportToEbayStore}">
                                         <parameter param-name="productStoreId" from-field="productStoreId"/>
                                         <parameter param-name="prodCatalogId" from-field="parameters.prodCatalogId"/>
                                         <parameter param-name="partyId" from-field="parameters.partyId"/>

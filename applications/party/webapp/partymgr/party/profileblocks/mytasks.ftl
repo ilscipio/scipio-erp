@@ -109,7 +109,7 @@ under the License.
           <#-- <@td>${workEffort.partyId}</@td> -->
           <@td>${workEffort.roleTypeId}</@td>
           <@td><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.link_nav_record_name!}">${workEffort.workEffortName}</a></@td>
-          <@td class="button-col"><a href="/workeffort/control/acceptRoleAssignment?workEffortId=${workEffort.workEffortId}&amp;partyId=${workEffort.partyId}&amp;roleTypeId=${workEffort.roleTypeId}&amp;fromDate=${workEffort.fromDate.toString()}" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></@td>
+          <@td class="button-col"><a href="/workeffort/control/acceptRoleAssignment?workEffortId=${workEffort.workEffortId}&amp;partyId=${workEffort.partyId}&amp;roleTypeId=${workEffort.roleTypeId}&amp;fromDate=${workEffort.fromDate.toString()}" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></@td>
         </@tr>
       </#list>
       </@tbody>
@@ -141,7 +141,7 @@ under the License.
           <@td>${workEffort.groupPartyId}</@td>
           <#-- <@td>${workEffort.roleTypeId}</@td> -->
           <@td><a href="/workeffort/control/WorkEffortSummary?workEffortId=${workEffort.workEffortId}" class="${styles.link_nav_record_name!}">${workEffort.workEffortName}</a></@td>
-          <@td class="button-col"><a href="/workeffort/control/acceptassignment?workEffortId=${workEffort.workEffortId}&amp;partyId=${workEffort.partyId}&amp;roleTypeId=${workEffort.roleTypeId}&amp;fromDate=${workEffort.fromDate}" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></@td>
+          <@td class="button-col"><a href="/workeffort/control/acceptassignment?workEffortId=${workEffort.workEffortId}&amp;partyId=${workEffort.partyId}&amp;roleTypeId=${workEffort.roleTypeId}&amp;fromDate=${workEffort.fromDate}" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.WorkEffortAcceptAssignment}&nbsp;[${workEffort.workEffortId}]</a></@td>
         </@tr>
       </#list>
       </@tbody>

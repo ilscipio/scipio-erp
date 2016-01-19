@@ -62,7 +62,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.AccountingCreateAssignment}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.AccountingCreateAssignment}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListGlAccount" list-name="listIt" target="" title="" type="list" default-entity-name="GlAccount" 
@@ -153,8 +153,8 @@ under the License.
         </field>
         <field name="externalId" position="2"><text/></field>
         <field name="description"><textarea/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonAdd}" use-when="glAccount==null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonAdd}" use-when="glAccount==null" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <!-- this is used to list AcctgTransEntries and can be called either by using an acctgTransId or a glAccountId -->
@@ -255,7 +255,7 @@ under the License.
         
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" ><display type="date"/></field>
-        <field name="delete" title="${uiLabelMap.CommonExpire}" widget-style="${styles.link_action_sys} ${styles.action_terminate}"><submit/></field>
+        <field name="delete" title="${uiLabelMap.CommonExpire}" widget-style="${styles.link_run_sys} ${styles.action_terminate}"><submit/></field>
     </form>
 
     <form name="updateRateAmount" type="single" target="updateRateAmount" default-service-name="updateRateAmount"
@@ -298,6 +298,6 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.AccountingUpdateRateAmount}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.AccountingUpdateRateAmount}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
 </forms>

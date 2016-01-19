@@ -28,7 +28,7 @@ under the License.
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
         <field name="productStoreId" title="${uiLabelMap.MarketingSegmentGroupProductStoreId}"><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupSegmentGroup" list-name="listIt" target="" title="" type="list" paginate-target="LookupSegmentGroup"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -61,7 +61,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="partyClassificationGroupId" title="${uiLabelMap.MarketingSegmentGroupPartyClassificationGroupId}"><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteSegmentGroupClass" description="[${uiLabelMap.CommonDelete}]" also-hidden="false">
                 <parameter param-name="segmentGroupId"/>
                 <parameter param-name="partyClassificationGroupId"/>
@@ -82,7 +82,7 @@ under the License.
         <field name="createdByUserLoginId"><hidden/></field>
         <field name="modifiedByUserLoginId"><hidden/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
 
     <form name="ListLookupSalesForecast" list-name="listIt" type="list" paginate-target="LookupSalesForecast" view-size="10"

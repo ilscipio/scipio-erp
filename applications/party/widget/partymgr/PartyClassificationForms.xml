@@ -34,8 +34,8 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deletePartyClassification" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="partyClassificationGroupId"/>
                 <parameter param-name="partyId"/>
@@ -59,7 +59,7 @@ under the License.
         </field>
         <field name="parentGroupId"><display/></field>
         <field name="description" title=" "><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deletePartyClassificationGroup" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="partyClassificationGroupId"/>
             </hyperlink>
@@ -81,7 +81,7 @@ under the License.
         </field>
         <field name="parentGroupId"><lookup target-form-name="LookupPartyClassificationGroup"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text size="55"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
     </form>
 
     <form name="AddPartyClassification" type="single" target="createPartyClassification" default-map-name="partyClassification"
@@ -96,7 +96,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <!-- <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="segmentGroupId"/>
@@ -112,7 +112,7 @@ under the License.
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
         <!-- <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}">
             <hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}">
                 <parameter param-name="segmentGroupId"/>
@@ -139,8 +139,8 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deletePartyClassification" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="partyClassificationGroupId"/>
                 <parameter param-name="partyId"/>

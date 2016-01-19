@@ -29,7 +29,7 @@ under the License.
               <option value="${catalogId}">${thisCatalogName}</option>
             </#list>
           </select>
-          <div><a href="javascript:document.choosecatalogform.submit()" class="${styles.link_action_session!} ${styles.action_select!}">${uiLabelMap.CommonChange}</a></div>
+          <div><a href="javascript:document.choosecatalogform.submit()" class="${styles.link_run_session!} ${styles.action_select!}">${uiLabelMap.CommonChange}</a></div>
         </form>
     </@section>
 </#if>

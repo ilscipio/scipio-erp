@@ -22,7 +22,7 @@ under the License.
       <#if security.hasEntityPermission("PARTYMGR", "_UPDATE", session)>
         <a href="<@ofbizUrl>editAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonEdit}</a>
         <#if avsOverride??>
-          <a href="<@ofbizUrl>resetAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_clear!}">${uiLabelMap.CommonReset}</a>
+          <a href="<@ofbizUrl>resetAvsOverride?partyId=${party.partyId}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_clear!}">${uiLabelMap.CommonReset}</a>
         </#if>
       </#if>
   </@section>

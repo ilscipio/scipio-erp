@@ -48,7 +48,7 @@ under the License.
                   <input type="hidden" name="orderId" value="${orderId}"/>
                   <input type="hidden" name="noteId" value="${note.noteId}"/>
                   <input type="hidden" name="internalNote" value="Y"/>
-                  <a href="javascript:document.privateNotesForm_${note_index}.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.OrderNotesPrivate}</a>
+                  <a href="javascript:document.privateNotesForm_${note_index}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderNotesPrivate}</a>
                 </form>
             </#if>
             <#if note.internalNote! == "Y">
@@ -57,7 +57,7 @@ under the License.
                   <input type="hidden" name="orderId" value="${orderId}"/>
                   <input type="hidden" name="noteId" value="${note.noteId}"/>
                   <input type="hidden" name="internalNote" value="N"/>
-                  <a href="javascript:document.publicNotesForm_${note_index}.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.OrderNotesPublic}</a>
+                  <a href="javascript:document.publicNotesForm_${note_index}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderNotesPublic}</a>
                 </form>
             </#if>
           </@td>

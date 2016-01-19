@@ -40,7 +40,7 @@ under the License.
                 <option key="html" description="HTML"></option>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action_sys} ${styles.action_export}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
 
     <form name="NetBeforeOverheadReport" type="single" target="NetBeforeOverheadReport.pdf" title=""
@@ -53,7 +53,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action_sys} ${styles.action_export}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
 
     <form name="ProductDemandReport" type="single" target="ProductDemandReport.pdf" title=""
@@ -66,13 +66,13 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action_sys} ${styles.action_export}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
 
     <form name="OrderByReferrer" type="single" target="OrderByReferrer.pdf" target-window="_BLANK">
         <!--field name="referrerUrl"><text-find default-option="contains"/></field-->
         <field name="referrerUrl" title=" "><display description="${uiLabelMap.BirtOrderReportAllReferrer}"></display></field>
-        <field name="submit" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action_sys} ${styles.action_export}"><submit button-type="button"/></field>
+        <field name="submit" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
     <form name="SaleOrdersByChannel" type="single" target="OrdersByChannel.pdf" target-window="_BLANK">
         <field name="SalesChannel" title="${uiLabelMap.OrderSalesChannel}">
@@ -83,16 +83,16 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submit" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action_sys} ${styles.action_export}"><submit button-type="button"/></field>
+        <field name="submit" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
     <form name="SaleOrderDiscountCode" type="single" target="OrderDiscountCode.pdf" target-window="_BLANK">
         <field name="discountCodeUrl" title=" "><display description="${uiLabelMap.BirtOrderReportAllOrderItemsWithDiscountCode}"></display></field>
-        <field name="submit" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action_sys} ${styles.action_export}"><submit button-type="button"/></field>
+        <field name="submit" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
     <form name="Last3MonthsSalesReport" type="single" target="Last3MonthsSalesReport.pdf" target-window="_BLANK">
-        <field name="submit" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action_sys} ${styles.action_export}"><submit button-type="button"/></field>
+        <field name="submit" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
     <form name="CouponSalesReport" type="single" target="CouponSalesReport.pdf" target-window="_BLANK">
-        <field name="submit" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_action_sys} ${styles.action_export}"><submit button-type="button"/></field>
+        <field name="submit" title="${uiLabelMap.CommonRun}" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
 </forms>

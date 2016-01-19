@@ -65,7 +65,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_begin}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_begin}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -90,7 +90,7 @@ under the License.
                 <parameter param-name="ruleId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="DeleteProductManufacturingRule" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="ruleId"/>
             </hyperlink>
@@ -123,7 +123,7 @@ under the License.
                 <option key="AND" description="${uiLabelMap.CommonAnd}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -137,7 +137,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submit" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit/></field>
+        <field name="submit" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit/></field>
     </form>
     <form name="ListBom" type="list" list-name="ListProductBom" odd-row-style="alternate-row"
         default-table-style="${styles.table_basic} hover-bar" paginate-target="FindBom">

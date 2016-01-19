@@ -38,7 +38,7 @@ under the License.
     </#if>
     ${uiLabelMap.CommonInformation}
     <#if (orderHeader.orderId)??>
-      ${externalOrder!} [ <a href="<@ofbizUrl fullPath="true">order.pdf?orderId=${(orderHeader.orderId)!}</@ofbizUrl>" target="_BLANK" class="${styles.link_action_sys!} ${styles.action_export!}">PDF</a> ]
+      ${externalOrder!} [ <a href="<@ofbizUrl fullPath="true">order.pdf?orderId=${(orderHeader.orderId)!}</@ofbizUrl>" target="_BLANK" class="${styles.link_run_sys!} ${styles.action_export!}">PDF</a> ]
     </#if>
   </h3>
   <#-- placing customer information -->

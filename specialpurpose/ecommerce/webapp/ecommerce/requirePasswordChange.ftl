@@ -56,7 +56,7 @@ under the License.
               <input type="password" class="inputBox" name="newPasswordVerify" value="" size="20"/>
           </div>
           <div>
-              <input type="submit" class="${styles.link_action_session!} ${styles.action_login!}" value="${uiLabelMap.CommonLogin}"/>
+              <input type="submit" class="${styles.link_run_session!} ${styles.action_login!}" value="${uiLabelMap.CommonLogin}"/>
           </div>
       </form>
     </div>

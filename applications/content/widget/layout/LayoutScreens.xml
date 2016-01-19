@@ -103,7 +103,7 @@ under the License.
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditLayout}">
                             <include-form name="EditLayout" location="component://content/widget/layout/LayoutForms.xml"/>
-                            <link target="cloneLayout" text="${uiLabelMap.ContentCloneLayout}" style="${styles.link_action_sys} ${styles.action_copy}">
+                            <link target="cloneLayout" text="${uiLabelMap.ContentCloneLayout}" style="${styles.link_run_sys} ${styles.action_copy}">
                                 <parameter param-name="contentId" from-field="currentValue.contentId"/>
                             </link>
                             <platform-specific>

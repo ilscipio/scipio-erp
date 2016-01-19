@@ -70,7 +70,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
@@ -166,7 +166,7 @@ under the License.
         <field name="validFromDate" title="${uiLabelMap.CommonValidFromDate}"><date-time type="date"/></field>
         <field name="validThruDate" title="${uiLabelMap.CommonValidThruDate}" position="2"><date-time type="date"/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><textarea/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListQuoteRoles" target="" title="" type="list" list-name="quoteRoles"
     
@@ -177,7 +177,7 @@ under the License.
         </field>
         <field name="roleTypeId" title="${uiLabelMap.PartyRoleType}"><display-entity also-hidden="false" entity-name="RoleType"/></field>
         <field name="quoteId"><hidden/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="removeQuoteRole" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="partyId"/>
                 <parameter param-name="roleTypeId"/>
@@ -197,7 +197,7 @@ under the License.
             </drop-down>
         </field>
         <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <!-- Quote Items -->
@@ -258,7 +258,7 @@ under the License.
             </drop-down>
         </field>
          -->
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <sort-order>
             <field-group title="${uiLabelMap.CommonProduct}">
                 <sort-field name="productId"/>
@@ -328,7 +328,7 @@ under the License.
             </hyperlink>
         </field>
         <field name="custRequestItemSeqId"><hidden/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="removeQuoteItem" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="quoteItemSeqId"/>
                 <parameter param-name="quoteId"/>
@@ -345,7 +345,7 @@ under the License.
         <field name="attrName" title="${uiLabelMap.OrderOrderQuoteAttributeName}" use-when="quoteAttribute!=null"><display/></field>
         <field name="attrValue" title="${uiLabelMap.OrderOrderQuoteAttributeValue}"></field>
         <field name="quoteId"><hidden/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListQuoteAttributes" target="" title="" type="list" list-name="quoteAttributes"
@@ -359,7 +359,7 @@ under the License.
         </field>
         <field name="attrValue" title="${uiLabelMap.OrderOrderQuoteAttributeValue}"></field>
         <field name="quoteId"><hidden/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="removeQuoteAttribute" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="attrName"/>
                 <parameter param-name="quoteId"/>
@@ -378,7 +378,7 @@ under the License.
         </field>
         <field name="coeffValue" title="${uiLabelMap.OrderOrderQuoteCoeffValue}"></field>
         <field name="quoteId"><hidden/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="removeQuoteCoefficient" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="coeffName"/>
                 <parameter param-name="quoteId"/>
@@ -392,7 +392,7 @@ under the License.
         <field name="quoteId"><hidden/></field>
         <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoeffName}" use-when="quoteCoefficient==null"><text/></field>
         <field name="coeffName" title="${uiLabelMap.OrderOrderQuoteCoeffName}" use-when="quoteCoefficient!=null"><display/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 
     <form name="ManageQuotePrices" title="" type="multi" list-name="quoteItemAndCostInfos" target="autoUpdateQuotePrices?quoteId=${quoteId}" use-row-submit="true"
@@ -421,7 +421,7 @@ under the License.
         <field name="quoteUnitPrice" title="${uiLabelMap.OrderOrderQuoteUnitPrice}" widget-area-style="amount" title-area-style="align-right"><display/></field>
         <field name="manualQuoteUnitPrice" title="${uiLabelMap.OrderOrderQuoteManualUnitPrice}"><text/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelected}"><check/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     
     <form name="ListQuoteAdjustments" target="" title="" type="list" list-name="quoteAdjustments"
@@ -442,7 +442,7 @@ under the License.
         <field name="productPromoRuleId" title="${uiLabelMap.ProductPromoRule}"><display/></field>
         <field name="productPromoActionSeqId" title="${uiLabelMap.ProductPromoAction}"><display/></field>
         <field name="amount" widget-area-style="amount" title-area-style="align-right"><display type="currency"/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="removeQuoteAdjustment" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="quoteAdjustmentId"/>
                 <parameter param-name="quoteId"/>
@@ -476,7 +476,7 @@ under the License.
                 <entity-options description="${description}" entity-name="OrderAdjustmentType" key-field-name="orderAdjustmentTypeId"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <form name="EditQuoteReportMail" type="single" target="sendQuoteReportMail" title=""
@@ -486,7 +486,7 @@ under the License.
         <field name="sendTo"><text/></field>
         <field name="sendCc"><text/></field>
         <field name="note"><textarea/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListQuoteInfo" extends="ListQuoteTerms">
@@ -534,7 +534,7 @@ under the License.
             </drop-down>
         </field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><textarea/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <form name="EditQuoteTermItem" type="single" target="updateQuoteTermFromItem" title="" default-map-name="quoteTerm"
@@ -566,7 +566,7 @@ under the License.
                 <parameter param-name="tabButtonItems" value="QuoteTerms"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteQuoteTerm" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="termTypeId"/>
                 <parameter param-name="quoteItemSeqId"/>
@@ -585,7 +585,7 @@ under the License.
                 <parameter param-name="tabButtonItems" value="ListQuoteItems"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteQuoteTermFromItem" description="${uiLabelMap.CommonRemove}" also-hidden="false">
                 <parameter param-name="termTypeId"/>
                 <parameter param-name="quoteItemSeqId"/>
@@ -616,7 +616,7 @@ under the License.
         <field name="noteId"><hidden/></field>
         <field name="noteName"><text/></field>
         <field name="noteInfo"><textarea rows="5" cols="70"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <form name="QuoteHeader" type="single" default-map-name="quote">

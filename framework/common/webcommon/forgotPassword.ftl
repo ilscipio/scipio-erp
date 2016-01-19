@@ -40,8 +40,8 @@ under the License.
                </@row>
               <@row>
                 <@cell columns=12>
-                      <input type="submit" name="GET_PASSWORD_HINT" class="${styles.link_action_sys!} ${styles.action_view!}" value="${uiLabelMap.CommonGetPasswordHint}"/>
-                      <input type="submit" name="EMAIL_PASSWORD" class="${styles.link_action_sys!} ${styles.action_send!}" value="${uiLabelMap.CommonEmailPassword}"/>
+                      <input type="submit" name="GET_PASSWORD_HINT" class="${styles.link_run_sys!} ${styles.action_view!}" value="${uiLabelMap.CommonGetPasswordHint}"/>
+                      <input type="submit" name="EMAIL_PASSWORD" class="${styles.link_run_sys!} ${styles.action_send!}" value="${uiLabelMap.CommonEmailPassword}"/>
                       <#--<a href='<@ofbizUrl>authview</@ofbizUrl>' class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>-->
                 </@cell>
                </@row>

@@ -99,7 +99,7 @@ under the License.
                                 <set field="genericLinkName" value="print"/>
                                 <set field="genericLinkText" value="${uiLabelMap.CommonPrint}"/>
                                 <set field="genericLinkTarget" value="ApprovedProductRequirementsReport"/>
-                                <set field="genericLinkStyle" value="${styles.link_action_sys} ${styles.action_export}"/>
+                                <set field="genericLinkStyle" value="${styles.link_run_sys} ${styles.action_export}"/>
                                 <set field="genericLinkWindow" value="reportWindow"/>
                             </actions>
                             <widgets>
@@ -291,7 +291,7 @@ under the License.
                                 <link target="EditRequirementRole" text="${uiLabelMap.CommonNew}" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="requirementId"/>
                                 </link>
-                                <link target="autoAssignRequirementToSupplier" text="${uiLabelMap.OrderAutoAssign}" style="${styles.link_action_sys} ${styles.action_update}">
+                                <link target="autoAssignRequirementToSupplier" text="${uiLabelMap.OrderAutoAssign}" style="${styles.link_run_sys} ${styles.action_update}">
                                     <parameter param-name="requirementId"/>
                                 </link>
                             </container>

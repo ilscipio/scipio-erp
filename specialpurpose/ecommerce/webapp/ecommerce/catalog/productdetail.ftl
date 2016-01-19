@@ -531,7 +531,7 @@ ${virtualVariantJavaScript!}
           <#-- show tell a friend details only in ecommerce application -->
           <div>&nbsp;</div>
           <div>
-              <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}<#if categoryId??>&categoryId=${categoryId}/</#if></@ofbizUrl>','tellafriend');" class="${styles.link_action_sys!} ${styles.action_send!}">${uiLabelMap.CommonTellAFriend}</a>
+              <a href="javascript:popUpSmall('<@ofbizUrl>tellafriend?productId=${product.productId}<#if categoryId??>&categoryId=${categoryId}/</#if></@ofbizUrl>','tellafriend');" class="${styles.link_run_sys!} ${styles.action_send!}">${uiLabelMap.CommonTellAFriend}</a>
           </div>
     
           <#if disFeatureList?? && (0 < disFeatureList.size())>
@@ -574,13 +574,13 @@ ${virtualVariantJavaScript!}
                 <div id="addCart1" style="display:none;">
                   <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonQuantity}:</strong></span>&nbsp;
                   <input type="text" size="5" name="quantity" value="1" />
-                  <a href="javascript:javascript:addItem();" class="${styles.link_action_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+                  <a href="javascript:javascript:addItem();" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                   &nbsp;
                 </div>
                 <div id="addCart2" style="display:block;">
                   <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonQuantity}:</strong></span>&nbsp;
                   <input type="text" size="5" value="1" disabled="disabled" />
-                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");" class="${styles.link_action_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                   &nbsp;
                 </div>
               </#if>
@@ -653,18 +653,18 @@ ${virtualVariantJavaScript!}
                     Number of persons<input type="text" size="4" name="reservPersons" value="2"/>
                     Number of rooms<input type="text" size="5" name="quantity" value="1"/>
                   </div>
-                  <a href="javascript:addItem()" class="${styles.link_action_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+                  <a href="javascript:addItem()" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                 <#else>
-                  <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
+                  <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
                   <@showUnavailableVarients/>
                 </#if>
                 <#else>
                   <#if productStore??>
                     <#if productStore.requireInventory?? && productStore.requireInventory == "N">
-                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
+                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" <#if product.isVirtual!?upper_case == "Y">disabled="disabled"</#if> /></span><a href="javascript:addItem()" id="addToCart" name="addToCart" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
                       <@showUnavailableVarients/>
                     <#else>
-                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" disabled="disabled" /></span><a href="javascript:void(0);" disabled="disabled" class="${styles.link_action_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a><br />
+                      <span><input name="quantity" id="quantity" value="1" size="4" maxLength="4" type="text" disabled="disabled" /></span><a href="javascript:void(0);" disabled="disabled" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a><br />
                       <span>${uiLabelMap.ProductItemOutOfStock}<#if product.inventoryMessage??>&mdash; ${product.inventoryMessage}</#if></span>
                     </#if>
                   </#if>
@@ -714,7 +714,7 @@ ${virtualVariantJavaScript!}
                   <input type="text" size="5" name="quantity" value="1" />
                   <input type="hidden" name="reservStartStr" value= "" />
               </#if>
-              <a href="javascript:addShoplistSubmit();" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.OrderAddToShoppingList}</a>
+              <a href="javascript:addShoplistSubmit();" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.OrderAddToShoppingList}</a>
               </fieldset>
             </form>
           <#else> <br />

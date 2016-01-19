@@ -139,7 +139,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
          </@td >
          <@td>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; </@td >
          <@td>
-            <a class="${styles.link_action_sys!} ${styles.action_remove!}" href="<@ofbizUrl>removeSite?rootForumId=${rootForumId}&amp;contentId=${content.contentId}&amp;contentIdTo=${forumId}&amp;contentAssocTypeId=SUBSITE</@ofbizUrl>">Remove Site</a>
+            <a class="${styles.link_run_sys!} ${styles.action_remove!}" href="<@ofbizUrl>removeSite?rootForumId=${rootForumId}&amp;contentId=${content.contentId}&amp;contentIdTo=${forumId}&amp;contentAssocTypeId=SUBSITE</@ofbizUrl>">Remove Site</a>
          </@td>
        </@tr>
        <#assign rowCount = rowCount + 1 />

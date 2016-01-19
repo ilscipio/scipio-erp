@@ -26,7 +26,7 @@ under the License.
         <field name="partyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="contentId"><lookup target-form-name="LookupContent"/></field>
         <field name="resumeId"><lookup target-form-name="LookupPartyResume"/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListPartyResumes" type="list" separate-columns="true" default-entity-name="PartyResume" list-name="listIt" paginate-target="FindPartyResumes" paginate="true"
         odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
@@ -52,7 +52,7 @@ under the License.
                 </sub-hyperlink>
             </display-entity>
        </field>
-       <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
+       <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
            <hyperlink target="deletePartyResume" description="${uiLabelMap.CommonDelete}" also-hidden="false">
                 <parameter param-name="resumeId"/>
             </hyperlink>
@@ -68,7 +68,7 @@ under the License.
         <field name="partyId" use-when="partyResume==null&amp;&amp;partyId==null" title="${uiLabelMap.FormFieldTitle_partyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="resumeDate"><date-time/></field>
         <field name="resumeText"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
-        <field name="submitAction" use-when="resumeId!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="resumeId!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 </forms>

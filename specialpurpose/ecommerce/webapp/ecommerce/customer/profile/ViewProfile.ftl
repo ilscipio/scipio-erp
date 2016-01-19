@@ -28,7 +28,7 @@ under the License.
       <input type="hidden" id="updatedEmailAddress" name="updatedEmailAddress" value="${emailAddress!}" />
       <#if emailAddress??>
         <label>${emailAddress!}</label>
-        <a href="mailto:${emailAddress!}" class="${styles.link_action_sys!} ${styles.action_send!} ${styles.action_external!}">(${uiLabelMap.PartySendEmail})</a>
+        <a href="mailto:${emailAddress!}" class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}">(${uiLabelMap.PartySendEmail})</a>
       </#if>
       <div id="serverError_${emailContactMechId!}" class="errorMessage"></div>
     </div>

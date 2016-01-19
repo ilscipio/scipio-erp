@@ -45,7 +45,7 @@
         <field name="approverPartyId"><lookup target-form-name="LookupPartyName"/></field>
         <field name="description"><hidden/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplLeaves" list-name="listIt" type="list" odd-row-style="alternate-row" header-row-style="header-row-2"
         paginate-target="FindEmplLeaves" default-table-style="${styles.table_basic} hover-bar">
@@ -83,7 +83,7 @@
                 <parameter param-name="fromDate"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}" use-when="hasAdminPermission">
+        <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}" use-when="hasAdminPermission">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteEmplLeave">
                 <parameter param-name="partyId"/>
                 <parameter param-name="leaveTypeId"/>
@@ -111,8 +111,8 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" tooltip="${uiLabelMap.CommonRequired}" required-field="true"><date-time type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" tooltip="${uiLabelMap.CommonRequired}" position="2" required-field="true"><date-time type="date"/></field>
         <field name="leaveStatus"><hidden value="LEAVE_CREATED"/></field>
-        <field name="submitAction" use-when="leaveApp==null" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
-        <field name="submitAction" use-when="leaveApp!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="leaveApp==null" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" use-when="leaveApp!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="FindLeaveApprovals" target="FindLeaveApprovals" type="single">
         <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/>
@@ -128,7 +128,7 @@
             </drop-down>
         </field>
         <field name="description"><hidden/></field>
-        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListLeaveApprovals" list-name="listIt" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
         <actions>
@@ -182,6 +182,6 @@
             </drop-down>
         </field>
         <field name="leaveStatus" use-when="leaveApp!=null&amp;&amp;leaveApp.getString(&quot;leaveStatus&quot;).equals(&quot;LEAVE_REJECTED&quot;)"><display></display></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
 </forms>

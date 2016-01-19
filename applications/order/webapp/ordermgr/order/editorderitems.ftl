@@ -126,7 +126,7 @@ under the License.
                                    
                                             <#if ("ITEM_CREATED" == (currentItemStatus.statusId) && "ORDER_APPROVED" == (orderHeader.statusId)) && security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
                                                 
-                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
+                                                    <a href="javascript:document.OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderApproveOrder}</a>
                                                     <form name="OrderApproveOrderItem_${orderItem.orderItemSeqId?default("")}" method="post" action="<@ofbizUrl>changeOrderItemStatus</@ofbizUrl>">
                                                         <input type="hidden" name="statusId" value="ITEM_APPROVED"/>
                                                         <input type="hidden" name="orderId" value="${orderId!}"/>
@@ -419,8 +419,8 @@ under the License.
                             <@td><input type="text" name="amount" size="6" value="<@ofbizAmount amount=adjustmentAmount/>" class="${styles.text_right!}"/></@td>
                             <@td nowrap="nowrap">
                                 <#if (allowPriceChange)>
-                                    <input class="${styles.link_action_session!} ${styles.action_update!}" type="submit" value="${uiLabelMap.CommonUpdate}"/>
-                                    <a href="javascript:document.deleteOrderAdjustment${orderAdjustmentId}.submit();" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
+                                    <input class="${styles.link_run_session!} ${styles.action_update!}" type="submit" value="${uiLabelMap.CommonUpdate}"/>
+                                    <a href="javascript:document.deleteOrderAdjustment${orderAdjustmentId}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                                 <#else>
                                     <@ofbizAmount amount=adjustmentAmount/>
                                 </#if>
@@ -462,7 +462,7 @@ under the License.
                         <@td><input type="text" name="description" value="" size="30" maxlength="60" class="${styles.text_right!}"/></@td>
                         <@td><input type="text" name="amount" size="6" value="<@ofbizAmount amount=0.00/>" class="${styles.text_right!}"/></@td>
                         <@td>
-                            <input class="${styles.link_action_sys!} ${styles.action_add!}" type="submit" value="${uiLabelMap.CommonAdd}"/>
+                            <input class="${styles.link_run_sys!} ${styles.action_add!}" type="submit" value="${uiLabelMap.CommonAdd}"/>
                         </@td>
                     </@tr>
             </form>

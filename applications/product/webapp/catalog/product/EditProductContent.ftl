@@ -65,9 +65,9 @@ under the License.
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                        <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="${styles.link_action_local!} ${styles.action_add!}">.jpg</a>
-                        <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="${styles.link_action_local!} ${styles.action_add!}">.gif</a>
-                        <a href="javascript:insertImageName('small','');" class="${styles.link_action_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
+                        <a href="javascript:insertImageName('small','${imageNameSmall}.jpg');" class="${styles.link_run_local!} ${styles.action_add!}">.jpg</a>
+                        <a href="javascript:insertImageName('small','${imageNameSmall}.gif');" class="${styles.link_run_local!} ${styles.action_add!}">.gif</a>
+                        <a href="javascript:insertImageName('small','');" class="${styles.link_run_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
                     </div>
                   </#if>
             </@field>
@@ -81,9 +81,9 @@ under the License.
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                        <a href="javascript:insertImageName('medium','${imageNameMedium}.jpg');" class="${styles.link_action_local!} ${styles.action_add!}">.jpg</a>
-                        <a href="javascript:insertImageName('medium','${imageNameMedium}.gif');" class="${styles.link_action_local!} ${styles.action_add!}">.gif</a>
-                        <a href="javascript:insertImageName('medium','');" class="${styles.link_action_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
+                        <a href="javascript:insertImageName('medium','${imageNameMedium}.jpg');" class="${styles.link_run_local!} ${styles.action_add!}">.jpg</a>
+                        <a href="javascript:insertImageName('medium','${imageNameMedium}.gif');" class="${styles.link_run_local!} ${styles.action_add!}">.gif</a>
+                        <a href="javascript:insertImageName('medium','');" class="${styles.link_run_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
                     </div>
                   </#if>
             </@field>
@@ -97,9 +97,9 @@ under the License.
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                        <a href="javascript:insertImageName('large','${imageNameLarge}.jpg');" class="${styles.link_action_local!} ${styles.action_add!}">.jpg</a>
-                        <a href="javascript:insertImageName('large','${imageNameLarge}.gif');" class="${styles.link_action_local!} ${styles.action_add!}">.gif</a>
-                        <a href="javascript:insertImageName('large','');" class="${styles.link_action_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
+                        <a href="javascript:insertImageName('large','${imageNameLarge}.jpg');" class="${styles.link_run_local!} ${styles.action_add!}">.jpg</a>
+                        <a href="javascript:insertImageName('large','${imageNameLarge}.gif');" class="${styles.link_run_local!} ${styles.action_add!}">.gif</a>
+                        <a href="javascript:insertImageName('large','');" class="${styles.link_run_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
                     </div>
                   </#if>
             </@field>
@@ -113,9 +113,9 @@ under the License.
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                        <a href="javascript:insertImageName('detail','${imageNameDetail}.jpg');" class="${styles.link_action_local!} ${styles.action_add!}">.jpg</a>
-                        <a href="javascript:insertImageName('detail','${imageNameDetail}.gif');" class="${styles.link_action_local!} ${styles.action_add!}">.gif</a>
-                        <a href="javascript:insertImageName('detail','');" class="${styles.link_action_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
+                        <a href="javascript:insertImageName('detail','${imageNameDetail}.jpg');" class="${styles.link_run_local!} ${styles.action_add!}">.jpg</a>
+                        <a href="javascript:insertImageName('detail','${imageNameDetail}.gif');" class="${styles.link_run_local!} ${styles.action_add!}">.gif</a>
+                        <a href="javascript:insertImageName('detail','');" class="${styles.link_run_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
                     </div>
                   </#if>
             </@field>
@@ -129,14 +129,14 @@ under the License.
                   <#if productId?has_content>
                     <div>
                         <span>${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                        <a href="javascript:insertImageName('original','${imageNameOriginal}.jpg');" class="${styles.link_action_local!} ${styles.action_add!}">.jpg</a>
-                        <a href="javascript:insertImageName('original','${imageNameOriginal}.gif');" class="${styles.link_action_local!} ${styles.action_add!}">.gif</a>
-                        <a href="javascript:insertImageName('original','');" class="${styles.link_action_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
+                        <a href="javascript:insertImageName('original','${imageNameOriginal}.jpg');" class="${styles.link_run_local!} ${styles.action_add!}">.jpg</a>
+                        <a href="javascript:insertImageName('original','${imageNameOriginal}.gif');" class="${styles.link_run_local!} ${styles.action_add!}">.gif</a>
+                        <a href="javascript:insertImageName('original','');" class="${styles.link_run_local!} ${styles.action_clear!}">${uiLabelMap.CommonClear}</a>
                     </div>
                   </#if>
             </@field>
             <@field type="submitarea">
-                <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="${styles.link_action_sys!} ${styles.action_update!}"/>
+                <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
             </@field>
         </form>
         <@script>
@@ -159,7 +159,7 @@ under the License.
                 <input type="radio" name="upload_file_type_bogus" value="original" checked="checked" onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>");'/>${uiLabelMap.ProductOriginal}
             </@field>
             <@field type="submitarea">
-                <input type="submit" class="${styles.link_action_sys!} ${styles.action_import!}" value="${uiLabelMap.ProductUploadImage}"/>
+                <input type="submit" class="${styles.link_run_sys!} ${styles.action_import!}" value="${uiLabelMap.ProductUploadImage}"/>
             </@field>
             <#-- FIXME -->
             <span class="tooltip">${uiLabelMap.ProductOriginalImageMessage} : {ofbiz.home}/applications/product/config/ImageProperties.xml&quot;</span>

@@ -20,7 +20,7 @@ under the License.
 <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
   <@section title="${uiLabelMap.OrderReceiveOfflinePayments}">
       <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
-      <a href="javascript:document.paysetupform.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
+      <a href="javascript:document.paysetupform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
 
       <form method="post" action="<@ofbizUrl>receiveOfflinePayments/${donePage}</@ofbizUrl>" name="paysetupform">
         <#if requestParameters.workEffortId??>
@@ -76,7 +76,7 @@ under the License.
       </form>
 
       <a href="<@ofbizUrl>authview/${donePage}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonBack}</a>
-      <a href="javascript:document.paysetupform.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
+      <a href="javascript:document.paysetupform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonSave}</a>
   
   </@section>
 <#else>

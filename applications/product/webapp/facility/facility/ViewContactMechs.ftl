@@ -76,7 +76,7 @@ under the License.
                     </#if>
               <#elseif "EMAIL_ADDRESS" = contactMech.contactMechTypeId>
                     ${contactMech.infoString!}
-                    <a href='mailto:${contactMech.infoString!}' class="${styles.link_action_sys!} ${styles.action_send!} ${styles.action_external!}">${uiLabelMap.CommonSendEmail}</a>
+                    <a href='mailto:${contactMech.infoString!}' class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}">${uiLabelMap.CommonSendEmail}</a>
               <#elseif "WEB_ADDRESS" = contactMech.contactMechTypeId>
                     ${contactMech.infoString!}
                     <#assign openAddress = contactMech.infoString?default("")>
@@ -98,7 +98,7 @@ under the License.
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
                   <input type="hidden" name="contactMechId" value="${contactMech.contactMechId!}"/>
                 </form>
-                <a href="javascript:document.deleteContactForm_${contactMechMap_index}.submit()" class="${styles.link_action_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonExpire}</a>
+                <a href="javascript:document.deleteContactForm_${contactMechMap_index}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonExpire}</a>
               </#if>
             </@td>
           </@tr>

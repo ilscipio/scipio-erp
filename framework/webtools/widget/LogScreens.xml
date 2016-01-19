@@ -109,7 +109,7 @@ under the License.
                      <decorator-section name="body">
                          <screenlet>
                              <container style="button-bar">
-                                 <link target="LogView" text="${uiLabelMap.CommonRefresh}" style="${styles.link_action_sys} ${styles.action_reload}"/>
+                                 <link target="LogView" text="${uiLabelMap.CommonRefresh}" style="${styles.link_run_sys} ${styles.action_reload}"/>
                              </container>
                              <container style="">
                                  <label style="">${uiLabelMap.WebtoolsLogFileName}:</label>

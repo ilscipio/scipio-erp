@@ -29,7 +29,7 @@ under the License.
     <@field type="input" name="mapValue" label="${uiLabelMap.PartyAddressMatchValue}" />
     <@field type="input" name="sequenceNum" label="${uiLabelMap.CommonSequence}" value="0" size=5/>
     <@field type="submitarea">
-      <a href="javascript:document.addaddrmap.submit()" class="${styles.link_action_sys!} ${styles.action_add!}">${uiLabelMap.CommonCreate}</a>
+      <a href="javascript:document.addaddrmap.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.CommonCreate}</a>
     </@field>
   </form>
   </@section>
@@ -78,7 +78,7 @@ under the License.
               <@td>=></@td>
               <@td>${map.mapValue}</@td>
               <@td>${map.sequenceNum!}</@td>
-              <@td class="button-col"><a href="<@ofbizUrl>removeAddressMatchMap?mapKey=${map.mapKey}&amp;mapValue=${map.mapValue}</@ofbizUrl>" class="${styles.link_action_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
+              <@td class="button-col"><a href="<@ofbizUrl>removeAddressMatchMap?mapKey=${map.mapKey}&amp;mapValue=${map.mapValue}</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a></@td>
             </@tr>
           </#list>
           </@tbody>

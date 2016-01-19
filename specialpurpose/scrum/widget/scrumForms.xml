@@ -186,7 +186,7 @@ under the License.
         <field name="taskActualHours" title="${uiLabelMap.ScrumActualHours}" position="2" use-when="!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"><display/></field>
         <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"><display></display>
         </field>
-        <field name="deleteAction" title=" " position="1" use-when="showPosition1&amp;&amp;!&quot;CRQ_COMPLETED&quot;.equals(&quot;${custRequest.statusId}&quot;)" widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " position="1" use-when="showPosition1&amp;&amp;!&quot;CRQ_COMPLETED&quot;.equals(&quot;${custRequest.statusId}&quot;)" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="DeleteSprintBackLogs" description="Delete" confirmation-message="Are you sure to delete this sprint backlog ?" link-type="hidden-form">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="sprintId"/>
@@ -210,7 +210,7 @@ under the License.
                 <parameter param-name="sprintId"></parameter>
             </hyperlink>
         </field>
-        <field name="deleteTaskAction" title=" " position="2" use-when="!&quot;STS_COMPLETED&quot;.equals(taskCurrentStatusId)&amp;&amp;!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)" widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteTaskAction" title=" " position="2" use-when="!&quot;STS_COMPLETED&quot;.equals(taskCurrentStatusId)&amp;&amp;!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="DeleteTaskFromSprintOverview" description="Delete" confirmation-message="Are you sure to delete this task ?" link-type="hidden-form">
                 <parameter param-name="workEffortId" from-field="taskId"/>
                 <parameter param-name="custRequestId"/>
@@ -218,7 +218,7 @@ under the License.
                 <parameter param-name="projectId"/>
             </hyperlink>
         </field>
-        <field name="setCompleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_complete}" use-when="!&quot;STS_COMPLETED&quot;.equals(taskCurrentStatusId)&amp;&amp;!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"
+        <field name="setCompleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_complete}" use-when="!&quot;STS_COMPLETED&quot;.equals(taskCurrentStatusId)&amp;&amp;!&quot;SCRUM_SPRINT&quot;.equals(taskTypeId)"
          position="2">
             <hyperlink target="setCompleteTask" description="${uiLabelMap.ScrumSetComplete}" link-type="hidden-form">
                 <parameter param-name="workEffortId" from-field="taskId"/>
@@ -269,7 +269,7 @@ under the License.
         <field name="custRequestItemSeqId"><hidden value="${custRequestItems[0].custRequestItemSeqId}"/></field>
         <field name="sprintItemId"><hidden value="${parameters.workEffortId}"/></field>
         <field name="estimatedMilliSeconds" title="${uiLabelMap.ScrumEstimatedHours}"><display></display></field>
-        <field name="submitAction" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     
     <form name="showSprintInfo" type="single" default-entity-name="WorkEffort" target="EditSprint" >
@@ -369,7 +369,7 @@ under the License.
         <field name="deleteAction"><hidden/></field>
         <field name="actualDate" title="${uiLabelMap.CommonEndDate}"><hidden/></field>
         <field name="maxHours" title="${uiLabelMap.ScrumMaximumHours}"><hidden/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
         <sort-order>
             <sort-field name="productId"/>
             <sort-field name="workEffortParentId"/>
@@ -444,7 +444,7 @@ under the License.
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time/></field>
         <field name="statusId"><hidden value="PRTYASGN_ASSIGNED"/></field>
         <field name="workEffortId"><hidden value="${parameters.sprintId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.ScrumAssign}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.ScrumAssign}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
         <field name="projectId"><hidden value="${parameters.projectId}"/></field>
         <field name="sprintId"><hidden value="${parameters.sprintId}"/></field>
     </form>
@@ -472,7 +472,7 @@ under the License.
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display type="date"/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit confirmation-message="Are you sure to delete selected member ?"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit confirmation-message="Are you sure to delete selected member ?"/></field>
     </form>
     <form name="listSprintMemberNoAction" extends="listSprintMember">
         <field name="submitAction"><hidden/></field>
@@ -539,7 +539,7 @@ under the License.
             </drop-down>
         </field>
         <field name="projectId"><hidden value="${parameters.projectId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="newScrumProject" extends="editScrumProject">
         <field name="productId" title="${uiLabelMap.ScrumProductName}"><display-entity entity-name="Product" description="${internalName} [${productId}]"/> </field>
@@ -772,7 +772,7 @@ under the License.
         <field name="story" title="${uiLabelMap.ScrumStory}" use-when="custRequest!=null&amp;&amp;isTeamMember==false"><textarea  rows="4" cols="60" default-value="${story}" /></field>
         <field name="story" title="${uiLabelMap.ScrumStory}" use-when="custRequest!=null&amp;&amp;isTeamMember==true"><display description="${story}"/></field>
         <field name="noteInfo" title="${uiLabelMap.ScrumHowToTest}"><textarea  rows="4" cols="60" default-value="${noteInfo}" /></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <sort-order>
             <sort-field name="description"/>
             <sort-field name="productId"/>
@@ -855,7 +855,7 @@ under the License.
             </drop-down>
         </field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="FindTotalBacklog" type="single" target="FindTotalBacklog">
         <actions>
@@ -913,7 +913,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     
     <form name="ListProdBacklog" type="multi" use-row-submit="true" list-name="custRequestAndCustRequestItems" target="updateProductBacklogItemRow?productId=${productId}&amp;sequence=${sequence}&amp;" paginate-target="AddProdBacklog" separate-columns="true"
@@ -1035,11 +1035,11 @@ under the License.
             </drop-down>
         </field>
         <field name="deleteFlag" position="2" title="${uiLabelMap.CommonDelete}"><check/></field>
-        <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListProdBacklogForOwner" extends="ListProdBacklog">
          <field name="estimatedHours" position="2" title="${uiLabelMap.ScrumPlannedHours}"><display/></field>
-         <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+         <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListProdBacklogBySeq" type="multi" use-row-submit="false" list-name="custRequestAndCustRequestItems" target="updateProductBacklogItemRow?productId=${productId}&amp;sequence=${sequence}&amp;backStatusId=CRQ_ACCEPTED" 
         paginate-target="AddProdBacklog" separate-columns="true" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate="true">
@@ -1158,19 +1158,19 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="setToReview" widget-style="${styles.link_action_sys} ${styles.action_update}" title="${uiLabelMap.ScrumMoveToUnplannedSprint}"><hidden/></field>
-        <field name="deleteFlag" position="1" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="setToReview" widget-style="${styles.link_run_sys} ${styles.action_update}" title="${uiLabelMap.ScrumMoveToUnplannedSprint}"><hidden/></field>
+        <field name="deleteFlag" position="1" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="DeleteProductBacklogItem" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productId" from-field="parameters.productId"/>
                 <parameter param-name="custRequestId" from-field="custRequestId"/>
                 <parameter param-name="statusId" from-field="parameters.statusId"/>
             </hyperlink>
         </field>
-        <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListProdBacklogBySeqForOwner" extends="ListProdBacklogBySeq">
         <field name="estimatedHours"><display/></field>
-        <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
     </form>
     <form name="projectList" type="list" target="main" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="Sprints" list-name="sprints">
         <actions>
@@ -1379,7 +1379,7 @@ under the License.
         <field name="noteInfo2" title="${uiLabelMap.ScrumBeforeNextMeeting}"><textarea rows="3" cols="60"/></field>
         <field name="noteInfo3" title="${uiLabelMap.ScrumProblemTask}"><textarea rows="3" cols="60"/></field>
 <!--    <field name="noteDateTime" title="Create Date Perform"><date-time type="date"/></field> -->
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
 
     <form name="ListDailyMeetingMinute" type="list" list-name="workEffortNoteAndDataList" use-row-submit="true" separate-columns="true" 
@@ -1465,7 +1465,7 @@ under the License.
         <field name="sprintId"><hidden/></field>
         <field name="maxNum"><hidden value="${maxNum}"/></field>
         <field name="sprintBacklogs" title="${uiLabelMap.ScrumSprintBacklogHowMany}" tooltip="${maxNum} remaining in Product Backlog"><text default-value="1"/></field>
-        <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="EditSprintBacklog" type="single" target="updateSprintBacklog" >
@@ -1480,7 +1480,7 @@ under the License.
         </field>
         <field name="custSequenceNum"><display/></field>
         <field name="estimatedHours" title="${uiLabelMap.ScrumPlannedHours}"><text default-value="${groovy:return custRequest.custEstimatedMilliSeconds/3600000}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <!-- Product -->
     <form name="EditProduct" type="single" target="createProductAndRole" default-map-name="product">
@@ -1514,8 +1514,8 @@ under the License.
         <field name="longDescription" title="${uiLabelMap.CommonDescription}"><textarea/></field>
         <field name="productTypeId"><hidden value="SCRUM_ITEM"/></field>
         <field name="productId"><hidden value="${parameters.productId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="product==null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" position="1" use-when="product!=null" widget-style="${styles.link_action_sys} ${styles.action_update}" event="onClick" action="javascript: if(document.EditProduct.statusId.value == 'PRODUCT_CLOSED') {
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="product==null" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" position="1" use-when="product!=null" widget-style="${styles.link_run_sys} ${styles.action_update}" event="onClick" action="javascript: if(document.EditProduct.statusId.value == 'PRODUCT_CLOSED') {
                                                                                                                                                                                 if (confirm('Are you sure to close this product ?.')){ 
                                                                                                                                                                                     document.ViewEditProdBacklog.disable();
                                                                                                                                                                                     document.EditProduct.action = 'updateProduct';
@@ -1575,7 +1575,7 @@ under the License.
         <field name="internalName" title="${uiLabelMap.ScrumProductName}"><display description="${product.internalName} [${product.productId}]"/></field>
         <field name="longDescription" title="${uiLabelMap.CommonDescription}"><display /></field>
         <field name="productTypeId"><hidden value="SCRUM_ITEM"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="product==null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="product==null" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListProductBacklogCategories" type="list" use-row-submit="true" list-name="listIt" target="DeleteSprint" paginate-target="SprintList" separate-columns="true"
         odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
@@ -1638,8 +1638,8 @@ under the License.
         <field name="productId"><hidden value="${productId}"/></field>
         <field name="custRequestId"><hidden/></field>
         <field name="custRequestName" title="${uiLabelMap.ScrumCategory}"><text/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="custRequest==null" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="custRequest!=null" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" use-when="custRequest==null" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="custRequest!=null" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListProductByAdmin" type="list" default-entity-name="ProductRole" use-row-submit="true" list-name="listIt" target="deleteProduct" paginate-target="EditProduct" separate-columns="true"
         odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
@@ -1721,7 +1721,7 @@ under the License.
             </field>
             <field name="partyId"><hidden value="${userLogin.partyId}"/></field>
             <field name="roleTypeId"><hidden value="PRODUCT_OWNER"/></field>
-            <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+            <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
             <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done -->
             </field>
         </form>
@@ -1859,11 +1859,11 @@ under the License.
         </field>
         <field name="rateTypeId" title="${uiLabelMap.ScrumRateTypeId}" position="2"><display-entity entity-name="RateType" description="${description}"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonDate}" position="2"><display type="date"/> </field>
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="totalHoursNotYetBilled" extends="hoursNotYetBilled" paginate-target="TotalBilling"
        target="updateTotalNotBilledBacklog?productId=${productId}&amp;fromDate=${fromDate}&amp;thruDate=${thruDate}&amp;includeMeeting=${includeMeeting}&amp;VIEW_SIZE_1=${parameters.VIEW_SIZE_1}&amp;VIEW_INDEX_1=${parameters.VIEW_INDEX_1}" >
-        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="AddProductTimeToNewInvoice" type="single" target="addProductTimeToNewInvoice">
         <field name="partyIdFrom" title="${uiLabelMap.WorkEffortTimeBillFromParty}"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName} [${partyId}]"/></field>
@@ -1885,7 +1885,7 @@ under the License.
             </drop-down>
            </field>
         <field name="invoiceDate" title="${uiLabelMap.ScrumInvoiceDate}" use-when="context.get(&quot;invoiceId&quot;)!=null"><date-time type="date"></date-time></field>
-        <field name="submitAction" title="${uiLabelMap.PageTitleAddProjectTimeToNewInvoice}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.PageTitleAddProjectTimeToNewInvoice}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="FindProductBilling" type="single" target="ProductBilling">
         <field name="productId"><hidden/></field>
@@ -1897,7 +1897,7 @@ under the License.
                 <option key="N"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="FindProductTotalBilling" extends="FindProductBilling" type="single" target="TotalBilling">
         <field name="productId" title="${uiLabelMap.ScrumProductName}">
@@ -1915,7 +1915,7 @@ under the License.
     </form>
     <!-- View Form -->
     <form name="ViewEditScrumProject" type="single" extends="editScrumProject">
-        <field name="submitAction" title="Save" widget-style="${styles.link_action_sys} ${styles.action_update}" event="onClick" action="javascript:document.ViewEditScrumProject.disable();"><submit/></field>
+        <field name="submitAction" title="Save" widget-style="${styles.link_run_sys} ${styles.action_update}" event="onClick" action="javascript:document.ViewEditScrumProject.disable();"><submit/></field>
     </form>
     <form name="ViewEditProdBacklog" type="single" default-map-name="custRequest">
         <actions>
@@ -2076,7 +2076,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" event="onClick" action="javascript:document.ViewDailyMeetingMinute.disable();"><hidden/></field>
     </form>
     <form name="ViewEditScrumProject" type="single" extends="editScrumProject">
-        <field name="submitAction" title="Save" widget-style="${styles.link_action_sys} ${styles.action_update}"><hidden/></field>
+        <field name="submitAction" title="Save" widget-style="${styles.link_run_sys} ${styles.action_update}"><hidden/></field>
     </form>
     <form name="ViewAddSprintBacklog" type="single" extends="addSprintBacklog">
         <field name="submitAction"><hidden/></field>
@@ -2164,14 +2164,14 @@ under the License.
         <field name="taskCreatedDate" title="${uiLabelMap.FormFieldTitle_createdDate}"><display type="date"/></field>
         <field name="taskEstimatedMilliSeconds" title="${uiLabelMap.ScrumPlannedHours}" parameter-name="planHours"><text size="5"/></field>
         <field name="taskActualMilliSeconds" title="${uiLabelMap.ScrumActualHours}" parameter-name="actualHours"><display/></field>
-        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="button" /></field>
+        <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button" /></field>
         <field name="editAction" title=" " widget-style="${styles.link_nav} ${styles.action_update}">
             <hyperlink target="EditSprintTask" description="${uiLabelMap.CommonEdit}" link-type="hidden-form">
                 <parameter param-name="sprintId" from-field="parameters.parameters.sprintId"/>
                 <parameter param-name="taskId"/>
             </hyperlink>
         </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteSprintTask" description="${uiLabelMap.CommonDelete}" link-type="hidden-form" confirmation-message="Are you sure to delete this task?">
                 <parameter param-name="sprintId" from-field="parameters.sprintId"/>
                 <parameter param-name="custRequestId"/>
@@ -2268,7 +2268,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="findAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit/></field>
+        <field name="findAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit/></field>
     </form>
     <form name="SprintTasksListNoAction" extends="SprintTasksList">
         <field name="partyId">
@@ -2386,8 +2386,8 @@ under the License.
         <field name="custRequestId1" title="${uiLabelMap.ScrumSprintBacklog}">
             <display description="${groovy:return sprint.getString(&quot;workEffortName&quot;)+' - '+backlog.getString(&quot;description&quot;);}"/>
         </field>
-        <field name="createAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><hidden/></field>
-        <field name="createAction1" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
+        <field name="createAction" widget-style="${styles.link_run_sys} ${styles.action_add}"><hidden/></field>
+        <field name="createAction1" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
     
     <form name="ListProduct" type="list" default-entity-name="ProductRole" use-row-submit="true" list-name="listIt" target="deleteProduct" paginate-target="main" separate-columns="true"
@@ -2538,7 +2538,7 @@ under the License.
         </field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><ignored/></field>
         <field name="submitAction"><ignored/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}" use-when="headerItem.equals(&quot;EditProjectContents&quot;)">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteProjectContent">
                 <parameter param-name="contentId"/>
                 <parameter param-name="workEffortId"/>
@@ -2547,7 +2547,7 @@ under the License.
                 <parameter param-name="projectId"/>
             </hyperlink>
         </field>
-        <field name="downloadAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_export}">
+        <field name="downloadAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_export}">
             <hyperlink description="${uiLabelMap.ContentDownload}" target="ViewSimpleContent?contentId=${contentId}"/>
         </field>
         <sort-order>
@@ -2574,7 +2574,7 @@ under the License.
             </drop-down>
         </field>
         <field name="dataResourceName" title="${uiLabelMap.CommonUpload}"><file/></field>
-        <field name="createAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="createAction" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListProjectContent" type="list" paginate-target="/ListCommContent"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -2589,7 +2589,7 @@ under the License.
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
         <field name="drMimeTypeId"><hidden/></field>
-        <field name="downloadAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_export}">
+        <field name="downloadAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_export}">
             <hyperlink description="${uiLabelMap.ContentDownload}" target="ViewSimpleContent?contentId=${contentId}"/>
         </field>
     </form>
@@ -2608,7 +2608,7 @@ under the License.
         <field name="contentTypeId"><display description="${descContent.description}"/></field>
         <field name="contentName"><display description="${contentMap.contentName} [${contentId}]"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/> </field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteScrumProductContent">
                 <parameter param-name="contentId"/>
                 <parameter param-name="fromDate"/>
@@ -2616,7 +2616,7 @@ under the License.
                 <parameter param-name="productContentTypeId"/>
             </hyperlink>
         </field>
-        <field name="downloadAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_export}">
+        <field name="downloadAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_export}">
             <hyperlink description="${uiLabelMap.ContentDownload}" target="ViewSimpleContent?contentId=${contentId}"/>
         </field>
     </form>
@@ -2656,7 +2656,7 @@ under the License.
         target="createProdBacklogNote?custRequestId=${parameters.custRequestId}&amp;productId=${parameters.productId}">
         <field name="noteName"><text/> </field>
         <field name="noteInfo"><textarea/></field>
-        <field name="createAction widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="createAction widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListProdBacklogNote" type="list" list-name="custNoteList"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ProdBacklogNote">
@@ -2670,7 +2670,7 @@ under the License.
         <field name="noteParty">
             <display-entity entity-name="PartyNameView" description="${lastName}, ${firstName} ${middleName}" key-field-name="partyId"/>
         </field>
-        <field name="removeNote" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="removeNote" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink description="${uiLabelMap.CommonDelete}" target="deleteProdBacklogNote">
                 <parameter param-name="noteId" from-field="noteId"/>
                 <parameter param-name="custRequestId" from-field="custRequestId"/>
@@ -2698,7 +2698,7 @@ under the License.
             </drop-down>
         </field>
         <field name="dataResourceName" title="${uiLabelMap.CommonUpload}*"><file/></field>
-        <field name="createAction" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="createAction" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListCustRequestContent" type="list" list-name="custRequestAndContents"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="EditBacklogItemContent">
@@ -2715,7 +2715,7 @@ under the License.
         <field name="contentName"><display description="${contentMap.contentName}[${contentId}]"/></field>
         <field name="mimeTypeId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
-        <field name="deleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_remove}" >
+        <field name="deleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_remove}" >
            <hyperlink also-hidden="false" description="${uiLabelMap.CommonDelete}" target="deleteBacklogItemContent">
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="contentId"/>
@@ -2724,7 +2724,7 @@ under the License.
                 </hyperlink>
         </field>
         
-        <field name="downloadAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_export}">
+        <field name="downloadAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_export}">
             <hyperlink description="${uiLabelMap.ContentDownload}" target="ViewSimpleContent?contentId=${contentId}"/>
         </field>
     </form>
@@ -2823,7 +2823,7 @@ under the License.
                 }"/>
         </actions>
         <field name="reason"><textarea/> </field>
-        <field name="buttonSubmit" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit request-confirmation="true" confirmation-message="${actualHoursMessage}"/></field>
+        <field name="buttonSubmit" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit request-confirmation="true" confirmation-message="${actualHoursMessage}"/></field>
     </form>
     <form name="DeleteProductBacklogItem" type="single" target="deleteProductBacklogItem?productId=${parameters.productId}&amp;custRequestId=${parameters.custRequestId}&amp;statusId=${parameters.statusId}">
         <actions>
@@ -2839,7 +2839,7 @@ under the License.
                 }"/>
         </actions>
         <field name="reason"><textarea/> </field>
-        <field name="buttonSubmit" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit request-confirmation="true" confirmation-message="${actualHoursMessage}"/></field>
+        <field name="buttonSubmit" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit request-confirmation="true" confirmation-message="${actualHoursMessage}"/></field>
     </form>
     <form name="ViewBacklogStatus" type="list" extends="ViewRequestStatus" extends-resource="component://order/widget/ordermgr/CustRequestForms.xml"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -2890,7 +2890,7 @@ under the License.
         <field name="story" title="${uiLabelMap.ScrumStory}" ><textarea  rows="4" cols="60"/></field>
         <field name="custSequenceNum"><hidden value="1"/></field>
         <field name="noteInfo" title="${uiLabelMap.ScrumHowToTest}" ><textarea  rows="4" cols="60"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="QuickAddNewTask" type="upload" target="createTaskForBacklog">
@@ -2937,7 +2937,7 @@ under the License.
             </entity-options>
             </drop-down>
         </field>
-        <field name="createAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
+        <field name="createAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="NewBacklogTask" extends="QuickAddNewTask">
         <field name="custRequestId"><hidden/></field>
@@ -2951,7 +2951,7 @@ under the License.
             <set field="custRequestCategoryGroupId" from-field="parentCustRequestId"/>
         </row-actions>
         <field name="UnplannedSequence"><hidden value="Y"/></field>
-        <field name="deleteFlag" position="1" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteFlag" position="1" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="DeleteProductBacklogItem" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productId" from-field="parameters.productId"/>
                 <parameter param-name="custRequestId" from-field="custRequestId"/>
@@ -2968,7 +2968,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" widget-style="${styles.link_action_sys} ${styles.action_update}" use-when="&quot;${statusId}&quot;==&quot;CRQ_ACCEPTED&quot;||&quot;${statusId}&quot;==&quot;CRQ_REOPENED&quot;" >
+        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" widget-style="${styles.link_run_sys} ${styles.action_update}" use-when="&quot;${statusId}&quot;==&quot;CRQ_ACCEPTED&quot;||&quot;${statusId}&quot;==&quot;CRQ_REOPENED&quot;" >
             <hyperlink description="${uiLabelMap.ScrumMoveToUnplannedSprint}" target="setUnplannedSprint">
                 <parameter param-name="custRequestId" from-field="parameters.custRequestId"/>
                 <parameter param-name="productId" from-field="parameters.productId"/>
@@ -2977,11 +2977,11 @@ under the License.
         </field>
         <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" use-when="&quot;${statusId}&quot;==&quot;CRQ_REVIEWED&quot;"><hidden /></field>
         <field name="dummy2" title="${uiLabelMap.CommonDelete}"><display description=" "/></field>
-        <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
     </form>
     <form name="unplannedBacklogListForOwner" extends="unplannedBacklogList">
         <field name="estimatedHours"><display/></field>
-        <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
     </form>
     <form name="unplanBacklogListItems" type="list" use-row-submit="true" list-name="listIt" target="UpdateUnplanBacklogHours" paginate-target="unplanBacklog" separate-columns="true"
         odd-row-style="alternate-row" default-table-style="hover-bar basic-table">
@@ -3068,7 +3068,7 @@ under the License.
         <field name="planHours" title="${uiLabelMap.ScrumPlannedHours}" position="2" use-when="workEffortId!=null">
             <display/>
         </field>
-        <field name="deleteAction" title=" " position="1" use-when="showPosition1&amp;&amp;!&quot;CRQ_COMPLETED&quot;.equals(&quot;${custRequest.statusId}&quot;)" widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteAction" title=" " position="1" use-when="showPosition1&amp;&amp;!&quot;CRQ_COMPLETED&quot;.equals(&quot;${custRequest.statusId}&quot;)" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="DeleteUnplanBacklog" description="Delete" confirmation-message="Are you sure to delete this sprint backlog ?" link-type="hidden-form">
                 <parameter param-name="workEffortId"/>
                 <parameter param-name="custRequestId"/>
@@ -3090,14 +3090,14 @@ under the License.
                 <parameter param-name="taskId" from-field="${workEffortId}"/>
             </hyperlink>
         </field>
-        <field name="deleteTaskAction" title=" " position="2" use-when="workEffortId!=null&amp;&amp;!&quot;STS_COMPLETED&quot;.equals(currentStatusId)" widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="deleteTaskAction" title=" " position="2" use-when="workEffortId!=null&amp;&amp;!&quot;STS_COMPLETED&quot;.equals(currentStatusId)" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="DeleteTaskFromUnplanBacklog" description="Delete" confirmation-message="Are you sure to delete this task ?" link-type="hidden-form">
                 <parameter param-name="workEffortId" from-field="workEffortId"/>
                 <parameter param-name="custRequestId"/>
                 <parameter param-name="productId" from-field="parameters.productId"/>
             </hyperlink>
         </field>
-        <field name="setCompleteAction" title=" " widget-style="${styles.link_action_sys} ${styles.action_complete}" use-when="workEffortId!=null&amp;&amp;!&quot;STS_COMPLETED&quot;.equals(currentStatusId)"
+        <field name="setCompleteAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_complete}" use-when="workEffortId!=null&amp;&amp;!&quot;STS_COMPLETED&quot;.equals(currentStatusId)"
          position="2">
             <hyperlink target="setCompleteFromUnplanBacklog" description="${uiLabelMap.ScrumSetComplete}" link-type="hidden-form">
                 <parameter param-name="workEffortId" from-field="workEffortId"/>
@@ -3161,8 +3161,8 @@ under the License.
         <!--<field name="custRequestCategoryGroupId" position="1" use-when="${groovy:showPosition1}" title="${uiLabelMap.ScrumCategory}">
             <display-entity entity-name="CustRequest" key-field-name="custRequestId" description="${custRequestName}"/>
         </field>-->
-        <field name="submitAction" widget-style="${styles.link_action_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
-        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" widget-style="${styles.link_action_sys} ${styles.action_update}" use-when="&quot;${statusId}&quot;==&quot;CRQ_ACCEPTED&quot;" position="2">
+        <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="setToReview" title="${uiLabelMap.ScrumMoveToUnplannedSprint}" widget-style="${styles.link_run_sys} ${styles.action_update}" use-when="&quot;${statusId}&quot;==&quot;CRQ_ACCEPTED&quot;" position="2">
             <hyperlink description="${uiLabelMap.ScrumMoveToUnplannedSprint}" target="setUnplannedSprint">
                 <parameter param-name="custRequestId" from-field="custRequest.custRequestId"/>
                 <parameter param-name="productId" from-field="parameters.productId"/>
@@ -3206,7 +3206,7 @@ under the License.
         <field name="custRequestId"><hidden/></field>
         <field name="planHours" title="Plan Hours"><text size="2"/></field>
         <field name="actualHours"><hidden/></field>
-        <field name="createAction1" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
+        <field name="createAction1" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="ListProductRevisions" extends="ListTaskRevisions" extends-resource="component://scrum/widget/TaskForms.xml" paginate-target="ViewProduct" view-size="10">
         <field name="productId"><hidden value="${parameters.productId}"/></field>
@@ -3224,6 +3224,6 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit/></field>
     </form>
 </forms>

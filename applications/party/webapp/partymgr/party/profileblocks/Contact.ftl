@@ -96,7 +96,7 @@ under the License.
                       <input name="my" value="My" type="hidden"/>
                       <input name="statusId" value="COM_PENDING" type="hidden"/>
                       <input name="communicationEventTypeId" value="EMAIL_COMMUNICATION" type="hidden"/>
-                    </form><a class="${styles.link_action_sys!} ${styles.action_send!}" href="javascript:document['${emailFormName}'].submit()">${uiLabelMap.CommonSendEmail}</a>
+                    </form><a class="${styles.link_run_sys!} ${styles.action_send!}" href="javascript:document['${emailFormName}'].submit()">${uiLabelMap.CommonSendEmail}</a>
                   </div>
                 <#elseif "WEB_ADDRESS" = contactMech.contactMechTypeId>
                   <div>
@@ -121,7 +121,7 @@ under the License.
                         <option value="${type.custRequestTypeId}">${type.get("description", locale)}</option>
                       </#list>
                     </select>
-                    <input type="submit" class="${styles.link_action_sys!} ${styles.action_add!}" value="${uiLabelMap.PartyCreateNewCustRequest}"/>
+                    <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.PartyCreateNewCustRequest}"/>
                   </form>
                 </#if>
               </@td>
@@ -134,7 +134,7 @@ under the License.
                   <form name="partyDeleteContact" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>" onsubmit="javascript:submitFormDisableSubmits(this)">
                     <input name="partyId" value="${partyId}" type="hidden"/>
                     <input name="contactMechId" value="${contactMech.contactMechId}" type="hidden"/>
-                    <input type="submit" class="${styles.link_action_sys!} ${styles.action_terminate!}" value="${uiLabelMap.CommonExpire}"/>
+                    <input type="submit" class="${styles.link_run_sys!} ${styles.action_terminate!}" value="${uiLabelMap.CommonExpire}"/>
                   </form>
                 </#if>
               </@td>

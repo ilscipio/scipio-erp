@@ -32,7 +32,7 @@ under the License.
                   <@container class="+${styles.text_center!}">
                       <#--<a href="/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}" target="_blank"><img src="<@ofbizContentUrl>${(contentDataResourceView.drObjectInfo)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a>
                       <a href="<@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl>" target="_blank"><img src="<@ofbizContentUrl>${(productImage.productImageThumb)!}</@ofbizContentUrl>" vspace="5" hspace="5" alt=""/></a>-->
-                      <a href="<@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl>" target="_blank" class="${styles.link_action_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
+                      <a href="<@ofbizContentUrl>${(productImage.productImage)!}</@ofbizContentUrl>" target="_blank" class="${styles.link_run_sys!} ${styles.action_view!}">${uiLabelMap.CommonView}</a>
                   </@container>
                   <@container class="+${styles.text_center!}">
                        <#--<a href="javascript:call_fieldlookup('','<@ofbizUrl>ImageShare?contentId=${productContentAndInfo.contentId}&amp;dataResourceId=${productContentAndInfo.dataResourceId}&amp;seoUrl=/catalog/images/${seoUrl}-${product.productId}/${seoUrl}-${contentName}</@ofbizUrl>','',${styles.gallery_share_view_width!},${styles.gallery_share_view_height!});" class="${styles.link_nav!} ${styles.action_send!}">${uiLabelMap.ImageManagementShare}</a>-->

@@ -32,7 +32,7 @@ under the License.
               </@cell>
               <@cell columns=3>
                 <@field type="submitarea">
-                  <a href="javascript:document.activityForm.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.OrderRelease}</a>
+                  <a href="javascript:document.activityForm.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderRelease}</a>
                 </@field>
               </@cell>
             </@row>
@@ -52,7 +52,7 @@ under the License.
               </@cell>
               <@cell columns=3>
                 <@field type="submitarea">
-                  <a href="javascript:document.activityForm.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.OrderHold}</a>
+                  <a href="javascript:document.activityForm.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderHold}</a>
                 </@field>
               </@cell>
             </@row>
@@ -87,7 +87,7 @@ under the License.
             </@cell>
             <@cell columns=3>
               <@field type="submitarea">
-                  <a href="javascript:document.transitionForm.submit()" class="${styles.link_action_sys!} ${styles.action_update!}">${uiLabelMap.CommonContinue}</a>
+                  <a href="javascript:document.transitionForm.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonContinue}</a>
               </@field>
             </@cell>
           </@row>

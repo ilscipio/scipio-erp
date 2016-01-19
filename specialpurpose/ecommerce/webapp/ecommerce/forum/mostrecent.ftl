@@ -65,7 +65,7 @@ under the License.
     <#if (0 < entityList?size)>
         <@tr>
           <@td colspan="5">
-            <div class="${styles.link_action_sys!} ${styles.action_update!}"><a href="javascript:submitRows('${row?default(0)}')">${uiLabelMap.CommonUpdate}</a></div>
+            <div class="${styles.link_run_sys!} ${styles.action_update!}"><a href="javascript:submitRows('${row?default(0)}')">${uiLabelMap.CommonUpdate}</a></div>
           </@td>
         </@tr>
     </#if>

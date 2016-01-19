@@ -31,7 +31,7 @@ under the License.
                 <list-options list-name="starSchemas" key-name="name" description="${title}"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_select}">
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_select}">
             <submit button-type="button"/>
         </field>
     </form>

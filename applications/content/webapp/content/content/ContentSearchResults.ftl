@@ -18,7 +18,7 @@ under the License.
 -->
 <@section title="${uiLabelMap.ContentSearchContents}, ${uiLabelMap.ProductSearchFor}:">
     <#list searchConstraintStrings as searchConstraintString>
-        <div><a href="<@ofbizUrl>ContentSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_action_session!} ${styles.action_remove!}">X</a>&nbsp;${searchConstraintString}</div>
+        <div><a href="<@ofbizUrl>ContentSearchResults?removeConstraint=${searchConstraintString_index}&amp;clearSearch=N</@ofbizUrl>" class="${styles.link_run_session!} ${styles.action_remove!}">X</a>&nbsp;${searchConstraintString}</div>
     </#list>
     <div><span>${uiLabelMap.CommonSortedBy}</span> ${searchSortOrderString}</div>
     <div><a href="<@ofbizUrl>ContentSearchOptions</@ofbizUrl>" class="${styles.link_nav!} ${styles.link_update!} ${styles.action_scope_session!}">${uiLabelMap.CommonRefineSearch}</a></div>

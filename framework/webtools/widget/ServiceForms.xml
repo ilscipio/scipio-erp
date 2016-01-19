@@ -43,7 +43,7 @@ under the License.
         <field name="SERVICE_INTERVAL" title="${uiLabelMap.WebtoolsInterval}" tooltip="${uiLabelMap.WebtoolsForUseWithFrequency}"><text/></field>
         <field name="SERVICE_COUNT" title="${uiLabelMap.WebtoolsCount}" tooltip="${uiLabelMap.WebtoolsNumberOfTimeTheJobWillRun}"><text default-value="1"/></field>
         <field name="SERVICE_MAXRETRY" title="${uiLabelMap.WebtoolsMaxRetry}" tooltip="${uiLabelMap.WebtoolsNumberOfJobRetry}"><text default-value="0"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
 
     <form name="runService" type="single" target="setSyncServiceParameters"
@@ -51,7 +51,7 @@ under the License.
         <field name="SERVICE_NAME" title="${uiLabelMap.WebtoolsService}"><text/></field>
         <field name="POOL_NAME" title="${uiLabelMap.WebtoolsPool}"><text/></field>
         <field name="_RUN_SYNC_"><hidden value="Y"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_action_sys} ${styles.action_begin}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_begin}"><submit button-type="button"/></field>
     </form>
 
     <form name="FindJobs" type="single" target="FindJob" default-entity-name="JobSandbox">
@@ -68,7 +68,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}" position="1">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}" position="1">
             <submit button-type="button"/>
         </field>
     </form>
@@ -100,7 +100,7 @@ under the License.
         </field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" sort-field="true"><display-entity entity-name="StatusItem" description="${description}"/></field>
         <field name="finishDateTime" title="${uiLabelMap.CommonEndDateTime}" sort-field="true"><display/></field>
-        <field name="cancelAction" title=" " use-when="startDateTime==null&amp;&amp;finishDateTime==null&amp;&amp;cancelDateTime==null" widget-style="${styles.link_action_sys} ${styles.action_terminate}">
+        <field name="cancelAction" title=" " use-when="startDateTime==null&amp;&amp;finishDateTime==null&amp;&amp;cancelDateTime==null" widget-style="${styles.link_run_sys} ${styles.action_terminate}">
             <hyperlink also-hidden="false" description="${uiLabelMap.WebtoolsCancelJob}" target="cancelJob">
                 <parameter param-name="jobId"/>
             </hyperlink>

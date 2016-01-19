@@ -68,7 +68,7 @@ under the License.
         <field name="monthsInPastLimit" entry-name="monthsInPastLimit"><text/></field>
         <field name="fromDateSellThrough"><date-time/></field>
         <field name="thruDateSellThrough"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_action_sys} ${styles.action_find}">
+        <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}">
             <submit button-type="button"/>
         </field>
     </form>
@@ -98,6 +98,6 @@ under the License.
             </drop-down>
         </field>
         <field name="submitAction"><hidden/></field>
-        <field name="report" title="Export Report" widget-style="${styles.link_action_sys} ${styles.action_export}"><submit button-type="button"/></field>
+        <field name="report" title="Export Report" widget-style="${styles.link_run_sys} ${styles.action_export}"><submit button-type="button"/></field>
     </form>
 </forms>

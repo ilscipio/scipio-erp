@@ -69,7 +69,7 @@ under the License.
                     </entity-options-->
             </drop-down>
         </field>
-        <field name="submitAction" title="Find" widget-style="${styles.link_action_sys} ${styles.action_find}"><submit button-type="button"/></field>
+        <field name="submitAction" title="Find" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListCategories" type="multi" use-row-submit="true" target="deleteCategoriesFromEbayStore" title="" list-name="categoriesList"
         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
@@ -104,7 +104,7 @@ under the License.
         </field>
         <field name="comments" title="Ebay Category Id"><display description="${ebayCategoryId}"></display></field>
         <field name="subCategory"><display description="${groovy:prodCategoryRollup.size()}"></display></field>
-        <field name="updateAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_action_sys} ${styles.action_remove}"><submit button-type="button"/></field>
+        <field name="updateAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit button-type="button"/></field>
     </form>
     <form name="NewEbayAccount" type="single" target="createEbayAccount">
         <auto-fields-service service-name="createEbayAccount"/>
@@ -117,7 +117,7 @@ under the License.
         </field>
         <field name="currentPassword"><password/></field>
         <field name="currentPasswordVerify"><password/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="AddCatalog" type="single" target="associateCatalogToStore">
         <field name="productStoreId"><hidden /></field>
@@ -126,14 +126,14 @@ under the License.
                 <list-options list-name="prodCatalogList" key-name="prodCatalogId" description="${catalogName}"/>
             </drop-down>
         </field>
-        <field name="submit" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_action_sys} ${styles.action_add}"><submit/></field>
+        <field name="submit" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="CatalogList" type="list" list-name="prodStoreCatalogList" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
         <field name="productStoreId"><display/></field>
         <field name="prodCatalogId">
             <display-entity entity-name="ProdCatalog" description="${catalogName}" key-field-name="prodCatalogId"/>
         </field>
-        <field name="delete" widget-style="${styles.link_action_sys} ${styles.action_remove}">
+        <field name="delete" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="removeCatalogFromStore" description="${uiLabelMap.CommonDelete}">
                 <parameter param-name="productStoreId"/>
                 <parameter param-name="prodCatalogId"/>

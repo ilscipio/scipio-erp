@@ -335,7 +335,7 @@ function getConfigDetails(event) {
               <div>[${uiLabelMap.EcommerceProductNotConfigured}]&nbsp;
               <input type="text" size="5" name="quantity" value="0" disabled="disabled" /></div>
             <#else>
-              <a href="javascript:addItem()" class="${styles.link_action_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>&nbsp;
+              <a href="javascript:addItem()" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>&nbsp;
               <input type="text" size="5" name="quantity" value="1" />
                 <#if minimumQuantity?? && (minimumQuantity > 0)>
                   Minimum order quantity is ${minimumQuantity}.
@@ -365,7 +365,7 @@ function getConfigDetails(event) {
           </select>
           &nbsp;&nbsp;
           <input type="text" size="5" name="quantity" value="1" />
-          <a href="javascript:document.addToShoppingList.submit();" class="${styles.link_action_sys!} ${styles.action_add!}">[${uiLabelMap.OrderAddToShoppingList}]</a>
+          <a href="javascript:document.addToShoppingList.submit();" class="${styles.link_run_sys!} ${styles.action_add!}">[${uiLabelMap.OrderAddToShoppingList}]</a>
         </form>
       <#else> <br />
         ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>
@@ -436,7 +436,7 @@ function getConfigDetails(event) {
         <@table>
           <@tr>
             <@td>
-                    <a href="javascript:verifyConfig();" class="${styles.link_action_sys!} ${styles.action_verify!}">${uiLabelMap.OrderVerifyConfiguration}</a>
+                    <a href="javascript:verifyConfig();" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.OrderVerifyConfiguration}</a>
             </@td>
           </@tr>
 
@@ -451,7 +451,7 @@ function getConfigDetails(event) {
                 <div>${StringUtil.wrapString(question.description!)}</div>
                 <#assign instructions = question.content.get("INSTRUCTIONS", "html")!>
                 <#if instructions?has_content>
-                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${instructions}");" class="${styles.link_action_sys!} ${styles.action_view!}">Instructions</a>
+                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${instructions}");" class="${styles.link_run_sys!} ${styles.action_view!}">Instructions</a>
                 </#if>
                 <#assign image = question.content.get("IMAGE_URL", "url")!>
                 <#if image?string?has_content>

@@ -49,7 +49,7 @@ under the License.
           </@tr>
           <@tr>
             <@td colspan="2" align="center">
-              <input type="submit" value="${uiLabelMap.CommonSend}" />
+              <input type="submit" value="${uiLabelMap.CommonSend}" class="${styles.link_run_sys!} ${styles.action_send!}" />
             </@td>
           </@tr>
         </@table>

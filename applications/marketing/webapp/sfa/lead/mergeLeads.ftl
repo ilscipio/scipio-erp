@@ -124,7 +124,7 @@ under the License.
             </@tr>
             <@tr>
               <@td colspan="4" align="center">
-                <input type="submit" value="${uiLabelMap.CommonSubmit}"/>
+                <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
               </@td>
             </@tr>
           </@table>

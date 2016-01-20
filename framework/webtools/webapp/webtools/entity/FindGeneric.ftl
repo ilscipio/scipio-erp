@@ -42,7 +42,7 @@ under the License.
             <@tfoot>
                 <@tr>
                     <@td colspan="3">${uiLabelMap.WebtoolsToFindAll} ${entityName}, ${uiLabelMap.WebtoolsLeaveAllEntriesBlank}</@td>
-                    <@td><input type="submit" value="${uiLabelMap.CommonFind}"/></@td>
+                    <@td><input type="submit" value="${uiLabelMap.CommonFind}" class="${styles.link_run_sys!} ${styles.action_find!}"/></@td>
                 </@tr>
             </@tfoot>
           </@table>

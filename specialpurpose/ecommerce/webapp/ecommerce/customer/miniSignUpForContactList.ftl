@@ -66,8 +66,8 @@ under the License.
             </select>
           </div>
           <div>
-            <input type="submit" value="${uiLabelMap.EcommerceSubscribe}"/>
-            <input type="button" value="${uiLabelMap.EcommerceUnsubscribe}" onclick="javascript:unsubscribeByContactMech();"/>
+            <input type="submit" value="${uiLabelMap.EcommerceSubscribe}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
+            <input type="button" value="${uiLabelMap.EcommerceUnsubscribe}" class="${styles.link_run_sys!} ${styles.action_remove!}" onclick="javascript:unsubscribeByContactMech();"/>
           </div>
         </fieldset>
       </form>
@@ -93,8 +93,8 @@ under the License.
           <input id="email" name="email" class="required" type="text"/>
         </div>
         <div>
-          <input type="submit" value="${uiLabelMap.EcommerceSubscribe}"/>
-          <input type="button" value="${uiLabelMap.EcommerceUnsubscribe}" onclick="javascript:unsubscribe();"/>
+          <input type="submit" value="${uiLabelMap.EcommerceSubscribe}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
+          <input type="button" value="${uiLabelMap.EcommerceUnsubscribe}" class="${styles.link_run_sys!} ${styles.action_remove!}" onclick="javascript:unsubscribe();"/>
         </div>
       </fieldset>
     </form>

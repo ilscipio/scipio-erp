@@ -48,7 +48,7 @@ under the License.
                             <#if hasExpired><#assign class="alert"></#if>
                             <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className="${class!''}"  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(productStorePromoAppl.thruDate)!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
                             <input type="text" size="5" name="sequenceNum" value="${(productStorePromoAppl.sequenceNum)!}" />
-                            <input type="submit" value="${uiLabelMap.CommonUpdate}" />
+                            <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                         </form>
                     </@td>
                     <@td align="center">
@@ -56,7 +56,7 @@ under the License.
                            <input type="hidden" name="productStoreId" value="${productStorePromoAppl.productStoreId}" />
                            <input type="hidden" name="productPromoId" value="${productStorePromoAppl.productPromoId}" />
                            <input type="hidden" name="fromDate" value="${productStorePromoAppl.fromDate}" />
-                           <input type="submit" value="${uiLabelMap.CommonDelete}" />
+                           <input type="submit" value="${uiLabelMap.CommonDelete}" class="${styles.link_run_sys!} ${styles.action_remove!}" />
                        </form>
                     </@td>
                 </@tr>
@@ -75,7 +75,7 @@ under the License.
                 </#list>
                 </select>
                 <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                <input type="submit" value="${uiLabelMap.CommonAdd}"/>
+                <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
             </form>
     </@section>
 </#if>

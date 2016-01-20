@@ -36,7 +36,7 @@ under the License.
               <form method="post" action="setOrderName" name="setCartOrderNameForm">
                   <@field type="input" id="orderName" name="orderName" size="12" maxlength="200" value="${shoppingCart.getOrderName()?default('')}" label="${uiLabelMap.OrderOrderName}"/>
                   <@field type="submitarea">
-                      <input type="submit" value="${uiLabelMap.CommonSet}" />
+                      <input type="submit" value="${uiLabelMap.CommonSet}"class="${styles.link_run_session!} ${styles.action_update!}" />
                   </@field>
               </form>
             </@cell>
@@ -47,7 +47,7 @@ under the License.
                     <form method="post" action="setPoNumber" name="setCartPoNumberForm">
                         <@field type="input" id="correspondingPoId" name="correspondingPoId" size="12" value="${shoppingCart.getPoNumber()?default('')}" label="${uiLabelMap.OrderPONumber}"/>
                         <@field type="submitarea">
-                            <input type="submit" value="${uiLabelMap.CommonSet}" />
+                            <input type="submit" value="${uiLabelMap.CommonSet}" class="${styles.link_run_session!} ${styles.action_update!}" />
                         </@field>
                     </form>
                     </@cell>

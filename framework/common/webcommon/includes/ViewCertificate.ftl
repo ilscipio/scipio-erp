@@ -85,7 +85,7 @@ under the License.
                       
                       <input type="hidden" name="alias" value=""/>
                       
-                      <input type="submit" value="${uiLabelMap.CommonSave}"/>
+                      <input type="submit" value="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
                     </form>
                   </td>
               </tr>

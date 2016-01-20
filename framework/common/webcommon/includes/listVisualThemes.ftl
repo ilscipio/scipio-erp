@@ -60,7 +60,7 @@ margin: 1em;
               <input type="hidden" name="userPrefTypeId" value="VISUAL_THEME"/>
               <input type="hidden" name="userPrefValue" value="${visualTheme.visualThemeId}"/>
             </form>
-            <a href="javascript:document.SetUserPreferences_${visualTheme.visualThemeId}.submit()">${visualTheme.get("description", locale)?default(visualTheme.visualThemeId)}</a>
+            <a href="javascript:document.SetUserPreferences_${visualTheme.visualThemeId}.submit()" class="${styles.link_run_sys_long!} ${styles.action_update!}">${visualTheme.get("description", locale)?default(visualTheme.visualThemeId)}</a>
           </td>
           <td>
             <#if visualTheme.visualThemeId == visualThemeId>${uiLabelMap.CommonVisualThemeSelected}<#else>&nbsp;</#if>

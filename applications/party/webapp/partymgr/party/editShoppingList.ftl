@@ -217,8 +217,8 @@ under the License.
             <@td class="align-float"><@ofbizCurrency amount=unitPrice isoCode=currencyUomId/></@td>
             <@td class="align-float"><@ofbizCurrency amount=totalPrice isoCode=currencyUomId/></@td>
             <@td class="button-col align-float">
-              <a href="javascript:document.listform_${shoppingListItem.shoppingListItemSeqId}.submit();">${uiLabelMap.CommonUpdate}</a>
-              <a href="javascript:document.removeform_${shoppingListItem.shoppingListItemSeqId}.submit();">${uiLabelMap.CommonRemove}</a>
+              <a href="javascript:document.listform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+              <a href="javascript:document.removeform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a>
             </@td>
           </@tr>
         </#list>
@@ -240,7 +240,7 @@ under the License.
       <@field type="input" name="productId" label="${uiLabelMap.PartyProduct}" value="" />
       <@field type="input" size="5" name="quantity" label="${uiLabelMap.CommonQuantity}" value="${requestParameters.quantity?default('1')}" />
       <@field type="submitarea">
-        <input type="submit" value="${uiLabelMap.PartyAddToShoppingList}" />
+        <input type="submit" value="${uiLabelMap.PartyAddToShoppingList}" class="${styles.link_run_sys!} ${styles.action_add!}" />
       </@field>
     </form>
 </@section>

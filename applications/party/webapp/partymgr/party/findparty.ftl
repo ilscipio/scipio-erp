@@ -129,7 +129,7 @@ under the License.
     </#if>
 
         <@field type="submitarea">
-            <input type="submit" value="${uiLabelMap.CommonFind}" onclick="javascript:document.lookupparty.submit();"/>
+            <input type="submit" value="${uiLabelMap.CommonFind}" onclick="javascript:document.lookupparty.submit();" class="${styles.link_run_sys!} ${styles.action_find!}"/>
         </@field>
       </form>
     </div>

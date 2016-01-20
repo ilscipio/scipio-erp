@@ -30,8 +30,8 @@ under the License.
     </@tr>
     <@tr>
       <@td colspan="2" align="center">
-        <input type="submit" value="${uiLabelMap.CommonConfirm}" id="openTerminalConfirm"/>
-        <input type="submit" value="${uiLabelMap.CommonCancel}" id="openTerminalCancel"/>
+        <input type="submit" value="${uiLabelMap.CommonConfirm}" id="openTerminalConfirm" class="${styles.link_run_sys!} ${styles.action_update!}"/>
+        <input type="submit" value="${uiLabelMap.CommonCancel}" id="openTerminalCancel" class="${styles.link_nav_cancel!}"/>
       </@td>
     </@tr>
     <@tr>

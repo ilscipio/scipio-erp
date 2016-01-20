@@ -66,7 +66,7 @@ under the License.
         <@row>
             <@cell class="+${styles.text_right!}">
                 <input type="hidden" name="JavaScriptEnabled" value="N"/>
-                <input type="submit" value="${uiLabelMap.CommonLogin}" class="button"/>
+                <input type="submit" value="${uiLabelMap.CommonLogin}" class="${styles.link_run_session!} ${styles.action_login!}"/>
             </@cell>
         </@row>
       </form>

@@ -42,7 +42,7 @@ under the License.
                     <span class="tooltip">${uiLabelMap.ProductDefaultsTo} &quot;categorydetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#categorydetail&quot;</span>
                 </@field>
                 <@field type="submitarea">
-                    <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" />
+                    <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                 </@field>
         </form>
 </@section>

@@ -167,12 +167,12 @@ under the License.
               </#if>
           </@field>
           <@field type="submitarea">
-              <input type="submit" value="${uiLabelMap.CommonUpdate}"/>
+              <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
           </@field>
         <#else>
           <input type="hidden" name="statusId" value="RETURN_REQUESTED" />
           <@field type="submitarea">
-              <input type="submit" value="${uiLabelMap.CommonNew}"/>
+              <input type="submit" value="${uiLabelMap.CommonNew}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
           </@field>
         </#if>
 

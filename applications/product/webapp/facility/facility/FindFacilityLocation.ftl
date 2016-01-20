@@ -57,7 +57,7 @@ under the License.
             <input type="text" name="positionId" value="" size="19" maxlength="20" />
         </@field>
         <@field type="submitarea">
-            <input type="submit" name="look_up" value="${uiLabelMap.CommonFind}" />
+            <input type="submit" name="look_up" value="${uiLabelMap.CommonFind}" class="${styles.link_run_sys!} ${styles.action_find!}" />
         </@field>
     </form>
 

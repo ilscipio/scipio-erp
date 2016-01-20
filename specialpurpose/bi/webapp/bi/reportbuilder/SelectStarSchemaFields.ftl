@@ -50,7 +50,7 @@ under the License.
       <@tfoot>
         <@tr>
             <@td colspan="3">
-                <input name="submitButton" type="submit" value="${uiLabelMap.BusinessIntelligenceRenderTheReport}"/>
+                <input name="submitButton" type="submit" value="${uiLabelMap.BusinessIntelligenceRenderTheReport}" class="${styles.link_run_sys!} ${styles.action_export!}"/>
             </@td>
         </@tr>
       </@tfoot>

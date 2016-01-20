@@ -33,7 +33,7 @@ under the License.
                     <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId!}"/>
                     <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                     <span>${uiLabelMap.ProductAddEmail}:</span><input type="text" size="40" name="emailAddress" />
-                    <input type="submit" value="${uiLabelMap.CommonAdd}" />
+                    <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
                 </form>
                 <#if productPromoCode.requireEmailOrParty! == "N">
                     <div class="tooltip">${uiLabelMap.ProductNoteRequireEmailParty}</div>
@@ -42,7 +42,7 @@ under the License.
                     <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId!}"/>
                     <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                     <input type="file" size="40" name="uploadedFile" />
-                    <input type="submit" value="${uiLabelMap.CommonUpload}" />
+                    <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_import!}" />
                 </form>
             </div>
     </@section>
@@ -56,7 +56,7 @@ under the License.
                     <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId!}"/>
                     <input type="hidden" name="productPromoId" value="${productPromoId}"/>
                     <span>${uiLabelMap.ProductAddPartyId}:</span><input type="text" size="10" name="partyId" />
-                    <input type="submit" value="${uiLabelMap.CommonAdd}" />
+                    <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
                 </form>
             </div>
     </@section>

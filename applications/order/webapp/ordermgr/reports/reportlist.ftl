@@ -44,7 +44,7 @@ these reports and helping to improve them.</p>
   </@field>
 -->
   <@field type="submitarea">
-      <input type="submit" tabindex="16" class="button" name="GoReport" value="Order Report">
+      <input type="submit" tabindex="16" name="GoReport" value="Order Report" class="${styles.link_run_sys!} ${styles.action_export!}"/>
   </@field>
 </form>
 
@@ -69,6 +69,6 @@ these reports and helping to improve them.</p>
   </@field>
 -->
   <@field type="submitarea">
-      <input type="submit" tabindex="16" class="button" name="GoReport" value="Item Report">
+      <input type="submit" tabindex="16" name="GoReport" value="Item Report"  class="${styles.link_run_sys!} ${styles.action_export!}"/>
   </@field>
 </form>

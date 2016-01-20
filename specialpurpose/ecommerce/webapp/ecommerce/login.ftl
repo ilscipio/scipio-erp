@@ -68,7 +68,7 @@ under the License.
                 <input type="password" id="password" name="PASSWORD" value=""/>
               </div>
               <div>
-                <input type="submit" class="button" value="${uiLabelMap.CommonLogin}"/>
+                <input type="submit" class="${styles.link_run_session!} ${styles.action_login!}" value="${uiLabelMap.CommonLogin}"/>
               </div>
               <div>
                 <label for="newcustomer_submit">${uiLabelMap.CommonMayCreateNewAccountHere}:</label>
@@ -101,7 +101,7 @@ under the License.
           <input type="password" id="password" name="PASSWORD" value=""/>
         </div>
         <div>
-          <input type="submit" class="button" value="${uiLabelMap.CommonLogin}"/>
+          <input type="submit" class="${styles.link_run_session!} ${styles.action_login!}" value="${uiLabelMap.CommonLogin}"/>
         </div>
         <div>
           <label for="newcustomer_submit">${uiLabelMap.CommonMayCreateNewAccountHere}:</label>
@@ -122,8 +122,8 @@ under the License.
       <input type="text" id="forgotpassword_userName" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>"/>
     </div>
     <div class="buttons">
-      <input type="submit" class="button" name="GET_PASSWORD_HINT" value="${uiLabelMap.CommonGetPasswordHint}"/>
-      <input type="submit" class="button" name="EMAIL_PASSWORD" value="${uiLabelMap.CommonEmailPassword}"/>
+      <input type="submit" class="${styles.link_run_sys!} ${styles.action_view!}" name="GET_PASSWORD_HINT" value="${uiLabelMap.CommonGetPasswordHint}"/>
+      <input type="submit" class="${styles.link_run_sys!} ${styles.action_send!}" name="EMAIL_PASSWORD" value="${uiLabelMap.CommonEmailPassword}"/>
     </div>
   </form>
   </div>
@@ -134,7 +134,7 @@ under the License.
   <form method="post" action="<@ofbizUrl>newcustomer</@ofbizUrl>">
     <div>
       <label for="newcustomer_submit">${uiLabelMap.CommonMayCreateNewAccountHere}:</p>
-      <input type="submit" class="button" id="newcustomer_submit" value="${uiLabelMap.CommonMayCreate}"/>
+      <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" id="newcustomer_submit" value="${uiLabelMap.CommonMayCreate}"/>
     <div>
   </form>
 </div>

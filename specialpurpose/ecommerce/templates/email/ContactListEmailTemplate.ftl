@@ -31,7 +31,7 @@ under the License.
                 <input type="hidden" name="fromDate" value="${fromDate}" />
                 <input type="hidden" name="statusId" value="CLPT_UNSUBS_PENDING" />
                 <input type="hidden" name="optInVerifyCode" value="${optInVerifyCode!}" />
-                <input type="submit" name="submitButton" value="Click here to unsubscribe your newsletter subscription." />
+                <input type="submit" name="submitButton" value="Click here to unsubscribe your newsletter subscription." class="${styles.link_run_sys!} ${styles.action_remove!}" />
             </fieldset>
         </form>
     </body>

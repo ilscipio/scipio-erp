@@ -147,7 +147,7 @@ under the License.
     </@tr>
     <@tr>
       <@td align="center">
-        <input type="submit" name="btSubmit" id="btSubmit" value="Continue"/>
+        <input type="submit" name="btSubmit" id="btSubmit" value="Continue" class="${styles.link_run_sys!} ${styles.action_update!}"/>
       </@td>
     </@tr>
   </@table>

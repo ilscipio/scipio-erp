@@ -532,7 +532,7 @@ under the License.
     </@tbody>
 </@table>
 <input type="hidden" name="feedbackSize" value="${feedbackCounter}"/>
-<input type="submit" value="Leave Feedback"/>
+<input type="submit" value="Leave Feedback" class="${styles.link_run_sys!} ${styles.action_add!}"/>
 </form>
 <#else>
   <@resultMsg>No Leave Feedback.</@resultMsg>

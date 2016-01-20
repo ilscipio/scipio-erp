@@ -53,7 +53,7 @@ under the License.
       		</#list>
     	</@table>
     	<@field type="submitarea">
-    		<input type="submit" value='${uiLabelMap.CommonSubmit}' />
+    		<input type="submit" value='${uiLabelMap.CommonSubmit}' class="${styles.link_run_sys!} ${styles.action_update!}" />
     	</@field>
   	</form>
 <#else>

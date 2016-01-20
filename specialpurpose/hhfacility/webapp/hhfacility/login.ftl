@@ -39,7 +39,7 @@ under the License.
       <input type="text" id="tenantId" name="userTenantId" value="${parameters.userTenantId!}" size="20"/>
     </div>
   </#if>
-  <input type="submit" value="${uiLabelMap.CommonLogin}" class="loginButton" />
+  <input type="submit" value="${uiLabelMap.CommonLogin}" class="${styles.link_run_session!} ${styles.action_login!}" />
 </form>
 
 <@script>

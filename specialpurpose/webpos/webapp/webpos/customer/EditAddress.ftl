@@ -89,9 +89,9 @@ under the License.
     </@tr>
     <@tr>
       <@td width="100%" colspan="4" align="center">
-        <input type="submit" id="editAddressCreateUpdate" name="editAddressCreateUpdate" value="${uiLabelMap.CommonCreate}"/>
+        <input type="submit" id="editAddressCreateUpdate" name="editAddressCreateUpdate" value="${uiLabelMap.CommonCreate}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
         &nbsp;
-        <input type="submit" id="editAddressCancel" name="editAddressCancel" value="${uiLabelMap.CommonCancel}"/>
+        <input type="submit" id="editAddressCancel" name="editAddressCancel" value="${uiLabelMap.CommonCancel}" class="${styles.link_nav_cancel!}"/>
       </@td>
     </@tr>
   </@table>

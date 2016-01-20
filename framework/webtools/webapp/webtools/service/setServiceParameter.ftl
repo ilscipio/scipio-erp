@@ -35,7 +35,7 @@ under the License.
     </#list>
     <@tfoot>
       <@tr>
-        <@td colspan="2" align="center"><input type="submit" value="${uiLabelMap.CommonSubmit}" /></@td>
+        <@td colspan="2" align="center"><input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_begin!}" /></@td>
       </@tr>
     </@tfoot>
     </@table>

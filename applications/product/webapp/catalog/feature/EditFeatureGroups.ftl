@@ -34,7 +34,7 @@ under the License.
                     <form method='post' action='<@ofbizUrl>UpdateProductFeatureGroup</@ofbizUrl>'>
                     <input type='hidden' name="productFeatureGroupId" value="${productFeatureGroup.productFeatureGroupId}" />
                     <input type='text' size='30' name="description" value="${productFeatureGroup.description!}" />
-                    <input type="submit" value="${uiLabelMap.CommonUpdate}" />
+                    <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                     </form>
                 </@td>
                 <@td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.link_nav!}">${uiLabelMap.ProductFeatureGroupAppls}</a></@td>
@@ -50,7 +50,7 @@ under the License.
                 <input type="text" size='30' name='description' value='' />
             </@field>
             <@field type="submitarea">
-              <input type="submit" value="${uiLabelMap.CommonCreate}" />
+              <input type="submit" value="${uiLabelMap.CommonCreate}" class="${styles.link_run_sys!} ${styles.action_add!}" />
             </@field>
         </form>
 </@section>

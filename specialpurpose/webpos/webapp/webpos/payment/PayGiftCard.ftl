@@ -45,8 +45,8 @@ under the License.
     </@tr>
     <@tr>
       <@td colspan="2" align="center">
-        <input type="submit" value="${uiLabelMap.CommonConfirm}" id="payGiftCardConfirm"/>
-        <input type="submit" value="${uiLabelMap.CommonCancel}" id="payGiftCardCancel"/>
+        <input type="submit" value="${uiLabelMap.CommonConfirm}" id="payGiftCardConfirm" class="${styles.link_run_sys!} ${styles.action_update!}"/>
+        <input type="submit" value="${uiLabelMap.CommonCancel}" id="payGiftCardCancel" class="${styles.link_nav_cancel!}"/>
       </@td>
     </@tr>
     <@tr>

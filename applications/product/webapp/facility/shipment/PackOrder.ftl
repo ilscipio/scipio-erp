@@ -315,7 +315,7 @@ under the License.
                     <@tr><@td colspan="10">&nbsp;</@td></@tr>
                     <@tr>
                       <@td colspan="12" align="right">
-                        <input type="submit" value="${uiLabelMap.ProductPackItem}" />
+                        <input type="submit" value="${uiLabelMap.ProductPackItem}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                         &nbsp;
                         <input type="button" value="${uiLabelMap.CommonClear} (${uiLabelMap.CommonAll})" onclick="javascript:document.clearPackForm.submit();"/>
                       </@td>

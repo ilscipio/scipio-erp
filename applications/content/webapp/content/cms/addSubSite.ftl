@@ -42,10 +42,10 @@ function win_cancel() {
       </select>
   </@field>
   <@field type="submitarea"> 
-      <input type="submit" name="submitBtn" value="Create"/>
+      <input type="submit" name="submitBtn" value="Create" class="${styles.link_run_sys!} ${styles.action_add!}"/>
       <#--
-      <a href="javascript:submit_add()">Create</a>
-      <a href="javascript:win_cancel()">Cancel</a>
+      <a href="javascript:submit_add()" class="${styles.link_run_sys!} ${styles.action_add!}">Create</a>
+      <a href="javascript:win_cancel()" class="${styles.link_nav_cancel!}">Cancel</a>
       -->
   </@field>
 <input type="hidden" name="contentIdTo" value="${requestParameters.parentForumId}" />

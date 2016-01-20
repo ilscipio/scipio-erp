@@ -91,7 +91,7 @@ under the License.
                   </@tr>
                   <@tr valign="middle" groupLast=true>
                       <@td colspan="4" align="center">
-                          <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;" />
+                          <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                           <input type="hidden" value="${productCategoryMembers.size()}" name="_rowCount" />
                       </@td>
                   </@tr>

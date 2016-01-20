@@ -51,7 +51,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
             </div>
           </@td>
           <@td valign="middle" align="right">
-            <a href="javascript:document.userform.submit()" class="submenutextright">Refresh</a>
+            <a href="javascript:document.userform.submit()" class="${styles.link_run_sys!} ${styles.action_reload!}">Refresh</a>
           </@td>
         </@tr>
       </@table>
@@ -191,7 +191,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
     <#if (0 < mostRecentList?size)>
         <@tr>
           <@td colspan="5">
-            <input type="submit" name="submitBtn" value="${uiLabelMap.CommonUpdate}"/>
+            <input type="submit" name="submitBtn" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}"/>
           </@td>
         </@tr>
     </#if>
@@ -252,7 +252,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
         </@tr>
           <@tr>
             <@td>
-            <input type="submit" name="submitBtn" value="${uiLabelMap.CommonUpdate}"/>
+            <input type="submit" name="submitBtn" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
             </@td>
           </@tr>
       </@table>

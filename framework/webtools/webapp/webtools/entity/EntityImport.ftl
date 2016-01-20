@@ -32,12 +32,12 @@ under the License.
     <input type="checkbox" name="createDummyFks" <#if createDummyFks??>checked="checked"</#if>/>${uiLabelMap.WebtoolsCreateDummyFks}<br />
     <input type="checkbox" name="checkDataOnly" <#if checkDataOnly??>checked="checked"</#if>/>${uiLabelMap.WebtoolsCheckDataOnly}<br />
     ${uiLabelMap.WebtoolsTimeoutSeconds}:<input type="text" size="6" value="${txTimeoutStr?default("7200")}" name="txTimeout"/><br />
-    <div class="button-bar"><input type="submit" value="${uiLabelMap.WebtoolsImportFile}"/></div>
+    <div class="button-bar"><input type="submit" value="${uiLabelMap.WebtoolsImportFile}" class="${styles.link_run_sys!} ${styles.action_import!}"/></div>
   </form>
   <form method="post" action="<@ofbizUrl>entityImport</@ofbizUrl>">
     ${uiLabelMap.WebtoolsCompleteXMLDocument}:<br />
     <textarea rows="20" cols="85" name="fulltext">${fulltext?default("<entity-engine-xml>\n</entity-engine-xml>")}</textarea>
-    <div class="button-bar"><input type="submit" value="${uiLabelMap.WebtoolsImportText}"/></div>
+    <div class="button-bar"><input type="submit" value="${uiLabelMap.WebtoolsImportText}" class="${styles.link_run_sys!} ${styles.action_import!}"/></div>
   </form>
   <#if messages??>
       <hr />

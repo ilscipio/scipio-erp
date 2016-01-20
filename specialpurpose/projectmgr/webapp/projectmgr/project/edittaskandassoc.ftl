@@ -168,7 +168,7 @@ under the License.
              </#if>
          </@field>
          <@field type="submitarea">
-             <input type="submit" name="submit" value="${uiLabelMap.CommonSave}"/>
+             <input type="submit" name="submit" value="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
          </@field>
      </form>
 </@section>

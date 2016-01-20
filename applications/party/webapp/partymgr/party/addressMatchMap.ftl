@@ -54,7 +54,7 @@ under the License.
         "successRedirectUrl" : "${successUrl}"
     }>
     <@field type="submitarea" progressOptions=progressOptions>
-      <input type="submit" value="${uiLabelMap.CommonUpload} CSV"/>    
+      <input type="submit" value="${uiLabelMap.CommonUpload} CSV" class="${styles.link_run_sys!} ${styles.action_import!}"/>    
     </@field>
   </form>
   </@section>

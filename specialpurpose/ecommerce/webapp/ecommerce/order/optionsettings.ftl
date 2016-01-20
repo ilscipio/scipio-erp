@@ -80,6 +80,6 @@ under the License.
         </fieldset>
     </#if>
     <div class="buttons">
-      <input type="submit" class="smallsubmit" value="${uiLabelMap.CommonContinue}"/>
+      <input type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value="${uiLabelMap.CommonContinue}"/>
     </div>
   </form>

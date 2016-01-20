@@ -899,7 +899,7 @@ ${virtualVariantJavaScript!}
             <form method="post" action="<@ofbizUrl>addProductTags</@ofbizUrl>" name="addProductTags">
                 <input type="hidden" name="productId" value="${product.productId!}"/>
                 <input class="inputProductTags" type="text" value="" name="productTags" id="productTags" size="40"/>
-                <input class="buttonProductTags" type="submit" value="${uiLabelMap.EcommerceAddTags}" name="addTag"/>
+                <input class="buttonProductTags" type="submit" value="${uiLabelMap.EcommerceAddTags}" name="addTag" class="${styles.link_run_sys!} ${styles.action_add!}"/>
             </form>
             <span>${uiLabelMap.EcommerceAddTagsDetail}</span>
         </p>

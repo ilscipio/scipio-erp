@@ -82,7 +82,7 @@ under the License.
                 <a href="<@ofbizUrl>forgotPassword</@ofbizUrl>">${uiLabelMap.CommonForgotYourPassword}?</a>
             </@cell>
             <@cell class="${styles.grid_large!}6 ${styles.text_right!}">
-                <input type="submit" value="${uiLabelMap.CommonLogin}"/>
+                <input type="submit" value="${uiLabelMap.CommonLogin}" class="${styles.link_run_session!} ${styles.action_login!}"/>
                 <a href="<@ofbizUrl>newRegisterLogin</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_register!}">${uiLabelMap.MyPortalNewRegistration}</a>
             </@cell>
         </@row>

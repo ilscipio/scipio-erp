@@ -78,7 +78,7 @@ ${menuWrapper.renderMenuString()}
                     <@publishContent forumId=rootForumId2 contentId=contentId />
                     <@tr>
                       <@td colspan="1">
-                          <input type="submit" name="submitBtn" value="Publish"/>
+                          <input type="submit" name="submitBtn" value="Publish" class="${styles.link_run_sys!} ${styles.action_updatestatus!}"/>
                       </@td>
                     </@tr>
               </@table>
@@ -152,7 +152,7 @@ ${menuWrapper.renderMenuString()}
                     </@tr>
                     <@tr>
                       <@td colspan="1">
-                          <input type="submit" name="submitBtn" value="${uiLabelMap.CommonUpdate}"/>
+                          <input type="submit" name="submitBtn" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
                       </@td>
                     </@tr>
               </@table>

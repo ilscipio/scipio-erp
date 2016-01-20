@@ -62,8 +62,8 @@ under the License.
     <@tfoot>
       <@tr>
         <@td colspan="2" align="center">
-          <input type="submit" value="${uiLabelMap.CommonConfirm}" id="chooseVariantConfirm"/>
-          <input type="submit" value="${uiLabelMap.CommonCancel}" id="chooseVariantCancel"/>
+          <input type="submit" value="${uiLabelMap.CommonConfirm}" id="chooseVariantConfirm" class="${styles.link_run_session!} ${styles.action_update!}"/>
+          <input type="submit" value="${uiLabelMap.CommonCancel}" id="chooseVariantCancel" class="${styles.link_nav_cancel!}"/>
         </@td>
       </@tr>
       <@tr>

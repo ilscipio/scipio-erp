@@ -122,7 +122,7 @@ under the License.
                 </@tr>
                 <@tr>
                   <@td scope="row" class="${styles.grid_large!}3">&nbsp;</@td>
-                  <@td><input type="submit" value="${uiLabelMap.OrderAddToOrder}"/></@td>
+                  <@td><input type="submit" value="${uiLabelMap.OrderAddToOrder}" class="${styles.link_run_sys!} ${styles.action_add!}"/></@td>
                 </@tr>
             </@table>
         </form>

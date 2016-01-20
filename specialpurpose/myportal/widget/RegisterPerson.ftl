@@ -120,7 +120,7 @@ under the License.
                     <@tr>
                         <@td> </@td>
                         <@td>
-                            <input type="submit" value="Save" name="submitButton"/>
+                            <input type="submit" value="Save" class="${styles.link_run_sys!} ${styles.action_register!}"/>
                         </@td>
                     </@tr>
                 </@tbody>

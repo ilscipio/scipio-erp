@@ -46,7 +46,7 @@ under the License.
           <@tr>
             <@td>&nbsp;</@td>
                 <@td>${uiLabelMap.WebtoolsServiceClearPreviousParams} ? <input type="checkbox" name="_CLEAR_PREVIOUS_PARAMS_" /></@td>
-            <@td><input type="submit" value="${uiLabelMap.CommonSubmit}"/></@td>
+            <@td><input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_update!}"/></@td>
           </@tr>
         </@tfoot>
         </@table>

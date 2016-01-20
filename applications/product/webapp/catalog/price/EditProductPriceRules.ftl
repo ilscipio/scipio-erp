@@ -49,7 +49,7 @@ under the License.
                     <input type="radio" name="isSale" value="Y" <#if saleRule>checked="checked"</#if> />${uiLabelMap.CommonYes}&nbsp;
                     <input type="radio" name="isSale" value="N" <#if !saleRule>checked="checked"</#if> />${uiLabelMap.CommonNo}
                     &nbsp;&nbsp;
-                    <input type="submit" value="${uiLabelMap.CommonUpdate}" />
+                    <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                     </div>
                 </form>
             </@td>
@@ -57,7 +57,7 @@ under the License.
               <#if !productPriceConds?has_content && !productPriceActions?has_content>
                   <form method="post" action="<@ofbizUrl>deleteProductPriceRule</@ofbizUrl>" name="deleteProductPriceRule">
                       <input type="hidden" name="productPriceRuleId" value="${productPriceRule.productPriceRuleId}" />
-                      <input type="submit" value="${uiLabelMap.CommonDelete}" />
+                      <input type="submit" value="${uiLabelMap.CommonDelete}" class="${styles.link_run_sys!} ${styles.action_remove!}" />
                   </form>
               </#if>
             </@td>
@@ -109,7 +109,7 @@ under the License.
                                     </#list>
                                 </select>
                                 <input type="text" size="20" name="condValue" value="${productPriceCond.condValue!}" />
-                                <input type="submit" value="${uiLabelMap.CommonUpdate}" />
+                                <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                             </form>
                         </@td>
                         <@td align="center">
@@ -138,7 +138,7 @@ under the License.
                                 </#list>
                             </select>
                             <input type="text" size="20" name="condValue" />
-                            <input type="submit" value="${uiLabelMap.CommonCreate}" />
+                            <input type="submit" value="${uiLabelMap.CommonCreate}" class="${styles.link_run_sys!} ${styles.action_add!}" />
                         </form>
                     </@td>
                   </@tr>
@@ -175,7 +175,7 @@ under the License.
                                     </#list>
                                 </select>
                                 <input type="text" size="8" name="amount" value="${productPriceAction.amount!}" />
-                                <input type="submit" value="${uiLabelMap.CommonUpdate}" />
+                                <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                             </form>
                         </@td>
                         <@td align="center">
@@ -199,7 +199,7 @@ under the License.
                                 </#list>
                             </select>
                             <input type="text" size="8" name="amount" />
-                            <input type="submit" value="${uiLabelMap.CommonCreate}" />
+                            <input type="submit" value="${uiLabelMap.CommonCreate}" class="${styles.link_run_sys!} ${styles.action_add!}" />
                         </form>
                     </@td>
                   </@tr>

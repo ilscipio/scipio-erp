@@ -111,7 +111,7 @@ under the License.
             <@tfoot>
             <@tr><@td colspan="11" align="center">
               <input type="hidden" name="_rowCount" value="${rowCount}" />
-              <input type="submit" value='${uiLabelMap.CommonUpdate}'/>
+              <input type="submit" value='${uiLabelMap.CommonUpdate}' class="${styles.link_run_sys!} ${styles.action_update!}"/>
             </@td></@tr>
             </@tfoot>
         </#if>

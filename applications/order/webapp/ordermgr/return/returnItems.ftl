@@ -302,7 +302,7 @@ under the License.
                   <@td colspan="6" align="right">
                   <input name="returnId" value="${returnHeader.returnId}" type="hidden" />
                   <input name="_rowCount" value="${rowCount}" type="hidden" />
-                  <input type="submit" class="bottontext" value="${uiLabelMap.CommonUpdate}" /></@td>
+                  <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonUpdate}" /></@td>
               </@tr>
            </#if>
            <@tr type="util"><@td colspan="10"><hr/></@td></@tr>
@@ -335,7 +335,7 @@ under the License.
           <input type="hidden" name="returnId" value="${returnId}" />
           <input type="hidden" name="statusId" value="${statusId}" />
           <input type="hidden" name="needsInventoryReceive" value="${returnHeader.needsInventoryReceive!"N"}" />
-          <div align="right"><input type="submit" value="${uiLabelMap.OrderReturnAccept}" /></div>
+          <div align="right"><input type="submit" value="${uiLabelMap.OrderReturnAccept}" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" /></div>
         </form>
         </#if>
 

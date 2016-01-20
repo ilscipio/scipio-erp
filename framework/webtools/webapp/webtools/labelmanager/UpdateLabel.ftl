@@ -65,13 +65,13 @@ under the License.
             </@tr>
             <@tr>
                 <@td colspan="2" align="center">
-                    <input type="submit" value="${uiLabelMap.CommonBack}"/>
+                    <input type="submit" value="${uiLabelMap.CommonBack}" class="${styles.link_nav_cancel!}"/>
                     <#if parameters.sourceKey??>
-                        <input type="submit" value="${uiLabelMap.WebtoolsLabelManagerRemove}" name="removeLabel"/>
-                        <input type="submit" value="${uiLabelMap.CommonUpdate}" name="confirm" onclick="javascript:updateAndSaveLabel()"/>
+                        <input type="submit" value="${uiLabelMap.WebtoolsLabelManagerRemove}" name="removeLabel" class="${styles.link_run_sys!} ${styles.action_remove!}"/>
+                        <input type="submit" value="${uiLabelMap.CommonUpdate}" name="confirm" onclick="javascript:updateAndSaveLabel()" class="${styles.link_run_sys!} ${styles.action_update!}"/>
                     <#else>
-                        <input type="submit" value="${uiLabelMap.CommonAdd}" name="confirm"/>
-                        <input type="submit" value="${uiLabelMap.WebtoolsLabelManagerUpdateAndSave}" name="confirm" onclick="javascript:updateAndSaveLabel()"/>
+                        <input type="submit" value="${uiLabelMap.CommonAdd}" name="confirm" class="${styles.link_run_sys!} ${styles.action_add!}"/>
+                        <input type="submit" value="${uiLabelMap.WebtoolsLabelManagerUpdateAndSave}" name="confirm" onclick="javascript:updateAndSaveLabel()" class="${styles.link_run_sys!} ${styles.action_update!}"/>
                     </#if>
                 </@td>
             </@tr>
@@ -114,13 +114,13 @@ under the License.
             </#list>
             <@tr>
                 <@td colspan="2" align="center">
-                    <input type="submit" value="${uiLabelMap.CommonBack}"/>
+                    <input type="submit" value="${uiLabelMap.CommonBack}" class="${styles.link_nav_cancel!}"/>
                     <#if parameters.sourceKey??>
-                        <input type="submit" value="${uiLabelMap.WebtoolsLabelManagerRemove}" name="removeLabel"/>
-                        <input type="submit" value="${uiLabelMap.CommonUpdate}" name="confirm" onclick="javascript:updateAndSaveLabel()"/>
+                        <input type="submit" value="${uiLabelMap.WebtoolsLabelManagerRemove}" name="removeLabel" class="${styles.link_run_sys!} ${styles.action_remove!}"/>
+                        <input type="submit" value="${uiLabelMap.CommonUpdate}" name="confirm" onclick="javascript:updateAndSaveLabel()" class="${styles.link_run_sys!} ${styles.action_update!}"/>
                     <#else>
-                        <input type="submit" value="${uiLabelMap.CommonAdd}" name="confirm"/>
-                        <input type="submit" value="${uiLabelMap.WebtoolsLabelManagerUpdateAndSave}" name="confirm" onclick="javascript:updateAndSaveLabel()"/>
+                        <input type="submit" value="${uiLabelMap.CommonAdd}" name="confirm" class="${styles.link_run_sys!} ${styles.action_add!}"/>
+                        <input type="submit" value="${uiLabelMap.WebtoolsLabelManagerUpdateAndSave}" name="confirm" onclick="javascript:updateAndSaveLabel()" class="${styles.link_run_sys!} ${styles.action_update!}"/>
                     </#if>
                 </@td>
             </@tr>

@@ -184,7 +184,7 @@ function lookupBom() {
           </#if>
     </@field>
     <@field type="submitarea">
-        <input type="submit" <#if !(productAssoc??)>value="${uiLabelMap.CommonAdd}"<#else>value="${uiLabelMap.CommonEdit}"</#if>/>
+        <input type="submit"<#if !(productAssoc??)> value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"<#else> value="${uiLabelMap.CommonEdit}" class="${styles.link_run_sys!} ${styles.action_update!}"</#if>/>
     </@field>
 
     </form>

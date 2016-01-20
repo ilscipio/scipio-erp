@@ -56,7 +56,7 @@ under the License.
                   <@td>${store.getName()}</@td>
                   <@td align="center"><input type="checkbox" name="importIssuer" value="Y"/></@td>
                   <@td><input type="text" name="alias" size="20"/></@td>
-                  <@td align="right"><input type="submit" value="${uiLabelMap.CommonSave}"/></@td>
+                  <@td align="right"><input type="submit" value="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_add!}"/></@td>
                 </form>
               </@tr>
             </#if>

@@ -44,7 +44,7 @@ under the License.
           <option>view</option>
         </select>
         <input type="hidden" name="findType" value="search"/>
-        <input type="submit" name="submitButton" value="Find"/>
+        <input type="submit" name="submitButton" value="Find" class="${styles.link_run_sys!} ${styles.action_find!}"/>
       </form>
     </@section>
     <@section>
@@ -60,7 +60,7 @@ under the License.
             <option>request</option>
             <option>view</option>
           </select>
-          <input type="submit" name="submitButton" value="Lookup"/>
+          <input type="submit" name="submitButton" value="Lookup" class="${styles.link_run_sys!} ${styles.action_find!}"/>
         </div>
       </form>
     </@section>

@@ -193,7 +193,7 @@ under the License.
                   <input type="text" name="unitCost" size="10" value="${unitCost}"/>
               </@field>
               <@field type="submitarea">
-                  <input type="submit" value="${uiLabelMap.CommonReceive}" />
+                  <input type="submit" value="${uiLabelMap.CommonReceive}" class="${styles.link_run_sys!} ${styles.action_receive!}" />
               </@field>
             <@script>
               document.selectAllForm.quantityAccepted.focus();

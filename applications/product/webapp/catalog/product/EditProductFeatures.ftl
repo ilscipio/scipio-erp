@@ -92,7 +92,7 @@ under the License.
           <@tr>
             <@td colspan="8" align="center">
               <input type="hidden" name="_rowCount" value="${productFeatureAndAppls.size()}"/>
-              <input type="submit" value="${uiLabelMap.CommonUpdate}"/>
+              <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
             </@td>
           </@tr>
         </@tfoot>
@@ -138,7 +138,7 @@ under the License.
       </@field>
       
       <@field type="submitarea">
-        <input type="submit" value="${uiLabelMap.CommonAdd}"/>
+        <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
       </@field>
     </form>
 </@section>
@@ -169,7 +169,7 @@ under the License.
       <@field type="input" label="${uiLabelMap.CommonSequence}" size=5 name="sequenceNum" value="" />
     
       <@field type="submitarea">
-        <input type="submit" value="${uiLabelMap.CommonAdd}"/>
+        <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
       </@field>
     </form>
 </@section>
@@ -194,7 +194,7 @@ under the License.
       <@field type="input" label="${uiLabelMap.CommonSequence}" size=5 name="sequenceNum" value="" />
     
       <@field type="submitarea">
-        <input type="submit" value="${uiLabelMap.CommonAdd}"/>
+        <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
       </@field>
     </form>
 </@section>

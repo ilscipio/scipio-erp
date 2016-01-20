@@ -174,7 +174,7 @@ function insertImageName(type,nameValue) {
                 </@cell>
             </@row>
                 <@field type="submitarea">
-                    <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}"/>
+                    <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
                 </@field>
 
         </form>

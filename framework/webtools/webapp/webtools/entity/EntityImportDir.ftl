@@ -31,7 +31,7 @@ under the License.
     <input type="checkbox" name="checkDataOnly" <#if checkDataOnly??>checked="checked"</#if>/>${uiLabelMap.WebtoolsCheckDataOnly}<br />
     ${uiLabelMap.WebtoolsTimeoutSeconds}:<input type="text" size="6" value="${txTimeoutStr?default("7200")}" name="txTimeout"/><br />
     ${uiLabelMap.WebtoolsPause}:<input type="text" size="6" value="${filePauseStr?default("0")}" name="filePause"/><br />
-    <div class="button-bar"><input type="submit" value="${uiLabelMap.WebtoolsImportFile}"/></div>
+    <div class="button-bar"><input type="submit" value="${uiLabelMap.WebtoolsImportFile}" class="${styles.link_run_sys!} ${styles.action_import!}"/></div>
   </form>
   <#if messages??>
     <hr />

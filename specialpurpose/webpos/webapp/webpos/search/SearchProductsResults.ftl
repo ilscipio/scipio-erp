@@ -42,9 +42,9 @@ under the License.
           <input type="text" id="searchByProductDescription" name="searchByProductDescription"/>
         </@td>
         <@td width="50%" colspan="2" style="text-align:center">
-          <input type="submit" value="${uiLabelMap.CommonSearch}" id="searchProductsResultsSearch"/>
+          <input type="submit" value="${uiLabelMap.CommonSearch}" id="searchProductsResultsSearch" class="${styles.link_run_sys!} ${styles.action_find!}"/>
           &nbsp;
-          <input type="submit" value="${uiLabelMap.CommonCancel}" id="searchProductsResultsCancel"/>
+          <input type="submit" value="${uiLabelMap.CommonCancel}" id="searchProductsResultsCancel" class="${styles.link_nav_cancel!}"/>
         </@td>
       </@tr>
     </@table>

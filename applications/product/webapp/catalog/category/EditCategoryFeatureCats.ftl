@@ -56,7 +56,7 @@ under the License.
                             <input type="hidden" name="fromDate" value="${(productFeatureCatGrpAppl.fromDate)!}" />
                             <#if hasExpired><#assign class="alert"></#if>
                             <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" value="${(productFeatureCatGrpAppl.thruDate)!}" className="${class!''}"  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                            <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;" />
+                            <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                         </form>
                     </@td>
                     <@td align="center">
@@ -91,7 +91,7 @@ under the License.
                 <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
             </@field>
             <@field type="submitarea">
-                <input type="submit" value="${uiLabelMap.CommonAdd}" />
+                <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
             </@field>
           </@fields>
         </form> 
@@ -129,7 +129,7 @@ under the License.
                             <input type="hidden" name="fromDate" value="${(productFeatureCategoryAppl.fromDate)!}" />
                             <#if hasExpired><#assign class="alert"></#if>
                             <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" value="${(productFeatureCategoryAppl.thruDate)!}" className="${class!''}"  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="thruDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                            <input type="submit" value="${uiLabelMap.CommonUpdate}" style="font-size: x-small;" />
+                            <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                         </form>
                     </@td>
                     <@td align="center">

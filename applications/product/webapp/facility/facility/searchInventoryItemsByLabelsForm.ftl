@@ -40,7 +40,7 @@ under the License.
   <@tfoot>
   <@tr>
     <@td>
-      <input type="submit" value="${uiLabelMap.CommonSubmit}"/>
+      <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_find!}"/>
     </@td>
   </@tr>
   </@tfoot>

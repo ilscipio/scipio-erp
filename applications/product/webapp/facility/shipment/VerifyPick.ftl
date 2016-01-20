@@ -59,7 +59,7 @@ under the License.
               <input type="text" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?default("00001")}"/>
           </@field>
           <@field type="submitarea">
-              <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}"/>
+              <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}" class="${styles.link_run_sys!} ${styles.action_verify!}"/>
           </@field>
       </form>
       </@section>
@@ -72,7 +72,7 @@ under the License.
               <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
           </@field>
           <@field type="submitarea">
-              <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}"/>
+              <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}" class="${styles.link_run_sys!} ${styles.action_verify!}"/>
           </@field>
       </form>
       </@section>
@@ -143,7 +143,7 @@ under the License.
                   <input type="text" name="productId" size="20" maxlength="20" value=""/>
                   @
                   <input type="text" name="quantity" size="6" maxlength="6" value="1"/>
-                  <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItem}"/>
+                  <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItem}" class="${styles.link_run_sys!} ${styles.action_verify!}"/>
         </form>
         </@section>
         
@@ -271,7 +271,7 @@ under the License.
             <@tr>
               <@td colspan="12" align="right">
                 <#if isShowVerifyItemButton == "true">
-                  <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItems}"/>
+                  <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderItems}" class="${styles.link_run_sys!} ${styles.action_verify!}"/>
                 </#if>
                 &nbsp;
                 <#if rowKey != counter>

@@ -137,7 +137,7 @@ under the License.
                   <input type="text" name="paymentConfiguration" value="${payInfo.paymentConfiguration!}" size="30" maxlength="60" />
               </@field>
               <@field type="submitarea">
-                  <input type="submit" value="${uiLabelMap.CommonUpdate}" />
+                  <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
               </@field>
             </form>
     </@section>

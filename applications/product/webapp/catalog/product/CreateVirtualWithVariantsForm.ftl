@@ -33,7 +33,7 @@ under the License.
         </@field>  
         
         <@field type="submitarea">
-            <input type="submit" value="${uiLabelMap.ProductCreateVirtualProduct}"/>
+            <input type="submit" value="${uiLabelMap.ProductCreateVirtualProduct}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
         </@field> 
     </form>
 </@section>

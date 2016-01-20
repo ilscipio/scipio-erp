@@ -93,7 +93,7 @@ under the License.
     <tr>
       <td>&nbsp;</td>
       <td>
-        <input type="submit" value="${uiLabelMap.CommonSet}"/>
+        <input type="submit" value="${uiLabelMap.CommonSet}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
       </td>
     </tr>
   </table>

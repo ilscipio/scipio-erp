@@ -108,7 +108,7 @@ under the License.
     <#if !"INTERSECTION.UNION.DIFFERENCE.SUBSTITUTION"?contains(temporalExpression.tempExprTypeId)>
         <@tr>
           <@td>&nbsp;</@td>
-          <@td><input type="submit" name="submitBtn" value="${uiLabelMap.CommonSave}"/></@td>
+          <@td><input type="submit" name="submitBtn" value="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_update!}"/></@td>
         </@tr>
     </#if>
     </@table>  
@@ -162,7 +162,7 @@ under the License.
       <@formContents/>
       <@tr>
         <@td>&nbsp;</@td>
-        <@td><input type="submit" name="submitBtn" value="${uiLabelMap.CommonSave}"/></@td>
+        <@td><input type="submit" name="submitBtn" value="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_add!}"/></@td>
       </@tr>
     </@table>
   </form>
@@ -186,6 +186,6 @@ under the License.
         <option value="${candidate}">${candidate}</option>
       </#list>
     </select>
-    <input type="submit" name="submitBtn" value="${uiLabelMap.CommonSave}"/>
+    <input type="submit" name="submitBtn" value="${uiLabelMap.CommonSave} class="${styles.link_run_sys!} ${styles.action_add!}""/>
   </form>
 </#macro>

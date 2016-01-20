@@ -31,7 +31,7 @@ under the License.
             <input name="rowLimit" type="text" size="5" value="${rowLimit?default(200)}"/>
         </@field>
         <@field type="generic">
-            <input type="submit" name="submitButton" value="${uiLabelMap.CommonSubmit}"/>
+            <input type="submit" name="submitButton" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_begin!}"/>
         </@field>
     </form>
 

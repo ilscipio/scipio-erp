@@ -30,7 +30,7 @@ under the License.
         </@field>
         <@field type="input" name= "filterByEntityName" value="${parameters.filterByEntityName!}" label="${uiLabelMap.WebtoolsEntityName}"/>
         <@field type="submitarea">  
-          <input type="submit" value="${uiLabelMap.CommonApply}"/>
+          <input type="submit" value="${uiLabelMap.CommonApply}" class="${styles.link_run_sys!} ${styles.action_find!}"/>
         </@field>
        </form>
 </@cell>

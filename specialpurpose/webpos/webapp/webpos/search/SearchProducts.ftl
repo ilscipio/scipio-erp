@@ -30,7 +30,7 @@ under the License.
     <input type="text" id="productToSearch" name="productToSearch" size="28" maxlength="100"/>
     <div id="products" class="autocomplete" style="display:none"></div>
     <br />
-    <input type="submit" value="${uiLabelMap.CommonSearch}" id="productSearchConfirm"/>
+    <input type="submit" value="${uiLabelMap.CommonSearch}" id="productSearchConfirm" class="${styles.link_run_sys!} ${styles.action_find!}"/>
   </div>
 </form>
 <br />

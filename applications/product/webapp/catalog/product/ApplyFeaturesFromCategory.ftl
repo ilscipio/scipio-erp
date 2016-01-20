@@ -92,7 +92,7 @@ under the License.
     <#assign rowCount = rowCount + 1>
 </#list>
   <@tfoot>
-    <@tr><@td colspan="9" align="center"><input type="submit" value="${uiLabelMap.CommonApply}" /></@td></@tr>
+    <@tr><@td colspan="9" align="center"><input type="submit" value="${uiLabelMap.CommonApply}" class="${styles.link_run_sys!} ${styles.action_update!}" /></@td></@tr>
   </@tfoot>
 </#if>
 </@table>

@@ -35,7 +35,7 @@ under the License.
                 <span>${uiLabelMap.ProductPromotionPerCustomer}</span><input type="text" size="5" name="useLimitPerCustomer" />
                 <div>
                   <input type="file" size="40" name="uploadedFile" />
-                  <input type="submit" value="${uiLabelMap.CommonUpload}" />
+                  <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_import!}" />
                 </div>
             </form>
     </@section>
@@ -66,7 +66,7 @@ under the License.
                 <span>${uiLabelMap.ProductPromotionUseLimits}:
                 ${uiLabelMap.ProductPromotionPerCode}</span><input type="text" size="5" name="useLimitPerCode" />
                 <span>${uiLabelMap.ProductPromotionPerCustomer}</span><input type="text" size="5" name="useLimitPerCustomer" />
-                <input type="submit" value="${uiLabelMap.CommonAdd}" />
+                <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
             </form>
     </@section>
 </#if>

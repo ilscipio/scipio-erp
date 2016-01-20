@@ -8,7 +8,7 @@
             <@htmlTemplate.renderDateTimeField name="validDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="validDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
         </@field>
         <@field type="submitarea">
-            <input type="submit" value="${uiLabelMap.CommonRemoveExpired}" />
+            <input type="submit" value="${uiLabelMap.CommonRemoveExpired}" class="${styles.link_run_sys!} ${styles.action_remove!}" />
         </@field>
     </form>
 </@section>

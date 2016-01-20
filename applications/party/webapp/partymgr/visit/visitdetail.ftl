@@ -136,7 +136,7 @@ https://issues.apache.org/jira/browse/OFBIZ-4488
                   <input type="hidden" name="followerSid" value="${visit.sessionId}" />
                   <input type="hidden" name="visitId" value="${visit.visitId}" />
                   <input type="text" name="pageUrl" />
-                  <input type="submit" value="${uiLabelMap.CommonSubmit}" />
+                  <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_add!}" />
                 </form>
               </@td>
             </@tr>
@@ -150,7 +150,7 @@ https://issues.apache.org/jira/browse/OFBIZ-4488
                   <input type="hidden" name="followerSid" value="${visit.sessionId}" />
                   <input type="hidden" name="visitId" value="${visit.visitId}" />
                   <input type="text" name="followSid" />
-                  <input type="submit" value="${uiLabelMap.CommonSubmit}" />
+                  <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                 </form>
               </@td>
             </@tr>

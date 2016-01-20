@@ -60,7 +60,7 @@ under the License.
           </@tr>
           <@tr>
             <@td>&nbsp;</@td>
-            <@td><input type="submit" value="${uiLabelMap.CommonRun}" /></@td>
+            <@td><input type="submit" value="${uiLabelMap.CommonRun}" class="${styles.link_run_sys!} ${styles.action_export!}"/></@td>
             <@td>&nbsp;</@td>
           </@tr>
         </@table>

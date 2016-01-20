@@ -228,7 +228,7 @@ function shipBillAddr() {
             <@tfoot>
               <@tr>
                 <@td align="center" colspan="2">
-                  <input type="submit" class="smallsubmit" value="Continue" />
+                  <input type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value="Continue" />
                 </@td>
               </@tr>
             </@tfoot>
@@ -268,7 +268,7 @@ function shipBillAddr() {
               </#if>
               <@tr>
                 <@td align="center" colspan="2">
-                  <input type="submit" class="smallsubmit" value="${uiLabelMap.CommonContinue}" />
+                  <input type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value="${uiLabelMap.CommonContinue}" />
                 </@td>
               </@tr>
             </@table>

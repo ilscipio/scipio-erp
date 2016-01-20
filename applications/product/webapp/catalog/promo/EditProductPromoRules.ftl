@@ -41,7 +41,7 @@ under the License.
             <input type="hidden" name="productPromoId" value="${(productPromoRule.productPromoId)!}" />
             <input type="hidden" name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)!}" />
             <input type="text" size="30" name="ruleName" value="${(productPromoRule.ruleName)!}" />
-            <input type="submit" value="${uiLabelMap.CommonUpdate}" />
+            <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
           </form>
         </@td>
         <@td align="center">&nbsp;
@@ -124,7 +124,7 @@ under the License.
                     <option value = "${carrierShipmentMethod.partyId!}@${carrierShipmentMethod.shipmentMethodTypeId!}">${carrierShipmentMethod.partyId!}&nbsp;${shipmentMethodType.get("description")!}</option>
       </#list>
                   </select>
-                  <input type="submit" value="${uiLabelMap.CommonUpdate}" />
+                  <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                 </form>
                 <form name="deleteProductPromoCondition_${productPromoRule_index}_${productPromoCond_index}" method="post" action="<@ofbizUrl>deleteProductPromoCond</@ofbizUrl>">
                   <input type="hidden" name="productPromoId" value="${(productPromoCond.productPromoId)!}" />
@@ -175,7 +175,7 @@ under the License.
                       <option value="Y">${uiLabelMap.CommonY}</option>
                     </select>
                     ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_"/>*
-                    <input type="submit" value="${uiLabelMap.ProductAddConditionCategory}" />
+                    <input type="submit" value="${uiLabelMap.ProductAddConditionCategory}" class="${styles.link_run_sys!} ${styles.action_add!}" />
                   </form>
                 </div>
       <#-- ======================= Products ======================== -->
@@ -213,7 +213,7 @@ under the License.
                       <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
       </#list>
                     </select>
-                    <input type="submit" value="${uiLabelMap.ProductAddConditionProducts}" />
+                    <input type="submit" value="${uiLabelMap.ProductAddConditionProducts}" class="${styles.link_run_sys!} ${styles.action_add!}" />
                   </form>
                 </div>
               </@td>
@@ -253,7 +253,7 @@ under the License.
                     <option value = "${carrierShipmentMethod.partyId!}@${carrierShipmentMethod.shipmentMethodTypeId!}">${carrierShipmentMethod.partyId!}&nbsp;${shipmentMethodType.get("description")!}</option>
     </#list>
                   </select>
-                  <input type="submit" value="${uiLabelMap.ProductCreateCondition}" />
+                  <input type="submit" value="${uiLabelMap.ProductCreateCondition}" class="${styles.link_run_sys!} ${styles.action_add!}" />
                 </form>
               </@td>
             </@tr>
@@ -306,7 +306,7 @@ under the License.
                       <option value="N">${uiLabelMap.CommonN}</option>
                       <option value="Y">${uiLabelMap.CommonY}</option>
                     </select>
-                    <input type="submit" value="${uiLabelMap.CommonUpdate}" />
+                    <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                   </form>
                   <form name="deleteProductPromoAction_${productPromoRule_index}_${productPromoAction_index}" method="post" action="<@ofbizUrl>deleteProductPromoAction</@ofbizUrl>">
                     <input type="hidden" name="productPromoId" value="${(productPromoAction.productPromoId)!}" />
@@ -359,7 +359,7 @@ under the License.
                       <option value="Y">${uiLabelMap.CommonY}</option>
                     </select>
                     ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_"/>*
-                    <input type="submit" value="${uiLabelMap.ProductAddActionCategory}" />
+                    <input type="submit" value="${uiLabelMap.ProductAddActionCategory}" class="${styles.link_run_sys!} ${styles.action_add!}" />
                   </form>
                 </div>
       <#-- ======================= Products ======================== -->
@@ -397,7 +397,7 @@ under the License.
                       <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
       </#list>
                     </select>
-                    <input type="submit" value="${uiLabelMap.ProductAddActionProducts}" />
+                    <input type="submit" value="${uiLabelMap.ProductAddActionProducts}" class="${styles.link_run_sys!} ${styles.action_add!}" />
                   </form>
                 </div>
               </@td>
@@ -432,7 +432,7 @@ under the License.
                       <option value="N">${uiLabelMap.CommonN}</option>
                       <option value="Y">${uiLabelMap.CommonY}</option>
                     </select>
-                    <input type="submit" value="${uiLabelMap.ProductCreateAction}" />
+                    <input type="submit" value="${uiLabelMap.ProductCreateAction}" class="${styles.link_run_sys!} ${styles.action_add!}" />
                   </form>
               </@td>
             </@tr>
@@ -458,7 +458,7 @@ under the License.
     <form method="post" action="<@ofbizUrl>createProductPromoRule</@ofbizUrl>">
       <input type="hidden" name="productPromoId" value="${productPromoId!}" />
       <span>${uiLabelMap.ProductName}</span><input type="text" size="30" name="ruleName" />
-      <input type="submit" value="${uiLabelMap.CommonAdd}" />
+      <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
     </form>
 </@section>
 
@@ -500,7 +500,7 @@ under the License.
           <option value="Y">${uiLabelMap.CommonY}</option>
         </select>
         ${uiLabelMap.CommonAnd} ${uiLabelMap.CommonGroup}: <input type="text" size="10" maxlength="20" name="andGroupId" value="_NA_"/>*
-        <input type="submit" value="${uiLabelMap.CommonAdd}" />
+        <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
       </form>
     </div>
 </@section>
@@ -535,7 +535,7 @@ under the License.
           <option value="${productPromoApplEnum.enumId}">${productPromoApplEnum.get("description",locale)}</option>
         </#list>
         </select>
-        <input type="submit" value="${uiLabelMap.CommonAdd}" />
+        <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
       </form>
     </div>
 </@section>

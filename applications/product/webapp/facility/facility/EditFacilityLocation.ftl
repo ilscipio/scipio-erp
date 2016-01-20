@@ -82,9 +82,9 @@ under the License.
     </@field>
     <@field type="submitarea">
         <#if locationSeqId??>
-          <input type="submit" value="${uiLabelMap.CommonUpdate}" />
+          <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
         <#else>
-          <input type="submit" value="${uiLabelMap.CommonSave}" />
+          <input type="submit" value="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_add!}" />
         </#if>
     </@field>
   </form>
@@ -112,7 +112,7 @@ under the License.
                         <input type="hidden" name="locationSeqId" value="${(productFacilityLocation.locationSeqId)!}"/>
                         <input type="text" size="10" name="minimumStock" value="${(productFacilityLocation.minimumStock)!}"/>
                         <input type="text" size="10" name="moveQuantity" value="${(productFacilityLocation.moveQuantity)!}"/>
-                        <input type="submit" value="${uiLabelMap.CommonUpdate}"/>
+                        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
                         <a href="javascript:document.getElementById('lineForm${productFacilityLocation_index}').action='<@ofbizUrl>deleteProductFacilityLocation</@ofbizUrl>';document.getElementById('lineForm${productFacilityLocation_index}').submit();" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
                     </form>
                 </@td>
@@ -130,7 +130,7 @@ under the License.
             <@field type="generic" label="${uiLabelMap.ProductProductId}"><input type="text" size="10" name="productId" /></@field>
             <@field type="generic" label="${uiLabelMap.ProductMinimumStock}"><input type="text" size="10" name="minimumStock" /></@field>
             <@field type="generic" label="${uiLabelMap.ProductMoveQuantity}"><input type="text" size="10" name="moveQuantity" /></@field>
-            <@field type="submitarea"><input type="submit" value="${uiLabelMap.CommonAdd}" /></@field>
+            <@field type="submitarea"><input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" /></@field>
         </form>
   </@section>
   

@@ -51,7 +51,7 @@ under the License.
         <@tfoot>
           <@tr><@td colspan="11" align="center">
             <input type="hidden" name="_rowCount" value="${featureNum}" />
-            <input type="submit" value='${uiLabelMap.CommonCreate}'/>
+            <input type="submit" value='${uiLabelMap.CommonCreate}' class="${styles.link_run_sys!} ${styles.action_add!}"/>
           </@td></@tr>
         </@tfoot>
       </@table>

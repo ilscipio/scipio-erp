@@ -66,7 +66,7 @@ function call_fieldlookup3(view_name) {
           <@td valign="middle">
             <div class="boxhead">
              <input type="text" name="webSitePublishPoint" size="20" value="${webSitePublishPoint!}" />
-             <input type="submit" value="${uiLabelMap.CommonRefresh}"/>
+             <input type="submit" value="${uiLabelMap.CommonRefresh}" class="${styles.link_run_sys!} ${styles.action_reload!}"/>
              <input type="hidden" name="partyId" value="${partyId!}"/>
              <input type="hidden" name="userLoginId" value="${userLoginId!}"/>
             </div>

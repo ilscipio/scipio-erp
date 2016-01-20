@@ -91,7 +91,7 @@ under the License.
                 <input type="hidden" name="isRushOrder" value="Y"/>
                 ${uiLabelMap.ProductPickFirst}:
                 <input type="text" size="4" name="maxNumberOfOrders" value="20"/>
-                <input type="submit" value="${uiLabelMap.ProductCreatePicklist}"/>
+                <input type="submit" value="${uiLabelMap.ProductCreatePicklist}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
               </form>
             <#else>
               &nbsp;
@@ -178,7 +178,7 @@ under the License.
                     <span>${uiLabelMap.ProductPickFirst}</span>
                     <input type="text" size="4" name="maxNumberOfOrders" value="20"/>
                   </#if>
-                  <input type="submit" value="${uiLabelMap.ProductCreatePicklist}"/>
+                  <input type="submit" value="${uiLabelMap.ProductCreatePicklist}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
                 </form>
               <#else>
                 &nbsp;
@@ -199,7 +199,7 @@ under the License.
                     <span>${uiLabelMap.FormFieldTitle_printPickSheetFirst}</span>
                     <input type="text" size="4" name="maxNumberOfOrdersToPrint" value="20"/>
                   </#if>
-                  <input type="submit" value="${uiLabelMap.FormFieldTitle_printPickSheet}"/>
+                  <input type="submit" value="${uiLabelMap.FormFieldTitle_printPickSheet}" class="${styles.link_run_sys!} ${styles.action_export!}"/>
                 </form>
               <#else>
                 &nbsp;
@@ -222,7 +222,7 @@ under the License.
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
                   <span>${uiLabelMap.ProductPickFirst}</span>
                   <input type="text" size="4" name="maxNumberOfOrders" value="20"/>
-                  <input type="submit" value="${uiLabelMap.ProductCreatePicklist}"/>
+                  <input type="submit" value="${uiLabelMap.ProductCreatePicklist}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
                 </form>
               <#else>
                 &nbsp;
@@ -234,7 +234,7 @@ under the License.
                   <input type="hidden" name="facilityId" value="${facilityId!}"/>
                   <span>${uiLabelMap.FormFieldTitle_printPickSheetFirst}</span>
                   <input type="text" size="4" name="maxNumberOfOrdersToPrint" value="20"/>
-                  <input type="submit" value="${uiLabelMap.FormFieldTitle_printPickSheet}"/>
+                  <input type="submit" value="${uiLabelMap.FormFieldTitle_printPickSheet}" class="${styles.link_run_sys!} ${styles.action_export!}"/>
                 </form>
               <#else>
                 &nbsp;

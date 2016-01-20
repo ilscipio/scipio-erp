@@ -56,7 +56,7 @@ under the License.
           </@tr>
           <@tr>
             <@td colspan="2" align="center">
-              <input type="submit" value="${uiLabelMap.CommonLogin}"/>
+              <input type="submit" value="${uiLabelMap.CommonLogin}" class="${styles.link_run_session!} ${styles.action_login!}"/>
             </@td>
           </@tr>
         </@table>

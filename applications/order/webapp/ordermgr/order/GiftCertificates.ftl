@@ -46,7 +46,7 @@ under the License.
           <textarea id="message" name="answers_1003"></textarea>
         </div>
         <div>
-          <input type="submit" value="${uiLabelMap.CommonSubmit}" />
+          <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
         </div>
       <#else>
         <label>${uiLabelMap.OrderNoGiftCertificatesFound}</label>

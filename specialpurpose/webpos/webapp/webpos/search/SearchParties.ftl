@@ -26,7 +26,7 @@ under the License.
   </select>
   <br/>
   <input type="text" id="partyToSearch" name="partyToSearch" size="30" maxlength="100">
-  <input type="submit" value="${uiLabelMap.CommonSearch}" id="partySearchConfirm"/>
+  <input type="submit" value="${uiLabelMap.CommonSearch}" id="partySearchConfirm" class="${styles.link_run_sys!} ${styles.action_find!}"/>
   <br/>
 </div>
 <@script>

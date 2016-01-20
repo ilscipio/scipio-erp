@@ -53,9 +53,9 @@ under the License.
           <input type="text" id="searchByPartyIdValue" name="searchByPartyIdValue"/>
         </@td>
         <@td width="50%" colspan="4" style="text-align:center">
-          <input type="submit" value="${uiLabelMap.CommonSearch}" id="searchPartiesResultsSearch"/>
+          <input type="submit" value="${uiLabelMap.CommonSearch}" id="searchPartiesResultsSearch" class="${styles.link_run_sys!} ${styles.action_find!}"/>
           &nbsp;
-          <input type="submit" value="${uiLabelMap.CommonCancel}" id="searchPartiesResultsCancel"/>
+          <input type="submit" value="${uiLabelMap.CommonCancel}" id="searchPartiesResultsCancel" class="${styles.link_nav_cancel!}"/>
         </@td>
         <@td width="25%" colspan="2"></@td>
       </@tr>

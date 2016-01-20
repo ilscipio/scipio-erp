@@ -98,9 +98,9 @@ under the License.
 
   <@field type="submitarea">
     <#if facilityId?has_content>
-      <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" />
+      <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
     <#else>
-      <input type="submit" name="Update" value="${uiLabelMap.CommonSave}" />
+      <input type="submit" name="Update" value="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_add!}" />
     </#if>
   </@field>
 

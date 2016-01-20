@@ -121,7 +121,7 @@ under the License.
     </span>
    </div>
   <div class="buttons">
-    <input type="submit" value="${uiLabelMap.CommonContinue}"/>
+    <input type="submit" value="${uiLabelMap.CommonContinue}" class="${styles.link_run_session!} ${styles.action_update!}"/>
   </div>
   </fieldset>
 </form>

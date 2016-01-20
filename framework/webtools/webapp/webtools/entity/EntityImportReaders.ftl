@@ -28,7 +28,7 @@ under the License.
     <input type="checkbox" name="createDummyFks" <#if createDummyFks??>checked="checked"</#if> value="true"/>${uiLabelMap.WebtoolsCreateDummyFks}<br />
     <input type="checkbox" name="checkDataOnly" <#if checkDataOnly??>checked="checked"</#if> value="true"/>${uiLabelMap.WebtoolsCheckDataOnly}<br />
     ${uiLabelMap.WebtoolsTimeoutSeconds}:<input type="text" size="6" value="${txTimeoutStr?default("7200")}" name="txTimeout"/><br />
-    <div class="button-bar"><input type="submit" value="${uiLabelMap.WebtoolsImport}"/></div>
+    <div class="button-bar"><input type="submit" value="${uiLabelMap.WebtoolsImport}" class="${styles.link_run_sys!} ${styles.action_import!}"/></div>
   </form>
   <#if messages??>
       <hr />

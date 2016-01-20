@@ -47,7 +47,7 @@ under the License.
             <input type="hidden" name="sel_service_name" value="${selectedServiceMap.serviceName}"/>
             <input type="hidden" name="serviceName" value="${selectedServiceMap.serviceName}"/>
             Save eomodeld to Local Path: <input type="text" name="eomodeldFullPath" value="${parameters.eomodeldFullPath!}" size="60"/>
-            <input type="submit" name="submitButton" value="Export"/>
+            <input type="submit" name="submitButton" value="Export" class="${styles.link_run_sys!} ${styles.action_export!}"/>
           </form>
         </@cell>
       </@row>

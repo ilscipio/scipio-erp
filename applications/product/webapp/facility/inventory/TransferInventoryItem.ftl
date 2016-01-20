@@ -35,7 +35,7 @@ under the License.
           </@cell>
           <@cell columns=3>
             <@field type="submitarea">
-                <input type="submit" value="${uiLabelMap.ProductGetItem}" />
+                <input type="submit" value="${uiLabelMap.ProductGetItem}" class="${styles.link_run_sys!} ${styles.action_transfer!}" />
             </@field>
           </@cell>
         </@row>
@@ -150,9 +150,9 @@ under the License.
         </#if>
         <@field type="submitarea">
             <#if !(inventoryTransfer??)>
-                <input type="submit" value="${uiLabelMap.ProductTransfer}" />
+                <input type="submit" value="${uiLabelMap.ProductTransfer}" class="${styles.link_run_sys!} ${styles.action_transfer!}" />
             <#else>
-                <input type="submit" value="${uiLabelMap.CommonUpdate}" />
+                <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
             </#if>
         </@field>
         </form>

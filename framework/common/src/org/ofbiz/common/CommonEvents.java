@@ -393,7 +393,7 @@ public class CommonEvents {
 
     public static String getCaptcha(HttpServletRequest request, HttpServletResponse response) {
         try {
-        	Delegator delegator = (Delegator) request.getAttribute("delegator");
+            Delegator delegator = (Delegator) request.getAttribute("delegator");
             final String captchaSizeConfigName = StringUtils.defaultIfEmpty(request.getParameter("captchaSize"), "default");
             final String captchaSizeConfig = EntityUtilProperties.getPropertyValue("captcha.properties", "captcha." + captchaSizeConfigName, delegator);
             final String[] captchaSizeConfigs = captchaSizeConfig.split("\\|");

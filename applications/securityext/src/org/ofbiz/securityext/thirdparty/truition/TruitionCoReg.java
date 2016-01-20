@@ -45,7 +45,7 @@ public class TruitionCoReg {
     public static final String logPrefix = "Truition Cookie Info: ";
 
     public static String truitionReg(HttpServletRequest req, HttpServletResponse resp) {
-    	Delegator delegator = (Delegator) req.getAttribute("delegator");
+        Delegator delegator = (Delegator) req.getAttribute("delegator");
         HttpSession session = req.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         StringBuffer cookieNameB = new StringBuffer();
@@ -104,7 +104,7 @@ public class TruitionCoReg {
     }
 
     public static String truitionLogoff(HttpServletRequest req, HttpServletResponse resp) {
-    	Delegator delegator = (Delegator) req.getAttribute("delegator");
+        Delegator delegator = (Delegator) req.getAttribute("delegator");
         // locate the domain/cookie name setting
         String domainName = EntityUtilProperties.getPropertyValue("truition.properties", "truition.domain.name", delegator);
         String cookieName = EntityUtilProperties.getPropertyValue("truition.properties", "truition.cookie.name", delegator);
@@ -132,7 +132,7 @@ public class TruitionCoReg {
     }
 
     public static String truitionRedirect(HttpServletRequest req, HttpServletResponse resp) {
-    	Delegator delegator = (Delegator) req.getAttribute("delegator");
+        Delegator delegator = (Delegator) req.getAttribute("delegator");
         // redirect URL form field
         String redirectUrlName = EntityUtilProperties.getPropertyValue("truition.properties", "truition.redirect.urlName", delegator);
         String redirectUrl = req.getParameter(redirectUrlName);
@@ -153,7 +153,7 @@ public class TruitionCoReg {
     }
 
     public static boolean makeTruitionCookie(GenericValue userLogin, StringBuffer cookieName, StringBuffer cookieValue) {
-    	Delegator delegator = userLogin.getDelegator();
+        Delegator delegator = userLogin.getDelegator();
         String domainName = EntityUtilProperties.getPropertyValue("truition.properties", "truition.domain.name", delegator);
         String siteId = EntityUtilProperties.getPropertyValue("truition.properties", "truition.siteId", delegator);
 

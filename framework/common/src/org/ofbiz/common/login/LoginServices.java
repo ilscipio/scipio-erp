@@ -149,7 +149,7 @@ public class LoginServices {
 
                     // check the user login object again
                     try {
-                    	userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", username).cache(isServiceAuth).queryOne();
+                        userLogin = EntityQuery.use(delegator).from("UserLogin").where("userLoginId", username).cache(isServiceAuth).queryOne();
                     } catch (GenericEntityException e) {
                         Debug.logWarning(e, "", module);
                     }
@@ -891,7 +891,7 @@ public class LoginServices {
 
     public static void checkNewPassword(GenericValue userLogin, String currentPassword, String newPassword, String newPasswordVerify, String passwordHint, List<String> errorMessageList, boolean ignoreCurrentPassword, Locale locale) {
         Delegator delegator = userLogin.getDelegator();
-    	boolean useEncryption = "true".equals(EntityUtilProperties.getPropertyValue("security.properties", "password.encrypt", delegator));
+        boolean useEncryption = "true".equals(EntityUtilProperties.getPropertyValue("security.properties", "password.encrypt", delegator));
 
         String errMsg = null;
 

@@ -40,27 +40,27 @@ taskListDropdown = [];
 
 taskUnplanList = from("ProjectSprintBacklogTaskAndParty").where("partyId", partyId,"taskCurrentStatusId", "STS_CREATED","custRequestTypeId","RF_UNPLAN_BACKLOG").orderBy("taskTypeId").queryList();
 taskUnplanList.each { taskUnplanMap ->
-	unplanMap=[:];
-	custRequestId = taskUnplanMap.custRequestId;
-	productlist = from("CustRequestItem").where("custRequestId", custRequestId).orderBy("productId").queryList();
-	productlist.each { productMap ->
-		productId = productMap.productId;
-		product = from("Product").where("productId", productId).queryOne();
-			productName = product.internalName;
-			unplanMap.taskId = taskUnplanMap.taskId;
-			unplanMap.taskName = taskUnplanMap.taskName;
-			unplanMap.projectId = taskUnplanMap.projectId;
-			unplanMap.projectName = taskUnplanMap.projectName;
-			unplanMap.sprintId = taskUnplanMap.sprintId;
-			unplanMap.sprintName = taskUnplanMap.sprintName;
-			unplanMap.custRequestId = custRequestId;
-			unplanMap.description = taskUnplanMap.description;
-			unplanMap.productId = productId;
-			unplanMap.productName = productName;
-			
-	}
-	taskPartyList.add(taskUnplanMap);
-	taskListDropdown.add(unplanMap);
+    unplanMap=[:];
+    custRequestId = taskUnplanMap.custRequestId;
+    productlist = from("CustRequestItem").where("custRequestId", custRequestId).orderBy("productId").queryList();
+    productlist.each { productMap ->
+        productId = productMap.productId;
+        product = from("Product").where("productId", productId).queryOne();
+            productName = product.internalName;
+            unplanMap.taskId = taskUnplanMap.taskId;
+            unplanMap.taskName = taskUnplanMap.taskName;
+            unplanMap.projectId = taskUnplanMap.projectId;
+            unplanMap.projectName = taskUnplanMap.projectName;
+            unplanMap.sprintId = taskUnplanMap.sprintId;
+            unplanMap.sprintName = taskUnplanMap.sprintName;
+            unplanMap.custRequestId = custRequestId;
+            unplanMap.description = taskUnplanMap.description;
+            unplanMap.productId = productId;
+            unplanMap.productName = productName;
+            
+    }
+    taskPartyList.add(taskUnplanMap);
+    taskListDropdown.add(unplanMap);
 }
 
 exprBldr =  FastList.newInstance();
@@ -109,10 +109,10 @@ taskPlanList.each { taskPlanMap ->
     }
 }
 if (taskPartyList){
-	context.taskPartyList = taskPartyList;
+    context.taskPartyList = taskPartyList;
 }
 if (taskListDropdown){
-	context.taskListDropdown = taskListDropdown;
+    context.taskListDropdown = taskListDropdown;
 }
 
 

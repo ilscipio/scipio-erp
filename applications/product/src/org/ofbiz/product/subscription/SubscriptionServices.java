@@ -327,9 +327,9 @@ public class SubscriptionServices {
             
             if (subscriptionList != null) {
                 for (GenericValue subscription : subscriptionList) {
-                	expirationCompletedDate = subscription.getTimestamp("expirationCompletedDate");
-                	if (expirationCompletedDate == null) {
-                		Calendar currentDate = Calendar.getInstance();
+                    expirationCompletedDate = subscription.getTimestamp("expirationCompletedDate");
+                    if (expirationCompletedDate == null) {
+                        Calendar currentDate = Calendar.getInstance();
                         currentDate.setTime(UtilDateTime.nowTimestamp());
                         // check if the thruDate + grace period (if provided) is earlier than today's date
                         Calendar endDateSubscription = Calendar.getInstance();
@@ -381,7 +381,7 @@ public class SubscriptionServices {
                                 return ServiceUtil.returnError("Subscription couldn't be expired for subscriptionId: " + subscriptionId);
                             }
                         }
-                	}
+                    }
                 }
             }
         } catch (GenericServiceException e) {

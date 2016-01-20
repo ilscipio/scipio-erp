@@ -39,7 +39,7 @@ performFindInMap.noConditionFind = "Y";
 performFindInMap.inputFields = inputFields;
 performFindInMap.orderBy = parameters.sortField;
 if (parameters.sortField) {
-	performFindInMap.orderBy = "lastName";
+    performFindInMap.orderBy = "lastName";
 }
 performFindResults = runService('performFind', performFindInMap);
 resultList = performFindResults.listIt.getCompleteList();

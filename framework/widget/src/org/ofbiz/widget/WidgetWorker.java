@@ -299,75 +299,75 @@ public final class WidgetWorker {
         writer.append("</form>");
     }
     
-	// Cato: Creates JS script to populate the target hidden form with the corresponding fields of the row being selected (only when use-submit-row is true)
-	private static void makeJSForRowSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {	
-		List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
-		if (rowSubmitFields != null) {
-			writer.append("<script type=\"text/javascript\">\r\n");
-			writer.append("jQuery(document).ready(function() {\r\n");
-			writer.append("\tvar submitForm = $(\"form[name=" + hiddenFormName + "]\");\r\n");
-			writer.append("\tif (submitForm) {\r\n");
-			for (ModelFormField rowSubmitField : rowSubmitFields) {
-				writer.append("\t\tvar submitField = $(\"input[name=" + rowSubmitField.getName() + "]\");\r\n");
-				writer.append("\t\t$(submitField).click(function(e) {\r\n");
-				writer.append("\t\te.preventDefault();\r\n");
-				writer.append("\t\tvar checked = false;\r\n");
-				writer.append("\t\t\t$(this).parents(\"table\").find(\"input[type=radio][name^=selectAction]\").each( function (j, r) {\r\n");
+    // Cato: Creates JS script to populate the target hidden form with the corresponding fields of the row being selected (only when use-submit-row is true)
+    private static void makeJSForRowSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {    
+        List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
+        if (rowSubmitFields != null) {
+            writer.append("<script type=\"text/javascript\">\r\n");
+            writer.append("jQuery(document).ready(function() {\r\n");
+            writer.append("\tvar submitForm = $(\"form[name=" + hiddenFormName + "]\");\r\n");
+            writer.append("\tif (submitForm) {\r\n");
+            for (ModelFormField rowSubmitField : rowSubmitFields) {
+                writer.append("\t\tvar submitField = $(\"input[name=" + rowSubmitField.getName() + "]\");\r\n");
+                writer.append("\t\t$(submitField).click(function(e) {\r\n");
+                writer.append("\t\te.preventDefault();\r\n");
+                writer.append("\t\tvar checked = false;\r\n");
+                writer.append("\t\t\t$(this).parents(\"table\").find(\"input[type=radio][name^=selectAction]\").each( function (j, r) {\r\n");
 
-				writer.append("\t\t\tif ($(r).is(\":checked\")) {\r\n");
-				writer.append("\t\t\tconsole.log(\"radio element ======> \" + $(r).attr(\"name\") + \"   radio value =======> \" + $(r).val());\r\n");
-				writer.append("\t\t\t\tchecked = true;\r\n");
-				makeHiddenFieldsForHiddenForm(writer);
-				writer.append("\t\t\tsubmitForm.submit();\r\n");
-				// writer.append("\t\t\tconsole.log(\"submitForm ==========> \" + $(submitForm).html());\r\n");
-				writer.append("\t\t\t}\r\n");
-				writer.append("\t\t});\r\n");
-				writer.append("\t\tif (!checked)\r\n");
-				writer.append("\t\t\t alert(\"No row selected\");\r\n");
-				writer.append("\t\t});\r\n");
-			}
-			writer.append("\t} else {\r\n");
-			writer.append("\t\treturn false;\r\n");
-			writer.append("\t}\r\n");
-			writer.append("});\r\n");
-			writer.append("</script>\r\n");
-		}
-	}
-	
-	// Cato: Creates JS script to populate the target hidden form with the corresponding fields of the row that triggered the submission (only when use-submit-row is false)
-	private static void makeJSForInlineSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {		
-		List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
-		if (rowSubmitFields != null) {
-			writer.append("<script type=\"text/javascript\">\r\n");
-			writer.append("jQuery(document).ready(function() {\r\n");
-			writer.append("\tvar submitForm = $(\"form[name=" + hiddenFormName + "]\");\r\n");
-			writer.append("\tif (submitForm) {\r\n");
-			for (ModelFormField rowSubmitField : rowSubmitFields) {
-				writer.append("\t\tvar id = $(\"[id^=" + rowSubmitField.getCurrentContainerId(context) + "]\");\r\n");
-				writer.append("\t\t$(id).click(function(e) {\r\n");
-				writer.append("\t\te.preventDefault();\r\n");
-				makeHiddenFieldsForHiddenForm(writer);
-				writer.append("\t\t\tsubmitForm.submit();\r\n");
-				// writer.append("\t\t\tconsole.log(\"submitForm ==========> \" + $(submitForm).html());\r\n");
-				writer.append("\t\t});\r\n");
-			}
-			writer.append("\t} else {\r\n");
-			writer.append("\t\treturn false;\r\n");
-			writer.append("\t}\r\n");
-			writer.append("});\r\n");
-			writer.append("</script>\r\n");
-		}
-	}
+                writer.append("\t\t\tif ($(r).is(\":checked\")) {\r\n");
+                writer.append("\t\t\tconsole.log(\"radio element ======> \" + $(r).attr(\"name\") + \"   radio value =======> \" + $(r).val());\r\n");
+                writer.append("\t\t\t\tchecked = true;\r\n");
+                makeHiddenFieldsForHiddenForm(writer);
+                writer.append("\t\t\tsubmitForm.submit();\r\n");
+                // writer.append("\t\t\tconsole.log(\"submitForm ==========> \" + $(submitForm).html());\r\n");
+                writer.append("\t\t\t}\r\n");
+                writer.append("\t\t});\r\n");
+                writer.append("\t\tif (!checked)\r\n");
+                writer.append("\t\t\t alert(\"No row selected\");\r\n");
+                writer.append("\t\t});\r\n");
+            }
+            writer.append("\t} else {\r\n");
+            writer.append("\t\treturn false;\r\n");
+            writer.append("\t}\r\n");
+            writer.append("});\r\n");
+            writer.append("</script>\r\n");
+        }
+    }
+    
+    // Cato: Creates JS script to populate the target hidden form with the corresponding fields of the row that triggered the submission (only when use-submit-row is false)
+    private static void makeJSForInlineSubmit(Appendable writer, Map<String, Object> context, ModelForm modelForm, String hiddenFormName) throws IOException {        
+        List<ModelFormField> rowSubmitFields = modelForm.getMultiSubmitFields();
+        if (rowSubmitFields != null) {
+            writer.append("<script type=\"text/javascript\">\r\n");
+            writer.append("jQuery(document).ready(function() {\r\n");
+            writer.append("\tvar submitForm = $(\"form[name=" + hiddenFormName + "]\");\r\n");
+            writer.append("\tif (submitForm) {\r\n");
+            for (ModelFormField rowSubmitField : rowSubmitFields) {
+                writer.append("\t\tvar id = $(\"[id^=" + rowSubmitField.getCurrentContainerId(context) + "]\");\r\n");
+                writer.append("\t\t$(id).click(function(e) {\r\n");
+                writer.append("\t\te.preventDefault();\r\n");
+                makeHiddenFieldsForHiddenForm(writer);
+                writer.append("\t\t\tsubmitForm.submit();\r\n");
+                // writer.append("\t\t\tconsole.log(\"submitForm ==========> \" + $(submitForm).html());\r\n");
+                writer.append("\t\t});\r\n");
+            }
+            writer.append("\t} else {\r\n");
+            writer.append("\t\treturn false;\r\n");
+            writer.append("\t}\r\n");
+            writer.append("});\r\n");
+            writer.append("</script>\r\n");
+        }
+    }
     
     // Cato: Creates a form that gets populated with the corresponding fields of the row being submitted and then submits it.
-	public static void makeHiddenFormSubmitForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap,
-			HttpServletRequest request, HttpServletResponse response, ModelForm modelForm, Map<String, Object> context) throws IOException {
-		String hiddenFormName = makeLinkHiddenFormName(context, modelForm,
-				"submitForm" + modelForm.getItemIndexSeparator() + new Random().nextInt(Integer.MAX_VALUE));		
-		if (modelForm.getUseRowSubmit())
-			makeJSForRowSubmit(writer, context, modelForm, hiddenFormName);
-		else
-			makeJSForInlineSubmit(writer, context, modelForm, hiddenFormName);
+    public static void makeHiddenFormSubmitForm(Appendable writer, String target, String targetType, String targetWindow, Map<String, String> parameterMap,
+            HttpServletRequest request, HttpServletResponse response, ModelForm modelForm, Map<String, Object> context) throws IOException {
+        String hiddenFormName = makeLinkHiddenFormName(context, modelForm,
+                "submitForm" + modelForm.getItemIndexSeparator() + new Random().nextInt(Integer.MAX_VALUE));        
+        if (modelForm.getUseRowSubmit())
+            makeJSForRowSubmit(writer, context, modelForm, hiddenFormName);
+        else
+            makeJSForInlineSubmit(writer, context, modelForm, hiddenFormName);
         writer.append("<form method=\"post\"");
         writer.append(" action=\"");
         // note that this passes null for the parameterList on purpose so they won't be put into the URL
@@ -397,32 +397,32 @@ public final class WidgetWorker {
         }
         writer.append("</form>");
     }
-	
-	private static void makeHiddenFieldsForHiddenForm(Appendable writer) throws IOException {
-		writer.append("\t\t\t\t$(this).parents(\"tr\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");
-		writer.append("\t\t\t\tif ($(submitForm).find(\"input[name=\" + $(e).attr(\"name\") + \"]\").length <= 0) {\r\n");
-		writer.append("\t\t\t\t\tconsole.log(\"element ======> \" + $(e).attr(\"name\") + \"   value =======> \" + $(e).val());\r\n");
-		writer.append("\t\t\t\t\tvar hiddenField = $(\"<input></input>\")\r\n");
-		writer.append("\t\t\t\t\t$(hiddenField).attr(\"type\", \"hidden\");\r\n");
-		writer.append("\t\t\t\t\t$(hiddenField).attr(\"name\", $(e).attr(\"name\"));\r\n");
-		writer.append("\t\t\t\t\t$(hiddenField).attr(\"value\", $(e).val());\r\n");
-		writer.append("\t\t\t\t\t$(submitForm).append($(hiddenField));\r\n");
-		writer.append("\t\t\t\t}\r\n");
-		writer.append("\t\t\t});\r\n");		
-	}
+    
+    private static void makeHiddenFieldsForHiddenForm(Appendable writer) throws IOException {
+        writer.append("\t\t\t\t$(this).parents(\"tr\").find(\"input[type=text], input[type=hidden], input[type=radio], input[type=checkbox], select, textarea\").each( function (i, e) {\r\n");
+        writer.append("\t\t\t\tif ($(submitForm).find(\"input[name=\" + $(e).attr(\"name\") + \"]\").length <= 0) {\r\n");
+        writer.append("\t\t\t\t\tconsole.log(\"element ======> \" + $(e).attr(\"name\") + \"   value =======> \" + $(e).val());\r\n");
+        writer.append("\t\t\t\t\tvar hiddenField = $(\"<input></input>\")\r\n");
+        writer.append("\t\t\t\t\t$(hiddenField).attr(\"type\", \"hidden\");\r\n");
+        writer.append("\t\t\t\t\t$(hiddenField).attr(\"name\", $(e).attr(\"name\"));\r\n");
+        writer.append("\t\t\t\t\t$(hiddenField).attr(\"value\", $(e).val());\r\n");
+        writer.append("\t\t\t\t\t$(submitForm).append($(hiddenField));\r\n");
+        writer.append("\t\t\t\t}\r\n");
+        writer.append("\t\t\t});\r\n");        
+    }
 
-	public static String makeLinkHiddenFormName(Map<String, Object> context, ModelForm modelForm, String prefix) {
-		if (UtilValidate.isNotEmpty(modelForm.getName()))
-			return prefix + modelForm.getItemIndexSeparator() + modelForm.getName();
-		else if (UtilValidate.isNotEmpty(context.get("formName")))
-			return prefix + modelForm.getItemIndexSeparator()+ context.get("formName");
-		return prefix;	
-	}
-	
+    public static String makeLinkHiddenFormName(Map<String, Object> context, ModelForm modelForm, String prefix) {
+        if (UtilValidate.isNotEmpty(modelForm.getName()))
+            return prefix + modelForm.getItemIndexSeparator() + modelForm.getName();
+        else if (UtilValidate.isNotEmpty(context.get("formName")))
+            return prefix + modelForm.getItemIndexSeparator()+ context.get("formName");
+        return prefix;    
+    }
+    
     public static String makeLinkHiddenFormName(Map<String, Object> context, ModelFormField modelFormField) {
-		ModelForm modelForm = null;
-		if (UtilValidate.isNotEmpty(modelFormField))
-			modelForm = modelFormField.getModelForm();
+        ModelForm modelForm = null;
+        if (UtilValidate.isNotEmpty(modelFormField))
+            modelForm = modelFormField.getModelForm();
         Integer itemIndex = (Integer) context.get("itemIndex");
         String iterateId = "";
         String formUniqueId = "";
@@ -534,5 +534,5 @@ public final class WidgetWorker {
         return delegator;
     }
 
-	
+    
 }

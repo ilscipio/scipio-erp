@@ -43,8 +43,8 @@ allSprints.each { sprint ->
     companyId = "";
     companyName = "";
     if (productAndRole.size() > 0) {
-    	companyName = productAndRole.get(0).groupName;
-    	companyId = productAndRole.get(0).partyId;
+        companyName = productAndRole.get(0).groupName;
+        companyId = productAndRole.get(0).partyId;
     }
     sprint = sprint.getAllFields();
     sprint.put("companyId", companyId)
@@ -55,8 +55,8 @@ allSprints.each { sprint ->
     sprint.put("productName", productName);
     //sprint.add("companyName", companyName, "String")
     if (oldProjectId != newProjectId) {
-    	oldProjectId = newProjectId;
-    	countSprint = 0;
+        oldProjectId = newProjectId;
+        countSprint = 0;
         ismember = false;
        if (partyAndSecurityGroupList) {
            groupId = partyAndSecurityGroupList[0].groupId;
@@ -143,7 +143,7 @@ allSprints.each { sprint ->
                countSprint++;
         }
     } else { 
-    	if (countSprint < 4) {
+        if (countSprint < 4) {
            ismember = false;
            if (partyAndSecurityGroupList) {
                groupId = partyAndSecurityGroupList[0].groupId;
@@ -219,13 +219,13 @@ allSprints.each { sprint ->
             || ((security.hasEntityPermission("SCRUM", "_ROLE_ADMIN", session) || security.hasEntityPermission("SCRUM", "_ROLE_VIEW", session) 
             || security.hasEntityPermission("SCRUM_PROJECT", "_ROLE_ADMIN", session)  || security.hasEntityPermission("SCRUM_PROJECT", "_ROLE_VIEW", session)
             || security.hasEntityPermission("SCRUM_PROJECT", "_VIEW", session)) && ismember)) {
-            	sprints.add(sprint);
-            	countSprint++;
+                sprints.add(sprint);
+                countSprint++;
             }
         }
     }
 }
 if (sprints) {
-	sprints = UtilMisc.sortMaps(sprints, ["companyName", "projectName", "productName"])
+    sprints = UtilMisc.sortMaps(sprints, ["companyName", "projectName", "productName"])
     context.sprints = sprints;
 }

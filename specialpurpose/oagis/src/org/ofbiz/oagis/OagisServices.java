@@ -679,7 +679,7 @@ public class OagisServices {
         final String certAlias = EntityUtilProperties.getPropertyValue("oagis.properties", "auth.client.certificate.alias", delegator);
         final String basicAuthUsername = EntityUtilProperties.getPropertyValue("oagis.properties", "auth.basic.username", delegator);
         final String basicAuthPassword = EntityUtilProperties.getPropertyValue("oagis.properties", "auth.basic.password", delegator);
-    	if (out != null) {
+        if (out != null) {
             Writer outWriter = new OutputStreamWriter(out);
             try {
                 outWriter.write(outText);

@@ -1129,7 +1129,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         // Cato: Getting the id of the element from the context
         String id = null;
         if (submitField.getModelFormField().getCurrentContainerId(context) != null) {
-        	id = submitField.getModelFormField().getCurrentContainerId(context);
+            id = submitField.getModelFormField().getCurrentContainerId(context);
         }        
         
         StringWriter sr = new StringWriter();
@@ -1169,7 +1169,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
         }
         sr.append("\" id=\"");
         if (id != null) {
-        	sr.append(id);
+            sr.append(id);
         }        
         sr.append("\" />");
         executeMacro(writer, sr.toString());
@@ -1442,8 +1442,8 @@ public final class MacroFormRenderer implements FormStringRenderer {
     public void renderMultiFormClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
         //FIXME copy from HtmlFormRenderer.java (except for the closing form tag itself, that is now converted)
         if (!modelForm.getUseRowSubmit()) {    
-        	// Cato: when the form doesn't use a specific row for the submit button, render it below the main one (one per submit button defined)
-        	this.renderSubmitForm(writer, context, modelForm);
+            // Cato: when the form doesn't use a specific row for the submit button, render it below the main one (one per submit button defined)
+            this.renderSubmitForm(writer, context, modelForm);
         }
         
         StringWriter sr = new StringWriter();
@@ -2172,7 +2172,7 @@ public final class MacroFormRenderer implements FormStringRenderer {
             //Cato: ugly hack but seems to work for now, so the lookup field can find the proper field
             String updateAreaId = id;
             if (modelFormField.getModelForm().getType().equals("list"))
-            	updateAreaId = name;
+                updateAreaId = name;
             updateAreas.add(new ModelForm.UpdateArea("change", updateAreaId, autoCompleterTarget));
         }
         boolean ajaxEnabled = UtilValidate.isNotEmpty(updateAreas) && this.javaScriptEnabled;
@@ -2258,9 +2258,9 @@ public final class MacroFormRenderer implements FormStringRenderer {
         sr.append(alert);
         sr.append("\" name=\"");
 //        if (modelForm.getType().equals("list"))
-//        	sr.append(id);
+//            sr.append(id);
 //        else
-        	sr.append(name);
+            sr.append(name);
         sr.append("\" value=\"");
         sr.append(value);
         sr.append("\" size=\"");
@@ -3355,58 +3355,58 @@ public final class MacroFormRenderer implements FormStringRenderer {
         executeMacro(writer, sr.toString());
     }
 
-	@Override
-	public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {		
-		// get the parameterized pagination index and size fields
-		int paginatorNumber = WidgetWorker.getPaginatorNumber(context);
+    @Override
+    public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {        
+        // get the parameterized pagination index and size fields
+        int paginatorNumber = WidgetWorker.getPaginatorNumber(context);
 
-		String viewIndexField = modelForm.getMultiPaginateIndexField(context);
-		String viewSizeField = modelForm.getMultiPaginateSizeField(context);
-		int viewIndex = Paginator.getViewIndex(modelForm, context);
-		int viewSize = Paginator.getViewSize(modelForm, context);
-		if (viewIndexField.equals("viewIndex" + "_" + paginatorNumber)) {
-			viewIndexField = "VIEW_INDEX" + "_" + paginatorNumber;
-		}
-		if (viewSizeField.equals("viewSize" + "_" + paginatorNumber)) {
-			viewSizeField = "VIEW_SIZE" + "_" + paginatorNumber;
-		}
-		
-		HashMap<String, String> parameterMap = new HashMap<String, String>();
-		parameterMap.put(viewIndexField, Integer.toString(viewIndex));
-		parameterMap.put(viewSizeField, Integer.toString(viewSize));
+        String viewIndexField = modelForm.getMultiPaginateIndexField(context);
+        String viewSizeField = modelForm.getMultiPaginateSizeField(context);
+        int viewIndex = Paginator.getViewIndex(modelForm, context);
+        int viewSize = Paginator.getViewSize(modelForm, context);
+        if (viewIndexField.equals("viewIndex" + "_" + paginatorNumber)) {
+            viewIndexField = "VIEW_INDEX" + "_" + paginatorNumber;
+        }
+        if (viewSizeField.equals("viewSize" + "_" + paginatorNumber)) {
+            viewSizeField = "VIEW_SIZE" + "_" + paginatorNumber;
+        }
+        
+        HashMap<String, String> parameterMap = new HashMap<String, String>();
+        parameterMap.put(viewIndexField, Integer.toString(viewIndex));
+        parameterMap.put(viewSizeField, Integer.toString(viewSize));
 
-		Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
-		Appendable postMultiFormWriter = wholeFormContext != null ? (Appendable) wholeFormContext.get("postMultiFormWriter") : null;
-		if (modelForm.getType().equals("multi")) {		
-			if (postMultiFormWriter == null) {
-				postMultiFormWriter = new StringWriter();
-				if (wholeFormContext != null)
-					wholeFormContext.put("postMultiFormWriter", postMultiFormWriter);
-			}
-		} else {
-			postMultiFormWriter = writer;
-		}
-		WidgetWorker.makeHiddenFormSubmitForm(postMultiFormWriter, modelForm.getTarget(context, modelForm.getTargetType()), modelForm.getTargetType(), modelForm.getTargetWindow(), parameterMap, request, response, modelForm, context);
-	}
+        Map<String, Object> wholeFormContext = UtilGenerics.checkMap(context.get("wholeFormContext"));
+        Appendable postMultiFormWriter = wholeFormContext != null ? (Appendable) wholeFormContext.get("postMultiFormWriter") : null;
+        if (modelForm.getType().equals("multi")) {        
+            if (postMultiFormWriter == null) {
+                postMultiFormWriter = new StringWriter();
+                if (wholeFormContext != null)
+                    wholeFormContext.put("postMultiFormWriter", postMultiFormWriter);
+            }
+        } else {
+            postMultiFormWriter = writer;
+        }
+        WidgetWorker.makeHiddenFormSubmitForm(postMultiFormWriter, modelForm.getTarget(context, modelForm.getTargetType()), modelForm.getTargetType(), modelForm.getTargetWindow(), parameterMap, request, response, modelForm, context);
+    }
 
-	@Override
-	public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
-		contextHandler.registerContext(writer, context);
-		String headerStyle = FlexibleStringExpander.expandString(modelForm.getHeaderRowStyle(), context);
-		StringWriter sr = new StringWriter();
-		sr.append("<@renderFormatFooterRowOpen ");
-		sr.append(" style=\"");
-		sr.append(headerStyle);
-		sr.append("\" />");
-		executeMacro(writer, sr.toString());
-	}
+    @Override
+    public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        contextHandler.registerContext(writer, context);
+        String headerStyle = FlexibleStringExpander.expandString(modelForm.getHeaderRowStyle(), context);
+        StringWriter sr = new StringWriter();
+        sr.append("<@renderFormatFooterRowOpen ");
+        sr.append(" style=\"");
+        sr.append(headerStyle);
+        sr.append("\" />");
+        executeMacro(writer, sr.toString());
+    }
 
-	@Override
-	public void renderFormatFooterRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
-		StringWriter sr = new StringWriter();
-		sr.append("<@renderFormatFooterRowClose />");
-		executeMacro(writer, sr.toString());
-	}
+    @Override
+    public void renderFormatFooterRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        StringWriter sr = new StringWriter();
+        sr.append("<@renderFormatFooterRowClose />");
+        executeMacro(writer, sr.toString());
+    }
 
-	
+    
 }

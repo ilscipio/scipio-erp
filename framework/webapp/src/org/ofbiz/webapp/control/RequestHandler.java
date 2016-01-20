@@ -129,7 +129,7 @@ public class RequestHandler {
     public void doRequest(HttpServletRequest request, HttpServletResponse response, String chain,
             GenericValue userLogin, Delegator delegator) throws RequestHandlerException, RequestHandlerExceptionAllowExternalRequests {
 
-    	final boolean throwRequestHandlerExceptionOnMissingLocalRequest = EntityUtilProperties.propertyValueEqualsIgnoreCase(
+        final boolean throwRequestHandlerExceptionOnMissingLocalRequest = EntityUtilProperties.propertyValueEqualsIgnoreCase(
                 "requestHandler.properties", "throwRequestHandlerExceptionOnMissingLocalRequest", "Y", delegator);
         long startTime = System.currentTimeMillis();
         HttpSession session = request.getSession();
@@ -1023,7 +1023,7 @@ public class RequestHandler {
      */
     @Deprecated
     public static String getDefaultServerRootUrl(HttpServletRequest request, boolean secure) {
-    	Delegator delegator = (Delegator) request.getAttribute("delegator");
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
         String httpsPort = EntityUtilProperties.getPropertyValue("url.properties", "port.https", "443", delegator);
         String httpsServer = EntityUtilProperties.getPropertyValue("url.properties", "force.https.host", delegator);
         String httpPort = EntityUtilProperties.getPropertyValue("url.properties", "port.http", "80", delegator);

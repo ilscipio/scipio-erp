@@ -308,7 +308,7 @@ public class FormRenderer {
         List<ModelFormField> tempFieldList = new LinkedList<ModelFormField>();
         tempFieldList.addAll(modelForm.getFieldList());        
         if (("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) && !modelForm.getUseRowSubmit()) {
-        	tempFieldList.addAll(modelForm.getMultiSubmitFields());
+            tempFieldList.addAll(modelForm.getMultiSubmitFields());
         }
         for (int j = 0; j < tempFieldList.size(); j++) {
             ModelFormField modelFormField = tempFieldList.get(j);
@@ -360,7 +360,7 @@ public class FormRenderer {
                 
                 // Cato: Skip the rendering of the header if the field doesn't meet the use-when conditions
                 if (!modelFormField.shouldUse(context)) {
-                	continue;
+                    continue;
                 }
                 
                 // don't do any header for hidden or ignored fields
@@ -408,23 +408,23 @@ public class FormRenderer {
             }
 
             if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsBegin))
-            	maxNumOfColumns += innerDisplayHyperlinkFieldsBegin.size();
+                maxNumOfColumns += innerDisplayHyperlinkFieldsBegin.size();
             if (UtilValidate.isNotEmpty(innerDisplayHyperlinkFieldsEnd))
-            	maxNumOfColumns += innerDisplayHyperlinkFieldsEnd.size();
+                maxNumOfColumns += innerDisplayHyperlinkFieldsEnd.size();
             if (UtilValidate.isNotEmpty(innerFormFields))
-            	maxNumOfColumns += innerFormFields.size();
+                maxNumOfColumns += innerFormFields.size();
             
             // Cato: Add an extra column to hold a checkbox or radio button depending on the type of form.
             if ((modelForm.getType().equals("list") || modelForm.getType().equals("multi")) && modelForm.getUseRowSubmit()) {
-            	ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-            	ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(FieldInfo.DISPLAY, null);
-            	builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
-            	builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
-            	builder.setModelForm(modelForm);
-            	builder.setTitle("Select");
-            	builder.setFieldInfo(displayField);
-            	innerDisplayHyperlinkFieldsEnd.add(builder.build());            	
-            	maxNumOfColumns++;
+                ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+                ModelFormField.DisplayField displayField = new ModelFormField.DisplayField(FieldInfo.DISPLAY, null);
+                builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
+                builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
+                builder.setModelForm(modelForm);
+                builder.setTitle("Select");
+                builder.setFieldInfo(displayField);
+                innerDisplayHyperlinkFieldsEnd.add(builder.build());                
+                maxNumOfColumns++;
             }
 
             Map<String, List<ModelFormField>> fieldRow = UtilMisc.toMap("displayBefore", innerDisplayHyperlinkFieldsBegin,
@@ -467,8 +467,8 @@ public class FormRenderer {
                     }
                     if (innerFormFields.size() > 0) {
                         // TODO: manage colspan
-//                    	if (modelForm.getUseRowSubmit())
-//                    		formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
+//                        if (modelForm.getUseRowSubmit())
+//                            formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
                         Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
                         while (innerFormFieldsIt.hasNext()) {
                             ModelFormField modelFormField = innerFormFieldsIt.next();
@@ -476,7 +476,7 @@ public class FormRenderer {
                             if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit()) {
                                 formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, modelFormField, 1);
                             } else if (!modelForm.getUseRowSubmit()) {
-                            	formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
+                                formStringRenderer.renderFormatHeaderRowFormCellOpen(writer, context, modelForm);
                             }
 
                             // render title (unless this is a submit or a reset field)
@@ -485,7 +485,7 @@ public class FormRenderer {
                             if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit()) {
                                 formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, modelFormField);
                             } else if (!modelForm.getUseRowSubmit()) {
-                            	formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
+                                formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
                             }
 
                             if (innerFormFieldsIt.hasNext()) {
@@ -498,7 +498,7 @@ public class FormRenderer {
                             
                         }
 //                        if (modelForm.getUseRowSubmit())
-//                        	formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
+//                            formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
                     }
                     Iterator<ModelFormField> innerDisplayHyperlinkFieldsEndIt = innerDisplayHyperlinkFieldsEnd.iterator();
                     while (innerDisplayHyperlinkFieldsEndIt.hasNext()) {
@@ -597,33 +597,33 @@ public class FormRenderer {
         }
 
         if (modelForm.getGroupColumns()) {
-        	// Cato: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
+            // Cato: Add an extra column to hold a radio for form lists that use an specific row for submit buttons. This radio will determine which row must be submitted.
             if (modelForm.getType().equals("list") && modelForm.getUseRowSubmit()) {
-            	ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-            	List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
-            	optionSources.add(new SingleOption("Y", " ", null));
-            	ModelFormField.RadioField radioField = new ModelFormField.RadioField(FieldInfo.RADIO, null, optionSources);
-            	builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
-            	builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
-            	builder.setModelForm(modelForm);
-            	builder.setTitle("Select");
-            	builder.setFieldInfo(radioField);
-            	innerDisplayHyperlinkFieldsEnd.add(builder.build());            	
-            	numOfColumns++;
+                ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+                List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
+                optionSources.add(new SingleOption("Y", " ", null));
+                ModelFormField.RadioField radioField = new ModelFormField.RadioField(FieldInfo.RADIO, null, optionSources);
+                builder.setFieldName("selectAction" +  modelForm.getItemIndexSeparator() + modelForm.getName());
+                builder.setName("selectAction" + modelForm.getItemIndexSeparator() + modelForm.getName());
+                builder.setModelForm(modelForm);
+                builder.setTitle("Select");
+                builder.setFieldInfo(radioField);
+                innerDisplayHyperlinkFieldsEnd.add(builder.build());                
+                numOfColumns++;
             } else if (modelForm.getType().equals("multi") && modelForm.getUseRowSubmit()) {
-            	ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
-            	List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
-            	optionSources.add(new SingleOption("Y", " ", null));
-            	ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);            
-            	builder.setFieldName(UtilHttp.ROW_SUBMIT_PREFIX);				
-            	builder.setName(UtilHttp.ROW_SUBMIT_PREFIX);
-            	builder.setModelForm(modelForm);
-            	builder.setTitle("Select");
-            	builder.setFieldInfo(checkField);
-            	innerDisplayHyperlinkFieldsEnd.add(builder.build());            	
-            	numOfColumns++;
+                ModelFormFieldBuilder builder = new ModelFormFieldBuilder();
+                List<OptionSource> optionSources = new ArrayList<ModelFormField.OptionSource>();
+                optionSources.add(new SingleOption("Y", " ", null));
+                ModelFormField.CheckField checkField = new ModelFormField.CheckField(FieldInfo.CHECK, null, optionSources);            
+                builder.setFieldName(UtilHttp.ROW_SUBMIT_PREFIX);                
+                builder.setName(UtilHttp.ROW_SUBMIT_PREFIX);
+                builder.setModelForm(modelForm);
+                builder.setTitle("Select");
+                builder.setFieldInfo(checkField);
+                innerDisplayHyperlinkFieldsEnd.add(builder.build());                
+                numOfColumns++;
             }
-        	 
+            
             // do the first part of display and hyperlink fields
             Iterator<ModelFormField> innerDisplayHyperlinkFieldIter = innerDisplayHyperlinkFieldsBegin.iterator();
             while (innerDisplayHyperlinkFieldIter.hasNext()) {
@@ -650,7 +650,7 @@ public class FormRenderer {
                         }
                         cellOpen = true;
                     }
-					modelFormField.renderFieldString(writer, localContext, formStringRenderer);
+                    modelFormField.renderFieldString(writer, localContext, formStringRenderer);
                 }
                 if (cellOpen) {
                     formStringRenderer.renderFormatItemRowCellClose(writer, localContext, modelForm, modelFormField);
@@ -659,10 +659,10 @@ public class FormRenderer {
 
             // The form cell is rendered only if there is at least an input field
             if (innerFormFields.size() > 0) {
-                // render the "form" cell            	
-            	formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm); // TODO: colspan
-            	// Cato: Controls where a cell has been opened already so we don't generate invalid markup (similar to what is done for firsts links rendered above)
-            	boolean cellOpen = true;
+                // render the "form" cell                
+                formStringRenderer.renderFormatItemRowFormCellOpen(writer, localContext, modelForm); // TODO: colspan
+                // Cato: Controls where a cell has been opened already so we don't generate invalid markup (similar to what is done for firsts links rendered above)
+                boolean cellOpen = true;
 
                 if (formPerItem) {
                     formStringRenderer.renderFormOpen(writer, localContext, modelForm);
@@ -695,7 +695,7 @@ public class FormRenderer {
                 }
 
                 if (cellOpen)
-                	formStringRenderer.renderFormatItemRowFormCellClose(writer, localContext, modelForm);
+                    formStringRenderer.renderFormatItemRowFormCellClose(writer, localContext, modelForm);
             }
 
             // render the rest of the display/hyperlink fields
@@ -927,7 +927,7 @@ public class FormRenderer {
                             continue;
                         }
                         if (!modelFormField.shouldUse(localContext)) {
-                        	continue;
+                            continue;
                         }
                         
                         innerDisplayHyperlinkFieldsBegin.add(modelFormField);
@@ -959,7 +959,7 @@ public class FormRenderer {
                             continue;
                         }
                         if (!modelFormField.shouldUse(localContext)) {
-                        	continue;
+                            continue;
                         }
                         innerFormFields.add(modelFormField);
                         currentPosition = modelFormField.getPosition();
@@ -988,29 +988,29 @@ public class FormRenderer {
                             continue;
                         }
                         if (!modelFormField.shouldUse(localContext)) {
-                        	continue;
+                            continue;
                         }
                         innerDisplayHyperlinkFieldsEnd.add(modelFormField);
                         currentPosition = modelFormField.getPosition();
                     }
                           
                     // Cato: Adding submit buttons if use-row-submit flag in the form definition is set to false
-					if ("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) {
-						Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
-						while (submitFields.hasNext()) {
-							ModelFormField submitField = submitFields.next();
-							if (submitField != null && submitField.shouldUse(context)) {
-								if (!modelForm.getUseRowSubmit())
-									innerDisplayHyperlinkFieldsEnd.add(submitField);
-							}
-						}
-					}
+                    if ("multi".equals(modelForm.getType()) || "list".equals(modelForm.getType())) {
+                        Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
+                        while (submitFields.hasNext()) {
+                            ModelFormField submitField = submitFields.next();
+                            if (submitField != null && submitField.shouldUse(context)) {
+                                if (!modelForm.getUseRowSubmit())
+                                    innerDisplayHyperlinkFieldsEnd.add(submitField);
+                            }
+                        }
+                    }
                     
                     List<ModelFormField> hiddenIgnoredFieldList = getHiddenIgnoredFields(localContext, null, tempFieldList,
                             currentPosition);
                     
-					
-					// Rendering:
+                    
+                    // Rendering:
                     // the fields in the three lists created in the preprocessing phase
                     // are now rendered: this will create a visual representation
                     // of one row (for the current position).
@@ -1157,27 +1157,27 @@ public class FormRenderer {
             }
         }
 
-		public void renderTableFooter() throws IOException {
-			// Cato: Renders the submit button in the tfoot
-			if (UtilValidate.isNotEmpty(modelForm.getMultiSubmitFields()) && wrapperOpened && !footerRendered) {
-				Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
-				formStringRenderer.renderFormatFooterRowOpen(writer, context, modelForm);
-				int i = 0;
-				while (submitFields.hasNext()) {
-					ModelFormField submitField = submitFields.next();
-					if (submitField != null && submitField.shouldUse(context)) {
-						if (modelForm.getUseRowSubmit()) {
-							formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, submitField, numOfColumns - i);
-							submitField.renderFieldString(writer, context, formStringRenderer);
-							formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
-						}
-					}
-					i++;
-				}
-				formStringRenderer.renderFormatFooterRowClose(writer, context, modelForm);
-				footerRendered = true;
-			}
-		}
+        public void renderTableFooter() throws IOException {
+            // Cato: Renders the submit button in the tfoot
+            if (UtilValidate.isNotEmpty(modelForm.getMultiSubmitFields()) && wrapperOpened && !footerRendered) {
+                Iterator<ModelFormField> submitFields = modelForm.getMultiSubmitFields().iterator();
+                formStringRenderer.renderFormatFooterRowOpen(writer, context, modelForm);
+                int i = 0;
+                while (submitFields.hasNext()) {
+                    ModelFormField submitField = submitFields.next();
+                    if (submitField != null && submitField.shouldUse(context)) {
+                        if (modelForm.getUseRowSubmit()) {
+                            formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, submitField, numOfColumns - i);
+                            submitField.renderFieldString(writer, context, formStringRenderer);
+                            formStringRenderer.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
+                        }
+                    }
+                    i++;
+                }
+                formStringRenderer.renderFormatFooterRowClose(writer, context, modelForm);
+                footerRendered = true;
+            }
+        }
 
     }
     
@@ -1197,11 +1197,11 @@ public class FormRenderer {
         this.renderItemRows(writer, context, formStringRenderer, true, numOfColumns, listFormHandler);
         
         if (modelForm.getUseRowSubmit())
-        	listFormHandler.renderTableFooter();
+            listFormHandler.renderTableFooter();
         
         listFormHandler.renderTableClose();
         
-        // Cato: Renders a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.         	
+        // Cato: Renders a hidden form at the end of the list of results that will be used to submit the values once an action gets triggered.             
         formStringRenderer.renderSubmitForm(writer, context, modelForm);
         
        
@@ -1226,7 +1226,7 @@ public class FormRenderer {
         this.renderItemRows(writer, context, formStringRenderer, false, numOfColumns, listFormHandler);
         
         if (modelForm.getUseRowSubmit())        
-        	listFormHandler.renderTableFooter(); 
+            listFormHandler.renderTableFooter(); 
 
         listFormHandler.renderTableClose();
 

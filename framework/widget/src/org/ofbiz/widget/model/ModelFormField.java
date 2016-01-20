@@ -502,8 +502,8 @@ public class ModelFormField {
 
         Integer itemIndex = (Integer) context.get("itemIndex");
         if (itemIndex != null && "multi".equals(this.modelForm.getType())) {
-        	if (baseName.equals(UtilHttp.ROW_SUBMIT_PREFIX))
-        		return baseName + itemIndex.intValue();
+            if (baseName.equals(UtilHttp.ROW_SUBMIT_PREFIX))
+                return baseName + itemIndex.intValue();
             return baseName + this.modelForm.getItemIndexSeparator() + itemIndex.intValue();
         } else {
             return baseName;

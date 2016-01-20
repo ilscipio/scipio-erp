@@ -313,18 +313,18 @@ public class CmsEvents {
         try {
             webSite = EntityQuery.use(delegator).from("WebSite").where("webSiteId", webSiteId).cache().queryOne();
             if (webSite != null) {
-            	siteName = webSite.getString("siteName");
+                siteName = webSite.getString("siteName");
             }
             if (siteName == null) {
-            	siteName = "Not specified";
+                siteName = "Not specified";
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
         }
         if (webSite != null) {
-        	request.setAttribute("_ERROR_MESSAGE_", "Not able to find a page to display for website: " + siteName + " [" + webSiteId + "] not even a default page!");
+            request.setAttribute("_ERROR_MESSAGE_", "Not able to find a page to display for website: " + siteName + " [" + webSiteId + "] not even a default page!");
         } else {
-        	request.setAttribute("_ERROR_MESSAGE_", "Not able to find a page to display, not even a default page AND the website entity record for WebSiteId:" + webSiteId + " could not be found");
+            request.setAttribute("_ERROR_MESSAGE_", "Not able to find a page to display, not even a default page AND the website entity record for WebSiteId:" + webSiteId + " could not be found");
         }
         return "error";
     }

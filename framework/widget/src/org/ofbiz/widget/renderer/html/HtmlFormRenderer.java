@@ -1256,8 +1256,8 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
                 // this.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
 
                 // this.renderFormatItemRowCellOpen(writer, context, modelForm, submitField);
-            	if (modelForm.getUseRowSubmit())
-            		submitField.renderFieldString(writer, context, this);
+                if (modelForm.getUseRowSubmit())
+                    submitField.renderFieldString(writer, context, this);
 
                 // this.renderFormatItemRowCellClose(writer, context, modelForm, submitField);
 
@@ -2825,22 +2825,22 @@ public class HtmlFormRenderer extends HtmlWidgetRenderer implements FormStringRe
         // TODO
     }
 
-	@Override
-	public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        // TODO Auto-generated method stub
+        
+    }
 
-	@Override
-	public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        // TODO Auto-generated method stub
+        
+    }
 
-	@Override
-	public void renderFormatFooterRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void renderFormatFooterRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

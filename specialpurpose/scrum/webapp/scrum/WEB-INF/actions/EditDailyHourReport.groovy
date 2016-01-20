@@ -381,7 +381,7 @@ userLoginId = userLogin.partyId;
     sprintId = projectAndTaskMap.sprintId;
     workEffortList = from("WorkEffortAndProduct").where("workEffortId", projectAndTaskMap.projectId).queryList();
     backlogIndexList.add(workEffortList[0].productId);
-	
+    
     partyAssignmentSprintList = from("WorkEffortPartyAssignment").where("workEffortId", sprintId, "partyId", userLoginId).queryList();
     partyAssignmentSprintMap = partyAssignmentSprintList[0];
     // if this userLoginId is a member of sprint
@@ -392,12 +392,12 @@ userLoginId = userLogin.partyId;
         // if the task do not assigned
         if (partyAssignmentTaskMap) {
             custRequestTypeId = projectAndTaskMap.custRequestTypeId;
-			backlogStatusId = projectAndTaskMap.backlogStatusId;
-			if (custRequestTypeId.equals("RF_SCRUM_MEETINGS") && backlogStatusId.equals("CRQ_REVIEWED")) {
-				projectSprintBacklogAndTaskList.add(projectAndTaskMap);
-			   }
+            backlogStatusId = projectAndTaskMap.backlogStatusId;
+            if (custRequestTypeId.equals("RF_SCRUM_MEETINGS") && backlogStatusId.equals("CRQ_REVIEWED")) {
+                projectSprintBacklogAndTaskList.add(projectAndTaskMap);
+            }
             } else {
-					projectSprintBacklogAndTaskList.add(0,projectAndTaskMap);
+                    projectSprintBacklogAndTaskList.add(0,projectAndTaskMap);
              }
         }
     }
@@ -410,9 +410,9 @@ if (backlogIndexList) {
     if (custRequestList) {
         custRequestList.each { custRequestMap ->
             custRequestItemList = custRequestMap.getRelated("CustRequestItem", null, null, false);
-			custRequestItem =  
-			productOut = custRequestItemList[0].productId;
-			product = from("Product").where("productId", productOut).queryOne();
+            custRequestItem =  
+            productOut = custRequestItemList[0].productId;
+            product = from("Product").where("productId", productOut).queryOne();
             backlogIndex.each { backlogProduct ->
                 productId = backlogProduct
                 if (productId.equals(productOut)) {
@@ -428,8 +428,8 @@ if (backlogIndexList) {
                             result.productName = product.internalName;
                             result.taskId = workEffortMap.workEffortId;
                             result.taskName = workEffortMap.workEffortName;
-							result.custRequestTypeId = custRequestMap.custRequestTypeId;
-							result.taskTypeId = workEffortMap.workEffortTypeId;
+                            result.custRequestTypeId = custRequestMap.custRequestTypeId;
+                            result.taskTypeId = workEffortMap.workEffortTypeId;
                             unplanList.add(result);
                         }
                     }
@@ -440,21 +440,21 @@ if (backlogIndexList) {
 }
 projectSprintBacklogAndTaskList = UtilMisc.sortMaps(projectSprintBacklogAndTaskList, ["projectName","sprintName","-taskTypeId","custRequestId"]);
 projectSprintBacklogAndTaskList.each { projectSprintBacklogAndTaskMap ->
-	blTypeId = projectSprintBacklogAndTaskMap.custRequestTypeId;
-	if (blTypeId == "RF_SCRUM_MEETINGS"){
-		taskList.add(projectSprintBacklogAndTaskMap);
-	}
+    blTypeId = projectSprintBacklogAndTaskMap.custRequestTypeId;
+    if (blTypeId == "RF_SCRUM_MEETINGS"){
+        taskList.add(projectSprintBacklogAndTaskMap);
+    }
 }
 projectSprintBacklogAndTaskList = UtilMisc.sortMaps(projectSprintBacklogAndTaskList, ["-projectName","sprintName","-taskTypeId","custRequestId"]);
 projectSprintBacklogAndTaskList.each { projectSprintBacklogAndTaskMap ->
-	blTypeId = projectSprintBacklogAndTaskMap.custRequestTypeId;
-	if (blTypeId == "RF_PROD_BACKLOG"){
-		taskList.add(0,projectSprintBacklogAndTaskMap);
-	}
+    blTypeId = projectSprintBacklogAndTaskMap.custRequestTypeId;
+    if (blTypeId == "RF_PROD_BACKLOG"){
+        taskList.add(0,projectSprintBacklogAndTaskMap);
+    }
 }
 unplanList = UtilMisc.sortMaps(unplanList,["-productName","-taskTypeId","custRequestId"]);
 unplanList.each { unplanMap->
-		taskList.add(0,unplanMap);
+        taskList.add(0,unplanMap);
 }
 context.taskList = taskList;
 

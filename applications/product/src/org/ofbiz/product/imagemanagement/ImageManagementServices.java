@@ -762,7 +762,7 @@ public class ImageManagementServices {
     }
     
     public static Map<String, Object> resizeImageOfProduct(DispatchContext dctx, Map<String, ? extends Object> context) {
-    	Delegator delegator = dctx.getDelegator();
+        Delegator delegator = dctx.getDelegator();
         String imageServerPath = FlexibleStringExpander.expandString(EntityUtilProperties.getPropertyValue("catalog", "image.management.path", delegator), context);
         String productId = (String) context.get("productId");
         String dataResourceName = (String) context.get("dataResourceName");

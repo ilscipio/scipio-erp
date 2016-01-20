@@ -67,9 +67,9 @@ public class UtilCodec {
         private HTMLEntityCodec htmlCodec = new HTMLEntityCodec();
         public String encode(String original) {
             if (original == null) {
-       	    	return null;
-       	    }
-       	    return htmlCodec.encode(IMMUNE_HTML, original);
+                return null;
+            }
+            return htmlCodec.encode(IMMUNE_HTML, original);
         }
     }
 
@@ -78,9 +78,9 @@ public class UtilCodec {
         private XMLEntityCodec xmlCodec = new XMLEntityCodec();
         public String encode(String original) {
             if (original == null) {
-       	    	return null;
-       	    }
-       	    return xmlCodec.encode(IMMUNE_XML, original);
+                return null;
+            }
+            return xmlCodec.encode(IMMUNE_XML, original);
         }
     }
 

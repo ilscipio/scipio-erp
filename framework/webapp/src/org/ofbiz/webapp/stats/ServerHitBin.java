@@ -466,7 +466,7 @@ public class ServerHitBin {
 
     private void saveHit(HttpServletRequest request, long startTime, long runningTime, GenericValue userLogin) throws GenericEntityException {
         // persist record of hit in ServerHit entity if option turned on
-    	Delegator delegator = (Delegator) request.getAttribute("delegator");
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
         if (EntityUtilProperties.propertyValueEqualsIgnoreCase("serverstats", "stats.persist." + ServerHitBin.typeIds[type] + ".hit", "true", delegator)) {
             // if the hit type is ENTITY and the name contains "ServerHit" don't
             // persist; avoids the infinite loop and a bunch of annoying data

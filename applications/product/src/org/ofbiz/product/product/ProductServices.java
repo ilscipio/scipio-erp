@@ -901,7 +901,7 @@ public class ProductServices {
     }
 
     public static Map<String, Object> updateProductIfAvailableFromShipment(DispatchContext dctx, Map<String, ? extends Object> context) {
-    	Delegator delegator = dctx.getDelegator();
+        Delegator delegator = dctx.getDelegator();
         if ("Y".equals(EntityUtilProperties.getPropertyValue("catalog.properties", "reactivate.product.from.receipt", "N", delegator))) {
             LocalDispatcher dispatcher = dctx.getDispatcher();
             GenericValue userLogin = (GenericValue) context.get("userLogin");

@@ -2838,7 +2838,7 @@ public class PaymentGatewayServices {
     }
 
     public static boolean checkAuthValidity(GenericValue orderPaymentPreference, String paymentConfig) {
-    	Delegator delegator = orderPaymentPreference.getDelegator();
+        Delegator delegator = orderPaymentPreference.getDelegator();
         Timestamp authTime = PaymentGatewayServices.getAuthTime(orderPaymentPreference);
         if (authTime == null) {
             return false;

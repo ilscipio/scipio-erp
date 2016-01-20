@@ -29,14 +29,14 @@ def productExportList = [];
 def amountPerSection = 1000;
 def section = (int)(resultList.size()/amountPerSection);
 if (resultList.size() % amountPerSection != 0) {
-	section = section+1;
+    section = section+1;
 }
 
 for (int i=0; i<section; i++) {
-	if (!(i == (section-1))) {
-		productExportList.add(resultList.subList((i*amountPerSection), ((i+1)*amountPerSection)));
-	} else {
-		productExportList.add(resultList.subList((i*amountPerSection), resultList.size()));
-	}
+    if (!(i == (section-1))) {
+        productExportList.add(resultList.subList((i*amountPerSection), ((i+1)*amountPerSection)));
+    } else {
+        productExportList.add(resultList.subList((i*amountPerSection), resultList.size()));
+    }
 }
 context.productExportLists = productExportList

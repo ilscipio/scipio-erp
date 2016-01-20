@@ -137,7 +137,7 @@ public class WorkEffortKeywordIndex {
         }
     }
     public static void addWeightedKeywordSourceString(GenericValue value, String fieldName, List<String> strings) {
-    	Delegator delegator = value.getDelegator();
+        Delegator delegator = value.getDelegator();
         if (value.getString(fieldName) != null) {
             int weight = 1;
 

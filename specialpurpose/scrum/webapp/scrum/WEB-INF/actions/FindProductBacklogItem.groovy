@@ -51,11 +51,11 @@ if ((parameters.billed != null)||(parameters.parentCustRequestId != null)||(para
     }
     
     if(UtilValidate.isEmpty(parameters.billed)){
-    	orConditionBacklogList.add(EntityCondition.makeCondition("billed", EntityOperator.EQUALS, "Y"));
-    	orConditionBacklogList.add(EntityCondition.makeCondition("billed", EntityOperator.EQUALS, "N"));
-    	orConditionsBacklog = EntityCondition.makeCondition(orConditionBacklogList, EntityOperator.OR);
+        orConditionBacklogList.add(EntityCondition.makeCondition("billed", EntityOperator.EQUALS, "Y"));
+        orConditionBacklogList.add(EntityCondition.makeCondition("billed", EntityOperator.EQUALS, "N"));
+        orConditionsBacklog = EntityCondition.makeCondition(orConditionBacklogList, EntityOperator.OR);
     }else{
-    	conditionBacklogList.add(EntityCondition.makeCondition("billed", EntityOperator.EQUALS, parameters.billed));
+        conditionBacklogList.add(EntityCondition.makeCondition("billed", EntityOperator.EQUALS, parameters.billed));
     }
     
     if(!"Any".equals(parameters.statusId)){
@@ -64,27 +64,27 @@ if ((parameters.billed != null)||(parameters.parentCustRequestId != null)||(para
     }
     
     if(UtilValidate.isNotEmpty(parameters.parentCustRequestId)){
-    	conditionBacklogList.add(EntityCondition.makeCondition("parentCustRequestId", EntityOperator.EQUALS, parameters.parentCustRequestId));
+        conditionBacklogList.add(EntityCondition.makeCondition("parentCustRequestId", EntityOperator.EQUALS, parameters.parentCustRequestId));
     }
     if(UtilValidate.isNotEmpty(parameters.description)){
-    	conditionBacklogList.add(EntityCondition.makeCondition("description", EntityOperator.LIKE, "%" + description + "%"));
+        conditionBacklogList.add(EntityCondition.makeCondition("description", EntityOperator.LIKE, "%" + description + "%"));
     }
     
     if(UtilValidate.isNotEmpty(parameters.fromPartyId)){
-    	conditionBacklogList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.LIKE, "%" + parameters.fromPartyId + "%"));
+        conditionBacklogList.add(EntityCondition.makeCondition("fromPartyId", EntityOperator.LIKE, "%" + parameters.fromPartyId + "%"));
     }
     
     if (UtilValidate.isNotEmpty(parameters.custRequestDate)){
-    	fromDate = parameters.custRequestDate;
-    	fromDate = fromDate + " " + "00:00:00.000";
-    	conditionBacklogList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO, Timestamp.valueOf(fromDate)));
-    	thruDate = parameters.custRequestDate;
-    	thruDate = thruDate + " " + "23:59:59.999";
-    	conditionBacklogList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.LESS_THAN_EQUAL_TO, Timestamp.valueOf(thruDate)));
+        fromDate = parameters.custRequestDate;
+        fromDate = fromDate + " " + "00:00:00.000";
+        conditionBacklogList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.GREATER_THAN_EQUAL_TO, Timestamp.valueOf(fromDate)));
+        thruDate = parameters.custRequestDate;
+        thruDate = thruDate + " " + "23:59:59.999";
+        conditionBacklogList.add(EntityCondition.makeCondition("custRequestDate", EntityOperator.LESS_THAN_EQUAL_TO, Timestamp.valueOf(thruDate)));
     }
     
     if(UtilValidate.isNotEmpty(parameters.custRequestId)){
-    	conditionBacklogList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.LIKE, custRequestId + "%"));
+        conditionBacklogList.add(EntityCondition.makeCondition("custRequestId", EntityOperator.LIKE, custRequestId + "%"));
     }
     
     conditionsBacklog = EntityCondition.makeCondition(conditionBacklogList, EntityOperator.AND);

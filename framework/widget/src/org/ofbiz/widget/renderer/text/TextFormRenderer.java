@@ -304,22 +304,22 @@ public class TextFormRenderer implements FormStringRenderer {
         // TODO
     }
 
-	@Override
-	public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void renderSubmitForm(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        // TODO Auto-generated method stub
+        
+    }
 
-	@Override
-	public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void renderFormatFooterRowOpen(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        // TODO Auto-generated method stub
+        
+    }
 
-	@Override
-	public void renderFormatFooterRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void renderFormatFooterRowClose(Appendable writer, Map<String, Object> context, ModelForm modelForm) throws IOException {
+        // TODO Auto-generated method stub
+        
+    }
 
 }

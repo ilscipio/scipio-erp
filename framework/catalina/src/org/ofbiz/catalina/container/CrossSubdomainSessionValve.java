@@ -65,7 +65,7 @@ public class CrossSubdomainSessionValve extends ValveBase {
 
     protected void replaceCookie(Request request, Response response, Cookie cookie) {
 
-    	Delegator delegator = (Delegator) request.getAttribute("delegator");
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
         // copy the existing session cookie, but use a different domain (only if domain is valid)
         String cookieDomain = null;
         cookieDomain = EntityUtilProperties.getPropertyValue("url", "cookie.domain", "", delegator);

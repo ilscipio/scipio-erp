@@ -229,7 +229,7 @@ public class KeywordIndex {
             int weight = 1;
 
             try {
-            	Delegator delegator = value.getDelegator();
+                Delegator delegator = value.getDelegator();
                 weight = Integer.parseInt(EntityUtilProperties.getPropertyValue("prodsearch", "index.weight." + value.getEntityName() + "." + fieldName, "1", delegator));
             } catch (Exception e) {
                 Debug.logWarning("Could not parse weight number: " + e.toString(), module);

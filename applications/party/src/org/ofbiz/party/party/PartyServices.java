@@ -2217,7 +2217,7 @@ public class PartyServices {
             
         } 
         catch (GenericServiceException e) {
-        	Debug.logError(e, module);
+            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
         
@@ -2227,7 +2227,7 @@ public class PartyServices {
         }
     
         catch (IOException e) {
-        	Debug.logError(e, module);
+            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
         

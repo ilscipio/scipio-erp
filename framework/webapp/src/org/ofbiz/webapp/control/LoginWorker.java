@@ -125,7 +125,7 @@ public class LoginWorker {
      * Gets (and creates if necessary) a key to be used for an external login parameter
      */
     public static String getExternalLoginKey(HttpServletRequest request) {
-    	Delegator delegator = (Delegator) request.getAttribute("delegator");
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
         boolean externalLoginKeyEnabled = "true".equals(EntityUtilProperties.getPropertyValue("security", "security.login.externalLoginKey.enabled", "true", delegator));
         if (!externalLoginKeyEnabled) {
             return null;
@@ -869,7 +869,7 @@ public class LoginWorker {
 
     // preprocessor method to login a user from a HTTP request header (configured in security.properties)
     public static String checkRequestHeaderLogin(HttpServletRequest request, HttpServletResponse response) {
-    	Delegator delegator = (Delegator) request.getAttribute("delegator");
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
         String httpHeader = EntityUtilProperties.getPropertyValue("security.properties", "security.login.http.header", null, delegator);
 
         // make sure the header field is set in security.properties; if not, then this is disabled and just return
@@ -894,7 +894,7 @@ public class LoginWorker {
 
     // preprocessor method to login a user from HttpServletRequest.getRemoteUser() (configured in security.properties)
     public static String checkServletRequestRemoteUserLogin(HttpServletRequest request, HttpServletResponse response) {
-    	Delegator delegator = (Delegator) request.getAttribute("delegator");
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
         Boolean allowRemoteUserLogin = "true".equals(EntityUtilProperties.getPropertyValue("security", "security.login.http.servlet.remoteuserlogin.allow", "false", delegator));
         // make sure logging users via remote user is allowed in security.properties; if not just return
         if (allowRemoteUserLogin) {
@@ -917,7 +917,7 @@ public class LoginWorker {
     }
     // preprocessor method to login a user w/ client certificate see security.properties to configure the pattern of CN
     public static String check509CertLogin(HttpServletRequest request, HttpServletResponse response) {
-    	Delegator delegator = (Delegator) request.getAttribute("delegator");
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
         boolean doCheck = "true".equalsIgnoreCase(EntityUtilProperties.getPropertyValue("security.properties", "security.login.cert.allow", "true", delegator));
         if (doCheck) {
             HttpSession session = request.getSession();

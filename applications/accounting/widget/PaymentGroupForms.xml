@@ -118,7 +118,7 @@ under the License.
         <field use-when="finAccount!=null" name="ownerPartyId" title="${uiLabelMap.FormFieldTitle_ownerPartyId}" position="2">
             <display description="${finAccount.ownerPartyId}" type="text"/>
         </field>
-		<field name="paymentGroupName" use-when="display==true"><display/></field>
+        <field name="paymentGroupName" use-when="display==true"><display/></field>
         <field name="submitAction" use-when="paymentGroup!=null @and display==false" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     

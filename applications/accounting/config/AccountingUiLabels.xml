@@ -215,16 +215,16 @@
         <value xml:lang="zh_TW">帳目調節</value>
     </property>
     <property key="AccountingAcctTransEntryRecon">
-    	<value xml:lang="en">Account Transaction Entry Reconciliations</value>
+        <value xml:lang="en">Account Transaction Entry Reconciliations</value>
     </property>
      <property key="AccountingAcctGlRecon">
-     	<value xml:lang="en">Account GL Reconciliations</value>
+        <value xml:lang="en">Account GL Reconciliations</value>
     </property>
     <property key="AccountingTransactionHeader">
-    	<value xml:lang="en">Transaction Header</value>
+        <value xml:lang="en">Transaction Header</value>
     </property>
     <property key="AccountingPostTransaction">
-    	<value xml:lang="en">Post Transaction</value>
+        <value xml:lang="en">Post Transaction</value>
     </property>
     <property key="AccountingAcctRecons">
         <value xml:lang="de">Kontenabstimmungen</value>
@@ -2790,10 +2790,10 @@
         <value xml:lang="zh_TW">會計科目表</value>
     </property>
     <property key="AccountingArMenu">
-    	<value xml:lang="en">Accounts Receivable</value>
+        <value xml:lang="en">Accounts Receivable</value>
     </property>
     <property key="AccountingApMenu">
-    	<value xml:lang="en">Accounts Payable</value>
+        <value xml:lang="en">Accounts Payable</value>
     </property>
     <property key="AccountingChartOfAcctsMenu">
         <value xml:lang="ar">بيان الحسابات</value>
@@ -5327,7 +5327,7 @@
         <value xml:lang="zh_TW">外匯匯率</value>
     </property>
     <property key="AccountingFinancialInformation">
-    	<value xml:lang="en">Financial Information</value>
+        <value xml:lang="en">Financial Information</value>
     </property>
     <property key="AccountingFinAccount">
         <value xml:lang="de">Finanzkonto</value>
@@ -7214,7 +7214,7 @@
         <value xml:lang="zh_TW">隱藏欄位</value>
     </property>
     <property key="AccountingIncomesExpenses">
-    	<value xml:lang="en">Income &amp; Expenses</value>
+        <value xml:lang="en">Income &amp; Expenses</value>
     </property>
     <property key="AccountingIgnoreInvoiceItems">
         <value xml:lang="ar">تجاهل بنود الفاتورة</value>
@@ -22160,6 +22160,6 @@
         <value xml:lang="zh_TW">交易成功了.</value>
     </property>
     <property key="AccountingMaintenanceJobs">
-    	<value xml:lang="en">Maintenance Jobs</value>
+        <value xml:lang="en">Maintenance Jobs</value>
     </property>
 </resource>

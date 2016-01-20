@@ -195,7 +195,7 @@ under the License.
         <actions>
             <set field="statusId" value="FINACT_TRNS_CREATED"/>
         </actions>
-		<auto-fields-service service-name="createFinAccountTrans" default-position="1"/>
+        <auto-fields-service service-name="createFinAccountTrans" default-position="1"/>
         <field name="finAccountId"><hidden/></field>
         <field name="finAccountTransId"><hidden/></field>
         <field name="finAccountTransTypeId" title="${uiLabelMap.CommonType}" position="1">

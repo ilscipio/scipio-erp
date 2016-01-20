@@ -381,7 +381,7 @@ under the License.
                                      </link>
                                      <include-form name="paymentApplications" location="component://accounting/widget/PaymentForms.xml"/>
                                 </screenlet>
-                             	<section>
+                                <section>
                                      <condition>
                                          <not><if-empty field="finAccountTransId"/></not>
                                      </condition>
@@ -391,9 +391,9 @@ under the License.
                                          </screenlet>
                                      </widgets>
                                 </section>                                
-								<screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
-								    <include-form name="AcctgTransAndEntries" location="component://accounting/widget/PaymentForms.xml"/>
-								</screenlet>
+                                <screenlet title="${uiLabelMap.AccountingTransactions}" navigation-form-name="AcctgTransAndEntries">
+                                    <include-form name="AcctgTransAndEntries" location="component://accounting/widget/PaymentForms.xml"/>
+                                </screenlet>
                             </widgets>
                             <fail-widgets>
                                 <screenlet title="${uiLabelMap.AccountingPaymentHeader}">
@@ -435,9 +435,9 @@ under the License.
             <widgets>
                 <decorator-screen name="GenericTransactionDecorator" location="component://accounting/widget/TransactionScreens.xml">
                     <decorator-section name="body">
-	                    <platform-specific>
-	                        <html><html-template location="component://accounting/webapp/accounting/payment/manualTx.ftl"/></html>
-	                    </platform-specific>
+                        <platform-specific>
+                            <html><html-template location="component://accounting/webapp/accounting/payment/manualTx.ftl"/></html>
+                        </platform-specific>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

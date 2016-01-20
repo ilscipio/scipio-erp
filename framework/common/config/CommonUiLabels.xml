@@ -9469,7 +9469,7 @@
         <value xml:lang="zh_TW">已接收</value>
     </property>
     <property key="CommonRecentActivity">
-    	<value xml:lang="en">Recent Activity</value>
+        <value xml:lang="en">Recent Activity</value>
     </property>
     <property key="CommonRed">
         <value xml:lang="ar">أحمر</value>

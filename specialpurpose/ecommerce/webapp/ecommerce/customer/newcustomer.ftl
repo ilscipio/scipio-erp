@@ -50,8 +50,8 @@ under the License.
          }
      }
      function hideShowUsaStates() {
-		 var customerStateElement = document.getElementById('newuserform_stateProvinceGeoId');
-     	 var customerCountryElement = document.getElementById('newuserform_countryGeoId');
+         var customerStateElement = document.getElementById('newuserform_stateProvinceGeoId');
+         var customerCountryElement = document.getElementById('newuserform_countryGeoId');
          if (customerCountryElement.value == "USA" || customerCountryElement.value == "UMI") {
              customerStateElement.style.display = "block";
          } else {

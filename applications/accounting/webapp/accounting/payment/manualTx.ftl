@@ -18,72 +18,72 @@ under the License.
 -->
 
 <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session) || security.hasEntityPermission("ACCOUNTING", "_CREATE", session)>
-  	${setRequestAttribute("validTx", "false")}
-  	<form name="manualTxForm" method="post" action="<@ofbizUrl>manualETx</@ofbizUrl>">
-		<#if requestParameters.paymentMethodId??>
-		  <input type="hidden" name="paymentMethodId" value="${requestParameters.paymentMethodId}" />
-		</#if>
-		 
-		<#if paymentMethodType?has_content>
-			<@field type="display" label="${uiLabelMap.CommonPaymentMethodType}">${paymentMethodType.get("description",locale)}</@field>
-			<input type="hidden" name="paymentMethodTypeId" value="${paymentMethodType.paymentMethodTypeId}" />
-		<#else>
-			<@field type="select" name="paymentMethodTypeId" label="${uiLabelMap.CommonPaymentMethodType}">
-		    	<option value="CREDIT_CARD">${uiLabelMap.AccountingCreditCard}</option>
-		    </@field>
-		</#if>
-		
-		<#if currentStore?has_content>
-			<@field type="display" label="${uiLabelMap.ProductProductStore}"><#if currentStore.storeName??>${currentStore.storeName}<#else>${currentStore.productStoreId}</#if></@field>
-		    <input type="hidden" name="productStoreId" value="${currentStore.productStoreId}" />
-		<#else>
-			<@field type="select" name="productStoreId" label="${uiLabelMap.ProductProductStore}">
-		    	<#list productStores as productStore>
-		        	<option value="${productStore.productStoreId}"><#if productStore.storeName??>${productStore.storeName}<#else>${productStore.productStoreId}</#if></option>
-		        </#list>
-			</@field>
-		</#if>
+    ${setRequestAttribute("validTx", "false")}
+    <form name="manualTxForm" method="post" action="<@ofbizUrl>manualETx</@ofbizUrl>">
+        <#if requestParameters.paymentMethodId??>
+        <input type="hidden" name="paymentMethodId" value="${requestParameters.paymentMethodId}" />
+        </#if>
+        
+        <#if paymentMethodType?has_content>
+            <@field type="display" label="${uiLabelMap.CommonPaymentMethodType}">${paymentMethodType.get("description",locale)}</@field>
+            <input type="hidden" name="paymentMethodTypeId" value="${paymentMethodType.paymentMethodTypeId}" />
+        <#else>
+            <@field type="select" name="paymentMethodTypeId" label="${uiLabelMap.CommonPaymentMethodType}">
+                <option value="CREDIT_CARD">${uiLabelMap.AccountingCreditCard}</option>
+            </@field>
+        </#if>
+        
+        <#if currentStore?has_content>
+            <@field type="display" label="${uiLabelMap.ProductProductStore}"><#if currentStore.storeName??>${currentStore.storeName}<#else>${currentStore.productStoreId}</#if></@field>
+            <input type="hidden" name="productStoreId" value="${currentStore.productStoreId}" />
+        <#else>
+            <@field type="select" name="productStoreId" label="${uiLabelMap.ProductProductStore}">
+                <#list productStores as productStore>
+                    <option value="${productStore.productStoreId}"><#if productStore.storeName??>${productStore.storeName}<#else>${productStore.productStoreId}</#if></option>
+                </#list>
+            </@field>
+        </#if>
       
-		<#if currentTx?has_content>
-			<@field type="display" label="${uiLabelMap.AccountingTransactionType}">${currentTx.get("description",locale)}</@field>
-			<input type="hidden" name="transactionType" value="${currentTx.enumId}" />
-		<#else>
-			<!-- TODO: Clarify how to handle JS events -->            
+        <#if currentTx?has_content>
+            <@field type="display" label="${uiLabelMap.AccountingTransactionType}">${currentTx.get("description",locale)}</@field>
+            <input type="hidden" name="transactionType" value="${currentTx.enumId}" />
+        <#else>
+            <!-- TODO: Clarify how to handle JS events -->            
             <#-- @field type="select" name="transactionType" onchange="javascript:document.manualTxForm.submit();" title="${uiLabelMap.AccountingTransactionType}" -->
             <@row>
-	            <@cell small=3 large=2>${uiLabelMap.AccountingTransactionType}</@cell>
-	            <@cell small=9 large=10>
-	           	<select name="transactionType" onchange="javascript:document.manualTxForm.submit();"> 
-	            	<#-- the select one option is so the list will fire on any seletion -->
-	              	<option value="Select one">${uiLabelMap.CommonSelectOne}</option>
-	              	<#list paymentSettings as setting>
-	                	<option value="${setting.enumId}">${setting.get("description",locale)}</option>
-	             	 </#list>
-	            </select>
-	            </@cell>
+                <@cell small=3 large=2>${uiLabelMap.AccountingTransactionType}</@cell>
+                <@cell small=9 large=10>
+                <select name="transactionType" onchange="javascript:document.manualTxForm.submit();"> 
+                    <#-- the select one option is so the list will fire on any seletion -->
+                    <option value="Select one">${uiLabelMap.CommonSelectOne}</option>
+                    <#list paymentSettings as setting>
+                        <option value="${setting.enumId}">${setting.get("description",locale)}</option>
+                    </#list>
+                </select>
+                </@cell>
             </@row>
             <#-- /@field -->
-		</#if>
+        </#if>
 
-		<#-- payment method information -->
-		<#if paymentMethodType?has_content && paymentMethodTypeId == "CREDIT_CARD">
-			${screens.render("component://accounting/widget/PaymentScreens.xml#manualCCTx")}
-	  	<#elseif paymentMethodType?has_content && paymentMethodTypeId == "GIFT_CARD">
-			${screens.render("component://accounting/widget/PaymentScreens.xml#manualGCTx")}
-	  	</#if>
+        <#-- payment method information -->
+        <#if paymentMethodType?has_content && paymentMethodTypeId == "CREDIT_CARD">
+            ${screens.render("component://accounting/widget/PaymentScreens.xml#manualCCTx")}
+        <#elseif paymentMethodType?has_content && paymentMethodTypeId == "GIFT_CARD">
+            ${screens.render("component://accounting/widget/PaymentScreens.xml#manualGCTx")}
+        </#if>
 
-     	<#if requestAttributes.validTx?default("false") == "true">
-        	<hr/>
-        	<#-- amount field -->
-        	<@field type="input" label="${uiLabelMap.CommonAmount}" size="20" maxlength="30" name="amount" required=true tooltip="${uiLabelMap.CommonRequired}"/>
-        	<#-- submit button -->
-        	<@field type="submitarea">
-            	<input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
-        	</@field>
-      	<#elseif txType?has_content>
-        	<@resultMsg>${uiLabelMap.AccountingTransactionTypeNotYetSupported}</@resultMsg>
-      	</#if>
-  	</form>
+        <#if requestAttributes.validTx?default("false") == "true">
+            <hr/>
+            <#-- amount field -->
+            <@field type="input" label="${uiLabelMap.CommonAmount}" size="20" maxlength="30" name="amount" required=true tooltip="${uiLabelMap.CommonRequired}"/>
+            <#-- submit button -->
+            <@field type="submitarea">
+                <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
+            </@field>
+        <#elseif txType?has_content>
+            <@resultMsg>${uiLabelMap.AccountingTransactionTypeNotYetSupported}</@resultMsg>
+        </#if>
+    </form>
 <#else>
-	<@alert type="error">${uiLabelMap.AccountingPermissionError}</@alert>
+    <@alert type="error">${uiLabelMap.AccountingPermissionError}</@alert>
 </#if>

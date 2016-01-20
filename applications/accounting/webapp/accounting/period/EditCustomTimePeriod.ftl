@@ -25,7 +25,7 @@ under the License.
          		<input type="hidden" name="currentCustomTimePeriodId" value="${currentCustomTimePeriodId!}" />
          		<span>${uiLabelMap.AccountingShowOnlyPeriodsWithOrganization}</span>
          		<input type="text" size="20" name="findOrganizationPartyId" value="${findOrganizationPartyId!}" />
-         		<input type="submit" value='${uiLabelMap.CommonUpdate}' />
+         		<input type="submit" value='${uiLabelMap.CommonUpdate}' class="${styles.link_run_sys!} ${styles.action_update!}"/>
      		</form>
  	 	</@section>
 
@@ -113,7 +113,7 @@ under the License.
 				              	<#if compareDate?has_content>
 				                	<#if nowTimestamp.before(compareDate)><#assign hasntStarted = true></#if>
 				              	</#if>
-				              	<@field type="input" size="13" name="fromDate" value="${currentCustomTimePeriod.fromDate?string("yyyy-MM-dd")}" class="+${alertClass} />
+				              	<@field type="input" size="13" name="fromDate" value="${currentCustomTimePeriod.fromDate?string('yyyy-MM-dd')}" class="+${alertClass}" />
 				            </@td>
 				            <@td>
 				              	<#assign hasExpired = false>
@@ -121,10 +121,10 @@ under the License.
 				              	<#if compareDate?has_content>
 				                	<#if nowTimestamp.after(compareDate)><#assign hasExpired = true></#if>
 				              	</#if>
-				              	<@field type="input" size='13' name="thruDate" value="${currentCustomTimePeriod.thruDate?string("yyyy-MM-dd")}" class="+${alertClass}">
+				              	<@field type="input" size='13' name="thruDate" value="${currentCustomTimePeriod.thruDate?string('yyyy-MM-dd')}" class="+${alertClass}" />
 				            </@td>
 				            <@td class="button-col">
-				              <input type="submit" value='${uiLabelMap.CommonUpdate}'/>
+				              <input type="submit" value='${uiLabelMap.CommonUpdate}' class="${styles.link_run_sys!} ${styles.action_update!}"/>
 				              <a href='<@ofbizUrl>deleteCustomTimePeriod?customTimePeriodId=${currentCustomTimePeriod.customTimePeriodId}</@ofbizUrl>'>
 				              ${uiLabelMap.CommonDelete}</a>
 				            </@td>
@@ -196,7 +196,7 @@ under the License.
 					                  		</#if>
 					                  		<option value='${periodType.periodTypeId}'<#if isDefault> selected="selected"</#if>>${periodType.description} [${periodType.periodTypeId}]</option>
 					                	</#list>
-			              			</select>
+			              			</@field>
 			            		</@td>
 			            		<@td><@field type="input" size='4' name="periodNum" value="${customTimePeriod.periodNum!}" /></@td>
 			            		<@td><@field type="input" size='10' name="periodName" value="${customTimePeriod.periodName!}" /></@td>
@@ -206,7 +206,7 @@ under the License.
 					              	<#if compareDate?has_content>
 					                	<#if nowTimestamp.before(compareDate)><#assign hasntStarted = true></#if>
 					              	</#if>
-					              	<@field type="input" size='13' name="fromDate" value="${customTimePeriod.fromDate?string("yyyy-MM-dd")}" class="${alertHasntStartedClass}" />
+					              	<@field type="input" size='13' name="fromDate" value="${customTimePeriod.fromDate?string('yyyy-MM-dd')}" class="${alertHasntStartedClass}" />
 					            </@td>
 			            		<@td>
 			              			<#assign hasExpired = false>
@@ -214,11 +214,11 @@ under the License.
 			              			<#if compareDate?has_content>
 			                			<#if nowTimestamp.after(compareDate)><#assign hasExpired = true></#if>
 			              			</#if>
-			              			<@field type="input" size='13' name="thruDate" value="${customTimePeriod.thruDate?string("yyyy-MM-dd")}" class="${alertHasExpiredClass}" />
+			              			<@field type="input" size='13' name="thruDate" value="${customTimePeriod.thruDate?string('yyyy-MM-dd')}" class="${alertHasExpiredClass}" />
 			             		</@td>
 			            		<@td class="button-col">
-			            			<@field type="submitarea">
-				              			<input type="submit" value='${uiLabelMap.CommonUpdate}'/>
+			            			  <@field type="submitarea">
+				              			<input type="submit" value='${uiLabelMap.CommonUpdate}' class="${styles.link_run_sys!} ${styles.action_update!}"/>
 				              		</@field>
 				              		<a href='<@ofbizUrl>deleteCustomTimePeriod?customTimePeriodId=${customTimePeriod.customTimePeriodId!}&amp;currentCustomTimePeriodId=${currentCustomTimePeriodId!}&amp;findOrganizationPartyId=${findOrganizationPartyId!}</@ofbizUrl>'>
 				              		${uiLabelMap.CommonDelete}</a>
@@ -280,7 +280,7 @@ under the License.
 		          	<@field type="input" size='14' name='fromDate' label="${uiLabelMap.CommonFromDate}" />		          	
 		          	<@field type="input" size='14' name='thruDate' label="${uiLabelMap.CommonThruDate}" />
 		          	<@field type="submitarea">
-		          		<input type="submit" value="${uiLabelMap.CommonAdd}" />
+		          		<input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
 		          	</@field>
         		</div>
       		</form>

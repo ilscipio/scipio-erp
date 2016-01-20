@@ -1895,13 +1895,13 @@
         <value xml:lang="zh_TW">已指派的任務</value>
     </property>
     <property key="WorkEffortCompletedTasks">
-    	<value xml:lang="en">Completed Tasks</value>
+        <value xml:lang="en">Completed Tasks</value>
     </property>
     <property key="WorkEffortAssignedActivities">
-    	<value xml:lang="en">Assigned Activities</value>
+        <value xml:lang="en">Assigned Activities</value>
     </property>
     <property key="WorkEffortCompletedActivities">
-    	<value xml:lang="en">Completed Activities</value>
+        <value xml:lang="en">Completed Activities</value>
     </property>
     <property key="WorkEffortAssoc">
         <value xml:lang="en">WorkEffort Association</value>

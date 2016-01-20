@@ -68,21 +68,21 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonPaymentGroupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                    	<section>
-                    		<condition>
-                    			<not><if-empty field="paymentGroup"/></not>
-                    		</condition>   
-                    		<widgets>
-                    			 <screenlet title="${uiLabelMap.AccountingPaymentGroup}">
-		                            <include-form name="EditPaymentGroup" location="component://accounting/widget/PaymentGroupForms.xml"/>
-		                        </screenlet>
-                    		</widgets>
-                    		<fail-widgets>
-                    			 <screenlet title="${uiLabelMap.AccountingNewPaymentGroup}">
-		                            <include-form name="AddPaymentGroup" location="component://accounting/widget/PaymentGroupForms.xml"/>
-		                        </screenlet>
-                    		</fail-widgets>
-                    	</section>
+                        <section>
+                            <condition>
+                                <not><if-empty field="paymentGroup"/></not>
+                            </condition>   
+                            <widgets>
+                                <screenlet title="${uiLabelMap.AccountingPaymentGroup}">
+                                    <include-form name="EditPaymentGroup" location="component://accounting/widget/PaymentGroupForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                            <fail-widgets>
+                                <screenlet title="${uiLabelMap.AccountingNewPaymentGroup}">
+                                    <include-form name="AddPaymentGroup" location="component://accounting/widget/PaymentGroupForms.xml"/>
+                                </screenlet>
+                            </fail-widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

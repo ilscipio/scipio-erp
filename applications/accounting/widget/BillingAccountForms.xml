@@ -197,7 +197,7 @@ under the License.
          <display-entity entity-name="RoleType" description="${description}"/>
         </field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><display/></field>
- 		    <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
+            <field name="thruDate" title="${uiLabelMap.CommonThru}"><date-time type="date"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}">
             <hyperlink target="deleteBillingAccountRole" description="${uiLabelMap.CommonDelete}" also-hidden="false">

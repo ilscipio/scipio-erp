@@ -997,9 +997,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#global chartDataIndex = 0/>
   <#-- Allow just one or two datasets for now -->
   <#if (datasets <= 0) || (datasets > 2)>
-  	<#global chartDatasets = 1/>
+    <#global chartDatasets = 1/>
   <#else>
-  	<#global chartDatasets = datasets/>
+    <#global chartDatasets = datasets/>
   </#if>
   
   <@chart_markup type=type chartId=chartId chartIdNum=chartIdNum chartLibrary=chartLibrary chartDatasets=chartDatasets title=title 
@@ -1127,12 +1127,12 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 <#-- @chartdata main markup - theme override -->
 <#macro chartdata_markup title="" value="" value2="" chartId="" chartType="" chartLibrary="" origArgs={} passArgs={} catchArgs...>
   <#if chartLibrary=="foundation">
-	<#if chartType = "line">
-		<#global chartDataIndex =  chartDataIndex + 1 />
-		<li data-y="${value!}" data-x="${chartDataIndex + 1}">${title!}</li>
-	<#else>
-		<li data-value="${value!}">${title!}</li>
-	</#if>
+    <#if chartType = "line">
+      <#global chartDataIndex =  chartDataIndex + 1 />
+      <li data-y="${value!}" data-x="${chartDataIndex + 1}">${title!}</li>
+    <#else>
+      <li data-value="${value!}">${title!}</li>
+    </#if>
   <#else>
     <#if chartType="line" || chartType="bar">
       ${chartId!}.addData([<#if value?has_content>${value!}</#if><#if value2?has_content> ,${value2}</#if>]<#if title?has_content>,"${title!}"</#if>);      

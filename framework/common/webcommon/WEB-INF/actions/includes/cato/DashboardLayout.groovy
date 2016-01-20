@@ -9,8 +9,8 @@ final DASHBOARD_MIN_COLUMNS = UtilProperties.getPropertyAsInteger("framework/wid
 
 columns = (parameters.columns) ? parameters.columns : DASHBOARD_MIN_COLUMNS;
 if (columns > DASHBOARD_MAX_COLUMNS)
-    columns =  DASHBOARD_MAX_COLUMNS;
-    
+	columns =  DASHBOARD_MAX_COLUMNS;
+	
 rows = Math.round(sections.size() / 2);
 
 //Debug.log("columns ==========> " + columns);
@@ -18,11 +18,11 @@ rows = Math.round(sections.size() / 2);
 
 sections = new LinkedList(context.sections.keySet());
 //for (section in sections) {
-//    Debug.log("section keySet name ======> " + section);
+//	Debug.log("section keySet name ======> " + section);
 //}
 //
 //for (section in context.sections) {
-//    Debug.log("section context name ======> " + section);
+//	Debug.log("section context name ======> " + section);
 //}
 
 dashboardGrid = new LinkedList<LinkedList<String>>();
@@ -30,17 +30,17 @@ columnsList = new LinkedList<String>();
 
 sectionIndex = 0;
 for (i = 0; i < rows; i++) {
-    for (x = 0; x < columns; x++) {
-//        Debug.log("sectionIndex ======> " + sectionIndex);
-        if (sectionIndex < sections.size()) {
-            columnsList.add(sections.get(sectionIndex));
-        } else {
-            columnsList.add(null);
-        }
-        sectionIndex++;
-    }
-    dashboardGrid.add(columnsList);
-    columnsList = new LinkedList<String>();
+	for (x = 0; x < columns; x++) {
+//		Debug.log("sectionIndex ======> " + sectionIndex);
+		if (sectionIndex < sections.size()) {
+			columnsList.add(sections.get(sectionIndex));
+		} else {
+			columnsList.add(null);
+		}
+		sectionIndex++;
+	}
+	dashboardGrid.add(columnsList);
+	columnsList = new LinkedList<String>();
 }
 
 context.columns = columns;

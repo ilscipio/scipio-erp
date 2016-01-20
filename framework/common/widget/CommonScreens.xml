@@ -997,29 +997,29 @@ under the License.
     </screen>
     
     <!-- 
-        Cato: Common decorator for dashboards 
-        Render all child sections in a grid. Grid size may be overriden by passing a 'columns' argument. 
-        Although, dashboard grids have size constraints (min col/max col size), defined in widget.properties, 
-        in order to force screens that use this decorator to look like as a dashboard.           
+    	Cato: Common decorator for dashboards 
+    	Render all child sections in a grid. Grid size may be overriden by passing a 'columns' argument. 
+    	Although, dashboard grids have size constraints (min col/max col size), defined in widget.properties, 
+    	in order to force screens that use this decorator to look like as a dashboard.     	  
     -->
     <screen name="main-decorator-dashboard">
-        <section>
-            <widgets>
-                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="body">                     
-                        <section>
-                            <actions>
-                                <script location="component://common/webcommon/WEB-INF/actions/includes/cato/DashboardLayout.groovy" />                         
-                            </actions>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.CommonDashboard}">
-                                    <platform-specific><html><html-template location="component://common/webcommon/includes/cato/dashboard.ftl"/></html></platform-specific>                                 
-                                </screenlet>
-                            </widgets>
-                        </section>
-                    </decorator-section>
-                </decorator-screen>
-            </widgets>
+    	<section>
+    		<widgets>
+		    	<decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+		             <decorator-section name="body">		             
+		                 <section>
+		                     <actions>
+		                     	<script location="component://common/webcommon/WEB-INF/actions/includes/cato/DashboardLayout.groovy" />                         
+		                     </actions>
+		                     <widgets>
+		                     	<screenlet title="${uiLabelMap.CommonDashboard}">
+		                     		<platform-specific><html><html-template location="component://common/webcommon/includes/cato/dashboard.ftl"/></html></platform-specific>		                     	
+		                        </screenlet>
+		                     </widgets>
+		                 </section>
+		             </decorator-section>
+		         </decorator-screen>
+	         </widgets>
          </section>
     </screen>
     

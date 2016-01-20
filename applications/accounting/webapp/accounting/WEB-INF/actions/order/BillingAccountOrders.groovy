@@ -34,11 +34,11 @@ if (billingAccountId) {
                 orderBillingAccMap.putAll(orderBillingAcc);
                 orderId = orderBillingAcc.orderId;
                 orderBillingAccMap.orderId = orderId;
-                Debug.log("orderBillingAccMap ==============> " + orderBillingAccMap);
-                orderPaymentPreferencesList.add(orderBillingAccMap);
+				Debug.log("orderBillingAccMap ==============> " + orderBillingAccMap);
+				orderPaymentPreferencesList.add(orderBillingAccMap);
             }
             
         }
     }
-    context.orderPaymentPreferencesList = orderPaymentPreferencesList;
+	context.orderPaymentPreferencesList = orderPaymentPreferencesList;
 }

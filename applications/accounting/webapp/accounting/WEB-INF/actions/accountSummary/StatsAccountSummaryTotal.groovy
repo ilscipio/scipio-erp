@@ -43,23 +43,23 @@ contentCache = UtilCache.getOrCreateUtilCache("stats.accounting", 0, 0, 0, true,
 def begin, end,dailyStats,weeklyStats,monthlyStats;
 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 if(context.chartIntervalScope != null){
-    String iscope = context.chartIntervalScope; //day|week|month|year
-    int icount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : 0;
-    icount = icount *(-1);
-    if(iscope=="day"){
-        begin = UtilDateTime.getDayStart(nowTimestamp, icount, timeZone, locale);
-    }
-    if(iscope=="week"){
-        begin = UtilDateTime.getWeekStart(nowTimestamp, 0, icount, timeZone, locale);
-    }
-    if(iscope=="month"){
-        begin = UtilDateTime.getMonthStart(nowTimestamp, 0, icount, timeZone, locale);
-    }
-    if(iscope=="year"){
-        begin = UtilDateTime.getYearStart(nowTimestamp, 0, icount, timeZone, locale);
-    }
+	String iscope = context.chartIntervalScope; //day|week|month|year
+	int icount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : 0;
+	icount = icount *(-1);
+	if(iscope=="day"){
+		begin = UtilDateTime.getDayStart(nowTimestamp, icount, timeZone, locale);
+	}
+	if(iscope=="week"){
+		begin = UtilDateTime.getWeekStart(nowTimestamp, 0, icount, timeZone, locale);
+	}
+	if(iscope=="month"){
+		begin = UtilDateTime.getMonthStart(nowTimestamp, 0, icount, timeZone, locale);
+	}
+	if(iscope=="year"){
+		begin = UtilDateTime.getYearStart(nowTimestamp, 0, icount, timeZone, locale);
+	}
 }else{
-    begin = UtilDateTime.getYearStart(nowTimestamp, timeZone, locale);
+	begin = UtilDateTime.getYearStart(nowTimestamp, timeZone, locale);
 }
 
 end = UtilDateTime.getYearEnd(nowTimestamp, timeZone, locale);
@@ -77,7 +77,7 @@ Debug.log("findLastClosedDateOutMap ===========> " + findLastClosedDateOutMap);
 //customTimePeriodExprs.add(EntityCondition.makeCondition("periodTypeId", EntityOperator.EQUALS, "FISCAL_YEAR"));
 //List customTimePeriods = select("customTimePeriodId", "isClosed", "fromDate", "thruDate").where(customTimePeriodExprs).from("CustomTimePeriod").orderBy("thruDate DESC").queryList();
 //customTimePeriods.each { customTimePeriod ->
-//    Debug.log("customTimePeriod ==========> " + customTimePeriod);
+//	Debug.log("customTimePeriod ==========> " + customTimePeriod);
 //}
 
 Debug.log("partyIds ===========> " + partyIds);
@@ -95,52 +95,52 @@ andCond = EntityCondition.makeCondition(andExprs, EntityOperator.AND);
 List allTransactionTotals = select("acctgTransTypeId", "debitCreditFlag", "amount").from("AcctgTransSums").where(andExprs).queryList();
 List allTransactionDebit = [];
 List allTransactionCredit = [];
-if (allTransactionTotals) {    
-    allTransactionTotals.each { allTransactionTotal ->
-//        Debug.log("allTransactionTotal ==========> " + allTransactionTotal);
-        accountMap = FastMap.newInstance();
-        accountMap.put("amount", allTransactionTotal.amount);
-        acctgTransType = select("description").from("AcctgTransType").where(["acctgTransTypeId" : allTransactionTotal.acctgTransTypeId]).cache(true).queryOne();
-        accountMap.put("type", acctgTransType.description);
+if (allTransactionTotals) {	
+	allTransactionTotals.each { allTransactionTotal ->
+//		Debug.log("allTransactionTotal ==========> " + allTransactionTotal);
+		accountMap = FastMap.newInstance();
+		accountMap.put("amount", allTransactionTotal.amount);
+		acctgTransType = select("description").from("AcctgTransType").where(["acctgTransTypeId" : allTransactionTotal.acctgTransTypeId]).cache(true).queryOne();
+		accountMap.put("type", acctgTransType.description);
 
-        if (allTransactionTotal.debitCreditFlag == "C") {
-            allTransactionCredit.add(accountMap);
-        } else if (allTransactionTotal.debitCreditFlag == "D") {
-            allTransactionDebit.add(accountMap);
-        }        
-    }
+		if (allTransactionTotal.debitCreditFlag == "C") {
+			allTransactionCredit.add(accountMap);
+		} else if (allTransactionTotal.debitCreditFlag == "D") {
+			allTransactionDebit.add(accountMap);
+		}		
+	}
 }
 
-Map    processResult(List transactionList) {
-    Map resultMap = new TreeMap<String, Object>();
-    transactionList.each { header ->
-        Debug.log("header ==========> " + header);
-            Map newMap = [:];
-            BigDecimal total = BigDecimal.ZERO;
-            total = total.plus(header.amount ?: BigDecimal.ZERO);
-            newMap.put("total", total);
-            newMap.put("count", 1);
-            newMap.put("pos", header.type);
-            resultMap.put(header.type, newMap);
-//        }
-    }
-    return resultMap;
+Map	processResult(List transactionList) {
+	Map resultMap = new TreeMap<String, Object>();
+	transactionList.each { header ->
+		Debug.log("header ==========> " + header);
+			Map newMap = [:];
+			BigDecimal total = BigDecimal.ZERO;
+			total = total.plus(header.amount ?: BigDecimal.ZERO);
+			newMap.put("total", total);
+			newMap.put("count", 1);
+			newMap.put("pos", header.type);
+			resultMap.put(header.type, newMap);
+//		}
+	}
+	return resultMap;
 }
 
 
 //if (contentCache.get(cacheId)==null){
-//    GenericValue userLogin = context.get("userLogin");
-    Map cacheMap = [:];
-    // Lookup results
-    debitStats = processResult(allTransactionDebit);
-    creditStats = processResult(allTransactionCredit);
-    contentCache.put(cacheId, cacheMap);
+//	GenericValue userLogin = context.get("userLogin");
+	Map cacheMap = [:];
+	// Lookup results
+	debitStats = processResult(allTransactionDebit);
+	creditStats = processResult(allTransactionCredit);
+	contentCache.put(cacheId, cacheMap);
 //} else {
-//    cacheMap = contentCache.get(cacheId);
-//    debitStats = cacheMap.debitStats;
-//    creditStats = cacheMap.creditStats;
+//	cacheMap = contentCache.get(cacheId);
+//	debitStats = cacheMap.debitStats;
+//	creditStats = cacheMap.creditStats;
 //}
-context.debitStats = debitStats;        
+context.debitStats = debitStats;		
 context.creditStats = creditStats;
 Debug.log("debitStats ===========> " + debitStats);
 Debug.log("creditStats ===========> " + creditStats);

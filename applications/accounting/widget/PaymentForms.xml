@@ -109,7 +109,7 @@ under the License.
             </service>
         </actions>
         <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_info_id}">
-                <hyperlink description="${paymentId}" target="paymentOverview">
+       		 <hyperlink description="${paymentId}" target="paymentOverview">
                 <parameter param-name="paymentId"/>
             </hyperlink>
         </field>

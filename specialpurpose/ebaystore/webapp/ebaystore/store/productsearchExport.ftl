@@ -731,7 +731,7 @@ under the License.
                                                                 </@table>
                                                                 <#--assign i = 0>
                                                                 <#list paymentMethods as paymentMethod>
-                                                                    <input type="checkbox" value="${paymentMethod.name()!}" name="${paymentMethod.name()!}_${id}">${paymentMethod.value()!}</checkbox><span style="width:40px"/><#if i==3><br /><#assign i = -1></#if>
+                                                                    <input type="checkbox" value="${paymentMethod.name()!}" name="${paymentMethod.name()!}_${id}"/>${paymentMethod.value()!}<span style="width:40px"/><#if i==3><br /><#assign i = -1></#if>
                                                                     <#assign i=i+1> 
                                                                 </#list-->
                                                             </#if>

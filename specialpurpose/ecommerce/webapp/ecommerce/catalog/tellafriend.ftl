@@ -28,7 +28,7 @@ under the License.
         <#else>
             <#assign cancel = "Y">
         </#if>
-        <input type="hidden" name="webSiteId" value="${context.webSiteId!}">
+        <input type="hidden" name="webSiteId" value="${context.webSiteId!}"/>
       <#if !cancel??>
         <@table>
           <@tr>

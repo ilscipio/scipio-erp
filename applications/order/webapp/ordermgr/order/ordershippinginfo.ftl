@@ -115,7 +115,7 @@ under the License.
                 <@tr>
                   <@td width="40%">&nbsp;</@td>
                   <@td width="40%">
-                    <input name="_rowSubmit_o_${rowCount}" value="Y" type="hidden">
+                    <input name="_rowSubmit_o_${rowCount}" value="Y" type="hidden"/>
                     <input type="hidden" name="orderId_o_${rowCount}" value="${orderId}"/>
                     <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"/>
                     <input type="hidden" name="shipGroupSeqId_o_${rowCount}" value="${OISG.shipGroupSeqId}"/>

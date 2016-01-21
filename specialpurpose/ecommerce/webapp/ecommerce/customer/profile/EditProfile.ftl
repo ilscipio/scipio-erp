@@ -61,7 +61,7 @@ under the License.
         </div>
     </fieldset>
     <div>
-      <input type="submit" id="submitEditUserForm" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonSubmit}">
+      <input type="submit" id="submitEditUserForm" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonSubmit}"/>
       <a id="cancelEditUserForm" href="<@ofbizUrl>viewprofile</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancel}</a>
     </div>
   </form>

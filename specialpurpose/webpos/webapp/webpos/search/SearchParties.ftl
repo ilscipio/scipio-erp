@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div>
-  <input type="hidden" id="partyIdentificationTypeId" name="partyIdentificationTypeId" value="">
+  <input type="hidden" id="partyIdentificationTypeId" name="partyIdentificationTypeId" value=""/>
   <label for="searchPartyBy"><b>&nbsp;${uiLabelMap.WebPosSearchBy}</b></label>
   <select id="searchPartyBy" name="searchPartyBy">
     <option value="lastName" selected>${uiLabelMap.PartyLastName}</option>
@@ -25,7 +25,7 @@ under the License.
     <option value="idValue">${uiLabelMap.PartyPartyIdentification}</option>
   </select>
   <br/>
-  <input type="text" id="partyToSearch" name="partyToSearch" size="30" maxlength="100">
+  <input type="text" id="partyToSearch" name="partyToSearch" size="30" maxlength="100"/>
   <input type="submit" value="${uiLabelMap.CommonSearch}" id="partySearchConfirm" class="${styles.link_run_sys!} ${styles.action_find!}"/>
   <br/>
 </div>

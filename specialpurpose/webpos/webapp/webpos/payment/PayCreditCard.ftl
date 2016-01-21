@@ -34,7 +34,7 @@ under the License.
     </@tr>
     <@tr>
       <@td width="100%" align="center" colspan="4">
-        ${uiLabelMap.WebPosPayCreditCardSwipe} <input type="checkbox" id="swipeCard" name="swipeCard" value="Y" checked="checked">
+        ${uiLabelMap.WebPosPayCreditCardSwipe} <input type="checkbox" id="swipeCard" name="swipeCard" value="Y" checked="checked"/>
       </@td>
     </@tr>
     <@tr id="showSwipeData">

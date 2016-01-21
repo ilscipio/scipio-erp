@@ -66,7 +66,7 @@ under the License.
             <@td>${uiLabelMap.WebtoolsServiceName}</@td>
             <@td>${selectedServiceMap.serviceName}</@td>
             <@td>${uiLabelMap.WebtoolsEngineName}</@td>
-            <@td><a href='<@ofbizUrl>${url}?constraint=engine_name@${selectedServiceMap.engineName}</@ofbizUrl>'>${selectedServiceMap.engineName}</a></@td>
+            <@td><a href="<@ofbizUrl>${url}?constraint=engine_name@${selectedServiceMap.engineName}</@ofbizUrl>">${selectedServiceMap.engineName}</a></@td>
           </@tr>
           <@tr>
             <@td>${uiLabelMap.CommonDescription}</@td>
@@ -76,19 +76,19 @@ under the License.
           </@tr>
           <@tr>
             <@td>${uiLabelMap.WebtoolsExportable}</@td>
-            <@td>${selectedServiceMap.export}<#if selectedServiceMap.exportBool = "true">&nbsp;(<a href='<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}&amp;show_wsdl=true</@ofbizUrl>'>${uiLabelMap.WebtoolsShowShowWSDL}</a>)</#if></@td>
+            <@td>${selectedServiceMap.export}<#if selectedServiceMap.exportBool = "true">&nbsp;(<a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}&amp;show_wsdl=true</@ofbizUrl>">${uiLabelMap.WebtoolsShowShowWSDL}</a>)</#if></@td>
             <@td>${uiLabelMap.WebtoolsLocation}</@td>
-            <@td><a href='<@ofbizUrl>${url}?constraint=location@${selectedServiceMap.location}</@ofbizUrl>'>${selectedServiceMap.location}</a></@td>
+            <@td><a href="<@ofbizUrl>${url}?constraint=location@${selectedServiceMap.location}</@ofbizUrl>">${selectedServiceMap.location}</a></@td>
           </@tr>
           <@tr>
             <@td>${uiLabelMap.WebtoolsDefinitionLocation}</@td>
-            <@td><a href='<@ofbizUrl>${url}?constraint=definitionLocation@${selectedServiceMap.definitionLocation}</@ofbizUrl>'>${selectedServiceMap.definitionLocation}</a></@td>
+            <@td><a href="<@ofbizUrl>${url}?constraint=definitionLocation@${selectedServiceMap.definitionLocation}</@ofbizUrl>">${selectedServiceMap.definitionLocation}</a></@td>
             <@td>${uiLabelMap.WebtoolsDefaultEntityName}</@td>
-            <@td><a href='<@ofbizUrl>${url}?constraint=default_entity_name@${selectedServiceMap.defaultEntityName}</@ofbizUrl>'>${selectedServiceMap.defaultEntityName}</a></@td>
+            <@td><a href="<@ofbizUrl>${url}?constraint=default_entity_name@${selectedServiceMap.defaultEntityName}</@ofbizUrl>">${selectedServiceMap.defaultEntityName}</a></@td>
           </@tr>
           <@tr>
             <@td>${uiLabelMap.WebtoolsArtifactInfo}</@td>
-            <@td><a href='<@ofbizUrl>ArtifactInfo?name=${selectedServiceMap.serviceName}&amp;type=service</@ofbizUrl>'>${uiLabelMap.WebtoolsArtifactInfo}</a></@td>
+            <@td><a href="<@ofbizUrl>ArtifactInfo?name=${selectedServiceMap.serviceName}&amp;type=service</@ofbizUrl>">${uiLabelMap.WebtoolsArtifactInfo}</a></@td>
             <@td>${uiLabelMap.WebtoolsRequireNewTransaction}</@td>
             <@td>${selectedServiceMap.requireNewTransaction}</@td>
           </@tr>
@@ -140,7 +140,7 @@ under the License.
           ${selectedServiceMap.implServices}
         <#elseif selectedServiceMap.implServices?has_content>
           <#list selectedServiceMap.implServices as implSrv>
-            <a href='<@ofbizUrl>${url}?sel_service_name=${implSrv.getService()}</@ofbizUrl>'>${implSrv.getService()}</a><br />
+            <a href="<@ofbizUrl>${url}?sel_service_name=${implSrv.getService()}</@ofbizUrl>">${implSrv.getService()}</a><br />
           </#list>
         </#if>
     </@cell>
@@ -190,7 +190,7 @@ under the License.
                   <#list ecaMap.actions as action>
                     <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
                       <@tr>
-                        <@td colspan="2"><a href='<@ofbizUrl>${url}?sel_service_name=${action.serviceName}</@ofbizUrl>'>${action.serviceName?default(uiLabelMap.CommonNA)}</a></@td>
+                        <@td colspan="2"><a href="<@ofbizUrl>${url}?sel_service_name=${action.serviceName}</@ofbizUrl>">${action.serviceName?default(uiLabelMap.CommonNA)}</a></@td>
                       </@tr>
                       <@tr>
                         <@td>${uiLabelMap.WebtoolsSecasIgnoreError}</b> ${action.ignoreError?default(uiLabelMap.CommonNA)}</@td>
@@ -221,7 +221,7 @@ under the License.
                         <@td>
                           <b>${uiLabelMap.WebtoolsConditionService}</b>
                           <#if condition.conditionService?has_content>
-                            <a href='<@ofbizUrl>${url}?sel_service_name=${condition.conditionService}</@ofbizUrl>'>${condition.conditionService?default(uiLabelMap.CommonNA)}</a>
+                            <a href="<@ofbizUrl>${url}?sel_service_name=${condition.conditionService}</@ofbizUrl>">${condition.conditionService?default(uiLabelMap.CommonNA)}</a>
                           <#else>
                             ${condition.conditionService?default(uiLabelMap.CommonNA)}
                           </#if>
@@ -323,7 +323,7 @@ under the License.
                   <@td>${modelParam.internal!}</@td>
                   <@td>
                     <#if modelParam.entityName??>
-                      <a href='<@ofbizUrl>${url}?constraint=default_entity_name@${modelParam.entityName}</@ofbizUrl>'>${modelParam.entityName!}</a>
+                      <a href="<@ofbizUrl>${url}?constraint=default_entity_name@${modelParam.entityName}</@ofbizUrl>">${modelParam.entityName!}</a>
                     </#if>
                   </@td>
                   <@td>${modelParam.fieldName!}</@td>
@@ -388,12 +388,12 @@ under the License.
             <#assign anchorAttribs = {}>
           </#if>
           <@tr>
-            <@td id=anchorId attribs=anchorAttribs><a href='<@ofbizUrl>${url}?sel_service_name=${service.serviceName}</@ofbizUrl>'>${service.serviceName}</a></@td>
-            <@td><a href='<@ofbizUrl>${url}?constraint=engine_name@${service.engineName?default(uiLabelMap.CommonNA)}</@ofbizUrl>'>${service.engineName}</a></@td>
-            <@td><a href='<@ofbizUrl>${url}?constraint=default_entity_name@${service.defaultEntityName?default(uiLabelMap.CommonNA)}</@ofbizUrl>'>${service.defaultEntityName}</a></@td>
+            <@td id=anchorId attribs=anchorAttribs><a href="<@ofbizUrl>${url}?sel_service_name=${service.serviceName}</@ofbizUrl>">${service.serviceName}</a></@td>
+            <@td><a href="<@ofbizUrl>${url}?constraint=engine_name@${service.engineName?default(uiLabelMap.CommonNA)}</@ofbizUrl>">${service.engineName}</a></@td>
+            <@td><a href="<@ofbizUrl>${url}?constraint=default_entity_name@${service.defaultEntityName?default(uiLabelMap.CommonNA)}</@ofbizUrl>">${service.defaultEntityName}</a></@td>
             <@td>${service.invoke}</@td>
-            <@td><a href='<@ofbizUrl>${url}?constraint=location@${service.location?default(uiLabelMap.CommonNA)}</@ofbizUrl>'>${service.location}</a></@td>
-            <@td><a href='<@ofbizUrl>${url}?constraint=definitionLocation@${service.definitionLocation}</@ofbizUrl>'>${service.definitionLocation}</a></@td>
+            <@td><a href="<@ofbizUrl>${url}?constraint=location@${service.location?default(uiLabelMap.CommonNA)}</@ofbizUrl>">${service.location}</a></@td>
+            <@td><a href="<@ofbizUrl>${url}?constraint=definitionLocation@${service.definitionLocation}</@ofbizUrl>">${service.definitionLocation}</a></@td>
           </@tr>
           <#assign lastChar = firstChar>
         </#list>

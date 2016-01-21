@@ -56,7 +56,7 @@ under the License.
                       <#if (addr1.indexOf(" ") > 0)>
                         <#assign addressNum = addr1.substring(0, addr1.indexOf(" "))>
                         <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1)>
-                        <br /><a target='_blank' href='${uiLabelMap.CommonLookupWhitepagesAddressLink}' class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
+                        <br /><a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesAddressLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
                       </#if>
                   </#if>
                   <#if postalAddress.geoPointId?has_content>
@@ -71,17 +71,17 @@ under the License.
                     <#if telecomNumber.areaCode?has_content>${telecomNumber.areaCode}-</#if>${telecomNumber.contactNumber!}
                     <#if facilityContactMech.extension?has_content>${uiLabelMap.CommonExt} ${facilityContactMech.extension}</#if>
                     <#if (telecomNumber?has_content && !telecomNumber.countryCode?has_content) || telecomNumber.countryCode! = "011">
-                      <br /><a target='_blank' href='${uiLabelMap.CommonLookupAnywhoLink}' class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupAnywho}</a>
-                      <a target='_blank' href='${uiLabelMap.CommonLookupWhitepagesTelNumberLink}' class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
+                      <br /><a target="_blank" href="${uiLabelMap.CommonLookupAnywhoLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupAnywho}</a>
+                      <a target="_blank" href="${uiLabelMap.CommonLookupWhitepagesTelNumberLink}" class="${styles.link_nav!} ${styles.action_find!} ${styles.action_external!}">${uiLabelMap.CommonLookupWhitepages}</a>
                     </#if>
               <#elseif "EMAIL_ADDRESS" = contactMech.contactMechTypeId>
                     ${contactMech.infoString!}
-                    <a href='mailto:${contactMech.infoString!}' class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}">${uiLabelMap.CommonSendEmail}</a>
+                    <a href="mailto:${contactMech.infoString!}" class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}">${uiLabelMap.CommonSendEmail}</a>
               <#elseif "WEB_ADDRESS" = contactMech.contactMechTypeId>
                     ${contactMech.infoString!}
                     <#assign openAddress = contactMech.infoString?default("")>
                     <#if !openAddress?starts_with("http") && !openAddress?starts_with("HTTP")><#assign openAddress = "http://" + openAddress></#if>
-                    <a target='_blank' href='${openAddress}' class="${styles.link_nav!}">((${uiLabelMap.CommonOpenPageNewWindow})</a>
+                    <a target="_blank" href="${openAddress}" class="${styles.link_nav!}">((${uiLabelMap.CommonOpenPageNewWindow})</a>
               <#else>
                     ${contactMech.infoString!}
               </#if>
@@ -91,7 +91,7 @@ under the License.
             <@td class="button-col">
               &nbsp;
               <#if security.hasEntityPermission("FACILITY", "_UPDATE", session)>
-                <a href='<@ofbizUrl>EditContactMech?facilityId=${facilityId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>' class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
+                <a href="<@ofbizUrl>EditContactMech?facilityId=${facilityId}&amp;contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonUpdate}</a>
               </#if>
               <#if security.hasEntityPermission("FACILITY", "_DELETE", session)>
                 <form action="<@ofbizUrl>deleteContactMech/ViewContactMechs</@ofbizUrl>" name="deleteContactForm_${contactMechMap_index}" method="post">

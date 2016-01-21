@@ -173,11 +173,11 @@ function getConfigDetails() {
     <@tr>
       <@td colspan="2" align="right">
         <#if previousProductId??>
-          <a href='<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${previousProductId!}</@ofbizUrl>' class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
+          <a href="<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${previousProductId!}</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
         </#if>
         <a href="<@ofbizUrl>category/~category_id=${categoryId!}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${(category.categoryName)?default(category.description)!}</a>
         <#if nextProductId??>
-          &nbsp;|&nbsp;<a href='<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${nextProductId!}</@ofbizUrl>' class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
+          &nbsp;|&nbsp;<a href="<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${nextProductId!}</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
         </#if>
       </@td>
     </@tr>
@@ -194,7 +194,7 @@ function getConfigDetails() {
         <#assign productLargeImageUrl = firstLargeImage>
       </#if>
       <#if productLargeImageUrl?string?has_content>
-        <a href="javascript:popupDetail();"><img src='<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>' name='mainImage' vspace='5' hspace='5' class='cssImgLarge' align='left' alt="" /></a>
+        <a href="javascript:popupDetail();"><img src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
       </#if>
     </@td>
     <@td align="right" valign="top">
@@ -446,7 +446,7 @@ function getConfigDetails() {
             <@td>
               <div>${question.question}</div>
               <#if question.isFirst()>
-                <a name='#${question.getConfigItem().getString("configItemId")}'></a>
+                <a name="#${question.getConfigItem().getString("configItemId")}"></a>
                 <div>${question.description!}</div>
                 <#assign instructions = question.content.get("INSTRUCTIONS", "html")!>
                 <#if instructions?has_content>
@@ -454,10 +454,10 @@ function getConfigDetails() {
                 </#if>
                 <#assign image = question.content.get("IMAGE_URL", "url")!>
                 <#if image?has_content>
-                  <img src='<@ofbizContentUrl>${contentPathPrefix!}${image!}</@ofbizContentUrl>' vspace='5' hspace='5' class='cssImgSmall' align='left' alt="" />
+                  <img src="<@ofbizContentUrl>${contentPathPrefix!}${image!}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgSmall" align="left" alt="" />
                 </#if>
               <#else>
-                <div><a href='#${question.getConfigItem().getString("configItemId")}' class="${styles.link_nav!} ${styles.action_view!}">Details</a></div>
+                <div><a href="#${question.getConfigItem().getString("configItemId")}" class="${styles.link_nav!} ${styles.action_view!}">Details</a></div>
               </#if>
             </@td>
           </@tr>

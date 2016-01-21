@@ -29,7 +29,7 @@ under the License.
     <@tr>
       <@td width="100%" align="center" colspan="2">
         <b>${uiLabelMap.WebPosPayGiftCardTotal} <span id="giftCardTotalPaid"/></b>
-        <a id="removeGiftCardTotalPaid" href="javascript:void(0);"><img src="/images/collapse.gif"></a>
+        <a id="removeGiftCardTotalPaid" href="javascript:void(0);"><img src="/images/collapse.gif"/></a>
       </@td>
     </@tr>
     <@tr>

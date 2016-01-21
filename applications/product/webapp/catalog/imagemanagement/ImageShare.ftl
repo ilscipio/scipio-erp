@@ -46,12 +46,12 @@ $(document).ready(function(){
         pathImageThumbnailUrl = $('#ImageShare_direct').html(pathImageThumbnailUrl).text();
         form.link.value = pathImageUrlEcommerce;
         form.direct.value = pathImageUrl;
-        form.html.value = "<a target='_blank' title='Image' href='" + pathImageUrl + "'><img src='" + pathImageUrl + "' border='0'/></a>Uploaded with <a target='_blank' href='http://images.ofbiz.com'>ofbiz.com</a>";
+        form.html.value = '<a target="_blank" title="Image" href="' + pathImageUrl + '"><img src="' + pathImageUrl + '" border="0"/></a>Uploaded with <a target="_blank" href="http://images.ofbiz.com">ofbiz.com</a>';
         form.forumCode.value = "[URL=" + pathImageUrl + "/][IMG]" + pathImageUrl + "[/IMG][/URL]Uploaded with [URL=http://images.ofbiz.com]ofbiz.com[/URL]";
         form.altForumCode.value = "[URL=" + pathImageUrl + "/][IMG]" + pathImageUrl + "[/IMG][/URL]Uploaded with [URL=http://images.ofbiz.com]ofbiz.com[/URL]";
         form.forumThumbnail.value = "[URL=" + pathImageThumbnailUrl + "/][IMG]" + pathImageThumbnailUrl + "[/IMG][/URL]Uploaded with [URL=http://images.ofbiz.com]ofbiz.com[/URL]";
         form.altForumThumbnail.value = "[URL=" + pathImageThumbnailUrl + "/][IMG]" + pathImageThumbnailUrl + "[/IMG][/URL]Uploaded with [URL=http://images.ofbiz.com]ofbiz.com[/URL]";
-        form.htmlThumbnail.value = "<a target='_blank' title='Image' href='" + pathImageThumbnailUrl + "'><img src='" + pathImageThumbnailUrl + "' border='0'/></a>Uploaded with <a target='_blank' href='http://images.ofbiz.com'>ofbiz.com</a>";
+        form.htmlThumbnail.value = '<a target="_blank" title="Image" href="' + pathImageThumbnailUrl + '"><img src="' + pathImageThumbnailUrl + '" border="0"/></a>Uploaded with <a target="_blank" href="http://images.ofbiz.com">ofbiz.com</a>';
     }
 });
 

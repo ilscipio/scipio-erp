@@ -54,8 +54,8 @@ under the License.
       <br/>
       <b>${uiLabelMap.CommonQuantity}</b>&nbsp;
       <input type="text" id="itemQuantity" name="itemQuantity" value="${cartLine.getQuantity()}" size="5" maxlength="5"/>
-      <a href="javascript:void(0);" id="incrementQuantity"><img src="/images/expand.gif"></a>
-      <a href="javascript:void(0);" id="decrementQuantity"><img src="/images/collapse.gif"></a>
+      <a href="javascript:void(0);" id="incrementQuantity"><img src="/images/expand.gif"/></a>
+      <a href="javascript:void(0);" id="decrementQuantity"><img src="/images/collapse.gif"/></a>
       <br/>
       <#if isManager?default(false)>
         <b>${uiLabelMap.WebPosManagerModifyPriceNewPrice}</b>&nbsp;

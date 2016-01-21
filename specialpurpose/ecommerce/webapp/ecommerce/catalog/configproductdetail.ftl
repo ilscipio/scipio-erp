@@ -164,11 +164,11 @@ function getConfigDetails(event) {
     <@tr>
       <@td colspan="2" align="right">
         <#if previousProductId??>
-          <a href='<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${previousProductId!}</@ofbizUrl>' class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
+          <a href="<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${previousProductId!}</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
         </#if>
         <a href="<@ofbizUrl>category/~category_id=${categoryId!}</@ofbizUrl>" class="${styles.link_nav_info_name!}">${(category.categoryName)?default(category.description)!}</a>
         <#if nextProductId??>
-          &nbsp;|&nbsp;<a href='<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${nextProductId!}</@ofbizUrl>' class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
+          &nbsp;|&nbsp;<a href="<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${nextProductId!}</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
         </#if>
       </@td>
     </@tr>
@@ -185,7 +185,7 @@ function getConfigDetails(event) {
         <#assign productLargeImageUrl = firstLargeImage>
       </#if>
       <#if productLargeImageUrl?string?has_content>
-        <a href="javascript:popupDetail();"><img src='<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>' name='mainImage' vspace='5' hspace='5' class='cssImgXLarge' align='left' alt="" /></a>
+        <a href="javascript:popupDetail();"><img src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage" vspace="5" hspace="5" class="cssImgXLarge" align="left" alt="" /></a>
       </#if>
     </@td>
     <@td align="right" valign="top">
@@ -397,7 +397,7 @@ function getConfigDetails(event) {
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
                 <@td align="center" valign="bottom">
-                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class='cssImgSmall' alt="" /></a>
+                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a>
                   <br />
                   <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_nav_info_name!}">${key}</a>
                 </@td>
@@ -447,7 +447,7 @@ function getConfigDetails(event) {
             <@td>
               <div>${question.question}</div>
               <#if question.isFirst()>
-                <a name='#${question.getConfigItem().getString("configItemId")}'></a>
+                <a name="#${question.getConfigItem().getString("configItemId")}"></a>
                 <div>${StringUtil.wrapString(question.description!)}</div>
                 <#assign instructions = question.content.get("INSTRUCTIONS", "html")!>
                 <#if instructions?has_content>
@@ -455,10 +455,10 @@ function getConfigDetails(event) {
                 </#if>
                 <#assign image = question.content.get("IMAGE_URL", "url")!>
                 <#if image?string?has_content>
-                  <img src='<@ofbizContentUrl>${contentPathPrefix!}${image!}</@ofbizContentUrl>' vspace='5' hspace='5' class='cssImgXLarge' align='left' alt="" />
+                  <img src="<@ofbizContentUrl>${contentPathPrefix!}${image!}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgXLarge" align="left" alt="" />
                 </#if>
               <#else>
-                <div><a href='#${question.getConfigItem().getString("configItemId")}' class="${styles.link_nav!} ${styles.action_view!}">Details</a></div>
+                <div><a href="#${question.getConfigItem().getString("configItemId")}" class="${styles.link_nav!} ${styles.action_view!}">Details</a></div>
               </#if>
             </@td>
           </@tr>
@@ -658,7 +658,7 @@ function getConfigDetails(event) {
 
     <#list assocProducts as productAssoc>
       <@tr><@td>
-          <a href='<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo!}</@ofbizUrl>' class="${styles.link_nav_info_id!}">
+          <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">
             ${productAssoc.productIdTo!}
           </a>
           - ${productAssoc.reason!}

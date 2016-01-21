@@ -1116,7 +1116,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#macro field_display_markup_widget type="" imageLocation="" idName="" description="" title="" class="" alert="" inPlaceEditorUrl="" 
     inPlaceEditorParams="" imageAlt="" collapse=false fieldTitleBlank=false tooltip="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
   <#if type?has_content && type=="image">
-    <img src="${imageLocation}" alt="${imageAlt}"><#lt/>
+    <img src="${imageLocation}" alt="${imageAlt}"/><#lt/>
   <#else>
     <#--
     <#if inPlaceEditorUrl?has_content || class?has_content || alert=="true" || title?has_content>

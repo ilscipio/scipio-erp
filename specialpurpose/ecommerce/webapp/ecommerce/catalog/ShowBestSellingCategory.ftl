@@ -47,7 +47,7 @@ under the License.
                             <div class="productsummary">
                                 <div class="smallimage">
                                     <a href="<@ofbizCatalogAltUrl productCategoryId=productCategoryId/>">
-                                        <span class="popup_link"><img alt="Small Image" src="${categoryImageUrl}"></span>
+                                        <span class="popup_link"><img alt="Small Image" src="${categoryImageUrl}"/></span>
                                     </a>
                                 </div>
                                 <div class="productbuy">

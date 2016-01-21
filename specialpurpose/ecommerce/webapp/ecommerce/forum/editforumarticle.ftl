@@ -59,7 +59,7 @@ under the License.
     <div class="screenlet-body">
   <@table>
     <@tr><@td align="right" nowrap="nowrap"><div class="tabletext">${uiLabelMap.EcommerceImage}</div></@td><@td>&nbsp;</@td><@td><div class="tabletext">
-        <img src="<@ofbizUrl>img?imgId=${imgDataResourceId!}</@ofbizUrl>" alt="" class='cssImgStandard' />
+        <img src="<@ofbizUrl>img?imgId=${imgDataResourceId!}</@ofbizUrl>" alt="" class="cssImgStandard" />
 <div></@td></@tr>
   </@table>
     </div>

@@ -38,7 +38,7 @@ under the License.
             <#list relations as relation>
                 <@tr>
                     <@td>${relation.title}</@td>
-                    <@td class="button-col"><a href='<@ofbizUrl>FindGeneric?entityName=${relation.relEntityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>'>${relation.relEntityName}</a></@td>
+                    <@td class="button-col"><a href="<@ofbizUrl>FindGeneric?entityName=${relation.relEntityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>">${relation.relEntityName}</a></@td>
                     <@td>${relation.type}</@td>
                     <@td>${relation.fkName}</@td>
                     <@td>

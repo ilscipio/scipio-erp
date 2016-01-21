@@ -47,7 +47,7 @@ under the License.
   <#if contactMechTypeId??>
     <#if !contactMech??>
       <@heading>${uiLabelMap.PartyCreateNewContactInfo}</@heading>
-      <a href='<@ofbizUrl>${donePage}</@ofbizUrl>' class="button">${uiLabelMap.CommonGoBack}</a>
+      <a href="<@ofbizUrl>${donePage}</@ofbizUrl>" class="button">${uiLabelMap.CommonGoBack}</a>
       <a href="javascript:document.editcontactmechform.submit()" class="button">${uiLabelMap.CommonSave}</a>
     <#else>
       <@heading>${uiLabelMap.PartyEditContactInfo}</@heading>      
@@ -92,7 +92,7 @@ under the License.
                           <input type="hidden" name="contactMechPurposeTypeId" value="${partyContactMechPurpose.contactMechPurposeTypeId}"/>
                           <input type="hidden" name="fromDate" value="${partyContactMechPurpose.fromDate}"/>
                           <input type="hidden" name="useValues" value="true"/>
-                          <a href='javascript:document.deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}.submit()' class='button'>&nbsp;${uiLabelMap.CommonDelete}&nbsp;</a>
+                          <a href="javascript:document.deletePartyContactMechPurpose_${partyContactMechPurpose.contactMechPurposeTypeId}.submit()" class="button">&nbsp;${uiLabelMap.CommonDelete}&nbsp;</a>
                         </div>
                       </form> 
                   </@td>
@@ -114,7 +114,7 @@ under the License.
                       </div>
                   </form>
                 </@td>
-                <@td><a href='javascript:document.newpurposeform.submit()' class='button'>${uiLabelMap.PartyAddPurpose}</a></@td>
+                <@td><a href="javascript:document.newpurposeform.submit()" class="button">${uiLabelMap.PartyAddPurpose}</a></@td>
               </@tr>
               </#if>
             </@table>

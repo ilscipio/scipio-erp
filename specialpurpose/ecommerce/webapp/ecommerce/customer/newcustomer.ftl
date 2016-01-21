@@ -69,7 +69,7 @@ will generally always be reserved for the logo at the top of the page.
 
 <@heading>${uiLabelMap.PartyRequestNewAccount}
   <span>
-    ${uiLabelMap.PartyAlreadyHaveAccount}, <a href='<@ofbizUrl>checkLogin/main</@ofbizUrl>'>${uiLabelMap.CommonLoginHere}</a>
+    ${uiLabelMap.PartyAlreadyHaveAccount}, <a href="<@ofbizUrl>checkLogin/main</@ofbizUrl>">${uiLabelMap.CommonLoginHere}</a>
   </span>
 </@heading>
 

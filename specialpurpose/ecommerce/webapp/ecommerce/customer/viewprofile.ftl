@@ -208,7 +208,7 @@ under the License.
               <form name= "deleteContactMech_${contactMech.contactMechId}" method= "post" action= "<@ofbizUrl>deleteContactMech</@ofbizUrl>">
                 <div>
                 <input type= "hidden" name= "contactMechId" value= "${contactMech.contactMechId}"/>
-                <a href='javascript:document.deleteContactMech_${contactMech.contactMechId}.submit()' class='button'>${uiLabelMap.CommonExpire}</a>
+                <a href="javascript:document.deleteContactMech_${contactMech.contactMechId}.submit()" class="button">${uiLabelMap.CommonExpire}</a>
               </div>
               </form>
             </@td>

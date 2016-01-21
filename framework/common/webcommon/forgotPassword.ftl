@@ -42,7 +42,7 @@ under the License.
                 <@cell columns=12>
                       <input type="submit" name="GET_PASSWORD_HINT" class="${styles.link_run_sys!} ${styles.action_view!}" value="${uiLabelMap.CommonGetPasswordHint}"/>
                       <input type="submit" name="EMAIL_PASSWORD" class="${styles.link_run_sys!} ${styles.action_send!}" value="${uiLabelMap.CommonEmailPassword}"/>
-                      <#--<a href='<@ofbizUrl>authview</@ofbizUrl>' class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>-->
+                      <#--<a href="<@ofbizUrl>authview</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>-->
                 </@cell>
                </@row>
                <input type="hidden" name="JavaScriptEnabled" value="N"/>

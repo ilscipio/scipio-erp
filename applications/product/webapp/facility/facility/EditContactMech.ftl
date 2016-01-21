@@ -125,7 +125,7 @@ under the License.
                         <option value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.get("description",locale)}</option>
                       </#list>
                     </select>
-                    &nbsp;<a href='javascript:document.newpurposeform.submit()' class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.PartyAddPurpose}</a>
+                    &nbsp;<a href="javascript:document.newpurposeform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.PartyAddPurpose}</a>
                   </form>
                 </@td>
               </@tr>

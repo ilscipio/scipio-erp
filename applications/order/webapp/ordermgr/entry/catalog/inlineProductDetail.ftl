@@ -264,7 +264,7 @@ ${virtualJavaScript!}
       </#if>
       <#if productLargeImageUrl?string?has_content>
         <input type="hidden" name="detailImage${inlineCounter}" value="${firstDetailImage?default(mainDetailImageUrl?default("_NONE_"))}"/>
-        <a href="javascript:popupDetailInline('${inlineCounter}');"><img src='<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>' name='mainImage${inlineCounter}' vspace='5' hspace='5' class='cssImgLarge' align='left' alt="" /></a>
+        <a href="javascript:popupDetailInline('${inlineCounter}');"><img src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage${inlineCounter}" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
       </#if>
     </@td>
     <@td align="right" valign="top" width="100%">

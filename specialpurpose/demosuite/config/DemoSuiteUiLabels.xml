@@ -20,4 +20,9 @@
         <value xml:lang="zh">不允许你浏览这个页面。</value>
         <value xml:lang="zh_TW">不允許您檢視這個頁面.</value>
     </property>
+    
+    <!-- Data load services errors -->
+    <property key="ProductErrorProductStoreNotFound">
+        <value xml:lang="en">Product store not found.</value>
+    </property>
 </resource>

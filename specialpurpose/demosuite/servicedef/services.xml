@@ -30,4 +30,16 @@
         <attribute name="maxDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="workEffortTypeId" type="String" mode="IN" optional="true"/>
     </service>
+    
+    <service name="createProductData" engine="groovy" location="component://demosuite/script/com/ilscipio/data/ProductData.groovy" 
+        invoke="createDemoProduct" transaction-timeout="7200">
+        <description>Creates a number of demo data</description>
+        <attribute name="num" type="Integer" mode="IN" optional="false"/>
+        <attribute name="minDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="maxDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+        <attribute name="productCategoryTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="createNewCategories" type="Boolean" mode="IN" optional="true"/>
+    </service>
 </services>

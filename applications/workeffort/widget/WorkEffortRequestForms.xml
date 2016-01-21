@@ -47,7 +47,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="workEffortId"><hidden/></field>
         <field name="custRequestId"><lookup target-form-name="LookupCustRequest"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}">
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}">
             <submit button-type="text-link"/>
         </field>
     </form>

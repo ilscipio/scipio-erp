@@ -318,7 +318,7 @@
         <field name="howToTest" title="${uiLabelMap.ScrumHowToTest}"><textarea/></field>
         <field name="workEffortId" title="${uiLabelMap.ScrumTaskId}"><hidden value="${taskId}"/></field>
         <field name="custRequestId" title="${uiLabelMap.ScrumCustRequestId}"><hidden value="${custRequestId}"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}" >
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}" >
             <submit/>
         </field>
     </form>

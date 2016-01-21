@@ -141,7 +141,7 @@ under the License.
                 <entity-options entity-name="ContactList" description="${description}" key-field-name="contactListId"/>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="MergeContacts" type="single" target="MergeContacts">
         <actions>

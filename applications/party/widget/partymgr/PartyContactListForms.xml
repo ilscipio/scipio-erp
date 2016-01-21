@@ -89,7 +89,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="text-link"/></field>
     </form>
 
     <form name="ListLookupContactList" type="list" target="LookupContactList" default-map-name="contactList"

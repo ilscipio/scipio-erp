@@ -635,7 +635,7 @@ under the License.
         header-row-style="header-row" default-table-style="${styles.table_basic}">
         <field name="communicationEventId"><display/></field>
         <field name="workEffortId"  use-when="workEffort==null&amp;&amp;workEffortId==null" ><lookup target-form-name="LookupWorkEffort"/></field>
-        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
+        <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="text-link"/></field>
         <sort-order>
             <sort-field name="communicationEventId"/>
             <banner left-text="${uiLabelMap.WorkEffortBannerAddWorkEffortAndAssoc1}"/>

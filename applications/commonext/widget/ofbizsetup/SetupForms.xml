@@ -100,7 +100,7 @@
         <field name="partyId"><hidden value="${partyId}"/></field>
 
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="facility!=null" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" use-when="facility==null" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" use-when="facility==null" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
     <form name="EditProductStore" type="single" target="updateProductStore" title="" default-map-name="productStore"

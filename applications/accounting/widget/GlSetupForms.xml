@@ -470,7 +470,7 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_create}"><submit/></field>
     </form>
 
     <!-- forms for Sales invoice Itemtypes to GLAccount number -->

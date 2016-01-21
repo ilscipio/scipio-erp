@@ -268,7 +268,7 @@ under the License.
         <field name="sequenceNum" map-name="empty" widget-style="inputBox"><text/></field>
         <field name="comments" map-name="empty" widget-style="inputBox"><text size="40"/></field>
 
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
 
     <form name="ListContentApproval" target="updateContentApproval" list-name="contentApprovalList" type="list"

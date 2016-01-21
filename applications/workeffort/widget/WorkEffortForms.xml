@@ -330,7 +330,7 @@ under the License.
         <field name="sequenceNum"><text/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
         <field name="thruDate" title="${uiLabelMap.CommonThru}" position="2"><date-time/></field>
-        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
+        <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
         <field name="cancelAction" title=" " widget-style="${styles.link_nav_cancel}"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
 

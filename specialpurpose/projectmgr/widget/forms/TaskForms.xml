@@ -738,7 +738,7 @@
             </field>
         <field name="estimatedStartDate" title="${uiLabelMap.FormFieldTitle_estimatedStartDate}"><date-time type="date"/></field>
         <field name="estimatedCompletionDate" title="${uiLabelMap.FormFieldTitle_estimatedCompletionDate}"><date-time type="date"/></field>
-        <field name="save" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
+        <field name="save" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="CreateCustRequestWorkEffortByExistingTaskForm" type="single" target="acceptRequestAndConnectToTask">
         <field name="custRequestId"><hidden value="${parameters.custRequestId}"/></field>

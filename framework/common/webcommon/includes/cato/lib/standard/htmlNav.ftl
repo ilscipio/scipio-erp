@@ -944,3 +944,71 @@ menu item element must override this and provide a proper check.
   </#if>
 </#macro>    
 
+<#-- 
+*************
+* Tree Menu
+************
+Render menu in a tree fashion way 
+
+  * Usage Example *  
+    <@treemenu type="">
+        <li>Text or <a href="#">Anchor</a></li>
+    </@treemenu>
+    
+    Or:
+    <@treemenu type="magellan">
+        <@treemenuitem arrival="MyTargetAnchor">Text or <a href="#">Anchor</a></@mli>
+    </@treemenu>
+                    
+  * Parameters *
+  	treeMenuLibrary = (jsTree) (default:jsTree)
+    inlineItems     = boolean, if true, generate only items, not menu container    
+    id              = menu id    
+    attribs         = hash of other tree menu attribs
+    data            = list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item
+                      same as @menuitem macro parameters.
+                      alternatively, the items can be specified as nested content.        
+-->
+<#assign treemenu_defaultArgs = {
+  "library":"jsTree", "data":{}, "inlineItems":false, "id":"",  "attribs":{}, "passArgs":{}
+}>
+<#macro treemenu args={} inlineArgs...>
+  <#local args = toSimpleMap(args)> <#-- DEV NOTE: this MUST be called here (or through concatMaps) to handle .class key properly -->  
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.menu_defaultArgs)>
+  <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
+  <#local attribs = makeAttribMapFromArgMap(args)>  
+  
+  <#local treeMenuLibrary = library!"jsTree"/> 
+  <#local treeData><@objectAsScript lang="json" object=data /></#local> 
+  ${Static["org.ofbiz.base.util.Debug"].log("id ====> " + id)}  
+  ${Static["org.ofbiz.base.util.Debug"].log("data ====> " + data)}  
+  
+  <@treemenu_markup treeMenuLibrary=treeMenuLibrary treeData=treeData id=id attribs=attribs excludeAttribs=["class", "id", "style"] origArgs=origArgs passArgs=passArgs/>
+</#macro>
+
+<#-- @treemenu main markup - theme override -->
+<#macro treemenu_markup treeMenuLibrary="" treeData={} id="" attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
+	<#if treeMenuLibrary == "jsTree">
+		<script type="text/javascript"> 
+			jQuery(window).load(create${id!''}Tree());
+				<#-- create Tree-->
+			  	function create${id!''}Tree() {
+				  	console.log("createTree");
+				    jQuery(function () {			        
+				        jQuery("#${id}").jstree({
+				         	"core" : {
+				         		"data" : ${treeData}
+				         	}
+				       });
+				    });
+			  	}
+		  </script>		
+	</#if>
+	<div id="${id}"></div>
+</#macro>
+
+
+
+ 
+

@@ -65,7 +65,7 @@ under the License.
       <@imageField name="additionalImageFour" imageHtml=imageHtml />
       
       <@field type="submitarea">
-          <input type="submit" value='${uiLabelMap.CommonUpload}' class="${styles.link_run_sys!} ${styles.action_import!}" />
+          <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_import!}" />
       </@field>
 
   <div class="right" style='margin-top:-250px;'>

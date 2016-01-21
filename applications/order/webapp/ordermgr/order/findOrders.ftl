@@ -77,7 +77,7 @@ function submitFindForm(val){
   <#if (parameters.hideFields!"N")=='Y'>
     <input type="hidden" name="hideFields" value="N"/>
   <#else>
-    <input type='hidden' name='hideFields' value='Y'/>
+    <input type="hidden" name="hideFields" value="Y"/>
   </#if>
   <input type="hidden" name="showAll" value="${showAll!}"/>
   <input type="hidden" name="viewSize" value="${viewSize}"/>

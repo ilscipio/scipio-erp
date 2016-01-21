@@ -393,12 +393,12 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       <#nested>
     </select>
   <#if otherFieldName?has_content>
-    <noscript><input type='text' name='${otherFieldName}' /></noscript>
+    <noscript><input type="text" name="${otherFieldName}" /></noscript>
     <@script>
       disa = ' disabled';
       if(other_choice(document.${formName}.${fieldName}))
         disa = '';
-      document.write("<input type='text' name='${otherFieldName}' value='${otherValue?js_string}' size='${otherFieldSize}'"+disa+" onfocus='check_choice(document.${formName}.${fieldName})' />");
+      document.write('<input type="text" name="${otherFieldName}" value="${otherValue?js_string}" size="${otherFieldSize}"'+disa+' onfocus="check_choice(document.${formName}.${fieldName})" />');
       if(disa && document.styleSheets)
       document.${formName}.${otherFieldName}.styles.visibility  = 'hidden';
     </@script>

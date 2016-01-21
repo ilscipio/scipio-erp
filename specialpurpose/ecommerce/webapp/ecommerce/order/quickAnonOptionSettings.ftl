@@ -111,7 +111,7 @@ function onClickShippingMethod(e) {
             <@tr>
               <@td colspan="2">
                 <@heading>${uiLabelMap.OrderPoNumber}</@heading>&nbsp;
-                <input type="text" class='inputBox' name="correspondingPoId" size="15" value='${shoppingCart.getPoNumber()!}'/>
+                <input type="text" class='inputBox' name="correspondingPoId" size="15" value="${shoppingCart.getPoNumber()!}"/>
               </@td>
             </@tr>
             <#if productStore.showCheckoutGiftOptions! != "N">
@@ -119,8 +119,8 @@ function onClickShippingMethod(e) {
             <@tr>
               <@td colspan="2">
                   <@heading>${uiLabelMap.OrderIsThisGift}</@heading>
-                  <input type='radio' <#if shoppingCart.getIsGift()?default("Y") == "Y">checked="checked"</#if> name='is_gift' value='true'/><span class="tabletext">${uiLabelMap.CommonYes}</span>
-                  <input type='radio' <#if shoppingCart.getIsGift()?default("N") == "N">checked="checked"</#if> name='is_gift' value='false'/><span class="tabletext">${uiLabelMap.CommonNo}</span>
+                  <input type="radio" <#if shoppingCart.getIsGift()?default("Y") == "Y">checked="checked"</#if> name="is_gift" value="true"/><span class="tabletext">${uiLabelMap.CommonYes}</span>
+                  <input type="radio" <#if shoppingCart.getIsGift()?default("N") == "N">checked="checked"</#if> name="is_gift" value="false"/><span class="tabletext">${uiLabelMap.CommonNo}</span>
               </@td>
             </@tr>
             <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
@@ -142,13 +142,13 @@ function onClickShippingMethod(e) {
     <@tr><@td colspan="2"><@heading>${uiLabelMap.OrderShipAllAtOnce}?</@heading></@td></@tr>
     <@tr>
         <@td valign="top" colspan="2">
-                <input type='radio' <#if shoppingCart.getMaySplit()?default("N") == "N">checked="checked"</#if> name='may_split' value='false'/>
+                <input type="radio" <#if shoppingCart.getMaySplit()?default("N") == "N">checked="checked"</#if> name="may_split" value="false"/>
                 <span>${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</span>
         </@td>
     </@tr>
     <@tr>
         <@td valign="top"  colspan="2">
-                <input <#if shoppingCart.getMaySplit()?default("N") == "Y">checked="checked"</#if> type='radio' name='may_split' value='true'/>
+                <input <#if shoppingCart.getMaySplit()?default("N") == "Y">checked="checked"</#if> type="radio" name="may_split" value="true"/>
                 <span>${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</span>
         </@td>
     </@tr>

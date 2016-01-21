@@ -99,8 +99,8 @@ under the License.
     </#macro>
     <@section title=sectionTitle class="${styles.grid_large!}9" menuContent=menuContent>
       <form method="post" name="poentryform" action="<@ofbizUrl>initorderentry</@ofbizUrl>">
-      <input type='hidden' name='finalizeMode' value='type'/>
-      <input type='hidden' name='orderMode' value='PURCHASE_ORDER'/>
+      <input type="hidden" name="finalizeMode" value="type"/>
+      <input type="hidden" name="orderMode" value="PURCHASE_ORDER"/>
         <#if partyId??>
           <#assign thisPartyId = partyId>
         <#else>

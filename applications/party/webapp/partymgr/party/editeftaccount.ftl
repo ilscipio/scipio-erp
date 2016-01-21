@@ -127,7 +127,7 @@ under the License.
                 <#assign partyContactMech = postalAddressInfo.partyContactMech>
                 <@tr>
                   <@td class="button-col">
-                    <input type='radio' name='contactMechId' value='${contactMech.contactMechId}' />
+                    <input type="radio" name="contactMechId" value="${contactMech.contactMechId}" />
                   </@td>
                   <@td>
                     <#list partyContactMechPurposes as partyContactMechPurpose>

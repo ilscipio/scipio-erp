@@ -72,21 +72,21 @@ function getPaymentRunningTotal() {
 <@section>
     <form id="depositWithdrawPaymentsForm" name="depositWithdrawPaymentsForm" method="post" action="<@ofbizUrl>depositWithdrawPayments</@ofbizUrl>">
         <#if paymentList?has_content>
-            <input type="hidden" name='organizationPartyId' value="${organizationPartyId!}" />
-            <input type="hidden" name='finAccountId' value="${finAccountId!}" />
-            <input type="hidden" name='paymentMethodTypeId' value="${paymentMethodTypeId!}" />
-            <input type="hidden" name='cardType' value="${cardType!}" />
-            <input type="hidden" name='partyIdFrom' value="${partyIdFrom!}" />
-            <input type="hidden" name='fromDate' value="${fromDate!}" />
-            <input type="hidden" name='thruDate' value="${thruDate!}" />
-            <input type="hidden" name='paymentGroupTypeId' value="BATCH_PAYMENT" />
+            <input type="hidden" name="organizationPartyId" value="${organizationPartyId!}" />
+            <input type="hidden" name="finAccountId" value="${finAccountId!}" />
+            <input type="hidden" name="paymentMethodTypeId" value="${paymentMethodTypeId!}" />
+            <input type="hidden" name="cardType" value="${cardType!}" />
+            <input type="hidden" name="partyIdFrom" value="${partyIdFrom!}" />
+            <input type="hidden" name="fromDate" value="${fromDate!}" />
+            <input type="hidden" name="thruDate" value="${thruDate!}" />
+            <input type="hidden" name="paymentGroupTypeId" value="BATCH_PAYMENT" />
             <div>
                 <span>${uiLabelMap.AccountingRunningTotal} :</span>
                 <span id="showPaymentRunningTotal"></span>
             </div>
             
                 <div align="right">
-                    <span>${uiLabelMap.AccountingPayment} ${uiLabelMap.PartyPartyGroupName}</span> <input type="text" size='25' id="paymentGroupName" name='paymentGroupName' />
+                    <span>${uiLabelMap.AccountingPayment} ${uiLabelMap.PartyPartyGroupName}</span> <input type="text" size="25" id="paymentGroupName" name="paymentGroupName" />
                     <span>${uiLabelMap.AccountingGroupInOneTransaction}</span>
                     <input type="checkbox" name="groupInOneTransaction" value="Y" checked="checked" />
                     <input id="submitButton" type="button"  onclick="javascript:document.depositWithdrawPaymentsForm.submit();" value="${uiLabelMap.AccountingDepositWithdraw}" disabled="disabled"/>

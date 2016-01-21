@@ -32,8 +32,8 @@ under the License.
                 <@td><a href='<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>' class="${styles.link_nav_info_id!}">${productFeatureGroup.productFeatureGroupId}</a></@td>
                 <@td>
                     <form method='post' action='<@ofbizUrl>UpdateProductFeatureGroup</@ofbizUrl>'>
-                    <input type='hidden' name="productFeatureGroupId" value="${productFeatureGroup.productFeatureGroupId}" />
-                    <input type='text' size='30' name="description" value="${productFeatureGroup.description!}" />
+                    <input type="hidden" name="productFeatureGroupId" value="${productFeatureGroup.productFeatureGroupId}" />
+                    <input type="text" size="30" name="description" value="${productFeatureGroup.description!}" />
                     <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
                     </form>
                 </@td>
@@ -47,7 +47,7 @@ under the License.
 <@section title="${uiLabelMap.ProductCreateProductFeatureGroup}">
         <form method="post" action="<@ofbizUrl>CreateProductFeatureGroup</@ofbizUrl>">
             <@field type="generic" label="${uiLabelMap.CommonDescription}">
-                <input type="text" size='30' name='description' value='' />
+                <input type="text" size="30" name="description" value="" />
             </@field>
             <@field type="submitarea">
               <input type="submit" value="${uiLabelMap.CommonCreate}" class="${styles.link_run_sys!} ${styles.action_add!}" />

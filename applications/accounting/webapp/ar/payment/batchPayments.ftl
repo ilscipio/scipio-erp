@@ -135,24 +135,24 @@ function setServiceName(selection) {
                         <option value="massPaymentsToVoid">${uiLabelMap.AccountingPaymentTabStatusToVoid}</option>
                     </select>
                     <input id="submitButton" type="button" onclick="javascript:jQuery('#paymentBatchForm').submit();" value="${uiLabelMap.CommonRun}" disabled="disabled" />
-                    <input type="hidden" name='organizationPartyId' value="${organizationPartyId!}" />
-                    <input type="hidden" name='paymentGroupTypeId' value="BATCH_PAYMENT" />
+                    <input type="hidden" name="organizationPartyId" value="${organizationPartyId!}" />
+                    <input type="hidden" name="paymentGroupTypeId" value="BATCH_PAYMENT" />
                     <input type="hidden" name="groupInOneTransaction" value="Y" />
                     <input type="hidden" name="paymentStatusChange" id="paymentStatusChange" value="<@ofbizUrl>massChangePaymentStatus</@ofbizUrl>" />
                     <input type="hidden" name="statusId" id="statusId" value="${parameters.statusId!}" />
                     <#if finAccountId?has_content>
-                        <input type="hidden" name='finAccountId' value="${finAccountId!}" />
+                        <input type="hidden" name="finAccountId" value="${finAccountId!}" />
                     </#if>
-                    <input type="hidden" name='paymentMethodTypeId' value="${paymentMethodTypeId!}" />
-                    <input type="hidden" name='cardType' value="${cardType!}" />
-                    <input type="hidden" name='partyIdFrom' value="${partyIdFrom!}" />
-                    <input type="hidden" name='fromDate' value="${fromDate!}" />
-                    <input type="hidden" name='thruDate' value="${thruDate!}" />
+                    <input type="hidden" name="paymentMethodTypeId" value="${paymentMethodTypeId!}" />
+                    <input type="hidden" name="cardType" value="${cardType!}" />
+                    <input type="hidden" name="partyIdFrom" value="${partyIdFrom!}" />
+                    <input type="hidden" name="fromDate" value="${fromDate!}" />
+                    <input type="hidden" name="thruDate" value="${thruDate!}" />
                 </div>
                 </div>
                 <div id="createPaymentBatch" style="display: none;" class="align-float">
                     <label for="paymentGroupName">${uiLabelMap.AccountingPaymentGroupName}</label>
-                    <input type="text" size='25' id="paymentGroupName" name='paymentGroupName' />
+                    <input type="text" size="25" id="paymentGroupName" name="paymentGroupName" />
                     <#if finAccounts?has_content>
                         <label for="finAccountId">${uiLabelMap.AccountingBankAccount}</label>
                         <select name="finAccountId" id="finAccountId">

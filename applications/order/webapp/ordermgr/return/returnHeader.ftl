@@ -86,7 +86,7 @@ under the License.
                   </#list>
                 </select>
               <#else>
-                <input type='text' size='20' name='billingAccountId' />
+                <input type="text" size="20" name="billingAccountId" />
               </#if>
           </@field>
           <@field type="generic" label="${uiLabelMap.FormFieldTitle_paymentMethodId}">
@@ -112,7 +112,7 @@ under the License.
                   </#if>
                 </select>
               <#else>
-                <input type='text' size='20' name='paymentMethodId' value="${(returnHeader.paymentMethodId)!}"/>
+                <input type="text" size="20" name="paymentMethodId" value="${(returnHeader.paymentMethodId)!}"/>
               </#if>
               <#if (returnHeader.fromPartyId)?has_content>
                 <a href="/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
@@ -152,7 +152,7 @@ under the License.
                 <#list addresses as address >
                   <@displayAddress postalAddress = address.postalAddress editable = true/>
                 </#list>
-                <input type='radio' name="originContactMechId" value="" <#if (!postalAddressFrom?has_content)> checked="checked"</#if> />${uiLabelMap.CommonNoAddress}
+                <input type="radio" name="originContactMechId" value="" <#if (!postalAddressFrom?has_content)> checked="checked"</#if> />${uiLabelMap.CommonNoAddress}
               <#else>
                  <#if (postalAddressFrom?has_content)>
                    <@displayAddress postalAddress = postalAddressFrom editable = false />
@@ -180,7 +180,7 @@ under the License.
             <#if postalAddress?has_content>
                     <div>
                       <#if (editable)>
-                        <input type='radio' name="originContactMechId" value="${postalAddress.contactMechId!}"
+                        <input type="radio" name="originContactMechId" value="${postalAddress.contactMechId!}"
                           <#if ( postalAddressFrom?has_content && postalAddressFrom.contactMechId?default("") == postalAddress.contactMechId)>checked="checked"</#if> />
                       </#if>
                       <#if postalAddress.toName?has_content><span>${uiLabelMap.CommonTo}</span>&nbsp;${postalAddress.toName}<br /></#if>

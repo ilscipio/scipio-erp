@@ -48,7 +48,7 @@ under the License.
                     <input type="hidden" name="surveyId" value="${workEffortSurveyAppl.surveyId!}"/>
                     <input type="hidden" name="workEffortId" value="${workEffortSurveyAppl.workEffortId!}"/>
                     <input type="hidden" name="fromDate" value="${workEffortSurveyAppl.fromDate!}"/>
-                    <@td><input type="submit" name="submitBtn" value='${uiLabelMap.CommonUpdate}' class="${styles.link_run_sys!} ${styles.action_update!}" /> </@td>
+                    <@td><input type="submit" name="submitBtn" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" /> </@td>
                   </form>
                     <@td>
                       <form id="deleteWorkEffortSurveyAppl_${workEffortSurveyAppl_index}" method="post" action="<@ofbizUrl>deleteWorkEffortSurveyAppl</@ofbizUrl>">

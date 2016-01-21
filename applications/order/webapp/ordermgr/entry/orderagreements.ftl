@@ -27,9 +27,9 @@ under the License.
   </#macro>
   <@section title="${uiLabelMap.OrderOrderEntryCurrencyAgreementShipDates}" menuContent=menuContent>
     <#if agreements??>
-      <input type='hidden' name='hasAgreements' value='Y'/>
+      <input type="hidden" name="hasAgreements" value="Y"/>
     <#else>
-      <input type='hidden' name='hasAgreements' value='N'/>
+      <input type="hidden" name="hasAgreements" value="N"/>
     </#if>
     
     <@table type="fields"> <#-- orig: class="basic-table" -->
@@ -56,12 +56,12 @@ under the License.
 
       <#if "PURCHASE_ORDER" == cart.getOrderType()>
         <@field type="generic" label="${uiLabelMap.OrderOrderId}">
-            <input type='text' size='15' maxlength='100' name='orderId' value=""/>
+            <input type="text" size="15" maxlength="100" name="orderId" value=""/>
         </@field>
       </#if>
 
       <@field type="generic" label="${uiLabelMap.OrderOrderName}">
-          <input type='text' size='60' maxlength='100' name='orderName'/>
+          <input type="text" size="60" maxlength="100" name="orderName"/>
       </@field>
 
     <#if cart.getOrderType() != "PURCHASE_ORDER">
@@ -89,7 +89,7 @@ under the License.
             </#list>
           </select>
           <#else>
-             <input type="hidden" name='CURRENT_CATALOG_ID' value=""/> 
+             <input type="hidden" name="CURRENT_CATALOG_ID" value=""/> 
           </#if>
       </@field>
 

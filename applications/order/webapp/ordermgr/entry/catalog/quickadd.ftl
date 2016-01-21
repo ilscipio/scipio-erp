@@ -57,7 +57,7 @@ under the License.
   <br />
   <center>
   <form method="post" action="<@ofbizUrl>addtocartbulk</@ofbizUrl>" name="bulkaddform">
-    <input type='hidden' name='category_id' value='${categoryId}' />
+    <input type="hidden" name="category_id" value="${categoryId}" />
     <div class="quickaddall">
       <a href="javascript:document.bulkaddform.submit()" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddAllToCart}</a>
     </div>

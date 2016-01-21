@@ -34,16 +34,16 @@ under the License.
         <@tbody>
         <#list 0..featureNum-1 as feature>
           <@tr id="productFeatureTypeId_tableRow_${feature_index}" valign="middle">
-              <@td><input type="text" size='15' name="description_o_${feature_index}" /></@td>
+              <@td><input type="text" size="15" name="description_o_${feature_index}" /></@td>
               <@td><select name='productFeatureTypeId_o_${feature_index}' size="1">
                   <#list productFeatureTypes as productFeatureType>
                   <option value='${productFeatureType.productFeatureTypeId}'>${productFeatureType.get("description",locale)!}</option>
                   </#list>
                   </select>
-                  <input name='productFeatureCategoryId_o_${feature_index}' type="hidden" value="${productFeatureCategoryId}" />
+                  <input name="productFeatureCategoryId_o_${feature_index}" type="hidden" value="${productFeatureCategoryId}" />
               </@td>
-              <@td><input type="text" size='5' name="defaultSequenceNum_o_${feature_index}"" /></@td>
-              <@td><input type="text" size='5' name="idCode_o_${feature_index}" /></@td>
+              <@td><input type="text" size="5" name="defaultSequenceNum_o_${feature_index}"" /></@td>
+              <@td><input type="text" size="5" name="idCode_o_${feature_index}" /></@td>
               <@td align="right"><input type="checkbox" name="_rowSubmit_o_${feature_index}" value="Y" checked="checked" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'productFeatureTypeId_tableRow_${feature_index}');" /></@td>
           </@tr>
         </#list>
@@ -51,7 +51,7 @@ under the License.
         <@tfoot>
           <@tr><@td colspan="11" align="center">
             <input type="hidden" name="_rowCount" value="${featureNum}" />
-            <input type="submit" value='${uiLabelMap.CommonCreate}' class="${styles.link_run_sys!} ${styles.action_add!}"/>
+            <input type="submit" value="${uiLabelMap.CommonCreate}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
           </@td></@tr>
         </@tfoot>
       </@table>

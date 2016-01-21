@@ -288,17 +288,17 @@ function getConfigDetails(event) {
                 </select>
               </div>
             </#list>
-            <input type='hidden' name="product_id" value='${product.productId}' />
-            <input type='hidden' name="add_product_id" value='NULL' />
+            <input type="hidden" name="product_id" value="${product.productId}" />
+            <input type="hidden" name="add_product_id" value="NULL" />
           <#else>
-            <input type='hidden' name="product_id" value='${product.productId}' />
-            <input type='hidden' name="add_product_id" value='NULL' />
+            <input type="hidden" name="product_id" value="${product.productId}" />
+            <input type="hidden" name="add_product_id" value="NULL" />
             <div class="tabletext"><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
             <#assign inStock = false>
           </#if>
         <#else>
-          <input type='hidden' name="product_id" value='${product.productId}' />
-          <input type='hidden' name="add_product_id" value='${product.productId}' />
+          <input type="hidden" name="product_id" value="${product.productId}" />
+          <input type="hidden" name="add_product_id" value="${product.productId}" />
           <#if productNotAvailable??>
             <#assign isStoreInventoryRequired = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
             <#if isStoreInventoryRequired>
@@ -343,7 +343,7 @@ function getConfigDetails(event) {
             </#if>
           </#if>
           <#if requestParameters.category_id??>
-            <input type='hidden' name='category_id' value='${requestParameters.category_id}' />
+            <input type="hidden" name="category_id" value="${requestParameters.category_id}" />
           </#if>
         </#if>
       </form>
@@ -428,11 +428,11 @@ function getConfigDetails(event) {
   <@tr>
     <@td colspan="2">
       <form name="configform" id="configFormId" method="post" action="<@ofbizUrl>product<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
-        <input type='hidden' name='add_product_id' value='${product.productId}' />
-        <input type='hidden' name='add_category_id' value='' />
-        <input type='hidden' name='quantity' value='1' />
+        <input type="hidden" name="add_product_id" value="${product.productId}" />
+        <input type="hidden" name="add_category_id" value="" />
+        <input type="hidden" name="quantity" value="1" />
 
-        <input type='hidden' name='product_id' value='${product.productId}' />
+        <input type="hidden" name="product_id" value="${product.productId}" />
         <@table>
           <@tr>
             <@td>
@@ -483,7 +483,7 @@ function getConfigDetails(event) {
                 <#if renderSingleChoiceWithRadioButtons?? && "Y" == renderSingleChoiceWithRadioButtons>
                 <#-- This is the radio button implementation -->
                 <#if !question.isMandatory()>
-                  <div><input type="radio" name='${counter}' value='<#if !question.isSelected()>checked</#if>' /> No option</div>
+                  <div><input type="radio" name="${counter}" value="<#if !question.isSelected()>checked</#if>" /> No option</div>
                 </#if>
                 <#assign optionCounter = 0>
                 <#list options as option>
@@ -496,7 +496,7 @@ function getConfigDetails(event) {
                     <#-- Render virtual compoennts -->
                     <#if option.hasVirtualComponent()>
                       <div>
-                        <input type='radio' name='${counter}' id="${counter}_${optionCounter}" value='${optionCounter}' onclick="javascript:checkOptionVariants('${counter}_${optionCounter}');" />
+                        <input type="radio" name="${counter}" id="${counter}_${optionCounter}" value="${optionCounter}" onclick="javascript:checkOptionVariants('${counter}_${optionCounter}');" />
                         ${option.description} <#if !option.isAvailable()> (*)</#if>
                         <#assign components = option.getComponents()>
                         <#list components as component>
@@ -511,7 +511,7 @@ function getConfigDetails(event) {
                       </div>
                     <#else>
                       <div>
-                        <input type="radio" name='${counter}' value='${optionCounter}' <#if option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory())>checked="checked"</#if> />
+                        <input type="radio" name="${counter}" value="${optionCounter}" <#if option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory())>checked="checked"</#if> />
                         ${option.description}&nbsp;
                         <#if (shownPrice > 0)>+<@ofbizCurrency amount=shownPrice isoCode=price.currencyUsed/>&nbsp;</#if>
                         <#if (shownPrice < 0)>-<@ofbizCurrency amount=(-1*shownPrice) isoCode=price.currencyUsed/>&nbsp;</#if>
@@ -556,7 +556,7 @@ function getConfigDetails(event) {
                     <#-- Render virtual compoennts -->
                     <#if option.hasVirtualComponent()>
                       <div>
-                        <input type='CHECKBOX' name='${counter}' id="${counter}_${optionCounter}" value='${optionCounter}' onclick="javascript:checkOptionVariants('${counter}_${optionCounter}');" />
+                        <input type="CHECKBOX" name="${counter}" id="${counter}_${optionCounter}" value="${optionCounter}" onclick="javascript:checkOptionVariants('${counter}_${optionCounter}');" />
                         ${option.description} <#if !option.isAvailable()> (*)</#if>
                         <#assign components = option.getComponents()>
                         <#list components as component>
@@ -571,7 +571,7 @@ function getConfigDetails(event) {
                       </div>
                     <#else>
                     <div>
-                      <input type='CHECKBOX' name='${counter}' value='${optionCounter}' <#if option.isSelected()>checked="checked"</#if> />
+                      <input type="CHECKBOX" name="${counter}" value="${optionCounter}" <#if option.isSelected()>checked="checked"</#if> />
                       ${option.description} +<@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if>
                     </div>
                     </#if>

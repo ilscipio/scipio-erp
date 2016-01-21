@@ -74,8 +74,8 @@ under the License.
                 </@field>  
             <#else>
                 <@field type="generic" label="${uiLabelMap.OrderOrderShipEstimate}">
-                    <input type='hidden' name='${shipGroupIndex?default("0")}_shipping_method' value="STANDARD@_NA_" />
-                    <input type='text' name='${shipGroupIndex?default("0")}_ship_estimate' value="${cart.getItemShipGroupEstimate(shipGroupIndex?default('0'))!}"/>
+                    <input type="hidden" name="${shipGroupIndex?default("0")}_shipping_method" value="STANDARD@_NA_" />
+                    <input type="text" name="${shipGroupIndex?default("0")}_ship_estimate" value="${cart.getItemShipGroupEstimate(shipGroupIndex?default('0'))!}"/>
                 </@field>
             </#if>
 

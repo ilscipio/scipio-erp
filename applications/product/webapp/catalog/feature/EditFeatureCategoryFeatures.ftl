@@ -77,7 +77,7 @@ under the License.
             <@tr id="productFeatureId_tableRow_${rowCount}" valign="middle">
               <@td><input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
               <a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${productFeature.productFeatureId}</a></@td>
-              <@td><input type="text" size='15' name="description_o_${rowCount}" value="${productFeature.description}" /></@td>
+              <@td><input type="text" size="15" name="description_o_${rowCount}" value="${productFeature.description}" /></@td>
               <@td><select name='productFeatureTypeId_o_${rowCount}' size="1">
                 <#if productFeature.productFeatureTypeId?has_content>
                   <option value='${productFeature.productFeatureTypeId}'><#if curProductFeatureType??>${curProductFeatureType.get("description",locale)!}<#else> [${productFeature.productFeatureTypeId}]</#if></option>
@@ -97,12 +97,12 @@ under the License.
                   <option value='${productFeatureCategory.productFeatureCategoryId}'>${productFeatureCategory.get("description",locale)!} [${productFeatureCategory.productFeatureCategoryId}]</option>
                 </#list>
               </select></@td>
-              <@td><input type="text" size='10' name="uomId_o_${rowCount}" value="${productFeature.uomId!}" /></@td>
-              <@td><input type="text" size='5' name="numberSpecified_o_${rowCount}" value="${productFeature.numberSpecified!}" /></@td>
-              <@td><input type="text" size='5' name="defaultAmount_o_${rowCount}" value="${productFeature.defaultAmount!}" /></@td>
-              <@td><input type="text" size='5' name="defaultSequenceNum_o_${rowCount}" value="${productFeature.defaultSequenceNum!}" /></@td>
-              <@td><input type="text" size='5' name="idCode_o_${rowCount}" value="${productFeature.idCode!}" /></@td>
-              <@td><input type="text" size='5' name="abbrev_o_${rowCount}" value="${productFeature.abbrev!}" /></@td>
+              <@td><input type="text" size="10" name="uomId_o_${rowCount}" value="${productFeature.uomId!}" /></@td>
+              <@td><input type="text" size="5" name="numberSpecified_o_${rowCount}" value="${productFeature.numberSpecified!}" /></@td>
+              <@td><input type="text" size="5" name="defaultAmount_o_${rowCount}" value="${productFeature.defaultAmount!}" /></@td>
+              <@td><input type="text" size="5" name="defaultSequenceNum_o_${rowCount}" value="${productFeature.defaultSequenceNum!}" /></@td>
+              <@td><input type="text" size="5" name="idCode_o_${rowCount}" value="${productFeature.idCode!}" /></@td>
+              <@td><input type="text" size="5" name="abbrev_o_${rowCount}" value="${productFeature.abbrev!}" /></@td>
               <@td align="right"><input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'productFeatureId_tableRow_${rowCount}');" /></@td>
             </@tr>
             <#assign rowCount = rowCount + 1>
@@ -111,7 +111,7 @@ under the License.
             <@tfoot>
             <@tr><@td colspan="11" align="center">
               <input type="hidden" name="_rowCount" value="${rowCount}" />
-              <input type="submit" value='${uiLabelMap.CommonUpdate}' class="${styles.link_run_sys!} ${styles.action_update!}"/>
+              <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
             </@td></@tr>
             </@tfoot>
         </#if>

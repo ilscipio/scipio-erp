@@ -196,7 +196,7 @@ under the License.
                           </#if>
                           <@td align="right" nowrap="nowrap">${uiLabelMap.ProductPerUnitPrice}</@td>
                           <@td align="right">
-                            <input type='text' name='unitCost_o_${rowCount}' size='6' value='${unitCost?default(0)?string("##0.00")}' />
+                            <input type="text" name="unitCost_o_${rowCount}" size="6" value="${unitCost?default(0)?string("##0.00")}" />
                           </@td>
                         </@tr>
                       </@table>

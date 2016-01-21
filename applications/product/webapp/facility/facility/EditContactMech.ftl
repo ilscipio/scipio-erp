@@ -35,8 +35,8 @@ under the License.
     <#if !preContactMechTypeId?has_content>
 
     <form method="post" action='<@ofbizUrl>EditContactMech</@ofbizUrl>' name="createcontactmechform">
-      <input type='hidden' name='facilityId' value='${facilityId}' />
-      <input type='hidden' name='DONE_PAGE' value='${donePage!}' />
+      <input type="hidden" name="facilityId" value="${facilityId}" />
+      <input type="hidden" name="DONE_PAGE" value="${donePage!}" />
     <@row>
       <@cell columns=9>
         <@field type="generic" label="${uiLabelMap.PartySelectContactType}">
@@ -66,13 +66,13 @@ under the License.
       
     <#if !mechMap.contactMech?has_content>
         <form method="post" action='<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform" id="editcontactmechform">
-        <input type='hidden' name='DONE_PAGE' value='${donePage}' />
-        <input type='hidden' name='contactMechTypeId' value='${mechMap.contactMechTypeId}' />
-        <input type='hidden' name='facilityId' value='${facilityId}' />
-        <#if preContactMechTypeId??><input type='hidden' name='preContactMechTypeId' value='${preContactMechTypeId}' /></#if>
-        <#if contactMechPurposeTypeId??><input type='hidden' name='contactMechPurposeTypeId' value='${contactMechPurposeTypeId!}' /></#if>
+        <input type="hidden" name="DONE_PAGE" value="${donePage}" />
+        <input type="hidden" name="contactMechTypeId" value="${mechMap.contactMechTypeId}" />
+        <input type="hidden" name="facilityId" value="${facilityId}" />
+        <#if preContactMechTypeId??><input type="hidden" name="preContactMechTypeId" value="${preContactMechTypeId}" /></#if>
+        <#if contactMechPurposeTypeId??><input type="hidden" name="contactMechPurposeTypeId" value="${contactMechPurposeTypeId!}" /></#if>
 
-        <#if paymentMethodId??><input type='hidden' name='paymentMethodId' value='${paymentMethodId}' /></#if>
+        <#if paymentMethodId??><input type="hidden" name="paymentMethodId" value="${paymentMethodId}" /></#if>
 
         <@field type="generic" label="${uiLabelMap.PartyContactPurposes}">
             <select name='contactMechPurposeTypeId' class="required">
@@ -117,8 +117,8 @@ under the License.
               <@tr>
                 <@td>
                   <form method="post" action='<@ofbizUrl>createFacilityContactMechPurpose?DONE_PAGE=${donePage}&amp;useValues=true</@ofbizUrl>' name='newpurposeform'>
-                  <input type="hidden" name='facilityId' value='${facilityId}' />
-                  <input type="hidden" name='contactMechId' value='${contactMechId!}' />
+                  <input type="hidden" name="facilityId" value="${facilityId}" />
+                  <input type="hidden" name="contactMechId" value="${contactMechId!}" />
                     <select name='contactMechPurposeTypeId'>
                       <option></option>
                       <#list mechMap.purposeTypes as contactMechPurposeType>
@@ -134,9 +134,9 @@ under the License.
         </@field>
         </#if>
         <form method="post" action='<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform" id="editcontactmechform">
-        <input type="hidden" name="contactMechId" value='${contactMechId}' />
-        <input type="hidden" name="contactMechTypeId" value='${mechMap.contactMechTypeId}' />
-        <input type="hidden" name='facilityId' value='${facilityId}' />
+        <input type="hidden" name="contactMechId" value="${contactMechId}" />
+        <input type="hidden" name="contactMechTypeId" value="${mechMap.contactMechTypeId}" />
+        <input type="hidden" name="facilityId" value="${facilityId}" />
     </#if>
 
   <#if "POSTAL_ADDRESS" = mechMap.contactMechTypeId!>

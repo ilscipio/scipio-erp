@@ -60,13 +60,13 @@ under the License.
     <#if !contactMech??>
         <form method="post" action='<@ofbizUrl>${reqName}</@ofbizUrl>' name="editcontactmechform" id="editcontactmechform">
         <div>
-          <input type='hidden' name='contactMechTypeId' value='${contactMechTypeId}' />
+          <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />
           <#if contactMechPurposeType??>
             <div>(${uiLabelMap.PartyNewContactHavePurpose} "${contactMechPurposeType.get("description",locale)!}")</div>
           </#if>
-          <#if cmNewPurposeTypeId?has_content><input type='hidden' name='contactMechPurposeTypeId' value='${cmNewPurposeTypeId}' /></#if>
-          <#if preContactMechTypeId?has_content><input type='hidden' name='preContactMechTypeId' value='${preContactMechTypeId}' /></#if>
-          <#if paymentMethodId?has_content><input type='hidden' name='paymentMethodId' value='${paymentMethodId}' /></#if>
+          <#if cmNewPurposeTypeId?has_content><input type="hidden" name="contactMechPurposeTypeId" value="${cmNewPurposeTypeId}" /></#if>
+          <#if preContactMechTypeId?has_content><input type="hidden" name="preContactMechTypeId" value="${preContactMechTypeId}" /></#if>
+          <#if paymentMethodId?has_content><input type="hidden" name="paymentMethodId" value="${paymentMethodId}" /></#if>
     <#else>
         <@tr>
           <@td align="right" valign="top">${uiLabelMap.PartyContactPurposes}</@td>
@@ -122,8 +122,8 @@ under the License.
         </@tr>
         <form method="post" action='<@ofbizUrl>${reqName}</@ofbizUrl>' name="editcontactmechform" id="editcontactmechform">
           <div>
-          <input type="hidden" name="contactMechId" value='${contactMechId}' />
-          <input type="hidden" name="contactMechTypeId" value='${contactMechTypeId}' />
+          <input type="hidden" name="contactMechId" value="${contactMechId}" />
+          <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />
     </#if>
 
     <#if contactMechTypeId = "POSTAL_ADDRESS">

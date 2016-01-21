@@ -28,7 +28,7 @@ under the License.
                               <div class="tabletext"><a href="${customerDetailLink}${partyId}" class="${styles.link_nav_info_name!}">${partyGroup.groupName!}</a></div>
             </#if>
             <form method="post" action="<@ofbizUrl>orderentry</@ofbizUrl>" name="setpartyform">
-              <div><input type="text" name="partyId" size='10' value="${partyId!}" /></div>
+              <div><input type="text" name="partyId" size="10" value="${partyId!}" /></div>
               <div>
                 <a href="javascript:document.setpartyform.submit();" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.CommonSet}</a>&nbsp;|&nbsp;<a href="/partymgr/control/findparty" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a><#if partyId?default("_NA_") != "_NA_" && partyId?default("_NA_") != "">&nbsp;|&nbsp;<a href="${customerDetailLink}${partyId}" class="${styles.link_nav!} ${styles.action_view!}">${uiLabelMap.CommonView}</a></#if>
               </div>

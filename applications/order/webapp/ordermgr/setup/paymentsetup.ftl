@@ -94,7 +94,7 @@ under the License.
             </#if>
               <@field type="generic" label="WebSite">
                   <#if webSitePayment?has_content>
-                    <input type='hidden' name='webSiteId' value='${webSitePayment.webSiteId}' />
+                    <input type="hidden" name="webSiteId" value="${webSitePayment.webSiteId}" />
                     <div>
                       <b>${webSitePayment.siteName}</b> (This cannot be changed without re-creating the setting.)
                     </div>
@@ -108,7 +108,7 @@ under the License.
               </@field>
               <@field type="generic" label="Payment Method Type">
                   <#if webSitePayment?has_content>
-                    <input type='hidden' name='paymentMethodTypeId' value='${webSitePayment.paymentMethodTypeId}' />
+                    <input type="hidden" name="paymentMethodTypeId" value="${webSitePayment.paymentMethodTypeId}" />
                     <div>
                       <b>${webSitePayment.description}</b> (This cannot be changed without re-creating the setting.)
                     </div>

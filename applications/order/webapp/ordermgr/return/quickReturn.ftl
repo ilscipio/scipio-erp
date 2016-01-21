@@ -56,7 +56,7 @@ under the License.
                   </#if>
                 </select>
               <#else>
-                <input type='text' size='20' name='paymentMethodId' />
+                <input type="text" size="20" name="paymentMethodId" />
               </#if>
               <#if (party.partyId)?has_content>
                 <a href="/partymgr/control/editcreditcard?partyId=${party.partyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>

@@ -420,7 +420,7 @@ under the License.
                       <@tr>
                         <@td>
                           <#assign shipmentMethodAndAmount = shippingRate.shipmentMethodTypeId + "@" + "UPS" + "*" + shippingRate.rate>
-                          <input type='radio' name='shipmentMethodAndAmount' value='${shipmentMethodAndAmount!}' />
+                          <input type="radio" name="shipmentMethodAndAmount" value="${shipmentMethodAndAmount!}" />
                           UPS&nbsp;${shippingRate.shipmentMethodDescription!}
                           <#if (shippingRate.rate > -1)>
                             <@ofbizCurrency amount=shippingRate.rate isoCode=orderReadHelper.getCurrency()/>

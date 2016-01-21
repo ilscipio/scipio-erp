@@ -24,7 +24,7 @@ under the License.
         default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
     </menu>
 
-    <menu name="find" menu-container-style="button-bar tab-bar" default-selected-style="selected" default-menu-item-name="content"
+    <menu name="find" menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemselected}" default-menu-item-name="content"
         default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
         <menu-item name="find" title="${uiLabelMap.CommonFind}">
             <link target="FindCompDocTemplate"/>
@@ -32,7 +32,7 @@ under the License.
     </menu>
 
 
-    <menu name="tree" menu-container-style="button-bar tab-bar" default-selected-style="selected" default-menu-item-name="content"
+    <menu name="tree" menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemselected}" default-menu-item-name="content"
         selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
         <menu-item name="viewtree" title="${uiLabelMap.ContentCompDocViewTree}">
             <condition>
@@ -78,7 +78,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="subtree" menu-container-style="button-bar tab-bar" default-selected-style="selected" default-menu-item-name="content"
+    <menu name="subtree" menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemselected}" default-menu-item-name="content"
         selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
         <menu-item name="viewtree" title="${uiLabelMap.PageTitleViewCompDocTree}">
             <condition>

@@ -20,7 +20,7 @@ under the License.
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
-    <menu name="EditSubscription" default-selected-style="selected" type="simple"
+    <menu name="EditSubscription" default-selected-style="${styles.menu_default_itemselected}" type="simple"
         menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem">
         <menu-item name="EditSubscription" title="${uiLabelMap.ProductSubscription}">
             <link target="EditSubscription">
@@ -39,7 +39,7 @@ under the License.
             </link>
         </menu-item>
     </menu>
-    <menu name="EditSubscriptionResource" default-selected-style="selected" type="simple"
+    <menu name="EditSubscriptionResource" default-selected-style="${styles.menu_default_itemselected}" type="simple"
         menu-container-style="button-bar tab-bar" selected-menuitem-context-field-name="tabButtonItem">
         <menu-item name="EditSubscriptionResource" title="${uiLabelMap.ProductSubscriptionResource}">
             <link target="EditSubscriptionResource">

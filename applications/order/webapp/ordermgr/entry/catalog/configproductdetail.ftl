@@ -183,7 +183,7 @@ function getConfigDetails() {
     </@tr>
   </#if>
 
-  <@tr><@td colspan="2"><hr class='sepbar'/></@td></@tr>
+  <@tr><@td colspan="2"><hr class="sepbar"/></@td></@tr>
 
   <#-- Product image/name/price -->
   <@tr>
@@ -224,7 +224,7 @@ function getConfigDetails() {
               - if isSale show price with salePrice style and print "On Sale!"
       -->
       <#if totalPrice??>
-        <div>${uiLabelMap.ProductAggregatedPrice}: <span id='totalPrice' class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
+        <div>${uiLabelMap.ProductAggregatedPrice}: <span id="totalPrice" class="basePrice"><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
       <#else>
       <#if price.competitivePrice?? && price.price?? && price.price?double < price.competitivePrice?double>
         <div>${uiLabelMap.ProductCompareAtPrice}: <span class="basePrice"><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span></div>
@@ -266,7 +266,7 @@ function getConfigDetails() {
         </div>
       </#if>
       <#if daysToShip??>
-        <div><b>${uiLabelMap.ProductUsuallyShipsIn} <font color='red'>${daysToShip}</font> ${uiLabelMap.CommonDays}!<b></div>
+        <div><b>${uiLabelMap.ProductUsuallyShipsIn} <font color="red">${daysToShip}</font> ${uiLabelMap.CommonDays}!<b></div>
       </#if>
 
       <#if disFeatureList?? && 0 < disFeatureList.size()>
@@ -318,10 +318,10 @@ function getConfigDetails() {
         <#-- check to see if introductionDate hasn't passed yet -->
         <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
           <p>&nbsp;</p>
-          <div class='tabletext' style='color: red;'>${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
+          <div class="tabletext" style="color: red;">${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
         <#-- check to see if salesDiscontinuationDate has passed -->
         <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)>
-          <div class='tabletext' style='color: red;'>${uiLabelMap.ProductProductNoLongerAvailable}.</div>
+          <div class="tabletext" style="color: red;">${uiLabelMap.ProductProductNoLongerAvailable}.</div>
         <#-- check to see if the product requires inventory check and has inventory -->
         <#else>
           <#if inStock>
@@ -413,14 +413,14 @@ function getConfigDetails() {
     </@td>
   </@tr>
 
-  <@tr><@td colspan="2"><hr class='sepbar'/></@td></@tr>
+  <@tr><@td colspan="2"><hr class="sepbar"/></@td></@tr>
 
   <#-- Long description of product -->
   <@tr>
     <@td colspan="2">${productContentWrapper.get("LONG_DESCRIPTION", "html")!}</@td>
   </@tr>
 
-  <@tr><@td colspan="2"><hr class='sepbar'/></@td></@tr>
+  <@tr><@td colspan="2"><hr class="sepbar"/></@td></@tr>
 
   <#-- Any attributes/etc may go here -->
   <#-- Product Configurator -->
@@ -450,7 +450,7 @@ function getConfigDetails() {
                 <div>${question.description!}</div>
                 <#assign instructions = question.content.get("INSTRUCTIONS", "html")!>
                 <#if instructions?has_content>
-                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${instructions}");" class="${styles.link_nav!} ${styles.action_view!}">Instructions</a>
+                  <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${instructions}');" class="${styles.link_nav!} ${styles.action_view!}">Instructions</a>
                 </#if>
                 <#assign image = question.content.get("IMAGE_URL", "url")!>
                 <#if image?has_content>
@@ -469,7 +469,7 @@ function getConfigDetails() {
               <#assign optionCounter = 0>
               <#list options as option>
                 <div>${option.description} <#if !option.isAvailable()> (*)</#if></div>
-                <div>${uiLabelMap.CommonComments}: <input type="text" name="comments_${counter}_${optionCounter}" id='comments_${counter}_${optionCounter}' value="${option.comments!}" /></div>
+                <div>${uiLabelMap.CommonComments}: <input type="text" name="comments_${counter}_${optionCounter}" id="comments_${counter}_${optionCounter}" value="${option.comments!}" /></div>
                 <#assign optionCounter = optionCounter + 1>
               </#list>
             <#else>
@@ -485,7 +485,7 @@ function getConfigDetails() {
                 <#if renderSingleChoiceWithRadioButtons?? && "Y" == renderSingleChoiceWithRadioButtons>
                 <#-- This is the radio button implementation -->
                 <#if !question.isMandatory()>
-                  <div><input type="radio" name="${counter}" value="<#if !question.isSelected()>checked="checked"</#if>" /> No option</div>
+                  <div><input type="radio" name="${counter}" value=""<#if !question.isSelected()> checked="checked"</#if>/> No option</div>
                 </#if>
                 <#assign optionComment = "">
                 <#assign optionCounter = 0>
@@ -526,12 +526,12 @@ function getConfigDetails() {
                     </#if>
                   <#assign optionCounter = optionCounter + 1>
                 </#list>
-                <div>${uiLabelMap.CommonComments}: <input type="text" name="comments_${counter}_0" id='comments_${counter}_0' value="${optionComment!}" /></div>
+                <div>${uiLabelMap.CommonComments}: <input type="text" name="comments_${counter}_0" id="comments_${counter}_0" value="${optionComment!}" /></div>
                 <#else>
                 <#-- And this is the select box implementation -->
-                <select name='${counter}'>
+                <select name="${counter}">
                 <#if !question.isMandatory()>
-                  <option value=''>---</option>
+                  <option value="">---</option>
                 </#if>
                 <#assign options = question.options>
                 <#assign optionCounter = 0>
@@ -546,7 +546,7 @@ function getConfigDetails() {
                     <#assign optionComment = option.getComments()>
                     <#assign optionCounter = optionCounter + 1>
                   </#if>
-                  <option value='${optionCounter}' <#if option.isSelected()>selected="selected"</#if>>
+                  <option value="${optionCounter}" <#if option.isSelected()>selected="selected"</#if>>
                     ${option.description}&nbsp;
                     <#if (shownPrice > 0)>+<@ofbizCurrency amount=shownPrice isoCode=price.currencyUsed/>&nbsp;</#if>
                     <#if (shownPrice < 0)>-<@ofbizCurrency amount=(-1*shownPrice) isoCode=price.currencyUsed/>&nbsp;</#if>
@@ -555,7 +555,7 @@ function getConfigDetails() {
                   <#assign optionCounter = optionCounter + 1>
                 </#list>
                 </select>
-                <div>${uiLabelMap.CommonComments}: <input type="text" name="comments_${counter}_0" id='comments_${counter}_0' value="${optionComment!}" /></div>
+                <div>${uiLabelMap.CommonComments}: <input type="text" name="comments_${counter}_0" id="comments_${counter}_0" value="${optionComment!}" /></div>
                 </#if>
               <#else>
                 <#-- Multi choice question -->
@@ -566,7 +566,7 @@ function getConfigDetails() {
                     <#-- Render virtual compoennts -->
                     <#if option.hasVirtualComponent()>
                       <div>
-                        <input type="CHECKBOX" name="${counter}" id="${counter}_${optionCounter}" value="${optionCounter}" onclick="javascript:checkOptionVariants('${counter}_${optionCounter}');" />
+                        <input type="checkbox" name="${counter}" id="${counter}_${optionCounter}" value="${optionCounter}" onclick="javascript:checkOptionVariants('${counter}_${optionCounter}');" />
                         ${option.description} <#if !option.isAvailable()> (*)</#if>
                         <#assign components = option.getComponents()>
                         <#list components as component>
@@ -581,11 +581,11 @@ function getConfigDetails() {
                       </div>
                     <#else>
                     <div>
-                      <input type="CHECKBOX" name="${counter}" value="${optionCounter}" <#if option.isSelected()>checked="checked"</#if> />
+                      <input type="checkbox" name="${counter}" value="${optionCounter}" <#if option.isSelected()>checked="checked"</#if> />
                       ${option.description} +<@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if>
                     </div>
                     </#if>
-                    <div>${uiLabelMap.CommonComments}: <input type="text" name="comments_${counter}_${optionCounter}" id='comments_${counter}_${optionCounter}' value="${option.comments!}" /></div>
+                    <div>${uiLabelMap.CommonComments}: <input type="text" name="comments_${counter}_${optionCounter}" id="comments_${counter}_${optionCounter}" value="${option.comments!}" /></div>
                   <#assign optionCounter = optionCounter + 1>
                 </#list>
               </#if>
@@ -601,7 +601,7 @@ function getConfigDetails() {
       </form>
     </@td>
   </@tr>
-  <@tr><@td colspan="2"><hr class='sepbar'/></@td></@tr>
+  <@tr><@td colspan="2"><hr class="sepbar"/></@td></@tr>
 
 <#-- Upgrades/Up-Sell/Cross-Sell -->
 <#macro associated assocProducts beforeName showName afterName formNamePrefix targetRequestName>

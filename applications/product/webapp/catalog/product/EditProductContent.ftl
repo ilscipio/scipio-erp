@@ -152,11 +152,11 @@ under the License.
           <@fields type="default-nolabels">
             <@field type="file" size="50" name="fname"/>
             <@field type="generic">
-                <input type="radio" name="upload_file_type_bogus" value="small" onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=small</@ofbizUrl>");'/>${uiLabelMap.CommonSmall}
-                <input type="radio" name="upload_file_type_bogus" value="medium" onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=medium</@ofbizUrl>");'/>${uiLabelMap.CommonMedium}
-                <input type="radio" name="upload_file_type_bogus" value="large"onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=large</@ofbizUrl>");'/>${uiLabelMap.CommonLarge}
-                <input type="radio" name="upload_file_type_bogus" value="detail" onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=detail</@ofbizUrl>");'/>${uiLabelMap.CommonDetail}
-                <input type="radio" name="upload_file_type_bogus" value="original" checked="checked" onclick='setUploadUrl("<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>");'/>${uiLabelMap.ProductOriginal}
+                <input type="radio" name="upload_file_type_bogus" value="small" onclick="setUploadUrl('<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=small</@ofbizUrl>');"/>${uiLabelMap.CommonSmall}
+                <input type="radio" name="upload_file_type_bogus" value="medium" onclick="setUploadUrl('<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=medium</@ofbizUrl>');"/>${uiLabelMap.CommonMedium}
+                <input type="radio" name="upload_file_type_bogus" value="large" onclick="setUploadUrl('<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=large</@ofbizUrl>');"/>${uiLabelMap.CommonLarge}
+                <input type="radio" name="upload_file_type_bogus" value="detail" onclick="setUploadUrl('<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=detail</@ofbizUrl>');"/>${uiLabelMap.CommonDetail}
+                <input type="radio" name="upload_file_type_bogus" value="original" checked="checked" onclick="setUploadUrl('<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>');"/>${uiLabelMap.ProductOriginal}
             </@field>
             <@field type="submitarea">
                 <input type="submit" class="${styles.link_run_sys!} ${styles.action_import!}" value="${uiLabelMap.ProductUploadImage}"/>

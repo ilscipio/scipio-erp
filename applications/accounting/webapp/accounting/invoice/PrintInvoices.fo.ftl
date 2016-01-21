@@ -140,7 +140,7 @@ under the License.
                         <fo:block font-size="10pt" font-weight="bold">${uiLabelMap.AccountingOrderNr}:</fo:block>
                       </fo:table-cell>
                       <fo:table-cell>
-                        <fo:block font-size ="10pt" font-weight="bold"><#list orders as order> ${order} </#list></fo:block>
+                        <fo:block font-size="10pt" font-weight="bold"><#list orders as order> ${order} </#list></fo:block>
                       </fo:table-cell>
                     </fo:table-row>
                   </fo:table-body>

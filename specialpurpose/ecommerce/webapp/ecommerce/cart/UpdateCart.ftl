@@ -70,7 +70,7 @@ under the License.
             <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "" /></#if>
           </#if>
           <@tr id="cartItemDisplayRow_${cartLine_index}">
-            <@td headers="orderItem"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt = "Product Image" /></@td>
+            <@td headers="orderItem"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Product Image" /></@td>
             <@td headers="description">${cartLine.getName()!}</@td>
             <@td headers="unitPrice">${cartLine.getDisplayPrice()}</@td>
             <@td headers="quantity"><span id="completedCartItemQty_${cartLine_index}">${cartLine.getQuantity()?string.number}</span></@td>

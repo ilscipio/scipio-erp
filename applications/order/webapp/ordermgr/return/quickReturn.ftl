@@ -41,7 +41,7 @@ under the License.
         <#if "CUSTOMER_RETURN" == returnHeaderTypeId>
           <@field type="generic" label="${uiLabelMap.FormFieldTitle_paymentMethodId}">
               <#if creditCardList?? || eftAccountList??>
-                <select name='paymentMethodId'>
+                <select name="paymentMethodId">
                   <option value=""></option>
                   <#if creditCardList?has_content>
                     <#list creditCardList as creditCardPm>

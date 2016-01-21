@@ -87,7 +87,7 @@ under the License.
           </@field>
           <#-- label for the following field used to be: ${uiLabelMap.ProductCategoryId} ??? -->
           <@field type="generic" label="${uiLabelMap.ProductFeatureApplicationType}">
-              <select name='productFeatureApplTypeId' size='1'>
+              <select name="productFeatureApplTypeId" size="1">
                 <#list applicationTypes as applicationType>
                    <#assign displayDesc = applicationType.get("description", locale)?default("No Description")>
                    <#if 18 < displayDesc?length>

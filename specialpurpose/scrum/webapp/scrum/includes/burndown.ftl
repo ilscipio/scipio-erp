@@ -25,13 +25,13 @@ under the License.
 <#assign members = delegator.findByAnd("WorkEffortPartyAssignment", Static["org.ofbiz.base.util.UtilMisc"].toMap("workEffortId", parameters.get("sprintId")), null, false)/>
 <#if (members.size() > 0)>
     <#assign maxHours = estimatedHrs * members.size()/>
-    <div id="params_birtReport" style='display:none'>
-        <INPUT type="HIDDEN" name="sprintId" value="${sprint.workEffortId!}"/>
-        <INPUT type="HIDDEN" name="actualStartDate" value="${sprint.actualStartDate!}"/>
-        <INPUT type="HIDDEN" name="actualCompletionDate" value="${sprint.actualCompletionDate!}"/>
-        <INPUT type="HIDDEN" name="dayNumber" value="${dayNumber!}"/>
-        <INPUT type="HIDDEN" name="estimatedHrs" value="${estimatedHrs!}"/>
-        <INPUT type="HIDDEN" name="maxHours" value="${maxHours!}"/>
+    <div id="params_birtReport" style="display:none">
+        <input type="hidden" name="sprintId" value="${sprint.workEffortId!}"/>
+        <input type="hidden" name="actualStartDate" value="${sprint.actualStartDate!}"/>
+        <input type="hidden" name="actualCompletionDate" value="${sprint.actualCompletionDate!}"/>
+        <input type="hidden" name="dayNumber" value="${dayNumber!}"/>
+        <input type="hidden" name="estimatedHrs" value="${estimatedHrs!}"/>
+        <input type="hidden" name="maxHours" value="${maxHours!}"/>
     </div>
     <form id="form_birtReport" method="post"></form>
     <@script>
@@ -44,7 +44,7 @@ under the License.
       for( var i=0;i<oParams.length;i++ )  
       {
         var param = document.createElement( "INPUT" );
-        param.type = "HIDDEN";
+        param.type = "hidden";
         param.name= oParams[i].name;
         param.value= oParams[i].value;
         formObj.appendChild( param );
@@ -56,6 +56,6 @@ under the License.
     }
     
     </@script>
-    <iframe name="birtReport" frameborder="no"  scrolling = "auto"  style='height:350px;width:100%;'></iframe>
+    <iframe name="birtReport" frameborder="no" scrolling="auto" style="height:350px;width:100%;"></iframe>
     <@script>loadViewerbirtReport();</@script> 
 </#if>

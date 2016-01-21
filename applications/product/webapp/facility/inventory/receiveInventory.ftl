@@ -51,9 +51,9 @@ under the License.
             </@thead>
             <#list receivedItems as item>
               <form name="cancelReceivedItemsForm_${item_index}" method="post" action="<@ofbizUrl>cancelReceivedItems</@ofbizUrl>">
-                <input type="hidden" name="receiptId" value ="${(item.receiptId)!}"/>
-                <input type="hidden" name="purchaseOrderId" value ="${(item.orderId)!}"/>
-                <input type="hidden" name="facilityId" value ="${facilityId!}"/>
+                <input type="hidden" name="receiptId" value="${(item.receiptId)!}"/>
+                <input type="hidden" name="purchaseOrderId" value="${(item.orderId)!}"/>
+                <input type="hidden" name="facilityId" value="${facilityId!}"/>
                 <@tr>
                   <@td><a href="<@ofbizUrl>ViewShipment?shipmentId=${item.shipmentId!}</@ofbizUrl>" class="${styles.link_nav_info_id_long!}">${item.shipmentId!} ${item.shipmentItemSeqId!}</a></@td>
                   <@td>${item.receiptId}</@td>
@@ -143,7 +143,7 @@ under the License.
               </@field>
               <@field type="generic" label="${uiLabelMap.ProductDateReceived}">
                   <input type="text" name="datetimeReceived" size="24" value="${nowTimestamp}" />
-                  <#-- <a href="#" onclick="setNow("datetimeReceived")" class="${styles.link_run_local!} ${styles.action_update!}">[Now]</a> -->
+                  <#-- <a href="#" onclick="setNow('datetimeReceived')" class="${styles.link_run_local!} ${styles.action_update!}">[Now]</a> -->
               </@field>
               
               

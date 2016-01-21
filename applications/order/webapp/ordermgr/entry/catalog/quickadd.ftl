@@ -25,13 +25,13 @@ under the License.
       </@td>
       <@td align="right">
         <form name="choosequickaddform" method="post" action="<@ofbizUrl>quickadd</@ofbizUrl>">
-          <select name='category_id'>
-            <option value='${productCategory.productCategoryId}'>${productCategory.categoryName!}</option>
-            <option value='${productCategory.productCategoryId}'>--</option>
+          <select name="category_id">
+            <option value="${productCategory.productCategoryId}">${productCategory.categoryName!}</option>
+            <option value="${productCategory.productCategoryId}">--</option>
             <#list quickAddCats as quickAddCatalogId>
               <#assign loopCategory = delegator.findOne("ProductCategory", Static["org.ofbiz.base.util.UtilMisc"].toMap("productCategoryId", quickAddCatalogId), true)>
               <#if loopCategory?has_content>
-                <option value='${quickAddCatalogId}'>${loopCategory.categoryName!}</option>
+                <option value="${quickAddCatalogId}">${loopCategory.categoryName!}</option>
               </#if>
             </#list>
           </select>
@@ -40,7 +40,7 @@ under the License.
       </@td>
     </@tr>
     <#if productCategory.categoryImageUrl?? || productCategory.longDescription??>
-      <@tr><@td colspan='2'><hr class='sepbar'/></@td></@tr>
+      <@tr><@td colspan='2'><hr class="sepbar"/></@td></@tr>
       <@tr>
         <@td valign="top" width="0" colspan='2'>
             <#if productCategory.categoryImageUrl??>

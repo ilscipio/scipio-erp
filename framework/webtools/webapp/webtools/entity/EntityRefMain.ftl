@@ -52,12 +52,12 @@ under the License.
         </div>
         <#assign numberShowed = 0>
         <#list packagesList as package>
-            <hr /><div id='${package.packageName}' class='packagetext'>${package.packageName}</div><hr />
+            <hr /><div id="${package.packageName}" class="packagetext">${package.packageName}</div><hr />
             <#list package.entitiesList as entity>
                 <@table type="data-list" width="95%" border="1" cellpadding="2" cellspacing="0"> <#-- orig: class="" -->
                     <@tr class='entityheader'>
                         <@td colspan="5">
-                            <div id='${entity.entityName}' class="titletext">
+                            <div id="${entity.entityName}" class="titletext">
                                 ${uiLabelMap.WebtoolsEntity}: ${entity.entityName}
                                 <#if entity.plainTableName?has_content>  | ${uiLabelMap.WebtoolsTable}: ${entity.plainTableName}</#if>
                             </div>

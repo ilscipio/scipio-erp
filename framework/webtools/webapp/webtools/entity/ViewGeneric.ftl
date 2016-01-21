@@ -104,7 +104,7 @@ function ShowTab(lname) {
           <#if pkNotFound>
             <p>${uiLabelMap.WebtoolsEntityName} ${entityName} ${uiLabelMap.WebtoolsWithPk} ${findByPk} ${uiLabelMap.WebtoolsSpecifiedEntity2}.</p>
           </#if>
-          <form action='<@ofbizUrl>UpdateGeneric?entityName=${entityName}</@ofbizUrl>' method="post" name="updateForm">
+          <form action="<@ofbizUrl>UpdateGeneric?entityName=${entityName}</@ofbizUrl>" method="post" name="updateForm">
             <#assign showFields = true>
             <#-- FIXME: inputs within table elems -->
             <@table type="fields" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->

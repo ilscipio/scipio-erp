@@ -186,6 +186,6 @@ under the License.
         <option value="${candidate}">${candidate}</option>
       </#list>
     </select>
-    <input type="submit" name="submitBtn" value="${uiLabelMap.CommonSave} class="${styles.link_run_sys!} ${styles.action_add!}""/>
+    <input type="submit" name="submitBtn" value="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
   </form>
 </#macro>

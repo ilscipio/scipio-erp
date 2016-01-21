@@ -113,7 +113,7 @@ under the License.
                             </form>
                         </@td>
                         <@td align="center">
-                         <form name="deleteProductPriceCond_${productPriceCond_index}" method= "post" action= "<@ofbizUrl>deleteProductPriceCond</@ofbizUrl>">
+                         <form name="deleteProductPriceCond_${productPriceCond_index}" method="post" action="<@ofbizUrl>deleteProductPriceCond</@ofbizUrl>">
                            <input type="hidden" name="productPriceRuleId" value="${productPriceCond.productPriceRuleId}" />
                            <input type="hidden" name="productPriceCondSeqId" value="${productPriceCond.productPriceCondSeqId}" />
                            <a href="javascript:document.deleteProductPriceCond_${productPriceCond_index}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>

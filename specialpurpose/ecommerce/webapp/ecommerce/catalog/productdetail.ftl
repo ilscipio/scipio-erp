@@ -580,7 +580,7 @@ ${virtualVariantJavaScript!}
                 <div id="addCart2" style="display:block;">
                   <span style="white-space: nowrap;"><strong>${uiLabelMap.CommonQuantity}:</strong></span>&nbsp;
                   <input type="text" size="5" value="1" disabled="disabled" />
-                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+                  <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}');" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
                   &nbsp;
                 </div>
               </#if>
@@ -693,7 +693,7 @@ ${virtualVariantJavaScript!}
               <input type="hidden" name="productId" value="${product.productId}" />
               <input type="hidden" name="product_id" value="${product.productId}" />
               <input type="hidden" name="productStoreId" value="${productStoreId}" />
-              <input type="hidden" name="reservStart" value= "" />
+              <input type="hidden" name="reservStart" value="" />
               <select name="shoppingListId">
                 <#if shoppingLists?has_content>
                   <#list shoppingLists as shoppingList>
@@ -712,7 +712,7 @@ ${virtualVariantJavaScript!}
                 Qty&nbsp;<input type="text" size="5" name="quantity" value="1" />
               <#else>
                   <input type="text" size="5" name="quantity" value="1" />
-                  <input type="hidden" name="reservStartStr" value= "" />
+                  <input type="hidden" name="reservStartStr" value="" />
               </#if>
               <a href="javascript:addShoplistSubmit();" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.OrderAddToShoppingList}</a>
               </fieldset>

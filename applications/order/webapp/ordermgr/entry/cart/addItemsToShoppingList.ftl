@@ -32,7 +32,7 @@ under the License.
           
           <@field type="select" label="" name="shoppingListId" currentValue="">
           <#list shoppingLists as shoppingList>
-            <option value='${shoppingList.shoppingListId}'>${shoppingList.getString("listName")}</option>
+            <option value="${shoppingList.shoppingListId}">${shoppingList.getString("listName")}</option>
           </#list>
             <option value="">---</option>
             <option value="">${uiLabelMap.OrderNewShoppingList}</option>

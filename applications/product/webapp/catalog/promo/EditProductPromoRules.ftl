@@ -116,12 +116,12 @@ under the License.
         <#assign description = "">
       </#if>
                   <label>${uiLabelMap.OrderSelectShippingMethod}:</label>
-                  <select name = "carrierShipmentMethod">
-                    <option value = "${carrierShippingMethod!}">${carrierParty!}&nbsp;${description}</option>
-                    <option value = "">&nbsp;</option>
+                  <select name="carrierShipmentMethod">
+                    <option value="${carrierShippingMethod!}">${carrierParty!}&nbsp;${description}</option>
+                    <option value="">&nbsp;</option>
       <#list carrierShipmentMethods as carrierShipmentMethod>
         <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType", true)>
-                    <option value = "${carrierShipmentMethod.partyId!}@${carrierShipmentMethod.shipmentMethodTypeId!}">${carrierShipmentMethod.partyId!}&nbsp;${shipmentMethodType.get("description")!}</option>
+                    <option value="${carrierShipmentMethod.partyId!}@${carrierShipmentMethod.shipmentMethodTypeId!}">${carrierShipmentMethod.partyId!}&nbsp;${shipmentMethodType.get("description")!}</option>
       </#list>
                   </select>
                   <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
@@ -246,11 +246,11 @@ under the License.
                   <input type="text" size="25" name="condValue" />
                   ${uiLabelMap.CommonOther}:<input type="text" size="10" name="otherValue" />
                   <label>${uiLabelMap.OrderSelectShippingMethod}:</label>
-                  <select name = "carrierShipmentMethod">
-                    <option value = "">--${uiLabelMap.OrderSelectShippingMethod}--</option>
+                  <select name="carrierShipmentMethod">
+                    <option value="">--${uiLabelMap.OrderSelectShippingMethod}--</option>
     <#list carrierShipmentMethods as carrierShipmentMethod>
       <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOne("ShipmentMethodType", true)>
-                    <option value = "${carrierShipmentMethod.partyId!}@${carrierShipmentMethod.shipmentMethodTypeId!}">${carrierShipmentMethod.partyId!}&nbsp;${shipmentMethodType.get("description")!}</option>
+                    <option value="${carrierShipmentMethod.partyId!}@${carrierShipmentMethod.shipmentMethodTypeId!}">${carrierShipmentMethod.partyId!}&nbsp;${shipmentMethodType.get("description")!}</option>
     </#list>
                   </select>
                   <input type="submit" value="${uiLabelMap.ProductCreateCondition}" class="${styles.link_run_sys!} ${styles.action_add!}" />

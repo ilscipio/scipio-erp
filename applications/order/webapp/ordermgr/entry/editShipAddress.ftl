@@ -74,7 +74,7 @@ under the License.
         <@field type="generic" label="${uiLabelMap.OrderAllowSolicitation}">
             <select name="allowSolicitation">
               <#assign selectedValue = parameters.allowSolicitation?default("")/>
-              <option></option><option ${(selectedValue=="Y")?string("selected=\"selected\"","")}>Y</option><option ${(selectedValue=="N")?string("selected=\"selected\"","")}>N</option>
+              <option></option><option${(selectedValue=="Y")?string(" selected=\"selected\"","")}>Y</option><option${(selectedValue=="N")?string(" selected=\"selected\"","")}>N</option>
             </select>
         </@field>
       </form>

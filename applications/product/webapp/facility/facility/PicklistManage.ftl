@@ -167,7 +167,7 @@ under the License.
                         <@td>
                           <form name="deletePicklistItem_${picklist.picklistId}_${picklistItem.orderId}_${picklistItemInfo_index}" method="post" action="<@ofbizUrl>deletePicklistItem</@ofbizUrl>">
                             <input type="hidden" name="picklistBinId" value="${picklistItemInfo.picklistItem.picklistBinId}"/>
-                            <input type="hidden" name="orderId" value= "${picklistItemInfo.picklistItem.orderId}"/>
+                            <input type="hidden" name="orderId" value="${picklistItemInfo.picklistItem.orderId}"/>
                             <input type="hidden" name="orderItemSeqId" value="${picklistItemInfo.picklistItem.orderItemSeqId}"/>
                             <input type="hidden" name="shipGroupSeqId" value="${picklistItemInfo.picklistItem.shipGroupSeqId}"/>
                             <input type="hidden" name="inventoryItemId" value="${picklistItemInfo.picklistItem.inventoryItemId}"/>
@@ -219,7 +219,7 @@ under the License.
                               <@td><input type="text" name="quantity" value="${picklistItem.quantity}" /></@td>
                               <@td>
                                 <input type="hidden" name="picklistBinId" value="${picklistItemInfo.picklistItem.picklistBinId}"/>
-                                <input type="hidden" name="orderId" value= "${picklistItemInfo.picklistItem.orderId}"/>
+                                <input type="hidden" name="orderId" value="${picklistItemInfo.picklistItem.orderId}"/>
                                 <input type="hidden" name="orderItemSeqId" value="${picklistItemInfo.picklistItem.orderItemSeqId}"/>
                                 <input type="hidden" name="shipGroupSeqId" value="${picklistItemInfo.picklistItem.shipGroupSeqId}"/>
                                 <input type="hidden" name="inventoryItemId" value="${picklistItemInfo.picklistItem.inventoryItemId}"/>

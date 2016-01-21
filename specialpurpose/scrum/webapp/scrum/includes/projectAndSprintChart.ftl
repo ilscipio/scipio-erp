@@ -16,8 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<div id="params_projectSprintReport" style='display:none'>
-    <INPUT type="HIDDEN" name="productId" value="${product.productId}"/>
+<div id="params_projectSprintReport" style="display:none">
+    <input type="hidden" name="productId" value="${product.productId}"/>
 </div>
 <form id="form_projectSprintReport" method="post"></form>
 <@script>
@@ -28,7 +28,7 @@ under the License.
     if( oParams ) {
       for( var i=0;i<oParams.length;i++ ) {
         var param = document.createElement( "INPUT" );
-        param.type = "HIDDEN";
+        param.type = "hidden";
         param.name= oParams[i].name;
         param.value= oParams[i].value;
         formObj.appendChild(param);
@@ -40,5 +40,5 @@ under the License.
     formObj.submit( );
     }
 </@script>
-<iframe name="projectSprintReport" frameborder="no"  scrolling = "auto"  style='height:350px;width:100%;'></iframe>
+<iframe name="projectSprintReport" frameborder="no" scrolling="auto" style="height:350px;width:100%;"></iframe>
 <@script>loadViewerProjectSprintReport();</@script>

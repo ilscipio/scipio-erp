@@ -31,7 +31,7 @@ under the License.
             <@tr valign="middle">
                 <@td><a href="<@ofbizUrl>EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${productFeatureGroup.productFeatureGroupId}</a></@td>
                 <@td>
-                    <form method='post' action='<@ofbizUrl>UpdateProductFeatureGroup</@ofbizUrl>'>
+                    <form method="post" action="<@ofbizUrl>UpdateProductFeatureGroup</@ofbizUrl>">
                     <input type="hidden" name="productFeatureGroupId" value="${productFeatureGroup.productFeatureGroupId}" />
                     <input type="text" size="30" name="description" value="${productFeatureGroup.description!}" />
                     <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />

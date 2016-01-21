@@ -208,13 +208,13 @@ under the License.
                   <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
                   <#if currShipContactMechId?? && currShipContactMechId?has_content>
                       <#if currShipContactMechId == shippingContactMech.contactMechId>
-                        <#assign checkedValue = "checked='checked'">
+                        <#assign checkedValue = "checked=\"checked\"">
                       <#else>
                         <#assign checkedValue = "">
                       </#if>
                   <#else>
                       <#if i == 0>
-                          <#assign checkedValue = "checked='checked'">
+                          <#assign checkedValue = "checked=\"checked\"">
                       <#else>
                           <#assign checkedValue = "">
                       </#if>

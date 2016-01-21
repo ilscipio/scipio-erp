@@ -63,7 +63,7 @@ under the License.
               <@htmlTemplate.lookupField value='${returnInfo.fromPartyId!}' formName="returnhead" name="fromPartyId" id="fromPartyId" fieldFormName="LookupPartyName"/>
           </@field>
           <@field type="generic" label="${uiLabelMap.OrderReturnToFacility}">
-              <select name='destinationFacilityId'>
+              <select name="destinationFacilityId">
                 <#if currentFacility??>
                   <option value="${currentFacility.facilityId}">${currentFacility.facilityName?default(currentFacility.facilityId)}</option>
                   <option value="${currentFacility.facilityId}">---</option>
@@ -75,7 +75,7 @@ under the License.
           </@field>
           <@field type="generic" label="${uiLabelMap.AccountingBillingAccount}">
               <#if billingAccountList?has_content>
-                <select name='billingAccountId'>
+                <select name="billingAccountId">
                   <#if currentAccount??>
                     <option value="${currentAccount.billingAccountId}">${currentAccount.billingAccountId}: ${currentAccount.description!}</option>
                     <option value="${currentAccount.billingAccountId}">---</option>
@@ -91,7 +91,7 @@ under the License.
           </@field>
           <@field type="generic" label="${uiLabelMap.FormFieldTitle_paymentMethodId}">
               <#if creditCardList?? || eftAccountList??>
-                <select name='paymentMethodId'>
+                <select name="paymentMethodId">
                   <#if currentCreditCard??>
                     <option value="${currentCreditCard.paymentMethodId}">CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(currentCreditCard)}</option>
                   </#if>
@@ -119,7 +119,7 @@ under the License.
               </#if>
           </@field>
           <@field type="generic" label="${uiLabelMap.OrderReturnNeedsAutoReceive}">
-              <select name='needsInventoryReceive'>
+              <select name="needsInventoryReceive">
                 <#if needsInventoryReceive??>
                   <#if "Y" == needsInventoryReceive>
                     <option selected="selected" value="${needsInventoryReceive}">${uiLabelMap.CommonYes}</option>

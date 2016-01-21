@@ -155,7 +155,7 @@ document.lookupinventory.productId.focus();
               <@td>${MrpEventType.get("description",locale)}</@td>
               <@td>&nbsp;</@td>
               <@td>${inven.eventName!}</@td>
-              <@td><font <#if inven.isLate?default("N") == "Y">color='red'</#if>>${inven.getString("eventDate")}</font></@td>
+              <@td><font<#if inven.isLate?default("N") == "Y"> color="red"</#if>>${inven.getString("eventDate")}</font></@td>
               <@td>&nbsp;</@td>
               <@td align="right">${inven.getString("quantity")}</@td>
               <@td align="right">${quantityAvailableAtDate!}</@td>

@@ -24,15 +24,15 @@ under the License.
     <#-- When creating a new contact mech, first select the type, then actually create -->
     <#if !requestParameters.preContactMechTypeId?? && !preContactMechTypeId??>
     <@heading>${uiLabelMap.PartyCreateNewContactInfo}</@heading>
-    <form method="post" action='<@ofbizUrl>editcontactmechnosave</@ofbizUrl>' name="createcontactmechform">
+    <form method="post" action="<@ofbizUrl>editcontactmechnosave</@ofbizUrl>" name="createcontactmechform">
       <div>
       <@table width="90%" border="0" cellpadding="2" cellspacing="0">
         <@tr>
           <@td>${uiLabelMap.PartySelectContactType}:</@td>
           <@td>
-            <select name="preContactMechTypeId" class='selectBox'>
+            <select name="preContactMechTypeId" class="selectBox">
               <#list contactMechTypes as contactMechType>
-                <option value='${contactMechType.contactMechTypeId}'>${contactMechType.get("description",locale)}</option>
+                <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
             </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="button">${uiLabelMap.CommonCreate}</a>
           </@td>
@@ -58,7 +58,7 @@ under the License.
     <@table width="90%" border="0" cellpadding="2" cellspacing="0">
   
     <#if !contactMech??>
-        <form method="post" action='<@ofbizUrl>${reqName}</@ofbizUrl>' name="editcontactmechform" id="editcontactmechform">
+        <form method="post" action="<@ofbizUrl>${reqName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
         <div>
           <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />
           <#if contactMechPurposeType??>
@@ -101,14 +101,14 @@ under the License.
               <#if purposeTypes?has_content>
               <@tr>
                 <@td>
-                  <form method="post" action='<@ofbizUrl>createPartyContactMechPurpose</@ofbizUrl>' name='newpurposeform'>
+                  <form method="post" action="<@ofbizUrl>createPartyContactMechPurpose</@ofbizUrl>" name="newpurposeform">
                     <div>
                     <input type="hidden" name="contactMechId" value="${contactMechId}"/>
                     <input type="hidden" name="useValues" value="true"/>
-                      <select name='contactMechPurposeTypeId' class='selectBox'>
+                      <select name="contactMechPurposeTypeId" class="selectBox">
                         <option></option>
                         <#list purposeTypes as contactMechPurposeType>
-                          <option value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.get("description",locale)}</option>
+                          <option value="${contactMechPurposeType.contactMechPurposeTypeId}">${contactMechPurposeType.get("description",locale)}</option>
                         </#list>
                       </select>
                       </div>
@@ -120,7 +120,7 @@ under the License.
             </@table>
           </@td>
         </@tr>
-        <form method="post" action='<@ofbizUrl>${reqName}</@ofbizUrl>' name="editcontactmechform" id="editcontactmechform">
+        <form method="post" action="<@ofbizUrl>${reqName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
           <div>
           <input type="hidden" name="contactMechId" value="${contactMechId}" />
           <input type="hidden" name="contactMechTypeId" value="${contactMechTypeId}" />
@@ -131,35 +131,35 @@ under the License.
         <@td align="right" valign="top">${uiLabelMap.PartyToName}</@td>
         <@td>&nbsp;</@td>
         <@td>
-          <input type="text" class='inputBox' size="30" maxlength="60" name="toName" value="${postalAddressData.toName!}" />
+          <input type="text" class="inputBox" size="30" maxlength="60" name="toName" value="${postalAddressData.toName!}" />
         </@td>
       </@tr>
       <@tr>
         <@td align="right" valign="top">${uiLabelMap.PartyAttentionName}</@td>
         <@td>&nbsp;</@td>
         <@td>
-          <input type="text" class='inputBox' size="30" maxlength="60" name="attnName" value="${postalAddressData.attnName!}" />
+          <input type="text" class="inputBox" size="30" maxlength="60" name="attnName" value="${postalAddressData.attnName!}" />
         </@td>
       </@tr>
       <@tr>
         <@td align="right" valign="top">${uiLabelMap.PartyAddressLine1}</@td>
         <@td>&nbsp;</@td>
         <@td>
-          <input type="text" class='inputBox' size="30" maxlength="30" name="address1" value="${postalAddressData.address1!}" />
+          <input type="text" class="inputBox" size="30" maxlength="30" name="address1" value="${postalAddressData.address1!}" />
         *</@td>
       </@tr>
       <@tr>
         <@td align="right" valign="top">${uiLabelMap.PartyAddressLine2}</@td>
         <@td>&nbsp;</@td>
         <@td>
-            <input type="text" class='inputBox' size="30" maxlength="30" name="address2" value="${postalAddressData.address2!}" />
+            <input type="text" class="inputBox" size="30" maxlength="30" name="address2" value="${postalAddressData.address2!}" />
         </@td>
       </@tr>
       <@tr>
         <@td align="right" valign="top">${uiLabelMap.PartyCity}</@td>
         <@td>&nbsp;</@td>
         <@td>
-            <input type="text" class='inputBox' size="30" maxlength="30" name="city" value="${postalAddressData.city!}" />
+            <input type="text" class="inputBox" size="30" maxlength="30" name="city" value="${postalAddressData.city!}" />
         *</@td>
       </@tr>
       <@tr>
@@ -174,7 +174,7 @@ under the License.
         <@td align="right" valign="top">${uiLabelMap.PartyZipCode}</@td>
         <@td>&nbsp;</@td>
         <@td>
-          <input type="text" class='inputBox' size="12" maxlength="10" name="postalCode" value="${postalAddressData.postalCode!}" />
+          <input type="text" class="inputBox" size="12" maxlength="10" name="postalCode" value="${postalAddressData.postalCode!}" />
         *</@td>
       </@tr>
       <@tr>   
@@ -200,10 +200,10 @@ under the License.
         <@td align="right" valign="top">${uiLabelMap.PartyPhoneNumber}</@td>
         <@td>&nbsp;</@td>
         <@td>
-          <input type="text" class='inputBox' size="4" maxlength="10" name="countryCode" value="${telecomNumberData.countryCode!}" />
-          -&nbsp;<input type="text" class='inputBox' size="4" maxlength="10" name="areaCode" value="${telecomNumberData.areaCode!}" />
-          -&nbsp;<input type="text" class='inputBox' size="15" maxlength="15" name="contactNumber" value="${telecomNumberData.contactNumber!}" />
-          &nbsp;${uiLabelMap.PartyExtension}&nbsp;<input type="text" class='inputBox' size="6" maxlength="10" name="extension" value="${partyContactMechData.extension!}" />
+          <input type="text" class="inputBox" size="4" maxlength="10" name="countryCode" value="${telecomNumberData.countryCode!}" />
+          -&nbsp;<input type="text" class="inputBox" size="4" maxlength="10" name="areaCode" value="${telecomNumberData.areaCode!}" />
+          -&nbsp;<input type="text" class="inputBox" size="15" maxlength="15" name="contactNumber" value="${telecomNumberData.contactNumber!}" />
+          &nbsp;${uiLabelMap.PartyExtension}&nbsp;<input type="text" class="inputBox" size="6" maxlength="10" name="extension" value="${partyContactMechData.extension!}" />
         </@td>
       </@tr>
       <@tr>
@@ -216,7 +216,7 @@ under the License.
         <@td align="right" valign="top">${uiLabelMap.PartyEmailAddress}</@td>
         <@td>&nbsp;</@td>
         <@td>
-          <input type="text" class='inputBox' size="60" maxlength="255" name="emailAddress" value="<#if tryEntity>${contactMech.infoString!}<#else>${requestParameters.emailAddress!}</#if>" />
+          <input type="text" class="inputBox" size="60" maxlength="255" name="emailAddress" value="<#if tryEntity>${contactMech.infoString!}<#else>${requestParameters.emailAddress!}</#if>" />
         *</@td>
       </@tr>
     <#else>
@@ -224,7 +224,7 @@ under the License.
         <@td align="right" valign="top">${contactMechType.get("description",locale)!}</@td>
         <@td>&nbsp;</@td>
         <@td>
-            <input type="text" class='inputBox' size="60" maxlength="255" name="infoString" value="${contactMechData.infoString!}" />
+            <input type="text" class="inputBox" size="60" maxlength="255" name="infoString" value="${contactMechData.infoString!}" />
         *</@td>
       </@tr>
     </#if>
@@ -232,7 +232,7 @@ under the License.
         <@td align="right" valign="top">${uiLabelMap.PartyAllowSolicitation}?</@td>
         <@td>&nbsp;</@td>
         <@td>
-          <select name="allowSolicitation" class='selectBox'>
+          <select name="allowSolicitation" class="selectBox">
             <#if (((partyContactMechData.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
             <#if (((partyContactMechData.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
             <option></option>

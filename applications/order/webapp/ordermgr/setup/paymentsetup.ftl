@@ -101,7 +101,7 @@ under the License.
                   <#else>
                     <select name="webSiteId">
                       <#list webSites as nextWebSite>
-                        <option value='${nextWebSite.webSiteId}'>${nextWebSite.siteName}</option>
+                        <option value="${nextWebSite.webSiteId}">${nextWebSite.siteName}</option>
                       </#list>
                     </select>
                   </#if>
@@ -115,7 +115,7 @@ under the License.
                   <#else>
                     <select name="paymentMethodTypeId">
                       <#list paymentMethodTypes as nextPayType>
-                        <option value='${nextPayType.paymentMethodTypeId}'>${nextPayType.description}</option>
+                        <option value="${nextPayType.paymentMethodTypeId}">${nextPayType.description}</option>
                       </#list>
                     </select>
                   </#if>

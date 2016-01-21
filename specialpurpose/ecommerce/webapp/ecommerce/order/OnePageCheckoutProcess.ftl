@@ -197,7 +197,7 @@ under the License.
                             </label>
                             <select id="shipToStateProvinceGeoId" name="shipToStateProvinceGeoId">
                               <#if shipToStateProvinceGeoId?has_content>
-                                <option value='${shipToStateProvinceGeoId!}'>${shipToStateProvinceGeo?default(shipToStateProvinceGeoId!)}</option>
+                                <option value="${shipToStateProvinceGeoId!}">${shipToStateProvinceGeo?default(shipToStateProvinceGeoId!)}</option>
                               <#else>
                                 <option value="_NA_">${uiLabelMap.PartyNoState}</option>
                               </#if>
@@ -283,7 +283,7 @@ under the License.
           <div id="editBillingPanel" class="screenlet-body" style="display: none;">
             <form id="billingForm" class="theform" action="<@ofbizUrl></@ofbizUrl>" method="post">
               <fieldset class="col">
-                  <input type="hidden" id ="billToContactMechId" name="billToContactMechId" value="${billToContactMechId!}" />
+                  <input type="hidden" id="billToContactMechId" name="billToContactMechId" value="${billToContactMechId!}" />
                   <input type="hidden" id="shipToContactMechIdInBillingForm" name="shipToContactMechId" value="${shipToContactMechId!}" />
                   <input type="hidden" id="paymentMethodId" name="paymentMethodId" value="${paymentMethodId!}" />
                   <input type="hidden" id="paymentMethodTypeId" name="paymentMethodTypeId" value="${paymentMethodTypeId?default("CREDIT_CARD")}" />
@@ -445,7 +445,7 @@ under the License.
                               </label>
                               <select name="billToCountryGeoId" id="billToCountryGeoId">
                                 <#if billToCountryGeoId??>
-                                  <option value='${billToCountryGeoId!}'>${billToCountryProvinceGeo?default(billToCountryGeoId!)}</option>
+                                  <option value="${billToCountryGeoId!}">${billToCountryProvinceGeo?default(billToCountryGeoId!)}</option>
                                 </#if>
                                 ${screens.render("component://common/widget/CommonScreens.xml#countries")}
                               </select>
@@ -456,7 +456,7 @@ under the License.
                               </label>
                               <select id="billToStateProvinceGeoId" name="billToStateProvinceGeoId">
                                 <#if billToStateProvinceGeoId?has_content>
-                                  <option value='${billToStateProvinceGeoId!}'>${billToStateProvinceGeo?default(billToStateProvinceGeoId!)}</option>
+                                  <option value="${billToStateProvinceGeoId!}">${billToStateProvinceGeo?default(billToStateProvinceGeoId!)}</option>
                                 <#else>
                                   <option value="_NA_">${uiLabelMap.PartyNoState}</option>
                                 </#if>

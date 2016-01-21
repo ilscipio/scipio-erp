@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.ProductAddProductFeatureInBulk} ${uiLabelMap.CommonFor} ${featureCategory.description}">
-      <form method='post' action='<@ofbizUrl>BulkAddProductFeatures</@ofbizUrl>' name="selectAllForm">
+      <form method="post" action="<@ofbizUrl>BulkAddProductFeatures</@ofbizUrl>" name="selectAllForm">
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <input type="hidden" name="_checkGlobalScope" value="N" />
         <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
@@ -35,14 +35,14 @@ under the License.
         <#list 0..featureNum-1 as feature>
           <@tr id="productFeatureTypeId_tableRow_${feature_index}" valign="middle">
               <@td><input type="text" size="15" name="description_o_${feature_index}" /></@td>
-              <@td><select name='productFeatureTypeId_o_${feature_index}' size="1">
+              <@td><select name="productFeatureTypeId_o_${feature_index}" size="1">
                   <#list productFeatureTypes as productFeatureType>
-                  <option value='${productFeatureType.productFeatureTypeId}'>${productFeatureType.get("description",locale)!}</option>
+                  <option value="${productFeatureType.productFeatureTypeId}">${productFeatureType.get("description",locale)!}</option>
                   </#list>
                   </select>
                   <input name="productFeatureCategoryId_o_${feature_index}" type="hidden" value="${productFeatureCategoryId}" />
               </@td>
-              <@td><input type="text" size="5" name="defaultSequenceNum_o_${feature_index}"" /></@td>
+              <@td><input type="text" size="5" name="defaultSequenceNum_o_${feature_index}" /></@td>
               <@td><input type="text" size="5" name="idCode_o_${feature_index}" /></@td>
               <@td align="right"><input type="checkbox" name="_rowSubmit_o_${feature_index}" value="Y" checked="checked" onclick="javascript:checkToggle(this, 'selectAllForm');highlightRow(this,'productFeatureTypeId_tableRow_${feature_index}');" /></@td>
           </@tr>

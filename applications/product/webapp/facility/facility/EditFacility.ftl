@@ -35,10 +35,10 @@ under the License.
 
   <@field type="generic" label="${uiLabelMap.ProductFacilityTypeId}">
       <select name="facilityTypeId">
-        <option selected="selected" value='${facilityType.facilityTypeId!}'>${facilityType.get("description",locale)!}</option>
-        <option value='${facilityType.facilityTypeId!}'>----</option>
+        <option selected="selected" value="${facilityType.facilityTypeId!}">${facilityType.get("description",locale)!}</option>
+        <option value="${facilityType.facilityTypeId!}">----</option>
         <#list facilityTypes as nextFacilityType>
-          <option value='${nextFacilityType.facilityTypeId!}'>${nextFacilityType.get("description",locale)!}</option>
+          <option value="${nextFacilityType.facilityTypeId!}">${nextFacilityType.get("description",locale)!}</option>
         </#list>
       </select>
   </@field>
@@ -50,9 +50,9 @@ under the License.
   </@field>
   <@field type="generic" label="${uiLabelMap.ProductFacilityDefaultWeightUnit}">
       <select name="defaultWeightUomId">
-          <option value=''>${uiLabelMap.CommonNone}</option>
+          <option value="">${uiLabelMap.CommonNone}</option>
           <#list weightUomList as uom>
-            <option value='${uom.uomId}'
+            <option value="${uom.uomId}"
                <#if (facility.defaultWeightUomId?has_content) && (uom.uomId == facility.defaultWeightUomId)>
                selected="selected"
                </#if>
@@ -63,7 +63,7 @@ under the License.
   <@field type="generic" label="${uiLabelMap.ProductFacilityDefaultInventoryItemType}">
       <select name="defaultInventoryItemTypeId">
           <#list inventoryItemTypes as nextInventoryItemType>
-            <option value='${nextInventoryItemType.inventoryItemTypeId}'
+            <option value="${nextInventoryItemType.inventoryItemTypeId}"
                <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
                selected="selected"
                </#if>
@@ -79,9 +79,9 @@ under the License.
   </@field>
   <@field type="generic" label="${uiLabelMap.ProductFacilityDefaultAreaUnit}">
       <select name="facilitySizeUomId">
-          <option value=''>${uiLabelMap.CommonNone}</option>
+          <option value="">${uiLabelMap.CommonNone}</option>
           <#list areaUomList as uom>
-            <option value='${uom.uomId}'
+            <option value="${uom.uomId}"
                <#if (facility.facilitySizeUomId?has_content) && (uom.uomId == facility.facilitySizeUomId)>
                selected="selected"
                </#if>

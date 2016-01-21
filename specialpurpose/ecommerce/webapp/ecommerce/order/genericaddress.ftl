@@ -93,7 +93,7 @@ under the License.
 <@tr>
   <@td width="26%" align="right" valign="middle">${uiLabelMap.PartyAllowSolicitation}?</@td>
   <@td width="74%">
-    <select name="allowSolicitation" class='selectBox' <#if requestParameters.useShipAddr??>disabled</#if>>
+    <select name="allowSolicitation" class="selectBox" <#if requestParameters.useShipAddr??>disabled</#if>>
       <#if (((parameters.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
       <#if (((parameters.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
       <option></option>

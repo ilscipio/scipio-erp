@@ -37,7 +37,7 @@ under the License.
 </#macro>
 <@section title="${uiLabelMap.ProductStockMovesNeeded}" menuContent=menuContent>
         <#if moveByOisgirInfoList?has_content || moveByPflInfoList?has_content>
-          <form method="post" action="<@ofbizUrl>processPhysicalStockMove</@ofbizUrl>" name='selectAllForm'>
+          <form method="post" action="<@ofbizUrl>processPhysicalStockMove</@ofbizUrl>" name="selectAllForm">
               <#-- general request fields -->
               <input type="hidden" name="facilityId" value="${facilityId!}" />
               <input type="hidden" name="_useRowSubmit" value="Y" />
@@ -149,7 +149,7 @@ under the License.
 </@section>      
       
 <@section title="${uiLabelMap.ProductQuickStockMove}">
-        <form method="post" action="<@ofbizUrl>processQuickStockMove</@ofbizUrl>" name='quickStockMove'>
+        <form method="post" action="<@ofbizUrl>processQuickStockMove</@ofbizUrl>" name="quickStockMove">
             <input type="hidden" name="facilityId" value="${facilityId!}" />
                 <@field type="generic" label="${uiLabelMap.ProductProduct}">
                     <@htmlTemplate.lookupField formName="quickStockMove" name="productId" id="productId" fieldFormName="LookupProduct"/>

@@ -62,7 +62,7 @@ under the License.
         <#-- Multi-Item Return Receiving -->
         <#if returnHeader?has_content>
           <@section>
-          <form method="post" action="<@ofbizUrl>receiveReturnedProduct</@ofbizUrl>" name='selectAllForm'>
+          <form method="post" action="<@ofbizUrl>receiveReturnedProduct</@ofbizUrl>" name="selectAllForm">
             <#-- general request fields -->
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}" />
             <input type="hidden" name="returnId" value="${requestParameters.returnId!}" />
@@ -115,7 +115,7 @@ under the License.
                             <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}" />
                             <@td width="45%">
                                 ${returnItem.returnItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${externalKeyParam!}" target="catalog" class="${styles.link_nav_info_idname!}">${product.productId}&nbsp;-&nbsp;${product.internalName!}</a> : ${product.description!}
-                                <#if serializedInv?has_content><font color='red'>**${uiLabelMap.ProductSerializedInventoryFound}**</font></#if>
+                                <#if serializedInv?has_content><font color="red">**${uiLabelMap.ProductSerializedInventoryFound}**</font></#if>
                             </@td>
                           <#elseif orderItem?has_content>
                             <@td width="45%">
@@ -166,7 +166,7 @@ under the License.
                            <@td width='10%'>
                               <select name="inventoryItemTypeId_o_${rowCount}" size="1" id="inventoryItemTypeId_o_${rowCount}" onchange="javascript:setInventoryItemStatus(this,${rowCount});">
                                  <#list inventoryItemTypes as nextInventoryItemType>
-                                    <option value='${nextInventoryItemType.inventoryItemTypeId}'
+                                    <option value="${nextInventoryItemType.inventoryItemTypeId}"
                                  <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
                                     selected="selected"
                                   </#if>
@@ -176,7 +176,7 @@ under the License.
                           </@td>
                           <@td width="35%">
                             <span>${uiLabelMap.ProductInitialInventoryItemStatus}:</span>&nbsp;&nbsp;
-                            <select name="statusId_o_${rowCount}" size='1' id = "statusId_o_${rowCount}">
+                            <select name="statusId_o_${rowCount}" size="1" id="statusId_o_${rowCount}">
                               <option value="INV_RETURNED">${uiLabelMap.ProductReturned}</option>
                               <option value="INV_AVAILABLE">${uiLabelMap.ProductAvailable}</option>
                               <option value="INV_NS_DEFECTIVE" <#if returnItem.returnReasonId?default("") == "RTN_DEFECTIVE_ITEM">Selected</#if>>${uiLabelMap.ProductDefective}</option>

@@ -38,7 +38,7 @@ under the License.
             <select name="agreementId">
             <option value="">${uiLabelMap.CommonNone}</option>
             <#list agreements as agreement>
-            <option value='${agreement.agreementId}'>${agreement.agreementId} - ${agreement.description!}</option>
+            <option value="${agreement.agreementId}">${agreement.agreementId} - ${agreement.description!}</option>
             </#list>
             </select>
       </@field>
@@ -48,7 +48,7 @@ under the License.
               <select name="agreementId">
               <option value="">${uiLabelMap.CommonNone}</option>
               <#list agreementRoles as agreementRole>
-                  <option value='${agreementRole.agreementId!}'>${agreementRole.agreementId!} - ${agreementRole.roleTypeId!}</option>
+                  <option value="${agreementRole.agreementId!}">${agreementRole.agreementId!} - ${agreementRole.roleTypeId!}</option>
               </#list>
               </select>
         </@field>
@@ -66,7 +66,7 @@ under the License.
 
     <#if cart.getOrderType() != "PURCHASE_ORDER">
       <@field type="generic" label="${uiLabelMap.OrderPONumber}">
-          <input type="text" class='inputBox' name="correspondingPoId" size="15" />
+          <input type="text" class="inputBox" name="correspondingPoId" size="15" />
       </@field>
     </#if>
 
@@ -82,7 +82,7 @@ under the License.
 
       <@field type="generic" label="${uiLabelMap.ProductChooseCatalog}">
           <#if catalogCol?has_content>
-          <select name='CURRENT_CATALOG_ID'>
+          <select name="CURRENT_CATALOG_ID">
             <#list catalogCol! as catalogId>
               <#assign thisCatalogName = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogName(request, catalogId)>
               <option value="${catalogId}" <#if currentCatalogId?default('') == catalogId>selected="selected"</#if> >${thisCatalogName}</option>

@@ -43,10 +43,10 @@ under the License.
               <#if catalogCol?has_content && (catalogCol?size > 1)>
                 <@tr>
                   <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.ProductChooseCatalog}</@td>
-                  <@td><select name='prodCatalogId'>
+                  <@td><select name="prodCatalogId">
                     <#list catalogCol as catalogId>
                       <#assign thisCatalogName = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogName(request, catalogId)>
-                      <option value='${catalogId}'>${thisCatalogName}</option>
+                      <option value="${catalogId}">${thisCatalogName}</option>
                     </#list>
                   </select>
                   </@td>

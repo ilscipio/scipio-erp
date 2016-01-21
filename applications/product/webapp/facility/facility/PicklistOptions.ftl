@@ -43,7 +43,7 @@ under the License.
         <input type="text" size="4" name="maxNumberOfOrders" value="50"/>    
     </@field>      
     <@field type="submitarea">
-      <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_select!}" align='right'/>
+      <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_select!}" align="right"/>
     </@field>
     </div>
   </form>
@@ -118,7 +118,7 @@ under the License.
                 
               <#assign viewGroupDetailForm>
                     <form name="viewGroupDetail_${pickMoveInfo_index}" action="<@ofbizUrl>PicklistOptions</@ofbizUrl>" method="post">
-                      <input type ="hidden" name="viewDetail" value= "${groupName!}"/>
+                      <input type="hidden" name="viewDetail" value="${groupName!}"/>
                       <input type="hidden" name="groupByShippingMethod" value="${requestParameters.groupByShippingMethod!}"/>
                       <input type="hidden" name="groupByWarehouseArea" value="${requestParameters.groupByWarehouseArea!}"/>
                       <input type="hidden" name="groupByNoOfOrderItems" value="${requestParameters.groupByNoOfOrderItems!}"/>

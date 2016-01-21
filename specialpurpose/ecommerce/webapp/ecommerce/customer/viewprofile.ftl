@@ -205,9 +205,9 @@ under the License.
               <a href="<@ofbizUrl>editcontactmech?contactMechId=${contactMech.contactMechId}</@ofbizUrl>" class="button">${uiLabelMap.CommonUpdate}</a>
             </@td>
             <@td align="right" valign="top">
-              <form name= "deleteContactMech_${contactMech.contactMechId}" method= "post" action= "<@ofbizUrl>deleteContactMech</@ofbizUrl>">
+              <form name="deleteContactMech_${contactMech.contactMechId}" method="post" action="<@ofbizUrl>deleteContactMech</@ofbizUrl>">
                 <div>
-                <input type= "hidden" name= "contactMechId" value= "${contactMech.contactMechId}"/>
+                <input type="hidden" name="contactMechId" value="${contactMech.contactMechId}"/>
                 <a href="javascript:document.deleteContactMech_${contactMech.contactMechId}.submit()" class="button">${uiLabelMap.CommonExpire}</a>
               </div>
               </form>

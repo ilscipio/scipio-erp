@@ -101,7 +101,7 @@ under the License.
         <#else>
             <#assign description = enum.getString("description")/>
         </#if>
-        <option value='${enum.enumId}' ${selected}>${description}</option>
+        <option value="${enum.enumId}" ${selected}>${description}</option>
     </#list>
     </select>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "GEO">
@@ -119,14 +119,14 @@ under the License.
         <#else>
             <#assign description = geo.getString("geoName")/>
         </#if>
-        <option value='${geo.geoId}' ${selected}>${description}</option>
+        <option value="${geo.geoId}" ${selected}>${description}</option>
     </#list>
     </select>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "STATE_PROVINCE">
     <select name="${questionFieldName}">
     <#assign states = Static["org.ofbiz.common.CommonWorkers"].getStateList(delegator)>
     <#list states as state>
-        <option value='${state.geoId}'>${state.geoName?default(state.geoId)}</option>
+        <option value="${state.geoId}">${state.geoName?default(state.geoId)}</option>
     </#list>
     </select>
   <#elseif surveyQuestionAndAppl.surveyQuestionTypeId == "COUNTRY">

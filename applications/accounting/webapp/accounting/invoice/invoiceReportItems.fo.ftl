@@ -29,7 +29,7 @@ under the License.
               <fo:block font-weight="bold">${uiLabelMap.AccountingOrderNr}:</fo:block>
             </fo:table-cell>
             <fo:table-cell>
-              <fo:block font-size ="10pt" font-weight="bold"><#list orders as order>${order} </#list></fo:block>
+              <fo:block font-size="10pt" font-weight="bold"><#list orders as order>${order} </#list></fo:block>
             </fo:table-cell>
           </fo:table-row>
         </fo:table-body>
@@ -54,7 +54,7 @@ under the License.
           <#assign termType = term.getRelatedOne("TermType", false)/>
           <fo:table-row>
             <fo:table-cell>
-              <fo:block font-size ="10pt" font-weight="bold">${termType.description!} ${term.description!} ${term.termDays!} ${term.textValue!}</fo:block>
+              <fo:block font-size="10pt" font-weight="bold">${termType.description!} ${term.description!} ${term.termDays!} ${term.textValue!}</fo:block>
             </fo:table-cell>
           </fo:table-row>
           </#list>

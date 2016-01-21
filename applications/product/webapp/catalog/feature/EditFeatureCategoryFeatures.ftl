@@ -49,7 +49,7 @@ under the License.
           <@productFeatureMaintNav />
         </#if>
          
-      <form method='post' action='<@ofbizUrl>UpdateProductFeatureInCategory</@ofbizUrl>' name="selectAllForm">
+      <form method="post" action="<@ofbizUrl>UpdateProductFeatureInCategory</@ofbizUrl>" name="selectAllForm">
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <input type="hidden" name="_checkGlobalScope" value="N" />
         <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
@@ -78,23 +78,23 @@ under the License.
               <@td><input type="hidden" name="productFeatureId_o_${rowCount}" value="${productFeature.productFeatureId}" />
               <a href="<@ofbizUrl>EditFeature?productFeatureId=${productFeature.productFeatureId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${productFeature.productFeatureId}</a></@td>
               <@td><input type="text" size="15" name="description_o_${rowCount}" value="${productFeature.description}" /></@td>
-              <@td><select name='productFeatureTypeId_o_${rowCount}' size="1">
+              <@td><select name="productFeatureTypeId_o_${rowCount}" size="1">
                 <#if productFeature.productFeatureTypeId?has_content>
-                  <option value='${productFeature.productFeatureTypeId}'><#if curProductFeatureType??>${curProductFeatureType.get("description",locale)!}<#else> [${productFeature.productFeatureTypeId}]</#if></option>
-                  <option value='${productFeature.productFeatureTypeId}'>---</option>
+                  <option value="${productFeature.productFeatureTypeId}"><#if curProductFeatureType??>${curProductFeatureType.get("description",locale)!}<#else> [${productFeature.productFeatureTypeId}]</#if></option>
+                  <option value="${productFeature.productFeatureTypeId}">---</option>
                 </#if>
                 <#list productFeatureTypes as productFeatureType>
-                  <option value='${productFeatureType.productFeatureTypeId}'>${productFeatureType.get("description",locale)!}</option>
+                  <option value="${productFeatureType.productFeatureTypeId}">${productFeatureType.get("description",locale)!}</option>
                 </#list>
               </select></@td>
-              <@td><select name='productFeatureCategoryId_o_${rowCount}' size="1">
+              <@td><select name="productFeatureCategoryId_o_${rowCount}" size="1">
                 <#if productFeature.productFeatureCategoryId?has_content>
                   <#assign curProdFeatCat = productFeature.getRelatedOne("ProductFeatureCategory", false)>
-                  <option value='${productFeature.productFeatureCategoryId}'>${(curProdFeatCat.description)!} [${productFeature.productFeatureCategoryId}]</option>
-                  <option value='${productFeature.productFeatureCategoryId}'>---</option>
+                  <option value="${productFeature.productFeatureCategoryId}">${(curProdFeatCat.description)!} [${productFeature.productFeatureCategoryId}]</option>
+                  <option value="${productFeature.productFeatureCategoryId}">---</option>
                 </#if>
                 <#list productFeatureCategories as productFeatureCategory>
-                  <option value='${productFeatureCategory.productFeatureCategoryId}'>${productFeatureCategory.get("description",locale)!} [${productFeatureCategory.productFeatureCategoryId}]</option>
+                  <option value="${productFeatureCategory.productFeatureCategoryId}">${productFeatureCategory.get("description",locale)!} [${productFeatureCategory.productFeatureCategoryId}]</option>
                 </#list>
               </select></@td>
               <@td><input type="text" size="10" name="uomId_o_${rowCount}" value="${productFeature.uomId!}" /></@td>

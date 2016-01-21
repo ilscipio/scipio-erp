@@ -455,13 +455,13 @@ ${virtualJavaScript!}
             </#list>
               <input type="hidden" name="product_id" value="${product.productId}"/>
               <input type="hidden" name="add_product_id" value="${product.productId}"/>
-            <div id="addCart1" style="display:none;>
+            <div id="addCart1" style="display:none;">
               <span style="white-space: nowrap;"><b>${uiLabelMap.CommonQuantity}:</b></span>&nbsp;
               <input type="text" size="5" name="quantity" value="1"/>
               <a href="javascript:javascript:addItem();" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
               &nbsp;
             </div>
-            <div id="addCart2" style="display:block;>
+            <div id="addCart2" style="display:block;">
               <span style="white-space: nowrap;"><b>${uiLabelMap.CommonQuantity}:</b></span>&nbsp;
               <input type="text" size="5" value="1" disabled="disabled"/>
               <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${uiLabelMap.CommonPleaseSelectAllFeaturesFirst}");" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
@@ -561,7 +561,7 @@ ${virtualJavaScript!}
           <input type="hidden" name="productId" value="${product.productId}"/>
           <input type="hidden" name="product_id" value="${product.productId}"/>
           <input type="hidden" name="productStoreId" value="${productStoreId!}"/>
-          <input type="hidden" name="reservStart" value= ""/>
+          <input type="hidden" name="reservStart" value=""/>
           <select name="shoppingListId">
             <#if shoppingLists?has_content>
               <#list shoppingLists as shoppingList>
@@ -576,7 +576,7 @@ ${virtualJavaScript!}
               <@table type="fields"><@tr><@td>&nbsp;</@td><@td align="right">${uiLabelMap.CommonStartDate} (yyyy-mm-dd)</@td><@td><input type="text" size="10" name="reservStartStr" /></@td><@td>Number of&nbsp;days</@td><@td><input type="text" size="4" name="reservLength" /></@td><@td>&nbsp;</@td><@td align="right">Number of&nbsp;persons</@td><@td><input type="text" size="4" name="reservPersons" value="1" /></@td><@td align="right">Qty&nbsp;</@td><@td><input type="text" size="5" name="quantity" value="1" /></@td></@tr></@table>
           <#else>
               <input type="text" size="5" name="quantity" value="1"/>
-              <input type="hidden" name="reservStartStr" value= ""/>
+              <input type="hidden" name="reservStartStr" value=""/>
           </#if>
           <a href="javascript:addShoplistSubmit();" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.OrderAddToShoppingList}</a>
         </form>

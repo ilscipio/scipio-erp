@@ -47,7 +47,7 @@ under the License.
       <label for="billToCountryGeoId">${uiLabelMap.CommonCountry}*</label>
       <select name="countryGeoId" id="billToCountryGeoId" class="required">
         <#if billToCountryGeoId??>
-          <option value='${billToCountryGeoId!}'>${billToCountryProvinceGeo!(billToCountryGeoId!)}</option>
+          <option value="${billToCountryGeoId!}">${billToCountryProvinceGeo!(billToCountryGeoId!)}</option>
         </#if>
         ${screens.render("component://common/widget/CommonScreens.xml#countries")}
       </select>
@@ -57,7 +57,7 @@ under the License.
       <label for="billToStateProvinceGeoId">${uiLabelMap.PartyState}*<span id="advice-required-billToStateProvinceGeoId" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span></label>
       <select name="stateProvinceGeoId" id="billToStateProvinceGeoId">
         <#if billToStateProvinceGeoId?has_content>
-          <option value='${billToStateProvinceGeoId!}'>${billToStateProvinceGeo!(billToStateProvinceGeoId!)}</option>
+          <option value="${billToStateProvinceGeoId!}">${billToStateProvinceGeo!(billToStateProvinceGeoId!)}</option>
         <#else>
           <option value="_NA_">${uiLabelMap.PartyNoState}</option>
         </#if>

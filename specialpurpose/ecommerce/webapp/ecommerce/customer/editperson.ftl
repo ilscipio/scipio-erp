@@ -49,37 +49,37 @@ under the License.
   <@tr>
     <@td align="right">${uiLabelMap.PartyFirstName}</@td>
       <@td>
-        <input type="text" class='inputBox' size="30" maxlength="30" name="firstName" value="${personData.firstName!}"/>
+        <input type="text" class="inputBox" size="30" maxlength="30" name="firstName" value="${personData.firstName!}"/>
       *</@td>
     </@tr>
     <@tr>
       <@td align="right">${uiLabelMap.PartyMiddleInitial}</@td>
       <@td>
-        <input type="text" class='inputBox' size="4" maxlength="4" name="middleName" value="${personData.middleName!}"/>
+        <input type="text" class="inputBox" size="4" maxlength="4" name="middleName" value="${personData.middleName!}"/>
       </@td>
     </@tr>
     <@tr>
       <@td align="right">${uiLabelMap.PartyLastName}</@td>
       <@td>
-        <input type="text" class='inputBox' size="30" maxlength="30" name="lastName" value="${personData.lastName!}"/>
+        <input type="text" class="inputBox" size="30" maxlength="30" name="lastName" value="${personData.lastName!}"/>
       *</@td>
     </@tr>
     <@tr>
       <@td align="right">${uiLabelMap.PartySuffix}</@td>
       <@td>
-        <input type="text" class='inputBox' size="10" maxlength="30" name="suffix" value="${personData.suffix!}"/>
+        <input type="text" class="inputBox" size="10" maxlength="30" name="suffix" value="${personData.suffix!}"/>
       </@td>
     </@tr>
     <@tr>
       <@td align="right">${uiLabelMap.PartyNickName}</@td>
       <@td>
-        <input type="text" class='inputBox' size="30" maxlength="60" name="nickname" value="${personData.nickname!}"/>
+        <input type="text" class="inputBox" size="30" maxlength="60" name="nickname" value="${personData.nickname!}"/>
       </@td>
     </@tr>
     <@tr>
       <@td align="right">${uiLabelMap.PartyGender}</@td>
       <@td>
-        <select name="gender" class='selectBox'>
+        <select name="gender" class="selectBox">
           <#if personData.gender?has_content >
             <option value="${personData.gender}">
                 <#if personData.gender == "M" >${uiLabelMap.CommonMale}</#if>
@@ -97,33 +97,33 @@ under the License.
     <@tr>
       <@td align="right">${uiLabelMap.PartyBirthDate}</@td>
       <@td>
-        <input type="text" class='inputBox' size="11" maxlength="20" name="birthDate" value="${(personData.birthDate.toString())!}"/>
+        <input type="text" class="inputBox" size="11" maxlength="20" name="birthDate" value="${(personData.birthDate.toString())!}"/>
         <div>${uiLabelMap.CommonFormatDate}</div>
       </@td>
     </@tr>
     <@tr>
       <@td align="right">${uiLabelMap.PartyHeight}</@td>
       <@td>
-        <input type="text" class='inputBox' size="30" maxlength="60" name="height" value="${personData.height!}"/>
+        <input type="text" class="inputBox" size="30" maxlength="60" name="height" value="${personData.height!}"/>
       </@td>
     </@tr>
     <@tr>
       <@td align="right">${uiLabelMap.PartyWeight}</@td>
       <@td>
-        <input type="text" class='inputBox' size="30" maxlength="60" name="weight" value="${personData.weight!}"/>
+        <input type="text" class="inputBox" size="30" maxlength="60" name="weight" value="${personData.weight!}"/>
       </@td>
     </@tr>
 
     <@tr>
       <@td align="right">${uiLabelMap.PartyMaidenName}</@td>
       <@td>
-        <input type="text" class='inputBox' size="30" maxlength="60" name="mothersMaidenName" value="${personData.mothersMaidenName!}"/>
+        <input type="text" class="inputBox" size="30" maxlength="60" name="mothersMaidenName" value="${personData.mothersMaidenName!}"/>
       </@td>
     </@tr>
     <@tr>
       <@td align="right">${uiLabelMap.PartyMaritalStatus}</@td>
       <@td>
-        <select name="maritalStatus" class='selectBox'>
+        <select name="maritalStatus" class="selectBox">
           <#if personData.maritalStatus?has_content>
              <option value="${personData.maritalStatus}">
                <#if personData.maritalStatus == "S">${uiLabelMap.PartySingle}</#if>
@@ -143,32 +143,32 @@ under the License.
     <@tr>
       <@td align="right">${uiLabelMap.PartySocialSecurityNumber}</@td>
       <@td>
-        <input type="text" class='inputBox' size="30" maxlength="60" name="socialSecurityNumber" value="${personData.socialSecurityNumber!}"/>
+        <input type="text" class="inputBox" size="30" maxlength="60" name="socialSecurityNumber" value="${personData.socialSecurityNumber!}"/>
       </@td>
     </@tr>
     <@tr>
       <@td align="right">${uiLabelMap.PartyPassportNumber}</@td>
       <@td>
-        <input type="text" class='inputBox' size="30" maxlength="60" name="passportNumber" value="${personData.passportNumber!}"/>
+        <input type="text" class="inputBox" size="30" maxlength="60" name="passportNumber" value="${personData.passportNumber!}"/>
       </@td>
     </@tr>
     <@tr>
       <@td align="right">${uiLabelMap.PartyPassportExpireDate}</@td>
       <@td>
-        <input type="text" class='inputBox' size="11" maxlength="20" name="passportExpireDate" value="${personData.passportExpireDate!}"/>
+        <input type="text" class="inputBox" size="11" maxlength="20" name="passportExpireDate" value="${personData.passportExpireDate!}"/>
         <div>${uiLabelMap.CommonFormatDate}</div>
       </@td>
     </@tr>
     <@tr>
       <@td align="right">${uiLabelMap.PartyTotalYearsWorkExperience}</@td>
       <@td>
-        <input type="text" class='inputBox' size="30" maxlength="60" name="totalYearsWorkExperience" value="${personData.totalYearsWorkExperience!}"/>
+        <input type="text" class="inputBox" size="30" maxlength="60" name="totalYearsWorkExperience" value="${personData.totalYearsWorkExperience!}"/>
       </@td>
     </@tr>
     <@tr>
       <@td align="right">${uiLabelMap.CommonComment}</@td>
       <@td>
-        <input type="text" class='inputBox' size="30" maxlength="60" name="comments" value="${personData.comments!}"/>
+        <input type="text" class="inputBox" size="30" maxlength="60" name="comments" value="${personData.comments!}"/>
       </@td>
     </@tr>
 </@table>

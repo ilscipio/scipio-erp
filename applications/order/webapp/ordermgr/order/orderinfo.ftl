@@ -165,7 +165,7 @@ under the License.
       <@td>${uiLabelMap.FormFieldTitle_priority}</@td>
       <@td colspan="3">
          <form name="setOrderReservationPriority" method="post" action="<@ofbizUrl>setOrderReservationPriority</@ofbizUrl>">
-         <input type = "hidden" name="orderId" value="${orderId}"/>
+         <input type="hidden" name="orderId" value="${orderId}"/>
         <select name="priority">
           <option value="1"<#if (orderHeader.priority)! == "1"> selected="selected"</#if>>${uiLabelMap.CommonHigh}</option>
           <option value="2"<#if (orderHeader.priority)! == "2"> selected="selected"<#elseif !(orderHeader.priority)?has_content> selected="selected"</#if>>${uiLabelMap.CommonNormal}</option>
@@ -180,7 +180,7 @@ under the License.
       <@td>${uiLabelMap.AccountingInvoicePerShipment}</@td>
       <@td colspan="3">
          <form name="setInvoicePerShipment" method="post" action="<@ofbizUrl>setInvoicePerShipment</@ofbizUrl>">
-         <input type = "hidden" name="orderId" value="${orderId}"/>
+         <input type="hidden" name="orderId" value="${orderId}"/>
         <select name="invoicePerShipment">
           <option value="Y" <#if (orderHeader.invoicePerShipment)! == "Y">selected="selected" </#if>>${uiLabelMap.CommonYes}</option>
           <option value="N" <#if (orderHeader.invoicePerShipment)! == "N">selected="selected" </#if>>${uiLabelMap.CommonNo}</option>

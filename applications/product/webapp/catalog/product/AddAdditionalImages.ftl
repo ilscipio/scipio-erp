@@ -68,7 +68,7 @@ under the License.
           <input type="submit" value="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_import!}" />
       </@field>
 
-  <div class="right" style='margin-top:-250px;'>
+  <div class="right" style="margin-top:-250px;">
     <a href="javascript:void(0);"><img id="detailImage" name="mainImage" vspace="5" hspace="5" width="150" height="150" style="margin-left:50px" src="" alt="" /></a>
     <input type="hidden" id="originalImage" name="originalImage" />
   </div>

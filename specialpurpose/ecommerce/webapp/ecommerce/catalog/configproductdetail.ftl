@@ -215,7 +215,7 @@ function getConfigDetails(event) {
               - if isSale show price with salePrice style and print "On Sale!"
       -->
       <#if totalPrice??>
-        <div>${uiLabelMap.ProductAggregatedPrice}: <span id='totalPrice' class='basePrice'><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
+        <div>${uiLabelMap.ProductAggregatedPrice}: <span id="totalPrice" class="basePrice"><@ofbizCurrency amount=totalPrice isoCode=totalPrice.currencyUsed/></span></div>
       <#else>
       <#if price.competitivePrice?? && price.price?? && price.price < price.competitivePrice>
         <div>${uiLabelMap.ProductCompareAtPrice}: <span class="basePrice"><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span></div>
@@ -315,10 +315,10 @@ function getConfigDetails(event) {
         <#-- check to see if introductionDate hasn't passed yet -->
         <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
           <p>&nbsp;</p>
-          <div class='tabletext' style='color: red;'>${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
+          <div class="tabletext" style="color: red;">${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
         <#-- check to see if salesDiscontinuationDate has passed -->
         <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)>
-          <div class='tabletext' style='color: red;'>${uiLabelMap.ProductProductNoLongerAvailable}.</div>
+          <div class="tabletext" style="color: red;">${uiLabelMap.ProductProductNoLongerAvailable}.</div>
         <#-- check to see if the product requires inventory check and has inventory -->
         <#else>
           <#if inStock>
@@ -421,7 +421,7 @@ function getConfigDetails(event) {
     </@td>
   </@tr>
 
-  <@tr><@td colspan="2"><hr class='sepbar'/></@td></@tr>
+  <@tr><@td colspan="2"><hr class="sepbar"/></@td></@tr>
 
   <#-- Any attributes/etc may go here -->
   <#-- Product Configurator -->
@@ -451,7 +451,7 @@ function getConfigDetails(event) {
                 <div>${StringUtil.wrapString(question.description!)}</div>
                 <#assign instructions = question.content.get("INSTRUCTIONS", "html")!>
                 <#if instructions?has_content>
-                  <a href="javascript:showErrorAlert("${uiLabelMap.CommonErrorMessage2}","${instructions}");" class="${styles.link_run_sys!} ${styles.action_view!}">Instructions</a>
+                  <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${instructions}');" class="${styles.link_run_sys!} ${styles.action_view!}">Instructions</a>
                 </#if>
                 <#assign image = question.content.get("IMAGE_URL", "url")!>
                 <#if image?string?has_content>
@@ -522,9 +522,9 @@ function getConfigDetails(event) {
                 </#list>
                 <#else>
                 <#-- And this is the select box implementation -->
-                <select name='${counter}'>
+                <select name="${counter}">
                 <#if !question.isMandatory()>
-                  <option value=''>---</option>
+                  <option value="">---</option>
                 </#if>
                 <#assign options = question.options>
                 <#assign optionCounter = 0>
@@ -537,7 +537,7 @@ function getConfigDetails(event) {
                   <#if option.isSelected()>
                     <#assign optionCounter = optionCounter + 1>
                   </#if>
-                  <option value='${optionCounter}' <#if option.isSelected()>selected="selected"</#if>>
+                  <option value="${optionCounter}" <#if option.isSelected()>selected="selected"</#if>>
                     ${option.description}&nbsp;
                     <#if (shownPrice > 0)>+<@ofbizCurrency amount=shownPrice isoCode=price.currencyUsed/>&nbsp;</#if>
                     <#if (shownPrice < 0)>-<@ofbizCurrency amount=(-1*shownPrice) isoCode=price.currencyUsed/>&nbsp;</#if>
@@ -556,7 +556,7 @@ function getConfigDetails(event) {
                     <#-- Render virtual compoennts -->
                     <#if option.hasVirtualComponent()>
                       <div>
-                        <input type="CHECKBOX" name="${counter}" id="${counter}_${optionCounter}" value="${optionCounter}" onclick="javascript:checkOptionVariants('${counter}_${optionCounter}');" />
+                        <input type="checkbox" name="${counter}" id="${counter}_${optionCounter}" value="${optionCounter}" onclick="javascript:checkOptionVariants('${counter}_${optionCounter}');" />
                         ${option.description} <#if !option.isAvailable()> (*)</#if>
                         <#assign components = option.getComponents()>
                         <#list components as component>
@@ -571,7 +571,7 @@ function getConfigDetails(event) {
                       </div>
                     <#else>
                     <div>
-                      <input type="CHECKBOX" name="${counter}" value="${optionCounter}" <#if option.isSelected()>checked="checked"</#if> />
+                      <input type="checkbox" name="${counter}" value="${optionCounter}" <#if option.isSelected()>checked="checked"</#if> />
                       ${option.description} +<@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if>
                     </div>
                     </#if>
@@ -599,7 +599,7 @@ function getConfigDetails(event) {
       </#if>
     </@td>
   </@tr>
-  <@tr><@td colspan="2"><hr class='sepbar'/></@td></@tr>
+  <@tr><@td colspan="2"><hr class="sepbar"/></@td></@tr>
   <#if productReviews?has_content>
     <#list productReviews as productReview>
       <#assign postedUserLogin = productReview.getRelatedOne("UserLogin", false)>

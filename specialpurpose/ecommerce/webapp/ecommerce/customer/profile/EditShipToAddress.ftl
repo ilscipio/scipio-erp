@@ -57,7 +57,7 @@ under the License.
       <label for="shipToStateProvinceGeoId">${uiLabelMap.PartyState}*<span id="advice-required-shipToStateProvinceGeoId" style="display: none" class="errorMessage">(${uiLabelMap.CommonRequired})</span></label>
       <select name="stateProvinceGeoId" id="shipToStateProvinceGeoId">
         <#if shipToStateProvinceGeoId?has_content>
-          <option value='${shipToStateProvinceGeoId!}'>${shipToStateProvinceGeo!(shipToStateProvinceGeoId!)}</option>
+          <option value="${shipToStateProvinceGeoId!}">${shipToStateProvinceGeo!(shipToStateProvinceGeoId!)}</option>
         <#else>
           <option value="_NA_">${uiLabelMap.PartyNoState}</option>
         </#if>

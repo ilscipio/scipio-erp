@@ -52,7 +52,7 @@ under the License.
     </span>
     <span>
       <label for="suffix">${uiLabelMap.PartySuffix}</label>
-      <input type="text" class='inputBox' name="suffix" value="${parameters.suffix!}" />
+      <input type="text" class="inputBox" name="suffix" value="${parameters.suffix!}" />
     </span>
     </div>
   </fieldset>

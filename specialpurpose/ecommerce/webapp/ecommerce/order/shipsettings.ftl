@@ -56,7 +56,7 @@ under the License.
         <label for="state">${uiLabelMap.CommonState}*</label>
         <select id="stateProvinceGeoId" name="stateProvinceGeoId">
           <#if stateProvinceGeoId?has_content>
-            <option value='${stateProvinceGeoId!}'>${stateProvinceGeo!(stateProvinceGeoId!)}</option>
+            <option value="${stateProvinceGeoId!}">${stateProvinceGeo!(stateProvinceGeoId!)}</option>
           <#else>
             <option value="_NA_">${uiLabelMap.PartyNoState}</option>
           </#if>

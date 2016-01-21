@@ -104,14 +104,14 @@ function onClickShippingMethod(e) {
             </@tr>
             <@tr>
               <@td colspan="2">
-                <textarea class='textAreaBox' cols="30" rows="3" name="shipping_instructions">${shoppingCart.getShippingInstructions()!}</textarea>
+                <textarea class="textAreaBox" cols="30" rows="3" name="shipping_instructions">${shoppingCart.getShippingInstructions()!}</textarea>
               </@td>
             </@tr>
             <@tr type="util"><@td colspan="2"><hr /></@td></@tr>
             <@tr>
               <@td colspan="2">
                 <@heading>${uiLabelMap.OrderPoNumber}</@heading>&nbsp;
-                <input type="text" class='inputBox' name="correspondingPoId" size="15" value="${shoppingCart.getPoNumber()!}"/>
+                <input type="text" class="inputBox" name="correspondingPoId" size="15" value="${shoppingCart.getPoNumber()!}"/>
               </@td>
             </@tr>
             <#if productStore.showCheckoutGiftOptions! != "N">
@@ -131,7 +131,7 @@ function onClickShippingMethod(e) {
             </@tr>
             <@tr>
               <@td colspan="2">
-                <textarea class='textAreaBox' cols="30" rows="3" name="gift_message">${shoppingCart.getGiftMessage()!}</textarea>
+                <textarea class="textAreaBox" cols="30" rows="3" name="gift_message">${shoppingCart.getGiftMessage()!}</textarea>
               </@td>
             </@tr>
             </#if>

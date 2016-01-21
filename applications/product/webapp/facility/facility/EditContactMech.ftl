@@ -34,7 +34,7 @@ under the License.
     <#-- When creating a new contact mech, first select the type, then actually create -->
     <#if !preContactMechTypeId?has_content>
 
-    <form method="post" action='<@ofbizUrl>EditContactMech</@ofbizUrl>' name="createcontactmechform">
+    <form method="post" action="<@ofbizUrl>EditContactMech</@ofbizUrl>" name="createcontactmechform">
       <input type="hidden" name="facilityId" value="${facilityId}" />
       <input type="hidden" name="DONE_PAGE" value="${donePage!}" />
     <@row>
@@ -42,7 +42,7 @@ under the License.
         <@field type="generic" label="${uiLabelMap.PartySelectContactType}">
             <select name="preContactMechTypeId">
               <#list mechMap.contactMechTypes as contactMechType>
-                <option value='${contactMechType.contactMechTypeId}'>${contactMechType.get("description",locale)}</option>
+                <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
             </select>
         </@field>
@@ -65,7 +65,7 @@ under the License.
     </#if>
       
     <#if !mechMap.contactMech?has_content>
-        <form method="post" action='<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform" id="editcontactmechform">
+        <form method="post" action="<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
         <input type="hidden" name="DONE_PAGE" value="${donePage}" />
         <input type="hidden" name="contactMechTypeId" value="${mechMap.contactMechTypeId}" />
         <input type="hidden" name="facilityId" value="${facilityId}" />
@@ -75,10 +75,10 @@ under the License.
         <#if paymentMethodId??><input type="hidden" name="paymentMethodId" value="${paymentMethodId}" /></#if>
 
         <@field type="generic" label="${uiLabelMap.PartyContactPurposes}">
-            <select name='contactMechPurposeTypeId' class="required">
+            <select name="contactMechPurposeTypeId" class="required">
               <option></option>
               <#list mechMap.purposeTypes as contactMechPurposeType>
-                <option value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.get("description",locale)}</option>
+                <option value="${contactMechPurposeType.contactMechPurposeTypeId}">${contactMechPurposeType.get("description",locale)}</option>
                </#list>
             </select>
           *
@@ -116,13 +116,13 @@ under the License.
             <@tfoot>
               <@tr>
                 <@td>
-                  <form method="post" action='<@ofbizUrl>createFacilityContactMechPurpose?DONE_PAGE=${donePage}&amp;useValues=true</@ofbizUrl>' name='newpurposeform'>
+                  <form method="post" action="<@ofbizUrl>createFacilityContactMechPurpose?DONE_PAGE=${donePage}&amp;useValues=true</@ofbizUrl>" name="newpurposeform">
                   <input type="hidden" name="facilityId" value="${facilityId}" />
                   <input type="hidden" name="contactMechId" value="${contactMechId!}" />
-                    <select name='contactMechPurposeTypeId'>
+                    <select name="contactMechPurposeTypeId">
                       <option></option>
                       <#list mechMap.purposeTypes as contactMechPurposeType>
-                        <option value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.get("description",locale)}</option>
+                        <option value="${contactMechPurposeType.contactMechPurposeTypeId}">${contactMechPurposeType.get("description",locale)}</option>
                       </#list>
                     </select>
                     &nbsp;<a href="javascript:document.newpurposeform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.PartyAddPurpose}</a>
@@ -133,7 +133,7 @@ under the License.
             </@table>
         </@field>
         </#if>
-        <form method="post" action='<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform" id="editcontactmechform">
+        <form method="post" action="<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
         <input type="hidden" name="contactMechId" value="${contactMechId}" />
         <input type="hidden" name="contactMechTypeId" value="${mechMap.contactMechTypeId}" />
         <input type="hidden" name="facilityId" value="${facilityId}" />

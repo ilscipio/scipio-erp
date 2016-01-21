@@ -111,7 +111,7 @@ under the License.
                   <input type="text" class="inputBox" name="workCountryCode" value="${parameters.workCountryCode!}" size="4" maxlength="10"/>
                   -&nbsp;<input type="text" class="inputBox" name="workAreaCode" value="${parameters.workAreaCode!}" size="4" maxlength="10"/>
                   -&nbsp;<input type="text" class="inputBox" name="workContactNumber" value="${parameters.workContactNumber!}" size="15" maxlength="15"/>
-                  -&nbsp;<input type="text" class='inputBox' name="workExt" value="${parameters.workExt!}" size="6" maxlength="10"/>
+                  -&nbsp;<input type="text" class="inputBox" name="workExt" value="${parameters.workExt!}" size="6" maxlength="10"/>
                 </@td>
               </@tr>
               <@tr>

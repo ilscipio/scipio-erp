@@ -234,7 +234,7 @@ function makeExpDate() {
               <hr />
 
                   <@field type="generic" label="${uiLabelMap.AccountingCompanyNameCard}">
-                      <input type="text" class='inputBox' size="30" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard!}"/>
+                      <input type="text" class="inputBox" size="30" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard!}"/>
                   </@field>
               <@field type="generic" label="${uiLabelMap.AccountingPrefixCard}">
                   <select name="titleOnCard">

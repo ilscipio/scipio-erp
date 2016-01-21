@@ -42,9 +42,9 @@ under the License.
         <#if shipmentPackageRouteSegList?? && shipmentPackageRouteSegList?has_content>
           <#list shipmentPackageRouteSegList as shipmentPackageRouteSeg>
             <form name="viewShipmentPackageRouteSegLabelImageForm_${shipmentPackageRouteSeg_index}" method="post" action="<@ofbizUrl>viewShipmentPackageRouteSegLabelImage</@ofbizUrl>">
-              <input type="hidden" name="shipmentId" value ="${(shipmentPackageRouteSeg.shipmentId)!}"/>
-              <input type="hidden" name ="shipmentPackageSeqId" value = "${(shipmentPackageRouteSeg.shipmentPackageSeqId)!}"/>
-              <input type="hidden" name="shipmentRouteSegmentId" value ="${(shipmentPackageRouteSeg.shipmentRouteSegmentId)!}"/>
+              <input type="hidden" name="shipmentId" value="${(shipmentPackageRouteSeg.shipmentId)!}"/>
+              <input type="hidden" name="shipmentPackageSeqId" value="${(shipmentPackageRouteSeg.shipmentPackageSeqId)!}"/>
+              <input type="hidden" name="shipmentRouteSegmentId" value="${(shipmentPackageRouteSeg.shipmentRouteSegmentId)!}"/>
               <div>
                 <span>${uiLabelMap.ProductPackage}</span> ${(shipmentPackageRouteSeg.shipmentPackageSeqId)!}
                 <#if shipmentPackageRouteSeg.labelImage??>
@@ -106,9 +106,9 @@ under the License.
                 <@tbody>
                 <#list packedLines as packedLine>
                   <form name="updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}" method="post" action="<@ofbizUrl>updatePackedLine</@ofbizUrl>">
-                    <input type="hidden" name="orderId" value ="${orderId!}"/>
-                    <input type="hidden" name = "facilityId" value = "${(facility.facilityId)!}"/>
-                    <input type="hidden" name="weightPackageSeqId" value ="${packedLine.getWeightPackageSeqId()}"/>
+                    <input type="hidden" name="orderId" value="${orderId!}"/>
+                    <input type="hidden" name="facilityId" value="${(facility.facilityId)!}"/>
+                    <input type="hidden" name="weightPackageSeqId" value="${packedLine.getWeightPackageSeqId()}"/>
                     <@tr>
                       <@td>
                           ${uiLabelMap.ProductPackage} ${packedLine.getWeightPackageSeqId()}
@@ -145,7 +145,7 @@ under the License.
               <div align="right">
                 <a href="javascript:document.completePackageForm.submit()" class="${styles.link_run_sys!} ${styles.action_complete!}">${uiLabelMap.ProductComplete}</a>
               </div>
-              <form name="completePackageForm" method ="post" action="<@ofbizUrl>completePackage</@ofbizUrl>">
+              <form name="completePackageForm" method="post" action="<@ofbizUrl>completePackage</@ofbizUrl>">
                 <input type="hidden" name="orderId" value="${orderId!}"/>
                 <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
                 <input type="hidden" name="facilityId" value="${(facility.facilityId)!}"/>
@@ -159,10 +159,10 @@ under the License.
             </#if>
             <#if (orderedQuantity > packedLines.size())>
             <@table type="fields" cellpadding="2" cellspacing="0"> <#-- orig: class="basic-table" -->
-              <form name="weightPackageForm" method ="post" action="<@ofbizUrl>setPackageInfo</@ofbizUrl>">
-                <input type="hidden" name = "shipGroupSeqId" value = "${shipGroupSeqId!}"/>
-                <input type="hidden" name = "facilityId" value = "${(facility.facilityId)!}"/>
-                <input type="hidden" name = "orderId" value = "${orderId!}"/>
+              <form name="weightPackageForm" method="post" action="<@ofbizUrl>setPackageInfo</@ofbizUrl>">
+                <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
+                <input type="hidden" name="facilityId" value="${(facility.facilityId)!}"/>
+                <input type="hidden" name="orderId" value="${orderId!}"/>
                 <#assign packedLines = weightPackageSession.getPackedLines(orderId)/>
                 <#if packedLines?has_content>
                   <hr/>

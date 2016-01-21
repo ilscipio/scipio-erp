@@ -20,9 +20,9 @@
 <#-- cms menu bar -->
 <div id="cmsmenu" style="margin-bottom: 8px;">
     <#if (content?has_content)>
-        <a href="javascript:void(0);" onclick="javascript:callDocument(true, '${content.contentId}', '', 'ELECTRONIC_TEXT');" class="tabButton">Quick Sub-Content</a>
-        <a href="javascript:void(0);" onclick="javascript:callPathAlias('${content.contentId}');" class="selected">Path Alias</a>
-        <a href="javascript:void(0);" onclick="javascript:callMetaInfo('${content.contentId}');" class="tabButton">Meta Tags</a>
+        <a href="javascript:void(0);" onclick="javascript:callDocument(true, '${content.contentId}', '', 'ELECTRONIC_TEXT');" class="${styles.link_nav!}">Quick Sub-Content</a>
+        <a href="javascript:void(0);" onclick="javascript:callPathAlias('${content.contentId}');" class="${styles.link_nav!} ${styles.selected!}">Path Alias</a>
+        <a href="javascript:void(0);" onclick="javascript:callMetaInfo('${content.contentId}');" class="${styles.link_nav!}">Meta Tags</a>
     </#if>
 </div>
 

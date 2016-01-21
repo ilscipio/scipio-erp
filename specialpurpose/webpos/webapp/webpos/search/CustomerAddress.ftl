@@ -17,9 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign sectionTitle>
-    <a id="billingAddressSelected" href="javascript:void(0);">${uiLabelMap.WebPosBillingAddress}</a>
+    <a id="billingAddressSelected" href="javascript:void(0);" class="${styles.action_nav!}">${uiLabelMap.WebPosBillingAddress}</a>
     &nbsp;
-    <a id="shippingAddressSelected" href="javascript:void(0);">${uiLabelMap.WebPosShippingAddress}</a>
+    <a id="shippingAddressSelected" href="javascript:void(0);" class="${styles.action_nav!}">${uiLabelMap.WebPosShippingAddress}</a>
 </#assign>
 <@section title=sectionTitle>
     <div id="customerAddress">

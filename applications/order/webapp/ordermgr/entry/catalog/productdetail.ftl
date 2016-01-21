@@ -308,7 +308,7 @@ ${virtualJavaScript!}
         <#assign productLargeImageUrl = firstLargeImage>
       </#if>
       <#if productLargeImageUrl?string?has_content>
-        <a href="javascript:popupDetail();"><img src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage" vspace="5" hspace="5" class="cssImgLarge" alt="" /></a>
+        <a href="javascript:popupDetail();" class="${styles.action_run_sys!} ${styles.action_view!}"><img src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage" vspace="5" hspace="5" class="cssImgLarge" alt="" /></a>
       </#if>
     </@td>
     <@td align="right" valign="top">
@@ -610,9 +610,9 @@ ${virtualJavaScript!}
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
                 <@td align="center" valign="bottom">
-                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a>
+                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.action_run_local!} ${styles.action_select!}"><img src="<@ofbizContentUrl>${contentPathPrefix!}${imageUrl}</@ofbizContentUrl>" class="cssImgSmall" alt="" /></a>
                   <br />
-                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_nav_info_name!}">${key}</a>
+                  <a href="javascript:getList('FT${featureOrderFirst}','${indexer}',1);" class="${styles.link_run_local!} ${styles.action_select!}">${key}</a>
                 </@td>
               </#if>
               <#assign indexer = indexer + 1>

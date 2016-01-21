@@ -194,7 +194,7 @@ function getConfigDetails() {
         <#assign productLargeImageUrl = firstLargeImage>
       </#if>
       <#if productLargeImageUrl?string?has_content>
-        <a href="javascript:popupDetail();"><img src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
+        <a href="javascript:popupDetail();" class="${styles.action_run_sys!} ${styles.action_view!}"><img src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
       </#if>
     </@td>
     <@td align="right" valign="top">

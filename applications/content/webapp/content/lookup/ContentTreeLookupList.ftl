@@ -64,7 +64,7 @@
       <#if tabButtonItem=="ListContentTree">
         <#--Form ListContentTree-->
           <@tr> 
-              <@td><a class="plain" href="javascript:set_value('${contentData.contentId!}')">${contentData.contentId!}</a></@td>
+              <@td><a class="plain" href="javascript:set_value('${contentData.contentId!}')" class="${styles.link_run_local!} ${styles.action_select!}">${contentData.contentId!}</a></@td>
               <@td>${contentData.contentName!}</@td>
               <@td>${contentData.mimeTypeId!}</@td>
           </@tr>

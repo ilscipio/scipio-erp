@@ -42,11 +42,11 @@ under the License.
           <@tr alt=alt_row class=class>
             <@td>
               <#if salesRepInCart>
-              <a href="javascript:removeSalesRep('${salesRep.partyId}');">
+              <a href="javascript:removeSalesRep('${salesRep.partyId}');" class="${styles.link_run_sys!} ${styles.action_remove!}">
                 &nbsp;${person}
               </a>
               <#else>
-              <a href="javascript:addSalesRep('${salesRep.partyId}');">
+              <a href="javascript:addSalesRep('${salesRep.partyId}');" class="${styles.link_run_sys!} ${styles.action_add!}">
                 &nbsp;${person}
               </a>
               </#if>

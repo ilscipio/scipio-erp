@@ -65,6 +65,7 @@ public class ContentSearchEvents {
 
         // setup resultOffset and maxResults, noting that resultOffset is 1 based, not zero based as these numbers
         Integer resultOffset = Integer.valueOf(lowIndex + 1);
+        // Cato: FIXME: maxResults of viewSize ensures pagination is disabled. The whole thing needs rewriting to support pagination.
         Integer maxResults = Integer.valueOf(viewSize);
 
         // ========== Do the actual search

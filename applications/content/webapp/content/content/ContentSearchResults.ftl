@@ -27,6 +27,7 @@ under the License.
       <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
     </#if>
 
+    <#-- Cato: use @paginate...
     <#macro paginateContentResults>
       <#if (0 < listSize?int)>
       <@menu type="button">
@@ -35,12 +36,12 @@ under the License.
         <@menuitem type="link" href=makeOfbizUrl("ContentSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N") text="${uiLabelMap.CommonNext}" disabled=(!(highIndex?int < listSize?int)) />
       </@menu>
       </#if>
-    </#macro>
+    </#macro>-->
     
-    <#if contentIds?has_content>
-    
-    <@paginateContentResults />
-    <center>
+  <#if contentIds?has_content>
+    <#-- Cato: FIXME: see ContentSearchEvents.java -->
+    <p>NOTE: This search currently only shows the first ${listSize!0} results and supports no pagination.</p>
+    <@paginate mode="content" url=makeOfbizUrl("ContentSearchResults") paramStr="/~clearSearch=N" paramDelim="/" paramPrefix="~" viewSize=viewSize!1 viewIndex=viewIndex! listSize=listSize!0>
       <@table type="data-complex" width="100%" cellpadding="0" cellspacing="0"> <#-- orig: class="" -->
         <#assign listIndex = lowIndex>
         <#list contentIds as contentId><#-- note that there is no boundary range because that is being done before the list is put in the content -->
@@ -52,9 +53,7 @@ under the License.
           </@tr>
         </#list>
       </@table>
-    </center>
-    <@paginateContentResults />
-    
-    </#if>
+    </@paginate>
+  </#if>
 
 </@section>

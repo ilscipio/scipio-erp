@@ -122,7 +122,7 @@ under the License.
           <@td nowrap align="right"><@ofbizCurrency amount=cartLine.getDisplayPrice() isoCode=shoppingCart.getCurrency()/></@td>
           <@td nowrap align="right"><@ofbizCurrency amount=cartLine.getOtherAdjustments() isoCode=shoppingCart.getCurrency()/></@td>
           <@td nowrap align="right"><@ofbizCurrency amount=cartLine.getDisplayItemSubTotal() isoCode=shoppingCart.getCurrency()/></@td>
-          <@td nowrap align="center"><a href="javascript:deleteCartItem('${cartLineIndex}');" class="${styles.action_run_session!} ${styles.action_remove!}"><img src="/images/mini-trash.png" /></a></@td>
+          <@td nowrap align="center"><a href="javascript:deleteCartItem('${cartLineIndex}');" class="${styles.link_type_image!} ${styles.action_run_session!} ${styles.action_remove!}"><img src="/images/mini-trash.png" /></a></@td>
         </@tr>
         <#-- toggle the row color -->
         <#assign alt_row = !alt_row>

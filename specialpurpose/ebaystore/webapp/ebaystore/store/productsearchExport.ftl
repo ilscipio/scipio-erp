@@ -553,7 +553,7 @@ under the License.
                                                                 //popUp(document.getElementById('themeImg').src, 'themeImgBig', '400', '550');
                                                               }
                                                             </@script>
-                                                            <a id="themeImgUrl" href="javascript:popUpImg();" class="${styles.action_run_sys!} ${styles.action_view!}"><img hspace="5" height="120" border="0" align="top" width="100" id="themeImg" name="themeImg" src="http://pics.ebay.com/aw/pics/vit/None2_sample_100x120.gif" alt="" /></a>
+                                                            <a id="themeImgUrl" href="javascript:popUpImg();" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img hspace="5" height="120" border="0" align="top" width="100" id="themeImg" name="themeImg" src="http://pics.ebay.com/aw/pics/vit/None2_sample_100x120.gif" alt="" /></a>
                                                             <br /><div style="height:120px"></div>
                                                         </@td>
                                                     </@tr>

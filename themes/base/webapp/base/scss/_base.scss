@@ -386,9 +386,9 @@ div.scrollable-table-container > table {
 }
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
-  FIXME: this should have an emphasis, but warning color is probably not appropriate... */
+  FIXME: this should have an emphasis, but not sure if "info" color is appropriate... */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
-   @include button-style($bg:$warning-button-bg-color, $bg-hover:$warning-button-bg-hover, $border-color:$warning-button-border-color);
+   @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
 }
 
 /* special nav cancel/back/return action button (alt regular color) */

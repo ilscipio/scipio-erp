@@ -9,7 +9,7 @@
     </@heading>            
     
     <#if chartType == "line" || chartType == "bar">
-        <@chart type=chartType library=library datasets=datasets>
+        <@chart type=chartType library=library>
             <#list totalMap.keySet() as key>        
                 <#assign currData = totalMap[key] />
                 <#if currData?has_content>

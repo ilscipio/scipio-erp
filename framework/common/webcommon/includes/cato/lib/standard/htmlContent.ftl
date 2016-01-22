@@ -977,11 +977,10 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   * Parameters *
     type           = (pie|bar|line) (default:pie)
     library        = (foundation|chart) (default:foundation)
-    title          = Data Title  (default:empty)
-    datasets       = Number of datasets (1|2) (default:1) Only works for chart and bar|line
+    title          = Data Title  (default:empty)    
 -->
 <#assign chart_defaultArgs = {
-  "type":"pie", "library":"foundation", "title":"", "datasets":1, "passArgs":{}
+  "type":"pie", "library":"foundation", "title":"", "passArgs":{}
 }>
 <#macro chart args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.chart_defaultArgs)>
@@ -995,19 +994,13 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#global chartId = "chart_${renderSeqNumber!}_${chartIdNum!}"/>
   <#global chartType = type/>
   <#global chartDataIndex = 0/>
-  <#-- Allow just one or two datasets for now -->
-  <#if (datasets <= 0) || (datasets > 2)>
-    <#global chartDatasets = 1/>
-  <#else>
-    <#global chartDatasets = datasets/>
-  </#if>
   
   <@chart_markup type=type chartId=chartId chartIdNum=chartIdNum chartLibrary=chartLibrary chartDatasets=chartDatasets title=title 
     renderSeqNumber=renderSeqNumber origArgs=origArgs passArgs=passArgs><#nested></@chart_markup>
 </#macro>
 
 <#-- @chart main markup - theme override -->
-<#macro chart_markup type="" chartLibrary="" title="" chartId="" chartIdNum=0 chartDatasets=1 renderSeqNumber=0 origArgs={} passArgs={} catchArgs...>
+<#macro chart_markup type="" chartLibrary="" title="" chartId="" chartIdNum=0 renderSeqNumber=0 origArgs={} passArgs={} catchArgs...>
   <#if chartLibrary=="foundation">
     <@row>
       <@cell columns=3>    
@@ -1019,6 +1012,14 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
       <@cell columns=9><div id="chart_${renderSeqNumber!}_${chartIdNum!}" style="height:300px;"></div></@cell>
     </@row>
   <#else>
+    <#local nestedContent>
+        <#nested />
+    </#local>
+    <#-- Get the number of datasets by inspecting the nested content (chartjs addData function values) -->
+    <#assign chartDatasets=chart_get_number_of_datasets(nestedContent, chartLibrary) />
+    ${Static["org.ofbiz.base.util.Debug"].log("chartDatasets ==============> " + chartDatasets)}
+    <#if chartDatasets &lt; 1><#local chartDatasets = 1 /></#if>
+    
     <canvas id="${chartId!}" class="${styles.grid_large!}12 chart-data" height="300" style="height:300px;"></canvas>
     <@script>
         $(function(){
@@ -1086,7 +1087,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                       label: "",
                       data: []
                     }
-                    <#if chartDatasets == 2>
+                    <#if chartDatasets &gt; 1>
                     ,{
                       fillColor: chartData.secondaryFillColor,
                       strokeColor: chartData.secondaryStrokeColor,
@@ -1102,11 +1103,60 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                 };
             </#if>
             var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${chartIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
-            <#nested/>
+            ${nestedContent}
         });
     </@script>
   </#if>
 </#macro>
+<#--
+*************
+* chart_get_number_of_datasets
+************
+
+
+  * Usage Example *  
+               
+                    
+  * Parameters *
+    content           = (pie|bar|line) (default:pie)
+    library        = (foundation|chart) (default:chart)   
+-->
+<#function chart_get_number_of_datasets content="" library="chart">
+    <#if content?has_content>
+        <#if library == "chart">
+            <#local num_of_values_found = [] />
+            <#-- cleanup spaces and tabs and split by the regex ';.+\n' -->
+            <#-- TODO: check if it works for all OS, in linux works -->
+            <#list content?trim?split(";.+\n", "r") as contentItem>            
+                <#-- make sure we are handling the proper chartjs addData function -->
+                <#if contentItem?has_content && contentItem?length &gt; 0 && contentItem?contains("addData")> 
+                    <#-- isolate the array values passed in the addData function -->
+                    <#assign item = contentItem?trim />
+                    ${Static["org.ofbiz.base.util.Debug"].log("contentItem =====> " + item)}
+                    <#local squareOpenIndex = item?last_index_of("[") />
+                    <#local squareCloseIndex = item?last_index_of("]") />
+                    <#if squareOpenIndex &gt; -1 && squareCloseIndex &gt; -1 && squareOpenIndex &lt; squareCloseIndex>
+                        <#local num_of_values_found = num_of_values_found + [item[squareOpenIndex + 1..squareCloseIndex - 1]?split(",")?size] />
+                    </#if>
+                </#if>    
+            </#list>
+            
+            <#-- minimum values we accept (values represent datasets, so always expect one at least) -->
+            <#local min_num_of_values = 1 />
+            <#-- look for inconsistencies -->
+            <#local prev_num_of_values = -1 />           
+            <#list num_of_values_found as num_of_values>
+                <#if prev_num_of_values == -1>
+                    <#local prev_num_of_values = num_of_values />
+                    <#local min_num_of_values = num_of_values />
+                <#elseif num_of_values &lt; prev_num_of_values>
+                    <#local min_num_of_values = num_of_values>
+                </#if>
+            </#list>
+            <#return min_num_of_values />
+        </#if>
+    </#if>
+</#function>
 
 <#assign chartdata_defaultArgs = {
   "title":"", "value":"", "value2":"", "passArgs":{}
@@ -1135,7 +1185,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </#if>
   <#else>
     <#if chartType="line" || chartType="bar">
-      ${chartId!}.addData([<#if value?has_content>${value!}</#if><#if value2?has_content> ,${value2}</#if>]<#if title?has_content>,"${title!}"</#if>);      
+      ${chartId!}.addData([<#if value?has_content>${value!}</#if><#if value2?has_content>, ${value2}</#if>]<#if title?has_content>,"${title!}"</#if>);      
     <#else>
       ${chartId!}.addData({value:${value!},color:chartData.color,highlight: chartData.highlight<#if title?has_content>,label:"${title!}"</#if>});
     </#if>

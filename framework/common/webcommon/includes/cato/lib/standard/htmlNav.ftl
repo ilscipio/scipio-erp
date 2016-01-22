@@ -456,7 +456,6 @@ menu item element must override this and provide a proper check.
    viewIndex       = page currently displayed
    viewSize        = maximum number of items displayed. NOTE: this should be decided earlier in rendering (data prep)
                      and a valid value MUST be passed.
-   altParam        = Use viewIndex/viewSize as parameters, instead of VIEW_INDEX / VIEW_SIZE
    forcePost       = Always use POST for non-ajax browsing (note: even if false, large requests are coerced to POST)
    paramStr        = Extra URL parameters in string format, escaped (param1=val1&amp;param2=val2)
    viewIndexFirst  = First viewIndex value number (0 or 1, only affects param values, not display)
@@ -470,17 +469,32 @@ menu item element must override this and provide a proper check.
                      NOTE: this is not the same as enabled control. paginateOn does not prevent macro from rendering something.
    viewSizeSelection  = default false, currently officially unsupported.
                         DEV NOTE: only here for testing purposes
+   altParam           = Use viewIndex/viewSize as parameter names, instead of VIEW_INDEX / VIEW_SIZE
+   viewIndexString/   = specific param names to use (default VIEW_INDEX / VIEW_SIZE / PAGING)
+   viewSizeString/
+   paginateToggleString
+   paramPrefix        = prefix added to param names. some screens need "~".
+                        NOTE: Does not affect paramStr - caller must handle.
+   paramDelim         = default "&amp;". Some screens need "/".
+                        NOTE: Does not affect paramStr - caller must handle.
 -->
 <#assign paginate_defaultArgs = {
   "mode":"single", "type":"default", "layout":"default", "noResultsMode":"default", "enabled":true, "url":"", "class":"", 
   "viewIndex":0, "listSize":0, "viewSize":-1, "prioViewSize":false, "altParam":false, 
   "forcePost":false, "paramStr":"", "viewIndexFirst":0, "showCount":"", "alwaysShowCount":"", "countMsg":"", "lowCountMsg":"",
-  "paginateToggle":false, "paginateOn":true, "paginateToggleString":"", "paginateToggleOnValue":"Y", "paginateToggleOffValue":"N", 
-  "viewSizeSelection":"", "position":"", "passArgs":{}
+  "paginateToggle":false, "paginateOn":true, "paginateToggleOnValue":"Y", "paginateToggleOffValue":"N", 
+  "viewSizeSelection":"", "position":"", 
+  "viewIndexString":"", "viewSizeString":"", "paginateToggleString":"", 
+  "paramDelim":"", "paramPrefix":"",
+  "passArgs":{}
 }>
 <#macro paginate args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.paginate_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+
+  <#if !paramDelim?has_content>
+    <#local paramDelim = "&amp;">
+  </#if>
 
   <#-- this is also checked in paginate_core, but avoid problems with parameters by checking again early. -->  
   <#if enabled?is_boolean && enabled == false>
@@ -530,19 +544,20 @@ menu item element must override this and provide a proper check.
     <#else>
       <#local realHighIndex = highIndex/>
     </#if>
-    <#if altParam>
-      <#local viewIndexString = "viewIndex">
-      <#local viewSizeString = "viewSize">
-      <#if !paginateToggleString?has_content>
-        <#local paginateToggleString = "paging">
-      </#if>
-    <#else>
-      <#local viewIndexString = "VIEW_INDEX">
-      <#local viewSizeString = "VIEW_SIZE">
-      <#if !paginateToggleString?has_content>
-        <#local paginateToggleString = "PAGING">
-      </#if>
+
+    <#if !viewIndexString?has_content>
+      <#local viewIndexString = altParam?string("viewIndex", "VIEW_INDEX")>
     </#if>
+    <#local viewIndexString = paramPrefix + viewIndexString>
+    <#if !viewSizeString?has_content>
+      <#local viewSizeString = altParam?string("viewSize", "VIEW_SIZE")>
+    </#if>
+    <#local viewSizeString = paramPrefix + viewSizeString>
+    <#if !paginateToggleString?has_content>
+      <#local paginateToggleString = altParam?string("paging", "PAGING")>
+    </#if>
+    <#local paginateToggleString = paramPrefix + paginateToggleString>
+
     <#if (viewIndexLast > (viewIndex))>
       <#local viewIndexNext = (viewIndex+1)>
     <#else>
@@ -554,43 +569,43 @@ menu item element must override this and provide a proper check.
       <#local viewIndexPrevious = viewIndex>
     </#if>
   
-    <#local commonUrl = addParamDelimToUrl(url, "&amp;")>
+    <#local commonUrl = addParamDelimToUrl(url, paramDelim)>
     <#if paramStr?has_content>
-      <#local commonUrl = commonUrl + trimParamStrDelims(paramStr) + "&amp;">
+      <#local commonUrl = commonUrl + trimParamStrDelims(paramStr, paramDelim) + paramDelim>
     </#if>
     
     <#local firstUrl = "">
     <#if (!firstUrl?has_content)>
-      <#local firstUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexFirst}"/>
+      <#local firstUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexFirst}"/>
     </#if>
     <#local previousUrl = "">
     <#if (!previousUrl?has_content)>
-      <#local previousUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexPrevious}"/>
+      <#local previousUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexPrevious}"/>
     </#if>
     <#local nextUrl="">
     <#if (!nextUrl?has_content)>
-      <#local nextUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexNext}"/>
+      <#local nextUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexNext}"/>
     </#if>
     <#local lastUrl="">
     <#if (!lastUrl?has_content)>
-      <#local lastUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndexLast}"/>
+      <#local lastUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexLast}"/>
     </#if>
     <#local selectUrl="">
     <#if (!selectUrl?has_content)>
-      <#local selectUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}="/>
+      <#local selectUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}="/>
     </#if>
     <#local selectSizeUrl="">
     <#if (!selectSizeUrl?has_content)>
-      <#local selectSizeUrl=commonUrl+"${viewSizeString}='+this.value+'&amp;${viewIndexString}=${viewIndexFirst}"/>
+      <#local selectSizeUrl=commonUrl+"${viewSizeString}='+this.value+'${paramDelim}${viewIndexString}=${viewIndexFirst}"/>
     </#if>
   
     <#local paginateOnUrl="">
     <#if (!paginateOnUrl?has_content)>
-      <#local paginateOnUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndex}&amp;${paginateToggleString}=${paginateToggleOnValue}"/>
+      <#local paginateOnUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndex}${paramDelim}${paginateToggleString}=${paginateToggleOnValue}"/>
     </#if>
     <#local paginateOffUrl="">
     <#if (!paginateOffUrl?has_content)>
-      <#local paginateOffUrl=commonUrl+"${viewSizeString}=${viewSize}&amp;${viewIndexString}=${viewIndex}&amp;${paginateToggleString}=${paginateToggleOffValue}"/>
+      <#local paginateOffUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndex}${paramDelim}${paginateToggleString}=${paginateToggleOffValue}"/>
     </#if>
     
     <#-- NOTE: javaScriptEnabled is a context var -->

@@ -177,22 +177,33 @@ TODO: java transform.
 * addParamDelimToUrl
 ************
 Adds a param delimiter to end of url if needed.
+
+2016-01-21: New special case: if paramDelim is "/" or contains "/", treat differently (because trumps "?")
                     
   * Parameters *
     url             = Url to which to append delimiter
     paramDelim      = Param delimiter to use (escaped, "&amp;" by default)
+    paramStarter    = usually/always "?". only significant if paramDelim does not contain "/".
 -->
-<#function addParamDelimToUrl url paramDelim="&amp;">
-  <#if url?contains("?")>
-    <#if url?ends_with("?")>
+<#function addParamDelimToUrl url paramDelim="&amp;" paramStarter="?">
+  <#if paramDelim?contains("/")>
+    <#if url?ends_with(paramDelim)>
       <#return url>
-    <#elseif url?ends_with(paramDelim)>
-      <#return url>
+    <#elseif url?ends_with(paramStarter) || url?ends_with("/")>
+      <#return url[0..-1] + paramDelim>
     <#else>
       <#return url + paramDelim>
     </#if>
   <#else>
-    <#return url + "?">
+    <#if url?contains(paramStarter)>
+      <#if url?ends_with(paramStarter) || url?ends_with(paramDelim)>
+        <#return url>
+      <#else>
+        <#return url + paramDelim>
+      </#if>
+    <#else>
+      <#return url + paramStarter>
+    </#if>
   </#if>
 </#function> 
 

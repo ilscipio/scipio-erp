@@ -44,12 +44,12 @@ under the License.
                 
                 <!-- ToDo: Move to themes? -->
                 <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>    
-				<set field="layoutSettings.styleSheets[+0]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
+                <set field="layoutSettings.styleSheets[+0]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
                 <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>                               
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
-                	<decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
                             <condition>
                                 <not><if-empty-section section-name="left-column" /></not>
@@ -519,38 +519,38 @@ under the License.
 
     <screen name="main">
         <section>
-            <actions>               
+            <actions>
             </actions>
             <widgets>            
-				<decorator-screen name="main-decorator-dashboard" location="component://common/widget/CommonScreens.xml">
-					<decorator-section name="topLeft">                        
-                       	<section>
-                       		<actions>
-                       			<set field="productStoreId" value="CATO_FOUNDATION_1"/>
-                       			<entity-one value-field="productStore" entity-name="ProductStore"/>
-                       			<script location="component://product/webapp/catalog/WEB-INF/actions/dashboard/StoreCatalogTree.groovy"/>
-                       		</actions>
-                       		<widgets>
-                       			<screenlet title="${productStore.storeName}">
-                       				<platform-specific><html><html-template location="component://product/webapp/catalog/dashboard/storeCatalogTree.ftl"/></html></platform-specific>
-                       			</screenlet>
-                       		</widgets>
-                       	</section>
+                <decorator-screen name="main-decorator-dashboard" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="topLeft">
+                           <section>
+                               <actions>
+                                   <set field="productStoreId" value="CATO_FOUNDATION_1"/>
+                                   <entity-one value-field="productStore" entity-name="ProductStore"/>
+                                   <script location="component://product/webapp/catalog/WEB-INF/actions/dashboard/StoreCatalogTree.groovy"/>
+                               </actions>
+                               <widgets>
+                                   <screenlet title="${productStore.storeName}">
+                                       <platform-specific><html><html-template location="component://product/webapp/catalog/dashboard/storeCatalogTree.ftl"/></html></platform-specific>
+                                   </screenlet>
+                               </widgets>
+                           </section>
                     </decorator-section>
-                    <decorator-section name="topRight">                        
-                       	<section>
-                       		<actions>
-                       			<set field="productStoreId" value="CATO_FOUNDATION_2"/>
-                       			<entity-one value-field="productStore" entity-name="ProductStore"/>
-                       			<script location="component://product/webapp/catalog/WEB-INF/actions/dashboard/StoreCatalogTree.groovy"/>
-                       		</actions>
-                       		<widgets>
-                       			<screenlet title="${productStore.storeName}">
-                       				<platform-specific><html><html-template location="component://product/webapp/catalog/dashboard/storeCatalogTree.ftl"/></html></platform-specific>
-                       			</screenlet>     
-                       		</widgets>
-                       	</section>
-                    </decorator-section>	               
+                    <decorator-section name="topRight">
+                           <section>
+                               <actions>
+                                   <set field="productStoreId" value="CATO_FOUNDATION_2"/>
+                                   <entity-one value-field="productStore" entity-name="ProductStore"/>
+                                   <script location="component://product/webapp/catalog/WEB-INF/actions/dashboard/StoreCatalogTree.groovy"/>
+                               </actions>
+                               <widgets>
+                                   <screenlet title="${productStore.storeName}">
+                                       <platform-specific><html><html-template location="component://product/webapp/catalog/dashboard/storeCatalogTree.ftl"/></html></platform-specific>
+                                   </screenlet>     
+                               </widgets>
+                           </section>
+                    </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>

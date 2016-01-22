@@ -315,4 +315,17 @@
             <submit button-type="button" />
         </field>
     </form>
+    
+    <form name="productPromotions" type="list" title="" header-row-style="header-row" default-table-style="${styles.table_basic}">
+        <actions>
+            <script location="component://" />
+            
+        </actions>
+        <field name="productCategoryId"></field>
+        <field name="productStore"></field>
+        <field name="productDate"></field>
+        <field name="promoTitle"></field>
+        <field name="voucher"></field>
+        
+    </form>
 </forms>

@@ -38,24 +38,24 @@ import com.ilscipio.cato.helper.JsTreeHelper.JsTreeDataItem.JsTreeDataItemState
 productStoreId = (context.productStoreId) ? context.productStoreId : parameters.productStoreId;
 
 //JsTreeHelper.JsTreeDataItem.JsTreeDataItemState.class.getDeclaredConstructors().each { constructor ->
-//	Debug.log("constructor (from groovy) ========> " + constructor);
+//  Debug.log("constructor (from groovy) ========> " + constructor);
 //}
 //
 //Debug.log(JsTreeHelper.displayConstructor());
 
 
 if (!productStoreId) {
-	Debug.log("No product store Id found.");
-	return;
+    Debug.log("No product store Id found.");
+    return;
 }
 Debug.log("productStoreId =======> " + productStoreId);
 List separateRootType(roots) {
     if(roots) {
         prodRootTypeTree = [];
         roots.each { root ->
-			productCategory = root.getRelatedOne("ProductCategory", false);			
-			itemState = new JsTreeHelper.JsTreeDataItem.JsTreeDataItemState(true, false);
-			dataItem = new JsTreeDataItem(productCategory.getString("productCategoryId"), productCategory.getString("categoryName"), "jstree-file", itemState, null);
+            productCategory = root.getRelatedOne("ProductCategory", false);            
+            itemState = new JsTreeHelper.JsTreeDataItem.JsTreeDataItemState(true, false);
+            dataItem = new JsTreeDataItem(productCategory.getString("productCategoryId"), productCategory.getString("categoryName"), "jstree-file", itemState, null);
             prodRootTypeTree.add(dataItem);
         }
         return prodRootTypeTree;
@@ -66,19 +66,19 @@ treeData =  [];
 //Get the Catalogs
 productStoreCatalogs = from("ProductStoreCatalog").where(new EntityExpr("productStoreId", EntityComparisonOperator.EQUALS, productStoreId)).filterByDate().queryList();
 for (productStoreCatalog in productStoreCatalogs) {
-//	Debug.log("prodCatalogId ==========> " + productStoreCatalog.prodCatalogId);
-	prodCatalog = productStoreCatalog.getRelatedOne("ProdCatalog", true);
-	if (prodCatalog) {
-		children = [];
-		prodCatalogCategories = from("ProdCatalogCategory").where("prodCatalogId", prodCatalog.prodCatalogId).filterByDate().queryList();		
-		if (prodCatalogCategories) {
-			children = separateRootType(prodCatalogCategories);
-//			Debug.log("productCatalogCategories ======> " + prodCatalogMap.child);
-		}
+//    Debug.log("prodCatalogId ==========> " + productStoreCatalog.prodCatalogId);
+    prodCatalog = productStoreCatalog.getRelatedOne("ProdCatalog", true);
+    if (prodCatalog) {
+        children = [];
+        prodCatalogCategories = from("ProdCatalogCategory").where("prodCatalogId", prodCatalog.prodCatalogId).filterByDate().queryList();        
+        if (prodCatalogCategories) {
+            children = separateRootType(prodCatalogCategories);
+//            Debug.log("productCatalogCategories ======> " + prodCatalogMap.child);
+        }
         itemState = new JsTreeHelper.JsTreeDataItem.JsTreeDataItemState(true, false);
         dataItem = new JsTreeDataItem(prodCatalog.getString("prodCatalogId"), prodCatalog.getString("catalogName"), "jstree-folder", itemState, children);
-        treeData.add(dataItem);	    
-	}
+        treeData.add(dataItem);        
+    }
 }
 context.treeData = treeData;
 

@@ -961,7 +961,7 @@ Render menu in a tree fashion way
     </@treemenu>
                     
   * Parameters *
-  	treeMenuLibrary = (jsTree) (default:jsTree)
+      treeMenuLibrary = (jsTree) (default:jsTree)
     inlineItems     = boolean, if true, generate only items, not menu container    
     id              = menu id    
     attribs         = hash of other tree menu attribs
@@ -982,30 +982,30 @@ Render menu in a tree fashion way
   <#local treeMenuLibrary = library!"jsTree"/> 
   <#local treeData><@objectAsScript lang="json" object=data /></#local> 
   ${Static["org.ofbiz.base.util.Debug"].log("id ====> " + id)}  
-  ${Static["org.ofbiz.base.util.Debug"].log("data ====> " + data)}  
+  ${Static["org.ofbiz.base.util.Debug"].log("data ====> " + data)}
   
   <@treemenu_markup treeMenuLibrary=treeMenuLibrary treeData=treeData id=id attribs=attribs excludeAttribs=["class", "id", "style"] origArgs=origArgs passArgs=passArgs/>
 </#macro>
 
 <#-- @treemenu main markup - theme override -->
 <#macro treemenu_markup treeMenuLibrary="" treeData={} id="" attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
-	<#if treeMenuLibrary == "jsTree">
-		<script type="text/javascript"> 
-			jQuery(window).load(create${id!''}Tree());
-				<#-- create Tree-->
-			  	function create${id!''}Tree() {
-				  	console.log("createTree");
-				    jQuery(function () {			        
-				        jQuery("#${id}").jstree({
-				         	"core" : {
-				         		"data" : ${treeData}
-				         	}
-				       });
-				    });
-			  	}
-		  </script>		
-	</#if>
-	<div id="${id}"></div>
+    <#if treeMenuLibrary == "jsTree">
+        <script type="text/javascript"> 
+            jQuery(window).load(create${id!''}Tree());
+                <#-- create Tree-->
+                  function create${id!''}Tree() {
+                      console.log("createTree");
+                    jQuery(function () {
+                        jQuery("#${id}").jstree({
+                             "core" : {
+                                 "data" : ${treeData}
+                             }
+                       });
+                    });
+                  }
+          </script>
+    </#if>
+    <div id="${id}"></div>
 </#macro>
 
 

@@ -1,3 +1,3 @@
 <#if security.hasEntityPermission("CATALOG", "_VIEW", session)>    
-    <@treemenu id="testTree" data=treeData/>
+    <@treemenu id=productStoreId data=treeData/>
 </#if>

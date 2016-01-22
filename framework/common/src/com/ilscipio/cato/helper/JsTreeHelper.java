@@ -8,6 +8,13 @@ import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 
+/**
+ * Provides several utilities for handling jsTree objects (data, settings, etc.). Compatible
+ * with jsTree version 3.x.x
+ * 
+ * @author jsoto
+ * 
+ */
 public class JsTreeHelper {
 
     public static String buildTreeData(List<JsTreeDataItem> treeDataList) {
@@ -25,18 +32,8 @@ public class JsTreeHelper {
 
     public static class JsTreeDataItem extends HashMap<String, Object> {
         private static final long serialVersionUID = -660269373973470543L;
-        private String id;
-        private String text;
-        private String icon;
-        private JsTreeDataItemState state;
-        private List<JsTreeDataItem> children;
 
         public JsTreeDataItem(String id, String text, String icon, JsTreeDataItemState state, List<JsTreeDataItem> children) {
-            this.id = id;
-            this.text = text;
-            this.state = state;
-            this.icon = icon;
-            this.children = children;
             if (UtilValidate.isNotEmpty(id))
                 put("id", id);
             if (UtilValidate.isNotEmpty(text))
@@ -50,43 +47,67 @@ public class JsTreeHelper {
         }
 
         public String getId() {
-            return id;
+            return (String) get("id");
         }
 
         public String getText() {
-            return text;
+            return (String) get("text");
         }
 
         public String getIcon() {
-            return icon;
+            return (String) get("icon");
         }
 
         public JsTreeDataItemState getState() {
-            return state;
+            return (JsTreeDataItemState) get("state");
         }
 
         public List<JsTreeDataItem> getChildren() {
-            return children;
+            return (List<JsTreeDataItem>) get("children");
+        }
+
+        public void setId(String id) {
+            put("id", id);
+        }
+
+        public void setText(String text) {
+            put("text", text);
+        }
+
+        public void setIcon(String icon) {
+            put("icon", icon);
+        }
+
+        public void setState(JsTreeDataItemState state) {
+            put("state", state);
+        }
+
+        public void setChildren(List<JsTreeDataItem> children) {
+            put("children", children);
         }
 
         public static class JsTreeDataItemState extends HashMap<String, Boolean> {
             private static final long serialVersionUID = -3407209672564973008L;
-            private boolean opened;
-            private boolean selected;
 
             public JsTreeDataItemState(boolean opened, boolean selected) {
-                this.opened = opened;
-                this.selected = selected;
                 put("opened", opened);
                 put("selected", selected);
             }
 
             public boolean isOpened() {
-                return opened;
+                return get("opened");
             }
 
             public boolean isSelected() {
-                return selected;
+                return get("selected");
+            }
+
+            public void setOpened(boolean opened) {
+                put("opened", opened);
+            }
+
+            public void setSelected(boolean selected) {
+                put("selected", selected);
             }
 
         }

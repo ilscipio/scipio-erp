@@ -17,12 +17,14 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-
-<!-- As of 06/07/20015 the ofbiz standard Menu-widget has been expanded by a default-link-style attribute.-->
-
+<!-- Cato: As of 06/07/2015 the ofbiz standard Menu-widget has been expanded by a default-link-style attribute.
+     NOTE: The widget attribute "selected" usually translates to "active" in styles hash/FTL/CSS terminology (where "selected" may mean something else).
+        This is because there's only one highlight option for widgets and by convention the selected widget attrib should practically always be used to select the "active" menu item. -->
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
+    <!-- Cato: -->
     <menu name="CommonAppBarMenu" default-menu-item-name="main" id="app-navigation" type="simple" title="${applicationTitle}&amp;nbsp;"
-        default-selected-style="active" menu-container-style="menu-main" default-link-style="${styles.menu_main_item_link}" selected-menuitem-context-field-name="headerItem" items-sort-mode="displaytext-ignorecase">
+        default-selected-style="${styles.menu_main_itemactive}" menu-container-style="menu-main" default-link-style="${styles.menu_main_item_link}" 
+        selected-menuitem-context-field-name="headerItem" items-sort-mode="displaytext-ignorecase">
         <menu-item name="main" title="${uiLabelMap.CommonMain}" sort-mode="off">
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="main" link-type="anchor"/>
@@ -30,7 +32,7 @@ under the License.
     </menu>
     
     <menu name="CommonAppBarDashboardMenu" default-menu-item-name="main" id="app-navigation" type="simple" title="${applicationTitle}&amp;nbsp;"
-        default-selected-style="active" menu-container-style="menu-main" default-link-style="${styles.menu_main_item_link}" selected-menuitem-context-field-name="headerItem" items-sort-mode="displaytext-ignorecase">
+        default-selected-style="${styles.menu_main_itemactive}" menu-container-style="menu-main" default-link-style="${styles.menu_main_item_link}" selected-menuitem-context-field-name="headerItem" items-sort-mode="displaytext-ignorecase">
         <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off">
             <condition><not><if-empty field="userLogin"/></not></condition>
             <link target="main" link-type="anchor"/>
@@ -38,14 +40,14 @@ under the License.
     </menu>
 
     <menu name="CommonTabBarMenu" selected-menuitem-context-field-name="tabButtonItem" type="simple"
-          menu-container-style="menu-tab" default-selected-style="active" default-link-style="${styles.menu_tab_item_link}"/>
+          menu-container-style="menu-tab" default-selected-style="${styles.menu_tab_itemactive}" default-link-style="${styles.menu_tab_item_link}"/>
     
     <!-- New in Cato -->
     <menu name="CommonSubTabBarMenu" selected-menuitem-context-field-name="tabButtonItem" type="simple"
-          menu-container-style="menu-tab" default-selected-style="active" default-link-style="${styles.menu_subtab_item_link}"/>
+          menu-container-style="menu-tab" default-selected-style="${styles.menu_subtab_itemactive}" default-link-style="${styles.menu_subtab_item_link}"/>
 
-    <menu name="CommonButtonBarMenu" type="simple" menu-container-style="menu-button" default-widget-style="" default-link-style="${styles.menu_button_item_link}" default-selected-style="" />    
+    <menu name="CommonButtonBarMenu" type="simple" menu-container-style="menu-button" default-widget-style="" default-link-style="${styles.menu_button_item_link}" default-selected-style="${styles.menu_button_itemactive}" />    
     
     <!-- New in Cato -->
-    <menu name="CommonSideBarMenu" type="simple" menu-container-style="menu-sidebar" default-link-style="${styles.menu_sidebar_item_link}" default-selected-style="active" items-sort-mode="displaytext-ignorecase" />
+    <menu name="CommonSideBarMenu" type="simple" menu-container-style="menu-sidebar" default-link-style="${styles.menu_sidebar_item_link}" default-selected-style="${styles.menu_sidebar_itemactive}" items-sort-mode="displaytext-ignorecase" />
 </menus>

@@ -70,7 +70,8 @@
               (though it was before)
        NOTE: there is duplication despite the menu_default_ fallbacks (supported by @menu) because otherwise the styles
           are too hard to use from EL syntax (widgets) - can't easily code fallbacks.
-       --> 
+       NOTE: The widget attribute "selected" usually translates to "active" in styles hash/FTL/CSS terminology (where "selected" may mean something else).
+          This is because there's only one highlight option for widgets and by convention the selected widget attrib should practically always be used to select the "active" menu item. --> 
     <#-- Generic menu types -->
     "menu_generic" : "",  
     "menu_generic_item" : "", 

@@ -898,7 +898,7 @@ menu item element must override this and provide a proper check.
                         <#local sufficientPs = false>
                         <#list availPageSizes as ps>
                            <#if !sufficientPs>
-                              <option <#if viewSize == ps> selected="selected" </#if> value="${ps}">${ps}</option>
+                              <option<#if viewSize == ps> selected="selected"</#if> value="${ps}">${ps}</option>
                               <#if (ps >= listSize)>
                                 <#local sufficientPs = true>
                               </#if>

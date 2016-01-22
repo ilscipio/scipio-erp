@@ -140,7 +140,7 @@
     </menu> 
     
     <menu name="EbayFeedbackTabBar" selected-menuitem-context-field-name="feedbackItem" type="simple" 
-        default-selected-style="${styles.menu_default_itemselected}" menu-container-style="button-bar button-style-2">
+        default-selected-style="${styles.menu_default_itemactive}" menu-container-style="button-bar button-style-2">
         <menu-item name="Feedback">
             <condition>
                 <not><if-empty  field="parameters.productStoreId"/></not>

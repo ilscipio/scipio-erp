@@ -37,7 +37,7 @@ under the License.
         <include-elements menu-name="ContentAppBar" recursive="full" />
     </menu>
 
-    <menu name="ContentTabBar"  menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemselected}" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
+    <menu name="ContentTabBar"  menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemactive}" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="tabButtonItem"
         title="" type="simple">
         <menu-item name="content" title="${uiLabelMap.ContentContent}">
@@ -140,7 +140,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="WebSiteButtonBar"  menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemselected}" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
+    <menu name="WebSiteButtonBar"  menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemactive}" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="tabButtonItem"
         title="" type="simple">
         <menu-item name="EditWebSite" title="${uiLabelMap.ContentWebSite}">
@@ -190,7 +190,7 @@ under the License.
         <include-elements menu-name="WebSiteButtonBar" recursive="includes-only" />
     </menu>
     
-    <menu name="BlogButtonBar"  menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemselected}" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
+    <menu name="BlogButtonBar"  menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemactive}" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="tabButtonItem"
         title="" type="simple">
         <menu-item name="ListBlog" title="${uiLabelMap.CommonList}">
@@ -234,7 +234,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="BlogArticleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-selected-style="${styles.menu_default_itemselected}" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
+    <menu name="BlogArticleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-selected-style="${styles.menu_default_itemactive}" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="tabButtonItem"
         title="" type="simple">
         <menu-item name="ListlogArt" title="${uiLabelMap.CommonList}">
@@ -271,7 +271,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ContentTopButtonBar" menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemselected}" type="simple" selected-menuitem-context-field-name="tabButtonItem">
+    <menu name="ContentTopButtonBar" menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemactive}" type="simple" selected-menuitem-context-field-name="tabButtonItem">
         <menu-item name="findContent" title="${uiLabelMap.CommonFind}">
             <link target="findContent"/>
         </menu-item>
@@ -285,7 +285,7 @@ under the License.
         <include-elements menu-name="ContentTopButtonBar" recursive="includes-only" />
     </menu>
     
-    <menu name="lookupMenu" menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemselected}" type="simple" selected-menuitem-context-field-name="tabButtonItem">
+    <menu name="lookupMenu" menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemactive}" type="simple" selected-menuitem-context-field-name="tabButtonItem">
         <menu-item name="close" title="${uiLabelMap.CommonClose}">
             <link target="javascript:window.close();" url-mode="plain"/>
         </menu-item>
@@ -293,7 +293,7 @@ under the License.
             <link target="showHelp?helpTopic=navigateHelp"/>
         </menu-item>
     </menu>
-    <menu name="contentMenu" menu-container-style="button-bar button-style-2" default-selected-style="${styles.menu_default_itemselected}" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="contentMenu" menu-container-style="button-bar button-style-2" default-selected-style="${styles.menu_default_itemactive}" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="EditContent" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditContent"/>
         </menu-item>
@@ -304,7 +304,7 @@ under the License.
             <link target="updateContentAllKeywords"/>
         </menu-item>
     </menu>
-    <menu name="websiteMenu" menu-container-style="button-bar button-style-2" default-selected-style="${styles.menu_default_itemselected}">
+    <menu name="websiteMenu" menu-container-style="button-bar button-style-2" default-selected-style="${styles.menu_default_itemactive}">
         <menu-item name="EditWebSite" title="${uiLabelMap.ContentCreateNewWebSite}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditWebSite"/>
         </menu-item>

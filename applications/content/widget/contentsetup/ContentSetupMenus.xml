@@ -23,7 +23,7 @@ under the License.
     
     <menu name="ContentSetupButtonBar" selected-menuitem-context-field-name="currentMenuItemName" default-menu-item-name="content"
         default-associated-content-id="${userLogin.userLoginId}" title="" type="simple"
-        menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemselected}">
+        menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemactive}">
 
         <menu-item name="contentPurposeOp" title="${uiLabelMap.PageTitleEditContentPurposeOperation}" >
             <link target="EditContentPurposeOperation" target-window="_top" style="tabButton"/>

@@ -293,14 +293,14 @@ under the License.
             <link target="showHelp?helpTopic=navigateHelp"/>
         </menu-item>
     </menu>
-    <menu name="contentMenu" menu-container-style="button-bar button-style-2" default-selected-style="${styles.menu_default_itemselected}">
+    <menu name="contentMenu" menu-container-style="button-bar button-style-2" default-selected-style="${styles.menu_default_itemselected}" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="EditContent" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditContent"/>
         </menu-item>
         <menu-item name="ContentSearchOptions" title="${uiLabelMap.CommonAdvancedSearch}">
             <link target="ContentSearchOptions"/>
         </menu-item>
-        <menu-item name="UpdateContentAllKeywords" title="${uiLabelMap.ContentAutoCreateKeywords}">
+        <menu-item name="UpdateContentAllKeywords" title="${uiLabelMap.ContentAutoCreateKeywords}" widget-style="+${styles.action_run_sys} ${styles.action_update}">
             <link target="updateContentAllKeywords"/>
         </menu-item>
     </menu>

@@ -289,13 +289,23 @@ public class ContentSearch {
 
             EntityListIterator eli = null;
             try {
-                eli = EntityQuery.use(delegator)
+                // Cato: prevent crash if maxResults == null
+                //eli = EntityQuery.use(delegator)
+                //        .select(fieldsToSelect).from(dynamicViewEntity)
+                //        .where(whereCondition)
+                //        .cursorScrollInsensitive()
+                //        .distinct()
+                //        .maxRows(maxResults)
+                //        .queryIterator();
+                EntityQuery query = EntityQuery.use(delegator)
                         .select(fieldsToSelect).from(dynamicViewEntity)
                         .where(whereCondition)
                         .cursorScrollInsensitive()
-                        .distinct()
-                        .maxRows(maxResults)
-                        .queryIterator();
+                        .distinct();
+                if (maxResults != null) {
+                    query = query.maxRows(maxResults);
+                }
+                eli = query.queryIterator();
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error in content search", module);
                 return null;

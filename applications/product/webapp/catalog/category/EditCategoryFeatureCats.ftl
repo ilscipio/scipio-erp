@@ -21,7 +21,7 @@ under the License.
 </form>
 
 <@menu type="button">
-  <@menuitem type="link" href="javascript:document.attachProductFeaturesToCategory.submit()" text="${uiLabelMap.ProductFeatureCategoryAttach}" />
+  <@menuitem type="link" href="javascript:document.attachProductFeaturesToCategory.submit()" text="${uiLabelMap.ProductFeatureCategoryAttach}" class="+${styles.action_run_sys!} ${styles.action_update!}"/>
 </@menu>
 
 <#if productCategoryId?? && productCategory??>

@@ -18,7 +18,7 @@ under the License.
 -->
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text="${uiLabelMap.ProductCreateNewFeature}" contentClass="+create" />
+    <@menuitem type="link" href=makeOfbizUrl("CreateFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text="${uiLabelMap.ProductCreateNewFeature}" contentClass="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.ProductEditFeaturesForFeatureCategory} \"${(curProductFeatureCategory.description)!}\"" menuContent=menuContent>
@@ -27,28 +27,27 @@ under the License.
         ${uiLabelMap.CommonAdd}
         <input type="text" name="featureNum" value="1" size="3" />
         ${uiLabelMap.ProductAddFeatureToCategory}
-        <input class="${styles.link_run_sys!} ${styles.action_add!}" type="submit" value="${uiLabelMap.CommonCreate}" />
+        <input class="${styles.link_nav!} ${styles.action_add!}" type="submit" value="${uiLabelMap.CommonCreate}" />
       </div>
       <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
     </form>
 </@section>
 
 <@section title="${uiLabelMap.ProductProductFeatureMaintenance}">
+      <#-- Cato: using @paginate
         <#macro productFeatureMaintNav>
-          <#if productId?has_content>
-            <#local productString = "&amp;productId=" + productId>
-          </#if>
           <@menu type="button">
             <@menuitem type="link" href=makeOfbizUrl("EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}") text="[${uiLabelMap.CommonPrevious}]" disabled=(viewIndex <= 0) />
             <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
             <@menuitem type="link" href=makeOfbizUrl("EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}") text="[${uiLabelMap.CommonNext}]" disabled=(listSize <= highIndex) />
           </@menu>
-        </#macro>
-        
-        <#if (listSize > 0)>
-          <@productFeatureMaintNav />
-        </#if>
-         
+        </#macro>-->
+
+    <#assign productString = "">
+    <#if productId?has_content>
+      <#assign productString = "&amp;productId=" + productId>
+    </#if>
+    <@paginate mode="content" url=makeOfbizUrl("EditFeatureCategoryFeatures") paramStr="productFeatureCategoryId=${productFeatureCategoryId!}${productString!}" viewSize=viewSize!1 viewIndex=viewIndex! listSize=listSize!0>
       <form method="post" action="<@ofbizUrl>UpdateProductFeatureInCategory</@ofbizUrl>" name="selectAllForm">
         <input type="hidden" name="_useRowSubmit" value="Y" />
         <input type="hidden" name="_checkGlobalScope" value="N" />
@@ -117,8 +116,6 @@ under the License.
         </#if>
         </@table>
       </form>
-        
-        <#if (listSize > 0)>
-          <@productFeatureMaintNav />
-        </#if>
+    </@paginate>
+ 
 </@section>

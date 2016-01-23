@@ -380,10 +380,12 @@ div.scrollable-table-container > table {
    @include button-style($bg:$success-button-bg-color, $bg-hover:$success-button-bg-hover, $border-color:$success-button-border-color);
 }
 
-/* individual run/submit creation links and run creation links in menu items (i.e., the submit button on the form) */
+/* REMOVED: no need to make this green, looks strange, so only do it for nav version (above); already covered by action-modify style further below
+ individual run/submit creation links and run creation links in menu items (i.e., the submit button on the form) 
 .action-run.action-scope-sys.action-modify.action-add.button, .action-run.action-scope-sys.action-modify.action-add .button {
    @include button-style($bg:$success-button-bg-color, $bg-hover:$success-button-bg-hover, $border-color:$success-button-border-color);
 }
+*/
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME: this should have an emphasis, but not sure if "info" color is appropriate... */

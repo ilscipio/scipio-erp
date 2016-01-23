@@ -10266,25 +10266,15 @@ div.scrollable-table-container > table {
   color: white;
 }
 
-/* individual run/submit creation links and run creation links in menu items (i.e., the submit button on the form) */
-/* line 384, ../scss/_base.scss */
+/* REMOVED: no need to make this green, looks strange, so only do it for nav version (above); already covered by action-modify style further below
+ individual run/submit creation links and run creation links in menu items (i.e., the submit button on the form) 
 .action-run.action-scope-sys.action-modify.action-add.button, .action-run.action-scope-sys.action-modify.action-add .button {
-  background-color: #43ac6a;
-  border-color: #368a55;
-  color: white;
+   @include button-style($bg:$success-button-bg-color, $bg-hover:$success-button-bg-hover, $border-color:$success-button-border-color);
 }
-/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-run.action-scope-sys.action-modify.action-add.button:hover, .action-run.action-scope-sys.action-modify.action-add.button:focus, .action-run.action-scope-sys.action-modify.action-add .button:hover, .action-run.action-scope-sys.action-modify.action-add .button:focus {
-  background-color: #368a55;
-}
-/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-run.action-scope-sys.action-modify.action-add.button:hover, .action-run.action-scope-sys.action-modify.action-add.button:focus, .action-run.action-scope-sys.action-modify.action-add .button:hover, .action-run.action-scope-sys.action-modify.action-add .button:focus {
-  color: white;
-}
-
+*/
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 390, ../scss/_base.scss */
+/* line 392, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #a0d3e8;
   border-color: #61b6d9;
@@ -10300,7 +10290,7 @@ div.scrollable-table-container > table {
 }
 
 /* special nav cancel/back/return action button (alt regular color) */
-/* line 395, ../scss/_base.scss */
+/* line 397, ../scss/_base.scss */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {
   background-color: #e7e7e7;
   border-color: #b9b9b9;
@@ -10316,7 +10306,7 @@ div.scrollable-table-container > table {
 }
 
 /* special run-action cancel action button (warning color) */
-/* line 400, ../scss/_base.scss */
+/* line 402, ../scss/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;
   border-color: #cf6e0e;

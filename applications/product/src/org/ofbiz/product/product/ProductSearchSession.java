@@ -872,7 +872,9 @@ public class ProductSearchSession {
         int lowIndex = 0;
         int listSize = 0;
         String paging = "Y";
-        int previousViewSize = 20;
+        // Cato: unhardcode default
+        //int previousViewSize = 20;
+        int previousViewSize = viewSize;
         Map<String, Object> requestParams = UtilHttp.getCombinedMap(request);
         List<String> keywordTypeIds = FastList.newInstance();
         if (requestParams.get("keywordTypeId") instanceof String) {

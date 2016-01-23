@@ -30,20 +30,18 @@ under the License.
 </#macro>
 
 <@section title="${uiLabelMap.PageTitleEditCategoryProducts}" menuContent=menuContent>
+      <#-- Cato: using @paginate
       <#macro categoryProductsNav>
         <@menu type="button">
           <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;activeOnly=${activeOnly.toString()}") text="${uiLabelMap.CommonPrevious}" disabled=(viewIndex <= 1) />
           <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
           <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;activeOnly=${activeOnly.toString()}") text="${uiLabelMap.CommonNext}" disabled=(listSize <= highIndex) />
         </@menu>
-      </#macro>
-      
-      <#if (listSize > 0)>
-        <@categoryProductsNav />
-      </#if>
+      </#macro>-->
 
-        <#if (listSize > 0)>
-           <form method="post" action="<@ofbizUrl>updateCategoryProductMember</@ofbizUrl>" name="updateCategoryProductForm">
+      <#if (listSize > 0)>
+        <@paginate mode="content" url=makeOfbizUrl("EditCategoryProducts") paramStr="productCategoryId=${productCategoryId!}&amp;activeOnly=${activeOnly.toString()}" viewSize=viewSize!1 viewIndex=viewIndex! listSize=listSize!0>
+            <form method="post" action="<@ofbizUrl>updateCategoryProductMember</@ofbizUrl>" name="updateCategoryProductForm">
               <input type="hidden" name="VIEW_SIZE" value="${viewSize}"/>
               <input type="hidden" name="VIEW_INDEX" value="${viewIndex}"/>
               <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
@@ -98,24 +96,21 @@ under the License.
                   <#assign rowCount = rowCount + 1>
               </#list>
               </@table>
-           </form>
-           <#assign rowCount = 0>
-           <#list productCategoryMembers as productCategoryMember>
-           <form name="deleteProductFromCategory_o_${rowCount}" method="post" action="<@ofbizUrl>removeCategoryProductMember</@ofbizUrl>">
+            </form>
+            <#assign rowCount = 0>
+            <#list productCategoryMembers as productCategoryMember>
+            <form name="deleteProductFromCategory_o_${rowCount}" method="post" action="<@ofbizUrl>removeCategoryProductMember</@ofbizUrl>">
               <input type="hidden" name="VIEW_SIZE" value="${viewSize}"/>
               <input type="hidden" name="VIEW_INDEX" value="${viewIndex}"/>
               <input type="hidden" name="productId" value="${(productCategoryMember.productId)!}" />
               <input type="hidden" name="productCategoryId" value="${(productCategoryMember.productCategoryId)!}"/>
               <input type="hidden" name="fromDate" value="${(productCategoryMember.fromDate)!}"/>
               <input type="hidden" name="activeOnly" value="${activeOnly.toString()}"/>
-           </form>
-             <#assign rowCount = rowCount + 1>
-           </#list>   
+            </form>
+            <#assign rowCount = rowCount + 1>
+          </#list>   
+        </@paginate>
       <#else>
         <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>     
-      </#if>
-    
-      <#if (listSize > 0)>
-        <@categoryProductsNav />
       </#if>
 </@section>

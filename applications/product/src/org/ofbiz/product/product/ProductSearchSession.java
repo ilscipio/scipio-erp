@@ -904,6 +904,7 @@ public class ProductSearchSession {
             previousViewSize = previousViewSizeInteger.intValue();
         }
 
+        // Cato: FIXME: paging is completely ignored in the stock code below! Not implemented!
         String pag = productSearchOptions.getPaging();
         if (paging != null) {
             paging = pag;

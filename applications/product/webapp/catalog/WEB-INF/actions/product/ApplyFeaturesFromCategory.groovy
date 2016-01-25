@@ -94,6 +94,8 @@ try {
 }
 
 context.productFeatures = productFeatures;
+// Cato: flag to tell template pagination happened
+context.productFeaturesPaginated = true;
 
 productFeatureApplMap = [:];
 productFeatureAppls = null;

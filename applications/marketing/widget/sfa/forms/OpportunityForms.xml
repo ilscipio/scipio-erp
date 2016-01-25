@@ -49,14 +49,14 @@ under the License.
         <actions>
             <set field="parameters.noConditionFind" value="Y"/>
             <set field="opportunityStageId" from-field="parameters.opportunityStageId"/>
-            <set field="parameters.opportunityStageId" value="${groovy:opportunityStageId==null?&quot;SOSTG_CLOSED&quot;:opportunityStageId}"/>
-            <set field="parameters.opportunityStageId_op" value="${groovy:opportunityStageId==null?&quot;notEqual&quot;:&quot;equals&quot;}"/>
-            <set field="parameters.roleTypeId" value="LEAD"/>
-            <set field="fieldList" value="${groovy:[&quot;partyId&quot;,&quot;salesOpportunityId&quot;,&quot;opportunityStageId&quot;,&quot;typeEnumId&quot;]}" type="List"/>
+            <set field="parameters.opportunityStageId" value="${groovy:opportunityStageId==null?'SOSTG_CLOSED':opportunityStageId}"/>
+            <set field="parameters.opportunityStageId_op" value="${groovy:opportunityStageId==null?'notEqual':'equals'}"/>
+            <set field="fieldList" value="${groovy:['partyId','salesOpportunityId','opportunityStageId','typeEnumId', 'roleTypeId']}" type="List"/>
+            <set field="sortField" from-field="parameters.sortField" default-value="salesOpportunityId"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
                 <field-map field-name="entityName" value="SalesOpportunityAndRole"/>
-                <field-map field-name="orderBy" from-field="parameters.sortField"/>
+                <field-map field-name="orderBy" value="${sortField}"/>
                 <field-map field-name="fieldList" from-field="fieldList"/>
                 <field-map field-name="distinct" value="Y"/>
                 <field-map field-name="viewIndex" from-field="viewIndex"/>
@@ -64,28 +64,28 @@ under the License.
             </service>
         </actions>
         <row-actions>
-            <set field="isDateAfterNow" value="${groovy:org.ofbiz.base.util.UtilValidate.isDateAfterNow(estimatedCloseDate)}" type="Boolean"/>
-            <entity-one entity-name="SalesOpportunity"/>
+            <entity-one entity-name="SalesOpportunity" value-field="salesOpportunity"/>
         </row-actions>
         <field name="salesOpportunityId"><hidden/></field>
-        <field name="opportunityName" title="${uiLabelMap.SfaOpportunityName}" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
-            <hyperlink target="ViewSalesOpportunity" description="${opportunityName} [${salesOpportunityId}]">
+        <field name="opportunityName" title="${uiLabelMap.SfaOpportunityName}" widget-style="${styles.link_nav_info_desc} ${styles.action_view}">
+            <hyperlink target="EditSalesOpportunity" description="${opportunityName} [${salesOpportunityId}] ${roleTypeId}">
                 <parameter param-name="salesOpportunityId"/>
             </hyperlink>
         </field>
         <field name="opportunityStageId" title="${uiLabelMap.SfaInitialStage}"><display-entity entity-name="SalesOpportunityStage" description="${description}"/></field>
-        <field name="partyId" title="${uiLabelMap.SfaLead}">
+        <field name="partyId" title="${uiLabelMap.SfaLead}/${uiLabelMap.Account}">
             <display-entity entity-name="PartyNameView" description="${firstName} ${lastName} ${middleName} ${groupName}" key-field-name="partyId">
                 <sub-hyperlink target="viewprofile" description="[${partyId}]" link-style="${styles.link_nav_info_id}">
                     <parameter param-name="partyId" from-field="partyId"/>
                 </sub-hyperlink>
             </display-entity> 
         </field>
+        <field name="roleTypeId"><display-entity entity-name="RoleType"/></field>
         <field name="nextStep"><display/></field>
         <field name="estimatedAmount" title="${uiLabelMap.SfaEstimatedAmount}"><display/></field>
         <field name="nextStepDate" position="1" title="${uiLabelMap.SfaNextStepDate}" sort-field="true"><display/></field>
         <field name="estimatedCloseDate" title="${uiLabelMap.SfaCloseDate}"><display/></field>
-        <field name="editAction" title="${uiLabelMap.CommonClose}" use-when="${groovy: estimatedCloseDate == null || isDateAfterNow == true || opportunityStageId != &quot;SOSTG_CLOSED&quot;}" widget-style="${styles.link_run_sys} ${styles.action_terminate}">
+        <field name="editAction" title="${uiLabelMap.CommonClose}" use-when="estimatedCloseDate == void || estimatedCloseDate == null || org.ofbiz.base.util.UtilValidate.isDateAfterNow(estimatedCloseDate) || opportunityStageId != &quot;SOSTG_CLOSED&quot;" widget-style="${styles.link_run_sys} ${styles.action_terminate}">
             <hyperlink target="closeSalesOpportunity" description="${uiLabelMap.CommonClose}">
                 <parameter param-name="salesOpportunityId"/>
                 <parameter param-name="opportunityStageId" value="SOSTG_CLOSED"/>
@@ -119,8 +119,8 @@ under the License.
             </drop-down>
         </field>
         <field name="nextStepDate" position="1" title="${uiLabelMap.SfaNextStepDate}"><date-time/></field>
-        <field name="estimatedCloseDate" position="2" title="${uiLabelMap.SfaCloseDate}" widget-style="required"><date-time/></field>
-        <field name="opportunityStageId" position="1" title="${uiLabelMap.SfaInitialStage}" widget-style="required">
+        <field name="estimatedCloseDate" position="2" title="${uiLabelMap.SfaCloseDate}"><date-time/></field>
+        <field name="opportunityStageId" position="1" title="${uiLabelMap.SfaInitialStage}">
             <drop-down>
                 <entity-options description="${description}" entity-name="SalesOpportunityStage">
                     <entity-order-by field-name="sequenceNum"/>
@@ -151,10 +151,10 @@ under the License.
                 </entity-options>
             </drop-down>
         </field>
-        <field name="accountPartyId" use-when="communicationEvent==null" title="${uiLabelMap.SfaInitialAccount}" ><lookup target-form-name="LookupPartyGroup" default-value="${accountPartyId}"/></field>
-        <field name="accountPartyId" use-when="communicationEvent!=null" title="${uiLabelMap.SfaInitialAccount}" ><lookup target-form-name="LookupPartyGroup" default-value="${accountPartyId}"/></field>
-        <field name="leadPartyId" use-when="communicationEvent==null" title="${uiLabelMap.SfaLead}" widget-style="required"><lookup target-form-name="LookupPerson" default-value="${leadPartyId}"/></field>
-        <field name="leadPartyId" use-when="communicationEvent!=null" title="${uiLabelMap.SfaLead}" widget-style="required"><lookup target-form-name="LookupPerson" default-value="${communicationEvent.partyIdFrom}"/></field>
+        <field name="accountPartyId" use-when="communicationEvent==null" title="${uiLabelMap.SfaInitialAccount}" ><lookup target-form-name="LookupAccount" default-value="${accountPartyId}"/></field>
+        <field name="accountPartyId" use-when="communicationEvent!=null" title="${uiLabelMap.SfaInitialAccount}" ><lookup target-form-name="LookupAccount" default-value="${accountPartyId}"/></field>
+        <field name="leadPartyId" use-when="communicationEvent==null" title="${uiLabelMap.SfaLead}"><lookup target-form-name="LookupLead" default-value="${leadPartyId}"/></field>
+        <field name="leadPartyId" use-when="communicationEvent!=null" title="${uiLabelMap.SfaLead}"><lookup target-form-name="LookupLead" default-value="${communicationEvent.partyIdFrom}"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}" use-when="salesOpportunity==null"><submit button-type="button"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}" use-when="salesOpportunity!=null"><submit button-type="button"/></field>
     </form>

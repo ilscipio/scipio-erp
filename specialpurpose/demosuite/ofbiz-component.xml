@@ -12,6 +12,7 @@
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="jar" location="lib/*"/>
 
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/CatoDemoCatalogData.xml"/>
 
     <!-- service resources: model(s), eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
@@ -19,6 +20,7 @@
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     <service-resource type="group" loader="main" location="servicedef/groups.xml"/>
     -->
+
 
     <!-- web applications; will be mounted when using the embedded container -->
     <webapp name="demosuite"

@@ -54,8 +54,9 @@ under the License.
 <@section title="${uiLabelMap.ProductAdvancedSearchInCategory}">
     <form id="advToKeywordSearchform" name="advToKeywordSearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
       <fieldset>
+        <#-- Cato: don't hardcode
         <input type="hidden" name="VIEW_SIZE" value="25"/>
-        <input type="hidden" name="PAGING" value="Y"/>
+        <input type="hidden" name="PAGING" value="Y"/>-->
         <input type="hidden" name="noConditionFind" value="Y"/>
           <#if searchCategory?has_content>
             <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId!}"/>

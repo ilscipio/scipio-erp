@@ -18,7 +18,7 @@ under the License.
 -->
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0") text="${uiLabelMap.WebtoolsBackToFindScreen}" />
+    <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValueOrNull('webtools', 'webtools.record.viewSize.default')!50}&amp;VIEW_INDEX=0") text="${uiLabelMap.WebtoolsBackToFindScreen}" />
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.WebtoolsRelations}">
@@ -38,7 +38,7 @@ under the License.
             <#list relations as relation>
                 <@tr>
                     <@td>${relation.title}</@td>
-                    <@td class="button-col"><a href="<@ofbizUrl>FindGeneric?entityName=${relation.relEntityName}&amp;find=true&amp;VIEW_SIZE=50&amp;VIEW_INDEX=0</@ofbizUrl>">${relation.relEntityName}</a></@td>
+                    <@td class="button-col"><a href="<@ofbizUrl>FindGeneric?entityName=${relation.relEntityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValueOrNull("webtools", "webtools.record.viewSize.default")!50}&amp;VIEW_INDEX=0</@ofbizUrl>">${relation.relEntityName}</a></@td>
                     <@td>${relation.type}</@td>
                     <@td>${relation.fkName}</@td>
                     <@td>

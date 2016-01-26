@@ -20,8 +20,9 @@ under the License.
 <#assign currentCatalogId = Static["org.ofbiz.product.catalog.CatalogWorker"].getCurrentCatalogId(request)/>
 <@heading>${uiLabelMap.ProductAdvancedSearchInCategory}</@heading>
 <form name="advtokeywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
+  <#-- Cato: don't hardcode these
   <input type="hidden" name="VIEW_SIZE" value="10"/>
-  <input type="hidden" name="PAGING" value="Y"/>
+  <input type="hidden" name="PAGING" value="Y"/>-->
   <@table>
     <input type="hidden" name="SEARCH_CATALOG_ID" value="${currentCatalogId}" />
     <#if searchCategory?has_content>

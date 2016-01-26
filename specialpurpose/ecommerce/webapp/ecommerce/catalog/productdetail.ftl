@@ -909,8 +909,9 @@ ${virtualVariantJavaScript!}
         <input type="hidden" name="keywordTypeId" value="KWT_TAG"/>
         <input type="hidden" name="statusId" value="KW_APPROVED"/>
         <input type="hidden" name="clearSearch" value="Y"/>
+        <#-- Cato: don't hardcode
         <input type="hidden" name="VIEW_SIZE" value="10"/>
-        <input type="hidden" name="PAGING" value="Y"/>
+        <input type="hidden" name="PAGING" value="Y"/>-->
         <input type="hidden" name="SEARCH_STRING" id="productTagStr"/>
     </form>
     </div>

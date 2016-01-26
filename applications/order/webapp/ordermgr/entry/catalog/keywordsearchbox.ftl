@@ -20,8 +20,9 @@ under the License.
 <@section title="${uiLabelMap.ProductSearchCatalog}" id="keywordsearchbox">
     <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
       <@fields type="generic"> <#-- no auto label areas or fancy things -->
+        <#-- Cato: don't hardcode these
         <input type="hidden" name="VIEW_SIZE" value="10" />
-        <input type="hidden" name="PAGING" value="Y" />
+        <input type="hidden" name="PAGING" value="Y" />-->
         <@field type="input" name="SEARCH_STRING" size="14" maxlength="50" value="${requestParameters.SEARCH_STRING!}" />
         
         <#if (0 < otherSearchProdCatalogCategories?size)>

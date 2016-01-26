@@ -18,7 +18,8 @@ under the License.
 -->
 <@section title="${uiLabelMap.CommonAdvancedSearch}">
     <form name="advToKeyWordSearchForm" method="post" action="<@ofbizUrl>WorkEffortSearchResults</@ofbizUrl>">
-      <input type="hidden" name="VIEW_SIZE" value="25"/>
+        <#-- Cato: don't hardcode
+        <input type="hidden" name="VIEW_SIZE" value="25"/>-->
         <@field type="generic" label="${uiLabelMap.WorkEffortKeywords}">
             <input type="text" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}"/>&nbsp;
               ${uiLabelMap.CommonAny}<input type="radio" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked="checked"</#if>/>

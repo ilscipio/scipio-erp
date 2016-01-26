@@ -44,8 +44,9 @@ under the License.
     <form id="productSearchform" method="post" action="<@ofbizUrl>productsearch</@ofbizUrl>" name="productSearchform">
     <input type="hidden" name="productStoreId" value="${parameters.productStoreId!}" />
       <fieldset>
+        <#-- Cato: don't hardcode
         <input type="hidden" name="VIEW_SIZE" value="25"/>
-        <input type="hidden" name="PAGING" value="Y"/>
+        <input type="hidden" name="PAGING" value="Y"/>-->
         <input type="hidden" name="noConditionFind" value="Y"/>
           <@field type="generic" label="${uiLabelMap.ProductCatalog}">
                   <select name="SEARCH_CATALOG_ID" id="searchCatalogId" onchange="javascript:selectChange(document.getElementById('advToKeywordSearchform'), document.getElementById('searchCatalogId'));" class="required">

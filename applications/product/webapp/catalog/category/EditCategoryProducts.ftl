@@ -30,14 +30,6 @@ under the License.
 </#macro>
 
 <@section title="${uiLabelMap.PageTitleEditCategoryProducts}" menuContent=menuContent>
-      <#-- Cato: using @paginate
-      <#macro categoryProductsNav>
-        <@menu type="button">
-          <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;activeOnly=${activeOnly.toString()}") text="${uiLabelMap.CommonPrevious}" disabled=(viewIndex <= 1) />
-          <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-          <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;activeOnly=${activeOnly.toString()}") text="${uiLabelMap.CommonNext}" disabled=(listSize <= highIndex) />
-        </@menu>
-      </#macro>-->
 
       <#if (listSize > 0)>
         <@paginate mode="content" url=makeOfbizUrl("EditCategoryProducts") paramStr="productCategoryId=${productCategoryId!}&amp;activeOnly=${activeOnly.toString()}" viewSize=viewSize!1 viewIndex=viewIndex! listSize=listSize!0>

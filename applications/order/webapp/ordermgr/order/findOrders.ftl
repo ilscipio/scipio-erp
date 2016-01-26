@@ -101,10 +101,10 @@ function submitFindForm(val){
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if (requestParameters.hideFields!"N") == "Y">
-    <@menuitem type="link" href="javascript:document.lookupandhidefields${requestParameters.hideFields}.submit()" text="${uiLabelMap.CommonShowLookupFields}" />
+    <@menuitem type="link" href="javascript:document.lookupandhidefields${requestParameters.hideFields}.submit()" text="${uiLabelMap.CommonShowLookupFields}" class="+${styles.action_run_sys!} ${styles.action_show!}" />
   <#else>
     <#if orderList??>
-      <@menuitem type="link" href="javascript:document.lookupandhidefields${requestParameters.hideFields!'Y'}.submit()" text="${uiLabelMap.CommonHideFields}" />
+      <@menuitem type="link" href="javascript:document.lookupandhidefields${requestParameters.hideFields!'Y'}.submit()" text="${uiLabelMap.CommonHideFields}" class="+${styles.action_run_sys!} ${styles.action_hide!}" />
     </#if>
     <@menuitem type="link" href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey!}" text="${uiLabelMap.PartyLookupParty}" />
     <@menuitem type="link" href="javascript:lookupOrders(true);" text="${uiLabelMap.OrderLookupOrder}" />
@@ -304,7 +304,7 @@ document.lookuporder.orderId.focus();
   
     <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"showAll": showAll!"", "hideFields": requestParameters.hideFields!"N"}, "&amp;", false)>
     <#-- forcePost required because search done from service event with https="true" -->
-    <@paginate mode="content" url=makeOfbizUrl("searchorders") viewSize=viewSize!1 viewIndex=viewIndex! listSize=orderListSize!0 altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1>
+    <@paginate mode="content" url=makeOfbizUrl("searchorders") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=orderListSize!0 altParam=true forcePost=true viewIndexFirst=1>
    
     <form name="massOrderChangeForm" method="post" action="javascript:void(0);">
         <input type="hidden" name="screenLocation" value="component://order/widget/ordermgr/OrderPrintScreens.xml#OrderPDF"/>

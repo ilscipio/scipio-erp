@@ -36,9 +36,9 @@ under the License.
     </@td>
     <@td align="right">
       <#if showOld>
-        <a href="<@ofbizUrl>viewprofile</@ofbizUrl>" class="button">${uiLabelMap.PartyHideOld}</a>
+        <a href="<@ofbizUrl>viewprofile</@ofbizUrl>" class="+${styles.action_run_sys!} ${styles.action_hide!}">${uiLabelMap.PartyHideOld}</a>
       <#else>
-        <a href="<@ofbizUrl>viewprofile?SHOW_OLD=true</@ofbizUrl>" class="button">${uiLabelMap.PartyShowOld}</a>
+        <a href="<@ofbizUrl>viewprofile?SHOW_OLD=true</@ofbizUrl>" class="+${styles.action_run_sys!} ${styles.action_show!}">${uiLabelMap.PartyShowOld}</a>
       </#if>
       <#if (productStore.enableDigProdUpload)! == "Y">
         <a href="<@ofbizUrl>digitalproductlist</@ofbizUrl>" class="button">${uiLabelMap.EcommerceDigitalProductUpload}</a>

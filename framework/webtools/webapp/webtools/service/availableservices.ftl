@@ -76,7 +76,7 @@ under the License.
           </@tr>
           <@tr>
             <@td>${uiLabelMap.WebtoolsExportable}</@td>
-            <@td>${selectedServiceMap.export}<#if selectedServiceMap.exportBool = "true">&nbsp;(<a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}&amp;show_wsdl=true</@ofbizUrl>">${uiLabelMap.WebtoolsShowShowWSDL}</a>)</#if></@td>
+            <@td>${selectedServiceMap.export}<#if selectedServiceMap.exportBool = "true">&nbsp;(<a href="<@ofbizUrl>${url}?sel_service_name=${selectedServiceMap.serviceName}&amp;show_wsdl=true</@ofbizUrl>" class="+${styles.link_nav!}" >${uiLabelMap.WebtoolsShowShowWSDL}</a>)</#if></@td>
             <@td>${uiLabelMap.WebtoolsLocation}</@td>
             <@td><a href="<@ofbizUrl>${url}?constraint=location@${selectedServiceMap.location}</@ofbizUrl>">${selectedServiceMap.location}</a></@td>
           </@tr>

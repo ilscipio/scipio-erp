@@ -34,14 +34,6 @@ under the License.
 </@section>
 
 <@section title="${uiLabelMap.ProductProductFeatureMaintenance}">
-      <#-- Cato: using @paginate
-        <#macro productFeatureMaintNav>
-          <@menu type="button">
-            <@menuitem type="link" href=makeOfbizUrl("EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}") text="[${uiLabelMap.CommonPrevious}]" disabled=(viewIndex <= 0) />
-            <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-            <@menuitem type="link" href=makeOfbizUrl("EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}") text="[${uiLabelMap.CommonNext}]" disabled=(listSize <= highIndex) />
-          </@menu>
-        </#macro>-->
 
     <#assign productString = "">
     <#if productId?has_content>

@@ -25,10 +25,10 @@ function lookupInventory() {
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
       <#if requestParameters.hideFields?default("N") == "Y">
-        <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?hideFields=N${paramList}") text="${uiLabelMap.CommonShowLookupFields}" />
+        <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?hideFields=N${paramList}") text="${uiLabelMap.CommonShowLookupFields}" class="+${styles.action_run_sys!} ${styles.action_show!}" />
       <#else>
         <#if inventoryList??>
-            <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?hideFields=Y${paramList}") text="${uiLabelMap.CommonHideFields}" />
+            <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?hideFields=Y${paramList}") text="${uiLabelMap.CommonHideFields}" class="+${styles.action_run_sys!} ${styles.action_hide!}" />
         </#if>
       </#if>
   </@menu>
@@ -45,7 +45,7 @@ function lookupInventory() {
               <@htmlTemplate.renderDateTimeField name="eventDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.eventDate!}" size="25" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
           </@field>
           <@field type="submitarea">
-              <a href="javascript:lookupInventory();" class="${styles.link_nav!} ${styles.action_find!}">&nbsp; ${uiLabelMap.CommonFind} &nbsp;</a>
+              <a href="javascript:lookupInventory();" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a>
           </@field>
       </#if>
     </form>
@@ -59,19 +59,11 @@ document.lookupinventory.productId.focus();
 <#if requestParameters.lookupFlag?default("N") == "Y">
     <@section>
       <#if inventoryList?has_content>
-        <@row>
-          <@cell class="+${styles.float_clearfix!}">
-           <p class="${styles.float_left!}">${uiLabelMap.CommonElementsFound}</p>
-          <#if (0 < listSize)>
-            <@menu type="button" class="+${styles.float_right!}">
-              <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${requestParameters.hideFields?default('N')}${paramList}") text="${uiLabelMap.CommonPrevious}" disabled=(!(0 < viewIndex)) />
-              <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-              <@menuitem type="link" href=makeOfbizUrl("FindInventoryEventPlan?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${requestParameters.hideFields?default('N')}${paramList}") text="${uiLabelMap.CommonNext}" disabled=(!(highIndex < listSize)) />
-            </@menu>
-          </#if>
-          </@cell>
-        </@row>
+        <p class="${styles.float_left!}">${uiLabelMap.CommonElementsFound}</p>
 
+    <#-- Cato: FIXME?: I'm not sure this search works properly... -->
+    <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"hideFields": requestParameters.hideFields!"N"}, "&amp;", false)>
+    <@paginate mode="content" url=makeOfbizUrl("FindInventoryEventPlan") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
       <@table type="data-complex" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
        <@thead>
         <@tr class="header-row">
@@ -162,8 +154,9 @@ document.lookupinventory.productId.focus();
             </@tr>
             <#assign count=count+1>
            </#list>
-
        </@table>
+      </@paginate>
+
       <#else>
        <@resultMsg>${uiLabelMap.CommonNoElementFound}</@resultMsg>
       </#if>

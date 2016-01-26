@@ -23,9 +23,9 @@ under the License.
     <span>${uiLabelMap.CommonSortedBy}:</span>${searchSortOrderString}
     <div><a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonRefineSearch}</a></div>
 
-    <#if !productIds?has_content>
-      <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
-    <#else>
+  <#if !productIds?has_content>
+    <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
+  <#else>
     <@script>
         function checkProductToBagTextArea(field, idValue) {
             fullValue = idValue + "\n";
@@ -60,47 +60,15 @@ under the License.
             e.checked = !e.checked;
         }
     </@script>
-    
-  <#macro keywordSearchNav>
-    <@row>
-        <@cell class="+${styles.text_right!}">
-        <#if (0 < listSize?int)>
-          <@menu type="button">
-              <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>
-                <@menuitem type="link" href=makeOfbizUrl("keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N/~PAGING=${paging}/~noConditionFind=${noConditionFind}/~ACTIVE_PRODUCT=${parameters.ACTIVE_PRODUCT}/~GOOGLE_SYNCED=${parameters.GOOGLE_SYNCED}/~DISCONTINUED_PRODUCT=${parameters.DISCONTINUED_PRODUCT}/~productStoreId=${parameters.productStoreId}") text="${uiLabelMap.CommonPrevious}" disabled=(!(0 < viewIndex?int)) />
-              <#else>
-                <@menuitem type="link" href=makeOfbizUrl("keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N/~PAGING=${paging}/~noConditionFind=${noConditionFind}") text="${uiLabelMap.CommonPrevious}" disabled=(!(0 < viewIndex?int)) />
-              </#if>
-            
-                <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-       
-              <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>
-                <@menuitem type="link" href=makeOfbizUrl("keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N/~PAGING=${paging}/~noConditionFind=${noConditionFind}/~ACTIVE_PRODUCT=${parameters.ACTIVE_PRODUCT}/~GOOGLE_SYNCED=${parameters.GOOGLE_SYNCED}/~DISCONTINUED_PRODUCT=${parameters.DISCONTINUED_PRODUCT}/~productStoreId=${parameters.productStoreId}") text="${uiLabelMap.CommonNext}" disabled=(!(highIndex?int < listSize?int)) />
-              <#else>
-                <@menuitem type="link" href=makeOfbizUrl("keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N/~PAGING=${paging}/~noConditionFind=${noConditionFind}") text="${uiLabelMap.CommonNext}" disabled=(!(highIndex?int < listSize?int)) />
-              </#if>
-
-            <#if (paging == "Y")>
-              <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>
-                <@menuitem type="link" href=makeOfbizUrl("keywordsearch/~VIEW_INDEX=0/~VIEW_SIZE=99999/~clearSearch=N/~PAGING=N/~noConditionFind=${noConditionFind}/~ACTIVE_PRODUCT=${parameters.ACTIVE_PRODUCT}/~GOOGLE_SYNCED=${parameters.GOOGLE_SYNCED}/~DISCONTINUED_PRODUCT=${parameters.DISCONTINUED_PRODUCT}/~productStoreId=${parameters.productStoreId}") text="${uiLabelMap.CommonPagingOff}" />
-              <#else>
-                <@menuitem type="link" href=makeOfbizUrl("keywordsearch/~VIEW_INDEX=0/~VIEW_SIZE=99999/~clearSearch=N/~PAGING=N/~noConditionFind=${noConditionFind}") text="${uiLabelMap.CommonPagingOff}" />
-              </#if>
-            <#else>
-                <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>
-                    <@menuitem type="link" href=makeOfbizUrl("keywordsearch/~VIEW_INDEX=0/~VIEW_SIZE=${previousViewSize}/~clearSearch=N/~PAGING=Y/~noConditionFind=${noConditionFind}/~ACTIVE_PRODUCT=${parameters.ACTIVE_PRODUCT}/~GOOGLE_SYNCED=${parameters.GOOGLE_SYNCED}/~DISCONTINUED_PRODUCT=${parameters.DISCONTINUED_PRODUCT}/~productStoreId=${parameters.productStoreId}") text="${uiLabelMap.CommonPagingOn}" />
-                <#else>
-                    <@menuitem type="link" href=makeOfbizUrl("keywordsearch/~VIEW_INDEX=0/~VIEW_SIZE=${previousViewSize}/~clearSearch=N/~PAGING=Y/~noConditionFind=${noConditionFind}") text="${uiLabelMap.CommonPagingOn}" />
-                </#if>
-            </#if>
-          </@menu>
-        </#if>
-        </@cell>
-    </@row>
-  </#macro>
   
-    <@keywordSearchNav />
-
+  <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>
+    <#assign paramStr = "~clearSearch=N/~noConditionFind=${noConditionFind}/~ACTIVE_PRODUCT=${parameters.ACTIVE_PRODUCT}/~GOOGLE_SYNCED=${parameters.GOOGLE_SYNCED}/~DISCONTINUED_PRODUCT=${parameters.DISCONTINUED_PRODUCT}/~productStoreId=${parameters.productStoreId}">
+  <#else>
+    <#assign paramStr = "~clearSearch=N/~noConditionFind=${noConditionFind}">
+  </#if>
+  <#-- Cato: FIXME: removed this toggle because the Java product search session impl. is incomplete:
+   paginateToggle=true paginateOn=((paging!"N")=="Y")-->
+  <@paginate mode="content" url=makeOfbizUrl("keywordsearch") paramStr=paramStr paramDelim="/" paramPrefix="~" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
     <form method="post" name="products">
       <input type="hidden" name="productStoreId" value="${parameters.productStoreId!}" />
       <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
@@ -123,7 +91,7 @@ under the License.
         </@tbody>
       </@table>
     </form>
+  </@paginate>
 
-    <@keywordSearchNav />
-    </#if>
+  </#if>
 </@section>

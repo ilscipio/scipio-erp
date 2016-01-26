@@ -30,7 +30,7 @@ under the License.
             <#assign index = index + 1/>
           </#list>
           
-          <@field type="select" label="" name="shoppingListId" currentValue="">
+          <@field type="select" label="${uiLabelMap.PageTitleShoppingList}" name="shoppingListId" currentValue="">
           <#list shoppingLists as shoppingList>
             <option value="${shoppingList.shoppingListId}">${shoppingList.getString("listName")}</option>
           </#list>

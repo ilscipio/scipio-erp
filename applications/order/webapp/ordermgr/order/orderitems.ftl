@@ -318,8 +318,7 @@ under the License.
                                     <@td colspan="6">
                                         <#if orderItem.orderItemTypeId != "RENTAL_ORDER_ITEM">
                                                                 ${uiLabelMap.ManufacturingProductionRun}
-                                            <a href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}${StringUtil.wrapString(externalKeyParam)}"
-                                                                    class="">${workEffort.workEffortId}</a>
+                                            <a href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_id!}">${workEffort.workEffortId}</a>
                                             ${uiLabelMap.OrderCurrentStatus}
                                             ${(delegator.findOne("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.getString("currentStatusId")), true).get("description",locale))!}
                                         <#else>

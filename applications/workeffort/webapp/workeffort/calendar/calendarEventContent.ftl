@@ -18,7 +18,7 @@ under the License.
 -->
 
 <#if workEffort.workEffortTypeId == "PROD_ORDER_HEADER">
-  <a href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}" class="event">
+  <a href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortId}" class="${styles.link_nav_info_id!} event">
     ${workEffort.workEffortId}
   </a>
   &nbsp;${workEffort.workEffortName?default("Undefined")}
@@ -34,7 +34,7 @@ under the License.
     </#list>
   </#if>
 <#elseif workEffort.workEffortTypeId == "PROD_ORDER_TASK">
-  <a href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortParentId}" class="event">
+  <a href="/manufacturing/control/ShowProductionRun?productionRunId=${workEffort.workEffortParentId}" class="${styles.link_nav_info_desc!} event">
     ${workEffort.workEffortParentId} / ${workEffort.workEffortId}
   </a>
   &nbsp;${workEffort.workEffortName?default("Undefined")}<#if workEffort.reservPersons??>&nbsp;Persons:${workEffort.reservPersons}</#if>

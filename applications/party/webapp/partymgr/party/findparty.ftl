@@ -40,9 +40,9 @@ under the License.
     <@menuitem type="link" href=makeOfbizUrl("${createUrl}") text="${uiLabelMap.CommonNew}" contentClass="+create" />
 <#if partyList?has_content>    
   <#if hideFields == "Y">
-    <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=N&amp;sortField=${sortField!}${paramList}") text="${uiLabelMap.CommonShowLookupFields}" class="+collapsed" />
+    <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=N&amp;sortField=${sortField!}${paramList}") text="${uiLabelMap.CommonShowLookupFields}" class="+${styles.action_run_sys!} ${styles.action_show!} ${styles.collapsed!}" />
   <#else>
-    <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=Y&amp;sortField=${sortField!}${paramList}") text="${uiLabelMap.CommonHideFields}" class="+expanded" />
+    <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=Y&amp;sortField=${sortField!}${paramList}") text="${uiLabelMap.CommonHideFields}" class="+${styles.action_run_sys!} ${styles.action_hide!} ${styles.expanded!}" />
   </#if>
 </#if>  
   </@menu>

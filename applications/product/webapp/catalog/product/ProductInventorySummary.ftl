@@ -19,9 +19,9 @@ under the License.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if parameters.showAllFacilities??>
-    <@menuitem type="link" href="EditProductInventoryItems?productId=${productId}" text="${uiLabelMap.ProductShowProductFacilities}" />
+    <@menuitem type="link" href="EditProductInventoryItems?productId=${productId}" text="${uiLabelMap.ProductShowProductFacilities}" class="+${styles.action_run_sys!} ${styles.action_find!}" />
   <#else>
-    <@menuitem type="link" href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" text="${uiLabelMap.ProductShowAllFacilities}" />
+    <@menuitem type="link" href="EditProductInventoryItems?productId=${productId}&amp;showAllFacilities=Y" text="${uiLabelMap.ProductShowAllFacilities}" class="+${styles.action_run_sys!} ${styles.action_find!}" />
   </#if>
   </@menu>
 </#macro>

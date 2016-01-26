@@ -22,10 +22,10 @@ under the License.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if parameters.hideFields?default("N") == "Y">
-    <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N${paramList}") text="${uiLabelMap.CommonShowLookupFields}" />
+    <@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=N${paramList}") text="${uiLabelMap.CommonShowLookupFields}" class="+${styles.action_run_sys!} ${styles.action_show!}"/>
   <#else>
-    <#if partyList??><@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=Y${paramList}") text="${uiLabelMap.CommonHideFields}" /></#if>
-    <@menuitem type="link" href="javascript:document.lookupparty.submit();" text="${uiLabelMap.PartyLookupParty}" />
+    <#if partyList??><@menuitem type="link" href=makeOfbizUrl("findEmployees?hideFields=Y${paramList}") text="${uiLabelMap.CommonHideFields}" class="+${styles.action_run_sys!} ${styles.action_hide!}"/></#if>
+    <#--<@menuitem type="link" href="javascript:document.lookupparty.submit();" text="${uiLabelMap.PartyLookupParty}" />-->
   </#if>
   </@menu>
 </#macro>
@@ -57,8 +57,8 @@ under the License.
                 <@field type="generic" label="${uiLabelMap.PartyUserLogin}">
                     <input type="text" name="userLoginId" value="${parameters.userLoginId!}"/>
                 </@field>
-                <@field type="generic"><input type="hidden" name="groupName" value="${parameters.groupName!}"/></@field>
-                <@field type="generic"><input type="hidden" name="roleTypeId" value="EMPLOYEE"/></@field>
+                <input type="hidden" name="groupName" value="${parameters.groupName!}"/>
+                <input type="hidden" name="roleTypeId" value="EMPLOYEE"/>
                 
             <#if extInfo == "P">
                 <hr />
@@ -103,7 +103,7 @@ under the License.
                     <input type="text" name="infoString" value="${parameters.infoString!}"/>
                 </@field>
             </#if>
-                <hr />
+                <#--<hr />-->
                 <@field type="submitarea">
                     <input type="submit" value="${uiLabelMap.PartyLookupParty}" onclick="javascript:document.lookupparty.submit();" class="${styles.link_run_sys!} ${styles.action_find!}"/>
                     <a href="<@ofbizUrl>findEmployees?roleTypeId=EMPLOYEE&amp;hideFields=Y&amp;lookupFlag=Y</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonShowAllRecords}</a>
@@ -119,17 +119,13 @@ under the License.
   </#if>
     
   <#if partyList??>
-    <#macro menuContent menuArgs={}>
-      <@menu args=menuArgs>
-      <#if (partyListSize > 0)>
-        <@menuitem type="link" href=makeOfbizUrl("findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}&amp;hideFields=${parameters.hideFields?default('N')}${paramList}") text="${uiLabelMap.CommonNext}" contentClass="+nav-next" disabled=(!(partyListSize > highIndex)) />
-        <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${partyListSize}" />
-        <@menuitem type="link" href=makeOfbizUrl("findEmployees?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}&amp;hideFields=${parameters.hideFields?default('N')}${paramList}") text="${uiLabelMap.CommonPrevious}" contentClass="+nav-previous" disabled=(!(viewIndex > 0)) />
-      </#if>
-      </@menu>
-    </#macro>
-    <@section id="findEmployeeResults" title="${uiLabelMap.PartyPartiesFound}" menuContent=menuContent>
+    <@section id="findEmployeeResults" title="${uiLabelMap.PartyPartiesFound}">
+    <#if lookupErrorMessage??>
+        <@alert type="error">${lookupErrorMessage}</@alert>
+    </#if>
     <#if partyList?has_content>
+      <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"hideFields": parameters.hideFields!"N"}, "&amp;", false)>
+      <@paginate mode="content" url=makeOfbizUrl("findEmployees") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=partyListSize!0>
         <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
           <@thead>
             <@tr class="header-row">
@@ -175,11 +171,9 @@ under the License.
             </@tr>
             </#list>
         </@table>
+      </@paginate>
     <#else>
         <@resultMsg>${uiLabelMap.PartyNoPartiesFound}</@resultMsg>
-    </#if>
-    <#if lookupErrorMessage??>
-        <@alert type="error">${lookupErrorMessage}</@alert>
     </#if>
     </@section>
   </#if>

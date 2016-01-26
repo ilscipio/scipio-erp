@@ -26,9 +26,9 @@ under the License.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if !partyId?? && showAll?lower_case == "true">
-    <@menuitem type="link" href=makeOfbizUrl("showvisits?showAll=false") text="${uiLabelMap.PartyShowActive}" />
+    <@menuitem type="link" href=makeOfbizUrl("showvisits?showAll=false") text="${uiLabelMap.PartyShowActive}" class="+${styles.action_run_sys!} ${styles.action_find!}" />
   <#elseif !partyId??>
-    <@menuitem type="link" href=makeOfbizUrl("showvisits?showAll=true") text="${uiLabelMap.PartyShowAll}" />
+    <@menuitem type="link" href=makeOfbizUrl("showvisits?showAll=true") text="${uiLabelMap.PartyShowAll}" class="+${styles.action_run_sys!} ${styles.action_find!}" />
   </#if>
   </@menu>
 </#macro>

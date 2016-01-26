@@ -605,13 +605,13 @@
     
     <menu name="CommFindTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="find">
-        <menu-item name="find" title="${uiLabelMap.CommonFind}">
+        <menu-item name="find" title="${uiLabelMap.CommonFind}" widget-style="+${styles.action_nav} ${styles.action_find}">
             <link target="findCommunications" url-mode="intra-app">
                 <parameter param-name="partyId"/>
                 <parameter param-name="communicationEventId"/>
             </link>
         </menu-item>
-        <menu-item name="showall" title="${uiLabelMap.CommonShowAll}">
+        <menu-item name="showall" title="${uiLabelMap.CommonShowAll}" widget-style="+${styles.action_run_sys} ${styles.action_find}">
             <link target="listCommunications" url-mode="intra-app">
                 <parameter param-name="partyId"/>
                 <parameter param-name="communicationEventId"/>

@@ -19,29 +19,24 @@ under the License.
 
 <@menu type="button">
 <#if curProductFeatureCategory??>
-  <@menuitem type="link" href=makeOfbizUrl("EditFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text="${uiLabelMap.ProductCreateNewFeature}" />
+  <@menuitem type="link" href=makeOfbizUrl("EditFeature?productFeatureCategoryId=${productFeatureCategoryId!}") text="${uiLabelMap.ProductCreateNewFeature}" class="+${styles.action_nav!} ${styles.action_add!}" />
 <#elseif productFeatureGroup??>
-  <@menuitem type="link" href=makeOfbizUrl("EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}") text="${uiLabelMap.CommonEdit} ${productFeatureGroup.description!}" />
+  <@menuitem type="link" href=makeOfbizUrl("EditFeatureGroupAppls?productFeatureGroupId=${productFeatureGroup.productFeatureGroupId!}") text="${uiLabelMap.CommonEdit} ${productFeatureGroup.description!}" class="+${styles.action_nav!} ${styles.action_add!}"/>
 </#if>
 <#if productId?has_content>
-  <@menuitem type="link" href=makeOfbizUrl("EditProduct?productId=${productId}") text="${uiLabelMap.ProductReturnToEditProduct}" />
-  <@menuitem type="link" href=makeOfbizUrl("EditProductFeatures?productId=${productId}") text="${uiLabelMap.ProductReturnToEditProductFeatures}" />
+  <@menuitem type="link" href=makeOfbizUrl("EditProduct?productId=${productId}") text="${uiLabelMap.ProductReturnToEditProduct}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
+  <@menuitem type="link" href=makeOfbizUrl("EditProductFeatures?productId=${productId}") text="${uiLabelMap.ProductReturnToEditProductFeatures}" class="+${styles.action_nav!} ${styles.action_cancel!}"/>
 </#if>
 </@menu>
 
-<#if (listSize > 0)>
-  <#assign selectedFeatureApplTypeId = selFeatureApplTypeId!>
-  <#if productId?has_content>
-    <#assign productString = "&amp;productId=" + productId>
-  </#if>
-    
-  <@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl("ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId!}&amp;productFeatureApplTypeId=${selectedFeatureApplTypeId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${productString!}") text="[${uiLabelMap.CommonPrevious}]" disabled=(!(viewIndex > 0)) />
-    <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-    <@menuitem type="link" href=makeOfbizUrl("ApplyFeaturesFromCategory?productFeatureCategoryId=${productFeatureCategoryId!}&amp;productFeatureApplTypeId=${selectedFeatureApplTypeId!}&amp;VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${productString!}") text="[${uiLabelMap.CommonNext}]" disabled=(!(listSize > highIndex)) />
-  </@menu>
-</#if>
 
+<#if (listSize > 0)>
+
+<#assign selectedFeatureApplTypeId = selFeatureApplTypeId!>
+<#-- Cato: NOTE: productFeatureGroupId was not in stock; has been added by us. 
+    NOTE: we added a productFeaturesPaginated flag because pagination only partly implemented by stock depending on search options (productFeatures list only paginated if productFeatureGroupId is not set) -->
+<#assign paramStr = addParamsToStr("", {"productFeatureCategoryId": productFeatureCategoryId!"", "productFeatureApplTypeId": selectedFeatureApplTypeId!"", "productId": productId!"", "productFeatureGroupId": productFeatureGroupId!""}, "&amp;", false)>
+<@paginate mode="content" url=makeOfbizUrl("ApplyFeaturesFromCategory") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paginateOn=((productFeaturesPaginated!true)==true)>
 <form method="post" action="<@ofbizUrl>ApplyFeaturesToProduct</@ofbizUrl>" name="selectAllForm">
   <input type="hidden" name="_useRowSubmit" value="Y" />
   <input type="hidden" name="_checkGlobalScope" value="Y" />
@@ -99,3 +94,8 @@ under the License.
 
   <input type="hidden" name="_rowCount" value="${rowCount!}"/>
 </form>
+</@paginate>
+
+<#else>
+  <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+</#if>

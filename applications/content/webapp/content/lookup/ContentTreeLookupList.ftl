@@ -17,6 +17,7 @@
   under the License.
   -->
   
+<#-- TODO: convert to @paginate -->  
 <@menu type="button">
   <#if (arraySize > 0)>
     <#assign url='/views/'+tabButtonItem+'?'+curFindString+'&amp;VIEW_SIZE='+viewSize+'&amp;VIEW_INDEX='+viewIndexFirst>

@@ -38,6 +38,7 @@
     "round" : "round",
     "radius" : "radius",
     "expand" : "expand",
+    "expanded" : "expanded",
     "collapse" : "collapse",
     "collapsed" : "collapsed",
     "required" : "required",
@@ -302,6 +303,9 @@
     "action_find" : "action-readonly action-read action-find",            <#-- find action: "Find", "Search", "Lookup", etc. -->
     "action_view" : "action-readonly action-read action-view",            <#-- view item action: "View PDF", etc. -->
     "action_export" : "action-readonly action-read action-export",        <#-- export action: "Export", "Download", "Stream", "Print", etc. -->
+    "action_visibility" : "action-readonly action-read action-visibility",          <#-- visibility change base action. NOTE: Do not confuse with action_find. action_find is a fresh find/filter query, while action_visibility could at most modify an existing query, depending on the wording (but mainly is for showing/hiding anything, not just queries). -->
+    "action_show" : "action-readonly action-read action-visibility action-show",    <#-- (visibility change only) show item action: "Show Old", etc. -->
+    "action_hide" : "action-readonly action-read action-visibility action-hide",    <#-- (visibility change only) hide item action: "Hide All", etc. -->
     
     "action_select" : "action-readonly action-select",                    <#-- select action: "Select", "Choose", "Pick", etc. -->
     "action_reload" : "action-readonly action-reload",                    <#-- reload action: "Refresh", etc. -->

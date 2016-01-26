@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-
+<#-- Cato: TODO: convert template (maybe wait until after updates from branch) -->
 <!-- TODO : Need formatting -->
 <script type="text/javascript">
 //<![CDATA[

@@ -62,9 +62,9 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#if placeholder?has_content> placeholder="${placeholder}"</#if><#rt/>
   /><#t/>
   <#if ajaxUrl?has_content>
-    <#local defaultMinLength = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")>
-    <#local defaultDelay = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")>
-    <@script>ajaxAutoCompleter('${ajaxUrl}', false, ${defaultMinLength!2}, ${defaultDelay!300});</@script><#lt/>
+    <#local defaultMinLength = getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")!2>
+    <#local defaultDelay = getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")!300>
+    <@script>ajaxAutoCompleter('${ajaxUrl}', false, ${defaultMinLength}, ${defaultDelay});</@script><#lt/>
   </#if>
 </#macro>
 
@@ -479,7 +479,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#local ajaxUrl = id + "," + ajaxUrl + ",ajaxLookup=Y" />
   </#if>
   <#if (!showDescription?has_content)>
-    <#local showDescriptionProp = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.lookup.showDescription", "N")>
+    <#local showDescriptionProp = getPropertyValue("widget.properties", "widget.lookup.showDescription")!"N">
     <#if "Y" == showDescriptionProp>
       <#local showDescription = "true" />
     <#else>
@@ -521,8 +521,8 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       );"></a><#rt>
     <#else>
       <#if ajaxEnabled?has_content && ajaxEnabled>
-        <#local defaultMinLength = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")>
-        <#local defaultDelay = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")>
+        <#local defaultMinLength = getPropertyValue("widget.properties", "widget.autocompleter.defaultMinLength")!2>
+        <#local defaultDelay = getPropertyValue("widget.properties", "widget.autocompleter.defaultDelay")!300>
         <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
         <#if !ajaxUrl?contains("searchValueFieldName=")>
           <#if descriptionFieldName?has_content && showDescription == "true">
@@ -547,8 +547,8 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
             ajaxUrl : <#if ajaxEnabled?has_content && ajaxEnabled>"${ajaxUrl}"<#else>""</#if>,
             showDescription : <#if ajaxEnabled?has_content && ajaxEnabled>"${showDescription}"<#else>false</#if>,
             presentation : "${presentation!}",
-            defaultMinLength : "${defaultMinLength!2}",
-            defaultDelay : "${defaultDelay!300}",
+            defaultMinLength : "${defaultMinLength}",
+            defaultDelay : "${defaultDelay}",
             args :
               <#rt/>
                 <#if targetParameterIter?has_content>
@@ -587,7 +587,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#if ajaxUrl?index_of("_LAST_VIEW_NAME_") < 0>
       <#local ajaxUrl = ajaxUrl + "&amp;_LAST_VIEW_NAME_=" + lastViewName />
     </#if>
-    <@script>ajaxAutoCompleter('${ajaxUrl}', ${showDescription}, ${defaultMinLength!2}, ${defaultDelay!300});</@script><#t/>
+    <@script>ajaxAutoCompleter('${ajaxUrl}', ${showDescription}, ${defaultMinLength}, ${defaultDelay});</@script><#t/>
   </#if>
 </#macro>
 

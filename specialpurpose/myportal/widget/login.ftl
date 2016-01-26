@@ -18,9 +18,9 @@ under the License.
 -->
 
 <#if requestAttributes.uiLabelMap??><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
-<#assign useMultitenant = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("general.properties", "multitenant")>
+<#assign useMultitenant = getPropertyValue("general.properties", "multitenant")!"">
 
-<#assign username = requestParameters.USERNAME?default((sessionAttributes.autoUserLogin.userLoginId)?default(""))>
+<#assign username = requestParameters.USERNAME?default((sessionAttributes.autoUserLogin.userLoginId)!"")>
 <#if username != "">
   <#assign focusName = false>
 <#else>

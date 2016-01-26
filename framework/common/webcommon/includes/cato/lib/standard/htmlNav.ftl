@@ -525,7 +525,7 @@ menu item element must override this and provide a proper check.
     
     <#-- these were an error on my part, do NOT do this; the view size should be decided and final earlier than rendering.
     <#if (viewSize <= 0)>
-      <#local viewSize = (getPropertyValueOrNull("widget.properties", "widget.form.defaultViewSize")!1)?number>
+      <#local viewSize = (getPropertyValue("widget.properties", "widget.form.defaultViewSize")!1)?number>
     </#if>
     -->
     

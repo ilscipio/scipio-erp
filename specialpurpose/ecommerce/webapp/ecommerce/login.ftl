@@ -16,8 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign janrainEnabled = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("ecommerce.properties", "janrain.enabled")>
-<#assign appName = Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue("ecommerce.properties", "janrain.appName")>
+<#assign janrainEnabled = getPropertyValue("ecommerce.properties", "janrain.enabled")!"">
+<#assign appName = getPropertyValue("ecommerce.properties", "janrain.appName")!"">
 <#if janrainEnabled == "Y">
 <@script>
 (function() {

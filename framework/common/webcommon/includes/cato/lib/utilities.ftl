@@ -123,26 +123,14 @@ Returns empty string if no label is found
 *************
 * getPropertyValue
 ************
-Gets property or empty string if missing (same behavior as UtilProperties).
-note: the ?string kludge is to get rid of the wrapString wrapper which can break.
-locale-less.
+Gets property or void/null if missing or has no content.
+NOTE: always use default value ("!") or other test operator!
 -->
 <#function getPropertyValue resource name>
-  <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name))?string>
-</#function>
-
-<#-- 
-*************
-* getPropertyValueOrNull
-************
-Gets property or void if missing (use default operator).
-locale-less.
--->
-<#function getPropertyValueOrNull resource name>
   <#local value = StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name))?string>
   <#if value?has_content>
     <#return value>
-  </#if>
+  </#if> <#-- else return nothing (void/null) -->
 </#function>
 
 <#-- 

@@ -906,7 +906,7 @@ public class ProductSearchSession {
 
         // Cato: FIXME: paging is completely ignored in the stock code below! Not implemented!
         String pag = productSearchOptions.getPaging();
-        if (paging != null) {
+        if (pag != null && !pag.isEmpty()) {
             paging = pag;
         }
 

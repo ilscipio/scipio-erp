@@ -65,6 +65,7 @@ public class WorkEffortSearchEvents {
 
         // setup resultOffset and maxResults, noting that resultOffset is 1 based, not zero based as these numbers
         Integer resultOffset = Integer.valueOf(lowIndex + 1);
+        // Cato: FIXME: if maxResults is set to viewSize, pagination is always disabled...
         Integer maxResults = Integer.valueOf(viewSize);
 
         // ========== Do the actual search

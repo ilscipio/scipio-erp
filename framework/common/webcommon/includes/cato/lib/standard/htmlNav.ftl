@@ -446,7 +446,7 @@ menu item element must override this and provide a proper check.
                      hide: hide menu when no results
                      disable: disable but show controls when no results (TODO?: not implemented)
    enabled         = [true|false], default true; manual control to disable the entire macro, sometimes needed to work around FTL language.
-                     for "content" mode, false will still render nested content (that is the purpose).
+                     for "content" mode, with false, will still render nested content (that is the purpose), but will never decorate.
    url             = Base Url to be used for pagination
    class           = css classes 
                      supports prefixes:
@@ -465,8 +465,12 @@ menu item element must override this and provide a proper check.
    lowCountMsg     = Alternate custom message for low counts, optional; markup provides its own or in styles hash
    paginateToggle  = if true, include a control to toggle pagination on/off 
                      (specify current state with paginateOn and tweak using paginateToggle* arguments)
-   paginateOn      = indicates whether pagination is currently on or off (use with paginateToggle)
-                     NOTE: this is not the same as enabled control. paginateOn does not prevent macro from rendering something.
+   paginateOn      = indicates whether pagination is currently on or off
+                     Can be used with paginateToggle to indicate current state, or set to false to prevent
+                     pagination controls while still allowing some decorations (depending on styling).
+                     NOTE: this is not the same as enabled control. paginateOn does not prevent macro from rendering.
+                     NOTE: if false, this will not prevent viewSize and viewIndex from being passed on, but they won't
+                         be taken into account in calculations.
    viewSizeSelection  = default false, currently officially unsupported.
                         DEV NOTE: only here for testing purposes
    altParam           = Use viewIndex/viewSize as parameter names, instead of VIEW_INDEX / VIEW_SIZE
@@ -502,6 +506,7 @@ menu item element must override this and provide a proper check.
       <#nested>
     </#if>
   <#else>
+  
     <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
     <#if (!viewSize?is_number)>
       <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize!, "htmlUtilitiesPaginate")!>
@@ -537,12 +542,18 @@ menu item element must override this and provide a proper check.
       </#if>
     </#if>
     
-    <#local lowIndex = (viewIndex - viewIndexFirst) * viewSize/>
-    <#local highIndex = ((viewIndex - viewIndexFirst) + 1) * viewSize/>
-    <#if (listSize < highIndex)>
-      <#local realHighIndex = listSize/>
+    <#if paginateOn>
+      <#local lowIndex = (viewIndex - viewIndexFirst) * viewSize/>
+      <#local highIndex = ((viewIndex - viewIndexFirst) + 1) * viewSize/>
+      <#if (listSize < highIndex)>
+        <#local realHighIndex = listSize/>
+      <#else>
+        <#local realHighIndex = highIndex/>
+      </#if>
     <#else>
-      <#local realHighIndex = highIndex/>
+      <#local lowIndex = 0>
+      <#local highIndex = listSize>
+      <#local realHighIndex = listSize/>
     </#if>
 
     <#if !viewIndexString?has_content>
@@ -569,6 +580,19 @@ menu item element must override this and provide a proper check.
       <#local viewIndexPrevious = viewIndex>
     </#if>
   
+    <#local origUrl = url>
+    <#local origParamStr = paramStr>
+  
+    <#-- SPECIAL CASE: if paramDelim=="/" and url contains ";" or "?" we must strip the non-dir params and reappend them later 
+         WARN: we can ignore paramStr to simplify; assume caller followed his own conventions... -->
+    <#local urlSuffix = "">
+    <#if paramDelim?contains("/")>
+      <#local url = stripParamStrFromUrl(url)>
+      <#if (url?length < origUrl?length)>
+        <#local urlSuffix = origUrl[url?length..]>
+      </#if>
+    </#if>
+
     <#local commonUrl = addParamDelimToUrl(url, paramDelim)>
     <#if paramStr?has_content>
       <#local commonUrl = commonUrl + trimParamStrDelims(paramStr, paramDelim) + paramDelim>
@@ -576,36 +600,36 @@ menu item element must override this and provide a proper check.
     
     <#local firstUrl = "">
     <#if (!firstUrl?has_content)>
-      <#local firstUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexFirst}"/>
+      <#local firstUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexFirst}"+urlSuffix/>
     </#if>
     <#local previousUrl = "">
     <#if (!previousUrl?has_content)>
-      <#local previousUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexPrevious}"/>
+      <#local previousUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexPrevious}"+urlSuffix/>
     </#if>
     <#local nextUrl="">
     <#if (!nextUrl?has_content)>
-      <#local nextUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexNext}"/>
+      <#local nextUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexNext}"+urlSuffix/>
     </#if>
     <#local lastUrl="">
     <#if (!lastUrl?has_content)>
-      <#local lastUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexLast}"/>
+      <#local lastUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndexLast}"+urlSuffix/>
     </#if>
     <#local selectUrl="">
     <#if (!selectUrl?has_content)>
-      <#local selectUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}="/>
+      <#local selectUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=_VIEWINDEXVALUE_"+urlSuffix/>
     </#if>
     <#local selectSizeUrl="">
     <#if (!selectSizeUrl?has_content)>
-      <#local selectSizeUrl=commonUrl+"${viewSizeString}='+this.value+'${paramDelim}${viewIndexString}=${viewIndexFirst}"/>
+      <#local selectSizeUrl=commonUrl+"${viewSizeString}='+this.value+'${paramDelim}${viewIndexString}=${viewIndexFirst}"+urlSuffix/>
     </#if>
   
     <#local paginateOnUrl="">
     <#if (!paginateOnUrl?has_content)>
-      <#local paginateOnUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndex}${paramDelim}${paginateToggleString}=${paginateToggleOnValue}"/>
+      <#local paginateOnUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndex}${paramDelim}${paginateToggleString}=${paginateToggleOnValue}"+urlSuffix/>
     </#if>
     <#local paginateOffUrl="">
     <#if (!paginateOffUrl?has_content)>
-      <#local paginateOffUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndex}${paramDelim}${paginateToggleString}=${paginateToggleOffValue}"/>
+      <#local paginateOffUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndex}${paramDelim}${paginateToggleString}=${paginateToggleOffValue}"+urlSuffix/>
     </#if>
     
     <#-- NOTE: javaScriptEnabled is a context var -->
@@ -747,6 +771,12 @@ menu item element must override this and provide a proper check.
     <#local ajaxPaginateOffUrl = escapeUrlParamDelims(ajaxPaginateOffUrl)>
     <#local paginateOffUrl = escapeUrlParamDelims(paginateOffUrl)>
 
+    <#-- SPECIAL CASE: markup expects selectUrl to contain the value _VIEWINDEXVALUE_, but legacy ofbiz code
+        may not set it. in that case, simply append, since it used to appen at the end. -->
+    <#if !selectUrl?contains("_VIEWINDEXVALUE_")>
+      <#local selectUrl = selectUrl + "_VIEWINDEXVALUE_">
+    </#if>
+
     <#if alwaysShowCount?is_boolean && alwaysShowCount == true>
       <#local showCount = true>
     </#if>
@@ -858,7 +888,8 @@ menu item element must override this and provide a proper check.
                     <#if vi == viewIndex>
                       <li class="${styles.pagination_item!} ${styles.pagination_item_active!}"><a href="javascript:void(0)">${i}</a></li>
                     <#else>
-                      <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxSelectUrl}${vi}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${selectUrl}${vi}')"</#if><#else>href="${selectUrl}${vi}"</#if></#local>
+                      <#local finalSelectUrl = selectUrl?replace("_VIEWINDEXVALUE_", vi)>
+                      <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxSelectUrl}${vi}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${finalSelectUrl}')"</#if><#else>href="${finalSelectUrl}"</#if></#local>
                       <li><a ${actionStr}>${i}</a></li>
                     </#if>
                   <#else>
@@ -938,9 +969,11 @@ menu item element must override this and provide a proper check.
       <div class="${styles.grid_row!}">
       <#if alwaysShowCount>
         <div class="${styles.grid_large!}2 ${styles.grid_cell!} ${styles.grid_end!}">${countMsg}</div>
-        <div class="${styles.grid_large!}10 ${styles.grid_cell!}">
+        <div class="${styles.grid_large!}8 ${styles.grid_cell!}">&nbsp;</div>
+        <div class="${styles.grid_large!}2 ${styles.grid_cell!}">
       <#else>
-        <div class="${styles.grid_large!}12 ${styles.grid_cell!}">
+        <div class="${styles.grid_large!}10 ${styles.grid_cell!}">&nbsp;</div>
+        <div class="${styles.grid_large!}2 ${styles.grid_cell!}">
       </#if>
           <div<@compiledClassAttribStr class=paginateClass />>
             <ul class="${styles.pagination_list!}">
@@ -956,6 +989,12 @@ menu item element must override this and provide a proper check.
         </div>
       </div>
     </#if>
+  <#elseif alwaysShowCount>
+      <#if !listItemsOnly>
+        <div class="${styles.grid_row!}">
+          <div class="${styles.grid_large!}12 ${styles.grid_cell!} ${styles.grid_end!}">${countMsg}</div>
+        </div>
+      </#if>
   </#if>
 </#macro>    
 

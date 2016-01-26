@@ -190,7 +190,7 @@ Adds a param delimiter to end of url if needed.
     <#if url?ends_with(paramDelim)>
       <#return url>
     <#elseif url?ends_with(paramStarter) || url?ends_with("/")>
-      <#return url[0..-1] + paramDelim>
+      <#return url[0..<(url?length-1)] + paramDelim>
     <#else>
       <#return url + paramDelim>
     </#if>
@@ -392,6 +392,28 @@ NOTE: now recognizes special syntax cato class args.
   </#list>
   <#return prefix + res?trim>
 </#function> 
+
+<#-- 
+*************
+* stripParamStrFromUrl
+************
+Strips param string (starting with "?" or ";") from url.
+                    
+  * Parameters *
+    url             = Url
+-->
+<#function stripParamStrFromUrl url>
+  <#local index = url?index_of("?")>
+  <#if (index >= 0)>
+    <#local url = url[0..<index]>
+    <#local index = url?index_of(";")>
+    <#if (index >= 0)>
+      <#local url = url[0..<index]>
+    </#if>
+  </#if>
+  <#return url>
+</#function> 
+
 
 <#-- 
 *************

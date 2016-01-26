@@ -469,8 +469,8 @@ menu item element must override this and provide a proper check.
                      Can be used with paginateToggle to indicate current state, or set to false to prevent
                      pagination controls while still allowing some decorations (depending on styling).
                      NOTE: this is not the same as enabled control. paginateOn does not prevent macro from rendering.
-                     NOTE: if false, this will not prevent viewSize and viewIndex from being passed on, but they won't
-                         be taken into account in calculations.
+   previousViewSize     = used if paginate state is off. if not specified, it will use a default from general.properties.
+   paginateOffViewSize  = a viewSize value send when turning off pagination via toggle. default is specified in general.properties.
    viewSizeSelection  = default false, currently officially unsupported.
                         DEV NOTE: only here for testing purposes
    altParam           = Use viewIndex/viewSize as parameter names, instead of VIEW_INDEX / VIEW_SIZE
@@ -486,19 +486,16 @@ menu item element must override this and provide a proper check.
   "mode":"single", "type":"default", "layout":"default", "noResultsMode":"default", "enabled":true, "url":"", "class":"", 
   "viewIndex":0, "listSize":0, "viewSize":-1, "prioViewSize":false, "altParam":false, 
   "forcePost":false, "paramStr":"", "viewIndexFirst":0, "showCount":"", "alwaysShowCount":"", "countMsg":"", "lowCountMsg":"",
-  "paginateToggle":false, "paginateOn":true, "paginateToggleOnValue":"Y", "paginateToggleOffValue":"N", 
+  "paginateToggle":false, "paginateOn":"", "paginateToggleOnValue":"Y", "paginateToggleOffValue":"N", 
   "viewSizeSelection":"", "position":"", 
   "viewIndexString":"", "viewSizeString":"", "paginateToggleString":"", 
   "paramDelim":"", "paramPrefix":"",
+  "previousViewSize":"", "paginateOffViewSize":"",
   "passArgs":{}
 }>
 <#macro paginate args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.paginate_defaultArgs)>
   <#local dummy = localsPutAll(args)>
-
-  <#if !paramDelim?has_content>
-    <#local paramDelim = "&amp;">
-  </#if>
 
   <#-- this is also checked in paginate_core, but avoid problems with parameters by checking again early. -->  
   <#if enabled?is_boolean && enabled == false>
@@ -506,7 +503,7 @@ menu item element must override this and provide a proper check.
       <#nested>
     </#if>
   <#else>
-  
+
     <#-- these errors apparently happen a lot, enforce here cause screens never catch, guarantee other checks work -->
     <#if (!viewSize?is_number)>
       <#local dummy = Static["org.ofbiz.base.util.Debug"].logError("pagination: viewSize was not a number type: " + viewSize!, "htmlUtilitiesPaginate")!>
@@ -523,11 +520,27 @@ menu item element must override this and provide a proper check.
     </#if>
     <#local viewIndex = viewIndex?floor>
     
-    <#-- these were an error on my part, do NOT do this; the view size should be decided and final earlier than rendering.
-    <#if (viewSize <= 0)>
-      <#local viewSize = (getPropertyValue("widget.properties", "widget.form.defaultViewSize")!1)?number>
+  
+    <#if !paramDelim?has_content>
+      <#local paramDelim = "&amp;">
     </#if>
-    -->
+
+    <#if !previousViewSize?has_content>
+      <#local previousViewSize = getPropertyValue("general.properties", "paginate.viewSize.default")!20>
+    </#if>
+    <#if !paginateOffViewSize?has_content>
+      <#local paginateOffViewSize = getPropertyValue("general.properties", "paginate.disabled.viewSize.default")!99999>
+    </#if>
+
+    <#if !paginateOn?has_content>
+      <#local paginateOn = true>
+      <#-- DEV NOTE: we could try to infer this from the passed view size as below, for automatic paging toggle support everywhere (with paginateToggle=true)... 
+          the only thing missing would be previousViewSize, but global default is not bad...
+          HOWEVER there is no point right now because the URLs are prepared before @paginate_core and the form widgets
+          don't handle this case... in general @paginate[_core] is indirectly limited by form widget implementation.
+      <#local paginateOn = (viewSize < paginateOffViewSize)> 
+      <#local paginateToggle = true>-->
+    </#if>
     
     <#local viewIndexLast = viewIndexFirst + ((listSize/viewSize)?ceiling-1)>
     <#if (viewIndexLast < viewIndexFirst)>
@@ -625,11 +638,11 @@ menu item element must override this and provide a proper check.
   
     <#local paginateOnUrl="">
     <#if (!paginateOnUrl?has_content)>
-      <#local paginateOnUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndex}${paramDelim}${paginateToggleString}=${paginateToggleOnValue}"+urlSuffix/>
+      <#local paginateOnUrl=commonUrl+"${viewSizeString}=${previousViewSize}${paramDelim}${viewIndexString}=${viewIndexFirst}${paramDelim}${paginateToggleString}=${paginateToggleOnValue}"+urlSuffix/>
     </#if>
     <#local paginateOffUrl="">
     <#if (!paginateOffUrl?has_content)>
-      <#local paginateOffUrl=commonUrl+"${viewSizeString}=${viewSize}${paramDelim}${viewIndexString}=${viewIndex}${paramDelim}${paginateToggleString}=${paginateToggleOffValue}"+urlSuffix/>
+      <#local paginateOffUrl=commonUrl+"${viewSizeString}=${paginateOffViewSize}${paramDelim}${viewIndexString}=${viewIndexFirst}${paramDelim}${paginateToggleString}=${paginateToggleOffValue}"+urlSuffix/>
     </#if>
     
     <#-- NOTE: javaScriptEnabled is a context var -->
@@ -816,11 +829,9 @@ menu item element must override this and provide a proper check.
 
   <#if paginateToggle>
      <#if !paginateOffLabel?has_content>
-       <#-- FIXME: must currently use globalContext to access label map due to widgets context issues -->
        <#local paginateOffLabel = (uiLabelMap.CommonPagingOff)!"">  
      </#if>
      <#if !paginateOnLabel?has_content>
-       <#-- FIXME: must currently use globalContext to access label map due to widgets context issues -->
        <#local paginateOnLabel = (uiLabelMap.CommonPagingOn)!"">  
      </#if>
   </#if>
@@ -850,10 +861,8 @@ menu item element must override this and provide a proper check.
     <#local countMsg = Static["org.ofbiz.base.util.UtilProperties"].getMessage("CommonUiLabels", countMsgLabel, messageMap, locale)!"">
   </#if>
 
-  <#if paginateOn>
-
-    <#-- note: implies (listSize > 0), some cases this gets called with listSize zero -->
-    <#if (listSize > minPageSize)>
+  <#-- note: (listSize > minPageSize) implies (listSize > 0); some cases this gets called with listSize zero -->
+  <#if paginateOn && (listSize > minPageSize)>
     
       <#local itemRange = 2/>
       <#local placeHolder ="..."/>
@@ -957,14 +966,7 @@ menu item element must override this and provide a proper check.
           </div>
         </div>
       </#if>
-    <#elseif alwaysShowCount>
-      <#if !listItemsOnly>
-        <div class="${styles.grid_row!}">
-          <div class="${styles.grid_large!}12 ${styles.grid_cell!} ${styles.grid_end!}">${countMsg}</div>
-        </div>
-      </#if>
-    </#if>
-  <#elseif paginateToggle && !paginateOn>
+  <#elseif paginateToggle>
     <#if !listItemsOnly>
       <div class="${styles.grid_row!}">
       <#if alwaysShowCount>
@@ -978,11 +980,15 @@ menu item element must override this and provide a proper check.
           <div<@compiledClassAttribStr class=paginateClass />>
             <ul class="${styles.pagination_list!}">
     </#if>
-  
+            <#if !paginateOn>
               <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPaginateOnUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${paginateOnUrl}')"</#if><#else>href="${paginateOnUrl}"</#if></#local>
               <#local paginateOffClass = addClassArg(paginateOnClass, styles.pagination_item!)>
               <li<@compiledClassAttribStr class=paginateOnClass />><a ${actionStr}>${paginateOnLabel}</a></li>  
-  
+            <#else>
+              <#local actionStr><#if javaScriptEnabled><#if ajaxEnabled>href="javascript:void(0)" onclick="ajaxUpdateAreas('${ajaxPaginateOffUrl}')"<#else>href="javascript:void(0)" onclick="<#if forcePost>submitPaginationPost<#else>submitPagination</#if>(this, '${paginateOffUrl}')"</#if><#else>href="${paginateOffUrl}"</#if></#local>
+              <#local paginateOffClass = addClassArg(paginateOffClass, styles.pagination_item!)>
+              <li<@compiledClassAttribStr class=paginateOffClass />><a ${actionStr}>${paginateOffLabel}</a></li> 
+            </#if>
     <#if !listItemsOnly>  
             </ul>
           </div>

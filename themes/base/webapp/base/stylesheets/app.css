@@ -10288,9 +10288,25 @@ div.scrollable-table-container > table {
   color: white;
 }
 
+/* terminate actions (like cancel order) */
+/* line 396, ../scss/_base.scss */
+.action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
+  background-color: #f08a24;
+  border-color: #cf6e0e;
+  color: white;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-sys.action-modify.action-terminate.button:hover, .action-run.action-scope-sys.action-modify.action-terminate.button:focus, .action-run.action-scope-sys.action-modify.action-terminate .button:hover, .action-run.action-scope-sys.action-modify.action-terminate .button:focus {
+  background-color: #cf6e0e;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-sys.action-modify.action-terminate.button:hover, .action-run.action-scope-sys.action-modify.action-terminate.button:focus, .action-run.action-scope-sys.action-modify.action-terminate .button:hover, .action-run.action-scope-sys.action-modify.action-terminate .button:focus {
+  color: white;
+}
+
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 398, ../scss/_base.scss */
+/* line 403, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #a0d3e8;
   border-color: #61b6d9;
@@ -10305,8 +10321,46 @@ div.scrollable-table-container > table {
   color: white;
 }
 
+/* individual actions that modify only session or local state 
+  FIXME?: should use different color from system? */
+/* line 409, ../scss/_base.scss */
+.action-run.action-scope-session.action-modify.button, .action-run.action-scope-session.action-modify .button,
+.action-run.action-scope-local.action-modify.button, .action-run.action-scope-local.action-modify .button {
+  background-color: #a0d3e8;
+  border-color: #61b6d9;
+  color: #333333;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-session.action-modify.button:hover, .action-run.action-scope-session.action-modify.button:focus, .action-run.action-scope-session.action-modify .button:hover, .action-run.action-scope-session.action-modify .button:focus,
+.action-run.action-scope-local.action-modify.button:hover,
+.action-run.action-scope-local.action-modify.button:focus, .action-run.action-scope-local.action-modify .button:hover, .action-run.action-scope-local.action-modify .button:focus {
+  background-color: #61b6d9;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-session.action-modify.button:hover, .action-run.action-scope-session.action-modify.button:focus, .action-run.action-scope-session.action-modify .button:hover, .action-run.action-scope-session.action-modify .button:focus,
+.action-run.action-scope-local.action-modify.button:hover,
+.action-run.action-scope-local.action-modify.button:focus, .action-run.action-scope-local.action-modify .button:hover, .action-run.action-scope-local.action-modify .button:focus {
+  color: white;
+}
+
+/* high-importance modify actions, like create order button */
+/* line 416, ../scss/_base.scss */
+.action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
+  background-color: #f04124;
+  border-color: #cf2a0e;
+  color: white;
+}
+/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-sys.action-modify.action-importance-high.button:hover, .action-run.action-scope-sys.action-modify.action-importance-high.button:focus, .action-run.action-scope-sys.action-modify.action-importance-high .button:hover, .action-run.action-scope-sys.action-modify.action-importance-high .button:focus {
+  background-color: #cf2a0e;
+}
+/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
+.action-run.action-scope-sys.action-modify.action-importance-high.button:hover, .action-run.action-scope-sys.action-modify.action-importance-high.button:focus, .action-run.action-scope-sys.action-modify.action-importance-high .button:hover, .action-run.action-scope-sys.action-modify.action-importance-high .button:focus {
+  color: white;
+}
+
 /* special nav cancel/back/return action button (alt regular color) */
-/* line 403, ../scss/_base.scss */
+/* line 422, ../scss/_base.scss */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {
   background-color: #e7e7e7;
   border-color: #b9b9b9;
@@ -10322,7 +10376,7 @@ div.scrollable-table-container > table {
 }
 
 /* special run-action cancel action button (warning color) */
-/* line 408, ../scss/_base.scss */
+/* line 427, ../scss/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;
   border-color: #cf6e0e;

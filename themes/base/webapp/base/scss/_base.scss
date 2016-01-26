@@ -392,12 +392,31 @@ div.scrollable-table-container > table {
    @include button-style($bg:$success-button-bg-color, $bg-hover:$success-button-bg-hover, $border-color:$success-button-border-color);
 }
 
+/* terminate actions (like cancel order) */
+.action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
+   @include button-style($bg:$warning-button-bg-color, $bg-hover:$warning-button-bg-hover, $border-color:$warning-button-border-color);
+}
+
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
    @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
 }
+
+/* individual actions that modify only session or local state 
+  FIXME?: should use different color from system? */
+.action-run.action-scope-session.action-modify.button, .action-run.action-scope-session.action-modify .button,
+.action-run.action-scope-local.action-modify.button, .action-run.action-scope-local.action-modify .button, {
+   @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
+}
+
+
+/* high-importance modify actions, like create order button */
+.action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
+   @include button-style($bg:$alert-button-bg-color, $bg-hover:$alert-button-bg-hover, $border-color:$alert-button-border-color);
+}
+
 
 /* special nav cancel/back/return action button (alt regular color) */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {

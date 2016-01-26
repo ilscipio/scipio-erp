@@ -314,10 +314,14 @@
     "action_close" : "action-readonly action-close",                      <#-- close action (should not change system state!): "Close Popup", etc. -->
     
     <#-- Misc action flags (fragments) -->
-    "action_external" : "action-external",                <#-- external action, notably for marking external links -->
+    "action_external" : "action-external",                                <#-- external action, notably for marking external links -->
     
-    "action_primary" : "action-primary",                  <#-- indicates the UI elem's primary reason for existing is to provide this action. usually implied for action_run. most action_nav that are part of a menu or with a static word like "View" fall into this category. -->
-    "action_secondary" : "action-secondary",              <#-- indicates the UI elem is providing this action as a secondary or convenience function, secondary to something else like providing information. for example, many action_nav (link_nav) text links with an entity value ID would fall into here. -->
+    "action_primary" : "action-primary",                                  <#-- indicates the UI elem's primary reason for existing is to provide this action. usually implied for action_run. most action_nav that are part of a menu or with a static word like "View" fall into this category. -->
+    "action_secondary" : "action-secondary",                              <#-- indicates the UI elem is providing this action as a secondary or convenience function, secondary to something else like providing information. for example, many action_nav (link_nav) text links with an entity value ID would fall into here. -->
+    
+    "action_importance_low" : "action-importance-low",                    <#-- lowered importance -->
+    "action_importance_normal" : "action-importance-normal",              <#-- normal importance (assumed default) -->
+    "action_importance_high" : "action-importance-high",                  <#-- high importance (assumed default). e.g. "Create Order" -->
     
   <#-- Link styles (fragments) -->
     <#-- misc/short link styles -->

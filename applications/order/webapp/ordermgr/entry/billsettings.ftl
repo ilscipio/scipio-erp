@@ -54,7 +54,7 @@ function makeExpDate() {
 
         <#if request.getAttribute("paymentMethodId")?? || ( (paymentMethodList?has_content || billingAccountList?has_content) && !requestParameters.createNew??)>
          <@menu type="button">
-           <@menuitem type="link" href=makeOfbizUrl("setBilling?createNew=Y") text="${uiLabelMap.CommonNew}" />
+           <@menuitem type="link" href=makeOfbizUrl("setBilling?createNew=Y") text="${uiLabelMap.CommonNew}" class="+${styles.action_nav!} ${styles.action_add!}"/>
          </@menu>
         
           <#-- initial screen when we have a associated party -->

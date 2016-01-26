@@ -16,32 +16,12 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<@script>
-    function paginateOrderList(viewSize, viewIndex) {
-        document.paginationForm.viewSize.value = viewSize;
-        document.paginationForm.viewIndex.value = viewIndex;
-        document.paginationForm.submit();
-    }
-</@script>
 
-<#macro menuContent menuArgs={}>
-  <@menu args=menuArgs>
-  <#if picklistInfoList?has_content && (0 < picklistInfoList?size)>
-    <@menuitem type="link" href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')" text="${uiLabelMap.CommonNext}" disabled=(!(picklistCount > highIndex)) />
-    <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${picklistCount}" />
-    <@menuitem type="link" href="javascript:paginateOrderList('${viewSize}', '${viewIndex-1}')" text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 0)) />
-  </#if>
-  </@menu>
-</#macro>
-<@section title="${uiLabelMap.ProductPicklistManage}" menuContent=menuContent>
-
-  <form name="paginationForm" method="post" action="<@ofbizUrl>PicklistManage</@ofbizUrl>">
-    <input type="hidden" name="viewSize" value="${viewSize}"/>
-    <input type="hidden" name="viewIndex" value="${viewIndex}"/>
-    <input type="hidden" name="facilityId" value="${facilityId}"/>
-  </form>
+<@section title="${uiLabelMap.ProductPicklistManage}">
   
-    <#if picklistInfoList?has_content>
+  <#if picklistInfoList?has_content>
+    <@paginate mode="content" url=makeOfbizUrl("PicklistManage") paramStr="facilityId=${facilityId!}" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=picklistCount!0 altParam=true forcePost=true>
+
       <#list picklistInfoList as picklistInfo>
         <#assign picklist = picklistInfo.picklist>
 
@@ -244,7 +224,8 @@ under the License.
           <hr />
         </#if>
       </#list>
-    <#else>
-      <@resultMsg>${uiLabelMap.ProductNoPicksStarted}.</@resultMsg>
-    </#if>
+    </@paginate>
+  <#else>
+    <@resultMsg>${uiLabelMap.ProductNoPicksStarted}.</@resultMsg>
+  </#if>
 </@section>

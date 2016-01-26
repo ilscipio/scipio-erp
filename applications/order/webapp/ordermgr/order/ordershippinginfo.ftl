@@ -213,10 +213,10 @@ under the License.
     <#macro menuContent menuArgs={}>
        <@menu args=menuArgs>
          <#--<@menuitem type="link" onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" text="&nbsp;" title="Collapse" />-->
-         <@menuitem type="link" href=makeOfbizUrl("shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}") text="${uiLabelMap.OrderShipGroup} PDF" target="_BLANK" />
+         <@menuitem type="link" href=makeOfbizUrl("shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}") text="${uiLabelMap.OrderShipGroup} PDF" target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}"/>
          <#-- Foundation: Button migrated from removed header to access OISGA -->
          <#if !parameters.view?has_content>
-           <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}&amp;view=OISGA") text="${uiLabelMap.OrderShipmentInformationByOrderItem}" />
+           <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}&amp;view=OISGA") text="${uiLabelMap.OrderShipmentInformationByOrderItem}" class="+${styles.action_run_sys!} ${styles.action_view!}" />
          </#if>
        </@menu>
     </#macro>
@@ -519,12 +519,12 @@ under the License.
                         ${shipGroup.shippingInstructions}
                       </@td>
                       <@td>
-                        <a href="javascript:editInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_local!} ${styles.action_update!}" id="editInstruction_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonEdit}</a>
+                        <a href="javascript:editInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_local!} ${styles.action_show!}" id="editInstruction_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonEdit}</a>
                       </@td>
                     </@tr>
                   </@table>
                 <#else>
-                  <a href="javascript:addInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_sys!} ${styles.action_add!}" id="addInstruction_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonAdd}</a>
+                  <a href="javascript:addInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_local!} ${styles.action_show!}" id="addInstruction_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonAdd}</a>
                 </#if>
                 <a href="javascript:saveInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_sys!} ${styles.action_update!}" id="saveInstruction_${shipGroup.shipGroupSeqId}" style="display:none">${uiLabelMap.CommonSave}</a>
                 <textarea name="shippingInstructions" id="shippingInstructions_${shipGroup.shipGroupSeqId}" style="display:none" rows="0" cols="0">${shipGroup.shippingInstructions!}</textarea>
@@ -551,9 +551,9 @@ under the License.
               <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId}"/>
               <#if shipGroup.giftMessage?has_content>
                 <label>${shipGroup.giftMessage}</label>
-                <a href="javascript:editGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_local!} ${styles.action_update!}" id="editGiftMessage_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonEdit}</a>
+                <a href="javascript:editGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_local!} ${styles.action_show!}" id="editGiftMessage_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonEdit}</a>
               <#else>
-                <a href="javascript:addGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_local!} ${styles.action_add!}" id="addGiftMessage_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonAdd}</a>
+                <a href="javascript:addGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_local!} ${styles.action_show!}" id="addGiftMessage_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonAdd}</a>
               </#if>
               <textarea name="giftMessage" id="giftMessage_${shipGroup.shipGroupSeqId}" style="display:none" rows="0" cols="0">${shipGroup.giftMessage!}</textarea>
               <a href="javascript:saveGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_sys!} ${styles.action_update!}" id="saveGiftMessage_${shipGroup.shipGroupSeqId}" style="display:none">${uiLabelMap.CommonSave}</a>
@@ -588,7 +588,7 @@ under the License.
             <@td valign="top" width="80%">
                 <#list shipGroupShipments as shipment>
                     <div>
-                      ${uiLabelMap.CommonNbr}<a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}">${shipment.shipmentId}</a>&nbsp;&nbsp;
+                      ${uiLabelMap.CommonNbr}<a href="/facility/control/ViewShipment?shipmentId=${shipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a>&nbsp;&nbsp;
                       <a target="_BLANK" href="/facility/control/PackingSlip.pdf?shipmentId=${shipment.shipmentId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_run_sys!} ${styles.action_export!}">${uiLabelMap.ProductPackingSlip}</a>
                       <#if "SALES_ORDER" == orderHeader.orderTypeId && "ORDER_COMPLETED" == orderHeader.statusId>
                         <#assign shipmentRouteSegments = delegator.findByAnd("ShipmentRouteSegment", {"shipmentId" : shipment.shipmentId}, null, false)>

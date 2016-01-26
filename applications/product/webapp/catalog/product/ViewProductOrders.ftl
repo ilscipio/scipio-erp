@@ -25,30 +25,24 @@ under the License.
     }
 </@script>
 
-<#macro menuContent menuArgs={}>
-  <@menu args=menuArgs>
-  <#if (orderList?has_content && 0 < orderList?size)>
-    <@menuitem type="link" href="javascript:paginateOrderList('${viewSize}', '${viewIndex+1}')" text="${uiLabelMap.CommonNext}" disabled=(!(orderListSize > highIndex)) />
-    <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${orderListSize}" />
-    <@menuitem type="link" href="javascript:paginateOrderList('${viewSize}', '${viewIndex-1}')" text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 1)) />
-  </#if>
-  </@menu>
-</#macro>
-<@section title="${uiLabelMap.OrderOrderFound}" menuContent=menuContent>
+<@section title="${uiLabelMap.OrderOrderFound}">
+    <#-- Cato: using @paginate, but loop still relevant
     <form name="paginationForm" method="post" action="<@ofbizUrl>viewProductOrder</@ofbizUrl>">
       <input type="hidden" name="viewSize"/>
-      <input type="hidden" name="viewIndex"/>
+      <input type="hidden" name="viewIndex"/>-->
       <#if paramIdList?? && paramIdList?has_content>
         <#list paramIdList as paramIds>
           <#assign paramId = paramIds.split("=")/>
           <#if "productId" == paramId[0]>
             <#assign productId = paramId[1]/>
           </#if>
-          <input type="hidden" name="${paramId[0]}" value="${paramId[1]}"/>
+          <#--<input type="hidden" name="${paramId[0]}" value="${paramId[1]}"/>-->
         </#list>
       </#if>
-    </form>
+    <#--</form>-->
   <#if orderList?has_content && productId??>
+  <#-- forcePost required because search done from service event with https="true" -->
+  <@paginate mode="content" url=makeOfbizUrl("viewProductOrder") paramStr=paramList viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=orderListSize!0 altParam=true viewIndexFirst=1 forcePost=true>
     <@table type="data-list" class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
      <@thead>
       <@tr class="header-row">
@@ -78,6 +72,7 @@ under the License.
           </#list>
         </#list>
     </@table>
+  </@paginate>
   <#else>
     <@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg>
   </#if>

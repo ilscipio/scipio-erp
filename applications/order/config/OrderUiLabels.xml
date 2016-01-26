@@ -15124,4 +15124,9 @@
         <value xml:lang="en">Include Country</value>
         <value xml:lang="fr">Pays inclus</value>
     </property>
+    <!-- Cato: TODO: translations -->
+    <property key="OrderOrderInfo">
+        <value xml:lang="de">Bestell-Info</value>
+        <value xml:lang="en">Order Info</value>
+    </property>
 </resource>

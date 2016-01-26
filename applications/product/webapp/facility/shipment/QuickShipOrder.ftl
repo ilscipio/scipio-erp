@@ -26,9 +26,9 @@ function setWeight(weight) {
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?facilityId=${facilityId}") text="${uiLabelMap.ProductNextShipment}" />
+    <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?facilityId=${facilityId}") text="${uiLabelMap.ProductNextShipment}" class="+${styles.action_run_sys!} ${styles.action_continue!}"/>
     <#if shipment?has_content>
-      <@menuitem type="link" href=makeOfbizUrl("EditShipment?shipmentId=${shipmentId}") text="${uiLabelMap.ProductEditShipment}" />
+      <@menuitem type="link" href=makeOfbizUrl("EditShipment?shipmentId=${shipmentId}") text="${uiLabelMap.ProductEditShipment}" class="+${styles.action_nav!} ${styles.action_update!}"/>
     </#if>
   </@menu>
 </#macro>

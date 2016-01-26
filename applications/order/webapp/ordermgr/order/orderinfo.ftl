@@ -185,7 +185,7 @@ under the License.
           <option value="Y" <#if (orderHeader.invoicePerShipment)! == "Y">selected="selected" </#if>>${uiLabelMap.CommonYes}</option>
           <option value="N" <#if (orderHeader.invoicePerShipment)! == "N">selected="selected" </#if>>${uiLabelMap.CommonNo}</option>
         </select>
-        <input type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value="${uiLabelMap.CommonUpdate}"/>
+        <input type="submit" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonUpdate}"/>
         </form>
       </@td>
     </@tr>

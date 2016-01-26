@@ -134,7 +134,7 @@ under the License.
     </menu>
     
     <menu name="OrderSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="QuickShipOrder" title="${uiLabelMap.OrderQuickShipEntireOrder}">
+        <menu-item name="QuickShipOrder" title="${uiLabelMap.OrderQuickShipEntireOrder}" widget-style="+${styles.action_run_sys} ${styles.action_complete}">
             <condition>
                 <and>
                     <if-has-permission permission="FACILITY" action="_CREATE"/>
@@ -149,7 +149,7 @@ under the License.
                 <parameter param-name="orderId" from-field="orderId"/>
             </link>
         </menu-item>
-        <menu-item name="EditOrderItems" title="${uiLabelMap.OrderEditItems}">
+        <menu-item name="EditOrderItems" title="${uiLabelMap.OrderEditItems}" widget-style="+${styles.action_nav}">
             <condition>
                 <and>
                     <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_CANCELLED"/>
@@ -160,7 +160,7 @@ under the License.
                 <parameter param-name="orderId"/>
             </link>
         </menu-item>
-        <menu-item name="RefundEntireOrder" title="${uiLabelMap.OrderQuickRefundEntireOrder}">
+        <menu-item name="RefundEntireOrder" title="${uiLabelMap.OrderQuickRefundEntireOrder}" widget-style="+${styles.action_nav} ${styles.action_terminate}">
             <condition>
                 <and>
                     <if-has-permission permission="ORDERMGR" action="_RETURN"/>
@@ -174,7 +174,7 @@ under the License.
                 <parameter param-name="needsInventoryReceive"/>
             </link>
         </menu-item>
-        <menu-item name="CreateReturn" title="${uiLabelMap.OrderCreateReturn}">
+        <menu-item name="CreateReturn" title="${uiLabelMap.OrderCreateReturn}" widget-style="+${styles.action_nav}">
             <condition>
                 <and>
                     <not><if-empty field="returnableItems"/></not>
@@ -189,7 +189,7 @@ under the License.
                 <parameter param-name="needsInventoryReceive"/>
             </link>
         </menu-item>
-        <menu-item name="CreateShipGroup" title="${uiLabelMap.OrderCreateShipGroup}">
+        <menu-item name="CreateShipGroup" title="${uiLabelMap.OrderCreateShipGroup}" widget-style="+${styles.action_run_sys} ${styles.action_add}">
             <condition>
                 <and>
                     <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_COMPLETED"/>
@@ -200,7 +200,7 @@ under the License.
                 <parameter param-name="orderId"/>
             </link>
         </menu-item>
-        <menu-item name="CreateAsNewOrder" title="${uiLabelMap.OrderCreateAsNewOrder}">
+        <menu-item name="CreateAsNewOrder" title="${uiLabelMap.OrderCreateAsNewOrder}" widget-style="+${styles.action_run_session} ${styles.action_add}">
             <condition>
                 <if-compare field="orderHeader.statusId" operator="not-equals" value="ORDER_CANCELLED"/>
             </condition>
@@ -209,7 +209,7 @@ under the License.
                 <parameter param-name="finalizeMode" value="init"/>
             </link>
         </menu-item>
-        <menu-item name="CreateReplacementOrder" title="${uiLabelMap.OrderCreateReplacementOrder}">
+        <menu-item name="CreateReplacementOrder" title="${uiLabelMap.OrderCreateReplacementOrder}" widget-style="+${styles.action_run_session} ${styles.action_add}">
             <condition>
                 <and>
                     <if-compare field="orderHeader.statusId" operator="equals" value="ORDER_COMPLETED"/>
@@ -221,7 +221,7 @@ under the License.
                 <parameter param-name="finalizeMode" value="init"/>
             </link>
         </menu-item>
-        <menu-item name="PDF" title="PDF">
+        <menu-item name="PDF" title="PDF" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <link target="order.pdf" target-window="_blank">
                 <parameter param-name="orderId"/>
             </link>

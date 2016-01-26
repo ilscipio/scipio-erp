@@ -44,26 +44,9 @@ under the License.
                 e.checked = !e.checked;
             }
       </@script>
-      <#macro paginationPanel>
-        <#if (0 < listSize?int)>
-        <div class="clearfix">
-          <div class="lefthalf margin-left"><input type="checkbox" name="selectAll" value="0" onclick="javascript:toggleAll(this);"/> <strong>${uiLabelMap.ProductProduct}</strong></div>
-          <div class="right">
-            <@menu type="button">
-              <@menuitem type="link" href=makeOfbizUrl("keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N/~PAGING=${paging}/~noConditionFind=${noConditionFind}") text="${uiLabelMap.CommonPrevious}" disabled=(!(0 < viewIndex?int)) />
-              <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-              <@menuitem type="link" href=makeOfbizUrl("keywordsearch/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N/~PAGING=${paging}/~noConditionFind=${noConditionFind}") text="${uiLabelMap.CommonNext}" disabled=(!(highIndex?int < listSize?int)) />
-              <#if paging == "Y">
-                <@menuitem type="link" href=makeOfbizUrl("keywordsearch/~VIEW_INDEX=0/~VIEW_SIZE=99999/~clearSearch=N/~PAGING=N/~noConditionFind=${noConditionFind}") text="${uiLabelMap.CommonPagingOff}" />
-              <#else>
-                <@menuitem type="link" href=makeOfbizUrl("keywordsearch/~VIEW_INDEX=0/~VIEW_SIZE=${previousViewSize}/~clearSearch=N/~PAGING=Y/~noConditionFind=${noConditionFind}") text="${uiLabelMap.CommonPagingOn}" />
-              </#if>
-            </@menu>
-          </div>
-        </div>
-        </#if>
-      </#macro>
-      <@paginationPanel />
+
+      <#-- Cato: NOTE: actual keyword search params are stored in session -->
+      <@paginate mode="content" url=makeOfbizUrl("keywordsearch") paramStr="~clearSearch=N/~noConditionFind=${noConditionFind}" paramDelim="/" paramPrefix="~" viewSize=viewSize!1 previousViewSize=previousViewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paginateToggle=true paginateOn=((paging!"Y") == "Y")>
       <form method="post" name="products" action="">
         <fieldset>
           <input type="hidden" name="productStoreId" value="${parameters.productStoreId!}" />
@@ -82,6 +65,6 @@ under the License.
           </@table>
         </fieldset>
       </form>
-      <@paginationPanel />
+      </@paginate>
     </#if>
 </@section>

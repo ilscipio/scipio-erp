@@ -93,7 +93,7 @@ under the License.
             <widgets>
                    <container style="${styles.grid_row}">
                        <container style="${styles.grid_large}12 ${styles.grid_cell}">
-                           <label style="heading" text="${uiLabelMap.OrderInfo}"/>
+                           <label style="heading" text="${uiLabelMap.OrderOrderInfo}"/>
                            <include-screen name="orderactions"/>
                        </container>
                    </container>

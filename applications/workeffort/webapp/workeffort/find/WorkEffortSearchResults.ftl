@@ -25,22 +25,10 @@ under the License.
 
     <#if !workEffortIds?has_content>
       <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
-    </#if>
+    <#else>
 
-    <#macro paginateWorkEfforts>
-      <#if (0 < listSize?int)>
-        <@menu type="button">
-          <@menuitem type="link" href=makeOfbizUrl("WorkEffortSearchResults/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N") text="${uiLabelMap.CommonPrevious}" disabled=(!(0 < viewIndex?int)) />
-          <@menuitem type="text" text="${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}" />
-          <@menuitem type="link" href=makeOfbizUrl("WorkEffortSearchResults/~VIEW_INDEX=${viewIndex+1}/~VIEW_SIZE=${viewSize}/~clearSearch=N") text="${uiLabelMap.CommonNext}" disabled=(!(highIndex?int < listSize?int)) />
-        </@menu>
-      </#if>
-    </#macro>
-    
-    <#if workEffortIds?has_content>
-
-    <@paginateWorkEfforts />
-    <center>
+    <#-- Cato: FIXME: the java in org.ofbiz.workeffort.workeffort.WorkEffortSearchEvents.getWorkEffortSearchResult doesn't actually support pagination; though this fails gracefully -->
+    <@paginate mode="content" url=makeOfbizUrl("WorkEffortSearchResults") paramStr="~clearSearch=N" paramDelim="/" paramPrefix="~" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
       <@table type="data-list" width="100%" cellpadding="0" cellspacing="0">
         <#assign listIndex = lowIndex>
         <#list workEffortIds as workEffortId><#-- note that there is no boundary range because that is being done before the list is put in the content -->
@@ -52,8 +40,7 @@ under the License.
           </@tr>
         </#list>
       </@table>
-    </center>
-    <@paginateWorkEfforts />
+    </@paginate>
     
     </#if>
 </@section>

@@ -61,14 +61,13 @@ under the License.
         }
     </@script>
   
+  <#-- Cato: NOTE: actual keyword search params are stored in session -->
   <#if parameters.ACTIVE_PRODUCT?has_content && parameters.GOOGLE_SYNCED?has_content && parameters.DISCONTINUED_PRODUCT?has_content>
     <#assign paramStr = "~clearSearch=N/~noConditionFind=${noConditionFind}/~ACTIVE_PRODUCT=${parameters.ACTIVE_PRODUCT}/~GOOGLE_SYNCED=${parameters.GOOGLE_SYNCED}/~DISCONTINUED_PRODUCT=${parameters.DISCONTINUED_PRODUCT}/~productStoreId=${parameters.productStoreId}">
   <#else>
     <#assign paramStr = "~clearSearch=N/~noConditionFind=${noConditionFind}">
   </#if>
-  <#-- Cato: FIXME: removed this toggle because the Java product search session impl. is incomplete:
-   paginateToggle=true paginateOn=((paging!"N")=="Y")-->
-  <@paginate mode="content" url=makeOfbizUrl("keywordsearch") paramStr=paramStr paramDelim="/" paramPrefix="~" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
+  <@paginate mode="content" url=makeOfbizUrl("keywordsearch") paramStr=paramStr paramDelim="/" paramPrefix="~" viewSize=viewSize!1 previousViewSize=previousViewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paginateToggle=true paginateOn=((paging!"N")=="Y")>
     <form method="post" name="products">
       <input type="hidden" name="productStoreId" value="${parameters.productStoreId!}" />
       <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->

@@ -19,7 +19,8 @@ under the License.
 
 
 <!-- TODO : Need formatting -->
-<@script>
+<script type="text/javascript">
+//<![CDATA[
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
@@ -54,9 +55,9 @@ function submitForm(form, mode, value) {
         form.action="<@ofbizUrl>updateCheckoutOptions/editgiftcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
 }
-
+//]]>
 $(document).ready(function(){
-    var issuerId = "";
+var issuerId = "";
     if ($('#checkOutPaymentId_IDEAL').attr('checked') == true) {
         $('#issuers').show();
         issuerId = $('#issuer').val();
@@ -80,7 +81,7 @@ $(document).ready(function(){
         $('#issuerId').val(issuerId);
     });
 });
-</@script>
+</script>
 
  
 <#assign cart = shoppingCart! />
@@ -137,11 +138,11 @@ $(document).ready(function(){
               </div>
               
               <div id="issuers">
-              <div><label>${uiLabelMap.AccountingBank}</label></div>
+              <div><label >${uiLabelMap.AccountingBank}</label></div>
                 <select name="issuer" id="issuer">
                 <#if issuerList?has_content>
                     <#list issuerList as issuer>
-                        <option value="${issuer.getIssuerID()}">${issuer.getIssuerName()}</option>
+                        <option value="${issuer.getIssuerID()}" >${issuer.getIssuerName()}</option>
                     </#list>
                 </#if>
               </select>
@@ -162,7 +163,7 @@ $(document).ready(function(){
                     <#assign pcardNumber = giftCard.cardNumber />
                     <#if pcardNumber?has_content>
                       <#assign psize = pcardNumber?length - 4 />
-                      <#if (0 < psize)>
+                      <#if 0 &lt; psize>
                         <#list 0 .. psize-1 as foo>
                           <#assign giftCardNumber = giftCardNumber + "*" />
                         </#list>
@@ -178,7 +179,7 @@ $(document).ready(function(){
                       <label for="checkOutPayment_${paymentMethod.paymentMethodId}">${uiLabelMap.AccountingGift}:${giftCardNumber}</label>
                         <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                         <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EG', '${paymentMethod.paymentMethodId}');" class="button">${uiLabelMap.CommonUpdate}</a>
-                        <strong>${uiLabelMap.OrderBillUpTo}:</strong> <input type="text" size="5" class="inputBox" name="amount_${paymentMethod.paymentMethodId}" value="<#if (cart.getPaymentAmount(paymentMethod.paymentMethodId)?default(0)> 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if>" />
+                        <strong>${uiLabelMap.OrderBillUpTo}:</strong> <input type="text" size="5" class="inputBox" name="amount_${paymentMethod.paymentMethodId}" value="<#if (cart.getPaymentAmount(paymentMethod.paymentMethodId)?default(0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if>" />
                   </div>
                  </#if>
                 <#elseif paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
@@ -189,7 +190,7 @@ $(document).ready(function(){
                       <label for="checkOutPayment_${paymentMethod.paymentMethodId}">CC:${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</label>
                         <#if paymentMethod.description?has_content>(${paymentMethod.description})</#if>
                         <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'EC', '${paymentMethod.paymentMethodId}');" class="button">${uiLabelMap.CommonUpdate}</a>
-                        <label for="amount_${paymentMethod.paymentMethodId}"><strong>${uiLabelMap.OrderBillUpTo}:</strong></label><input type="text" size="5" class="inputBox" id="amount_${paymentMethod.paymentMethodId}" name="amount_${paymentMethod.paymentMethodId}" value="<#if (cart.getPaymentAmount(paymentMethod.paymentMethodId)?default(0)> 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if>" />
+                        <label for="amount_${paymentMethod.paymentMethodId}"><strong>${uiLabelMap.OrderBillUpTo}:</strong></label><input type="text" size="5" class="inputBox" id="amount_${paymentMethod.paymentMethodId}" name="amount_${paymentMethod.paymentMethodId}" value="<#if (cart.getPaymentAmount(paymentMethod.paymentMethodId)?default(0) > 0)>${cart.getPaymentAmount(paymentMethod.paymentMethodId)?string("##0.00")}</#if>" />
                   </div>
                  </#if>
                 <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
@@ -262,6 +263,6 @@ $(document).ready(function(){
 </form>
 
 <div>
-  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'CS', '');" class="${styles.link_nav_cancel!}">${uiLabelMap.OrderBacktoShoppingCart}</a>
-  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'DN', '');" class="${styles.link_run_session!} ${styles.action_update!}">${uiLabelMap.OrderContinueToFinalOrderReview}</a>
+  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'CS', '');" class="buttontextbig">${uiLabelMap.OrderBacktoShoppingCart}</a>
+  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'DN', '');" class="buttontextbig">${uiLabelMap.OrderContinueToFinalOrderReview}</a>
 </div>

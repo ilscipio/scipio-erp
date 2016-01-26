@@ -86,12 +86,11 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.workEffortId}"> <!-- override-by-auto-include="true" -->
                         <section>
                             <condition>
                                 <and>
                                     <if-service-permission service-name="workEffortManagerPermission" main-action="VIEW"/>
-                                    <not><if-empty field="workEffortId"/></not>
                                 </and>
                             </condition>
                             <widgets>

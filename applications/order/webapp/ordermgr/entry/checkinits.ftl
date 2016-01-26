@@ -38,8 +38,8 @@ under the License.
     </#assign>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-        <@menuitem type="link" href="javascript:document.salesentryform.submit();" text="${uiLabelMap.CommonContinue}" />
         <@menuitem type="link" href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.PartyFindParty}" />
+        <@menuitem type="link" href="javascript:document.salesentryform.submit();" text="${uiLabelMap.CommonContinue}" class="+${styles.action_run_session!} ${styles.action_continue!}"/>
       </@menu>
     </#macro>
     <@section class="${styles.grid_large!}9" title=sectionTitle menuContent=menuContent>
@@ -93,8 +93,8 @@ under the License.
     </#assign>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-        <@menuitem type="link" href="javascript:document.poentryform.submit();" text="${uiLabelMap.CommonContinue}" />
         <@menuitem type="link" href="/partymgr/control/findparty?${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.PartyFindParty}" />
+        <@menuitem type="link" href="javascript:document.poentryform.submit();" text="${uiLabelMap.CommonContinue}" class="+${styles.action_run_session!} ${styles.action_continue!}" />
       </@menu>
     </#macro>
     <@section title=sectionTitle class="${styles.grid_large!}9" menuContent=menuContent>

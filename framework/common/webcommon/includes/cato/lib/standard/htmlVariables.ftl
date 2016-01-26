@@ -296,7 +296,8 @@
     "action_register" : "action-modify action-login",     <#-- register action: "Register", etc.; usually goes with system scope -->
     "action_login" : "action-modify action-login",        <#-- login action: "Login", etc.; usually goes with session scope -->
     "action_logout" : "action-modify action-logout",      <#-- logout action: "Logout", etc.; usually goes with session scope -->
-
+    "action_continue" : "action-modify action-continue",  <#-- continue action: "Continue", "Next". NOTE: this is a special case of "update" for styling needs. usually goes with action_run_session, but action_run_sys should be used if submits permanent data not just in session. -->
+    
     <#-- Specific read-only actions (may or retrieve or submit data for analysis without changing state meaningfully) -->
     "action_readonly" : "action-readonly",                                <#-- readonly action or actions -->
     "action_read" : "action-readonly action-read",                        <#-- generic read action, can also be a collection of read actions -->

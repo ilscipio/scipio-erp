@@ -22,7 +22,7 @@ under the License.
 
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href="javascript:document.agreementForm.submit()" text="${uiLabelMap.CommonContinue}" />
+      <@menuitem type="link" href="javascript:document.agreementForm.submit()" text="${uiLabelMap.CommonContinue}" class="+${styles.action_run_session!} ${styles.action_continue!}" />
     </@menu>
   </#macro>
   <@section title="${uiLabelMap.OrderOrderEntryCurrencyAgreementShipDates}" menuContent=menuContent>

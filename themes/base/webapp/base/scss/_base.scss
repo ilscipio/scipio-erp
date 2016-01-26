@@ -387,6 +387,12 @@ div.scrollable-table-container > table {
 }
 */
 
+/* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
+.action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
+   @include button-style($bg:$success-button-bg-color, $bg-hover:$success-button-bg-hover, $border-color:$success-button-border-color);
+}
+
+
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {

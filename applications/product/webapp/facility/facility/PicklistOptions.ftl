@@ -45,7 +45,6 @@ under the License.
     <@field type="submitarea">
       <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_select!}" align="right"/>
     </@field>
-    </div>
   </form>
 </@section>  
   

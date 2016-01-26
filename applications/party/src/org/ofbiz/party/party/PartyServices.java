@@ -1108,7 +1108,7 @@ public class PartyServices {
             viewSize = Integer.parseInt((String) context.get("VIEW_SIZE"));
         } catch (Exception e) {
             //viewSize = 20;
-            viewSize = UtilProperties.getPropertyAsInteger("general.properties", "paginate.viewSize.default", 20);
+            viewSize = UtilProperties.getPropertyAsInteger("general.properties", "record.paginate.defaultViewSize", 20);
         }
         result.put("viewSize", Integer.valueOf(viewSize));
 

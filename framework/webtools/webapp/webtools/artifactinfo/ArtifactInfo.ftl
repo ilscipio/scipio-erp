@@ -87,7 +87,7 @@ under the License.
     <#if artifactInfo.getType() == "entity">
         <#if artifactInfo.modelEntity.getFieldsUnmodifiable()?has_content>
             <@section title="Entity Fields">
-                <a href="<@ofbizUrl>FindGeneric?entityName=${artifactInfo.modelEntity.getEntityName()}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.viewSize.default")!50}&amp;VIEW_INDEX=0</@ofbizUrl>">All Entity Data</a>
+                <a href="<@ofbizUrl>FindGeneric?entityName=${artifactInfo.modelEntity.getEntityName()}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@ofbizUrl>">All Entity Data</a>
                 <@table type="data-list" cellspacing=""> <#-- orig: class="" -->
                 <#list artifactInfo.modelEntity.getFieldsUnmodifiable() as modelField>
                     <@tr><@td>${modelField.getName()}<#if modelField.getIsPk()>*</#if></@td><@td>${modelField.getType()}</@td><@td>${modelField.getDescription()!}</@td></@tr>

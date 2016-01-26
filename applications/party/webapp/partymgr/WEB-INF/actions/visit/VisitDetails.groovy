@@ -38,7 +38,7 @@ try {
 
 // Cato: unhardcode
 //viewSize = 20;
-defaultViewSize = org.ofbiz.base.util.UtilProperties.getPropertyAsInteger("general.properties", "paginate.viewSize.default", 20);
+defaultViewSize = org.ofbiz.base.util.UtilProperties.getPropertyAsInteger("general.properties", "record.paginate.defaultViewSize", 20);
 viewSize = defaultViewSize;
 try {
     viewSize = Integer.valueOf((String) parameters.VIEW_SIZE).intValue();

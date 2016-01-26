@@ -40,7 +40,7 @@ function ShowTab(lname) {
 <@section title="${uiLabelMap.WebtoolsViewValue} ${uiLabelMap.WebtoolsForEntity} ${entityName}">
 
     <@menu type="button">
-      <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.viewSize.default')!50}&amp;VIEW_INDEX=0") text="${uiLabelMap.WebtoolsBackToFindScreen}" />
+      <@menuitem type="link" href=makeOfbizUrl("FindGeneric?entityName=${entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue('webtools', 'webtools.record.paginate.defaultViewSize')!50}&amp;VIEW_INDEX=0") text="${uiLabelMap.WebtoolsBackToFindScreen}" />
       <#if enableEdit = "false">
         <#if hasCreatePermission>
           <@menuitem type="link" href=makeOfbizUrl("ViewGeneric?entityName=${entityName}&amp;enableEdit=true") contentClass="+create" text="${uiLabelMap.CommonCreateNew}" />

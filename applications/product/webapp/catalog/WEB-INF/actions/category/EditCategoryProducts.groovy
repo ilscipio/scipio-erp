@@ -26,7 +26,7 @@ context.activeOnly = activeOnly;
 paramInMap = [:];
 paramInMap.productCategoryId = UtilFormatOut.checkNull(request.getParameter("productCategoryId"));
 // Cato: lookup default
-paramInMap.defaultViewSize = UtilProperties.getPropertyAsInteger("general.properties", "paginate.viewSize.default", 20);
+paramInMap.defaultViewSize = UtilProperties.getPropertyAsInteger("general.properties", "record.paginate.defaultViewSize", 20);
 paramInMap.limitView = true;
 paramInMap.useCacheForMembers = true;
 paramInMap.checkViewAllow = false;

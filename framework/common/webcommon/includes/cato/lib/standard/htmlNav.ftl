@@ -526,10 +526,10 @@ menu item element must override this and provide a proper check.
     </#if>
 
     <#if !previousViewSize?has_content>
-      <#local previousViewSize = getPropertyValue("general.properties", "paginate.viewSize.default")!20>
+      <#local previousViewSize = getPropertyValue("general.properties", "record.paginate.defaultViewSize")!20>
     </#if>
     <#if !paginateOffViewSize?has_content>
-      <#local paginateOffViewSize = getPropertyValue("general.properties", "paginate.disabled.viewSize.default")!99999>
+      <#local paginateOffViewSize = getPropertyValue("general.properties", "record.paginate.disabled.defaultViewSize")!99999>
     </#if>
 
     <#if !paginateOn?has_content>

@@ -47,7 +47,7 @@ public class WorkEffortSearchEvents {
         int viewIndex = 0;
         // Cato: unhardcode default
         //int viewSize = 20;
-        int viewSize = UtilProperties.getPropertyAsInteger("general.properties", "paginate.viewSize.default", 20);
+        int viewSize = UtilProperties.getPropertyAsInteger("general.properties", "record.paginate.defaultViewSize", 20);
         int highIndex = 0;
         int lowIndex = 0;
         int listSize = 0;

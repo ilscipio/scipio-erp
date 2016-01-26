@@ -90,7 +90,7 @@ under the License.
                 <#if entity.entityPermissionView == 'Y'>
                   <a href="<@ofbizUrl>ViewRelations?entityName=${entity.entityName}</@ofbizUrl>">${uiLabelMap.WebtoolsReln}</a>
                   <a href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}</@ofbizUrl>">${uiLabelMap.WebtoolsFind}</a>
-                  <a href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.viewSize.default")!50}&amp;VIEW_INDEX=0</@ofbizUrl>">${uiLabelMap.WebtoolsAll}</a>
+                  <a href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@ofbizUrl>">${uiLabelMap.WebtoolsAll}</a>
                 </#if>
               <#else>
                 <#if entity.entityPermissionCreate == 'Y'>
@@ -99,7 +99,7 @@ under the License.
                 <#if entity.entityPermissionView == 'Y'>
                   <a href="<@ofbizUrl>ViewRelations?entityName=${entity.entityName}</@ofbizUrl>" title="${uiLabelMap.WebtoolsViewRelations}">${uiLabelMap.WebtoolsReln}</a>
                   <a href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}</@ofbizUrl>" title="${uiLabelMap.WebtoolsFindRecord}">${uiLabelMap.WebtoolsFind}</a>
-                  <a href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.viewSize.default")!50}&amp;VIEW_INDEX=0</@ofbizUrl>" title="${uiLabelMap.WebtoolsFindAllRecords}">${uiLabelMap.WebtoolsAll}</a>
+                  <a href="<@ofbizUrl>FindGeneric?entityName=${entity.entityName}&amp;find=true&amp;VIEW_SIZE=${getPropertyValue("webtools", "webtools.record.paginate.defaultViewSize")!50}&amp;VIEW_INDEX=0</@ofbizUrl>" title="${uiLabelMap.WebtoolsFindAllRecords}">${uiLabelMap.WebtoolsAll}</a>
                 </#if>
               </#if>
             </@td>

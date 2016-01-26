@@ -111,7 +111,7 @@ public class OrderListState implements Serializable {
     protected OrderListState() {
         // Cato: unhardcode default
         //viewSize = 10;
-        viewSize = UtilProperties.getPropertyAsInteger("order.properties", "order.paginate.viewSize.default", 10);
+        viewSize = UtilProperties.getPropertyAsInteger("order.properties", "order.paginate.defaultViewSize", 10);
         viewIndex = 0;
         orderStatusState = FastMap.newInstance();
         orderTypeState = FastMap.newInstance();

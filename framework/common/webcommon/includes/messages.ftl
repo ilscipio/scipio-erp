@@ -38,7 +38,7 @@ under the License.
   </#if>
 
 
-  <#if isError?has_content && !isError> <#-- Do not display the error messages when on error page -->
+  <#if (isErrorPage!false) == false> <#-- Do not display the error messages when on error page -->
   <#-- display the error messages -->
   <#if (errorMessage?has_content || errorMessageList?has_content)>
         <div id="main-${styles.alert_wrap!}">

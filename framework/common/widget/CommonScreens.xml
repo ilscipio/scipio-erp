@@ -731,6 +731,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="PageTitleError" />
                 <set field="noTitle" value="true" global="true" /><!-- Hack to remove the header element -->
+                <set field="isErrorPage" type="Boolean" value="true" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

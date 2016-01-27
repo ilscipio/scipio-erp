@@ -156,7 +156,7 @@
     
     <menu name="ProfileSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
-        <menu-item name="createNew" title="${uiLabelMap.AccountingBillingAccount}" >
+        <menu-item name="createNew" title="${uiLabelMap.AccountingBillingAccount}" widget-style="+${styles.action_nav} ${styles.action_find}">
             <condition>
                 <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW"/>
             </condition>
@@ -209,7 +209,7 @@
                 <parameter param-name="viewSize" value="20"/>
             </link>
         </menu-item>
-        <menu-item name="newQuote" title="${uiLabelMap.OrderNewQuote}">
+        <menu-item name="newQuote" title="${uiLabelMap.OrderNewQuote}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <if-has-permission permission="ORDERMGR" action="_CREATE"/>
             </condition>
@@ -218,7 +218,7 @@
                 <parameter param-name="externaLoginKey" from-field="externalLoginKey"/>
             </link>
         </menu-item>
-        <menu-item name="newOrder" title="${uiLabelMap.OrderNewOrder}">
+        <menu-item name="newOrder" title="${uiLabelMap.OrderNewOrder}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <if-has-permission permission="ORDERMGR" action="_CREATE"/>
             </condition>
@@ -229,23 +229,23 @@
         </menu-item>
     </menu>
     <menu name="create-new-party" type="simple" menu-container-style="basic-nav">
-        <menu-item name="create-party-group" title="${uiLabelMap.PartyCreateNewPartyGroup}">
+        <menu-item name="create-party-group" title="${uiLabelMap.PartyCreateNewPartyGroup}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="editpartygroup">
                 <parameter param-name="create_new" value="Y"/>
             </link>
         </menu-item>
-        <menu-item name="create-person" title="${uiLabelMap.PartyCreateNewPerson}">
+        <menu-item name="create-person" title="${uiLabelMap.PartyCreateNewPerson}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="editperson">
                 <parameter param-name="create_new" value="Y"/>
             </link>
         </menu-item>
-        <menu-item name="create-customer" title="${uiLabelMap.PartyCreateNewCustomer}">
+        <menu-item name="create-customer" title="${uiLabelMap.PartyCreateNewCustomer}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewCustomer"/>
         </menu-item>
-        <menu-item name="create-prospect" title="${uiLabelMap.PartyCreateNewProspect}">
+        <menu-item name="create-prospect" title="${uiLabelMap.PartyCreateNewProspect}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewProspect"/>
         </menu-item>
-        <menu-item name="create-employee" title="${uiLabelMap.PartyCreateNewEmployee}" >
+        <menu-item name="create-employee" title="${uiLabelMap.PartyCreateNewEmployee}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewEmployee"/>
         </menu-item>
     </menu>
@@ -291,7 +291,7 @@
     </menu>
 
     <menu name="addShipper">
-        <menu-item name="new" title="${uiLabelMap.CommonCreateNew}">
+        <menu-item name="new" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <if-has-permission permission="PARTYMGR" action="_CREATE"/>
             </condition>
@@ -301,7 +301,7 @@
         </menu-item>
     </menu>
     <menu name="communicationsMenu">
-        <menu-item name="newEmail" title="${uiLabelMap.PartyNewEmail}">
+        <menu-item name="newEmail" title="${uiLabelMap.PartyNewEmail}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <if-has-permission permission="PARTYMGR_CME-EMAIL_CREATE"/>
             </condition>
@@ -314,7 +314,7 @@
                 <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
             </link>
         </menu-item>
-        <menu-item name="newNote" title="${uiLabelMap.PartyNewInternalNote}">
+        <menu-item name="newNote" title="${uiLabelMap.PartyNewInternalNote}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <if-has-permission permission="PARTYMGR_CME-NOTE_CREATE"/>
             </condition>
@@ -354,7 +354,7 @@
         <actions>
             <script location="component://party/webapp/partymgr/WEB-INF/actions/communication/GetMyCommunicationEventRole.groovy"/>
         </actions>
-        <menu-item name="newEmail" title="${uiLabelMap.PartyNewEmail}">
+        <menu-item name="newEmail" title="${uiLabelMap.PartyNewEmail}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
                     <if-has-permission permission="PARTYMGR_CME-EMAIL_CREATE"/>
@@ -370,7 +370,7 @@
                 <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
             </link>
         </menu-item>
-        <menu-item name="newInternalNote" title="${uiLabelMap.PartyNewInternalNote}">
+        <menu-item name="newInternalNote" title="${uiLabelMap.PartyNewInternalNote}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
                     <if-has-permission permission="PARTYMGR_CME-NOTE_CREATE"/>
@@ -702,7 +702,7 @@
 
     <menu name="RelContactAccountsSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
-        <menu-item name="add" title="${uiLabelMap.CommonNew}">
+        <menu-item name="add" title="${uiLabelMap.CommonNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="${parameters._LAST_VIEW_NAME_}">
                 <parameter param-name="partyId"/>
                 <parameter param-name="portalPageId"/>
@@ -713,7 +713,7 @@
 
     <menu name="PartyIdentificationSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
-        <menu-item name="new" title="${uiLabelMap.CommonNew}">
+        <menu-item name="new" title="${uiLabelMap.CommonNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="viewidentifications">
                 <parameter param-name="partyId" from-field="parameters.partyId"/>
             </link>

@@ -413,7 +413,7 @@
     
     <menu name="TaskSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2">
-        <menu-item name="new" title="${uiLabelMap.CommonNew}">
+        <menu-item name="new" title="${uiLabelMap.CommonNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <or>
                     <not><if-empty field="workEffort"/></not>
@@ -483,7 +483,7 @@
     </menu>
     <menu name="TimesheetSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2" default-menu-item-name="StatustoProgress">
-        <menu-item name="addTimesheet" title="${uiLabelMap.CommonNew}">
+        <menu-item name="addTimesheet" title="${uiLabelMap.CommonNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="addWeeklyTimesheet"/>
         </menu-item>
         <menu-item name="TimeSheetStatusToComplete" title="${uiLabelMap.CommonStatustoComplete}">

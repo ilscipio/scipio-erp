@@ -124,13 +124,13 @@ under the License.
     <menu name="ContentSubButtonBar" menu-container-style="button-bar button-style-2" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
-        <menu-item name="NewContent" title="${uiLabelMap.CommonCreateNew}">
+        <menu-item name="NewContent" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <not><if-empty field="currentValue.contentId"/></not>
             </condition>
             <link target="EditContent"/>
         </menu-item>
-        <menu-item name="NewContentAssoc" title="${uiLabelMap.CommonCreateNew} ${uiLabelMap.ContentAssociation}">
+        <menu-item name="NewContentAssoc" title="${uiLabelMap.CommonCreateNew} ${uiLabelMap.ContentAssociation}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <if-compare field="tabButtonItem" operator="equals" value="association"/>
             </condition>
@@ -264,7 +264,7 @@ under the License.
     <menu name="BlogArticleButtonBar" menu-container-style="button-bar button-style-2" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName"
         title="" type="simple">
-        <menu-item name="NewBlogArticle" title="${uiLabelMap.ContentCreateNewBlogArticle}">
+        <menu-item name="NewBlogArticle" title="${uiLabelMap.ContentCreateNewBlogArticle}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditBlogArticle">
                 <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
             </link>

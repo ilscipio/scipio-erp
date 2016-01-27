@@ -229,7 +229,7 @@ under the License.
     
     <menu name="ShipmentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           default-menu-item-name="EditShipment" selected-menuitem-context-field-name="subTabButtonItem">
-        <menu-item name="EditShipment" title="${uiLabelMap.ProductNewShipment}">
+        <menu-item name="EditShipment" title="${uiLabelMap.ProductNewShipment}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditShipment"/>
         </menu-item>
     </menu>
@@ -273,7 +273,7 @@ under the License.
                 <parameter param-name="action" value="Y"/>
             </link>
         </menu-item>
-        <menu-item name="InventoryItemTotalsExportTab" title="${uiLabelMap.ProductInventoryItemTotalsExport}">
+        <menu-item name="InventoryItemTotalsExportTab" title="${uiLabelMap.ProductInventoryItemTotalsExport}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <link target="InventoryItemTotalsExport.csv">
                 <parameter param-name="facilityId" from-field="facilityId"/>
                 <parameter param-name="action" value="Y"/>

@@ -159,7 +159,7 @@ under the License.
                 <parameter param-name="quoteItemSeqId" from-field="parameters.quoteItemSeqId"/>
             </link>
         </menu-item>
-        <menu-item name="NewWorkEffort" title="${uiLabelMap.OrderCreateQuoteWorkEffort}">
+        <menu-item name="NewWorkEffort" title="${uiLabelMap.OrderCreateQuoteWorkEffort}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
                     <not><if-empty field="quote.quoteId"/></not>
@@ -173,7 +173,7 @@ under the License.
                 <parameter param-name="quoteId"/>
             </link>
         </menu-item>
-        <menu-item name="NewRole" title="${uiLabelMap.OrderCreateOrderQuoteRole}">
+        <menu-item name="NewRole" title="${uiLabelMap.OrderCreateOrderQuoteRole}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
                     <if-compare field="quote.statusId" operator="not-equals" value="QUO_APPROVED"/>
@@ -185,7 +185,7 @@ under the License.
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
         </menu-item>
-        <menu-item name="NewNote" title="${uiLabelMap.OrderCreateOrderQuoteNote}">
+        <menu-item name="NewNote" title="${uiLabelMap.OrderCreateOrderQuoteNote}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="createnewquotenote">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
@@ -202,12 +202,12 @@ under the License.
                 <parameter param-name="finalizeMode" value="init"/>
             </link>
         </menu-item>
-        <menu-item name="quoteReport" title="${uiLabelMap.CommonPdf}">
+        <menu-item name="quoteReport" title="${uiLabelMap.CommonPdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <link target="QuoteReport" target-window="new">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
             </link>
         </menu-item>
-        <menu-item name="editQuoteReportMail" title="${uiLabelMap.CommonPdf}: ${uiLabelMap.CommonSendReportByMail}">
+        <menu-item name="editQuoteReportMail" title="${uiLabelMap.CommonPdf}: ${uiLabelMap.CommonSendReportByMail}" widget-style="+${styles.action_run_sys} ${styles.action_send}">
             <link target="EditQuoteReportMail">
                 <parameter param-name="quoteId" from-field="quote.quoteId"/>
                 <parameter param-name="emailType" value="PRDS_QUO_CONFIRM"/>

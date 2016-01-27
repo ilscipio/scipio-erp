@@ -28,7 +28,7 @@
     
     <menu name="EbaySubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
-        <menu-item name="NewEbayAccount" title="New Ebay Account">
+        <menu-item name="NewEbayAccount" title="New Ebay Account" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="newEbayAccount"/>
         </menu-item>
     </menu>

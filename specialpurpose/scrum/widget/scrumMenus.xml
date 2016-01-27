@@ -118,7 +118,7 @@ under the License.
             </condition>
             <link target="FindResource"/>
         </menu-item>
-        <menu-item name="quickAddNewTask" title="${uiLabelMap.ScrumQuickAddNewTask}">
+        <menu-item name="quickAddNewTask" title="${uiLabelMap.ScrumQuickAddNewTask}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <if-has-permission permission="SCRUM" action="_ADMIN"/>
             </condition>
@@ -507,7 +507,7 @@ under the License.
     
     <menu name="ProductBackLogItemStatusTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2">
-        <menu-item name="addProdBacklog" title="${uiLabelMap.ScrumNewBacklogItem}" >
+        <menu-item name="addProdBacklog" title="${uiLabelMap.ScrumNewBacklogItem}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
                     <not><if-empty field="product"/></not>
@@ -515,7 +515,7 @@ under the License.
                     <if-empty field="product.supportDiscontinuationDate"/>
                 </and>
             </condition>
-            <link target="AddProdBacklog" style="+create">
+            <link target="AddProdBacklog">
                 <parameter param-name="productId" from-field="parameters.productId"/>
             </link>
         </menu-item>
@@ -607,7 +607,7 @@ under the License.
                 <parameter param-name="custRequestId" from-field="custRequestId"/>
             </link>
         </menu-item>
-        <menu-item name="addNewTask" title="${uiLabelMap.ScrumNewTask}" title-style="hidden">
+        <menu-item name="addNewTask" title="${uiLabelMap.ScrumNewTask}" title-style="hidden" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
                     <not><if-empty field="product"/></not>
@@ -621,7 +621,7 @@ under the License.
                 <parameter param-name="productId" from-field="parameters.productId"/>
             </link>
         </menu-item>
-        <menu-item name="addNewErrorTask" title="${uiLabelMap.ScrumNewErrorTask}" title-style="hidden">
+        <menu-item name="addNewErrorTask" title="${uiLabelMap.ScrumNewErrorTask}" title-style="hidden" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
                     <if-service-permission service-name="scrumPermissionCheck" main-action="UPDATE" resource-description="TEST"/>
@@ -662,7 +662,7 @@ under the License.
             </condition>
             <link text="Add Product" target="EditProduct" style="+create"></link>
         </menu-item>
-        <menu-item name="NewProject">
+        <menu-item name="NewProject" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
                     <not><if-empty field="parameters.productId"/></not>
@@ -686,7 +686,7 @@ under the License.
                 <parameter param-name="productId" from-field="product.productId"/>
             </link>
         </menu-item>
-        <menu-item name="NewCategory">
+        <menu-item name="NewCategory" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
                     <if-compare field="tabButtonItem" operator="equals" value="categories"/>
@@ -715,7 +715,7 @@ under the License.
                 <parameter param-name="companyId" from-field="companyId"/>
             </link>
         </menu-item>
-        <menu-item name="NewEmail" title="${uiLabelMap.ScrumNewEmail}">
+        <menu-item name="NewEmail" title="${uiLabelMap.ScrumNewEmail}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
             <and>
                 <if-compare field="tabButtonItem" operator="equals" value="productComm"/>
@@ -873,7 +873,7 @@ under the License.
     
     <menu name="TaskSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2">
-        <menu-item name="new" title="${uiLabelMap.CommonNew}">
+        <menu-item name="new" title="${uiLabelMap.CommonNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
                     <if-compare field="task.currentStatusId" operator="not-equals" value="STS_COMPLETED"/>
@@ -960,7 +960,7 @@ under the License.
     
     <menu name="ProjectSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2">
-        <menu-item name="AddSprint" title="${uiLabelMap.ScrumNewSprint}">
+        <menu-item name="AddSprint" title="${uiLabelMap.ScrumNewSprint}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
                     <not><if-empty field="workEffortId"/></not>
@@ -968,7 +968,7 @@ under the License.
                     <if-service-permission service-name="scrumPermissionCheck" main-action="CREATE" resource-description="SPRINT"/>
                 </and>
             </condition>
-            <link target="AddSprint" style="+create">
+            <link target="AddSprint">
                 <parameter param-name="projectId" from-field="parameters.projectId"/>
             </link>
         </menu-item>
@@ -1095,7 +1095,7 @@ under the License.
     </menu>
     <menu name="ProductBacklogEmailTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2">
-        <menu-item name="NewEmail" title="${uiLabelMap.ScrumNewEmail}">
+        <menu-item name="NewEmail" title="${uiLabelMap.ScrumNewEmail}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                     <if-service-permission service-name="scrumPermissionCheck" main-action="UPDATE" resource-description="TASK"/>
             </condition>

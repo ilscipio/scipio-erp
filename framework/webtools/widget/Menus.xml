@@ -214,7 +214,7 @@ under the License.
                 <parameter param-name="forstatic" value="true"/>
             </link>
         </menu-item>
-        <menu-item name="entityrefReport" title="${uiLabelMap.WebtoolsEntityReferencePdf}">
+        <menu-item name="entityrefReport" title="${uiLabelMap.WebtoolsEntityReferencePdf}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <link target="entityrefReport" target-window="_BLANK"/>
         </menu-item>
         <menu-item name="EntitySQLProcessor" title="${uiLabelMap.PageTitleEntitySQLProcessor}">
@@ -243,7 +243,7 @@ under the License.
                <parameter param-name="portalPageId" from-field="parameters.portalPageId"/>
             </link>
         </menu-item>
-        <menu-item name="new" title="${uiLabelMap.CommonNew}">
+        <menu-item name="new" title="${uiLabelMap.CommonNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewPortalPage"/>
         </menu-item>
         <menu-item name="refresh" title="${uiLabelMap.CommonRefresh}">
@@ -325,7 +325,7 @@ under the License.
         <menu-item name="FindGeo" title="${uiLabelMap.WebtoolsGeosFind}">
             <link target="FindGeo"/>            
         </menu-item>
-        <menu-item name="EditGeo" title="${uiLabelMap.WebtoolsGeoCreateNew}">
+        <menu-item name="EditGeo" title="${uiLabelMap.WebtoolsGeoCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditGeo">
                 <parameter param-name="geoId" from-field="parameters.geoId"/>
             </link>

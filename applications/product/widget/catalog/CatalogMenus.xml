@@ -321,8 +321,8 @@ under the License.
     </menu>
 
     <menu name="ProductStoreGroupButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="editstoregroup">
-            <link target="EditProductStoreGroup" text="${uiLabelMap.ProductNewGroup}" style="create"/>
+        <menu-item name="editstoregroup" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditProductStoreGroup" text="${uiLabelMap.ProductNewGroup}"/>
         </menu-item>
     </menu>
     
@@ -578,7 +578,7 @@ under the License.
                 <parameter param-name="product_id" from-field="productId"/>
             </link>
         </menu-item>
-        <menu-item name="ProductBarCode" title="${uiLabelMap.ProductBarcode}">
+        <menu-item name="ProductBarCode" title="${uiLabelMap.ProductBarcode}" widget-style="+${styles.action_run_sys} ${styles.action_export}">
             <condition>
                 <not><if-empty field="product"/></not>
             </condition>

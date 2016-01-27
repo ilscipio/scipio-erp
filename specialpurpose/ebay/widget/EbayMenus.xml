@@ -34,7 +34,7 @@ under the License.
         <menu-item name="find" title="${uiLabelMap.CommonFind}" >
             <link target="FindEbayConfigurations"/>
         </menu-item>
-        <menu-item name="newEbayConfig" title="${uiLabelMap.CommonNew}">
+        <menu-item name="newEbayConfig" title="${uiLabelMap.CommonNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <if-empty field="ebayConfig"/>
             </condition>
@@ -57,7 +57,7 @@ under the License.
     
     <menu name="EbayConfigSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
             menu-container-style="button-bar button-style-2">
-        <menu-item name="createNew" title="${uiLabelMap.CommonCreateNew}">
+        <menu-item name="createNew" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <not><if-empty field="ebayConfig"/></not>
             </condition>

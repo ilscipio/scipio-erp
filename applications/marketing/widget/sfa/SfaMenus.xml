@@ -57,7 +57,7 @@ under the License.
     
     <menu name="AccountSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2 no-clear">
-        <menu-item name="NewAccounts" title="${uiLabelMap.PageTitleCreateAccount}">
+        <menu-item name="NewAccounts" title="${uiLabelMap.PageTitleCreateAccount}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewAccount"/>
         </menu-item>
         <menu-item name="ViewSfaCommEvent" title="${uiLabelMap.PartyCommunications}">
@@ -119,10 +119,10 @@ under the License.
     
     <menu name="ContactSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2 no-clear">
-        <menu-item name="NewContact" title="${uiLabelMap.CommonCreateNew}">
+        <menu-item name="NewContact" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewContact"/>
         </menu-item>
-        <menu-item name="NewContactFromVCard" title="${uiLabelMap.SfaCreateContactFromVCard}">
+        <menu-item name="NewContactFromVCard" title="${uiLabelMap.SfaCreateContactFromVCard}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewContactFromVCard"/>
         </menu-item>
         <menu-item name="ViewSfaCommEvent" title="${uiLabelMap.PartyCommunications}">
@@ -163,7 +163,7 @@ under the License.
     
     <menu name="EventSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2 no-clear">
-        <menu-item name="NewEvent" title="${uiLabelMap.CommonCreateNew}"><link target="EditEvent"/></menu-item>
+        <menu-item name="NewEvent" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}"><link target="EditEvent"/></menu-item>
     </menu>
     
     <menu name="LeadTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -213,10 +213,10 @@ under the License.
     
     <menu name="LeadSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2 no-clear">
-        <menu-item name="NewLead" title="${uiLabelMap.CommonCreateNew}">
+        <menu-item name="NewLead" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewLead"/>
         </menu-item>
-        <menu-item name="NewLeadFromVCard" title="${uiLabelMap.PageTitleCreateLeadFromVCard}">
+        <menu-item name="NewLeadFromVCard" title="${uiLabelMap.PageTitleCreateLeadFromVCard}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="NewLeadFromVCard"/>
         </menu-item>
         <menu-item name="ViewSfaCommEvent" title="${uiLabelMap.PartyCommunications}">
@@ -299,7 +299,7 @@ under the License.
     
     <menu name="OpportunitySubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2 no-clear">
-        <menu-item name="NewCommEvent" title="${uiLabelMap.PartyNewEmail}">
+        <menu-item name="NewCommEvent" title="${uiLabelMap.PartyNewEmail}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="/partymgr/control/NewDraftCommunicationEvent" url-mode="inter-app" link-type="hidden-form">
                 <parameter param-name="communicationEventTypeId" value="EMAIL_COMMUNICATION"/>
                 <parameter param-name="partyIdFrom" from-field="userLogin.partyId"/>
@@ -350,7 +350,7 @@ under the License.
                 <parameter param-name="action" value="FORWARD"/>
             </link>
         </menu-item>
-        <menu-item name="newInternalNote" title="${uiLabelMap.PartyNewInternalNote}">
+        <menu-item name="newInternalNote" title="${uiLabelMap.PartyNewInternalNote}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
                     <if-has-permission permission="PARTYMGR_CME-NOTE_CREATE"/>

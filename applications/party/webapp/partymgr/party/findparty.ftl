@@ -37,7 +37,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("${createUrl}") text="${uiLabelMap.CommonNew}" contentClass="+create" />
+    <@menuitem type="link" href=makeOfbizUrl("${createUrl}") text="${uiLabelMap.CommonNew}" class="+${styles.action_nav!} ${styles.action_add!}" />
 <#if partyList?has_content>    
   <#if hideFields == "Y">
     <@menuitem type="link" href=makeOfbizUrl("findparty?hideFields=N&amp;sortField=${sortField!}${paramList}") text="${uiLabelMap.CommonShowLookupFields}" class="+${styles.action_run_sys!} ${styles.action_show!} ${styles.collapsed!}" />

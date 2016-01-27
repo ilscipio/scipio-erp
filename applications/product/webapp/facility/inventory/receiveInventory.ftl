@@ -22,7 +22,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("EditFacility") text="${uiLabelMap.ProductNewFacility}" contentClass="+create" />
+    <@menuitem type="link" href=makeOfbizUrl("EditFacility") text="${uiLabelMap.ProductNewFacility}" class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section menuContent=menuContent>

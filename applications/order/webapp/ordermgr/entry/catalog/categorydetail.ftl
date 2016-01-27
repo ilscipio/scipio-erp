@@ -16,7 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#-- Cato: TODO: convert to @paginate, but this has special AJAX functionality -->
+
 <@script>
     function callDocumentByPaginate(info) {
         var str = info.split('~');
@@ -41,6 +41,7 @@ under the License.
      }
 </@script>
 
+<#-- Cato: TODO: convert to @paginate, but this has special AJAX functionality -->
 <#macro paginationControls>
     <#assign viewIndexMax = Static["java.lang.Math"].ceil((listSize)?double / viewSize?double)>
       <#if (viewIndexMax?int > 0)>

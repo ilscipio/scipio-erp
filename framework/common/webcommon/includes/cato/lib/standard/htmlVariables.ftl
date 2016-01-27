@@ -304,14 +304,14 @@
     "action_find" : "action-readonly action-read action-find",            <#-- find action: "Find", "Search", "Lookup", etc. -->
     "action_view" : "action-readonly action-read action-view",            <#-- view item action: "View PDF", etc. -->
     "action_export" : "action-readonly action-read action-export",        <#-- export action: "Export", "Download", "Stream", "Print", etc. -->
-    "action_visibility" : "action-readonly action-read action-visibility",          <#-- visibility change base action. NOTE: Do not confuse with action_find. action_find is a fresh find/filter query, while action_visibility could at most modify an existing query, depending on the wording (but mainly is for showing/hiding anything, not just queries). -->
-    "action_show" : "action-readonly action-read action-visibility action-show",    <#-- (visibility change only) show item action: "Show Old", etc. -->
-    "action_hide" : "action-readonly action-read action-visibility action-hide",    <#-- (visibility change only) hide item action: "Hide All", etc. -->
     
+    "action_visibility" : "action-readonly action-visibility",            <#-- visibility change base action. NOTE: Do not confuse with action_find. action_find is a fresh find/filter query, while action_visibility could at most modify an existing query, depending on the wording (but mainly is for showing/hiding anything, not just queries). -->
+    "action_show" : "action-readonly action-visibility action-show",      <#-- (visibility change only) show item action: "Show Old", etc. -->
+    "action_hide" : "action-readonly action-visibility action-hide",      <#-- (visibility change only) hide item action: "Hide All", etc. -->
+    "action_close" : "action-readonly action-close",                      <#-- close action (should not change state! is not for "closing" a record): "Close Popup", etc. -->
     "action_select" : "action-readonly action-select",                    <#-- select action: "Select", "Choose", "Pick", etc. -->
     "action_reload" : "action-readonly action-reload",                    <#-- reload action: "Refresh", etc. -->
     "action_verify" : "action-readonly action-verify",                    <#-- verify action (should not change system state!): "Verify", "Validate", etc. -->
-    "action_close" : "action-readonly action-close",                      <#-- close action (should not change system state!): "Close Popup", etc. -->
     
     <#-- Misc action flags (fragments) -->
     "action_external" : "action-external",                                <#-- external action, notably for marking external links -->
@@ -323,7 +323,7 @@
     "action_importance_normal" : "action-importance-normal",              <#-- normal importance (assumed default) -->
     "action_importance_high" : "action-importance-high",                  <#-- high importance (assumed default). e.g. "Create Order" -->
     
-  <#-- Link styles (fragments) -->
+  <#-- Link styles (fragments - part of other styles) -->
     <#-- misc/short link styles -->
     "link_long" : "link-long",                            <#-- style to identify long links -->
     
@@ -333,7 +333,7 @@
     "link_type_text" : "link-type-text",
     "link_type_image" : "link-type-image",
     
-  <#-- Link styles (standalone/full)
+  <#-- Link styles (standalone/full - can be used alone though many should be accompanied by an extra action_xxx action type class)
   
     Link type information and style selection process
     
@@ -364,7 +364,7 @@
           * e.g.: <a href="javascript:cancelUpload()" class="${styles.link_run_sys_cancel!}">Cancel Upload</a>
         * link_nav_cancel: Use for "Back" and "Cancel" navigation links that lead to previous page
           * NOTE: Often nav cancel/back links look like they're part of a submit form for a run action, and are placed next to a run action (submit button), but they are still nav cancel actions if they lead to previous page, so use link_nav_cancel on these.
-          * e.g.: <a href="${donePageUri}" class="${styles.link_nav_cancel!}">Cancel/Back</a>
+          * e.g.: <a href="${donePageUri}" class="${styles.link_nav_cancel!}">Back/Cancel</a>
       * INFO TEXT LINKS: Each of the main text links categories has an "info" subtype/variant: informational run-action text links (link_run_xxx_info) and informational nav text links (link_nav_info/link_nav_info_xxx).
         These are almost the same as main text links but help identify links who have primary purpose of showing information with their text content and only a secondary purpose of allowing an action. This allows different emphasis when styling (e.g., button vs no button).
         * link_run_xxx_info (implies action_run, action_scope_xxx, action_secondary): Informational run-action text link - any text link whose main purpose is to show information (the link text), but secondarily (action_secondary) triggers a run-action.
@@ -388,28 +388,37 @@
           * e.g.: <a href="https://www.google.com" class="${styles.link_nav!} ${styles.action_external!}">Google</a>
 
     OTHER TYPES:
-      * NON-TEXT LINKS, CUSTOM LINKS AND OTHER ELEMENTS: Image and other non-text links as well as non-link elements that trigger actions or identify with an action even without causing one (such as menu item <li> elements or any other UI element),
+      * NON-TEXT LINKS, MENU ITEMS, CUSTOM LINKS AND OTHER ELEMENTS: Image and other non-text links as well as non-link elements that trigger actions or identify with an action even without causing one (such as menu item <li> elements or any other UI element),
         should NOT receive link_xxx classes. Links that need custom styles can also use something other than link_xxx if they're not appropriate. For these or any other action-related UI element, 
         use the main action_xxx styles directly instead of link_xxx, which have analogous categories (the only difference is they can't factor out styling decisions as directly as link_xxx styles do, and must rely more on css/sass).
         For image links, it's a good idea to add link_type_image as well, to help with limitations of CSS selectors, even if it makes it more verbose.
         * Main Types:
           * action_run_xxx: Run-action (with scope).
             * e.g.: <a href="${makeOfbizUrl("removeProduct?productId=10000")}" class="x-icon ${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_remove!}"><img src="x-icon.jpg"/></a>
+                    <@menuitem type="link" href="report.pdf" class="+${styles.action_run_sys!} ${styles.action_export!}" text="PDF" />
           * action_nav: Navigation action.
             * e.g.: <a href="${makeOfbizUrl("ViewProduct?productId=10000")}" class="product-img-link ${styles.link_type_image!} ${styles.action_nav!}"><img src="product-image.jpg"/></a>
+                    <@menuitem type="link" href="EditProduct" class="+${styles.action_nav!} ${styles.action_add!}" text="New Product" />
         * Special cases:
           * action_cancel: Anti-action cancel links. NOTE: Here these do not have a dedicated convenience/factoring style (not needed).
             * e.g.: <a href="javascript:cancelUpload()" class="x-icon ${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_cancel!}"><img src="x-icon.jpg"/></a>
+                    <@menuitem type="link" href="${donePage}" class="+${styles.action_nav!} ${styles.action_cancel!}" text="Back/Cancel" />
         * Other modifiers:
           * action_primary and action_secondary (rarely needed), action_external, etc.
- 
+        * MENU ITEM SPECIAL NOTES:
+          * class style attribute location: Usually the action classes will end up on the menu item element (<li>) instead of the link (<a>), 
+            because this is how Ofbiz labeled actions classically in menu widgets (from action classes such as the old "create"/"delete" to 
+            disabled/active styles). In FTL, @menuitem can do the same for consistency (using class="+${...}" instead of contentClass="+${...}", 
+            although some non-action classes may still need to be set with contentClass="+${...}"). In the end, the stylesheet should account for these cases and try to support both placements.
+        
     MISC:
       * VIEW ACTIONS: For action_view, sometimes there is not a clear distinction between link_run_xxx and link_nav (or action_run and action_nav), and subjective interpretation is required. 
       * THE MOST IMPORTANT: The most important for UI is to ensure that links and other UI elems that directly change system state when triggered are properly identified, so user knows when he is affecting the system state. System scope is most important. These links require:
         * action_run_sys (link_run_sys)
           * session and local scope changes should also be identified where possible, but are not as urgently needed as system state change identification. If unclear, but involves system, use system scope.
         * action_modify (or any other specific action that implies action_modify - see action type styles)
-        
+      * STYLING: See Cato's base theme _base.scss for current examples on how to style with CSS.   
+      
     DEV NOTES:
       * TODO?: May need/want CSS to identify to style differently depending on if these land within form tables vs outside or other criteria. But should probably do that with CSS selectors instead of here... 
             Maybe remove "button tiny" from all link_nav and link_run_xxx and delegate to SCSS, applying button style to the other classes instead... but has complications with CSS selection limits and SASS mixins... not trivial...

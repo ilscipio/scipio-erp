@@ -125,13 +125,14 @@ Returns empty string if no label is found
 ************
 Gets property or void/null if missing or has no content.
 NOTE: always use default value ("!") or other test operator!
--->
+Now implemented as java transform.
 <#function getPropertyValue resource name>
   <#local value = StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(resource, name))?string>
   <#if value?has_content>
     <#return value>
-  </#if> <#-- else return nothing (void/null) -->
+  </#if> <#- else return nothing (void/null) ->
 </#function>
+-->
 
 <#-- 
 *************

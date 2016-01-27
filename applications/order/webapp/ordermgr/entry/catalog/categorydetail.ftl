@@ -16,6 +16,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#-- Cato: TODO: convert to @paginate, but this has special AJAX functionality -->
 <@script>
     function callDocumentByPaginate(info) {
         var str = info.split('~');

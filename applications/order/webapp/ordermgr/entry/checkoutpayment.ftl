@@ -17,10 +17,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<#-- Cato: TODO: convert template (maybe wait until after updates from branch) -->
+<#-- Cato: TODO: convert template (maybe wait until after updates from branch) - this is not yet part of orderentry... -->
 <!-- TODO : Need formatting -->
-<script type="text/javascript">
-//<![CDATA[
+<@script>
 function submitForm(form, mode, value) {
     if (mode == "DN") {
         // done action; checkout
@@ -55,7 +54,7 @@ function submitForm(form, mode, value) {
         form.action="<@ofbizUrl>updateCheckoutOptions/editgiftcard?DONE_PAGE=checkoutpayment&paymentMethodId="+value+"</@ofbizUrl>";
         form.submit();
 }
-//]]>
+
 $(document).ready(function(){
 var issuerId = "";
     if ($('#checkOutPaymentId_IDEAL').attr('checked') == true) {
@@ -81,22 +80,32 @@ var issuerId = "";
         $('#issuerId').val(issuerId);
     });
 });
-</script>
+</@script>
 
  
 <#assign cart = shoppingCart! />
 
 <form method="post" id="checkoutInfoForm" action="">
-  <fieldset>
     <input type="hidden" name="checkoutpage" value="payment" />
     <input type="hidden" name="BACK_PAGE" value="checkoutoptions" />
     <input type="hidden" name="issuerId" id="issuerId" value="" />
 
-    <div class="screenlet">
-        <div class="screenlet-title-bar">
-            <h3>3)${uiLabelMap.OrderHowShallYouPay}?</h3>
-        </div>
-        <div class="screenlet-body inline">
+<#assign defaultFieldGridStyles = getDefaultFieldGridStyles({"labelArea":true, "postfix":true, "postfixSize":2})>
+<#macro invertedField type="" labelContent="" actionContent="">
+  <@row>
+    <@cell class=addClassArg(defaultFieldGridStyles.labelArea, "${styles.text_right!}")>
+      <#nested>
+    </@cell>
+    <@cell class=defaultFieldGridStyles.widgetArea>
+      ${labelContent}
+    </@cell>  
+    <@cell class=defaultFieldGridStyles.postfixArea>
+      ${actionContent}
+    </@cell>  
+  </@row>
+</#macro>
+
+    <@section title="3) ${uiLabelMap.OrderHowShallYouPay}?">
             <#-- Payment Method Selection -->
             <div>
                 <label>${uiLabelMap.CommonAdd}:</label>
@@ -107,35 +116,35 @@ var issuerId = "";
                   <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'NE', '');" class="button">${uiLabelMap.AccountingEFTAccount}</a>
                 </#if>
               <#if productStorePaymentMethodTypeIdMap.EXT_OFFLINE??>
-              </div>
-              <div>
+            </div>
+              <#assign labelContent><label for="checkOutPaymentId_OFFLINE">${uiLabelMap.OrderMoneyOrder}</label></#assign>
+              <@invertedField type="generic" labelContent=labelContent>
                   <input type="radio" id="checkOutPaymentId_OFFLINE" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == checkOutPaymentId>checked="checked"</#if> />
-                  <label for="checkOutPaymentId_OFFLINE">${uiLabelMap.OrderMoneyOrder}</label>
-              </div>
+              </@invertedField>
               </#if>
               <#if productStorePaymentMethodTypeIdMap.EXT_COD??>
-              <div>
+              <#assign labelContent><label for="checkOutPaymentId_COD">${uiLabelMap.OrderCOD}</label></#assign>
+              <@invertedField type="generic" labelContent=labelContent>
                   <input type="radio" id="checkOutPaymentId_COD" name="checkOutPaymentId" value="EXT_COD" <#if "EXT_COD" == checkOutPaymentId>checked="checked"</#if> />
-                  <label for="checkOutPaymentId_COD">${uiLabelMap.OrderCOD}</label>
-              </div>
+              </@invertedField>
               </#if>
               <#if productStorePaymentMethodTypeIdMap.EXT_WORLDPAY??>
-              <div>
+              <#assign labelContent><label for="checkOutPaymentId_WORLDPAY">${uiLabelMap.AccountingPayWithWorldPay}</label></#assign>
+              <@invertedField type="generic" labelContent=labelContent>
                   <input type="radio" id="checkOutPaymentId_WORLDPAY" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == checkOutPaymentId>checked="checked"</#if> />
-                  <label for="checkOutPaymentId_WORLDPAY">${uiLabelMap.AccountingPayWithWorldPay}</label>
-              </div>
+              </@invertedField>
               </#if>
               <#if productStorePaymentMethodTypeIdMap.EXT_PAYPAL??>
-              <div>
+              <#assign labelContent><label for="checkOutPaymentId_PAYPAL">${uiLabelMap.AccountingPayWithPayPal}</label></#assign>
+              <@invertedField type="generic" labelContent=labelContent>
                   <input type="radio" id="checkOutPaymentId_PAYPAL" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == checkOutPaymentId>checked="checked"</#if> />
-                  <label for="checkOutPaymentId_PAYPAL">${uiLabelMap.AccountingPayWithPayPal}</label>
-              </div>
+              </@invertedField>
               </#if>
               <#if productStorePaymentMethodTypeIdMap.EXT_IDEAL??>
-              <div>
+              <#assign labelContent><label for="checkOutPaymentId_IDEAL">${uiLabelMap.AccountingPayWithiDEAL}</label></#assign>
+              <@invertedField type="generic" labelContent=labelContent>
                   <input type="radio" id="checkOutPaymentId_IDEAL" name="checkOutPaymentId" value="EXT_IDEAL" <#if "EXT_IDEAL" == checkOutPaymentId>checked="checked"</#if> />
-                  <label for="checkOutPaymentId_IDEAL">${uiLabelMap.AccountingPayWithiDEAL}</label>
-              </div>
+              </@invertedField>
               
               <div id="issuers">
               <div><label >${uiLabelMap.AccountingBank}</label></div>
@@ -257,12 +266,10 @@ var issuerId = "";
                     <#if productStorePaymentMethodTypeIdMap.EFT_ACCOUNT??><a href="<@ofbizUrl>setBilling?paymentMethodType=EFT&amp;singleUsePayment=Y</@ofbizUrl>" class="button">${uiLabelMap.AccountingSingleUseEFTAccount}</a></#if>
               </div>
             <#-- End Payment Method Selection -->
-        </div>
-    </div>
-  </fieldset>
+    </@section>
 </form>
 
-<div>
-  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'CS', '');" class="buttontextbig">${uiLabelMap.OrderBacktoShoppingCart}</a>
-  <a href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'DN', '');" class="buttontextbig">${uiLabelMap.OrderContinueToFinalOrderReview}</a>
-</div>
+<@menu type="button">
+  <@menuitem href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'CS', '');" class="+${styles.action_nav!} ${styles.action_cancel!}" text="${uiLabelMap.OrderBacktoShoppingCart}" />
+  <@menuitem href="javascript:submitForm(document.getElementById('checkoutInfoForm'), 'DN', '');" class="+${styles.action_run_session!} ${styles.action_continue!}" text="${uiLabelMap.OrderContinueToFinalOrderReview}" />
+</@menu>

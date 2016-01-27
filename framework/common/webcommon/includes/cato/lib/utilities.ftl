@@ -1895,23 +1895,23 @@ returns void if nothing.
     renderContextType   = just call getRenderContextType()
 -->
 <#function getDefaultCatoLibLocation libName renderPlatformType="default" renderContextType="general">
-  <#local res = getPropertyValue("catorender", "cato.templating.lib." + renderContextType + "." + renderPlatformType + "."  + libName  + ".location")!"">
+  <#local res = getPropertyValue("catoWebapp", "cato.templating.lib." + renderContextType + "." + renderPlatformType + "."  + libName  + ".location")!"">
   <#if res?has_content>
     <#return res>
   </#if>
   <#if renderContextType != "general">
-    <#local res = getPropertyValue("catorender", "cato.templating.lib.general." + renderPlatformType  + "." + libName + ".location")!"">
+    <#local res = getPropertyValue("catoWebapp", "cato.templating.lib.general." + renderPlatformType  + "." + libName + ".location")!"">
     <#if res?has_content>
       <#return res>
     </#if>
   </#if>
   <#if renderPlatformType != "default">
-    <#local res = getPropertyValue("catorender", "cato.templating.lib." + renderContextType + ".default." + libName + ".location")!"">
+    <#local res = getPropertyValue("catoWebapp", "cato.templating.lib." + renderContextType + ".default." + libName + ".location")!"">
     <#if res?has_content>
       <#return res>
     </#if>
   </#if>
-  <#local res = getPropertyValue("catorender", "cato.templating.lib.general.default." + libName + ".location")!"">
+  <#local res = getPropertyValue("catoWebapp", "cato.templating.lib.general.default." + libName + ".location")!"">
   <#if res?has_content>
     <#return res>
   </#if>

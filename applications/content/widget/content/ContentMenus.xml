@@ -286,7 +286,7 @@ under the License.
     </menu>
     
     <menu name="lookupMenu" menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemactive}" type="simple" selected-menuitem-context-field-name="tabButtonItem">
-        <menu-item name="close" title="${uiLabelMap.CommonClose}">
+        <menu-item name="close" title="${uiLabelMap.CommonClose}" widget-style="+${styles.action_run_sys} ${styles.action_close}">
             <link target="javascript:window.close();" url-mode="plain"/>
         </menu-item>
         <menu-item name="index" title="${uiLabelMap.CommonExtIndex}">
@@ -311,13 +311,13 @@ under the License.
     </menu>
     <!-- Web Analytics -->
     <menu name="WebAnalyticsConfigButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="tabButtonItem2">
-        <menu-item name="EditWebAnalyticsConfig" title="${uiLabelMap.CommonCreate}">
-            <link target="EditWebAnalyticsConfig" style="+create">
+        <menu-item name="EditWebAnalyticsConfig" title="${uiLabelMap.CommonCreate}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditWebAnalyticsConfig">
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
             </link>
         </menu-item>
-        <!--<menu-item name="WebAnalyticsTypes" title="Create ${uiLabelMap.CatalogWebAnalyticsTypes}">
-            <link target="EditWebAnalyticsType" style="+create">
+        <!--<menu-item name="WebAnalyticsTypes" title="Create ${uiLabelMap.CatalogWebAnalyticsTypes}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="EditWebAnalyticsType">
                 <parameter param-name="webSiteId" from-field="parameters.webSiteId"/>
             </link>
         </menu-item>-->

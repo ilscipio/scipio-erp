@@ -22,56 +22,56 @@ under the License.
  xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 
     <menu name="contentsetup" selected-menuitem-context-field-name="tabButtonItem">
-        <menu-item name="adddataresource" title="${uiLabelMap.CommonAdd}" >
-            <link target="AddDataResource" name="AddDataResource" target-window="_top" style="tabButton"/>
+        <menu-item name="adddataresource" title="${uiLabelMap.CommonAdd}" widget-style="+${styles.action_nav} ${styles.action_add}">
+            <link target="AddDataResource" name="AddDataResource" target-window="_top" />
         </menu-item>
-        <menu-item name="finddataresource" title="${uiLabelMap.CommonFind}" >
-            <link target="FindDataResource" name="FindDataResource" target-window="_top" style="tabButton"/>
+        <menu-item name="finddataresource" title="${uiLabelMap.CommonFind}" widget-style="+${styles.action_nav} ${styles.action_find}">
+            <link target="FindDataResource" name="FindDataResource" target-window="_top" />
         </menu-item>
-        <menu-item name="browsedataresource" title="${uiLabelMap.ContentBrowse}" >
-            <link target="BrowseDataResource" name="BrowseDataResource" target-window="_top" style="tabButton"/>
+        <menu-item name="browsedataresource" title="${uiLabelMap.ContentBrowse}">
+            <link target="BrowseDataResource" name="BrowseDataResource" target-window="_top" />
         </menu-item>
         <menu-item name="editdataresource" title="${uiLabelMap.ContentDataResource}">
             <condition disabled-style="+disabled">
                 <not><if-empty field="dataResourceId"/></not>
             </condition>
-            <link target="EditDataResource" name="EditDataResource" target-window="_top" style="tabButton"/>
+            <link target="EditDataResource" name="EditDataResource" target-window="_top"/>
         </menu-item>
         <menu-item name="editelectronictext" title="${uiLabelMap.ContentDataResourceText}" >
             <condition disabled-style="+disabled">
                 <not><if-empty field="dataResourceId"/></not>
             </condition>
-            <link target="EditElectronicText" name="EditElectronicText" target-window="_top" style="tabButton"/>
+            <link target="EditElectronicText" name="EditElectronicText" target-window="_top"/>
         </menu-item>
         <menu-item name="edithtmltext" title="${uiLabelMap.ContentHtml}" >
             <condition disabled-style="+disabled">
                 <not><if-empty field="dataResourceId"/></not>
             </condition>
-            <link target="EditHtmlText" name="EditHtmlText" target-window="_top" style="tabButton"/>
+            <link target="EditHtmlText" name="EditHtmlText" target-window="_top"/>
         </menu-item>
         <menu-item name="uploadimage" title="${uiLabelMap.ContentImage}" >
             <condition disabled-style="+disabled">
                 <not><if-empty field="dataResourceId"/></not>
             </condition>
-            <link target="UploadImage" name="UploadImage" target-window="_top" style="tabButton"/>
+            <link target="UploadImage" name="UploadImage" target-window="_top"/>
         </menu-item>
         <menu-item name="editdataresourceattribute" title="${uiLabelMap.ContentAttribute}" >
             <condition disabled-style="+disabled">
                 <not><if-empty field="dataResourceId"/></not>
             </condition>
-            <link target="EditDataResourceAttribute" name="EditDataResourceAttribute" target-window="_top" style="tabButton"/>
+            <link target="EditDataResourceAttribute" name="EditDataResourceAttribute" target-window="_top"/>
         </menu-item>
         <menu-item name="editdataresourcerole" title="${uiLabelMap.ContentDataResourceRole}" >
             <condition disabled-style="+disabled">
                 <not><if-empty field="dataResourceId"/></not>
             </condition>
-            <link target="EditDataResourceRole" name="EditDataResourceRole" target-window="_top" style="tabButton"/>
+            <link target="EditDataResourceRole" name="EditDataResourceRole" target-window="_top"/>
         </menu-item>
         <menu-item name="editdataresourceproductfeatures" title="${uiLabelMap.ContentDataResourceProductFeatures}" >
             <condition disabled-style="+disabled">
                 <not><if-empty field="dataResourceId"/></not>
             </condition>
-            <link target="EditDataResourceProductFeatures" name="EditDataResourceProductFeatures" target-window="_top" style="tabButton"/>
+            <link target="EditDataResourceProductFeatures" name="EditDataResourceProductFeatures" target-window="_top"/>
         </menu-item>
     </menu>
     <menu name="DataResourceButtonBar" menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemactive}" type="simple" selected-menuitem-context-field-name="tabButtonItem">

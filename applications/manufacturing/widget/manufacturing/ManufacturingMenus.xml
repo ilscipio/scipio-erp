@@ -204,7 +204,7 @@ under the License.
                 <parameter param-name="statusId" value="PRUN_CLOSED"/>
            </link>
         </menu-item>
-        <menu-item name="quickChangeComplete" title="${uiLabelMap.ManufacturingQuickComplete}">
+        <menu-item name="quickChangeComplete" title="${uiLabelMap.ManufacturingQuickComplete}" widget-style="+${styles.action_run_sys} ${styles.action_complete}">
             <condition>
                  <and>
                    <if-compare field="productionRun.currentStatusId" operator="not-equals" value="PRUN_CANCELLED"/>
@@ -256,7 +256,7 @@ under the License.
                 <parameter param-name="productionRunId"/>
             </link>
         </menu-item>
-        <menu-item name="quickChangeComplete2Close" title="${uiLabelMap.ManufacturingQuickClose}">
+        <menu-item name="quickChangeComplete2Close" title="${uiLabelMap.ManufacturingQuickClose}" widget-style="+${styles.action_run_sys} ${styles.action_terminate}">
             <condition>
                 <if-compare field="productionRun.currentStatusId" operator="equals" value="PRUN_COMPLETED"/>
             </condition>

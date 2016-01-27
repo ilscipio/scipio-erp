@@ -40,10 +40,10 @@ under the License.
         <actions>
             <script location="component://webpos/widget/WebPosMenus.groovy"/>
         </actions>
-        <menu-item name="ManagerOpenTerminal" title="${uiLabelMap.WebPosManagerOpenTerminal}">
+        <menu-item name="ManagerOpenTerminal" title="${uiLabelMap.WebPosManagerOpenTerminal}" widget-style="+${styles.action_run_local} ${styles.action_show}">
           <link target="javascript:openTerminal();" url-mode="plain"/>
         </menu-item>
-        <menu-item name="ManagerCloseTerminal" title="${uiLabelMap.WebPosManagerCloseTerminal}">
+        <menu-item name="ManagerCloseTerminal" title="${uiLabelMap.WebPosManagerCloseTerminal}" widget-style="+${styles.action_run_local} ${styles.action_close}">
           <link target="javascript:closeTerminal();" url-mode="plain"/>
         </menu-item>
         <menu-item name="ManagerPaidIn" title="${uiLabelMap.WebPosManagerPaidIn}">
@@ -55,7 +55,7 @@ under the License.
         <menu-item name="ManagerPromoCode" title="${uiLabelMap.WebPosManagerPromoCode}">
           <link target="javascript:promoCode();" url-mode="plain"/>
         </menu-item>
-        <menu-item name="ManagerVoidOrder" title="${uiLabelMap.WebPosManagerVoidOrder}">
+        <menu-item name="ManagerVoidOrder" title="${uiLabelMap.WebPosManagerVoidOrder}" widget-style="+${styles.action_run_sys} ${styles.action_terminate}">
           <link target="javascript:voidOrder();" url-mode="plain"/>
         </menu-item>
         <menu-item name="Shutdown" title="${uiLabelMap.WebPosManagerShutdown}">

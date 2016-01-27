@@ -20,14 +20,14 @@
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="view_edit" default-title-style="tabButton" default-selected-style="tabButtonSelected" default-menu-item-name="all" orientation="horizontal" menu-width="100%" default-widget-style="tabButton" menu-container-style="blogmenuwrapper" title="" type="simple">
-        <menu-item name="edit" title="${uiLabelMap.CommonEdit}">
+        <menu-item name="edit" title="${uiLabelMap.CommonEdit}" widget-style="${styles.link_nav} ${styles.action_update}">
             <condition>
                 <or>
                     <if-has-permission permission="CONTENTMGR" action="UPDATE"/>
                     <if-entity-permission entity-id="${blog.contentId}" entity-name="Content" target-operation="CONTENT_UPDATE"/>
                 </or>
             </condition>
-            <link text="${uiLabelMap.CommonEdit}" target="EditBlogArticle" style="${styles.link_nav} ${styles.action_update}">
+            <link text="${uiLabelMap.CommonEdit}" target="EditBlogArticle">
                 <parameter param-name="contentId" from-field="blog.contentId"/>
                 <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>
             </link>

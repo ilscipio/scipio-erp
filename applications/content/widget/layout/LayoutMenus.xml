@@ -23,31 +23,31 @@ under the License.
     <menu name="LayoutButtonBar" selected-menuitem-context-field-name="tabButtonItem" default-menu-item-name="content" default-associated-content-id="${userLogin.userLoginId}" title="" type="simple"
         menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemactive}">
         <menu-item name="ListLayout" title="${uiLabelMap.ContentListOwnCreatedTemplates}" >
-            <link target="ListLayout" target-window="_top" style="tabButton"/>
+            <link target="ListLayout" target-window="_top" />
         </menu-item>
-        <menu-item name="FindLayout" title="${uiLabelMap.CommonFind}" >
-            <link target="FindLayout" target-window="_top" style="tabButton"/>
+        <menu-item name="FindLayout" title="${uiLabelMap.CommonFind}" widget-style="+${styles.action_nav} ${styles.action_find}">
+            <link target="FindLayout" target-window="_top" />
         </menu-item>
-        <menu-item name="EditLayout" title="${uiLabelMap.CommonEdit}">
+        <menu-item name="EditLayout" title="${uiLabelMap.CommonEdit}" widget-style="+${styles.action_nav} ${styles.action_update}">
             <condition>
                 <and>
                     <not><if-empty field="parameters.contentId"/></not>
                     <not><if-empty field="parameters.drDataResourceId"/></not>
                 </and>
             </condition>
-            <link target="EditLayout" target-window="_top" style="tabButton" >
+            <link target="EditLayout" target-window="_top"  >
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
                 <parameter param-name="drDataResourceId" from-field="parameters.drDataResourceId"/>
             </link>
         </menu-item>
-        <menu-item name="EditLayoutSubContent" title="${uiLabelMap.ContentSubContent}" >
+        <menu-item name="EditLayoutSubContent" title="${uiLabelMap.ContentSubContent}">
             <condition>
                 <and>
                     <not><if-empty field="parameters.contentId"/></not>
                     <not><if-empty field="parameters.drDataResourceId"/></not>
                 </and>
             </condition>
-            <link target="EditLayoutSubContent" target-window="_top" style="tabButton" >
+            <link target="EditLayoutSubContent" target-window="_top">
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
                 <parameter param-name="drDataResourceId" from-field="parameters.drDataResourceId"/>
             </link>
@@ -59,7 +59,7 @@ under the License.
                     <not><if-empty field="parameters.drDataResourceId"/></not>
                 </and>
             </condition>
-            <link target="EditLayoutText" target-window="_top" style="tabButton" >
+            <link target="EditLayoutText" target-window="_top"  >
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
                 <parameter param-name="drDataResourceId" from-field="parameters.drDataResourceId"/>
             </link>
@@ -71,7 +71,7 @@ under the License.
                     <not><if-empty field="parameters.drDataResourceId"/></not>
                 </and>
             </condition>
-            <link target="EditLayoutHtml" target-window="_top" style="tabButton" >
+            <link target="EditLayoutHtml" target-window="_top"  >
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
                 <parameter param-name="drDataResourceId" from-field="parameters.drDataResourceId"/>
             </link>
@@ -83,7 +83,7 @@ under the License.
                     <not><if-empty field="parameters.drDataResourceId"/></not>
                 </and>
             </condition>
-            <link target="EditLayoutImage" target-window="_top" style="tabButton" >
+            <link target="EditLayoutImage" target-window="_top"  >
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
                 <parameter param-name="drDataResourceId" from-field="parameters.drDataResourceId"/>
             </link>
@@ -95,7 +95,7 @@ under the License.
                     <not><if-empty field="parameters.drDataResourceId"/></not>
                 </and>
             </condition>
-            <link target="EditLayoutUrl" target-window="_top" style="tabButton" >
+            <link target="EditLayoutUrl" target-window="_top"  >
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
                 <parameter param-name="drDataResourceId" from-field="parameters.drDataResourceId"/>
             </link>

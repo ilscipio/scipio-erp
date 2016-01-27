@@ -437,7 +437,7 @@
                 <parameter param-name="currentStatusId" value="PTS_ON_HOLD"/>
             </link>
         </menu-item>
-        <menu-item name="setcomplete" title="${uiLabelMap.ProjectMgrSetComplete}" >
+        <menu-item name="setcomplete" title="${uiLabelMap.ProjectMgrSetComplete}" widget-style="+${styles.action_run_sys} ${styles.action_complete}">
             <condition>
                 <and>
                     <not><if-empty field="workEffort"/></not>
@@ -486,7 +486,7 @@
         <menu-item name="addTimesheet" title="${uiLabelMap.CommonNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="addWeeklyTimesheet"/>
         </menu-item>
-        <menu-item name="TimeSheetStatusToComplete" title="${uiLabelMap.CommonStatustoComplete}">
+        <menu-item name="TimeSheetStatusToComplete" title="${uiLabelMap.CommonStatustoComplete}" widget-style="+${styles.action_run_sys} ${styles.action_complete}">
             <condition>
                 <and>
                     <not><if-empty field="timesheet"/></not>
@@ -498,7 +498,7 @@
                 <parameter param-name="statusId" value="TIMESHEET_COMPLETED"/>
             </link>
         </menu-item>
-        <menu-item name="TimeSheetStatustoProgress" title="${uiLabelMap.ProjectMgrSetStatusInProgress}">
+        <menu-item name="TimeSheetStatustoProgress" title="${uiLabelMap.ProjectMgrSetStatusInProgress}" widget-style="+${styles.action_run_sys} ${styles.action_updatestatus}">
             <condition>
                 <and>
                     <not><if-empty field="timesheet"/></not>
@@ -514,7 +514,7 @@
     
     <menu name="MyTimeSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           menu-container-style="button-bar button-style-2">
-        <menu-item name="TimeSheetStatusToComplete" title="${uiLabelMap.CommonStatustoComplete}">
+        <menu-item name="TimeSheetStatusToComplete" title="${uiLabelMap.CommonStatustoComplete}" widget-style="+${styles.action_run_sys} ${styles.action_complete}">
             <condition>
                 <and>
                     <not><if-empty field="timesheet"/></not>
@@ -604,7 +604,7 @@
         </menu-item>
     </menu>
     <menu name="TimesheetBar">
-        <menu-item name="setToComplete" title="${uiLabelMap.CommonStatustoComplete}">
+        <menu-item name="setToComplete" title="${uiLabelMap.CommonStatustoComplete}" widget-style="+${styles.action_run_sys} ${styles.action_complete}">
             <condition>
                 <if-compare field="timesheet.statusId" operator="equals" value="TIMESHEET_IN_PROCESS"/>
             </condition>

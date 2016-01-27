@@ -300,7 +300,7 @@ under the License.
     
     <menu name="ProductStoreSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
-        <menu-item name="Expand" title="${uiLabelMap.CommonExpandAll}">
+        <menu-item name="Expand" title="${uiLabelMap.CommonExpandAll}" widget-style="+${styles.action_run_local} ${styles.action_show}">
             <condition>
                 <or>
                     <if-compare operator="equals" value="EditProductStore" field="tabButtonItem"/>
@@ -309,7 +309,7 @@ under the License.
             </condition>
             <link target="javascript:expandAll(true);" url-mode="plain"/>
         </menu-item>
-        <menu-item name="Collapse" title="${uiLabelMap.CommonCollapseAll}">
+        <menu-item name="Collapse" title="${uiLabelMap.CommonCollapseAll}" widget-style="+${styles.action_run_local} ${styles.action_hide}">
             <condition>
                 <or>
                     <if-compare operator="equals" value="EditProductStore" field="tabButtonItem"/>
@@ -331,7 +331,7 @@ under the License.
     </menu>
     
     <menu name="ProductStoreFacility" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="AddProductStoreFacility" title="${uiLabelMap.ProductAddFacility}">
+        <menu-item name="AddProductStoreFacility" title="${uiLabelMap.ProductAddFacility}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="javascript:ajaxUpdateArea('ProductStoreFacilityEditArea', 'editProductStoreFacility', 'productStoreId=${parameters.productStoreId}');"
                   url-mode="plain"/>
         </menu-item>
@@ -589,7 +589,7 @@ under the License.
         <menu-item name="ProductTags" title="${uiLabelMap.ProductTags}">
             <link target="EditProductTag"/>
         </menu-item>
-        <menu-item name="ExpandAll" title="${uiLabelMap.CommonExpandAll}" widget-style="+expand-all">
+        <menu-item name="ExpandAll" title="${uiLabelMap.CommonExpandAll}" widget-style="+${styles.action_run_local} ${styles.action_show} expand-all">
             <condition>
                 <and>
                     <if-compare operator="equals" value="EditProduct" field="tabButtonItem"/>
@@ -597,7 +597,7 @@ under the License.
             </condition>
             <link target="javascript:expandAll(true);" url-mode="plain"/>
         </menu-item>
-        <menu-item name="CollapseAll" title="${uiLabelMap.CommonCollapseAll}" widget-style="+collapse-all">
+        <menu-item name="CollapseAll" title="${uiLabelMap.CommonCollapseAll}" widget-style="+${styles.action_run_local} ${styles.action_hide} collapse-all">
             <condition>
                 <and>
                     <if-compare operator="equals" value="EditProduct" field="tabButtonItem"/>

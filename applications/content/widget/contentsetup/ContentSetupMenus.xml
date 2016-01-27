@@ -25,30 +25,30 @@ under the License.
         default-associated-content-id="${userLogin.userLoginId}" title="" type="simple"
         menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemactive}">
 
-        <menu-item name="contentPurposeOp" title="${uiLabelMap.PageTitleEditContentPurposeOperation}" >
-            <link target="EditContentPurposeOperation" target-window="_top" style="tabButton"/>
+        <menu-item name="contentPurposeOp" title="${uiLabelMap.PageTitleEditContentPurposeOperation}" widget-style="+${styles.action_nav} ${styles.action_update}">
+            <link target="EditContentPurposeOperation" target-window="_top" />
         </menu-item>
 
-        <menu-item name="contentOp" title="${uiLabelMap.PageTitleEditContentOperation}" >
-            <link target="EditContentOperation" target-window="_top" style="tabButton"/>
+        <menu-item name="contentOp" title="${uiLabelMap.PageTitleEditContentOperation}" widget-style="+${styles.action_nav} ${styles.action_update}">
+            <link target="EditContentOperation" target-window="_top"/>
         </menu-item>
-        <menu-item name="assocPred" title="${uiLabelMap.PageTitleEditContentAssocPredicate}" >
-            <link target="EditContentAssocPredicate" target-window="_top" style="tabButton"/>
+        <menu-item name="assocPred" title="${uiLabelMap.PageTitleEditContentAssocPredicate}" widget-style="+${styles.action_nav} ${styles.action_update}">
+            <link target="EditContentAssocPredicate" target-window="_top"/>
         </menu-item>
-        <menu-item name="typeAttr" title="${uiLabelMap.PageTitleEditContentTypeAttribute}" >
-            <link target="EditContentTypeAttr" target-window="_top" style="tabButton"/>
+        <menu-item name="typeAttr" title="${uiLabelMap.PageTitleEditContentTypeAttribute}" widget-style="+${styles.action_nav} ${styles.action_update}">
+            <link target="EditContentTypeAttr" target-window="_top" />
         </menu-item>
-        <menu-item name="purposeType" title="${uiLabelMap.PageTitleEditContentPurposeType}" >
-            <link target="EditContentPurposeType" target-window="_top" style="tabButton"/>
+        <menu-item name="purposeType" title="${uiLabelMap.PageTitleEditContentPurposeType}" widget-style="+${styles.action_nav} ${styles.action_update}">
+            <link target="EditContentPurposeType" target-window="_top" />
         </menu-item>
-        <menu-item name="assocType" title="${uiLabelMap.PageTitleEditContentAssocType}" >
-            <link target="EditContentAssocType" target-window="_top" style="tabButton"/>
+        <menu-item name="assocType" title="${uiLabelMap.PageTitleEditContentAssocType}" widget-style="+${styles.action_nav} ${styles.action_update}">
+            <link target="EditContentAssocType" target-window="_top" />
         </menu-item>
-        <menu-item name="type" title="${uiLabelMap.PageTitleEditContentType}" >
-            <link target="EditContentType" target-window="_top" style="tabButton"/>
+        <menu-item name="type" title="${uiLabelMap.PageTitleEditContentType}" widget-style="+${styles.action_nav} ${styles.action_update}">
+            <link target="EditContentType" target-window="_top" />
         </menu-item>
-        <menu-item name="userpermissions" title="${uiLabelMap.PageTitleEditContentUserPermissions}" >
-            <link name="UserPermissions" target="UserPermissions" target-window="_top" style="tabButton"/>
+        <menu-item name="userpermissions" title="${uiLabelMap.PageTitleEditContentUserPermissions}" widget-style="+${styles.action_nav} ${styles.action_update}">
+            <link name="UserPermissions" target="UserPermissions" target-window="_top"/>
         </menu-item>
     </menu>
     

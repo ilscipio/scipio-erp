@@ -830,9 +830,3 @@
   ${screens.render(ofbizWidgetsLayoutScreenLocation)}
 </@section>
 
-
-<@section>
-<a href="#" class="${styles.link_nav_cancel!}">asdfadsf</a>
-<a href="#" class="${styles.link_run_sys_cancel!}">asdfadsf</a>
-
-</@section>

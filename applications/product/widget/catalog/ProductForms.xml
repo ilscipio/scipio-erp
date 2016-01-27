@@ -18,6 +18,9 @@
         </field>
         <field name="productTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="true">
+                <entity-options entity-name="ProductType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
             </drop-down>
         </field>
         <field name="internalName" title="${uiLabelMap.CommonName}">

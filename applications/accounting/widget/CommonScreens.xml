@@ -404,7 +404,7 @@ under the License.
                                     <set field="chartDatasets" value="2"/>                                                                        
                                     <set field="organizationPartyId" from-field="parameters.organizationPartyId" default-value="${defaultOrganizationPartyId}" global="true"/>                         
                                     <set field="glFiscalTypeId" from-field="parameters.glFiscalTypeId" default-value="ACTUAL"/>                                   
-                                    <script location="component://accounting/webapp/accounting/WEB-INF/actions/dashboard/IncomeExpenses.groovy"/>
+                                    <script location="component://accounting/script/com/ilscipio/accounting/dashboard/IncomeExpenses.groovy"/>
                                 </actions>
                                 <widgets>
                                     <platform-specific>

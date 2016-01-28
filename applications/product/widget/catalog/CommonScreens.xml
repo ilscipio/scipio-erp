@@ -528,7 +528,7 @@ under the License.
                                <actions>
                                    <set field="productStoreId" value="CATO_FOUNDATION_1"/>
                                    <entity-one value-field="productStore" entity-name="ProductStore"/>
-                                   <script location="component://product/webapp/catalog/WEB-INF/actions/dashboard/StoreCatalogTree.groovy"/>
+                                   <script location="component://product/script/com/ilscipio/product/dashboard/StoreCatalogTree.groovy"/>
                                </actions>
                                <widgets>
                                    <screenlet title="${productStore.storeName}">
@@ -542,7 +542,7 @@ under the License.
                                <actions>
                                    <set field="productStoreId" value="CATO_FOUNDATION_2"/>
                                    <entity-one value-field="productStore" entity-name="ProductStore"/>
-                                   <script location="component://product/webapp/catalog/WEB-INF/actions/dashboard/StoreCatalogTree.groovy"/>
+                                   <script location="component://product/script/com/ilscipio/product/dashboard/StoreCatalogTree.groovy"/>
                                </actions>
                                <widgets>
                                    <screenlet title="${productStore.storeName}">

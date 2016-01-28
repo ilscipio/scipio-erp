@@ -27,7 +27,12 @@ import org.ofbiz.entity.condition.EntityExpr
 
 import com.ilscipio.cato.helper.JsTreeHelper
 import com.ilscipio.cato.helper.JsTreeHelper.JsTreeDataItem
+import com.ilscipio.cato.helper.JsTreeHelper.JsTreeEvent
+import com.ilscipio.cato.helper.JsTreeHelper.JsTreePluginList
+import com.ilscipio.cato.helper.JsTreeHelper.JsTreeTheme
 import com.ilscipio.cato.helper.JsTreeHelper.JsTreeDataItem.JsTreeDataItemState
+import com.ilscipio.cato.helper.JsTreeHelper.JsTreePlugin.JsTreeTypesPlugin
+import com.ilscipio.cato.helper.JsTreeHelper.JsTreePlugin.JsTreeTypesPlugin.JsTreeType
 
 // Put the result of CategoryWorker.getRelatedCategories into the separateRootType function as attribute.
 // The separateRootType function will return the list of category of given catalog.
@@ -54,7 +59,7 @@ List separateRootType(roots) {
         prodRootTypeTree = [];
         roots.each { root ->
             productCategory = root.getRelatedOne("ProductCategory", false);            
-            itemState = new JsTreeHelper.JsTreeDataItem.JsTreeDataItemState(true, false);
+            itemState = new JsTreeDataItemState(true, false);
             dataItem = new JsTreeDataItem(productCategory.getString("productCategoryId"), productCategory.getString("categoryName"), "jstree-file", itemState, null);
             prodRootTypeTree.add(dataItem);
         }
@@ -62,7 +67,33 @@ List separateRootType(roots) {
     }
 }
 
-treeData =  [];
+treeMenuSettings = [:];
+pluginList = new JsTreeHelper.JsTreePluginList();
+pluginList.add("sort, state");
+pluginList.add(new JsTreeTypesPlugin(["catalog", "category", "product"], new JsTreeType(3, 5, null, null), new JsTreeType(6, 2, null, null), new JsTreeType(0, 0, null, null)));
+treeMenuSettings["plugins"] = pluginList;
+
+treeMenuSettings["themes"] = new JsTreeTheme();
+StringBuffer function = new StringBuffer();
+function.append("jQuery.ajax({");
+function.append("url: URL,");
+function.append("type: 'POST',");
+function.append("data: dataSet,");
+function.append("error: function(msg) {");
+function.append("alert('An error occurred loading content! : ' + msg);");
+function.append("},");
+function.append("success: function(msg) {");
+function.append("jQuery('#centerdiv').html(msg);");
+function.append("}");
+function.append("});");
+
+selectNodeEvents = [new JsTreeEvent("select_node", function.toString())];
+treeMenuSettings["events"] = selectNodeEvents;
+context.treeMenuSettings = treeMenuSettings;
+
+
+
+treeMenuData =  [];
 //Get the Catalogs
 productStoreCatalogs = from("ProductStoreCatalog").where(new EntityExpr("productStoreId", EntityComparisonOperator.EQUALS, productStoreId)).filterByDate().queryList();
 for (productStoreCatalog in productStoreCatalogs) {
@@ -75,14 +106,12 @@ for (productStoreCatalog in productStoreCatalogs) {
             children = separateRootType(prodCatalogCategories);
 //            Debug.log("productCatalogCategories ======> " + prodCatalogMap.child);
         }
-        itemState = new JsTreeHelper.JsTreeDataItem.JsTreeDataItemState(true, false);
+        itemState = new JsTreeDataItemState(true, false);
         dataItem = new JsTreeDataItem(prodCatalog.getString("prodCatalogId"), prodCatalog.getString("catalogName"), "jstree-folder", itemState, children);
-        treeData.add(dataItem);        
+        treeMenuData.add(dataItem);        
     }
 }
-context.treeData = treeData;
-
-Debug.log("treeData ===========> " + context.treeData);
+context.treeMenuData = treeMenuData;
 
 //stillInCatalogManager = true;
 //productCategoryId = null;

@@ -18,42 +18,36 @@ under the License.
 -->
 
 <form id="addGiftCertificate" action="<@ofbizUrl>addGiftCertificateSurvey</@ofbizUrl>" method="post">
-  <fieldset>
-    <#if surveyId?? && surveyId?has_content>
+    <#if surveyId?has_content>
       <input type="hidden" name="quantity" value="1" />
       <input type="hidden" name="surveyId" value="${surveyId!}" />
       <#if giftCardProductList?has_content>
-        <label>${uiLabelMap.OrderSelectGiftAmount}</label>
+        <@heading relLevel=+1>${uiLabelMap.OrderSelectGiftAmount}</@heading>
         <#list giftCardProductList?sort_by("price") as giftCardProduct>
-          <div>
+          <@field type="generic" label="${giftCardProduct.productId!}&nbsp;:&nbsp;${giftCardProduct.productName!}" id="productId_${giftCardProduct.price!}">
             <input type="radio" name="add_product_id" id="productId_${giftCardProduct.price!}" value="${giftCardProduct.productId!}" checked="checked" />
-            <label for="productId_${giftCardProduct.price!}"> ${giftCardProduct.productId!}&nbsp;:&nbsp;${giftCardProduct.productName!}&nbsp;:&nbsp;<@ofbizCurrency amount=giftCardProduct.price! isoCode=currencyUomId/></label>
-          </div>
+          </@field>
         </#list>
-        <div>
-          <label for="emailAddress">${uiLabelMap.OrderRecipientEmailAdd}</label>
+        <@field type="generic" label="${uiLabelMap.OrderRecipientEmailAdd}" id="emailAddress">
           <input type="text" id="emailAddress" name="answers_1002" value="" />
-        </div>
-        <div>
-          <label for="recipientName">${uiLabelMap.OrderRecipientName}</label>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.OrderRecipientName}" id="recipientName">
           <input type="text" id="recipientName" name="answers_1001" value="" />
-        </div>
-        <div>
-          <label for="senderName">${uiLabelMap.OrderSenderName}</label>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.OrderSenderName}" id="senderName">
           <input type="text" id="senderName" name="answers_1000" value="" />
-        <div>
-          <label for="message">${uiLabelMap.OrderGiftMessage}:</label>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.OrderGiftMessage}" id="message">
           <textarea id="message" name="answers_1003"></textarea>
-        </div>
-        <div>
+        </@field>
+        <@field type="submitarea">
           <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
-        </div>
+        </@field>
       <#else>
-        <label>${uiLabelMap.OrderNoGiftCertificatesFound}</label>
+        <@resultMsg>${uiLabelMap.OrderNoGiftCertificatesFound}</@resultMsg>
       </#if>
     <#else>
-      <label>${uiLabelMap.OrderNoProductStoreFinAccountSettingsFound}</label>
+      <@resultMsg>${uiLabelMap.OrderNoProductStoreFinAccountSettingsFound}.</@resultMsg>
     </#if>
-  </fieldset>
 </form>
 

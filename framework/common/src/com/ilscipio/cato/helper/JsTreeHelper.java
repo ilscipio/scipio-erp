@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
@@ -113,6 +114,93 @@ public class JsTreeHelper {
             }
 
         }
+    }
+
+    public static class JsTreeTheme extends HashMap<String, Object> {
+        private static final long serialVersionUID = -4086721432593844943L;
+
+        public JsTreeTheme(String themeName, String themeUrl, String themeDir, boolean themeDots, boolean themeIcons, boolean themeStripes, String themeVariant,
+                boolean themeResponsive) {
+
+            setThemeName(themeName);
+            setThemeUrl(themeUrl);
+            setThemeDir(themeDir);
+            setThemeDots(themeDots);
+            setThemeIcons(themeIcons);
+            setThemeStripes(themeStripes);
+            setThemeVariant(themeVariant);
+            setThemeResponsive(themeResponsive);
+
+        }
+
+        public JsTreeTheme() {
+
+        }
+
+        public void setThemeName(String themeName) {
+            if (UtilValidate.isEmpty(themeName))
+                themeName = String.valueOf(Boolean.FALSE);
+            put("name", themeName);
+        }
+
+        public void setThemeUrl(String themeUrl) {
+            if (UtilValidate.isEmpty(themeUrl))
+                themeUrl = String.valueOf(Boolean.FALSE);
+            put("url", themeUrl);
+        }
+
+        public void setThemeDir(String themeDir) {
+            put("dir", themeDir);
+        }
+
+        public void setThemeDots(boolean themeDots) {
+            put("dots", themeDots);
+        }
+
+        public void setThemeIcons(boolean themeIcons) {
+            put("icons", themeIcons);
+        }
+
+        public void setThemeStripes(boolean themeStripes) {
+            put("stripes", themeStripes);
+        }
+
+        public void setThemeVariant(String themeVariant) {
+            put("variant", themeVariant);
+        }
+
+        public void setThemeResponsive(boolean themeResponsive) {
+            put("responsive", themeResponsive);
+        }
+
+    }
+
+    public static class JsTreeEvent extends HashMap<String, String> {
+        private static final long serialVersionUID = 2708617525071551004L;
+        private static final String JSTREE_EVENT = ".jstree";
+
+        private static final String[] VALID_EVENTS = { "init", "loading", "loaded", "ready", "load_node", "load_all", "model", "redraw", "before_open",
+                "open_node", "after_open", "close_node", "after_close", "open_all", "close_all", "enable_node", "disable_node", "show_node", "hide_all",
+                "show_all", "activate_node", "hover_node", "dehover_node", "select_node", "changed", "deselect_node", "select_all", "deselect_all", "set_state",
+                "refresh", "refresh_node", "set_text", "create_node", "rename_node", "delete_node", "move_node", "copy_node", "cut", "copy", "paste",
+                "clear_buffer", "set_theme" };
+
+        public JsTreeEvent(String event, String function) {
+            addEvent(event, function);
+        }
+
+        public void addEvent(String event, String function, String... params) {
+            put(event, function);
+        }
+
+        @Override
+        public String put(String key, String value) {
+            if (Arrays.asList(VALID_EVENTS).contains(key + JSTREE_EVENT) && !this.containsKey(key + JSTREE_EVENT)) {
+                return super.put(key + JSTREE_EVENT, value);
+            }
+            return null;
+        }
+
     }
 
     public static abstract class JsTreePlugin extends HashMap<String, Object> {
@@ -274,12 +362,44 @@ public class JsTreeHelper {
                 return PLUGIN_NAME;
             }
 
+            public JsTreeTypesPlugin(String[] types, JsTreeType... jsTreeType) throws Exception {
+                this(Arrays.asList(types), jsTreeType);
+            }
+
+            public JsTreeTypesPlugin(List<String> types, JsTreeType... jsTreeType) throws Exception {
+                if (types.size() != jsTreeType.length)
+                    throw new Exception("Odd array sizes have been passed. The number of types and and jsTreeTypes must be the same.");
+                for (int i = 0; i < types.size(); i++)
+                    addType(types.get(i), jsTreeType[i]);
+            }
+
+            public JsTreeTypesPlugin() {
+            }
+
             public void addType(String type, JsTreeType jsTreeType) {
                 put(type, jsTreeType);
             }
 
             public static class JsTreeType extends HashMap<String, Object> {
                 private static final long serialVersionUID = 2385436629068719748L;
+
+                public JsTreeType(Integer maxChildren, Integer maxDepth, String validChildren, String icon) {
+                    if (maxChildren == null)
+                        maxChildren = -1;
+                    setMaxChildren(maxChildren);
+                    if (maxDepth == null)
+                        maxDepth = -1;
+                    setMaxDepth(maxDepth);
+                    setValidChildren(validChildren);
+                    setIcon(icon);
+                }
+
+                public JsTreeType() {
+                    setMaxChildren(-1);
+                    setMaxDepth(-1);
+                    setValidChildren(null);
+                    setIcon(null);
+                }
 
                 public void setMaxChildren(int maxChildren) {
                     put("max_children", maxChildren);
@@ -324,12 +444,14 @@ public class JsTreeHelper {
     }
 
     public static class JsTreePluginList extends ArrayList<JsTreePlugin> {
+        private static final long serialVersionUID = 2601099764369384246L;
         private static String[] VALID_PLUGINS = { "changed", "checkbox", "conditionalselect", "contextmenu", "dnd", "massload", "search", "sort", "state",
                 "types", "unique", "wholerow" };
 
         public void add(String p) {
-            String[] plugins = p.split(";");
+            String[] plugins = p.split(",");
             for (String plugin : plugins) {
+                plugin = plugin.trim();
                 if (Arrays.asList(VALID_PLUGINS).contains(plugin) && !this.contains(plugin)) {
                     add(JsTreePlugin.newInstance(plugin));
                 }

@@ -1038,12 +1038,13 @@ Render menu in a tree fashion way
     inlineItems     = boolean, if true, generate only items, not menu container    
     id              = menu id    
     attribs         = hash of other tree menu attribs
-    data            = list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item
-                      same as @menuitem macro parameters.
+    data            = if jstTree: list of JsTreeHelper$JsTreeDataItem objects, where each object contains fields representing a tree menu item
+                      same as @treemenuitem macro parameters.
+    settings        = if jsTree: 
                       alternatively, the items can be specified as nested content.        
 -->
 <#assign treemenu_defaultArgs = {
-  "library":"jsTree", "data":{}, "inlineItems":false, "id":"",  "attribs":{}, "passArgs":{}
+  "library":"jsTree", "data":{}, "settings": [], "inlineItems":false, "id":"",  "attribs":{}, "passArgs":{}
 }>
 <#macro treemenu args={} inlineArgs...>
   <#local args = toSimpleMap(args)> <#-- DEV NOTE: this MUST be called here (or through concatMaps) to handle .class key properly -->  
@@ -1053,32 +1054,58 @@ Render menu in a tree fashion way
   <#local attribs = makeAttribMapFromArgMap(args)>  
   
   <#local treeMenuLibrary = library!"jsTree"/> 
-  <#local treeData><@objectAsScript lang="json" object=data /></#local> 
-  ${Static["org.ofbiz.base.util.Debug"].log("id ====> " + id)}  
-  ${Static["org.ofbiz.base.util.Debug"].log("data ====> " + data)}
   
-  <@treemenu_markup treeMenuLibrary=treeMenuLibrary treeData=treeData id=id attribs=attribs excludeAttribs=["class", "id", "style"] origArgs=origArgs passArgs=passArgs/>
+  <@treemenu_markup treeMenuLibrary=treeMenuLibrary treeMenuData=data treeMenuSettings=settings id=id attribs=attribs excludeAttribs=["class", "id", "style"] origArgs=origArgs passArgs=passArgs/>
 </#macro>
 
 <#-- @treemenu main markup - theme override -->
-<#macro treemenu_markup treeMenuLibrary="" treeData={} id="" attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
+<#macro treemenu_markup treeMenuLibrary="" treeMenuData={} treeMenuSettings=[] id="" attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
     <#if treeMenuLibrary == "jsTree">
+        ${Static["org.ofbiz.base.util.Debug"].log("id ====> " + id)}  
+        ${Static["org.ofbiz.base.util.Debug"].log("data ====> " + treeMenuData)}
+        <#local treeMenuDataJson><@objectAsScript lang="json" object=treeMenuData /></#local> 
+    
         <script type="text/javascript"> 
-            jQuery(window).load(create${id!''}Tree());
-                <#-- create Tree-->
-                  function create${id!''}Tree() {
-                      console.log("createTree");
-                    jQuery(function () {
-                        jQuery("#${id}").jstree({
-                             "core" : {
-                                 "data" : ${treeData}
-                             }
-                       });
-                    });
-                  }
-          </script>
+            $(document).ready(function() {
+                create${id!''}Tree()
+            });
+            <#-- create Tree-->
+            function create${id!''}Tree() {
+                $("#${id!''}")
+                <#if treeMenuSettings?has_content && treeMenuSettings?keys?seq_contains("events")>
+                    <#list treeMenuSettings.events as event>
+                        <#list event.keySet() as key>
+                            .on("${key}", function (e, data) {
+                                ${key}
+                            })
+                        </#list>
+                    </#list>
+                </#if>
+                .jstree({
+                    "core" : {
+                        "data" : ${treeMenuDataJson}
+                        <#if treeMenuSettings?has_content && treeMenuSettings?keys?seq_contains("themes")>
+                            "themes" : <@objectAsScript lang="json" object=treeMenuSettings.themes />
+                        </#if>
+                     }
+                     
+                     <#if treeMenuSettings?has_content && treeMenuSettings?keys?seq_contains("plugins")>
+                        <#list treeMenuSettings.plugins as plugin>
+                            , "${plugin.pluginName()}" : <@objectAsScript lang="json" object=plugin />
+                        </#list>
+                        
+                        , "plugins" : [
+                            <#list treeMenuSettings.plugins as plugin>
+                                "${plugin.pluginName()}"                               
+                                <#if treeMenuSettings.plugins?last.pluginName() != plugin.pluginName()>, </#if> 
+                            </#list>
+                        ]
+                     </#if>
+                });
+            }
+        </script>
     </#if>
-    <div id="${id}"></div>
+    <div id="${id!''}"></div>
 </#macro>
 
 

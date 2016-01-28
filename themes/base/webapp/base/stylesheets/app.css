@@ -10322,27 +10322,11 @@ div.scrollable-table-container > table {
 }
 
 /* individual actions that modify only session or local state 
-  FIXME?: should use different color from system? */
-/* line 409, ../scss/_base.scss */
+  FIXME?: should use different color from system? removed for now...
 .action-run.action-scope-session.action-modify.button, .action-run.action-scope-session.action-modify .button,
-.action-run.action-scope-local.action-modify.button, .action-run.action-scope-local.action-modify .button {
-  background-color: #a0d3e8;
-  border-color: #61b6d9;
-  color: #333333;
-}
-/* line 163, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-run.action-scope-session.action-modify.button:hover, .action-run.action-scope-session.action-modify.button:focus, .action-run.action-scope-session.action-modify .button:hover, .action-run.action-scope-session.action-modify .button:focus,
-.action-run.action-scope-local.action-modify.button:hover,
-.action-run.action-scope-local.action-modify.button:focus, .action-run.action-scope-local.action-modify .button:hover, .action-run.action-scope-local.action-modify .button:focus {
-  background-color: #61b6d9;
-}
-/* line 169, ../bower_components/foundation/scss/foundation/components/_buttons.scss */
-.action-run.action-scope-session.action-modify.button:hover, .action-run.action-scope-session.action-modify.button:focus, .action-run.action-scope-session.action-modify .button:hover, .action-run.action-scope-session.action-modify .button:focus,
-.action-run.action-scope-local.action-modify.button:hover,
-.action-run.action-scope-local.action-modify.button:focus, .action-run.action-scope-local.action-modify .button:hover, .action-run.action-scope-local.action-modify .button:focus {
-  color: white;
-}
-
+.action-run.action-scope-local.action-modify.button, .action-run.action-scope-local.action-modify .button, {
+   @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
+}*/
 /* high-importance modify actions, like create order button */
 /* line 416, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {

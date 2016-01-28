@@ -405,11 +405,11 @@ div.scrollable-table-container > table {
 }
 
 /* individual actions that modify only session or local state 
-  FIXME?: should use different color from system? */
+  FIXME?: should use different color from system? removed for now...
 .action-run.action-scope-session.action-modify.button, .action-run.action-scope-session.action-modify .button,
 .action-run.action-scope-local.action-modify.button, .action-run.action-scope-local.action-modify .button, {
    @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
-}
+}*/
 
 
 /* high-importance modify actions, like create order button */

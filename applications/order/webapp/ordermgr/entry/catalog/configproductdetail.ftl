@@ -164,14 +164,12 @@ function getConfigDetails() {
 }
 </@script>
 
-<div id="productdetail">
-
-<@table type="generic" border="0" cellpadding="2" cellspacing="0" width="100%">
+<@section id="productdetail">
 
   <#-- Category next/previous -->
   <#if category??>
-    <@tr>
-      <@td colspan="2" align="right">
+    <@row>
+      <@cell>
         <#if previousProductId??>
           <a href="<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${previousProductId!}</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a>&nbsp;|&nbsp;
         </#if>
@@ -179,15 +177,15 @@ function getConfigDetails() {
         <#if nextProductId??>
           &nbsp;|&nbsp;<a href="<@ofbizUrl>product/~category_id=${categoryId!}/~product_id=${nextProductId!}</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
         </#if>
-      </@td>
-    </@tr>
+      </@cell>
+    </@row>
   </#if>
 
-  <@tr><@td colspan="2"><hr class="sepbar"/></@td></@tr>
+  <hr class="sepbar"/>
 
   <#-- Product image/name/price -->
-  <@tr>
-    <@td valign="top" width="0">
+  <@row>
+    <@cell columns=4>
       <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL", "url")!>
       <#-- remove the next two lines to always display the virtual image first (virtual images must exist) -->
       <#if firstLargeImage?has_content>
@@ -196,8 +194,8 @@ function getConfigDetails() {
       <#if productLargeImageUrl?string?has_content>
         <a href="javascript:popupDetail();" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img src="<@ofbizContentUrl>${contentPathPrefix!}${productLargeImageUrl!}</@ofbizContentUrl>" name="mainImage" vspace="5" hspace="5" class="cssImgLarge" align="left" alt="" /></a>
       </#if>
-    </@td>
-    <@td align="right" valign="top">
+    </@cell>
+    <@cell columns=8>
       <@heading>${productContentWrapper.get("PRODUCT_NAME", "html")!}</@heading>
       <div>${productContentWrapper.get("DESCRIPTION", "html")!}</div>
       <div><b>${product.productId!}</b></div>
@@ -279,24 +277,27 @@ function getConfigDetails() {
             <div>&nbsp;</div>
       </#if>
 
+      <#-- FIXME: cross-section form! invalid HTML... -->
       <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform">
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?? && product.isVirtual?upper_case == "Y">
           <#if variantTree?? && 0 < variantTree.size()>
             <#list featureSet as currentType>
-              <div>
+            <@fields type="default-nolabels">
+              <@field type="generic">
                 <select name="FT${currentType}" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
                   <option>${featureTypes.get(currentType)}</option>
                 </select>
-              </div>
+              </@field>
+            </@fields>
             </#list>
             <input type="hidden" name="product_id" value="${product.productId}" />
             <input type="hidden" name="add_product_id" value="NULL" />
           <#else>
             <input type="hidden" name="product_id" value="${product.productId}" />
             <input type="hidden" name="add_product_id" value="NULL" />
-            <div class="tabletext"><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
+            <@alert type="info">${uiLabelMap.ProductItemOutOfStock}.</@alert>
             <#assign inStock = false>
           </#if>
         <#else>
@@ -305,23 +306,26 @@ function getConfigDetails() {
           <#if productNotAvailable??>
             <#assign isStoreInventoryRequired = Static["org.ofbiz.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)>
             <#if isStoreInventoryRequired>
-              <div class="tabletext"><b>${uiLabelMap.ProductItemOutOfStock}.</b></div>
+              <@alert type="info">${uiLabelMap.ProductItemOutOfStock}.</@alert>
               <#assign inStock = false>
-            <#else>
-              <div class="tabletext"><b>${product.inventoryMessage!}</b></div>
+            <#elseif inventoryMessage?has_content>
+              <@alert type="info">${product.inventoryMessage!}</@alert>
             </#if>
           </#if>
         </#if>
 
-        </@td></@tr><@tr><@td colspan="2" align="right">
+    </@cell>
+  </@row>
 
+  <@row>
+    <@cell> <#-- TODO: float right (as stock template) class="+${styles.text_right!}" -->
+      <@section>
         <#-- check to see if introductionDate hasn't passed yet -->
         <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
-          <p>&nbsp;</p>
-          <div class="tabletext" style="color: red;">${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
+          <@alert type="warning">${uiLabelMap.ProductProductNotYetMadeAvailable}.</@alert>
         <#-- check to see if salesDiscontinuationDate has passed -->
         <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)>
-          <div class="tabletext" style="color: red;">${uiLabelMap.ProductProductNoLongerAvailable}.</div>
+          <@alert type="warning">${uiLabelMap.ProductProductNoLongerAvailable}.</@alert>
         <#-- check to see if the product requires inventory check and has inventory -->
         <#else>
           <#if inStock>
@@ -330,48 +334,60 @@ function getConfigDetails() {
             <#else>
               <#assign hiddenStyle = "hidden">
             </#if>
-            <div id="add_amount" class="${hiddenStyle}">
-              <span style="white-space: nowrap;"><b>Amount:</b></span>&nbsp;
+            <#-- FIXME?: I don't understand why there's both an "add amount" and a quantity... -->
+            <@field type="generic" containerId="add_amount" label="Amount" containerClass="+${hiddenStyle}">
               <input type="text" size="5" name="add_amount" value="" />
-            </div>
+            </@field>
             <#if !configwrapper.isCompleted()>
-              <div>[${uiLabelMap.EcommerceProductNotConfigured}]&nbsp;
-              <input type="text" size="5" name="quantity" value="0" disabled="disabled" /></div>
+              <@alert type="info">[${uiLabelMap.EcommerceProductNotConfigured}]</@alert>
+              <@field type="generic" label="${uiLabelMap.ProductQuantity}" disabled=true>
+                <input type="text" size="5" name="quantity" value="0" disabled="disabled" />
+              </@field>
             <#else>
-              <a href="javascript:addItem()" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>&nbsp;
-              <input type="text" size="5" name="quantity" value="1" />
+              <@field type="generic" label="${uiLabelMap.ProductQuantity}">
+                <input type="text" size="5" name="quantity" value="1" />
+              </@field>
+              <@field type="submitarea">
+                <a href="javascript:addItem()" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+              </@field>
             </#if>
           </#if>
           <#if requestParameters.category_id??>
             <input type="hidden" name="category_id" value="${requestParameters.category_id}" />
           </#if>
         </#if>
+      </@section>
       </form>
-    <div>
+      <@section>
       <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
         <hr />
         <form name="addToShoppingList" method="post" action="<@ofbizUrl>addItemToShoppingList<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
           <input type="hidden" name="productId" value="${product.productId}" />
           <input type="hidden" name="product_id" value="${product.productId}" />
           <input type="hidden" name="configId" value="${configId!}" />
-          <select name="shoppingListId">
-            <#if shoppingLists?has_content>
-              <#list shoppingLists as shoppingList>
-                <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
-              </#list>
-            </#if>
-            <option value="">---</option>
-            <option value="">${uiLabelMap.OrderNewShoppingList}</option>
-          </select>
-          &nbsp;&nbsp;
-          <input type="text" size="5" name="quantity" value="1" />
-          <a href="javascript:document.addToShoppingList.submit();" class="${styles.link_run_sys!} ${styles.action_add!}">[${uiLabelMap.OrderAddToShoppingList}]</a>
+          <@field type="generic" label="${uiLabelMap.PartyShoppingList}">
+            <select name="shoppingListId">
+              <#if shoppingLists?has_content>
+                <#list shoppingLists as shoppingList>
+                  <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
+                </#list>
+              </#if>
+              <option value="">---</option>
+              <option value="">${uiLabelMap.OrderNewShoppingList}</option>
+            </select>
+          </@field>
+          <@field type="generic" label="${uiLabelMap.ProductQuantity}">
+            <input type="text" size="5" name="quantity" value="1" />
+          </@field>
+          <@field type="submitarea">
+            <a href="javascript:document.addToShoppingList.submit();" class="${styles.link_run_sys!} ${styles.action_add!}">[${uiLabelMap.OrderAddToShoppingList}]</a>
+          </@field>
         </form>
-      <#else> <br />
+      <#else> 
         ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>
         ${uiLabelMap.OrderToAddSelectedItemsToShoppingList}.&nbsp;
       </#if>
-      </div>
+      </@section>
       <#-- Prefill first select box (virtual products only) -->
       <#if variantTree?? && 0 < variantTree.size()>
         <@script>eval("list" + "${featureOrderFirst}" + "()");</@script>
@@ -410,22 +426,22 @@ function getConfigDetails() {
           </@tr>
         </@table>
       </#if>
-    </@td>
-  </@tr>
+    </@cell>
+  </@row>
 
-  <@tr><@td colspan="2"><hr class="sepbar"/></@td></@tr>
+  <hr class="sepbar"/>
 
   <#-- Long description of product -->
-  <@tr>
-    <@td colspan="2">${productContentWrapper.get("LONG_DESCRIPTION", "html")!}</@td>
-  </@tr>
+  <@row>
+    <@cell>${productContentWrapper.get("LONG_DESCRIPTION", "html")!}</@cell>
+  </@row>
 
-  <@tr><@td colspan="2"><hr class="sepbar"/></@td></@tr>
+  <hr class="sepbar"/>
 
   <#-- Any attributes/etc may go here -->
   <#-- Product Configurator -->
-  <@tr>
-    <@td colspan="2">
+  <@row>
+    <@cell>
       <form name="configform" id="configFormId" method="post" action="<@ofbizUrl>product<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>">
         <input type="hidden" name="add_product_id" value="${product.productId}" />
         <input type="hidden" name="add_category_id" value="" />
@@ -599,9 +615,10 @@ function getConfigDetails() {
         </#list>
         </@table>
       </form>
-    </@td>
-  </@tr>
-  <@tr><@td colspan="2"><hr class="sepbar"/></@td></@tr>
+    </@cell>
+  </@row>
+
+  <hr class="sepbar"/>
 
 <#-- Upgrades/Up-Sell/Cross-Sell -->
 <#macro associated assocProducts beforeName showName afterName formNamePrefix targetRequestName>
@@ -610,33 +627,37 @@ function getConfigDetails() {
     <#assign targetRequest = targetRequestName>
   </#if>
   <#if assocProducts?has_content>
-    <@tr><@td>&nbsp;</@td></@tr>
-    <@tr><@td colspan="2"><@heading>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}</@heading></@td></@tr>
-    <@tr type="util"><@td><hr /></@td></@tr>
+  <@row><@cell>&nbsp;</@cell></@row>
+  <#assign title>${beforeName!}<#if showName == "Y">${productContentWrapper.get("PRODUCT_NAME", "html")!}</#if>${afterName!}</#assign>
+  <@section title=title>
+    <hr />
     <#list assocProducts as productAssoc>
-      <@tr><@td>
+      <@row>
+        <@cell>
           <a href="<@ofbizUrl>${targetRequest}/<#if categoryId??>~category_id=${categoryId}/</#if>~product_id=${productAssoc.productIdTo!}</@ofbizUrl>" class="${styles.link_nav_info_id!}">
             ${productAssoc.productIdTo!}
           </a>
           - <b>${productAssoc.reason!}</b>
-        </@td></@tr>
+        </@cell>
+      </@row>
       ${setRequestAttribute("optProductId", productAssoc.productIdTo)}
       ${setRequestAttribute("listIndex", listIndex)}
       ${setRequestAttribute("formNamePrefix", formNamePrefix)}
       <#if targetRequestName?has_content>
         ${setRequestAttribute("targetRequestName", targetRequestName)}
       </#if>
-      <@tr>
-        <@td>
+      <@row>
+        <@cell>
           ${screens.render(productsummaryScreen)}
-        </@td>
-      </@tr>
+        </@cell>
+      </@row>
       <#local listIndex = listIndex + 1>
-      <@tr type="util"><@td><hr /></@td></@tr>
+      <hr />
     </#list>
     ${setRequestAttribute("optProductId", "")}
     ${setRequestAttribute("formNamePrefix", "")}
     ${setRequestAttribute("targetRequestName", "")}
+  </@section>
   </#if>
 </#macro>
 <#assign productValue = product>
@@ -651,7 +672,6 @@ ${setRequestAttribute("productValue", productValue)}
   <@associated assocProducts=upSellProducts beforeName="Try these instead of " showName="Y" afterName=":" formNamePrefix="upsl" targetRequestName="upsell"/>
   <#-- obsolescence -->
   <@associated assocProducts=obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:" formNamePrefix="obce" targetRequestName=""/>
-</@table>
 
 <#-- special cross/up-sell area using commonFeatureResultIds (from common feature product search) -->
 <#if commonFeatureResultIds?has_content>
@@ -659,16 +679,17 @@ ${setRequestAttribute("productValue", productValue)}
   <hr />
 
   <#list commonFeatureResultIds as commonFeatureResultId>
-    <div>
+    <@section>
       ${setRequestAttribute("optProductId", commonFeatureResultId)}
       ${setRequestAttribute("listIndex", commonFeatureResultId_index)}
       ${setRequestAttribute("formNamePrefix", "cfeatcssl")}
       <#-- ${setRequestAttribute("targetRequestName", targetRequestName)} -->
       ${screens.render(productsummaryScreen)}
-    </div>
+    </@section>
     <#if commonFeatureResultId_has_next>
       <hr />
     </#if>
   </#list>
 </#if>
-</div>
+
+</@section>

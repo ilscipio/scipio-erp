@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.ofbiz.base.lang.JSON;
 import org.ofbiz.base.util.Debug;
@@ -33,6 +32,102 @@ public class JsTreeHelper {
         return buffer.toString();
     }
 
+    public static class JsTreeCore extends HashMap<String, Object> {
+        private static final long serialVersionUID = 2371673939917629690L;
+
+        public void setMultiple(Boolean multiple) {
+            put("multiple", multiple);
+        }
+
+        public void setStrings(HashMap<String, String> strings) {
+            put("strings", strings);
+        }
+
+        public void setAnimation(Integer animation) {
+            put("animation", animation);
+        }
+
+        public void setExpandSelectedOnload(Boolean expandSelectedOnload) {
+            put("expand_selected_onload", expandSelectedOnload);
+        }
+
+        public void setWorker(Boolean worker) {
+            put("worker", worker);
+        }
+
+        public void setForceText(Boolean forceText) {
+            put("force_text", forceText);
+        }
+
+        public void setDblClickToggle(Boolean dblClickToggle) {
+            put("dblclick_toggle", dblClickToggle);
+        }
+
+        public void setThemes(JsTreeTheme themes) {
+            put("themes", themes);
+        }
+
+        public static class JsTreeTheme extends HashMap<String, Object> {
+            private static final long serialVersionUID = -4086721432593844943L;
+
+            public JsTreeTheme(String themeName, String themeUrl, String themeDir, boolean themeDots, boolean themeIcons, boolean themeStripes,
+                    String themeVariant, boolean themeResponsive) {
+
+                setThemeName(themeName);
+                setThemeUrl(themeUrl);
+                setThemeDir(themeDir);
+                setThemeDots(themeDots);
+                setThemeIcons(themeIcons);
+                setThemeStripes(themeStripes);
+                setThemeVariant(themeVariant);
+                setThemeResponsive(themeResponsive);
+
+            }
+
+            public JsTreeTheme() {
+
+            }
+
+            public void setThemeName(String themeName) {
+                if (UtilValidate.isEmpty(themeName))
+                    themeName = String.valueOf(Boolean.FALSE);
+                put("name", themeName);
+            }
+
+            public void setThemeUrl(String themeUrl) {
+                if (UtilValidate.isEmpty(themeUrl))
+                    themeUrl = String.valueOf(Boolean.FALSE);
+                put("url", themeUrl);
+            }
+
+            public void setThemeDir(String themeDir) {
+                put("dir", themeDir);
+            }
+
+            public void setThemeDots(boolean themeDots) {
+                put("dots", themeDots);
+            }
+
+            public void setThemeIcons(boolean themeIcons) {
+                put("icons", themeIcons);
+            }
+
+            public void setThemeStripes(boolean themeStripes) {
+                put("stripes", themeStripes);
+            }
+
+            public void setThemeVariant(String themeVariant) {
+                put("variant", themeVariant);
+            }
+
+            public void setThemeResponsive(boolean themeResponsive) {
+                put("responsive", themeResponsive);
+            }
+
+        }
+
+    }
+
     public static class JsTreeDataItem extends HashMap<String, Object> {
         private static final long serialVersionUID = -660269373973470543L;
 
@@ -47,26 +142,6 @@ public class JsTreeHelper {
                 put("icon", icon);
             if (UtilValidate.isNotEmpty(children))
                 put("children", children);
-        }
-
-        public String getId() {
-            return (String) get("id");
-        }
-
-        public String getText() {
-            return (String) get("text");
-        }
-
-        public String getIcon() {
-            return (String) get("icon");
-        }
-
-        public JsTreeDataItemState getState() {
-            return (JsTreeDataItemState) get("state");
-        }
-
-        public List<JsTreeDataItem> getChildren() {
-            return (List<JsTreeDataItem>) get("children");
         }
 
         public void setId(String id) {
@@ -116,74 +191,15 @@ public class JsTreeHelper {
         }
     }
 
-    public static class JsTreeTheme extends HashMap<String, Object> {
-        private static final long serialVersionUID = -4086721432593844943L;
-
-        public JsTreeTheme(String themeName, String themeUrl, String themeDir, boolean themeDots, boolean themeIcons, boolean themeStripes, String themeVariant,
-                boolean themeResponsive) {
-
-            setThemeName(themeName);
-            setThemeUrl(themeUrl);
-            setThemeDir(themeDir);
-            setThemeDots(themeDots);
-            setThemeIcons(themeIcons);
-            setThemeStripes(themeStripes);
-            setThemeVariant(themeVariant);
-            setThemeResponsive(themeResponsive);
-
-        }
-
-        public JsTreeTheme() {
-
-        }
-
-        public void setThemeName(String themeName) {
-            if (UtilValidate.isEmpty(themeName))
-                themeName = String.valueOf(Boolean.FALSE);
-            put("name", themeName);
-        }
-
-        public void setThemeUrl(String themeUrl) {
-            if (UtilValidate.isEmpty(themeUrl))
-                themeUrl = String.valueOf(Boolean.FALSE);
-            put("url", themeUrl);
-        }
-
-        public void setThemeDir(String themeDir) {
-            put("dir", themeDir);
-        }
-
-        public void setThemeDots(boolean themeDots) {
-            put("dots", themeDots);
-        }
-
-        public void setThemeIcons(boolean themeIcons) {
-            put("icons", themeIcons);
-        }
-
-        public void setThemeStripes(boolean themeStripes) {
-            put("stripes", themeStripes);
-        }
-
-        public void setThemeVariant(String themeVariant) {
-            put("variant", themeVariant);
-        }
-
-        public void setThemeResponsive(boolean themeResponsive) {
-            put("responsive", themeResponsive);
-        }
-
-    }
-
     public static class JsTreeEvent extends HashMap<String, String> {
         private static final long serialVersionUID = 2708617525071551004L;
-        private static final String JSTREE_EVENT = ".jstree";
+        public static final String JSTREE_EVENT = ".jstree";
 
-        private static final String[] VALID_EVENTS = { "init", "loading", "loaded", "ready", "load_node", "load_all", "model", "redraw", "before_open",
+        public static final String[] VALID_EVENTS = { "init", "loading", "loaded", "ready", "load_node", "load_all", "model", "redraw", "before_open",
                 "open_node", "after_open", "close_node", "after_close", "open_all", "close_all", "enable_node", "disable_node", "show_node", "hide_all",
-                "show_all", "activate_node", "hover_node", "dehover_node", "select_node", "changed", "deselect_node", "select_all", "deselect_all", "set_state",
-                "refresh", "refresh_node", "set_text", "create_node", "rename_node", "delete_node", "move_node", "copy_node", "cut", "copy", "paste",
-                "clear_buffer", "set_theme" };
+                "show_all", "activate_node", "hover_node", "dehover_node", "select_node", "changed", "deselect_node", "select_all", "deselect_all",
+                "set_state", "refresh", "refresh_node", "set_text", "create_node", "rename_node", "delete_node", "move_node", "copy_node", "cut", "copy",
+                "paste", "clear_buffer", "set_theme" };
 
         public JsTreeEvent(String event, String function) {
             addEvent(event, function);

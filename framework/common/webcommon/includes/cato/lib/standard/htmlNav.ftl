@@ -1053,9 +1053,11 @@ Render menu in a tree fashion way
   <#local origArgs = args>
   <#local attribs = makeAttribMapFromArgMap(args)>  
   
-  <#local treeMenuLibrary = library!"jsTree"/> 
+  <#local treeMenuLibrary = library!"jsTree"/>
   
-  <@treemenu_markup treeMenuLibrary=treeMenuLibrary treeMenuData=data treeMenuSettings=settings id=id attribs=attribs excludeAttribs=["class", "id", "style"] origArgs=origArgs passArgs=passArgs/>
+  <@treemenu_markup treeMenuLibrary=treeMenuLibrary treeMenuData=data treeMenuSettings=settings id=id attribs=attribs excludeAttribs=["class", "id", "style"] origArgs=origArgs passArgs=passArgs>
+        <#nested>
+  </@treemenu_markup>
 </#macro>
 
 <#-- @treemenu main markup - theme override -->
@@ -1064,7 +1066,8 @@ Render menu in a tree fashion way
         ${Static["org.ofbiz.base.util.Debug"].log("id ====> " + id)}  
         ${Static["org.ofbiz.base.util.Debug"].log("data ====> " + treeMenuData)}
         <#local treeMenuDataJson><@objectAsScript lang="json" object=treeMenuData /></#local> 
-    
+        <#local nestedEvents><#nested></#local>
+
         <script type="text/javascript"> 
             $(document).ready(function() {
                 create${id!''}Tree()
@@ -1072,20 +1075,12 @@ Render menu in a tree fashion way
             <#-- create Tree-->
             function create${id!''}Tree() {
                 $("#${id!''}")
-                <#if treeMenuSettings?has_content && treeMenuSettings?keys?seq_contains("events")>
-                    <#list treeMenuSettings.events as event>
-                        <#list event.keySet() as key>
-                            .on("${key}", function (e, data) {
-                                ${key}
-                            })
-                        </#list>
-                    </#list>
-                </#if>
+                ${nestedEvents}
                 .jstree({
                     "core" : {
                         "data" : ${treeMenuDataJson}
                         <#if treeMenuSettings?has_content && treeMenuSettings?keys?seq_contains("themes")>
-                            "themes" : <@objectAsScript lang="json" object=treeMenuSettings.themes />
+                            , "themes" : <@objectAsScript lang="json" object=treeMenuSettings.themes />
                         </#if>
                      }
                      
@@ -1108,7 +1103,17 @@ Render menu in a tree fashion way
     <div id="${id!''}"></div>
 </#macro>
 
+<#macro treemenu_event event="">
+    <#if event?has_content>
+        <#assign validEvents = Static["com.ilscipio.cato.helper.JsTreeHelper$JsTreeEvent"].VALID_EVENTS />        
+        <#assign e = event?keep_before(Static["com.ilscipio.cato.helper.JsTreeHelper$JsTreeEvent"].JSTREE_EVENT) />
+        ${Static["org.ofbiz.base.util.Debug"].log("e ====> " + e)}
 
-
- 
-
+        <#if validEvents?has_content && validEvents?seq_contains(e)>
+            ${Static["org.ofbiz.base.util.Debug"].log("valid event")}            
+            .on("${event}", function (e, data) {
+                <#nested>
+            })
+        </#if>
+    </#if>
+</#macro>

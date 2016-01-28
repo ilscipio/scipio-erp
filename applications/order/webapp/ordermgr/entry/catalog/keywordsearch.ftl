@@ -28,44 +28,16 @@ under the License.
     </@cell>
 </@row>
 
-
 <@row>
     <@cell>
         ${uiLabelMap.CommonSortedBy}: ${searchSortOrderString} <a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonRefineSearch}</a>
     </@cell>
 </@row>
 
-
 <#if !productIds?has_content>
   <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
-</#if>
-
-<#if productIds?has_content>
-    <div class="product-prevnext">
-        <#-- Start Page Select Drop-Down -->
-        <#assign viewIndexMax = Static["java.lang.Math"].ceil((listSize - 1)?double / viewSize?double)>
-        <select name="pageSelect" onchange="window.location=this[this.selectedIndex].value;">
-          <option value="#">${uiLabelMap.CommonPage} ${viewIndex?int + 1} ${uiLabelMap.CommonOf} ${viewIndexMax + 1}</option>
-          <#list 0..viewIndexMax as curViewNum>
-            <option value="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}/~clearSearch=N</@ofbizUrl>">${uiLabelMap.CommonGotoPage} ${curViewNum + 1}</option>
-          </#list>
-        </select>
-        <#-- End Page Select Drop-Down -->
-        <b>
-        <#if (viewIndex?int > 0)>
-          <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a> |
-        </#if>
-        <#if (listSize?int > 0)>
-          <span>${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
-        </#if>
-        <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex+1}/~clearSearch=N</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
-        </#if>
-        </b>
-    </div>
-</#if>
-
-<#if productIds?has_content>
+<#else>
+  <@paginate mode="content" url=makeOfbizUrl("keywordsearch") paramStr="~clearSearch=N" paramDelim="/" paramPrefix="~" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
     <div class="productsummary-container">
         <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
             ${setRequestAttribute("optProductId", productId)}
@@ -73,31 +45,7 @@ under the License.
             ${screens.render(productsummaryScreen)}
         </#list>
     </div>
-</#if>
-
-<#if productIds?has_content>
-    <div class="product-prevnext">
-        <#-- Start Page Select Drop-Down -->
-        <#assign viewIndexMax = Static["java.lang.Math"].ceil((listSize - 1)?double / viewSize?double)>
-        <select name="pageSelect" onchange="window.location=this[this.selectedIndex].value;">
-          <option value="#">${uiLabelMap.CommonPage} ${viewIndex?int + 1} ${uiLabelMap.CommonOf} ${viewIndexMax + 1}</option>
-          <#list 0..viewIndexMax as curViewNum>
-            <option value="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int}/~clearSearch=N</@ofbizUrl>">${uiLabelMap.CommonGotoPage} ${curViewNum + 1}</option>
-          </#list>
-        </select>
-        <#-- End Page Select Drop-Down -->
-        <b>
-        <#if (viewIndex?int > 0)>
-          <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}/~clearSearch=N</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonPrevious}</a> |
-        </#if>
-        <#if (listSize?int > 0)>
-          <span>${lowIndex+1} - ${highIndex} ${uiLabelMap.CommonOf} ${listSize}</span>
-        </#if>
-        <#if highIndex?int < listSize?int>
-          | <a href="<@ofbizUrl>keywordsearch/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex+1}/~clearSearch=N</@ofbizUrl>" class="${styles.link_nav!}">${uiLabelMap.CommonNext}</a>
-        </#if>
-        </b>
-    </div>
+  </@paginate>
 </#if>
 
 </@section>

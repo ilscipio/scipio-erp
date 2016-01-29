@@ -736,9 +736,9 @@ standard markup.
     postfixSize     = manual postfix size, in (large) grid columns
     postfixContent  = manual postfix markup/content - set to boolean false to prevent any content (but not area container)
         
-    * input *
+    * input (alias: text) *
     autoCompleteUrl = if autocomplete function exists, specification of url will make it available
-    postfix          = if set to true, attach submit button (default:false)
+    postfix         = if set to true, attach submit button (default:false)
     
     * textArea *
     readonly        = readonly
@@ -869,6 +869,8 @@ standard markup.
         
   <#if !type?has_content>
     <#local type = "generic">
+  <#elseif type == "text">
+    <#local type = "input">
   </#if>
   <#if !valueType?has_content>
     <#local valueType = "generic">

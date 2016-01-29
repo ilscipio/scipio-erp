@@ -102,14 +102,14 @@ under the License.
                                     </condition>
                                     <widgets>
                                         <container style="button-bar button-style-2">
-                                            <link target="viewprofile" text="${uiLabelMap.PartyHideOld}" style="${styles.link_run_sys} ${styles.action_view}">
+                                            <link target="viewprofile" text="${uiLabelMap.PartyHideOld}" style="${styles.link_run_sys} ${styles.action_hide}">
                                                 <parameter param-name="partyId" from-field="party.partyId"/>
                                             </link>
                                         </container>
                                     </widgets>
                                     <fail-widgets>
                                         <container style="button-bar button-style-2">
-                                            <link target="viewprofile" text="${uiLabelMap.PartyShowOld}" style="${styles.link_run_sys} ${styles.action_view}">
+                                            <link target="viewprofile" text="${uiLabelMap.PartyShowOld}" style="${styles.link_run_sys} ${styles.action_show}">
                                                 <parameter param-name="partyId" from-field="party.partyId"/>
                                                 <parameter param-name="SHOW_OLD" value="true"/>
                                             </link>

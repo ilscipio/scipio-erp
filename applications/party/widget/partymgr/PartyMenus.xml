@@ -274,7 +274,7 @@
 
     <menu name="PersonUpdateSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         menu-container-style="button-bar button-style-2">
-        <menu-item name="update" title="${uiLabelMap.CommonUpdate}">
+        <menu-item name="update" title="${uiLabelMap.CommonUpdate}" widget-style="+${styles.action_nav} ${styles.action_update}">
             <link target="editperson">
                 <parameter param-name="partyId" from-field="parameters.partyId"/>
             </link>

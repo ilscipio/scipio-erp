@@ -21,9 +21,11 @@ under the License.
 <#assign price = priceMap!>
 <#-- end variable setup -->
 
-<#-- virtual product javascript -->
-${virtualJavaScript!}
 <@script>
+
+<#-- virtual product javascript -->
+    ${virtualJavaScript!}
+
     var detailImageUrl = null;
      function setAddProductId(name) {
         document.addform.add_product_id.value = name;
@@ -77,11 +79,10 @@ ${virtualJavaScript!}
 
     function toggleAmt(toggle) {
         if (toggle == 'Y') {
-            changeObjectVisibility("add_amount", "visible");
+            jQuery('#add_amount').removeClass("${styles.hidden!}");
         }
-
-        if (toggle == 'N') {
-            changeObjectVisibility("add_amount", "hidden");
+        else if (toggle == 'N') {
+            jQuery('#add_amount').removeClass("${styles.hidden!}").addClass("${styles.hidden!}");
         }
     }
 
@@ -131,9 +132,6 @@ ${virtualJavaScript!}
             toggleAmt(checkAmtReq(sku));
         }
     }
- </@script>
-
-<@script>
 
 jQuery(document).ready( function() {
   jQuery('#configFormId').change(getConfigDetails);
@@ -151,14 +149,12 @@ function getConfigDetails() {
            data: jQuery('configFormId').serialize(),
            type: "POST",
            success: function(data) {
-                  var totalPrice = data.totalPrice;
-                  var configId = data.configId;
-                  document.getElementById('totalPrice').innerHTML = totalPrice;
-                  document.addToShoppingList.configId.value = configId;
-                }
+               var totalPrice = data.totalPrice;
+               var configId = data.configId;
+               document.getElementById('totalPrice').innerHTML = totalPrice;
+               document.addToShoppingList.configId.value = configId;
            },
            error: function(data) {
-
            }
        });
 }
@@ -182,6 +178,10 @@ function getConfigDetails() {
   </#if>
 
   <hr class="sepbar"/>
+
+  <#-- Cato: open form earlier than stock code so don't produce invalid html... -->
+  <#assign action><@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl></#assign>
+  <@form method="post" action=action name="addform">
 
   <#-- Product image/name/price -->
   <@row>
@@ -264,7 +264,7 @@ function getConfigDetails() {
         </div>
       </#if>
       <#if daysToShip??>
-        <div><b>${uiLabelMap.ProductUsuallyShipsIn} <font color="red">${daysToShip}</font> ${uiLabelMap.CommonDays}!<b></div>
+        <div><b>${uiLabelMap.ProductUsuallyShipsIn} <span class="${styles.color_alert!}">${daysToShip}</font> ${uiLabelMap.CommonDays}!<b></div>
       </#if>
 
       <#if disFeatureList?? && 0 < disFeatureList.size()>
@@ -277,8 +277,6 @@ function getConfigDetails() {
             <div>&nbsp;</div>
       </#if>
 
-      <#-- FIXME: cross-section form! invalid HTML... -->
-      <form method="post" action="<@ofbizUrl>additem<#if requestAttributes._CURRENT_VIEW_??>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform">
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?? && product.isVirtual?upper_case == "Y">
@@ -316,10 +314,10 @@ function getConfigDetails() {
 
     </@cell>
   </@row>
-
   <@row>
-    <@cell> <#-- TODO: float right (as stock template) class="+${styles.text_right!}" -->
-      <@section>
+    <@cell> <#-- TODO?: float right (as stock template) class="+${styles.text_right!}" -->
+      
+      <@section> 
         <#-- check to see if introductionDate hasn't passed yet -->
         <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
           <@alert type="warning">${uiLabelMap.ProductProductNotYetMadeAvailable}.</@alert>
@@ -329,18 +327,18 @@ function getConfigDetails() {
         <#-- check to see if the product requires inventory check and has inventory -->
         <#else>
           <#if inStock>
-            <#if product.requireAmount?default("N") == "Y">
-              <#assign hiddenStyle = "visible">
+            <#if (product.requireAmount!"N") == "Y">
+              <#assign hiddenStyle = "">
             <#else>
-              <#assign hiddenStyle = "hidden">
+              <#assign hiddenStyle = styles.hidden!>
             </#if>
-            <#-- FIXME?: I don't understand why there's both an "add amount" and a quantity... -->
-            <@field type="generic" containerId="add_amount" label="Amount" containerClass="+${hiddenStyle}">
+            <#-- Cato: NOTE: amount is kg or either; quantity is the number of units buying -->
+            <@field type="generic" containerId="add_amount" label="${uiLabelMap.OrderAmount}" containerClass="+${hiddenStyle}">
               <input type="text" size="5" name="add_amount" value="" />
             </@field>
             <#if !configwrapper.isCompleted()>
-              <@alert type="info">[${uiLabelMap.EcommerceProductNotConfigured}]</@alert>
-              <@field type="generic" label="${uiLabelMap.ProductQuantity}" disabled=true>
+              <@alert type="info">${uiLabelMap.EcommerceProductNotConfigured}</@alert>
+              <@field type="generic" label="${uiLabelMap.ProductQuantity} (${uiLabelMap.OrderUnits})" disabled=true>
                 <input type="text" size="5" name="quantity" value="0" disabled="disabled" />
               </@field>
             <#else>
@@ -348,7 +346,7 @@ function getConfigDetails() {
                 <input type="text" size="5" name="quantity" value="1" />
               </@field>
               <@field type="submitarea">
-                <a href="javascript:addItem()" class="${styles.link_run_session!} ${styles.action_add!}"><span style="white-space: nowrap;">${uiLabelMap.OrderAddToCart}</span></a>
+                <a href="javascript:addItem()" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
               </@field>
             </#if>
           </#if>
@@ -357,7 +355,13 @@ function getConfigDetails() {
           </#if>
         </#if>
       </@section>
-      </form>
+    </@cell>
+  </@row>
+  </@form>
+  
+  <@row> 
+    <@cell>    
+  
       <@section>
       <#if sessionAttributes.userLogin?has_content && sessionAttributes.userLogin.userLoginId != "anonymous">
         <hr />
@@ -421,7 +425,7 @@ function getConfigDetails() {
               <#assign indexer = indexer + 1>
             </#list>
             <#if (indexer > maxIndex)>
-              <@td><b>${uiLabelMap.OrderMoreOptionsAvailable}.</div></@td>
+              <@td><strong>${uiLabelMap.OrderMoreOptionsAvailable}.</strong></@td>
             </#if>
           </@tr>
         </@table>
@@ -429,15 +433,19 @@ function getConfigDetails() {
     </@cell>
   </@row>
 
-  <hr class="sepbar"/>
-
   <#-- Long description of product -->
-  <@row>
-    <@cell>${productContentWrapper.get("LONG_DESCRIPTION", "html")!}</@cell>
-  </@row>
+  <#assign longDesc = productContentWrapper.get("LONG_DESCRIPTION", "html")!?trim>
+  <#if longDesc?has_content>
+    <hr class="sepbar"/>
+    <@row>
+      <@cell>${longDesc}</@cell>
+    </@row>
+  </#if>
 
   <hr class="sepbar"/>
 
+
+<@fields type="default-compact">
   <#-- Any attributes/etc may go here -->
   <#-- Product Configurator -->
   <@row>
@@ -448,45 +456,49 @@ function getConfigDetails() {
         <input type="hidden" name="quantity" value="1" />
 
         <input type="hidden" name="product_id" value="${product.productId}" />
-        <@table type="fields" cellspacing=""> <#-- orig: class="" -->
-          <@tr>
-            <@td>
+          <@row>
+            <@cell>
                 <a href="javascript:verifyConfig();" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.OrderVerifyConfiguration}</a>
-            </@td>
-          </@tr>
-          <@tr type="util"><@td><hr /></@td></@tr>
+            </@cell>
+          </@row>
+          <hr />
           <#assign counter = 0>
           <#assign questions = configwrapper.questions>
           <#list questions as question>
-          <@tr>
-            <@td>
-              <div>${question.question}</div>
+          <@row>
+            <@cell columns=4>${StringUtil.wrapString(question.question)}</@cell>
+            <@cell columns=8 class="+${styles.text_right!}">
+              <#-- Cato: NOTE: question is already html-escaped by ConfigItem class; wrapString prevents second escape -->
               <#if question.isFirst()>
                 <a name="#${question.getConfigItem().getString("configItemId")}"></a>
-                <div>${question.description!}</div>
+                
                 <#assign instructions = question.content.get("INSTRUCTIONS", "html")!>
+                <#assign instructionsHtml = "">
                 <#if instructions?has_content>
-                  <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${instructions}');" class="${styles.link_nav!} ${styles.action_view!}">Instructions</a>
+                  <#assign instructionsHtml> <a href="javascript:showErrorAlert('${uiLabelMap.CommonErrorMessage2}','${instructions}');" class="${styles.link_nav!} ${styles.action_view!}">Instructions</a></#assign>
                 </#if>
+                <div>${question.description!}${instructionsHtml}</div>
+
                 <#assign image = question.content.get("IMAGE_URL", "url")!>
                 <#if image?has_content>
                   <img src="<@ofbizContentUrl>${contentPathPrefix!}${image!}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgSmall" align="left" alt="" />
                 </#if>
               <#else>
-                <div><a href="#${question.getConfigItem().getString("configItemId")}" class="${styles.link_nav!} ${styles.action_view!}">Details</a></div>
+                <a href="#${question.getConfigItem().getString("configItemId")}" class="${styles.link_nav!} ${styles.action_view!}">Details</a>
               </#if>
-            </@td>
-          </@tr>
-          <@tr>
-            <@td>
+            </@cell>
+          </@row>
+          <@row>
+            <@cell>
             <#if question.isStandard()>
               <#-- Standard item: all the options are always included -->
               <#assign options = question.options>
               <#assign optionCounter = 0>
               <#list options as option>
-                <div>${option.description} <#if !option.isAvailable()> (*)</#if></div>
-                <div>${uiLabelMap.CommonComments}: <input type="text" name="comments_${counter}_${optionCounter}" id="comments_${counter}_${optionCounter}" value="${option.comments!}" /></div>
-                <#assign optionCounter = optionCounter + 1>
+                <@field type="display">
+                    ${option.description} <#if !option.isAvailable()> (*)</#if>
+                </@field>
+                <@field type="text" name="comments_${counter}_${optionCounter}" id="comments_${counter}_${optionCounter}" value="${option.comments!}" label="${uiLabelMap.CommonComments}" />
               </#list>
             <#else>
               <#if question.isSingleChoice()>
@@ -501,7 +513,7 @@ function getConfigDetails() {
                 <#if renderSingleChoiceWithRadioButtons?? && "Y" == renderSingleChoiceWithRadioButtons>
                 <#-- This is the radio button implementation -->
                 <#if !question.isMandatory()>
-                  <div><input type="radio" name="${counter}" value=""<#if !question.isSelected()> checked="checked"</#if>/> No option</div>
+                  <@field type="radio" name="${counter}" value="" checked=!question.isSelected() label="No option" />
                 </#if>
                 <#assign optionComment = "">
                 <#assign optionCounter = 0>
@@ -517,9 +529,10 @@ function getConfigDetails() {
                   </#if>
                     <#-- Render virtual compoennts -->
                     <#if option.hasVirtualComponent()>
-                      <div>
-                        <input type="radio" name="${counter}" id="${counter}_${optionCounter}" value="${optionCounter}" onclick="javascript:checkOptionVariants('${counter}_${optionCounter}');" />
-                        ${option.description} <#if !option.isAvailable()> (*)</#if>
+                      <@row>
+                        <@cell>
+                        <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if></#assign>
+                        <@field type="radio" name="${counter}" id="${counter}_${optionCounter}" value="${optionCounter}" onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=fieldLabel />
                         <#assign components = option.getComponents()>
                         <#list components as component>
                           <#if (option.isVirtualComponent(component))>
@@ -530,22 +543,27 @@ function getConfigDetails() {
                             <#assign componentCounter = componentCounter + 1>
                           </#if>
                         </#list>
-                      </div>
+                        </@cell>
+                      </@row>
                     <#else>
-                      <div>
-                        <input type="radio" name="${counter}" value="${optionCounter}" <#if option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory())>checked="checked"</#if> />
-                        ${option.description}&nbsp;
-                        <#if (shownPrice > 0)>+<@ofbizCurrency amount=shownPrice isoCode=price.currencyUsed/>&nbsp;</#if>
-                        <#if (shownPrice < 0)>-<@ofbizCurrency amount=(-1*shownPrice) isoCode=price.currencyUsed/>&nbsp;</#if>
-                        <#if !option.isAvailable()>(*)</#if>
-                      </div>
+                      <@row>
+                        <@cell>
+                          <#assign fieldLabel>
+                            ${option.description}&nbsp;
+                            <#if (shownPrice > 0)>+<@ofbizCurrency amount=shownPrice isoCode=price.currencyUsed/>&nbsp;</#if>
+                            <#if (shownPrice < 0)>-<@ofbizCurrency amount=(-1*shownPrice) isoCode=price.currencyUsed/>&nbsp;</#if>
+                            <#if !option.isAvailable()> (*)</#if>
+                          </#assign>
+                          <@field type="radio" name="${counter}" value="${optionCounter}" checked=(option.isSelected() || (!question.isSelected() && optionCounter == 0 && question.isMandatory())) label=fieldLabel />
+                        </@cell>
+                      </@row>
                     </#if>
                   <#assign optionCounter = optionCounter + 1>
                 </#list>
-                <div>${uiLabelMap.CommonComments}: <input type="text" name="comments_${counter}_0" id="comments_${counter}_0" value="${optionComment!}" /></div>
+                  <@field type="input" name="comments_${counter}_0" id="comments_${counter}_0" value="${optionComment!}" label="${uiLabelMap.CommonComments}" />
                 <#else>
                 <#-- And this is the select box implementation -->
-                <select name="${counter}">
+                <@field type="select" name="${counter}">
                 <#if !question.isMandatory()>
                   <option value="">---</option>
                 </#if>
@@ -570,8 +588,8 @@ function getConfigDetails() {
                   </option>
                   <#assign optionCounter = optionCounter + 1>
                 </#list>
-                </select>
-                <div>${uiLabelMap.CommonComments}: <input type="text" name="comments_${counter}_0" id="comments_${counter}_0" value="${optionComment!}" /></div>
+                </@field>
+                <@field type="input" name="comments_${counter}_0" id="comments_${counter}_0" value="${optionComment!}" label="${uiLabelMap.CommonComments}" />
                 </#if>
               <#else>
                 <#-- Multi choice question -->
@@ -581,9 +599,11 @@ function getConfigDetails() {
                     <#assign componentCounter = 0>
                     <#-- Render virtual compoennts -->
                     <#if option.hasVirtualComponent()>
-                      <div>
-                        <input type="checkbox" name="${counter}" id="${counter}_${optionCounter}" value="${optionCounter}" onclick="javascript:checkOptionVariants('${counter}_${optionCounter}');" />
-                        ${option.description} <#if !option.isAvailable()> (*)</#if>
+                      <@row>
+                        <@cell>
+                        <#assign fieldLabel>${option.description}<#if !option.isAvailable()> (*)</#if></#assign>
+                        <@field type="checkbox" name="${counter}" id="${counter}_${optionCounter}" value="${optionCounter}" onClick="javascript:checkOptionVariants('${counter}_${optionCounter}');" label=fieldLabel />
+
                         <#assign components = option.getComponents()>
                         <#list components as component>
                           <#if (option.isVirtualComponent(component))>
@@ -594,26 +614,24 @@ function getConfigDetails() {
                             <#assign componentCounter = componentCounter + 1>
                           </#if>
                         </#list>
-                      </div>
+                        </@cell>
+                      </@row>
                     <#else>
-                    <div>
-                      <input type="checkbox" name="${counter}" value="${optionCounter}" <#if option.isSelected()>checked="checked"</#if> />
-                      ${option.description} +<@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if>
-                    </div>
+                      <#assign fieldLabel>${option.description} +<@ofbizCurrency amount=option.price isoCode=price.currencyUsed/><#if !option.isAvailable()> (*)</#if></#assign>
+                      <@field type="checkbox" name="${counter}" value="${optionCounter}" checked=option.isSelected() label=fieldLabel />
                     </#if>
-                    <div>${uiLabelMap.CommonComments}: <input type="text" name="comments_${counter}_${optionCounter}" id="comments_${counter}_${optionCounter}" value="${option.comments!}" /></div>
+                    <@field type="input" name="comments_${counter}_${optionCounter}" id="comments_${counter}_${optionCounter}" value="${option.comments!}" label="${uiLabelMap.CommonComments}"/>
                   <#assign optionCounter = optionCounter + 1>
                 </#list>
               </#if>
             </#if>
-            </@td>
-          </@tr>
+            </@cell>
+          </@row>
           <#if question_has_next>
-            <@tr type="util"><@td><hr /></@td></@tr>
+            <hr />
           </#if>
           <#assign counter = counter + 1>
         </#list>
-        </@table>
       </form>
     </@cell>
   </@row>
@@ -691,5 +709,6 @@ ${setRequestAttribute("productValue", productValue)}
     </#if>
   </#list>
 </#if>
+</@fields>
 
 </@section>

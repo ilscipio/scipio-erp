@@ -19,9 +19,9 @@ under the License.
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
       <#--if project?has_content>
-        <@menuitem type="link" href=makeOfbizUrl("newNotesForProject?workEffortId=${project.workEffortId!}&amp;showForm=Y") text="${uiLabelMap.ProjectMgrNotesCreateNew}" />
+        <@menuitem type="link" href=makeOfbizUrl("newNotesForProject?workEffortId=${project.workEffortId!}&amp;showForm=Y") text="${uiLabelMap.ProjectMgrNotesCreateNew}" class="+${styles.action_nav!} ${styles.action_add!}" />
       <#else>
-        <@menuitem type="link" href=makeOfbizUrl("newNotesForTask?workEffortId=${task.workEffortId!}&amp;showForm=Y") text="${uiLabelMap.ProjectMgrNotesCreateNew}" />
+        <@menuitem type="link" href=makeOfbizUrl("newNotesForTask?workEffortId=${task.workEffortId!}&amp;showForm=Y") text="${uiLabelMap.ProjectMgrNotesCreateNew}" class="+${styles.action_nav!} ${styles.action_add!}" />
       </#if-->
     </@menu>
   </#macro>

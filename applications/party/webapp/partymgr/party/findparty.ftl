@@ -295,8 +295,8 @@ under the License.
           <@menuitem type="link" href="/ordermgr/control/FindQuote?partyId=${partyRow.partyId + externalKeyParam}" text="${uiLabelMap.OrderOrderQuotes}" />
       </#if>
       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
-          <@menuitem type="link" href="/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}" text="${uiLabelMap.OrderNewOrder}" />
-          <@menuitem type="link" href="/ordermgr/control/EditQuote?partyId=${partyRow.partyId + externalKeyParam}" text="${uiLabelMap.OrderNewQuote}" />
+          <@menuitem type="link" href="/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}" text="${uiLabelMap.OrderNewOrder}" class="+${styles.action_run_session!} ${styles.action_add!}" />
+          <@menuitem type="link" href="/ordermgr/control/EditQuote?partyId=${partyRow.partyId + externalKeyParam}" text="${uiLabelMap.OrderNewQuote}" class="+${styles.action_nav!} ${styles.action_add!}" />
       </#if>
           </@menu>
         </@td>

@@ -77,7 +77,7 @@ under the License.
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
       <#if webSitePayment?has_content>
-        <@menuitem type="link" href=makeOfbizUrl("paysetup") text="Add New" />
+        <@menuitem type="link" href=makeOfbizUrl("paysetup") text="Add New" class="+${styles.action_nav!} ${styles.action_add!}" />
       </#if>
       </@menu>
     </#macro>

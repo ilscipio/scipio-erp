@@ -20,7 +20,7 @@ under the License.
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
         <#--if security.hasEntityPermission("PARTYMGR", "_CREATE", session) || userLogin.partyId == partyId>
-          <@menuitem type="link" href=makeOfbizUrl("editcontactmech?partyId=${partyId}") text="${uiLabelMap.CommonCreateNew}" />
+          <@menuitem type="link" href=makeOfbizUrl("editcontactmech?partyId=${partyId}") text="${uiLabelMap.CommonCreateNew}" class="+${styles.action_nav!} ${styles.action_add!}" />
         </#if-->
     </@menu>
   </#macro>

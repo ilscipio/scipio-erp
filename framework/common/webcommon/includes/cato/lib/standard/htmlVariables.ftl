@@ -344,7 +344,7 @@
         In addition, links can - and most should - have a secondary action_xxx action type class (action_modify, action_readonly, action_add, action_view, etc.) added that identifies
         the type of action the link is triggering or that the navigation link is encouraging the user to do (IF SHORT ON TIME: the most important is to identify the run-action links that belong to action_modify).
         * link_run_xxx (implies action_run, action_scope_xxx): Text links that directly trigger actions, changes in the system, often the last button in a chain of links leading to an action.
-          * Should always have a specific action type such as action_create, action_find, etc.
+          * Should always have a specific action type such as action_add, action_find, etc.
           * The xxx in link_run_xxx specifies scope (required). See scopes below. Most are link_run_sys.
           * e.g.: submit button on entity creation form
                   submit button on a find form
@@ -368,7 +368,7 @@
       * INFO TEXT LINKS: Each of the main text links categories has an "info" subtype/variant: informational run-action text links (link_run_xxx_info) and informational nav text links (link_nav_info/link_nav_info_xxx).
         These are almost the same as main text links but help identify links who have primary purpose of showing information with their text content and only a secondary purpose of allowing an action. This allows different emphasis when styling (e.g., button vs no button).
         * link_run_xxx_info (implies action_run, action_scope_xxx, action_secondary): Informational run-action text link - any text link whose main purpose is to show information (the link text), but secondarily (action_secondary) triggers a run-action.
-          * Should always have a specific action type such as action_create, action_find, etc.
+          * Should always have a specific action type such as action_add, action_find, etc.
           * NOTE: These are rare and included mainly for consistency. Info links are usually of the link_nav_info type. For run-actions in almost all cases you want to put emphasis on the action and less on the info in the link.
         * link_nav_info/link_nav_info_xxx (implies action_nav, action_secondary): Informational nav text link - any text link whose main purpose is to show information (the link text), but secondarily (action_secondary) provides a nav link.
           * If no specific action type is given, implies action_view (usually to view a specific record)

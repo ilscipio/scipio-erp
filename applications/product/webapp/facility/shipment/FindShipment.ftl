@@ -32,8 +32,8 @@ function lookupShipments() {
   <#if requestParameters.facilityId?has_content>
     <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?facilityId=${requestParameters.facilityId}") text="${uiLabelMap.ProductQuickShipOrder}" />
   </#if>
-    <@menuitem type="link" href=makeOfbizUrl("EditShipment") text="${uiLabelMap.ProductNewShipment}" />
-    <#--<@menuitem type="link" href="javascript:lookupShipments();" text="${uiLabelMap.ProductFindShipment}" />-->
+    <@menuitem type="link" href=makeOfbizUrl("EditShipment") text="${uiLabelMap.ProductNewShipment}" class="+${styles.action_nav!} ${styles.action_add!}" />
+    <#--<@menuitem type="link" href="javascript:lookupShipments();" text="${uiLabelMap.ProductFindShipment}" class="+${styles.action_nav!} ${styles.action_find!}" />-->
   </@menu>
 </#macro>
 <@section id="findOrders" menuContent=menuContent> <#-- title="${uiLabelMap.ProductFindShipmentTitle}" -->

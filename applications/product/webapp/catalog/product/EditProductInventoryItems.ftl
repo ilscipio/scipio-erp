@@ -21,7 +21,7 @@ under the License.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if productId?has_content>
-    <@menuitem type="link" href="/facility/control/EditInventoryItem?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCreateNewInventoryItemProduct}" />
+    <@menuitem type="link" href="/facility/control/EditInventoryItem?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCreateNewInventoryItemProduct}" class="+${styles.action_nav!} ${styles.action_add!}" />
     <#if showEmpty>
       <@menuitem type="link" href=makeOfbizUrl("EditProductInventoryItems?productId=${productId}") text="${uiLabelMap.ProductHideEmptyItems}" class="+${styles.action_run_sys!} ${styles.action_hide!}" />
     <#else>

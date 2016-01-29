@@ -24,7 +24,7 @@ under the License.
 </#if>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("EditCalendar") text="${uiLabelMap.ManufacturingNewCalendar}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditCalendar") text="${uiLabelMap.ManufacturingNewCalendar}" class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title=sectionTitle menuContent=menuContent>

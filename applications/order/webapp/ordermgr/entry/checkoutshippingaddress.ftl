@@ -62,7 +62,7 @@ function toggleBillingAccount(box) {
               <@tr>
                 <@td colspan="2">
                   <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.OrderSplitShipment}</a>
-                  <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="${styles.link_nav!} ${styles.link_create!}">${uiLabelMap.PartyAddNewAddress}</a>
+                  <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.PartyAddNewAddress}</a>
                   <#if (cart.getShipGroupSize() > 1)>
                     <div style="color: red;">${uiLabelMap.OrderNOTEMultipleShipmentsExist}</div>
                   </#if>

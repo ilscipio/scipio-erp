@@ -660,7 +660,7 @@
     "alert_prefix_type" : "",             <#-- Bootstrap: "alert-"; Note: This may be removed -->
     "alert_type_info" : "info",
     "alert_type_success" : "success",
-    "alert_type__warning" : "warning",
+    "alert_type_warning" : "warning",
     "alert_type_secondary" : "secondary",  
     "alert_type_alert" : "alert",        
     "alert_type_error" : "alert",

@@ -335,7 +335,7 @@ document.lookuporder.orderId.focus();
       <#macro massOrderChangeButton id="1">  
           <@row>
             <@cell>
-                <button href="#" data-dropdown="drop1" aria-controls="drop_${id!"1"}" aria-expanded="false" class="${styles.button!} ${styles.small!} ${styles.color_secondary!} ${styles.dropdown!}">${uiLabelMap.OrderRunAction}</button><br>
+                <button href="#" data-dropdown="drop1" aria-controls="drop_${id!"1"}" aria-expanded="false" class="${styles.button!} ${styles.small!} ${styles.button_color_secondary!} ${styles.dropdown!}">${uiLabelMap.OrderRunAction}</button><br>
                 <ul id="drop${id!"1"}" data-dropdown-content class="f-dropdown" aria-hidden="true" tabindex="-1">
                    <li><a href="javascript:submitFindForm('<@ofbizUrl>massApproveOrders?hideFields=${requestParameters.hideFields!"N"}${paramList}</@ofbizUrl>')">${uiLabelMap.OrderApproveOrder}</a></li>
                    <li><a href="javascript:submitFindForm('<@ofbizUrl>massHoldOrders?hideFields=${requestParameters.hideFields!"N"}${paramList}</@ofbizUrl>')">${uiLabelMap.OrderHold}</a></li>

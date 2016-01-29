@@ -480,12 +480,16 @@
     "color_error" : "alert",
     
     "button_color_default" : "",
+    "button_color_red" : "alert",
+    "button_color_grey" : "secondary",
+    "button_color_green" : "success",
     "button_color_primary" : "primary",
     "button_color_secondary" : "secondary",
     "button_color_success" : "success",
     "button_color_info" : "info",
     "button_color_warning" : "warning",
     "button_color_alert" : "alert",
+    "button_color_error" : "alert",
     
   <#-- Grid -->
     "grid_row" : "row",

@@ -146,7 +146,7 @@
 <@menu type="button" class="+my-button-menu-class" id="my-button-menu">
   <@menuitem type="link" text="Menu Button 1" />
   <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
-  <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.color_green}">
+  <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.button_color_green}">
     <!-- nested menu item comment -->
   </@menuitem>
 </@menu>
@@ -366,7 +366,7 @@
   <@menu type="tab">
     <@menuitem type="link" text="Menu Button 1" />
     <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
-    <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.color_green}">
+    <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.button_color_green}">
       <!-- nested menu item comment -->
     </@menuitem>
   </@menu>
@@ -374,7 +374,7 @@
   <#assign menuItems = [
     {"type":"link", "text":"Menu Tab 2", "disabled":true},
     {"type":"link", "text":"Menu Tab 1", "href":"ofbizUrl://WebtoolsLayoutDemo"},
-    {"type":"link", "text":"Menu Tab 4", "contentClass":"+${styles.color_green}", "onClick":"javascript:alert('Clicked menu item!');"},
+    {"type":"link", "text":"Menu Tab 4", "contentClass":"+${styles.button_color_green}", "onClick":"javascript:alert('Clicked menu item!');"},
     {"type":"text", "text":"Menu Tab 3 (text entry)", "nestedContent":"<!-- hidden nested menu item comment -->"}
     {"type":"submit", "text":"Menu Tab 5 (submit)", "disabled":true, "class":"+mymenuitemclass", "contentClass":"+mymenuitemcontentclass"}
     {"type":"link", "text":"Menu Tab 6", "selected":true}

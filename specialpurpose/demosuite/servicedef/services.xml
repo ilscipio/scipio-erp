@@ -38,6 +38,8 @@
         <attribute name="minDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="maxDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="productStoreId" type="String" mode="IN" optional="true"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="true"/>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="true"/>
         <attribute name="productCategoryTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="createNewCategories" type="Boolean" mode="IN" optional="true"/>

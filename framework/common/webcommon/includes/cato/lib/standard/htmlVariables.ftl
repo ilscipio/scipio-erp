@@ -491,6 +491,24 @@
     "button_color_alert" : "alert",
     "button_color_error" : "alert",
     
+    <#-- text color. NOTE: this does not provide the best styling abstraction, but at least better than hardcoding -->
+    "text_color_primary" : "colored-text primary",
+    "text_color_secondary" : "colored-text secondary",
+    "text_color_info" : "colored-text info",
+    "text_color_warning" : "colored-text warning",
+    "text_color_success" : "colored-text success",  
+    "text_color_alert" : "colored-text alert",
+    "text_color_error" : "colored-text alert",
+    
+    <#-- colors for any other element that supports coloring ("color" css attribute) -->
+    "elem_color_primary" : "colored-elem primary",
+    "elem_color_secondary" : "colored-elem secondary",
+    "elem_color_info" : "colored-elem info",
+    "elem_color_warning" : "colored-elem warning",
+    "elem_color_success" : "colored-elem success",  
+    "elem_color_alert" : "colored-elem alert",
+    "elem_color_error" : "colored-elem alert",
+    
   <#-- Grid -->
     "grid_row" : "row",
     "grid_cell" : "columns",

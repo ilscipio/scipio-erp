@@ -366,6 +366,26 @@ div.scrollable-table-container > table {
 }
 
 
+/* GENERAL ELEMENT COLORS */
+
+.colored-elem.primary, .colored-elem { color:$primary-color; }
+.colored-elem.secondary { color:$secondary-color; }
+.colored-elem.info { color:$info-color; }
+.colored-elem.success { color:$success-color; }
+.colored-elem.warning { color:$warning-color; }
+.colored-elem.alert { color:$alert-color; }
+
+
+/* TEXT COLORS */
+
+.colored-text.primary, .colored-text { color:$primary-color; }
+.colored-text.secondary { color:$secondary-color; }
+.colored-text.info { color:$info-color; }
+.colored-text.success { color:$success-color; }
+.colored-text.warning { color:$warning-color; }
+.colored-text.alert { color:$alert-color; }
+
+
 /* ACTION (LINK) STYLES */
 
 /* 2016-01-18: DEV NOTE: colors here are not final style choices, only demos of things that can be done for action links. 

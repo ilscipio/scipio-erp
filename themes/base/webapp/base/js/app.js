@@ -193,7 +193,7 @@ function CatoUploadProgress(options) {
 	};
 	
 	this.setProgressState = function(classStr) {
-		var stateStyles = [catoStyles.color_info, catoStyles.color_success, catoStyles.color_alert, catoStyles.color_warning].join(" ");
+		var stateStyles = [catoStyles.progress_state_info, catoStyles.progress_state_success, catoStyles.progress_state_alert].join(" ");
 		if (this.progBarId) {
 			jQuery("#"+this.progBarId).removeClass(stateStyles).addClass(classStr);
 		}

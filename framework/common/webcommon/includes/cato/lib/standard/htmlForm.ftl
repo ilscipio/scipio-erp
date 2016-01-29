@@ -160,7 +160,7 @@ for getFileUploadProgressStatus AJAX calls.
     value          = Percentage done
     id             = custom id; can also be specified as progressOptions.progBarId instead
                      if omitted will not make a progress bar, but script still generated for progressOptions.progTextBoxId
-    type           = (warning|info|success) default: success
+    type           = (alert|info|success) default: info
     class          = Adds classes - please use "(small|medium|large)-block-grid-#"
                      supports prefixes:
                        "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -189,21 +189,12 @@ for getFileUploadProgressStatus AJAX calls.
     <#local id = (progressOptions.progBarId)!"">
   </#if>
 
-  <#switch type>
-    <#case "alert">
-      <#local color=styles.color_alert!/>
-    <#break>
-    <#case "info">
-      <#local color=styles.color_info!/>
-    <#break>
-    <#case "warning">
-      <#local color=styles.color_warning!/>
-    <#break>
-    <#default>
-      <#local color=styles.color_success!/>
-  </#switch>
+  <#if !type?has_content>
+    <#local type = "info">
+  </#if>
+  <#local stateClass = styles["progress_state_" + type]!styles["progress_state_info"]!"">
 
-  <@progress_markup value=value id=id class=class showValue=showValue containerClass=containerClass color=color origArgs=origArgs passArgs=passArgs/>
+  <@progress_markup value=value id=id class=class showValue=showValue containerClass=containerClass stateClass=stateClass origArgs=origArgs passArgs=passArgs/>
     
   <#if progressOptions?has_content>
     <#local opts = progressOptions>
@@ -216,10 +207,10 @@ for getFileUploadProgressStatus AJAX calls.
 </#macro>
 
 <#-- @progress main markup - theme override -->
-<#macro progress_markup value=0 id="" class="" showValue=false containerClass="" color="" origArgs={} passArgs={} catchArgs...>
+<#macro progress_markup value=0 id="" class="" showValue=false containerClass="" stateClass="" origArgs={} passArgs={} catchArgs...>
   <#local classes = compileClassArg(class)>
   <#local containerClasses = compileClassArg(containerClass)>
-  <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if color?has_content> ${color!}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
+  <div class="${styles.progress_container}<#if !styles.progress_wrap?has_content && classes?has_content> ${classes}</#if><#if stateClass?has_content> ${stateClass}</#if><#if containerClasses?has_content> ${containerClasses}</#if>"<#if id?has_content> id="${id}"</#if>>
     <#if styles.progress_wrap?has_content><div class="${styles.progress_wrap!}<#if classes?has_content> ${classes}</#if>"<#if id?has_content> id="${id!}_meter"</#if> role="progressbar" aria-valuenow="${value!}" aria-valuemin="0" aria-valuemax="100" style="width: ${value!}%"></#if>
       <span class="${styles.progress_bar!}"<#if !styles.progress_wrap?has_content> style="width: ${value!}%"<#if id?has_content> id="${id!}_meter"</#if></#if>><#if showValue>${value!}</#if></span>
     <#if styles.progress_wrap?has_content></div></#if>

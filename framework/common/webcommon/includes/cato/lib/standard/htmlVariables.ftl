@@ -684,6 +684,11 @@
     "progress_wrap" : "",           <#-- Bootstrap: "progress-bar" -->
     "progress_bar" : "meter",       <#-- Bootstrap: "sr-only" -->
 
+    "progress_state_alert" : "alert",
+    "progress_state_info" : "info",
+    "progress_state_success" : "success",
+
+
   <#-- Fields 
        fields_xxx classes and settings are looked up by the @fields and @field macros as defaults for
        fields type and field type. -->

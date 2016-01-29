@@ -1044,7 +1044,7 @@ Render menu in a tree fashion way
                       alternatively, the items can be specified as nested content.        
 -->
 <#assign treemenu_defaultArgs = {
-  "library":"jsTree", "data":{}, "settings": [], "inlineItems":false, "id":"",  "attribs":{}, "passArgs":{}
+  "library":"jsTree", "data":{}, "settings": {}, "plugins": [], "inlineItems":false, "id":"",  "attribs":{}, "passArgs":{}
 }>
 <#macro treemenu args={} inlineArgs...>
   <#local args = toSimpleMap(args)> <#-- DEV NOTE: this MUST be called here (or through concatMaps) to handle .class key properly -->  
@@ -1055,13 +1055,13 @@ Render menu in a tree fashion way
   
   <#local treeMenuLibrary = library!"jsTree"/>
   
-  <@treemenu_markup treeMenuLibrary=treeMenuLibrary treeMenuData=data treeMenuSettings=settings id=id attribs=attribs excludeAttribs=["class", "id", "style"] origArgs=origArgs passArgs=passArgs>
+  <@treemenu_markup treeMenuLibrary=treeMenuLibrary treeMenuData=data treeMenuSettings=settings treeMenuPlugins=plugins id=id attribs=attribs excludeAttribs=["class", "id", "style"] origArgs=origArgs passArgs=passArgs>
         <#nested>
   </@treemenu_markup>
 </#macro>
 
 <#-- @treemenu main markup - theme override -->
-<#macro treemenu_markup treeMenuLibrary="" treeMenuData={} treeMenuSettings=[] id="" attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
+<#macro treemenu_markup treeMenuLibrary="" treeMenuData={} treeMenuSettings={} treeMenuPlugins=[] id="" attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
     <#if treeMenuLibrary == "jsTree">
         ${Static["org.ofbiz.base.util.Debug"].log("id ====> " + id)}  
         ${Static["org.ofbiz.base.util.Debug"].log("data ====> " + treeMenuData)}
@@ -1079,20 +1079,20 @@ Render menu in a tree fashion way
                 .jstree({
                     "core" : {
                         "data" : ${treeMenuDataJson}
-                        <#if treeMenuSettings?has_content && treeMenuSettings?keys?seq_contains("themes")>
-                            , "themes" : <@objectAsScript lang="json" object=treeMenuSettings.themes />
+                        <#if treeMenuSettings?has_content>
+                    	   , <@objectAsScript lang="json" object=treeMenuSettings wrap=false />
                         </#if>
                      }
                      
-                     <#if treeMenuSettings?has_content && treeMenuSettings?keys?seq_contains("plugins")>
-                        <#list treeMenuSettings.plugins as plugin>
+                     <#if treeMenuPlugins?has_content>
+                        <#list treeMenuPlugins as plugin>
                             , "${plugin.pluginName()}" : <@objectAsScript lang="json" object=plugin />
                         </#list>
                         
                         , "plugins" : [
-                            <#list treeMenuSettings.plugins as plugin>
+                            <#list treeMenuPlugins as plugin>
                                 "${plugin.pluginName()}"                               
-                                <#if treeMenuSettings.plugins?last.pluginName() != plugin.pluginName()>, </#if> 
+                                <#if treeMenuPlugins?last.pluginName() != plugin.pluginName()>, </#if> 
                             </#list>
                         ]
                      </#if>
@@ -1112,6 +1112,16 @@ Render menu in a tree fashion way
         <#if validEvents?has_content && validEvents?seq_contains(e)>
             ${Static["org.ofbiz.base.util.Debug"].log("valid event")}            
             .on("${event}", function (e, data) {
+				
+				/*for(var propertyName in e) {
+   					console.log("e propertyName =====> " + propertyName);
+ 
+				}*/
+				/*for(var propertyName in data.node) {
+                    console.log("data node propertyName =====> " + propertyName);
+                }*/
+                console.log("data node ====> " + data.node.id);
+
                 <#nested>
             })
         </#if>

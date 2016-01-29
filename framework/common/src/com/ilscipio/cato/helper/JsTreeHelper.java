@@ -35,6 +35,12 @@ public class JsTreeHelper {
     public static class JsTreeCore extends HashMap<String, Object> {
         private static final long serialVersionUID = 2371673939917629690L;
 
+        public JsTreeCore(boolean multiple, HashMap<String, String> strings, Integer animation) {
+            setMultiple(multiple);
+            setStrings(strings);
+            setAnimation(animation);
+        }
+
         public void setMultiple(Boolean multiple) {
             put("multiple", multiple);
         }
@@ -44,7 +50,8 @@ public class JsTreeHelper {
         }
 
         public void setAnimation(Integer animation) {
-            put("animation", animation);
+            if (UtilValidate.isNotEmpty(animation))
+                put("animation", animation);
         }
 
         public void setExpandSelectedOnload(Boolean expandSelectedOnload) {
@@ -84,8 +91,10 @@ public class JsTreeHelper {
 
             }
 
-            public JsTreeTheme() {
-
+            public JsTreeTheme(String themeName, String themeUrl, String themeDir) {
+                setThemeName(themeName);
+                setThemeUrl(themeUrl);
+                setThemeDir(themeDir);
             }
 
             public void setThemeName(String themeName) {
@@ -162,6 +171,10 @@ public class JsTreeHelper {
 
         public void setChildren(List<JsTreeDataItem> children) {
             put("children", children);
+        }
+        
+        public void setType(String type) {
+            put("type", type);
         }
 
         public static class JsTreeDataItemState extends HashMap<String, Boolean> {

@@ -24,12 +24,11 @@
 import org.ofbiz.base.util.Debug
 import org.ofbiz.entity.condition.EntityComparisonOperator
 import org.ofbiz.entity.condition.EntityExpr
+import org.ofbiz.product.category.CategoryWorker
 
 import com.ilscipio.cato.helper.JsTreeHelper
 import com.ilscipio.cato.helper.JsTreeHelper.JsTreeDataItem
-import com.ilscipio.cato.helper.JsTreeHelper.JsTreeEvent
 import com.ilscipio.cato.helper.JsTreeHelper.JsTreePluginList
-import com.ilscipio.cato.helper.JsTreeHelper.JsTreeTheme
 import com.ilscipio.cato.helper.JsTreeHelper.JsTreeDataItem.JsTreeDataItemState
 import com.ilscipio.cato.helper.JsTreeHelper.JsTreePlugin.JsTreeTypesPlugin
 import com.ilscipio.cato.helper.JsTreeHelper.JsTreePlugin.JsTreeTypesPlugin.JsTreeType
@@ -42,58 +41,54 @@ import com.ilscipio.cato.helper.JsTreeHelper.JsTreePlugin.JsTreeTypesPlugin.JsTr
 
 productStoreId = (context.productStoreId) ? context.productStoreId : parameters.productStoreId;
 
-//JsTreeHelper.JsTreeDataItem.JsTreeDataItemState.class.getDeclaredConstructors().each { constructor ->
-//  Debug.log("constructor (from groovy) ========> " + constructor);
-//}
-//
-//Debug.log(JsTreeHelper.displayConstructor());
-
-
 if (!productStoreId) {
     Debug.log("No product store Id found.");
     return;
 }
 Debug.log("productStoreId =======> " + productStoreId);
-List separateRootType(roots) {
-    if(roots) {
-        prodRootTypeTree = [];
-        roots.each { root ->
-            productCategory = root.getRelatedOne("ProductCategory", false);            
+
+//JsTreeDataItem createDataItem(GenericValue category, String type) {
+//    
+//}
+
+List getCategories(categories) {
+    if(categories) {
+        productCategories = [];
+        categories.each { productCategory ->           
             itemState = new JsTreeDataItemState(true, false);
             dataItem = new JsTreeDataItem(productCategory.getString("productCategoryId"), productCategory.getString("categoryName"), "jstree-file", itemState, null);
-            prodRootTypeTree.add(dataItem);
+            dataItem.setType("category");
+            productCategories.add(dataItem);            
         }
-        return prodRootTypeTree;
+        return productCategories;
     }
 }
 
-treeMenuSettings = [:];
+List getTopCategories(roots) {
+    if(roots) {
+        topCategories = [];
+        roots.each { root ->
+            productCategory = root.getRelatedOne("ProductCategory", false);
+            
+            children = [];
+            relatedCategories = CategoryWorker.getRelatedCategoriesRet(delegator, null, productCategory.getString("productCategoryId"), false, false, true);
+            if (relatedCategories)
+                children = getCategories(relatedCategories);
+                
+            itemState = new JsTreeDataItemState(true, false);            
+            dataItem = new JsTreeDataItem(productCategory.getString("productCategoryId"), productCategory.getString("categoryName"), "jstree-file", itemState, children);
+            dataItem.setType("category");
+            topCategories.add(dataItem);
+        }
+        return topCategories;
+    }
+}
+
 pluginList = new JsTreeHelper.JsTreePluginList();
 pluginList.add("sort, state");
 pluginList.add(new JsTreeTypesPlugin(["catalog", "category", "product"], new JsTreeType(3, 5, null, null), new JsTreeType(6, 2, null, null), new JsTreeType(0, 0, null, null)));
-treeMenuSettings["plugins"] = pluginList;
-
-treeMenuSettings["themes"] = new JsTreeTheme();
-
-
-//StringBuffer function = new StringBuffer();
-//function.append("jQuery.ajax({");
-//function.append("url: URL,");
-//function.append("type: 'POST',");
-//function.append("data: dataSet,");
-//function.append("error: function(msg) {");
-//function.append("alert('An error occurred loading content! : ' + msg);");
-//function.append("},");
-//function.append("success: function(msg) {");
-//function.append("jQuery('#centerdiv').html(msg);");
-//function.append("}");
-//function.append("});");
-//
-//selectNodeEvents = [new JsTreeEvent("select_node", function.toString())];
-//treeMenuSettings["events"] = selectNodeEvents;
-context.treeMenuSettings = treeMenuSettings;
-
-
+context.treeMenuPlugins = pluginList;
+context.treeMenuSettings = new JsTreeHelper.JsTreeCore(false, null, null);
 
 treeMenuData =  [];
 //Get the Catalogs
@@ -105,11 +100,12 @@ for (productStoreCatalog in productStoreCatalogs) {
         children = [];
         prodCatalogCategories = from("ProdCatalogCategory").where("prodCatalogId", prodCatalog.prodCatalogId).filterByDate().queryList();        
         if (prodCatalogCategories) {
-            children = separateRootType(prodCatalogCategories);
+            children = getTopCategories(prodCatalogCategories);
 //            Debug.log("productCatalogCategories ======> " + prodCatalogMap.child);
         }
         itemState = new JsTreeDataItemState(true, false);
         dataItem = new JsTreeDataItem(prodCatalog.getString("prodCatalogId"), prodCatalog.getString("catalogName"), "jstree-folder", itemState, children);
+        dataItem.setType("catalog");
         treeMenuData.add(dataItem);        
     }
 }

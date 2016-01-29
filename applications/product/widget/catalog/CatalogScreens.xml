@@ -82,11 +82,11 @@ under the License.
             <widgets>
             <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                 <decorator-section name="body">
-                    <include-menu name="CatalogTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                    <include-menu name="CatalogSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                    <label style="heading">${uiLabelMap.ProductCatalog} ${uiLabelMap.CommonFor} "${prodCatalog.catalogName}" [${prodCatalogId}]</label>
+                    <!-- <include-menu name="CatalogTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
+                    <include-menu name="CatalogSubTabBar" location="component://product/widget/catalog/CatalogMenus.xml"/> -->
+                    <!-- <label style="heading">${uiLabelMap.ProductCatalog} ${uiLabelMap.CommonFor} "${prodCatalog.catalogName}" [${prodCatalogId}]</label> -->
                     <screenlet title="${uiLabelMap.PageTitleEditProductCatalog}">
-                        <label>${uiLabelMap.ProductCatalogEmptyWarning}</label>
+                        <!-- <label>${uiLabelMap.ProductCatalogEmptyWarning}</label> -->
                         <include-form name="EditProdCatalog" location="component://product/widget/catalog/CatalogForms.xml"/>
                     </screenlet>
                 </decorator-section>

@@ -21,7 +21,7 @@ under the License.
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
     <#if orderId??>
-      <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}") text="${uiLabelMap.OrderViewOrder}" />
+      <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}") text="${uiLabelMap.OrderViewOrder}" class="+${styles.action_nav!} ${styles.action_view!}" />
     </#if>
     </@menu>
   </#macro>

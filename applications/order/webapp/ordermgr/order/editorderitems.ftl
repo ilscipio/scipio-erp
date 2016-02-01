@@ -30,9 +30,9 @@ under the License.
     <@menu args=menuArgs>
     <#if security.hasEntityPermission("ORDERMGR", "_UPDATE", session)>
       <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED">
-        <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelSelectedOrderItems')}';document.updateItemInfo.submit()" text="${uiLabelMap.OrderCancelSelectedItems}" />
-        <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelOrderItem')}';document.updateItemInfo.submit()" text="${uiLabelMap.OrderCancelAllItems}" />
-        <@menuitem type="link" href=makeOfbizUrl("orderview?${paramString}") text="${uiLabelMap.OrderViewOrder}" />
+        <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelSelectedOrderItems')}';document.updateItemInfo.submit()" text="${uiLabelMap.OrderCancelSelectedItems}" class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
+        <@menuitem type="link" href="javascript:document.updateItemInfo.action='${makeOfbizUrl('cancelOrderItem')}';document.updateItemInfo.submit()" text="${uiLabelMap.OrderCancelAllItems}" class="+${styles.action_run_sys!} ${styles.action_terminate!}" />
+        <@menuitem type="link" href=makeOfbizUrl("orderview?${paramString}") text="${uiLabelMap.OrderViewOrder}" class="+${styles.action_nav!} ${styles.action_view!}" />
       </#if>
     </#if>
     </@menu>
@@ -246,13 +246,13 @@ under the License.
                                         <#assign downloadContents = delegator.findByAnd("OrderItemAndProductContentInfo", {"orderId" : orderId, "orderItemSeqId" : orderItem.orderItemSeqId, "productContentTypeId" : "DIGITAL_DOWNLOAD", "statusId" : "ITEM_COMPLETED"})/>
                                         <#if downloadContents?has_content>
                                           <#list downloadContents as downloadContent>
-                                            <@menuitem type="link" href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" text="${uiLabelMap.ContentDownload}" target="_blank" />
+                                            <@menuitem type="link" href="/content/control/ViewSimpleContent?contentId=${downloadContent.contentId}" text="${uiLabelMap.ContentDownload}" target="_blank" class="+${styles.action_run_sys!} ${styles.action_export!}" />
                                           </#list>
                                         </#if>
-                                        <@menuitem type="link" href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCatalog}" target="_blank" />
-                                        <@menuitem type="link" href="/ecommerce/control/product?product_id=${productId}" text="${uiLabelMap.OrderEcommerce}" target="_blank" />
+                                        <@menuitem type="link" href="/catalog/control/EditProduct?productId=${productId}${StringUtil.wrapString(externalKeyParam)}" text="${uiLabelMap.ProductCatalog}" target="_blank" class="+${styles.action_nav!} ${styles.action_update!}" />
+                                        <@menuitem type="link" href="/ecommerce/control/product?product_id=${productId}" text="${uiLabelMap.OrderEcommerce}" target="_blank" class="+${styles.action_nav!} ${styles.action_view!}"/>
                                         <#if orderItemContentWrapper.get("IMAGE_URL", "url")?has_content>
-                                            <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL") text="${uiLabelMap.OrderViewImage}" target="_orderImage" />
+                                            <@menuitem type="link" href=makeOfbizUrl("viewimage?orderId=${orderId}&amp;orderItemSeqId=${orderItem.orderItemSeqId}&amp;orderContentTypeId=IMAGE_URL") text="${uiLabelMap.OrderViewImage}" target="_orderImage" class="+${styles.action_run_sys!} ${styles.action_view!}" />
                                         </#if>
                                     </@menu>
                               </@td>
@@ -370,7 +370,7 @@ under the License.
                     <@td colspan="6">&nbsp;</@td>
                     <@td>
                         <@menu type="button">
-                          <@menuitem type="submit" text="${uiLabelMap.OrderUpdateItems}" />
+                          <@menuitem type="submit" text="${uiLabelMap.OrderUpdateItems}" class="+${styles.action_run_sys!} ${styles.action_update!}"/>
                         </@menu>
                     </@td>
                 </@tr>

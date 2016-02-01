@@ -22,9 +22,9 @@ under the License.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if activeOnly>
-    <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=false") text="${uiLabelMap.ProductActiveAndInactive}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=false") text="${uiLabelMap.ProductActiveAndInactive}" class="+${styles.action_run_sys!} ${styles.action_show!}" />
   <#else>
-    <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=true") text="${uiLabelMap.ProductActiveOnly}" />
+    <@menuitem type="link" href=makeOfbizUrl("EditCategoryProducts?productCategoryId=${productCategoryId!}&amp;activeOnly=true") text="${uiLabelMap.ProductActiveOnly}" class="+${styles.action_run_sys!} ${styles.action_show!}" />
   </#if>
   </@menu>
 </#macro>

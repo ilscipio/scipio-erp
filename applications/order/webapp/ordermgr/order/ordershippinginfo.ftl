@@ -53,7 +53,7 @@ under the License.
   <#-- New in Ofbiz 14.12 -->
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-       <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}") text="${uiLabelMap.OrderShipmentInformationByOISG}" />
+       <@menuitem type="link" href=makeOfbizUrl("orderview?orderId=${orderId}") text="${uiLabelMap.OrderShipmentInformationByOISG}" class="+${styles.action_nav!} ${styles.action_view!}" />
     </@menu>
   </#macro>
   <@section title="${uiLabelMap.OrderShipmentInformation}" menuContent=menuContent>
@@ -212,7 +212,7 @@ under the License.
   <#assign shipGroup = shipGroup> <#-- Cato: make this global so macro can access - ftl kludge -->
     <#macro menuContent menuArgs={}>
        <@menu args=menuArgs>
-         <#--<@menuitem type="link" onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" text="&nbsp;" title="Collapse" />-->
+         <#--<@menuitem type="link" onclick="javascript:toggleScreenlet(this, 'ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}', 'true', '${uiLabelMap.CommonExpand}', '${uiLabelMap.CommonCollapse}');" text="&nbsp;" title="Collapse" class="+${styles.action_run_local!} ${styles.action_hide!}" />-->
          <@menuitem type="link" href=makeOfbizUrl("shipGroups.pdf?orderId=${orderId}&amp;shipGroupSeqId=${shipGroup.shipGroupSeqId}") text="${uiLabelMap.OrderShipGroup} PDF" target="_BLANK" class="+${styles.action_run_sys!} ${styles.action_export!}"/>
          <#-- Foundation: Button migrated from removed header to access OISGA -->
          <#if !parameters.view?has_content>

@@ -56,7 +56,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-      <@menuitem type="link" href="javascript:document.updateList.submit();" text="${uiLabelMap.CommonSave}" />
+      <@menuitem type="link" href="javascript:document.updateList.submit();" text="${uiLabelMap.CommonSave}" class="+${styles.action_run_sys!} ${styles.action_update!}"/>
       <@menuitem type="link" href="javascript:document.createQuoteFromShoppingListForm.submit()" text="${uiLabelMap.PartyCreateNewQuote}" class="+${styles.action_run_sys!} ${styles.action_add!}">
         <form method="post" name="createQuoteFromShoppingListForm" action="/ordermgr/control/createQuoteFromShoppingList">
           <input type="hidden" name="applyStorePromotions" value="N"/>
@@ -121,7 +121,7 @@ under the License.
 <#if childShoppingListDatas?has_content>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes") text="${uiLabelMap.PartyAddChildListsToCart}" />
+    <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}&amp;includeChild=yes") text="${uiLabelMap.PartyAddChildListsToCart}" class="+${styles.action_run_session!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}" menuContent=menuContent>
@@ -150,7 +150,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-<#-- <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}") text="${uiLabelMap.PartyAddListToCart}" /> -->
+<#-- <@menuitem type="link" href=makeOfbizUrl("addListToCart?shoppingListId=${shoppingList.shoppingListId}") text="${uiLabelMap.PartyAddListToCart}" class="+${styles.action_run_session!} ${styles.action_add!}" /> -->
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.PartyListItems} - ${shoppingList.listName}" menuContent=menuContent>

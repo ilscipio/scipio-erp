@@ -27,11 +27,11 @@ under the License.
         <#if (shoppingCartSize > 0)>
           <#macro cartLinks>
             <@menu type="button">
-              <@menuitem type="link" href=makeOfbizUrl("view/showcart") text="${uiLabelMap.OrderViewCart}" />
-              <@menuitem type="link" href=makeOfbizUrl("checkoutoptions") text="${uiLabelMap.OrderCheckout}" />
-              <@menuitem type="link" href=makeOfbizUrl("quickcheckout") text="${uiLabelMap.OrderCheckoutQuick}" />
-              <@menuitem type="link" href=makeOfbizUrl("onePageCheckout") text="${uiLabelMap.EcommerceOnePageCheckout}" />
-              <@menuitem type="link" href=makeOfbizUrl("googleCheckout") text="${uiLabelMap.EcommerceCartToGoogleCheckout}" />
+              <@menuitem type="link" href=makeOfbizUrl("view/showcart") text="${uiLabelMap.OrderViewCart}" class="+${styles.action_nav!} ${styles.action_view!}" />
+              <@menuitem type="link" href=makeOfbizUrl("checkoutoptions") text="${uiLabelMap.OrderCheckout}" class="+${styles.action_nav!} ${styles.action_begin!}"/>
+              <@menuitem type="link" href=makeOfbizUrl("quickcheckout") text="${uiLabelMap.OrderCheckoutQuick}" class="+${styles.action_nav!} ${styles.action_begin!}"/>
+              <@menuitem type="link" href=makeOfbizUrl("onePageCheckout") text="${uiLabelMap.EcommerceOnePageCheckout}" class="+${styles.action_nav!} ${styles.action_begin!}"/>
+              <@menuitem type="link" href=makeOfbizUrl("googleCheckout") text="${uiLabelMap.EcommerceCartToGoogleCheckout}" class="+${styles.action_nav!} ${styles.action_begin!}"/>
             </@menu>
           </#macro>
         

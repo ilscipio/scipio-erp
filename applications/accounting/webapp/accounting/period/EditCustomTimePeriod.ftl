@@ -33,7 +33,7 @@ under the License.
         <#if currentCustomTimePeriod?has_content>
             <#macro menuContent menuArgs={}>
                 <@menu args=menuArgs>
-                    <@menuitem type="link" href=makeOfbizUrl("EditCustomTimePeriod?findOrganizationPartyId=${findOrganizationPartyId!}") text="${uiLabelMap.CommonClearCurrent}" />
+                    <@menuitem type="link" href=makeOfbizUrl("EditCustomTimePeriod?findOrganizationPartyId=${findOrganizationPartyId!}") text="${uiLabelMap.CommonClearCurrent}" class="+${styles.action_run_local!} ${styles.action_clear!}" />
                 </@menu>
             </#macro>
         <#else>

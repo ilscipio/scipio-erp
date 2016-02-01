@@ -19,7 +19,7 @@ under the License.
 
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("findVisits?partyId=${partyId}") text="${uiLabelMap.CommonListAll}" />
+      <@menuitem type="link" href=makeOfbizUrl("findVisits?partyId=${partyId}") text="${uiLabelMap.CommonListAll}" class="+${styles.action_run_sys!} ${styles.action_find!}" />
     </@menu>
   </#macro>
   <@section id="partyVisits" title="${uiLabelMap.PartyVisits}" menuContent=menuContent>

@@ -19,7 +19,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("addressMatchMap") text="${uiLabelMap.PageTitleAddressMatchMap}" />
+    <@menuitem type="link" href=makeOfbizUrl("addressMatchMap") text="${uiLabelMap.PageTitleAddressMatchMap}" class="+${styles.action_nav!}" />
   </@menu>
 </#macro>
 <@section id="address-match-map" menuContent=menuContent>

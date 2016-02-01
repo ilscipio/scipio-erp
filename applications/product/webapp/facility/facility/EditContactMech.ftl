@@ -19,7 +19,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("authview/${donePage}?facilityId=${facilityId}") text="${uiLabelMap.CommonGoBack}" />
+    <@menuitem type="link" href=makeOfbizUrl("authview/${donePage}?facilityId=${facilityId}") text="${uiLabelMap.CommonGoBack}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
   <#if (mechMap.contactMechTypeId)?has_content && (mechMap.contactMech)?has_content>
     <@menuitem type="link" href=makeOfbizUrl("EditContactMech?facilityId=${facilityId}") text="${uiLabelMap.ProductNewContactMech}" class="+${styles.action_nav!} ${styles.action_add!}" />
   </#if>

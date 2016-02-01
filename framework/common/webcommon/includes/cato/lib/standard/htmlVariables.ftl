@@ -289,9 +289,9 @@
     "action_complete" : "action-modify action-complete",  <#-- complete action: "Complete Order", "Mark Success", etc. -->
     "action_updatestatus" : "action-modify action-updatestatus",  <#-- update status action (any status not better accounted for in previous): "Approve", "Set to Xxx", etc. NOTE: this type was added later, so may be underused (action_update, action_terminate, action_complete usually found instead) -->
     "action_import" : "action-modify action-import",      <#-- upload action: "Import", "Upload", etc. -->
-    "action_transfer" : "action-modify action-transfer",  <#-- generic transfer action: "Transfer", "Send", "Send Email", "Receive", etc. -->
-    "action_send" : "action-modify action-send",          <#-- send action (transfer in send direction): "Send", "Send Email", etc. -->
-    "action_receive" : "action-modify action-receive",    <#-- receive action (transfer in receive direction): "Receive", etc. -->
+    "action_transfer" : "action-modify action-transfer",  <#-- generic transfer action: "Transfer", "Send", "Send Email", "Receive", "Export to Foreign System", etc. -->
+    "action_send" : "action-modify action-send",          <#-- logical send action (transfer in send direction): "Send", "Send Email", "Export to Ebay", "Export to Google", etc. -->
+    "action_receive" : "action-modify action-receive",    <#-- logical receive action (transfer in receive direction): "Receive", "Import from Ebay", etc. -->
     "action_sync" : "action-modify action-sync",          <#-- sync action (two-way transfer): "Sync", etc. -->
     "action_register" : "action-modify action-login",     <#-- register action: "Register", etc.; usually goes with system scope -->
     "action_login" : "action-modify action-login",        <#-- login action: "Login", etc.; usually goes with session scope -->
@@ -303,12 +303,12 @@
     "action_read" : "action-readonly action-read",                        <#-- generic read action, can also be a collection of read actions -->
     "action_find" : "action-readonly action-read action-find",            <#-- find action: "Find", "Search", "Lookup", etc. -->
     "action_view" : "action-readonly action-read action-view",            <#-- view item action: "View PDF", etc. -->
-    "action_export" : "action-readonly action-read action-export",        <#-- export action: "Export", "Download", "Stream", "Print", etc. -->
+    "action_export" : "action-readonly action-read action-export",        <#-- export action: "Export", "Download", "Stream", "Print", etc. NOTE: this is not for "Export to Ebay" or foreign system; use action_transfer or action_send for that. -->
     
     "action_visibility" : "action-readonly action-visibility",            <#-- visibility change base action. NOTE: Do not confuse with action_find. action_find is a fresh find/filter query, while action_visibility could at most modify an existing query, depending on the wording (but mainly is for showing/hiding anything, not just queries). -->
     "action_show" : "action-readonly action-visibility action-show",      <#-- (visibility change only) show item action: "Show Old", etc. -->
     "action_hide" : "action-readonly action-visibility action-hide",      <#-- (visibility change only) hide item action: "Hide All", etc. -->
-    "action_close" : "action-readonly action-close",                      <#-- close action (should not change state! is not for "closing" a record): "Close Popup", etc. -->
+    "action_close" : "action-readonly action-close",                      <#-- close dialog or UI element action: "Close Popup", etc. NOTE: Should not change state! Do not use for "closing" a record (use action_terminate or other). -->
     "action_select" : "action-readonly action-select",                    <#-- select action: "Select", "Choose", "Pick", etc. -->
     "action_reload" : "action-readonly action-reload",                    <#-- reload action: "Refresh", etc. -->
     "action_verify" : "action-readonly action-verify",                    <#-- verify action (should not change system state!): "Verify", "Validate", etc. -->

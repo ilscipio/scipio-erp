@@ -23,7 +23,7 @@ under the License.
 <hr />
 <#if security.hasPermission("ENTITY_MAINT", session)>
   <@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl("xmldsrawdump") target="_blank" text="Click Here to Get Data (or save to file)" />
+    <@menuitem type="link" href=makeOfbizUrl("xmldsrawdump") target="_blank" text="Click Here to Get Data (or save to file)" class="+${styles.action_run_sys!} ${styles.action_export!}" />
   </@menu>
 <#else>
   <@alert type="error">You do not have permission to use this page (ENTITY_MAINT needed)</@alert>
@@ -31,9 +31,9 @@ under the License.
 <#else>
 <#macro displayButtonBar>
   <@menu type="button">
-    <@menuitem type="submit" text="${uiLabelMap.WebtoolsExport}" />
-    <@menuitem type="link" href=makeOfbizUrl("xmldsdump?checkAll=true") text="${uiLabelMap.WebtoolsCheckAll}" />
-    <@menuitem type="link" href=makeOfbizUrl("xmldsdump") text="${uiLabelMap.WebtoolsUnCheckAll}" />
+    <@menuitem type="submit" text="${uiLabelMap.WebtoolsExport}" class="+${styles.action_run_sys!} ${styles.action_export!}" />
+    <@menuitem type="link" href=makeOfbizUrl("xmldsdump?checkAll=true") text="${uiLabelMap.WebtoolsCheckAll}" class="+${styles.action_run_local!} ${styles.action_select!}" />
+    <@menuitem type="link" href=makeOfbizUrl("xmldsdump") text="${uiLabelMap.WebtoolsUnCheckAll}" class="+${styles.action_run_local!} ${styles.action_select!}" />
   </@menu>
 </#macro>
 

@@ -32,7 +32,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("PickMoveStockSimple?facilityId=${facilityId!}") text="${uiLabelMap.CommonPrint}" />
+    <@menuitem type="link" href=makeOfbizUrl("PickMoveStockSimple?facilityId=${facilityId!}") text="${uiLabelMap.CommonPrint}" class="+${styles.action_run_sys!} ${styles.action_export!}" />
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.ProductStockMovesNeeded}" menuContent=menuContent>

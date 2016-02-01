@@ -475,8 +475,8 @@ function submitForm(form, mode, value) {
 <@row>
   <@cell>
     <@menu type="button">
-      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" text="${uiLabelMap.OrderBacktoShoppingCart}" />
-      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" text="${uiLabelMap.OrderContinueToFinalOrderReview}" />
+      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" text="${uiLabelMap.OrderBacktoShoppingCart}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
+      <@menuitem type="link" href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" text="${uiLabelMap.OrderContinueToFinalOrderReview}" class="+${styles.action_run_session!} ${styles.action_continue!}" />
     </@menu>
   </@cell>
 </@row>

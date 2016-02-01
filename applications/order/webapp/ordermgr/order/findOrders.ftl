@@ -106,8 +106,8 @@ function submitFindForm(val){
     <#if orderList??>
       <@menuitem type="link" href="javascript:document.lookupandhidefields${requestParameters.hideFields!'Y'}.submit()" text="${uiLabelMap.CommonHideFields}" class="+${styles.action_run_sys!} ${styles.action_hide!}" />
     </#if>
-    <@menuitem type="link" href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey!}" text="${uiLabelMap.PartyLookupParty}" />
-    <@menuitem type="link" href="javascript:lookupOrders(true);" text="${uiLabelMap.OrderLookupOrder}" />
+    <@menuitem type="link" href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey!}" text="${uiLabelMap.PartyLookupParty}" class="+${styles.action_nav!} ${styles.action_find!}" />
+    <@menuitem type="link" href="javascript:lookupOrders(true);" text="${uiLabelMap.OrderLookupOrder}" class="+${styles.action_run_sys!} ${styles.action_find!}" />
   </#if>
   </@menu>
 </#macro>

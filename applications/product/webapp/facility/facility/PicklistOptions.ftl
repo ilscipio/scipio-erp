@@ -50,7 +50,7 @@ under the License.
   
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}") text="${uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked}" />
+    <@menuitem type="link" href=makeOfbizUrl("ReviewOrdersNotPickedOrPacked?facilityId=${facilityId}") text="${uiLabelMap.FormFieldTitle_reviewOrdersNotPickedOrPacked}" class="+${styles.action_nav!} ${styles.action_view!}" />
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.ProductFindOrdersToPick}" menuContent=menuContent>

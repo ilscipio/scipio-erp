@@ -194,9 +194,9 @@ under the License.
 </@script>
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("clearExpListing?productStoreId=${productStoreId!}") text="Clear Listing" />
+    <@menuitem type="link" href=makeOfbizUrl("clearExpListing?productStoreId=${productStoreId!}") text="Clear Listing" class="+${styles.action_run_sys!} ${styles.action_clear!}" />
     <#if isExportValid?? && isExportValid == "true">
-      <@menuitem type="link" href=makeOfbizUrl("exportListingToEbay?productStoreId=${productStoreId!}") text="Export Products Listing" />
+      <@menuitem type="link" href=makeOfbizUrl("exportListingToEbay?productStoreId=${productStoreId!}") text="Export Products Listing" class="+${styles.action_run_sys!} ${styles.action_send!}" />
     </#if>
   </@menu>
 </#macro>
@@ -214,19 +214,19 @@ under the License.
                    <#assign href>javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>exportProductListing</@ofbizUrl>?isProductId=${content.product.productId!}';document.getElementById('ProductsExportToEbay').submit();</#assign>
                    <#assign text = "${content.product.productName!}[${content.product.productId}]">
                    <#if id == 1> 
-                     <@menuitem type="link" href=href text=text selected=true />
+                     <@menuitem type="link" href=href text=text selected=true class="+${styles.action_run_sys!} ${styles.action_send!}" />
                      <#assign isProductId = content.product.productId!>
                    <#else> 
-                     <@menuitem type="link" href=href text=text id="tabHeader${id}" />
+                     <@menuitem type="link" href=href text=text id="tabHeader${id}" class="+${styles.action_run_sys!} ${styles.action_send!}" />
                    </#if>
                  <#else>
                    <#assign href>javascript:document.getElementById('ProductsExportToEbay').action = '<@ofbizUrl>exportProductListing</@ofbizUrl>?isProductId=${content.product.productId!}';document.getElementById('ProductsExportToEbay').submit();</#assign>
                    <#assign text = "${content.product.productName!}[${content.product.productId}]">
                    <#if isProductId?? && isProductId! == content.product.productId!> 
-                     <@menuitem type="link" href=href text=text selected=true />
+                     <@menuitem type="link" href=href text=text selected=true class="+${styles.action_run_sys!} ${styles.action_send!}" />
                      <#assign isProductId = content.product.productId!>
                    <#else>
-                     <@menuitem type="link" href=href text=text id="tabHeader${id}" />
+                     <@menuitem type="link" href=href text=text id="tabHeader${id}" class="+${styles.action_run_sys!} ${styles.action_send!}" />
                    </#if>
                  </#if>
                  <#assign id = id + 1>
@@ -584,7 +584,7 @@ under the License.
                                                       <#assign style></#assign>
                                                       <#assign id>tabHeader_${id}</#assign>
                                                     </#if>
-                                                    <@menuitem type="link" onClick="toggleTab(${id},2)" text="${tabName!}" style=style id=id />
+                                                    <@menuitem type="link" onClick="toggleTab(${id},2)" text="${tabName!}" style=style id=id class="+${styles.action_run_local!} ${styles.action_visibility!}" />
                                                     <#assign id = id + 1>
                                                </#if>
                                             </#list>

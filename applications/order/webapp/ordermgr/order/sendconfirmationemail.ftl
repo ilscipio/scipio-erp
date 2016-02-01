@@ -24,8 +24,8 @@ under the License.
     
       <#macro actionMenu>
         <@menu type="button">
-          <@menuitem type="link" href=makeOfbizUrl("authview/${donePage}?orderId=${orderId}") text="${uiLabelMap.CommonGoBack}" />
-          <@menuitem type="link" href="javascript:document.sendConfirmationForm.submit()" text="${uiLabelMap.CommonSend}" />
+          <@menuitem type="link" href=makeOfbizUrl("authview/${donePage}?orderId=${orderId}") text="${uiLabelMap.CommonGoBack}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
+          <@menuitem type="link" href="javascript:document.sendConfirmationForm.submit()" text="${uiLabelMap.CommonSend}" class="+${styles.action_run_sys!} ${styles.action_send!}" />
         </@menu>
       </#macro>
       

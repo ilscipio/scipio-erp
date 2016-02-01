@@ -26,8 +26,8 @@ under the License.
 <@section title=sectionTitle menuContent=menuContent>
     <#macro saveCancelMenu>
       <@menu type="button">
-        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") text="${uiLabelMap.CommonCancelDone}" />
-        <@menuitem type="link" href="javascript:document.editcreditcardform.submit()" text="${uiLabelMap.CommonSave}" />
+        <@menuitem type="link" href=makeOfbizUrl("${donePage}?partyId=${partyId}") text="${uiLabelMap.CommonCancelDone}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
+        <@menuitem type="link" href="javascript:document.editcreditcardform.submit()" text="${uiLabelMap.CommonSave}" class="+${styles.action_run_sys!} ${styles.action_update!}" />
       </@menu>
     </#macro>
     

@@ -19,7 +19,7 @@ under the License.
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if (maySelectItems!"N") == "Y">
-    <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" text="${uiLabelMap.OrderAddAllToCart}" />
+    <@menuitem type="link" href="javascript:document.addCommonToCartForm.add_all.value='true';document.addCommonToCartForm.submit()" text="${uiLabelMap.OrderAddAllToCart}" class="+${styles.action_run_session!} ${styles.action_add!}" />
   </#if>
   </@menu>
 </#macro>

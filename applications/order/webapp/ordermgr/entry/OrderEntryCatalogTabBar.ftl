@@ -30,7 +30,7 @@ under the License.
     </#assign>
     <#macro menuContent menuArgs={}>
       <@menu args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("orderentry") text="${uiLabelMap.OrderOrderItems}" />
+        <@menuitem type="link" href=makeOfbizUrl("orderentry") text="${uiLabelMap.OrderOrderItems}" class="+${styles.action_nav!}" />
       </@menu>
     </#macro>
     <@section title=sectionTitle menuContent=menuContent />

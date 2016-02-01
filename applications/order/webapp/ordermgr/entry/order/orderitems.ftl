@@ -20,8 +20,8 @@ under the License.
 <@section title="${uiLabelMap.OrderOrderItems}">
         <@menu type="button"> <#-- class="boxlink" -->
           <#if (maySelectItems!false) == true>
-            <@menuitem type="link" href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' text="${uiLabelMap.OrderAddAllToCart}" />
-            <@menuitem type="link" href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' text="${uiLabelMap.OrderAddCheckedToCart}" />
+            <@menuitem type="link" href='javascript:document.addOrderToCartForm.add_all.value="true";document.addOrderToCartForm.submit()' text="${uiLabelMap.OrderAddAllToCart}" class="+${styles.action_run_session!} ${styles.action_add!}" />
+            <@menuitem type="link" href='javascript:document.addOrderToCartForm.add_all.value="false";document.addOrderToCartForm.submit()' text="${uiLabelMap.OrderAddCheckedToCart}" class="+${styles.action_run_session!} ${styles.action_add!}"/>
           </#if>
         </@menu>
         

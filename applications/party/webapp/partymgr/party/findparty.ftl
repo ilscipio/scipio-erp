@@ -281,9 +281,9 @@ under the License.
         <@td>${partyDate.lastModifiedDate!}</@td>
         <@td class="button-col">
           <@menu type="button">
-          <@menuitem type="link" href=makeOfbizUrl("viewprofile?partyId=${partyRow.partyId}") text="${uiLabelMap.CommonDetails}" />
+          <@menuitem type="link" href=makeOfbizUrl("viewprofile?partyId=${partyRow.partyId}") text="${uiLabelMap.CommonDetails}" class="+${styles.action_nav!}" />
       <#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
-          <@menuitem type="link" href="javascript:document.searchorders_o_${rowCount}.submit()" text="${uiLabelMap.OrderOrders}">
+          <@menuitem type="link" href="javascript:document.searchorders_o_${rowCount}.submit()" text="${uiLabelMap.OrderOrders}" class="+${styles.action_run_sys!} ${styles.action_find!}">
           <form name="searchorders_o_${rowCount}" method="post" action="/ordermgr/control/searchorders">
             <input type="hidden" name="lookupFlag" value="Y" />
             <input type="hidden" name="hideFields" value="Y" />
@@ -292,7 +292,7 @@ under the License.
             <input type="hidden" name="viewSize" value="20" />
           </form>
           </@menuitem>
-          <@menuitem type="link" href="/ordermgr/control/FindQuote?partyId=${partyRow.partyId + externalKeyParam}" text="${uiLabelMap.OrderOrderQuotes}" />
+          <@menuitem type="link" href="/ordermgr/control/FindQuote?partyId=${partyRow.partyId + externalKeyParam}" text="${uiLabelMap.OrderOrderQuotes}" class="+${styles.action_nav!} ${styles.action_find!}" />
       </#if>
       <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
           <@menuitem type="link" href="/ordermgr/control/checkinits?partyId=${partyRow.partyId + externalKeyParam}" text="${uiLabelMap.OrderNewOrder}" class="+${styles.action_run_session!} ${styles.action_add!}" />

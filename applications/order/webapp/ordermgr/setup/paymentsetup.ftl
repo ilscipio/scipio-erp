@@ -23,7 +23,7 @@ under the License.
 
     <#macro menuContent menuArgs={}>
       <@menu type="button" class="+button-style-1" args=menuArgs>
-        <@menuitem type="link" href=makeOfbizUrl("paysetup") text="Payment Setup" selected=true />
+        <@menuitem type="link" href=makeOfbizUrl("paysetup") text="Payment Setup" selected=true class="+${styles.action_nav!} ${styles.action_configure!}" />
       </@menu>
     </#macro>
     <@section title="Payment Processor Setup" menuContent=menuContent>

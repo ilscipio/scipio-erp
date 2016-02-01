@@ -19,7 +19,7 @@ under the License.
 
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
-    <@menuitem type="link" href=makeOfbizUrl("returnMain") text="${uiLabelMap.OrderCreateReturn}" />
+    <@menuitem type="link" href=makeOfbizUrl("returnMain") text="${uiLabelMap.OrderCreateReturn}" class="+${styles.action_nav!} ${styles.action_add!}" />
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.OrderReturnsCurrent}" menuContent=menuContent>

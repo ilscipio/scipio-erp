@@ -236,7 +236,7 @@ function submitForm(form, mode, value) {
 </@section>
 
 <@menu type="button">
-  <@menuitem type="link" href=makeOfbizUrl("updateCheckoutOptions/showcart") text="${uiLabelMap.OrderBacktoShoppingCart}" />
-  <@menuitem type="link" href=makeOfbizUrl("setBilling") text="${uiLabelMap.CommonContinue}" />
+  <@menuitem type="link" href=makeOfbizUrl("updateCheckoutOptions/showcart") text="${uiLabelMap.OrderBacktoShoppingCart}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
+  <@menuitem type="link" href=makeOfbizUrl("setBilling") text="${uiLabelMap.CommonContinue}" class="+${styles.action_nav!} ${styles.action_continue!}" />
 </@menu>
 

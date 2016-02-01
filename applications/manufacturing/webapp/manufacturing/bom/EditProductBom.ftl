@@ -29,7 +29,7 @@ function lookupBom() {
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if product?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("BomSimulation?productId=${productId}&amp;bomType=${productAssocTypeId}") text="${uiLabelMap.ManufacturingBomSimulation}" />
+    <@menuitem type="link" href=makeOfbizUrl("BomSimulation?productId=${productId}&amp;bomType=${productAssocTypeId}") text="${uiLabelMap.ManufacturingBomSimulation}" class="+${styles.action_nav!}" />
   </#if>
   </@menu>
 </#macro>

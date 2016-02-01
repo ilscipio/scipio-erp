@@ -35,9 +35,9 @@ under the License.
   <#else>
     <@section title="${uiLabelMap.WebtoolsService} ${selectedServiceMap.serviceName}">
         <@menu type="button">
-          <@menuitem type="link" href=makeOfbizUrl("${url}") text="${uiLabelMap.CommonListAll}" />
-          <@menuitem type="link" href=makeOfbizUrl("/scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}") text="${uiLabelMap.WebtoolsSchedule}" />
-          <@menuitem type="link" href=makeOfbizUrl("/setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&amp;POOL_NAME=pool&amp;_RUN_SYNC_=Y") text="${uiLabelMap.PageTitleRunService}" />
+          <@menuitem type="link" href=makeOfbizUrl("${url}") text="${uiLabelMap.CommonListAll}" class="+${styles.action_run_sys!} ${styles.action_find!}" />
+          <@menuitem type="link" href=makeOfbizUrl("/scheduleJob?SERVICE_NAME=${selectedServiceMap.serviceName}") text="${uiLabelMap.WebtoolsSchedule}" class="+${styles.action_nav!} ${styles.action_configure!}" />
+          <@menuitem type="link" href=makeOfbizUrl("/setSyncServiceParameters?SERVICE_NAME=${selectedServiceMap.serviceName}&amp;POOL_NAME=pool&amp;_RUN_SYNC_=Y") text="${uiLabelMap.PageTitleRunService}" class="+${styles.action_nav!} ${styles.action_begin!}" />
         </@menu>
 
     <#-- Show a little form for exportServiceEoModelBundle -->
@@ -360,7 +360,7 @@ under the License.
 
   <#macro menuContent menuArgs={}>
     <@menu args=menuArgs>
-      <@menuitem type="link" href=makeOfbizUrl("${url}") text="${uiLabelMap.CommonListAll}" />
+      <@menuitem type="link" href=makeOfbizUrl("${url}") text="${uiLabelMap.CommonListAll}" class="+${styles.action_run_sys!} ${styles.action_find!}" />
     </@menu>
   </#macro>
   <@section menuContent=menuContent>

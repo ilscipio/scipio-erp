@@ -25,10 +25,10 @@ under the License.
           <@menuitem type="link" href="/ecommerce/control/product?product_id=${productId!}" text="${uiLabelMap.ProductProductPage}" class="+${styles.action_nav!} ${styles.action_view!}" />
           <@menuitem type="link" href=makeOfbizUrl("ProductBarCode.pdf?productId=${productId!}") text="${uiLabelMap.ProductBarcode}" target="_blank" class="+${styles.action_run_sys!} ${styles.action_export!}" />
         </#if>
-        <@menuitem type="link" href=makeOfbizUrl("EditProductTag") text="${uiLabelMap.ProductTags}" />
+        <@menuitem type="link" href=makeOfbizUrl("EditProductTag") text="${uiLabelMap.ProductTags}" class="+${styles.action_nav!} ${styles.action_update!}" />
         <#--<#if tabButtonItem?has_content && tabButtonItem="EditProduct">
-            <@menuitem type="link" href="javascript:expandAll(true);" text="${uiLabelMap.CommonExpandAll}" />
-            <@menuitem type="link" href="javascript:expandAll(false);" text="${uiLabelMap.CommonCollapseAll}" />
+            <@menuitem type="link" href="javascript:expandAll(true);" text="${uiLabelMap.CommonExpandAll}" class="+${styles.action_run_local!} ${styles.action_show!}" />
+            <@menuitem type="link" href="javascript:expandAll(false);" text="${uiLabelMap.CommonCollapseAll}" class="+${styles.action_run_local!} ${styles.action_hide!}" />
         </#if>-->
     </@menu>
     </@cell>

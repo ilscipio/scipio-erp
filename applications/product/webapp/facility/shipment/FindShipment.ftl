@@ -30,7 +30,7 @@ function lookupShipments() {
 <#macro menuContent menuArgs={}>
   <@menu args=menuArgs>
   <#if requestParameters.facilityId?has_content>
-    <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?facilityId=${requestParameters.facilityId}") text="${uiLabelMap.ProductQuickShipOrder}" />
+    <@menuitem type="link" href=makeOfbizUrl("quickShipOrder?facilityId=${requestParameters.facilityId}") text="${uiLabelMap.ProductQuickShipOrder}" class="+${styles.action_nav!} ${styles.action_send!}" />
   </#if>
     <@menuitem type="link" href=makeOfbizUrl("EditShipment") text="${uiLabelMap.ProductNewShipment}" class="+${styles.action_nav!} ${styles.action_add!}" />
     <#--<@menuitem type="link" href="javascript:lookupShipments();" text="${uiLabelMap.ProductFindShipment}" class="+${styles.action_nav!} ${styles.action_find!}" />-->
@@ -119,17 +119,11 @@ function lookupShipments() {
 </@section>
 
 <#if shipmentList??>
-  <#macro menuContent menuArgs={}>
-    <@menu args=menuArgs>
-    <#if (0 < shipmentList?size)>
-      <@menuitem type="link" href=makeOfbizUrl("FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex-1}${paramList}&amp;lookupFlag=Y") text="${uiLabelMap.CommonPrevious}" disabled=(!(viewIndex > 1)) contentClass="+nav-previous" />
-      <@menuitem type="text" text="${lowIndex} - ${highIndex} ${uiLabelMap.CommonOf} ${shipmentList?size}" />
-      <@menuitem type="link" href=makeOfbizUrl("FindShipment?VIEW_SIZE=${viewSize}&amp;VIEW_INDEX=${viewIndex+1}${paramList}&amp;lookupFlag=Y") text="${uiLabelMap.CommonPrevious}" disabled=(!(shipmentList?size > highIndex)) contentClass="+nav-next" />
-    </#if>
-    </@menu>
-  </#macro>
-  <@section id="findOrders_2" title="${uiLabelMap.ProductShipmentsFound}" menuContent=menuContent>
-      <#if shipmentList?has_content>  
+  <@section id="findOrders_2" title="${uiLabelMap.ProductShipments}">
+    <#if shipmentList?has_content>  
+      <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"lookupFlag": "Y"}, "&amp;", false)>
+      <@paginate mode="content" url=makeOfbizUrl("FindShipment") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=shipmentList?size>
+   
         <@table type="data-list" autoAltRows=true cellspacing="0" cellpadding="2" class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->
         <@thead>
           <@tr class="header-row">
@@ -160,8 +154,9 @@ function lookupShipments() {
             </@tr>
           </#list>
         </@table>
-      <#else>
-        <@resultMsg>${uiLabelMap.ProductNoShipmentsFound}.</@resultMsg>
-      </#if>  
+      </@paginate>
+    <#else>
+      <@resultMsg>${uiLabelMap.ProductNoShipmentsFound}.</@resultMsg>
+    </#if>  
   </@section>
 </#if>

@@ -468,6 +468,8 @@
     "link_nav_info_text" :          "link-type-text action-nav action-secondary",                                                   <#-- link containing any kind of free-form text -->
     
   <#-- Colors -->
+    <#-- DEV NOTE: is it possible that color_ should always be avoided or even removed in favor of xxxx_color_xxx (further below)? or renamed?
+        color_xxx class on its own does nothing, which is a little confusing, e.g. you might think setting these styles on a span will give the text a color, but it won't... -->
     "color_green" : "success",
     "color_red" : "alert",
     "color_grey" : "secondary",

@@ -1068,19 +1068,16 @@ Render menu in a tree fashion way
         <#local treeMenuDataJson><@objectAsScript lang="json" object=treeMenuData /></#local> 
         <#local nestedEvents><#nested></#local>
 
+        <div id="${id!''}"></div>
         <script type="text/javascript"> 
             $(document).ready(function() {
-                create${id!''}Tree()
-            });
-            <#-- create Tree-->
-            function create${id!''}Tree() {
-                $("#${id!''}")
-                ${nestedEvents}
+               $("#${id!''}")
+                ${nestedEvents?trim}
                 .jstree({
                     "core" : {
                         "data" : ${treeMenuDataJson}
                         <#if treeMenuSettings?has_content>
-                    	   , <@objectAsScript lang="json" object=treeMenuSettings wrap=false />
+                           , <@objectAsScript lang="json" object=treeMenuSettings wrap=false />
                         </#if>
                      }
                      
@@ -1097,10 +1094,10 @@ Render menu in a tree fashion way
                         ]
                      </#if>
                 });
-            }
+            });
         </script>
     </#if>
-    <div id="${id!''}"></div>
+    
 </#macro>
 
 <#macro treemenu_event event="">

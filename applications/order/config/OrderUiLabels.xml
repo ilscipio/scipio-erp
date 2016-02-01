@@ -13807,6 +13807,14 @@
         <value xml:lang="zh">单位数量</value>
         <value xml:lang="zh_TW">單位數量</value>
     </property>
+    <!-- Cato: TODO: translations -->
+    <property key="OrderUnits">
+        <value xml:lang="de">Einheiten</value>
+        <value xml:lang="en">Units</value>
+        <value xml:lang="es">Unidades</value>
+        <value xml:lang="fr">Unités</value>
+        <value xml:lang="it">Unità</value>
+    </property>
     <property key="OrderUnplanned">
         <value xml:lang="de">Nicht geplant</value>
         <value xml:lang="en">Unplanned</value>

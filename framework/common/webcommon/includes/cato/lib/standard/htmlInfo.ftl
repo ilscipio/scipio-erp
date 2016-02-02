@@ -143,7 +143,7 @@ A template should not assume too much about the message markup, but the markup s
     <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>            
                     
   * Parameters *
-    type        = [default|generic|result|fail|error|error-permission|error-security], default default - the type of message contained.
+    type        = [default|generic|result|fail|error|error-perm|error-security], default default - the type of message contained.
                   Basic types:
                     default: default. in standard Cato markup, same as generic.
                     generic: no type specified (avoid using - prefer more specific)
@@ -167,7 +167,7 @@ A template should not assume too much about the message markup, but the markup s
     <#local type = "generic">
   </#if>
   <#-- TODO: lookup default class based on type -->
-  <#local defaultClass = styles["commonmsg_" + type]!styles["commonmsg_default"]>
+  <#local defaultClass = styles["commonmsg_" + type?replace("-", "_")]!styles["commonmsg_default"]>
   <#local class = addClassArgDefault(class, defaultClass)>
   <@commonMsg_markup type=type class=class id=id origArgs=origArgs passArgs=passArgs><#nested></@commonMsg_markup>
 </#macro>

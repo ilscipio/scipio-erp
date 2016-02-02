@@ -57,7 +57,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.MarketingSegmentGroupMgrViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.MarketingSegmentGroupMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -109,7 +109,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.MarketingViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.MarketingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -178,7 +178,7 @@ under the License.
                                 <include-form name="listSegmentGroupClass" location="component://marketing/widget/SegmentForms.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.MarketingSegmentGroupMgrViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.MarketingSegmentGroupMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -221,7 +221,7 @@ under the License.
                                 <include-form name="listSegmentGroupGeo" location="component://marketing/widget/SegmentForms.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.MarketingSegmentGroupMgrViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.MarketingSegmentGroupMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -264,7 +264,7 @@ under the License.
                                 <include-form name="listSegmentGroupRole" location="component://marketing/widget/SegmentForms.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.MarketingSegmentGroupMgrViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.MarketingSegmentGroupMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

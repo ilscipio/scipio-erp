@@ -56,7 +56,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ProductSubscriptionViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductSubscriptionViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -108,7 +108,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ProductSubscriptionViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductSubscriptionViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -192,7 +192,7 @@ under the License.
                                 <include-form name="ListSubscriptionResources" location="component://product/widget/catalog/SubscriptionForms.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ProductSubscriptionViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductSubscriptionViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -240,7 +240,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ProductSubscriptionResourceViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductSubscriptionResourceViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

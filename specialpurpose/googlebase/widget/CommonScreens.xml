@@ -76,7 +76,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.GoogleBaseViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.GoogleBaseViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -132,7 +132,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

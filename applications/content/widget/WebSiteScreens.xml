@@ -42,7 +42,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

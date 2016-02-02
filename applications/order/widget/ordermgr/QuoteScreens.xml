@@ -565,7 +565,7 @@ under the License.
                 </screenlet>
             </widgets>
             <fail-widgets>
-                <label style="error-msg">${uiLabelMap.OrderNoQuoteFound}</label>
+                <label style="common-msg-error">${uiLabelMap.OrderNoQuoteFound}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -831,7 +831,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="perm-error-msg">${uiLabelMap.OrderViewPermissionError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.OrderViewPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -860,7 +860,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="perm-error-msg">${uiLabelMap.OrderViewPermissionError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.OrderViewPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>

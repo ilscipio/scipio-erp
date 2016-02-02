@@ -40,7 +40,7 @@ under the License.
                             </widgets>
                             <!--
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.XxxxViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.XxxxViewPermissionError}</label>
                             </fail-widgets>
                             -->
                         </section>
@@ -71,7 +71,7 @@ under the License.
                             </widgets>
                             <!--
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.XxxxViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.XxxxViewPermissionError}</label>
                             </fail-widgets>
                             -->
                         </section>

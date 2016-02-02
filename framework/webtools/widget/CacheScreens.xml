@@ -47,7 +47,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.WebtoolsPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -80,7 +80,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.WebtoolsPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -111,7 +111,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.WebtoolsPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

@@ -170,7 +170,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ScrumViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ScrumViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

@@ -449,7 +449,7 @@ under the License.
                             </screenlet>
                         </widgets>
                         <fail-widgets>
-                            <label style="perm-error-msg">${uiLabelMap.AccountingPrintChecksPermissionError}</label>
+                            <label style="common-msg-error-perm">${uiLabelMap.AccountingPrintChecksPermissionError}</label>
                         </fail-widgets>
                       </section>
                     </decorator-section>
@@ -496,7 +496,7 @@ under the License.
                             </screenlet>
                         </widgets>
                         <fail-widgets>
-                            <label style="perm-error-msg">${uiLabelMap.AccountingUpdatePaymentPermissionError}</label>
+                            <label style="common-msg-error-perm">${uiLabelMap.AccountingUpdatePaymentPermissionError}</label>
                         </fail-widgets>
                       </section>
                     </decorator-section>

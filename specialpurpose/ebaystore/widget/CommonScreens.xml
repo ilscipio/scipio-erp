@@ -99,7 +99,7 @@
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.EbayViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.EbayViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -134,7 +134,7 @@
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg" text="${uiLabelMap.EbayViewPermissionError}"/>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.EbayViewPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

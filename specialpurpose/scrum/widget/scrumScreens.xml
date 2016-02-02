@@ -97,7 +97,7 @@ under the License.
                         </widgets>
                         <fail-widgets>
                                 <screenlet>
-                                    <label style="perm-error-msg">You[${userLogin.partyId}] are have not permission to perform this action</label>
+                                    <label style="common-msg-error-perm">You[${userLogin.partyId}] are have not permission to perform this action</label>
                                 </screenlet>
                             </fail-widgets>
                         </section>
@@ -295,7 +295,7 @@ under the License.
                                 </link>
                             </container>
                             <screenlet>
-                                <label style="perm-error-msg">You[${userLogin.partyId}] are have not permission to perform this action</label>
+                                <label style="common-msg-error-perm">You[${userLogin.partyId}] are have not permission to perform this action</label>
                             </screenlet>
                         </fail-widgets>
                     </section>
@@ -1856,7 +1856,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ScrumBillingViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ScrumBillingViewPermissionError}</label>
                             </fail-widgets>
                          </section>
                     </decorator-section>
@@ -2265,7 +2265,7 @@ under the License.
                         </widgets>
                         <fail-widgets>
                                 <screenlet>
-                                    <label style="perm-error-msg">You[${userLogin.partyId}] are have not permission to perform this action</label>
+                                    <label style="common-msg-error-perm">You[${userLogin.partyId}] are have not permission to perform this action</label>
                                 </screenlet>
                             </fail-widgets>
                         </section>
@@ -2704,7 +2704,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="perm-error-msg">${uiLabelMap.ScrumBillingViewPermissionError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.ScrumBillingViewPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -2954,7 +2954,7 @@ under the License.
                         </widgets>
                         <fail-widgets>
                                 <screenlet>
-                                    <label style="perm-error-msg">You[${userLogin.partyId}] are have not permission to perform this action</label>
+                                    <label style="common-msg-error-perm">You[${userLogin.partyId}] are have not permission to perform this action</label>
                                 </screenlet>
                             </fail-widgets>
                         </section>

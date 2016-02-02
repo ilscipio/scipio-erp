@@ -81,7 +81,7 @@ under the License.
                                 <include-screen name="ViewQuoteTemplate" location="component://order/widget/ordermgr/QuoteScreens.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="error-msg">${uiLabelMap.OrderNoQuoteFound}</label>
+                                <label style="common-msg-error">${uiLabelMap.OrderNoQuoteFound}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

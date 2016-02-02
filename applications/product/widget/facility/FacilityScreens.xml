@@ -72,7 +72,7 @@ under the License.
                                                 </section>
                                             </widgets>
                                             <fail-widgets>
-                                                <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                                             </fail-widgets>
                                         </section>
                                     </widgets>
@@ -123,7 +123,7 @@ under the License.
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -191,7 +191,7 @@ under the License.
                                         </section>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                        <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                                     </fail-widgets>
                                 </section>
                             </decorator-section>
@@ -209,7 +209,7 @@ under the License.
                                         <platform-specific><html><html-template location="component://product/webapp/facility/facility/EditFacility.ftl"/></html></platform-specific>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                                        <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
                                     </fail-widgets>
                                 </section>
                             </decorator-section>

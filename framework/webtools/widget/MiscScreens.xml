@@ -105,7 +105,7 @@ under the License.
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.WebtoolsViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -190,18 +190,27 @@ under the License.
                     <label style="heading+4:+myheadingclass" text="Heading+4 (adding class)"/>
                 </screenlet>
                 <screenlet title="Specific markup labels">
+                    <label style="generic" text="Generic markup"/>
+                    <label text="Default markup"/> <!-- Cato: NOTE: at time of writing this defaults to "p" -->
                     <label style="p" text="Paragraph"/>
                     <label style="span" text="Span"/>
                     <label style="div" text="Div"/>
+                    <label style="myclass" text="Generic markup (with extra class)"/>
+                    <label style="+myclass" text="Generic markup (with extra class)"/>
+                    <label style="generic:myclass" text="Generic markup (with extra class)"/>
+                    <label style="generic:+myclass" text="Generic markup (with extra class)"/>
                     <label style="p:myclass" text="Paragraph (with extra class)"/>
-                    <label style="span:myclass" text="Span (with extra class)"/>
-                    <label style="div:myclass" text="Div (with extra class)"/>
+                    <label style="span:+myclass" text="Span (with extra class)"/>
+                    <label style="div:+myclass" text="Div (with extra class)"/>
                 </screenlet>
                 <screenlet title="Common message labels">
-                    <label style="result-msg" text="Result message"/>
-                    <label style="error-msg" text="Error message"/>
+                    <label style="common-msg-result" text="Result message"/>
+                    <label style="common-msg-error" text="Error message"/>
+                    <label style="common-msg-error-perm" text="Permission error message"/>
+                    <label style="common-msg-error-security" text="Security error message"/>
                     <label style="common-msg-custom" text="Custom common message"/>
-                    <label style="message" text="Legacy message (non-common)"/>
+                    <label style="common-msg-error:+myclass" text="Error message (with extra class)"/>
+                    <label style="common-msg-error:myclass" text="Error message (with extra class that replaces default)"/>
                 </screenlet>
             </widgets>
         </section>

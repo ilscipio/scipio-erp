@@ -41,7 +41,7 @@
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.AccountingViewPermissionError}
+                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}
                                 </label>
                             </fail-widgets>
                         </section>

@@ -119,7 +119,7 @@ under the License.
 
             </widgets>
             <fail-widgets>
-                <label style="error-msg" text="${uiLabelMap.OrderNoOrderFound}: [${orderId}]"></label>
+                <label style="common-msg-error" text="${uiLabelMap.OrderNoOrderFound}: [${orderId}]"></label>
             </fail-widgets>
         </section>
     </screen>
@@ -326,7 +326,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="perm-error-msg">${uiLabelMap.OrderViewPermissionError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.OrderViewPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -594,7 +594,7 @@ under the License.
                         </platform-specific>
                     </widgets>
                     <fail-widgets>
-                        <label style="perm-error-msg" text="${uiLabelMap.OrderViewPermissionError}"/>
+                        <label style="common-msg-error-perm" text="${uiLabelMap.OrderViewPermissionError}"/>
                     </fail-widgets>
                 </section>
             </widgets>
@@ -618,7 +618,7 @@ under the License.
                         </screenlet>
                     </widgets>
                     <fail-widgets>
-                        <label style="perm-error-msg" text="${uiLabelMap.OrderViewPermissionError}"/>
+                        <label style="common-msg-error-perm" text="${uiLabelMap.OrderViewPermissionError}"/>
                     </fail-widgets>
                 </section>
             </widgets>

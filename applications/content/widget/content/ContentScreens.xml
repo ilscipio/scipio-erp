@@ -63,7 +63,7 @@ under the License.
             <fail-widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="perm-error-msg">${uiLabelMap.ContentUpdatePermissionError}</label>
+                        <label style="common-msg-error-perm">${uiLabelMap.ContentUpdatePermissionError}</label>
                     </decorator-section>
                 </decorator-screen>
             </fail-widgets>
@@ -387,7 +387,7 @@ under the License.
                                 </screenlet>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

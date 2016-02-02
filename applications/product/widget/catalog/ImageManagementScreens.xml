@@ -122,7 +122,7 @@ under the License.
                             <widgets>
                                 <decorator-screen name="ImageManagementDecorator" location="${parameters.mainDecoratorLocation}">
                                     <decorator-section name="body">
-                                        <label style="error-msg" text="${uiLabelMap.ProductNoExistingProductsFound}"/>
+                                        <label style="common-msg-error" text="${uiLabelMap.ProductNoExistingProductsFound}"/>
                                     </decorator-section>
                                 </decorator-screen>
                             </widgets>
@@ -440,7 +440,7 @@ under the License.
                                         </screenlet>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="error-msg" text="${uiLabelMap.ProductNoExistingProductsFound}"/>
+                                        <label style="common-msg-error" text="${uiLabelMap.ProductNoExistingProductsFound}"/>
                                     </fail-widgets>
                                 </section>
                             </widgets>
@@ -714,7 +714,7 @@ under the License.
                                         </screenlet>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="error-msg" text="${uiLabelMap.ProductNoExistingProductsFound}"/>
+                                        <label style="common-msg-error" text="${uiLabelMap.ProductNoExistingProductsFound}"/>
                                     </fail-widgets>
                                 </section>
                             </widgets>

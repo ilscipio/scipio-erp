@@ -44,7 +44,7 @@ under the License.
                                 <include-form location="component://party/widget/partymgr/PartyContactListForms.xml" name="ListPartyContactLists"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>

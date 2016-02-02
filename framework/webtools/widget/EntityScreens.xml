@@ -221,7 +221,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="perm-error-msg">${uiLabelMap.WebtoolsPermissionError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -246,7 +246,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="perm-error-msg">${uiLabelMap.WebtoolsPermissionError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -271,7 +271,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="perm-error-msg">${uiLabelMap.WebtoolsPermissionError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -297,7 +297,7 @@ under the License.
                 </section>
             </widgets>
             <fail-widgets>
-                <label style="perm-error-msg">${uiLabelMap.WebtoolsPermissionError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -325,7 +325,7 @@ under the License.
                 </section>
             </widgets>
             <fail-widgets>
-                <label style="perm-error-msg">${uiLabelMap.WebtoolsPermissionError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -351,7 +351,7 @@ under the License.
                 </section>
             </widgets>
             <fail-widgets>
-                <label style="perm-error-msg">${uiLabelMap.WebtoolsPermissionError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>
@@ -436,7 +436,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="perm-error-msg">${uiLabelMap.WebtoolsPermissionMaint}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsPermissionMaint}</label>
             </fail-widgets>
         </section>
     </screen>

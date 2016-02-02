@@ -77,7 +77,7 @@ under the License.
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.AccountingViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                         <decorator-section-include name="body"/>
@@ -113,7 +113,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.AccountingViewPermissionError}
+                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}
                                 </label>
                             </fail-widgets>
                         </section>

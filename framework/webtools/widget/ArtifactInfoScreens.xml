@@ -38,7 +38,7 @@ under the License.
                 </decorator-screen>
             </widgets>
             <fail-widgets>
-                <label style="perm-error-msg">${uiLabelMap.WebtoolsCannotViewArtifactInfoPages}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.WebtoolsCannotViewArtifactInfoPages}</label>
             </fail-widgets>
         </section>
     </screen>

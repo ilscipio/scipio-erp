@@ -73,7 +73,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ScrumViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ScrumViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -104,7 +104,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">You do not have permission to view this page. ("SCRUM_VIEW" or "SCRUM_ADMIN" needed)</label>
+                                <label style="common-msg-error-perm">You do not have permission to view this page. ("SCRUM_VIEW" or "SCRUM_ADMIN" needed)</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -149,7 +149,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ScrumViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ScrumViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -214,7 +214,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">No access! need either SCUM_ADMIN/_VIEW or SCUM_PRODUCT_ADMIN/VIEW</label>
+                                <label style="common-msg-error-perm">No access! need either SCUM_ADMIN/_VIEW or SCUM_PRODUCT_ADMIN/VIEW</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -285,7 +285,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">No access! need either SCUM_ADMIN/_VIEW or SCUM_PRODUCT_ADMIN/VIEW</label>
+                                <label style="common-msg-error-perm">No access! need either SCUM_ADMIN/_VIEW or SCUM_PRODUCT_ADMIN/VIEW</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -355,7 +355,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">No access! need either SCUM_ADMIN/_VIEW or SCUM_PRODUCT_ADMIN/VIEW</label>
+                                <label style="common-msg-error-perm">No access! need either SCUM_ADMIN/_VIEW or SCUM_PRODUCT_ADMIN/VIEW</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -427,7 +427,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.PartyMgrViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.PartyMgrViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -469,7 +469,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ScrumViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ScrumViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -493,7 +493,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ScrumViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ScrumViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -520,7 +520,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ScrumViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ScrumViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -529,7 +529,7 @@ under the License.
             <fail-widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="perm-error-msg">You do not have permission to view this screen.</label>
+                        <label style="common-msg-error-perm">You do not have permission to view this screen.</label>
                     </decorator-section>
                 </decorator-screen>
             </fail-widgets>
@@ -580,7 +580,7 @@ under the License.
                                 <if-service-permission service-name="scrumPermissionCheck" main-action="CREATE" resource-description="MEMBER"/>
                             </condition>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ScrumViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ScrumViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                         <decorator-section-include name="body"/>

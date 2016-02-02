@@ -48,7 +48,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ContentViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ContentViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -216,7 +216,7 @@ under the License.
                         </decorator-screen>
                     </widgets>
                     <fail-widgets>
-                        <label style="perm-error-msg" text="${uiLabelMap.EditBlogArticlePermissionError}: ${contentId} ${uiLabelMap.ContentBlog} ${blogContentId}"></label>
+                        <label style="common-msg-error-perm" text="${uiLabelMap.EditBlogArticlePermissionError}: ${contentId} ${uiLabelMap.ContentBlog} ${blogContentId}"></label>
                     </fail-widgets>
                 </section>
             </widgets>

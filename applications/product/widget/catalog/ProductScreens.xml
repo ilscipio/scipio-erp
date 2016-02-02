@@ -105,7 +105,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.ProductCatalogViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.ProductCatalogViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -137,7 +137,7 @@ under the License.
                                 </decorator-screen>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.AccountingViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.AccountingViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -1353,7 +1353,7 @@ under the License.
                             <include-form name="ListBestProduct" location="component://product/widget/catalog/ProductForms.xml"/>
                         </widgets>
                         <fail-widgets>
-                            <label style="result-msg" text="${uiLabelMap.ProductNoProductFound}."></label>
+                            <label style="common-msg-result" text="${uiLabelMap.ProductNoProductFound}."></label>
                         </fail-widgets>
                     </section>
                 </screenlet>

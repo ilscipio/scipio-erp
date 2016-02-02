@@ -156,7 +156,7 @@ under the License.
                 </section>
             </widgets>
             <fail-widgets>
-                <label style="perm-error-msg">${uiLabelMap.ProductFacilityViewPermissionError}</label>
+                <label style="common-msg-error-perm">${uiLabelMap.ProductFacilityViewPermissionError}</label>
             </fail-widgets>
         </section>
     </screen>

@@ -93,12 +93,12 @@ under the License.
                                         <decorator-section-include name="body"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="error-msg">${uiLabelMap.ProductErrorFacilityIdNotFound}</label>
+                                        <label style="common-msg-error">${uiLabelMap.ProductErrorFacilityIdNotFound}</label>
                                     </fail-widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg">${uiLabelMap.AssetMaintViewPermissionError}</label>
+                                <label style="common-msg-error-perm">${uiLabelMap.AssetMaintViewPermissionError}</label>
                             </fail-widgets>
                         </section>
                     </decorator-section>
@@ -147,7 +147,7 @@ under the License.
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
-                                <label style="perm-error-msg" text="${uiLabelMap.AccountingViewPermissionError}"/>
+                                <label style="common-msg-error-perm" text="${uiLabelMap.AccountingViewPermissionError}"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

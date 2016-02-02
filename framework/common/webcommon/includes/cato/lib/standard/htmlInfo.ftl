@@ -177,9 +177,10 @@ A template should not assume too much about the message markup, but the markup s
   <#if type == "result">
     <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#nested></p>
   <#elseif type == "error" || type?starts_with("error-")>
-    <@alert type="error" class=class id=id><#nested></@alert>
+    <#-- NOTE: here we must resolve class arg before passing to @alert and make additive only -->
+    <@alert type="error" class=("+"+compileClassArg(class)) id=id><#nested></@alert>
   <#elseif type == "fail">
-    <@alert type="error" class=class id=id><#nested></@alert>
+    <@alert type="error" class=("+"+compileClassArg(class)) id=id><#nested></@alert>
   <#else>
     <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#nested></p>
   </#if>

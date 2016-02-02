@@ -76,7 +76,7 @@ under the License.
                             <@td>&nbsp;${(inventoryItem.datetimeReceived)!}</@td>
                             <@td>&nbsp;${(inventoryItem.expireDate)!}</@td>
                             <#if inventoryItem.facilityId?? && inventoryItem.containerId??>
-                                <@td style="color: red;">${uiLabelMap.ProductErrorFacility} (${inventoryItem.facilityId})
+                                <@td class="+${styles.text_color_alert!}">${uiLabelMap.ProductErrorFacility} (${inventoryItem.facilityId})
                                     ${uiLabelMap.ProductAndContainer} (${inventoryItem.containerId}) ${uiLabelMap.CommonSpecified}</@td>
                             <#elseif inventoryItem.facilityId??>
                                 <@td>${uiLabelMap.ProductFacilityLetter}:&nbsp;<a href="/facility/control/EditFacility?facilityId=${inventoryItem.facilityId}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_id!}">${inventoryItem.facilityId}</a></@td>
@@ -104,7 +104,7 @@ under the License.
                             <#elseif inventoryItem.inventoryItemTypeId! == "SERIALIZED_INV_ITEM">
                                 <@td align="right">&nbsp;${(inventoryItem.serialNumber)!}</@td>
                             <#else>
-                                <@td align="right" style="color: red;">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)!} ${uiLabelMap.ProductUnknownSerialNumber} (${(inventoryItem.serialNumber)!})
+                                <@td align="right" class="+${styles.text_color_alert!}">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)!} ${uiLabelMap.ProductUnknownSerialNumber} (${(inventoryItem.serialNumber)!})
                                     ${uiLabelMap.ProductAndQuantityOnHand} (${(inventoryItem.quantityOnHandTotal)!} ${uiLabelMap.CommonSpecified}</@td>
                             </#if>
                         </@tr>

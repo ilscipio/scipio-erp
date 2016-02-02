@@ -217,10 +217,10 @@ function lookupBom() {
       <@tr>
         <@td><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_nav_info_id!}">${(assocFromProduct.productIdTo)!}</a></@td>
         <@td><#if listToProduct??><a href="<@ofbizUrl>EditProductBom?productId=${(assocFromProduct.productIdTo)!}&amp;productAssocTypeId=${(assocFromProduct.productAssocTypeId)!}#components</@ofbizUrl>" class="${styles.link_nav_info_name!}">${(listToProduct.internalName)!}</a></#if>&nbsp;</@td>
-        <#assign class><#if (assocFromProduct.getTimestamp("fromDate"))?? && nowDate.before(assocFromProduct.getTimestamp("fromDate"))>alert</#if></#assign>
+        <#assign class><#if (assocFromProduct.getTimestamp("fromDate"))?? && nowDate.before(assocFromProduct.getTimestamp("fromDate"))>alert-elem</#if></#assign>
         <@td class=class>
         ${(assocFromProduct.fromDate)!}&nbsp;</@td>
-        <#assign class><#if (assocFromProduct.getTimestamp("thruDate"))?? && nowDate.after(assocFromProduct.getTimestamp("thruDate"))>alert</#if></#assign>
+        <#assign class><#if (assocFromProduct.getTimestamp("thruDate"))?? && nowDate.after(assocFromProduct.getTimestamp("thruDate"))>alert-elem</#if></#assign>
         <@td class=class>
         ${(assocFromProduct.thruDate)!}&nbsp;</@td>
         <@td>&nbsp;${(assocFromProduct.sequenceNum)!}</@td>
@@ -270,7 +270,7 @@ function lookupBom() {
         </#list>
       </@tbody>
     </@table>
-      <p>${uiLabelMap.CommonNote}: <b class="alert">${uiLabelMap.CommonRed}</b> ${uiLabelMap.ManufacturingNote1} <b style="color: red;">${uiLabelMap.CommonRed}</b>${uiLabelMap.ManufacturingNote2} <b style="color: red;">${uiLabelMap.CommonRed}</b>${uiLabelMap.ManufacturingNote3}<p>
+      <p>${uiLabelMap.CommonNote}: <b class="alert-elem">${uiLabelMap.CommonRed}</b> ${uiLabelMap.ManufacturingNote1} <b class="${styles.text_color_alert!}">${uiLabelMap.CommonRed}</b>${uiLabelMap.ManufacturingNote2} <b class="${styles.text_color_alert!}">${uiLabelMap.CommonRed}</b>${uiLabelMap.ManufacturingNote3}<p>
     <#else>
       <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
     </#if>

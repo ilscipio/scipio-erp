@@ -511,10 +511,10 @@ ${virtualJavaScript!}
         <#-- check to see if introductionDate hasnt passed yet -->
         <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
         <p>&nbsp;</p>
-          <div style="color: red;">${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
+          <div class="${styles.text_color_alert!}">${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
         <#-- check to see if salesDiscontinuationDate has passed -->
         <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)>
-          <div style="color: red;">${uiLabelMap.ProductProductNoLongerAvailable}.</div>
+          <div class="${styles.text_color_alert!}">${uiLabelMap.ProductProductNoLongerAvailable}.</div>
         <#-- check to see if the product requires inventory check and has inventory -->
         <#elseif product.virtualVariantMethodEnum! != "VV_FEATURETREE">
           <#if inStock>

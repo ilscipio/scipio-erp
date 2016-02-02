@@ -38,24 +38,24 @@ under the License.
     </#if>
     <#if orderHeader??>
         <#if orderHeader.orderTypeId == "SALES_ORDER" && shipment.shipmentTypeId! != "SALES_SHIPMENT">
-            <@heading style="color: red;">${uiLabelMap.ProductWarningOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}, ${uiLabelMap.ProductNotSalesShipment}.</@heading>
+            <@heading class="+${styles.text_color_alert!}">${uiLabelMap.ProductWarningOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}, ${uiLabelMap.ProductNotSalesShipment}.</@heading>
         <#elseif orderHeader.orderTypeId == "PURCHASE_ORDER" && shipment.shipmentTypeId! != "PURCHASE_SHIPMENT" && shipment.shipmentTypeId! != "DROP_SHIPMENT">
-            <@heading style="color: red;">${uiLabelMap.ProductWarningOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}, ${uiLabelMap.ProductNotPurchaseShipment}.</@heading>
+            <@heading class="+${styles.text_color_alert!}">${uiLabelMap.ProductWarningOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}, ${uiLabelMap.ProductNotPurchaseShipment}.</@heading>
         <#else>
             <@heading>${uiLabelMap.ProductNoteOrderType} ${(orderType.get("description",locale))?default(orderHeader.orderTypeId!)}.</@heading>
             <@heading>${uiLabelMap.ProductShipmentType}: ${shipment.shipmentTypeId!}.</@heading>
         </#if>
         <#if shipment.shipmentTypeId! == "SALES_SHIPMENT">
-            <@heading>${uiLabelMap.ProductOriginFacilityIs}: <#if originFacility??>${originFacility.facilityName!} [${originFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></@heading>
+            <@heading>${uiLabelMap.ProductOriginFacilityIs}: <#if originFacility??>${originFacility.facilityName!} [${originFacility.facilityId}]<#else><span class="${styles.text_color_alert!}">${uiLabelMap.ProductNotSet}</span></#if></@heading>
         <#elseif shipment.shipmentTypeId! == "PURCHASE_SHIPMENT">
-            <@heading>${uiLabelMap.ProductDestinationFacilityIs}: <#if destinationFacility??>${destinationFacility.facilityName!} [${destinationFacility.facilityId}]<#else><span style="color: red;">${uiLabelMap.ProductNotSet}</span></#if></@heading>
+            <@heading>${uiLabelMap.ProductDestinationFacilityIs}: <#if destinationFacility??>${destinationFacility.facilityName!} [${destinationFacility.facilityId}]<#else><span class="${styles.text_color_alert!}">${uiLabelMap.ProductNotSet}</span></#if></@heading>
         </#if>
         <#if "ORDER_APPROVED" == orderHeader.statusId || "ORDER_BACKORDERED" == orderHeader.statusId>
             <@heading>${uiLabelMap.ProductNoteOrderStatus} ${(orderHeaderStatus.get("description",locale))?default(orderHeader.statusId!)}.</@heading>
         <#elseif "ORDER_COMPLETED" == orderHeader.statusId>
             <@heading>${uiLabelMap.ProductNoteOrderStatus} ${(orderHeaderStatus.get("description",locale))?default(orderHeader.statusId!)}, ${uiLabelMap.ProductNoItemsLeft}.</@heading>
         <#else>
-            <@heading style="color: red;">${uiLabelMap.ProductWarningOrderStatus} ${(orderHeaderStatus.get("description",locale))?default(orderHeader.statusId!)}; ${uiLabelMap.ProductApprovedBeforeShipping}.</@heading>
+            <@heading class="+${styles.text_color_alert!}">${uiLabelMap.ProductWarningOrderStatus} ${(orderHeaderStatus.get("description",locale))?default(orderHeader.statusId!)}; ${uiLabelMap.ProductApprovedBeforeShipping}.</@heading>
         </#if>
     </#if>
 
@@ -112,7 +112,7 @@ under the License.
                     <@td>
                             <#if isSalesOrder>
                                 <#if (totalQuantityIssuedAndReserved != orderItemAndShipGroupAssoc.quantity)>
-                                <span style="color: red;">
+                                <span class="${styles.text_color_alert!}">
                                 <#else>
                                 <span>
                                 </#if>
@@ -124,7 +124,7 @@ under the License.
                                 </span>
                             <#else>
                                 <#if (totalQuantityIssued > orderItemAndShipGroupAssoc.quantity)>
-                                <span style="color: red;">
+                                <span class="${styles.text_color_alert!}">
                                 <#else>
                                 <span>
                                 </#if>
@@ -176,9 +176,9 @@ under the License.
                             <@td>
                                     ${orderItemShipGrpInvRes.inventoryItemId}
                                     <#if inventoryItem.facilityId?has_content>
-                                        <span<#if originFacility?? && originFacility.facilityId != inventoryItem.facilityId> style="color: red;"</#if>>[${(inventoryItemFacility.facilityName)?default(inventoryItem.facilityId)}]</span>
+                                        <span<#if originFacility?? && originFacility.facilityId != inventoryItem.facilityId> class="${styles.text_color_alert!}"</#if>>[${(inventoryItemFacility.facilityName)?default(inventoryItem.facilityId)}]</span>
                                     <#else>
-                                        <span style="color: red;">[${uiLabelMap.ProductNoFacility}]</span>
+                                        <span class="${styles.text_color_alert!}">[${uiLabelMap.ProductNoFacility}]</span>
                                     </#if>
                             </@td>
                             <@td>&nbsp;</@td>

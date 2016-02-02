@@ -62,8 +62,8 @@ under the License.
                          <a href="<@ofbizUrl>EditProduct?productId=${(productCategoryMember.productId)!}</@ofbizUrl>"><img alt="Small Image" src="<@ofbizContentUrl>${product.smallImageUrl}</@ofbizContentUrl>" class="cssImgSmall" align="middle" /></a>
                       </#if>
                     </@td>
-                    <#assign colorStyle><#if hasntStarted> style="color: red;"</#if></#assign>
-                    <@td style=colorStyle>${(productCategoryMember.fromDate?date?string.short)!}</@td>
+                    <#assign cellClass><#if hasntStarted>+${styles.text_color_alert!}</#if></#assign>
+                    <@td class=cellClass>${(productCategoryMember.fromDate?date?string.short)!}</@td>
                     <@td align="center">
                         <input type="hidden" name="productId${suffix}" value="${(productCategoryMember.productId)!}" />
                         <input type="hidden" name="productCategoryId${suffix}" value="${(productCategoryMember.productCategoryId)!}" />

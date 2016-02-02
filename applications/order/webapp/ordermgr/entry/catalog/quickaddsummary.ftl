@@ -49,10 +49,10 @@ under the License.
   <span class="qty">
     <#-- check to see if introductionDate hasn't passed yet -->
     <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
-      <div style="color: red;">${uiLabelMap.ProductNotYetAvailable}</div>
+      <div class="${styles.text_color_alert!}">${uiLabelMap.ProductNotYetAvailable}</div>
     <#-- check to see if salesDiscontinuationDate has passed -->
     <#elseif product.salesDiscontinuationDate?? && nowTimestamp.before(product.salesDiscontinuationDate)>
-      <div style="color: red;">${uiLabelMap.ProductNoLongerAvailable}</div>
+      <div class="${styles.text_color_alert!}">${uiLabelMap.ProductNoLongerAvailable}</div>
     <#-- check to see if the product is a virtual product -->
     <#elseif product.isVirtual?default("N") == "Y">
       <div>

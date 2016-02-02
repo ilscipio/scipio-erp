@@ -38,11 +38,11 @@ under the License.
             <@tr valign="middle">
                 <@td><a href="<@ofbizUrl>EditProduct?productId=${(assocFromProduct.productIdTo)!}</@ofbizUrl>" class="${styles.link_nav_info_idname!}">${(listToProduct.internalName)!} [${(assocFromProduct.productIdTo)!}]</a></@td>
                 <@td><#if curProductAssocType??> ${(curProductAssocType.get("description",locale))!}<#else>${(assocFromProduct.productAssocTypeId)!}</#if></@td>
-                <#assign colorStyle><#if (assocFromProduct.getTimestamp("fromDate"))?? && nowDate.before(assocFromProduct.getTimestamp("fromDate"))> style="color: red;"</#if></#assign>
-                <@td style=colorStyle>
+                <#assign cellClass><#if (assocFromProduct.getTimestamp("fromDate"))?? && nowDate.before(assocFromProduct.getTimestamp("fromDate"))>+${styles.text_color_alert!}</#if></#assign>
+                <@td class=cellClass>
                 ${(assocFromProduct.fromDate?date?string.short!)!}&nbsp;</@td>
-                <#assign colorStyle><#if (assocFromProduct.getTimestamp("thruDate"))?? && nowDate.after(assocFromProduct.getTimestamp("thruDate"))> style="color: red;"</#if></#assign>
-                <@td style=colorStyle>
+                <#assign cellClass><#if (assocFromProduct.getTimestamp("thruDate"))?? && nowDate.after(assocFromProduct.getTimestamp("thruDate"))>+${styles.text_color_alert!}</#if></#assign>
+                <@td class=cellClass>
                 ${(assocFromProduct.thruDate?date?string.short!)!}&nbsp;</@td>
                 <@td class="amount">&nbsp;${(assocFromProduct.sequenceNum)!}</@td>
                 <@td class="amount">&nbsp;${(assocFromProduct.quantity)!}</@td>

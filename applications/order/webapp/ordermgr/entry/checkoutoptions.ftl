@@ -108,7 +108,7 @@ function submitForm(form, mode, value) {
                       <@td colspan="2" align="center">
                         <a href="<@ofbizUrl>splitship</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.OrderSplitIntoMultipleShipments}</a>
                         <#if (shoppingCart.getShipGroupSize() > 1)>
-                          <div style="color: red;">${uiLabelMap.OrderNOTEMultipleShipmentsExist}.</div>
+                          <div class="${styles.text_color_alert!}">${uiLabelMap.OrderNOTEMultipleShipmentsExist}.</div>
                         </#if>
                       </@td>
                     </@tr>

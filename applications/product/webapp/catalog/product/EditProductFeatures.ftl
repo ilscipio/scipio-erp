@@ -60,8 +60,8 @@ under the License.
               [${(productFeatureAndAppl.productFeatureCategoryId)!}]</a></@td>
     <#assign hasntStarted = false>
     <#if (productFeatureAndAppl.getTimestamp("fromDate"))?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().before(productFeatureAndAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
-          <#assign colorStyle><#if hasntStarted>color: red;</#if></#assign>
-          <@td style=colorStyle>${(productFeatureAndAppl.fromDate)!}</@td>
+          <#assign cellClass><#if hasntStarted>+${styles.text_color_alert!}</#if></#assign>
+          <@td class=cellClass>${(productFeatureAndAppl.fromDate)!}</@td>
           <@td>
     <#assign hasExpired = false>
     <#if (productFeatureAndAppl.getTimestamp("thruDate"))?? && Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().after(productFeatureAndAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>

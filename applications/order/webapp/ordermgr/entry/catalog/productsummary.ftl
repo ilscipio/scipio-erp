@@ -93,10 +93,10 @@ ${virtualJavaScript!}
         <div class="productbuy">
           <#-- check to see if introductionDate hasn't passed yet -->
           <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
-            <div style="color: red;">${uiLabelMap.ProductNotYetAvailable}</div>
+            <div class="${styles.text_color_alert!}">${uiLabelMap.ProductNotYetAvailable}</div>
           <#-- check to see if salesDiscontinuationDate has passed -->
           <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)>
-            <div style="color: red;">${uiLabelMap.ProductNoLongerAvailable}</div>
+            <div class="${styles.text_color_alert!}">${uiLabelMap.ProductNoLongerAvailable}</div>
           <#-- check to see if it is a rental item; will enter parameters on the detail screen-->
           <#elseif product.productTypeId! == "ASSET_USAGE">
             <a href="${productUrl}" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.OrderMakeBooking}...</a>

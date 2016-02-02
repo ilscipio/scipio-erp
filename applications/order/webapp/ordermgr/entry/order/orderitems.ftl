@@ -115,7 +115,7 @@ under the License.
             </#list>
            </#list>
            <#if !orderItems?has_content>
-             <@tr><@td colspan=maySelectItems?default(false)?string("6", "5")><span style="color:red;">${uiLabelMap.checkhelpertotalsdonotmatchordertotal}</span></@td></@tr>
+             <@tr><@td colspan=maySelectItems?default(false)?string("6", "5")><span class="${styles.text_color_alert!}">${uiLabelMap.checkhelpertotalsdonotmatchordertotal}</span></@td></@tr>
            </#if>
 
           <@tr>

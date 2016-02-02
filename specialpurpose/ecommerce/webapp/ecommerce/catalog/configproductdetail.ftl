@@ -315,10 +315,10 @@ function getConfigDetails(event) {
         <#-- check to see if introductionDate hasn't passed yet -->
         <#if product.introductionDate?? && nowTimestamp.before(product.introductionDate)>
           <p>&nbsp;</p>
-          <div class="tabletext" style="color: red;">${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
+          <div class="tabletext" class="${styles.text_color_alert!}">${uiLabelMap.ProductProductNotYetMadeAvailable}.</div>
         <#-- check to see if salesDiscontinuationDate has passed -->
         <#elseif product.salesDiscontinuationDate?? && nowTimestamp.after(product.salesDiscontinuationDate)>
-          <div class="tabletext" style="color: red;">${uiLabelMap.ProductProductNoLongerAvailable}.</div>
+          <div class="tabletext" class="${styles.text_color_alert!}">${uiLabelMap.ProductProductNoLongerAvailable}.</div>
         <#-- check to see if the product requires inventory check and has inventory -->
         <#else>
           <#if inStock>

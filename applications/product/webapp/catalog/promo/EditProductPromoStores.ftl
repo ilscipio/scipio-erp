@@ -36,8 +36,8 @@ under the License.
                     <@td><a href="<@ofbizUrl>EditProductStore?productStoreId=${productStorePromoAppl.productStoreId}</@ofbizUrl>" class="${styles.link_nav_info_idname!}"><#if productStore??>${(productStore.storeName)!}</#if>[${productStorePromoAppl.productStoreId}]</a></@td>
                     <#assign hasntStarted = false>
                     <#if (productStorePromoAppl.getTimestamp("fromDate"))?? && nowTimestamp.before(productStorePromoAppl.getTimestamp("fromDate"))> <#assign hasntStarted = true></#if>
-                    <#assign colorStyle><#if hasntStarted>style="color: red;"</#if></#assign>
-                    <@td style=colorStyle>${productStorePromoAppl.fromDate!}</@td>
+                    <#assign cellClass><#if hasntStarted>+${styles.text_color_alert!}</#if></#assign>
+                    <@td class=cellClass>${productStorePromoAppl.fromDate!}</@td>
                     <@td align="center">
                         <#assign hasExpired = false>
                         <#if (productStorePromoAppl.getTimestamp("thruDate"))?? && nowTimestamp.after(productStorePromoAppl.getTimestamp("thruDate"))> <#assign hasExpired = true></#if>

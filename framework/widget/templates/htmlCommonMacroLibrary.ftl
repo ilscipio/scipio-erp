@@ -38,30 +38,43 @@ Cato: Common HTML macro library code
             class=class id=id consumeLevel=translateStyleStrBoolArg(headingArgs.consumeLevel!"")!""
             containerElemType=translateStyleStrClassesArg(headingArgs.containerElemType!"")!false
             containerClass=translateStyleStrClassesArg(headingArgs.containerElemClass!"")!"">${text}</@heading>
-      <#elseif elemType=="container">
-        <div${idText}<#if class?is_string && class?has_content> class="${class}"</#if>>${text}</div>
-      <#elseif elemType=="p">
-        <p${idText}<#if class?is_string && class?has_content> class="${class}"</#if>>${text}</p>
-      <#elseif elemType=="span">
-        <span${idText}<#if class?is_string && class?has_content> class="${class}"</#if>>${text}</span>
-      <#-- specific permission error class -->
-      <#elseif elemType=="perm-error-msg">
-        <@commonMsg type="error-permission" class=class id=id>${text}</@commonMsg>
-      <#-- more general security error class -->
-      <#elseif elemType=="security-error-msg">
-        <@commonMsg type="error-security" class=class id=id>${text}</@commonMsg>
-      <#elseif elemType=="fail-msg">
-        <@commonMsg type="fail" class=class id=id>${text}</@commonMsg>
-      <#-- general error class -->
-      <#elseif elemType=="error-msg">
-        <@commonMsg type="error" class=class id=id>${text}</@commonMsg>
-      <#-- result message class: sometimes messages like "no product found" are not an error but expected possible result -->
-      <#elseif elemType=="result-msg">
-        <@commonMsg type="result" class=class id=id>${text}</@commonMsg>
-      <#elseif elemType=="message">
-        <@alert type="info" class=class id=id>${text}</@alert>
       <#else>
-        <span${idText} class="${style}">${text}</span>
+          <#-- Cato: Because we didn't specify allowedElemTypes, class may contain the elemType in some cases (when no ":", which is most cases). Make sure to remove. -->
+          <#if !class?is_boolean && class?has_content>
+            <#local class = removeStyleNames(class, elemType)>
+          </#if>
+      
+          <#if elemType=="container">
+            <div${idText}<#if !class?is_boolean && class?has_content> class="${class}"</#if>>${text}</div>
+          <#elseif elemType=="div">
+            <div${idText}<#if !class?is_boolean && class?has_content> class="${class}"</#if>>${text}</div>
+          <#elseif elemType=="p">
+            <p${idText}<#if !class?is_boolean && class?has_content> class="${class}"</#if>>${text}</p>
+          <#elseif elemType=="span">
+            <span${idText}<#if !class?is_boolean && class?has_content> class="${class}"</#if>>${text}</span>
+          <#-- specific permission error class -->
+          <#elseif elemType=="perm-error-msg">
+            <@commonMsg type="error-permission" class=("+"+class) id=id>${text}</@commonMsg>
+          <#-- more general security error class -->
+          <#elseif elemType=="security-error-msg">
+            <@commonMsg type="error-security" class=("+"+class) id=id>${text}</@commonMsg>
+          <#elseif elemType=="fail-msg">
+            <@commonMsg type="fail" class=("+"+class) id=id>${text}</@commonMsg>
+          <#-- general error class -->
+          <#elseif elemType=="error-msg">
+            <@commonMsg type="error" class=("+"+class) id=id>${text}</@commonMsg>
+          <#-- result message class: sometimes messages like "no product found" are not an error but expected possible result -->
+          <#elseif elemType=="result-msg">
+            <@commonMsg type="result" class=("+"+class) id=id>${text}</@commonMsg>
+          <#elseif elemType?starts_with("common-msg-")>
+            <@commonMsg type=elemType["common-msg-"?length..] class=("+"+class) id=id>${text}</@commonMsg>
+          <#elseif elemType=="message">
+            <#-- Cato: legacy message style (DEPRECATED) -->
+            <@alert type="info" class=class id=id>${text}</@alert>
+          <#else>
+            <#-- Cato: default markup and stock Ofbiz case -->
+            <span${idText} class="${style}">${text}</span>
+          </#if>
       </#if>
     <#else>
       <span${idText}>${text}</span>

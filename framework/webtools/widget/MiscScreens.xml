@@ -172,7 +172,7 @@ under the License.
                     <screenlet title="Complex title style 2 (override title elem)" title-style="container:mycontainerclass;container:+mytitleclass"></screenlet>
                     <screenlet title="Complex title style 3 (no classes)" title-style="container;span"></screenlet>
                 </screenlet>
-                <screenlet title="Labels">
+                <screenlet title="Heading labels">
                     <label style="container:mycontainerclass;heading:myheadingclass" text="Complex title style"/>
                     <label style="heading:myheadingclass" text="Complex title style 3"/>
                     <label style="div:mycontainerclass;h" text="Complex title style 4"/>
@@ -188,6 +188,20 @@ under the License.
                     <label style="heading+3" text="Heading+3"/>
                     <label style="heading+4:myheadingclass" text="Heading+4 (replacing class)"/>
                     <label style="heading+4:+myheadingclass" text="Heading+4 (adding class)"/>
+                </screenlet>
+                <screenlet title="Specific markup labels">
+                    <label style="p" text="Paragraph"/>
+                    <label style="span" text="Span"/>
+                    <label style="div" text="Div"/>
+                    <label style="p:myclass" text="Paragraph (with extra class)"/>
+                    <label style="span:myclass" text="Span (with extra class)"/>
+                    <label style="div:myclass" text="Div (with extra class)"/>
+                </screenlet>
+                <screenlet title="Common message labels">
+                    <label style="result-msg" text="Result message"/>
+                    <label style="error-msg" text="Error message"/>
+                    <label style="common-msg-custom" text="Custom common message"/>
+                    <label style="message" text="Legacy message (non-common)"/>
                 </screenlet>
             </widgets>
         </section>

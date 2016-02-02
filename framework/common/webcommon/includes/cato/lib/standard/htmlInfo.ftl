@@ -143,8 +143,9 @@ A template should not assume too much about the message markup, but the markup s
     <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>            
                     
   * Parameters *
-    type        = [generic|result|fail|error|error-permission|error-security], default generic - the type of message contained.
+    type        = [default|generic|result|fail|error|error-permission|error-security], default default - the type of message contained.
                   Basic types:
+                    default: default. in standard Cato markup, same as generic.
                     generic: no type specified (avoid using - prefer more specific)
                   Types recognizes by Cato standard markup (theme-defined types are possible):
                     result: an informational result from a query of some kind. e.g., "no records found".
@@ -152,7 +153,7 @@ A template should not assume too much about the message markup, but the markup s
                     fail: a non-fatal error
                     error, error-*: an error message - typically an unexpected event or fatal error that should not happen in normal use.
     id          = id
-    class       = classes or additional classes for nested container
+    class       = classes or additional classes for message container (innermost containing element)
                   (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
 <#assign commonMsg_defaultArgs = {
@@ -166,19 +167,21 @@ A template should not assume too much about the message markup, but the markup s
     <#local type = "generic">
   </#if>
   <#-- TODO: lookup default class based on type -->
+  <#local defaultClass = styles["commonmsg_" + type]!styles["commonmsg_default"]>
+  <#local class = addClassArgDefault(class, defaultClass)>
   <@commonMsg_markup type=type class=class id=id origArgs=origArgs passArgs=passArgs><#nested></@commonMsg_markup>
 </#macro>
 
 <#-- @commonMsg main markup - theme override -->
 <#macro commonMsg_markup type="" class="" id="" origArgs={} passArgs={} catchArgs...>
   <#if type == "result">
-    <p<@compiledClassAttribStr class=class defaultVal="result-msg" /><#if id?has_content> id="${id}"</#if>><#nested></p>
+    <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#nested></p>
   <#elseif type == "error" || type?starts_with("error-")>
     <@alert type="error" class=class id=id><#nested></@alert>
   <#elseif type == "fail">
     <@alert type="error" class=class id=id><#nested></@alert>
   <#else>
-    <p<@compiledClassAttribStr class=class defaultVal="common-msg" /><#if id?has_content> id="${id}"</#if>><#nested></p>
+    <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#nested></p>
   </#if>
 </#macro>
 

@@ -89,7 +89,7 @@ under the License.
           <#if !(shipmentPackages?has_content)>
             <@section>
             <#if packedLines?has_content>
-              <@table type="data-list" cellpadding="2" cellspacing="0"> <#-- orig: class="basic-table" -->
+              <@table type="data-complex" cellpadding="2" cellspacing="0"> <#-- orig: class="basic-table" -->
                 <@thead>
                 <@tr>
                   <@th>
@@ -101,10 +101,13 @@ under the License.
                   <@th>
                     ${uiLabelMap.ProductPackageInputBox}:
                   </@th>
+                  <@th>&nbsp;</@th>
+                  <@th>&nbsp;</@th>
                 </@tr>
                 </@thead>
                 <@tbody>
                 <#list packedLines as packedLine>
+                  <#-- Cato: FIXME: form in table (invalid html) -->
                   <form name="updateWeightPackageForm_${packedLine.getWeightPackageSeqId()}" method="post" action="<@ofbizUrl>updatePackedLine</@ofbizUrl>">
                     <input type="hidden" name="orderId" value="${orderId!}"/>
                     <input type="hidden" name="facilityId" value="${(facility.facilityId)!}"/>
@@ -142,9 +145,9 @@ under the License.
                 </#list>
                 </@tbody>
               </@table>
-              <div align="right">
+              <@field type="submitarea">
                 <a href="javascript:document.completePackageForm.submit()" class="${styles.link_run_sys!} ${styles.action_complete!}">${uiLabelMap.ProductComplete}</a>
-              </div>
+              </@field>
               <form name="completePackageForm" method="post" action="<@ofbizUrl>completePackage</@ofbizUrl>">
                 <input type="hidden" name="orderId" value="${orderId!}"/>
                 <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
@@ -158,7 +161,6 @@ under the License.
               </form>
             </#if>
             <#if (orderedQuantity > packedLines.size())>
-            <@table type="fields" cellpadding="2" cellspacing="0"> <#-- orig: class="basic-table" -->
               <form name="weightPackageForm" method="post" action="<@ofbizUrl>setPackageInfo</@ofbizUrl>">
                 <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
                 <input type="hidden" name="facilityId" value="${(facility.facilityId)!}"/>
@@ -167,6 +169,8 @@ under the License.
                 <#if packedLines?has_content>
                   <hr/>
                 </#if>
+            <#-- Cato: NOTE/FIXME?: this table is meant to align with the previous table... maybe should be part of it... -->
+            <@table type="data-complex" cellpadding="2" cellspacing="0"> <#-- orig: class="basic-table" -->
                 <@tr>
                   <@td>${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
                       <br />
@@ -193,14 +197,15 @@ under the License.
                     </select>
                   </@td>
                   <@td align="right"><a href="javascript:document.weightPackageForm.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductNextPackage}</a></@td>
+                  <@td align="right">&nbsp;</@td>
                 </@tr>
-              </form>
             </@table>
+              </form>
             </#if>
             </@section>
           <#else>
             <@section>
-            <@table type="data-list" cellpadding="2" cellspacing="0">  <#-- orig: class="basic-table" -->
+            <@table type="data-complex" cellpadding="2" cellspacing="0">  <#-- orig: class="basic-table" -->
              <@thead>
              <@tr>
                 <@th>
@@ -243,9 +248,9 @@ under the License.
               </form>
               </@tbody>
             </@table>
-            <div align="right">
+            <@field type="submitarea">
               <a href="javascript:document.completePackForm.submit()" class="${styles.link_run_sys!} ${styles.action_complete!}">${uiLabelMap.ProductComplete}</a>
-            </div>
+            </@field>
             </@section>
           </#if>
         </#if>

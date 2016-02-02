@@ -482,5 +482,5 @@ document.lookuporder.orderId.focus();
 </#if>
 
 <#else>
-  <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
+  <@errorMsg>${uiLabelMap.OrderViewPermissionError}</@errorMsg>
 </#if>

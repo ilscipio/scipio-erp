@@ -39,7 +39,7 @@ function insertImageName(size,nameValue) {
 </#if>
 
 <#if !(configItem??)>
-    <@alert type="error">${uiLabelMap.ProductCouldNotFindProductConfigItem} "${configItemId}".</@alert>
+    <@errorMsg>${uiLabelMap.ProductCouldNotFindProductConfigItem} "${configItemId}".</@errorMsg>
 <#else>
     <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
       <@thead>

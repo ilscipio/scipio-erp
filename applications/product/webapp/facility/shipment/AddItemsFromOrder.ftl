@@ -34,7 +34,7 @@ under the License.
 
 <@section title="${uiLabelMap.ProductAddItemsShipment}: [${shipmentId!}]; ${uiLabelMap.ProductFromAnOrder}: [${orderId!}], ${uiLabelMap.ProductOrderShipGroupId}: [${shipGroupSeqId!}]">
     <#if orderId?has_content && !orderHeader??>
-        <@alert type="error"><#assign uiLabelWithVar=uiLabelMap.ProductErrorOrderIdNotFound?interpret><@uiLabelWithVar/>.</@alert>
+        <@errorMsg><#assign uiLabelWithVar=uiLabelMap.ProductErrorOrderIdNotFound?interpret><@uiLabelWithVar/>.</@errorMsg>
     </#if>
     <#if orderHeader??>
         <#if orderHeader.orderTypeId == "SALES_ORDER" && shipment.shipmentTypeId! != "SALES_SHIPMENT">
@@ -214,7 +214,7 @@ under the License.
 </@section>
 
 <#else>
-<@section>
-        <@alert type="error">${uiLabelMap.ProductShipmentNotFoundId}: [${shipmentId!}]</@alert>
-</@section>
+  <@section>
+    <@errorMsg>${uiLabelMap.ProductShipmentNotFoundId}: [${shipmentId!}]</@errorMsg>
+  </@section>
 </#if>

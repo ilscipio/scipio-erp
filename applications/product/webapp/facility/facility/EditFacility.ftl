@@ -23,7 +23,7 @@ under the License.
 <#else>
   <form action="<@ofbizUrl>CreateFacility</@ofbizUrl>" name="EditFacilityForm" method="post" class="basic-form">
   <#if facilityId??>
-    <@alert type="error">${uiLabelMap.ProductCouldNotFindFacilityWithId} "${facilityId!}".</@alert>
+    <@errorMsg>${uiLabelMap.ProductCouldNotFindFacilityWithId} "${facilityId!}".</@errorMsg>
   </#if>
 </#if>
 

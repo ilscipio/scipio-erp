@@ -123,7 +123,7 @@ function ShowTab(lname) {
                     </#list>
                   </#if>
                 <#else>
-                  <@alert type="error">${uiLabelMap.WebtoolsEntityCretePermissionError} ${entityName} ${plainTableName}</@alert>
+                  <@errorMsg>${uiLabelMap.WebtoolsEntityCretePermissionError} ${entityName} ${plainTableName}</@errorMsg>
                   <#assign showFields = false>
                 </#if>
               <#else>
@@ -163,7 +163,7 @@ function ShowTab(lname) {
                     </#list>
                   </#if>
                 <#else>
-                  <@tr type="meta"><@td><@alert type="error">${uiLabelMap.WebtoolsEntityCretePermissionError} ${entityName} ${plainTableName}</@alert></@td></@tr>
+                  <@tr type="meta"><@td><@errorMsg>${uiLabelMap.WebtoolsEntityCretePermissionError} ${entityName} ${plainTableName}</@errorMsg></@td></@tr>
                   <#assign showFields = false>
                 </#if>
               </#if>
@@ -239,7 +239,7 @@ function ShowTab(lname) {
                   </#list>
                 </@table>
               <#else>
-                <@alert type="error">${uiLabelMap.WebtoolsSpecifiedEntity1} ${entityName} ${uiLabelMap.WebtoolsSpecifiedEntity2}.</@alert>
+                <@errorMsg>${uiLabelMap.WebtoolsSpecifiedEntity1} ${entityName} ${uiLabelMap.WebtoolsSpecifiedEntity2}.</@errorMsg>
               </#if>
             </@cell>
         </@row>

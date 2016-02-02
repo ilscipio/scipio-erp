@@ -230,7 +230,7 @@ under the License.
         </#if>
     </#if>
 <#elseif parameters.shipmentId?has_content>
-  <@alert type="error">${uiLabelMap.ProductShipmentNotFoundId}: [${shipmentId!}]</@alert>
+  <@errorMsg>${uiLabelMap.ProductShipmentNotFoundId}: [${shipmentId!}]</@errorMsg>
 </#if>
 
 </@section>

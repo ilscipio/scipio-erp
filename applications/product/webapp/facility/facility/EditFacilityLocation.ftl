@@ -39,7 +39,7 @@ under the License.
     <input type="hidden" name="facilityId" value="${facilityId!}" />
     <input type="hidden" name="locationSeqId" value="${locationSeqId}" />
 <#else>
-    <@alert type="error">${uiLabelMap.ProductNotCreateLocationFacilityId}</@alert>
+    <@errorMsg>${uiLabelMap.ProductNotCreateLocationFacilityId}</@errorMsg>
 </#if>
 
 <#if facilityId?? || facilityLocation??>

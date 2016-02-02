@@ -65,7 +65,7 @@ under the License.
     </#if>
   </span>
 <#else>
-  <@alert type="error">${uiLabelMap.ProductErrorProductNotFound}.</@alert>
+  <@errorMsg>${uiLabelMap.ProductErrorProductNotFound}.</@errorMsg>
 </#if>
 
 

@@ -222,5 +222,5 @@ under the License.
       </@paginate>
   </@section>
 <#else>
-  <@alert type="error">${uiLabelMap.OrderViewPermissionError}</@alert>
+  <@errorMsg>${uiLabelMap.OrderViewPermissionError}</@errorMsg>
 </#if>

@@ -144,5 +144,5 @@ under the License.
 </#if>
 
 <#else>
-  <@alert type="error">You do not have permission to view this page. ("PAYSETUP_VIEW" or "PAYSETUP_ADMIN" needed)</@alert>
+  <@errorMsg>You do not have permission to view this page. ("PAYSETUP_VIEW" or "PAYSETUP_ADMIN" needed)</@errorMsg>
 </#if>

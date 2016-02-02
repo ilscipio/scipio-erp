@@ -102,6 +102,6 @@ under the License.
         </@table>
     </div>
   <#else>
-    <@alert type="error">${uiLabelMap.ProductProductNotFound} ${productId!}!</@alert>
+    <@errorMsg>${uiLabelMap.ProductProductNotFound} ${productId!}!</@errorMsg>
   </#if>
 </@section>

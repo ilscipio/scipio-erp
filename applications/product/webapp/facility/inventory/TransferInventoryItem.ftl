@@ -84,7 +84,7 @@ under the License.
                 <#elseif inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("SERIALIZED_INV_ITEM")>
                     ${(inventoryItem.serialNumber)!}
                 <#elseif inventoryItem??>
-                    <@alert type="error">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)!} ${uiLabelMap.ProductUnknownSpecifyType}.</@alert>
+                    <@errorMsg>${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)!} ${uiLabelMap.ProductUnknownSpecifyType}.</@errorMsg>
                 </#if>
             </@field>
 

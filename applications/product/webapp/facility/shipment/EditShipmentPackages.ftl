@@ -186,7 +186,7 @@ under the License.
         </@table>
 </@section>
 <#else>
-<@section>
-        <@alert type="error">${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId!}]</@alert>
-</@section>
+  <@section>
+    <@errorMsg>${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId!}]</@errorMsg>
+  </@section>
 </#if>

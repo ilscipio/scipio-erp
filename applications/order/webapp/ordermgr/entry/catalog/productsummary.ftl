@@ -227,5 +227,5 @@ ${virtualJavaScript!}
         </div>
     </div>
 <#else>
-  <@alert type="error">${uiLabelMap.ProductErrorProductNotFound}.</@alert>
+  <@errorMsg>${uiLabelMap.ProductErrorProductNotFound}.</@errorMsg>
 </#if>

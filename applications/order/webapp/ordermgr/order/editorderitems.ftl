@@ -40,7 +40,7 @@ under the License.
   <@section title="${uiLabelMap.OrderOrderItems}" menuContent=menuContent>
 
         <#if !orderItemList?has_content>
-            <@alert type="error">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</@alert>
+            <@errorMsg>${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</@errorMsg>
         </#if>
         
         <#-- CATO: FIXME: this whole template is full of forms inside table elems = invalid HTML -->

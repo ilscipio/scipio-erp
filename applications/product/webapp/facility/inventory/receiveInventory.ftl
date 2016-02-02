@@ -27,7 +27,7 @@ under the License.
 </#macro>
 <@section menuContent=menuContent>
         <#if invalidProductId??>
-            <@alert type="error">${invalidProductId}</@alert>
+            <@errorMsg>${invalidProductId}</@errorMsg>
         </#if>
 
         <#-- Receiving Results -->
@@ -209,50 +209,32 @@ under the License.
             <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId!}"/>
             <input type="hidden" name="initialSelected" value="Y"/>
             <input type="hidden" name="partialReceive" value="${partialReceive!}"/>
-            <@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
+            <@table type="data-complex">
               <#list shipments! as shipment>
                 <#assign originFacility = shipment.getRelatedOne("OriginFacility", true)!/>
                 <#assign destinationFacility = shipment.getRelatedOne("DestinationFacility", true)!/>
                 <#assign statusItem = shipment.getRelatedOne("StatusItem", true)/>
                 <#assign shipmentType = shipment.getRelatedOne("ShipmentType", true)/>
                 <#assign shipmentDate = shipment.estimatedArrivalDate!/>
-                <@tr type="util">
-                  <@td><hr /></@td>
-                </@tr>
                 <@tr>
-                  <@td>
-                    <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
-                      <@tr>
-                        <@td width="5%" nowrap="nowrap"><input type="radio" name="shipmentId" value="${shipment.shipmentId}" /></@td>
-                        <@td width="5%" nowrap="nowrap">${shipment.shipmentId}</@td>
-                        <@td>${shipmentType.get("description",locale)?default(shipmentType.shipmentTypeId?default(""))}</@td>
-                        <@td>${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</@td>
-                        <@td>${(originFacility.facilityName)!} [${shipment.originFacilityId!}]</@td>
-                        <@td>${(destinationFacility.facilityName)!} [${shipment.destinationFacilityId!}]</@td>
-                        <@td style="white-space: nowrap;">${(shipment.estimatedArrivalDate.toString())!}</@td>
-                      </@tr>
-                    </@table>
-                  </@td>
+                  <@td width="5%" nowrap="nowrap"><input type="radio" name="shipmentId" value="${shipment.shipmentId}" /></@td>
+                  <@td width="5%" nowrap="nowrap">${shipment.shipmentId}</@td>
+                  <@td>${shipmentType.get("description",locale)?default(shipmentType.shipmentTypeId?default(""))}</@td>
+                  <@td>${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</@td>
+                  <@td>${(originFacility.facilityName)!} [${shipment.originFacilityId!}]</@td>
+                  <@td>${(destinationFacility.facilityName)!} [${shipment.destinationFacilityId!}]</@td>
+                  <@td style="white-space: nowrap;">${(shipment.estimatedArrivalDate.toString())!}</@td>
                 </@tr>
               </#list>
-              <@tr type="util">
-                <@td><hr /></@td>
-              </@tr>
-              <@tr>
-                <@td>
-                  <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
-                    <@tr>
-                      <@td width="5%" nowrap="nowrap"><input type="radio" name="shipmentId" value="_NA_" /></@td>
-                      <@td width="5%" nowrap="nowrap">${uiLabelMap.ProductNoSpecificShipment}</@td>
-                      <@td colspan="5"></@td>
-                    </@tr>
-                  </@table>
-                </@td>
-              </@tr>
-              <@tr>
-                <@td>&nbsp;<a href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.ProductReceiveSelectedShipment}</a></@td>
-              </@tr>
+                <@tr>
+                  <@td width="5%" nowrap="nowrap"><input type="radio" name="shipmentId" value="_NA_" /></@td>
+                  <@td width="5%" nowrap="nowrap">${uiLabelMap.ProductNoSpecificShipment}</@td>
+                  <@td colspan="5"></@td>
+                </@tr>
             </@table>
+              <@field type="submitarea">
+                <a href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.ProductReceiveSelectedShipment}</a>
+              </@field>
           </form>
           </@section>
         <#-- Multi-Item PO Receiving -->
@@ -265,9 +247,9 @@ under the License.
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
             <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId!}"/>
             <input type="hidden" name="initialSelected" value="Y"/>
-            <#if shipment?has_content>
+          <#if shipment?has_content>
             <input type="hidden" name="shipmentIdReceived" value="${shipment.shipmentId}"/>
-            </#if>
+          </#if>
             <input type="hidden" name="_useRowSubmit" value="Y"/>
             <#assign rowCount = 0/>
           <#if !purchaseOrderItems?? || purchaseOrderItems.size() == 0>

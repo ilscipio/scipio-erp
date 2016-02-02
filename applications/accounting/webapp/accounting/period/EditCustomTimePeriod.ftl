@@ -286,6 +286,6 @@ under the License.
             </form>
         </@section>
     <#else>
-    <@alert type="error">${uiLabelMap.AccountingPermissionPeriod}.</@alert>
+      <@errorMsg>${uiLabelMap.AccountingPermissionPeriod}.</@errorMsg>
     </#if>
 </@section>

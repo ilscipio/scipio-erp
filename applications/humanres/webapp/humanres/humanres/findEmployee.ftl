@@ -121,7 +121,7 @@ under the License.
   <#if partyList??>
     <@section id="findEmployeeResults" title="${uiLabelMap.PartyPartiesFound}">
     <#if lookupErrorMessage??>
-        <@alert type="error">${lookupErrorMessage}</@alert>
+        <@errorMsg>${lookupErrorMessage}</@errorMsg>
     </#if>
     <#if partyList?has_content>
       <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"hideFields": parameters.hideFields!"N"}, "&amp;", false)>

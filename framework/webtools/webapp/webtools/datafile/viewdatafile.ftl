@@ -148,5 +148,5 @@ under the License.
         <@displayrecords records = dataFile.getRecords()/>
       </#if>
     <#else>
-      <@alert type="error">You do not have permission to use this page (DATAFILE_MAINT needed)</@alert>
+      <@errorMsg>You do not have permission to use this page (DATAFILE_MAINT needed)</@errorMsg>
     </#if>

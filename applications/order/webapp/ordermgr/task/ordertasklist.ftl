@@ -270,5 +270,5 @@ under the License.
         </@table>
   </@section>
 <#else>
-  <@alert type="error">You do not have permission to view this page. (ORDERMGR_VIEW or ORDERMGR_ADMIN needed)</@alert>
+  <@errorMsg>You do not have permission to view this page. (ORDERMGR_VIEW or ORDERMGR_ADMIN needed)</@errorMsg>
 </#if>

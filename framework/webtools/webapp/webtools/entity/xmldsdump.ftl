@@ -26,7 +26,7 @@ under the License.
     <@menuitem type="link" href=makeOfbizUrl("xmldsrawdump") target="_blank" text="Click Here to Get Data (or save to file)" class="+${styles.action_run_sys!} ${styles.action_export!}" />
   </@menu>
 <#else>
-  <@alert type="error">You do not have permission to use this page (ENTITY_MAINT needed)</@alert>
+  <@errorMsg>You do not have permission to use this page (ENTITY_MAINT needed)</@errorMsg>
 </#if>
 <#else>
 <#macro displayButtonBar>
@@ -103,6 +103,7 @@ under the License.
     </form>
 
 <#else>
-    <@alert type="error">${uiLabelMap.WebtoolsPermissionMaint}</@alert>
+    <@errorMsg>${uiLabelMap.WebtoolsPermissionMaint}</@errorMsg>
 </#if>
+
 </#if>

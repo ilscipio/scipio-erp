@@ -26,7 +26,7 @@ under the License.
         else
             var ajaxUrl = '<@ofbizUrl>categoryAjaxFiredSecure</@ofbizUrl>';
             
-        //jQuerry Ajax Request
+        //jQuery Ajax Request
         jQuery.ajax({
             url: ajaxUrl,
             type: 'POST',
@@ -41,7 +41,7 @@ under the License.
      }
 </@script>
 
-<#-- Cato: TODO: convert to @paginate, but this has special AJAX functionality -->
+<#-- Cato: TODO?: convert to @paginate, but this has special AJAX (NOTE: maybe leave as-is...) -->
 <#macro paginationControls>
     <#assign viewIndexMax = Static["java.lang.Math"].ceil((listSize)?double / viewSize?double)>
       <#if (viewIndexMax?int > 0)>

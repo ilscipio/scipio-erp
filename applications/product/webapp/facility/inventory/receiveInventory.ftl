@@ -27,7 +27,7 @@ under the License.
 </#macro>
 <@section menuContent=menuContent>
         <#if invalidProductId??>
-            <@errorMsg>${invalidProductId}</@errorMsg>
+            <@commonMsg type="error">${invalidProductId}</@commonMsg>
         </#if>
 
         <#-- Receiving Results -->
@@ -253,7 +253,7 @@ under the License.
             <input type="hidden" name="_useRowSubmit" value="Y"/>
             <#assign rowCount = 0/>
           <#if !purchaseOrderItems?? || purchaseOrderItems.size() == 0>
-            <@resultMsg>${uiLabelMap.ProductNoItemsPoReceive}.</@resultMsg>
+            <@commonMsg type="result">${uiLabelMap.ProductNoItemsPoReceive}.</@commonMsg>
           <#else>
             <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
                 <@tr>

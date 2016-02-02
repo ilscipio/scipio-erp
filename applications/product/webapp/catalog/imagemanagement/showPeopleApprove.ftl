@@ -79,6 +79,6 @@ jQuery(document).ready(function(){
             <a href="<@ofbizUrl>ListPeopleRejected</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_find!}">Rejected</a>
         </#if>
 <#else>
-  <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+  <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>
 </#if>
 

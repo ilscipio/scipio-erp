@@ -106,12 +106,12 @@ function uploadTrackingCode(orderId, productStoreId) {
           </#list>
         <#else>
           <@tr type="meta">
-            <@td colspan='4'><@resultMsg>${uiLabelMap.EbayNoOrderImported}.</@resultMsg></@td>
+            <@td colspan='4'><@commonMsg type="result">${uiLabelMap.EbayNoOrderImported}.</@commonMsg></@td>
           </@tr>
         </#if>
         <#if lookupErrorMessage??>
           <@tr type="meta">
-            <@td colspan='4'><@resultMsg>${lookupErrorMessage}</@resultMsg></@td>
+            <@td colspan='4'><@commonMsg type="result">${lookupErrorMessage}</@commonMsg></@td>
           </@tr>
         </#if>
       </@table>

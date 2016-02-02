@@ -439,6 +439,6 @@ under the License.
   </@section>
 <#else>
   <@section>
-    <@errorMsg>${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId!}]</@errorMsg>
+    <@commonMsg type="error">${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId!}]</@commonMsg>
   </@section>
 </#if>

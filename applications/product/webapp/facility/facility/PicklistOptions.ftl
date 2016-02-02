@@ -243,7 +243,7 @@ under the License.
         </#if>
     </@table>
   <#else>
-    <@resultMsg>${uiLabelMap.ProductNoOrdersFoundReadyToPickOrNeedStockMoves}.</@resultMsg>
+    <@commonMsg type="result">${uiLabelMap.ProductNoOrdersFoundReadyToPickOrNeedStockMoves}.</@commonMsg>
   </#if>
 </@section>
 

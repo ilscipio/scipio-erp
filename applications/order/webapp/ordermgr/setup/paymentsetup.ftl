@@ -69,7 +69,7 @@ under the License.
             </@tbody>
           </@table>
         <#else>
-            <@resultMsg>No settings found.</@resultMsg>
+            <@commonMsg type="result">No settings found.</@commonMsg>
         </#if>
     </@section>
 
@@ -144,5 +144,5 @@ under the License.
 </#if>
 
 <#else>
-  <@errorMsg>You do not have permission to view this page. ("PAYSETUP_VIEW" or "PAYSETUP_ADMIN" needed)</@errorMsg>
+  <@commonMsg type="error">You do not have permission to view this page. ("PAYSETUP_VIEW" or "PAYSETUP_ADMIN" needed)</@commonMsg>
 </#if>

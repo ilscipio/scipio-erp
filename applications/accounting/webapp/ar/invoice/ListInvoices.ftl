@@ -188,5 +188,5 @@ under the License.
     </@table>
   </form>
 <#else>
-  <@resultMsg>${uiLabelMap.AccountingNoInvoicesFound}.</@resultMsg>
+  <@commonMsg type="result">${uiLabelMap.AccountingNoInvoicesFound}.</@commonMsg>
 </#if>

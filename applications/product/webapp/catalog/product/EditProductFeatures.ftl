@@ -106,7 +106,7 @@ under the License.
     </form>
   </#list>
   <#else>
-    <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+    <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>
   </#if>
 </@section>
 

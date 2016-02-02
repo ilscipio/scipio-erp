@@ -180,6 +180,6 @@ under the License.
         </@tbody>
         </@table>
       <#else>
-        <@resultMsg>${uiLabelMap.PartyNoPaymentMethodInformation}</@resultMsg>
+        <@commonMsg type="result">${uiLabelMap.PartyNoPaymentMethodInformation}</@commonMsg>
       </#if>
   </@section>

@@ -99,5 +99,5 @@ under the License.
   </#list>
 </@table>
 <#else>
-  <@errorMsg>${uiLabelMap.WorkEffortFailedCalendarEntries}!</@errorMsg>
+  <@commonMsg type="error">${uiLabelMap.WorkEffortFailedCalendarEntries}!</@commonMsg>
 </#if>

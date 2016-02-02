@@ -52,7 +52,7 @@ under the License.
               <@td>&nbsp;</@td>
             </@tr>
             <@tr type="meta">
-              <@td align="center"><@resultMsg>${uiLabelMap.WebPosNoPartyInformation}</@resultMsg></@td>
+              <@td align="center"><@commonMsg type="result">${uiLabelMap.WebPosNoPartyInformation}</@commonMsg></@td>
             </@tr>
           </#if>
           </@table>
@@ -85,7 +85,7 @@ under the License.
               <@td>&nbsp;</@td>
             </@tr>
             <@tr type="meta">
-              <@td align="center"><@resultMsg>${uiLabelMap.WebPosNoPartyInformation}</@resultMsg></@td>
+              <@td align="center"><@commonMsg type="result">${uiLabelMap.WebPosNoPartyInformation}</@commonMsg></@td>
             </@tr>
           </#if>
           </@table>

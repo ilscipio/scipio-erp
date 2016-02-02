@@ -22,10 +22,10 @@
             </#list>
         </@chart>
     <#elseif chartType == "pie">
-        <@errorMsg>${uiLabelMap.CommonUnsupported}</@errorMsg>
+        <@commonMsg type="error">${uiLabelMap.CommonUnsupported}</@commonMsg>
     <#else>
-        <@errorMsg>${uiLabelMap.CommonUnsupported}</@errorMsg>
+        <@commonMsg type="error">${uiLabelMap.CommonUnsupported}</@commonMsg>
     </#if>
 <#else>
-    <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>            
+    <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>            
 </#if>

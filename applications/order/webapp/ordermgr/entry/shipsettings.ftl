@@ -303,5 +303,5 @@ under the License.
     </@section> 
  </@section>
 <#else>
- <@errorMsg>${uiLabelMap.OrderViewPermissionError}</@errorMsg>
+ <@commonMsg type="error">${uiLabelMap.OrderViewPermissionError}</@commonMsg>
 </#if>

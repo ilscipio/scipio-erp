@@ -309,7 +309,7 @@ under the License.
     </@paginate>
     
   <#else>
-    <@resultMsg>${uiLabelMap.PartyNoPartiesFound}</@resultMsg>
+    <@commonMsg type="result">${uiLabelMap.PartyNoPartiesFound}</@commonMsg>
   </#if>
   
       </@cell>

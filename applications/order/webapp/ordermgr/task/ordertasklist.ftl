@@ -263,12 +263,12 @@ under the License.
                   </@table>
                 </#if>
                 <#if !tasksFound>
-                  <@resultMsg>${uiLabelMap.CommonNoTaskAssigned}</@resultMsg>
+                  <@commonMsg type="result">${uiLabelMap.CommonNoTaskAssigned}</@commonMsg>
                 </#if>
               </@td>
             </@tr>
         </@table>
   </@section>
 <#else>
-  <@errorMsg>You do not have permission to view this page. (ORDERMGR_VIEW or ORDERMGR_ADMIN needed)</@errorMsg>
+  <@commonMsg type="error">You do not have permission to view this page. (ORDERMGR_VIEW or ORDERMGR_ADMIN needed)</@commonMsg>
 </#if>

@@ -67,6 +67,6 @@ under the License.
         </@cell>
       </@row>
     <#else>
-      <@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg>
+      <@commonMsg type="result">${uiLabelMap.OrderNoOrderFound}.</@commonMsg>
     </#if>
   </@section>

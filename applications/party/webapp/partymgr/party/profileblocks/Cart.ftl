@@ -53,7 +53,7 @@ under the License.
             </@tbody>
           </@table>
         <#else>
-          <@resultMsg>${uiLabelMap.PartyNoShoppingCartSavedForParty}</@resultMsg>
+          <@commonMsg type="result">${uiLabelMap.PartyNoShoppingCartSavedForParty}</@commonMsg>
         </#if>
     </@section>
   </#if>

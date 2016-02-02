@@ -33,7 +33,7 @@ under the License.
                 <#if !orderItemList?has_content>
                     <@tr type="meta">
                         <@td colspan="6">
-                            <@errorMsg>${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</@errorMsg>
+                            <@commonMsg type="error">${uiLabelMap.checkhelper_sales_order_lines_lookup_failed}</@commonMsg>
                         </@td>
                     </@tr>
                 <#else>

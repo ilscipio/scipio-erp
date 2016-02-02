@@ -29,7 +29,7 @@ under the License.
           <@section>
           <p>${uiLabelMap.ProductReceiptForReturn} ${uiLabelMap.CommonNbr}<a href="/ordermgr/control/returnMain?returnId=${returnHeader.returnId}${externalKeyParam!}" class="${styles.link_nav_info_id!}">${returnHeader.returnId}</a></p>
           <#if "RETURN_RECEIVED" == returnHeader.getString("statusId")>
-            <@resultMsg>${uiLabelMap.ProductReturnCompletelyReceived}</@resultMsg>
+            <@commonMsg type="result">${uiLabelMap.ProductReturnCompletelyReceived}</@commonMsg>
           </#if>
          
           <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
@@ -70,7 +70,7 @@ under the License.
             <#assign now = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()>
             <#assign rowCount = 0>
           <#if !returnItems?? || returnItems?size == 0>
-            <@resultMsg>${uiLabelMap.ProductNoItemsToReceive}</@resultMsg>
+            <@commonMsg type="result">${uiLabelMap.ProductNoItemsToReceive}</@commonMsg>
           <#else>
             <@table type="data-complex" cellspacing="0"> <#-- orig: class="basic-table" -->
                 <@tr>

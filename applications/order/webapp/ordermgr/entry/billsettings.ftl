@@ -126,7 +126,7 @@ function makeExpDate() {
                   </#if>
                 </#list>
               <#else>
-                <@resultMsg>${uiLabelMap.AccountingNoPaymentMethods}</@resultMsg>
+                <@commonMsg type="result">${uiLabelMap.AccountingNoPaymentMethods}</@commonMsg>
               </#if>
           </form>
         <#elseif paymentMethodType?? || finalizeMode?default("") == "payment">
@@ -395,5 +395,5 @@ function makeExpDate() {
       </@row>
     </@section>
 <#else>
-  <@errorMsg>${uiLabelMap.OrderViewPermissionError}</@errorMsg>
+  <@commonMsg type="error">${uiLabelMap.OrderViewPermissionError}</@commonMsg>
 </#if>

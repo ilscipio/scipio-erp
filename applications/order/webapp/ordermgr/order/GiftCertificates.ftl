@@ -44,10 +44,10 @@ under the License.
           <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
         </@field>
       <#else>
-        <@resultMsg>${uiLabelMap.OrderNoGiftCertificatesFound}</@resultMsg>
+        <@commonMsg type="result">${uiLabelMap.OrderNoGiftCertificatesFound}</@commonMsg>
       </#if>
     <#else>
-      <@resultMsg>${uiLabelMap.OrderNoProductStoreFinAccountSettingsFound}.</@resultMsg>
+      <@commonMsg type="result">${uiLabelMap.OrderNoProductStoreFinAccountSettingsFound}.</@commonMsg>
     </#if>
 </form>
 

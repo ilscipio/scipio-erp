@@ -129,7 +129,7 @@ under the License.
             </@tr>
           </@table>
         <#else>
-          <@resultMsg>${uiLabelMap.SfaNoLeadsSelectedToMerged}</@resultMsg>
+          <@commonMsg type="result">${uiLabelMap.SfaNoLeadsSelectedToMerged}</@commonMsg>
         </#if>
       </@td>
     </@tr>

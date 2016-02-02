@@ -116,7 +116,7 @@ function getPaymentRunningTotal() {
                 </#list>
             </@table>
         <#else>
-            <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+            <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>
         </#if>
     </form>
 </@section>

@@ -40,6 +40,6 @@ under the License.
     <@menuitem type="link" href="javascript:popUp('${compareProductsUrl}', 'compareProducts', '650', '750')" text="${uiLabelMap.ProductCompareProducts}" class="+${styles.action_nav!} ${styles.action_view!}" />
   </@menu>
 <#else>
-  <@resultMsg>${uiLabelMap.ProductNoProductsToCompare}</@resultMsg>
+  <@commonMsg type="result">${uiLabelMap.ProductNoProductsToCompare}</@commonMsg>
 </#if>
 </@section>

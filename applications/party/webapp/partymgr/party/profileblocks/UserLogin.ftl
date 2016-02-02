@@ -57,6 +57,6 @@ under the License.
           </@tbody>
         </@table>
       <#else>
-        <@resultMsg>${uiLabelMap.PartyNoUserLogin}</@resultMsg>
+        <@commonMsg type="result">${uiLabelMap.PartyNoUserLogin}</@commonMsg>
       </#if>
   </@section>

@@ -57,5 +57,5 @@ under the License.
         </@field>
     </form>
 <#else>
-    <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+    <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>
 </#if>

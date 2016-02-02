@@ -21,5 +21,5 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
   ${pages.get(requestAttributes.detailTemplate)}
 <#else>
   <#assign productId = requestAttributes.productId!>
-  <@errorMsg>${uiLabelMap.ProductProductNotFound} ${productId!}!</@errorMsg>
+  <@commonMsg type="error">${uiLabelMap.ProductProductNotFound} ${productId!}!</@commonMsg>
 </#if>

@@ -46,16 +46,18 @@ Cato: Common HTML macro library code
         <span${idText}<#if class?is_string && class?has_content> class="${class}"</#if>>${text}</span>
       <#-- specific permission error class -->
       <#elseif elemType=="perm-error-msg">
-        <@errorMsg type="permission" class=class id=id>${text}</@errorMsg>
+        <@commonMsg type="error-permission" class=class id=id>${text}</@commonMsg>
       <#-- more general security error class -->
       <#elseif elemType=="security-error-msg">
-        <@errorMsg type="security" class=class id=id>${text}</@errorMsg>
+        <@commonMsg type="error-security" class=class id=id>${text}</@commonMsg>
+      <#elseif elemType=="fail-msg">
+        <@commonMsg type="fail" class=class id=id>${text}</@commonMsg>
       <#-- general error class -->
       <#elseif elemType=="error-msg">
-        <@errorMsg type="error" class=class id=id>${text}</@errorMsg>
+        <@commonMsg type="error" class=class id=id>${text}</@commonMsg>
       <#-- result message class: sometimes messages like "no product found" are not an error but expected possible result -->
       <#elseif elemType=="result-msg">
-        <@resultMsg class=class id=id>${text}</@resultMsg>
+        <@commonMsg type="result" class=class id=id>${text}</@commonMsg>
       <#elseif elemType=="message">
         <@alert type="info" class=class id=id>${text}</@alert>
       <#else>

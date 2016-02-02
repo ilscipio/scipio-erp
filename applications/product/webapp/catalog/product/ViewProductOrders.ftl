@@ -74,6 +74,6 @@ under the License.
     </@table>
   </@paginate>
   <#else>
-    <@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg>
+    <@commonMsg type="result">${uiLabelMap.OrderNoOrderFound}.</@commonMsg>
   </#if>
 </@section>

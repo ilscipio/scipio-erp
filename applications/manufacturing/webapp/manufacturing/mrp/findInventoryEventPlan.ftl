@@ -158,7 +158,7 @@ document.lookupinventory.productId.focus();
       </@paginate>
 
       <#else>
-       <@resultMsg>${uiLabelMap.CommonNoElementFound}</@resultMsg>
+       <@commonMsg type="result">${uiLabelMap.CommonNoElementFound}</@commonMsg>
       </#if>
     </@section>
 </#if>

@@ -35,7 +35,7 @@ under the License.
 </@row>
 
 <#if !productIds?has_content>
-  <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
+  <@commonMsg type="result">${uiLabelMap.ProductNoResultsFound}.</@commonMsg>
 <#else>
   <@paginate mode="content" url=makeOfbizUrl("keywordsearch") paramStr="~clearSearch=N" paramDelim="/" paramPrefix="~" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
     <div class="productsummary-container">

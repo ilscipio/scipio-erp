@@ -48,7 +48,7 @@ under the License.
         </@fields>
       </form>
     <#else>
-      <@resultMsg>${uiLabelMap.PartyNoShoppingListsParty}.</@resultMsg>
+      <@commonMsg type="result">${uiLabelMap.PartyNoShoppingListsParty}.</@commonMsg>
     </#if>
 </@section>
 
@@ -229,7 +229,7 @@ under the License.
         <@paginateShoppingListItems position="bottom"/>
       </#if> 
     <#else>
-      <@resultMsg>${uiLabelMap.PartyShoppingListEmpty}.</@resultMsg>
+      <@commonMsg type="result">${uiLabelMap.PartyShoppingListEmpty}.</@commonMsg>
     </#if>
 </@section>
 

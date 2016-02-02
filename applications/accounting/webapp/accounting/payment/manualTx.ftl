@@ -81,9 +81,9 @@ under the License.
                 <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
             </@field>
         <#elseif txType?has_content>
-            <@resultMsg>${uiLabelMap.AccountingTransactionTypeNotYetSupported}</@resultMsg>
+            <@commonMsg type="result">${uiLabelMap.AccountingTransactionTypeNotYetSupported}</@commonMsg>
         </#if>
     </form>
 <#else>
-    <@errorMsg>${uiLabelMap.AccountingPermissionError}</@errorMsg>
+    <@commonMsg type="error">${uiLabelMap.AccountingPermissionError}</@commonMsg>
 </#if>

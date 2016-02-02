@@ -76,6 +76,6 @@ under the License.
   </form>
   </center>
 <#else>
-  <@resultMsg>${uiLabelMap.ProductNoProductsInThisCategory}.</@resultMsg>
+  <@commonMsg type="result">${uiLabelMap.ProductNoProductsInThisCategory}.</@commonMsg>
 </#if>
 

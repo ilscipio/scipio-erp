@@ -156,7 +156,7 @@ function lookupShipments() {
         </@table>
       </@paginate>
     <#else>
-      <@resultMsg>${uiLabelMap.ProductNoShipmentsFound}.</@resultMsg>
+      <@commonMsg type="result">${uiLabelMap.ProductNoShipmentsFound}.</@commonMsg>
     </#if>  
   </@section>
 </#if>

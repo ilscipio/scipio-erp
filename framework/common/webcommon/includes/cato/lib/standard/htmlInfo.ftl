@@ -45,9 +45,10 @@
 *************
 * Alert box
 ************
-Alert box for messages that should grab user attention.
+Alert box for messages that must grab user attention.
 NOTE: Should avoid using this for regular, common inlined message results such as "no records found" unless
-it's an unexpected result, error or one that requires user action. See other macros such as @resultMsg and @errorMsg.
+    it's an unexpected result, error or one that requires user action.
+    For most cases, it is preferrable to use @commonMsg macro because it is higher-level.
 
   * Usage Example *  
     <@alert type="info">
@@ -126,61 +127,60 @@ it's an unexpected result, error or one that requires user action. See other mac
 
 <#-- 
 *************
-* Query Result Message
+* Common messages (abstraction)
 ************
-Common query result message wrapper.
-Note: this is ONLY for expected, non-error messages, such as no records found in a query.
-Other messages such as for missing params/record IDs are usually errors.
+Abstracts and factors out the display format of common messages of specific meanings, such as
+errors (e.g. permission errors) and query results (e.g. "no records found" messages).
+
+This is higher-level than @alert macro; @alert has a specific markup/display and its types are levels of importance,
+whereas @commonMsg abstracts markup/display and its messages can be a combination of levels and specific meanings;
+@alert's goal is to grab user attention, whereas @commonMsg's behavior depends on the type of message.
+
+@commonMsg may use @alert to implement itself.
+A template should not assume too much about the message markup, but the markup should be kept simple.
 
   * Usage Example *  
-    <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>            
+    <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>            
                     
   * Parameters *
+    type        = [generic|result|fail|error|error-permission|error-security], default generic - the type of message contained.
+                  Basic types:
+                    generic: no type specified (avoid using - prefer more specific)
+                  Types recognizes by Cato standard markup (theme-defined types are possible):
+                    result: an informational result from a query of some kind. e.g., "no records found".
+                        is a normal event that shouldn't distract user attention.
+                    fail: a non-fatal error
+                    error, error-*: an error message - typically an unexpected event or fatal error that should not happen in normal use.
+    id          = id
     class       = classes or additional classes for nested container
                   (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
 -->
-<#assign resultMsg_defaultArgs = {
-  "class":"", "id":"", "passArgs":{}
+<#assign commonMsg_defaultArgs = {
+  "type":"", "class":"", "id":"", "passArgs":{}
 }>
-<#macro resultMsg args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.resultMsg_defaultArgs)>
+<#macro commonMsg args={} inlineArgs...>
+  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.commonMsg_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
-  <@resultMsg_markup class=class id=id origArgs=origArgs passArgs=passArgs><#nested></@resultMsg_markup>
+  <#if !type?has_content>
+    <#local type = "generic">
+  </#if>
+  <#-- TODO: lookup default class based on type -->
+  <@commonMsg_markup type=type class=class id=id origArgs=origArgs passArgs=passArgs><#nested></@commonMsg_markup>
 </#macro>
 
-<#-- @resultMsg main markup - theme override -->
-<#macro resultMsg_markup class="" id="" origArgs={} passArgs={} catchArgs...>
-  <p<@compiledClassAttribStr class=class defaultVal="result-msg" /><#if id?has_content> id="${id}"</#if>><#nested></p>
+<#-- @commonMsg main markup - theme override -->
+<#macro commonMsg_markup type="" class="" id="" origArgs={} passArgs={} catchArgs...>
+  <#if type == "result">
+    <p<@compiledClassAttribStr class=class defaultVal="result-msg" /><#if id?has_content> id="${id}"</#if>><#nested></p>
+  <#elseif type == "error" || type?starts_with("error-")>
+    <@alert type="error" class=class id=id><#nested></@alert>
+  <#elseif type == "fail">
+    <@alert type="error" class=class id=id><#nested></@alert>
+  <#else>
+    <p<@compiledClassAttribStr class=class defaultVal="common-msg" /><#if id?has_content> id="${id}"</#if>><#nested></p>
+  </#if>
 </#macro>
 
-<#-- 
-*************
-* Error Result Message
-************
-Common error result message wrapper.
-Abstracts/centralizes method used to display error, since of no consequence to most
-templates: currently @alert.
 
-  * Usage Example *  
-    <@errorMsg type="permission">${uiLabelMap.CommonNoPermission}.</@errorMsg>            
-                    
-  * Parameters *
-    type           = [permission|security|error], default error
-    class          = classes or additional classes for nested container
-                     (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
--->
-<#assign errorMsg_defaultArgs = {
-  "type":"error", "class":"", "id":"", "passArgs":{}
-}>
-<#macro errorMsg args={} inlineArgs...>
-  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.errorMsg_defaultArgs)>
-  <#local dummy = localsPutAll(args)>
-  <#local origArgs = args>
-  <@errorMsg_markup type=type class=class id=id origArgs=origArgs passArgs=passArgs><#nested></@errorMsg_markup>
-</#macro>
 
-<#-- @errorMsg main markup - theme override -->
-<#macro errorMsg_markup type="error" class="" id="" origArgs={} passArgs={} catchArgs...>
-  <@alert type="error" class=class id=id><#nested></@alert>
-</#macro>

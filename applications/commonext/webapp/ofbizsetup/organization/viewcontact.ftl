@@ -147,7 +147,7 @@ under the License.
           </#list>
         </@table>
       <#else>
-        <@resultMsg>${uiLabelMap.PartyNoContactInformation}</@resultMsg>
+        <@commonMsg type="result">${uiLabelMap.PartyNoContactInformation}</@commonMsg>
       </#if>
   </@section>
   

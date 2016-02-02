@@ -92,7 +92,7 @@ under the License.
                 </@tbody>
               </@table>
             <#else>
-              <@resultMsg>${uiLabelMap.PartyNoMatch}</@resultMsg>
+              <@commonMsg type="result">${uiLabelMap.PartyNoMatch}</@commonMsg>
             </#if>
           </#if>
 </@section>

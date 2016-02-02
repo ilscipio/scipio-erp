@@ -165,5 +165,5 @@ under the License.
     </#if>
 <#else>
     <hr />
-    <@resultMsg>${uiLabelMap.ProductNoProductsInThisCategory}</@resultMsg>
+    <@commonMsg type="result">${uiLabelMap.ProductNoProductsInThisCategory}</@commonMsg>
 </#if>

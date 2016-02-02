@@ -121,7 +121,7 @@ under the License.
   <#if partyList??>
     <@section id="findEmployeeResults" title="${uiLabelMap.PartyPartiesFound}">
     <#if lookupErrorMessage??>
-        <@errorMsg>${lookupErrorMessage}</@errorMsg>
+        <@commonMsg type="error">${lookupErrorMessage}</@commonMsg>
     </#if>
     <#if partyList?has_content>
       <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"hideFields": parameters.hideFields!"N"}, "&amp;", false)>
@@ -173,7 +173,7 @@ under the License.
         </@table>
       </@paginate>
     <#else>
-        <@resultMsg>${uiLabelMap.PartyNoPartiesFound}</@resultMsg>
+        <@commonMsg type="result">${uiLabelMap.PartyNoPartiesFound}</@commonMsg>
     </#if>
     </@section>
   </#if>

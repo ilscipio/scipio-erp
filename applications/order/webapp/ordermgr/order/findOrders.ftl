@@ -475,12 +475,12 @@ document.lookuporder.orderId.focus();
     </@paginate>
     
   <#else>
-    <@resultMsg>${uiLabelMap.OrderNoOrderFound}.</@resultMsg>
+    <@commonMsg type="result">${uiLabelMap.OrderNoOrderFound}.</@commonMsg>
   </#if>
     
   </@section>
 </#if>
 
 <#else>
-  <@errorMsg>${uiLabelMap.OrderViewPermissionError}</@errorMsg>
+  <@commonMsg type="error">${uiLabelMap.OrderViewPermissionError}</@commonMsg>
 </#if>

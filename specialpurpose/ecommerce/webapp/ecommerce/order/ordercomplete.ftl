@@ -23,5 +23,5 @@ under the License.
   ${screens.render("component://ecommerce/widget/OrderScreens.xml#orderitems")}
   <a href="<@ofbizUrl>main</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.EcommerceContinueShopping}</a>
 <#else>
-  <@errorMsg>${uiLabelMap.OrderSpecifiedNotFound}.</@errorMsg>
+  <@commonMsg type="error">${uiLabelMap.OrderSpecifiedNotFound}.</@commonMsg>
 </#if>

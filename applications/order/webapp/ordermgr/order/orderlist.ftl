@@ -216,11 +216,11 @@ under the License.
             </@tr>
           </#list>
           <#if !orderHeaderList?has_content>
-            <@tr type="meta"><@td colspan="9"><@resultMsg>${uiLabelMap.OrderNoOrderFound}</@resultMsg></@td></@tr>
+            <@tr type="meta"><@td colspan="9"><@commonMsg type="result">${uiLabelMap.OrderNoOrderFound}</@commonMsg></@td></@tr>
           </#if>
         </@table>
       </@paginate>
   </@section>
 <#else>
-  <@errorMsg>${uiLabelMap.OrderViewPermissionError}</@errorMsg>
+  <@commonMsg type="error">${uiLabelMap.OrderViewPermissionError}</@commonMsg>
 </#if>

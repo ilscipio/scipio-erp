@@ -68,7 +68,7 @@ under the License.
       </#list>
     </@table>
   <#else>
-    <@resultMsg>${uiLabelMap.OrderNoNotes}.</@resultMsg>
+    <@commonMsg type="result">${uiLabelMap.OrderNoNotes}.</@commonMsg>
   </#if>
 
   </@section>

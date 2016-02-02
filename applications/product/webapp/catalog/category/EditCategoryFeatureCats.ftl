@@ -71,7 +71,7 @@ under the License.
                 </#list>
             </@table>
         <#else>
-            <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+            <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>
         </#if>
     </@section>
     
@@ -144,7 +144,7 @@ under the License.
                 </#list>
             </@table>
         <#else>
-            <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+            <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>
         </#if>
     </@section>
 </#if>

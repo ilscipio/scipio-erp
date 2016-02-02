@@ -822,6 +822,13 @@
   
 </@section>
 
+<@section title="Common messages">
+  <@commonMsg type="generic">Generic message</@commonMsg>
+  <@commonMsg type="result">Result message ("no records found")</@commonMsg>
+  <@commonMsg type="error">Fatal error message</@commonMsg>
+  <@commonMsg type="fail">Non-fatal error message (fail)</@commonMsg>
+</@section>
+
 
 <#-- NOTE: keep last -->
 <hr />

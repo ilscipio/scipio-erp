@@ -139,7 +139,7 @@ function submitForm(form, mode, value) {
               </form>
             </#list>
           <#else>
-            <@resultMsg>${uiLabelMap.OrderNoShipGroupsDefined}.</@resultMsg>
+            <@commonMsg type="result">${uiLabelMap.OrderNoShipGroupsDefined}.</@commonMsg>
           </#if>
         </@table>
     </@section>

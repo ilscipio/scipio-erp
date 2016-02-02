@@ -336,5 +336,5 @@ under the License.
     </@script>
   </#if>
 <#else>
-  <@errorMsg>${uiLabelMap.ProductFacilityViewPermissionError}</@errorMsg>
+  <@commonMsg type="error">${uiLabelMap.ProductFacilityViewPermissionError}</@commonMsg>
 </#if>

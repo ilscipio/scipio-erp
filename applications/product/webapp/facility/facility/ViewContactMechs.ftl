@@ -105,6 +105,6 @@ under the License.
       </#list>
     </@table>
   <#else>
-    <@resultMsg>${uiLabelMap.CommonNoContactInformationOnFile}.</@resultMsg>
+    <@commonMsg type="result">${uiLabelMap.CommonNoContactInformationOnFile}.</@commonMsg>
   </#if>
 </div>

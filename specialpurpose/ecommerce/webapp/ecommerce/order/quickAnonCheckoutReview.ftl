@@ -67,5 +67,5 @@ under the License.
   </@table>
 </form>
 <#else>
-  <@errorMsg>${uiLabelMap.OrderErrorShoppingCartEmpty}.</@errorMsg>
+  <@commonMsg type="error">${uiLabelMap.OrderErrorShoppingCartEmpty}.</@commonMsg>
 </#if>

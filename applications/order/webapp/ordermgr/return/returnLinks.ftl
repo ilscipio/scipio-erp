@@ -64,6 +64,6 @@ under the License.
 <#else>
   <#--<@heading>${uiLabelMap.OrderCreateNewReturn}</@heading>-->
   <#if requestParameters.returnId?has_content>
-    <@errorMsg>${uiLabelMap.OrderNoReturnFoundWithId} : ${requestParameters.returnId}</@errorMsg>
+    <@commonMsg type="error">${uiLabelMap.OrderNoReturnFoundWithId} : ${requestParameters.returnId}</@commonMsg>
   </#if>
 </#if>

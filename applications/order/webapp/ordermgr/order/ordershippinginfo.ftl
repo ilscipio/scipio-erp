@@ -301,7 +301,7 @@ under the License.
                 <#if !shipGroup.contactMechId?has_content && !shipGroup.shipmentMethodTypeId?has_content>
                 <#assign noShipment = "true">
                 <@tr type="meta">
-                    <@td colspan="2" align="center"><@resultMsg>${uiLabelMap.OrderNotShipped}</@resultMsg></@td>
+                    <@td colspan="2" align="center"><@commonMsg type="result">${uiLabelMap.OrderNotShipped}</@commonMsg></@td>
                 </@tr>
                 </#if>
       </@table>

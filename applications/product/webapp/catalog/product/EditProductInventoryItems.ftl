@@ -114,6 +114,6 @@ under the License.
           </@table>
         </#if>
   <#else>
-    <@errorMsg>${uiLabelMap.ProductProductNotFound} ${productId!}!</@errorMsg>
+    <@commonMsg type="error">${uiLabelMap.ProductProductNotFound} ${productId!}!</@commonMsg>
   </#if>
 </@section>

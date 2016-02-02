@@ -57,7 +57,7 @@
         </#list>
       <#else>
         <@tr type="meta">
-          <@td colspan="5"><@resultMsg>No aliases currently defined.</@resultMsg></@td>
+          <@td colspan="5"><@commonMsg type="result">No aliases currently defined.</@commonMsg></@td>
         </@tr>
       </#if>
     </@table>

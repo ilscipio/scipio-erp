@@ -50,7 +50,7 @@ under the License.
             </#if>
         </@table>
       <#else>
-         <@panel><@resultMsg>${uiLabelMap.WebtoolsNoEntityRecordsFound} ${entityName}.</@resultMsg></@panel>
+         <@panel><@commonMsg type="result">${uiLabelMap.WebtoolsNoEntityRecordsFound} ${entityName}.</@commonMsg></@panel>
       </#if>
     
         <#if (arraySize > 0)>

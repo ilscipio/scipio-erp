@@ -48,6 +48,6 @@ under the License.
         </@tbody>
         </@table>
       <#else>
-        <@resultMsg>${uiLabelMap.PartyNoNotesForParty}</@resultMsg>
+        <@commonMsg type="result">${uiLabelMap.PartyNoNotesForParty}</@commonMsg>
       </#if>
   </@section>

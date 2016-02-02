@@ -272,7 +272,7 @@ function lookupBom() {
     </@table>
       <p>${uiLabelMap.CommonNote}: <b class="alert-elem">${uiLabelMap.CommonRed}</b> ${uiLabelMap.ManufacturingNote1} <b class="${styles.text_color_alert!}">${uiLabelMap.CommonRed}</b>${uiLabelMap.ManufacturingNote2} <b class="${styles.text_color_alert!}">${uiLabelMap.CommonRed}</b>${uiLabelMap.ManufacturingNote3}<p>
     <#else>
-      <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+      <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>
     </#if>
   </@section>
 </#if>

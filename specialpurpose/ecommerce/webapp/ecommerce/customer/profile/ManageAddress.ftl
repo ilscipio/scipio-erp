@@ -276,13 +276,13 @@ under the License.
                 jQuery("#update_${contactMech.contactMechId}").click(function(){jQuery("#displayEditAddressForm_${contactMech.contactMechId}").dialog("open")});
                 </@script>
             <#else>
-              <@resultMsg>${uiLabelMap.PartyPostalInformationNotFound}.</@resultMsg>
+              <@commonMsg type="result">${uiLabelMap.PartyPostalInformationNotFound}.</@commonMsg>
             </#if>
           </#if>
         </#if>
       </#list>
       <#if postalAddressFlag == "N">
-        <@resultMsg>${uiLabelMap.PartyPostalInformationNotFound}.</@resultMsg>
+        <@commonMsg type="result">${uiLabelMap.PartyPostalInformationNotFound}.</@commonMsg>
       </#if>
     </div>
   </div>

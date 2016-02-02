@@ -27,7 +27,7 @@ under the License.
         <span>${uiLabelMap.PartyCertName}</span>&nbsp;${cert.getSubjectX500Principal().getName()}
         <span>${uiLabelMap.PartyCertSerialNumber}</span>&nbsp;${cert.getSerialNumber().toString(16)}
     <#else>
-        <@resultMsg>${uiLabelMap.PartyCertInvalid}</@resultMsg>
+        <@commonMsg type="result">${uiLabelMap.PartyCertInvalid}</@commonMsg>
     </#if>
 </@section>
 <@section title="${uiLabelMap.PartyCertSaveToKeyStore}">

@@ -37,7 +37,7 @@ under the License.
 
 <@section title="${uiLabelMap.WebtoolsResults}">
     <#if resultMessage?has_content>
-      <@resultMsg>${resultMessage}</@resultMsg>
+      <@commonMsg type="result">${resultMessage}</@commonMsg>
     </#if>
 
     <#if columns?has_content>

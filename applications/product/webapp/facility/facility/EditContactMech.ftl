@@ -28,7 +28,7 @@ under the License.
 <@section menuContent=menuContent>
 
 <#if !mechMap.facilityContactMech?? && mechMap.contactMech??>
-  <@errorMsg>${uiLabelMap.PartyContactInfoNotBelongToYou}.</@errorMsg>
+  <@commonMsg type="error">${uiLabelMap.PartyContactInfoNotBelongToYou}.</@commonMsg>
 <#else>
   <#if !mechMap.contactMech??>
     <#-- When creating a new contact mech, first select the type, then actually create -->

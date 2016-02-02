@@ -27,5 +27,5 @@ under the License.
     ${StringUtil.wrapString(surveyString)}
   </form>
 <#else>
-  <@errorMsg>Problem rendering the survey.</@errorMsg>
+  <@commonMsg type="error">Problem rendering the survey.</@commonMsg>
 </#if>

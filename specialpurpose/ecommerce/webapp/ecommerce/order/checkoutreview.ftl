@@ -59,5 +59,5 @@ under the License.
     </@tr>
   </@table>
 <#else>
-  <@errorMsg>${uiLabelMap.OrderErrorShoppingCartEmpty}.</@errorMsg>
+  <@commonMsg type="error">${uiLabelMap.OrderErrorShoppingCartEmpty}.</@commonMsg>
 </#if>

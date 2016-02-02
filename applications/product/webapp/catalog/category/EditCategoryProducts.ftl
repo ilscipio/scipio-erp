@@ -103,6 +103,6 @@ under the License.
           </#list>   
         </@paginate>
       <#else>
-        <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>     
+        <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>     
       </#if>
 </@section>

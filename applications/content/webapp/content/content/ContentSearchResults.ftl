@@ -24,7 +24,7 @@ under the License.
     <div><a href="<@ofbizUrl>ContentSearchOptions</@ofbizUrl>" class="${styles.link_nav!} ${styles.link_update!} ${styles.action_scope_session!}">${uiLabelMap.CommonRefineSearch}</a></div>
 
     <#if !contentIds?has_content>
-      <@resultMsg>${uiLabelMap.ProductNoResultsFound}.</@resultMsg>
+      <@commonMsg type="result">${uiLabelMap.ProductNoResultsFound}.</@commonMsg>
     </#if>
     
   <#if contentIds?has_content>

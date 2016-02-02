@@ -226,6 +226,6 @@ under the License.
       </#list>
     </@paginate>
   <#else>
-    <@resultMsg>${uiLabelMap.ProductNoPicksStarted}.</@resultMsg>
+    <@commonMsg type="result">${uiLabelMap.ProductNoPicksStarted}.</@commonMsg>
   </#if>
 </@section>

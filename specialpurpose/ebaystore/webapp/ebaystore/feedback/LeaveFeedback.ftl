@@ -535,5 +535,5 @@ under the License.
 <input type="submit" value="Leave Feedback" class="${styles.link_run_sys!} ${styles.action_add!}"/>
 </form>
 <#else>
-  <@resultMsg>No Leave Feedback.</@resultMsg>
+  <@commonMsg type="result">No Leave Feedback.</@commonMsg>
 </#if>

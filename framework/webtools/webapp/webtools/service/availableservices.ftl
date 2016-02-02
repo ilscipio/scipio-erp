@@ -331,7 +331,7 @@ under the License.
               </#list>
           </@table>
         <#else>
-            <@resultMsg>${uiLabelMap.WebtoolsNoParametersDefined}</@resultMsg>
+            <@commonMsg type="result">${uiLabelMap.WebtoolsNoParametersDefined}</@commonMsg>
         </#if>
         </@cell>
     </@row>
@@ -400,5 +400,5 @@ under the License.
       </@table>
   </@section>
 <#else>
-  <@resultMsg>${uiLabelMap.WebtoolsNoServicesFound}.</@resultMsg>
+  <@commonMsg type="result">${uiLabelMap.WebtoolsNoServicesFound}.</@commonMsg>
 </#if>

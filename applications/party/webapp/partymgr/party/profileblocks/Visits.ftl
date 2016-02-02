@@ -54,6 +54,6 @@ under the License.
           </@tbody>
         </@table>
       <#else>
-        <@resultMsg>${uiLabelMap.PartyNoVisitFound}</@resultMsg>
+        <@commonMsg type="result">${uiLabelMap.PartyNoVisitFound}</@commonMsg>
       </#if>
   </@section>

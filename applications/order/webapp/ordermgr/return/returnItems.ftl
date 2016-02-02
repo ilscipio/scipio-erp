@@ -374,6 +374,6 @@ under the License.
           <#include "returnItemInc.ftl"/>
         </form>
   <#else>
-    <@errorMsg>${uiLabelMap.CommonErrorMessage2} : ${uiLabelMap.CommonPleaseSelect}. ${uiLabelMap.CommonUseBackButton}</@errorMsg>
+    <@commonMsg type="error">${uiLabelMap.CommonErrorMessage2} : ${uiLabelMap.CommonPleaseSelect}. ${uiLabelMap.CommonUseBackButton}</@commonMsg>
   </#if>
 </@section>

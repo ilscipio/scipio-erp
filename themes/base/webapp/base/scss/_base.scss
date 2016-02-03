@@ -34,6 +34,15 @@ input,select,text-area {max-width:50em;}
   background: #e1e1e1;
 }
 
+// Fix margin on rows
+.row {
+    .row {
+        margin-bottom:2em;        
+        .row {
+                    margin-bottom:0px;
+        }
+    }
+}
 
 /* NAVIGATION */
   

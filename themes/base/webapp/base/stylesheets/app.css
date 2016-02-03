@@ -1,3 +1,4 @@
+@import url("//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,400,300,700");
 /* line 431, ../bower_components/foundation/scss/foundation/components/_global.scss */
 meta.foundation-version {
   font-family: "/5.5.3/";
@@ -87,7 +88,7 @@ body {
   background: white;
   color: #222222;
   cursor: auto;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: 1.5;
@@ -1706,7 +1707,7 @@ select {
   background: #efefef;
   color: #222222;
   display: block;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   padding: 1rem;
 }
@@ -2417,7 +2418,7 @@ button, .button {
   border-style: solid;
   border-width: 0;
   cursor: pointer;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-weight: normal;
   line-height: normal;
   margin: 0 0 1.25rem;
@@ -5153,7 +5154,7 @@ kbd {
 /* line 91, ../bower_components/foundation/scss/foundation/components/_labels.scss */
 .label {
   display: inline-block;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-weight: normal;
   line-height: 1;
   margin-bottom: auto;
@@ -5723,7 +5724,7 @@ ul.pagination li {
 .pricing-table .title {
   background-color: #333333;
   color: #eeeeee;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   font-weight: normal;
   padding: 0.9375rem 1.25rem;
@@ -5733,7 +5734,7 @@ ul.pagination li {
 .pricing-table .price {
   background-color: #f6f6f6;
   color: #333333;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-size: 2rem;
   font-weight: normal;
   padding: 0.9375rem 1.25rem;
@@ -6129,7 +6130,7 @@ ul.pagination li {
 /* line 118, ../bower_components/foundation/scss/foundation/components/_side-nav.scss */
 .side-nav {
   display: block;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   list-style-position: outside;
   list-style-type: none;
   margin: 0;
@@ -6160,7 +6161,7 @@ ul.pagination li {
 /* line 91, ../bower_components/foundation/scss/foundation/components/_side-nav.scss */
 .side-nav li.active > a:first-child:not(.button) {
   color: #1cc7ff;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-weight: normal;
 }
 /* line 97, ../bower_components/foundation/scss/foundation/components/_side-nav.scss */
@@ -6346,7 +6347,7 @@ ul.pagination li {
 .sub-nav li {
   color: #999999;
   float: left;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-size: 0.875rem;
   font-weight: normal;
   margin-left: 1rem;
@@ -6629,7 +6630,7 @@ table tr td {
   display: block;
   background-color: #efefef;
   color: #222222;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-size: 1rem;
   padding: 1rem 2rem;
 }
@@ -7084,7 +7085,7 @@ meta.foundation-mq-topbar {
 .top-bar-section ul li > a {
   color: white;
   display: block;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-size: 0.8125rem;
   font-weight: normal;
   padding-left: 0.9375rem;
@@ -7957,7 +7958,7 @@ p aside {
 /* line 255, ../bower_components/foundation/scss/foundation/components/_type.scss */
 h1, h2, h3, h4, h5, h6 {
   color: #222222;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-style: normal;
   font-weight: normal;
   line-height: 1.4;
@@ -9781,23 +9782,32 @@ input, select, text-area {
   background: #e1e1e1;
 }
 
-/* NAVIGATION */
+/* line 39, ../scss/_base.scss */
+.row .row {
+  margin-bottom: 2em;
+}
 /* line 41, ../scss/_base.scss */
+.row .row .row {
+  margin-bottom: 0px;
+}
+
+/* NAVIGATION */
+/* line 50, ../scss/_base.scss */
 .sidebar {
   margin-top: 0px;
   background: #FAFAFA;
   padding: 10px;
 }
-/* line 46, ../scss/_base.scss */
+/* line 55, ../scss/_base.scss */
 .sidebar form {
   padding: 0px;
 }
-/* line 48, ../scss/_base.scss */
+/* line 57, ../scss/_base.scss */
 .sidebar input[type="search"]:focus {
   box-shadow: 0 0 0 !important;
 }
 
-/* line 53, ../scss/_base.scss */
+/* line 62, ../scss/_base.scss */
 .sub-top-bar {
   display: block;
   margin: -0.25rem 0 1.125rem;
@@ -9816,7 +9826,7 @@ input, select, text-area {
 .sub-top-bar li {
   color: #999999;
   float: left;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-size: 0.875rem;
   font-weight: normal;
   margin-left: 1rem;
@@ -9853,7 +9863,7 @@ input, select, text-area {
 .sub-top-bar li.active a:hover {
   background: #0078a0;
 }
-/* line 56, ../scss/_base.scss */
+/* line 65, ../scss/_base.scss */
 .sub-top-bar dt a, .sub-top-bar dd a, .sub-top-bar li a {
   background-color: #fafafa;
   color: #008cba;
@@ -9861,25 +9871,25 @@ input, select, text-area {
 }
 
 /* CONTENT */
-/* line 64, ../scss/_base.scss */
+/* line 73, ../scss/_base.scss */
 #content-main-section {
   padding-top: 32px;
   padding-bottom: 32px;
 }
 
-/* line 69, ../scss/_base.scss */
+/* line 78, ../scss/_base.scss */
 #content-main-body {
   width: 100%;
   min-height: 100%;
   position: relative;
 }
 
-/* line 75, ../scss/_base.scss */
+/* line 84, ../scss/_base.scss */
 h1 {
   margin-bottom: 1rem;
 }
 
-/* line 80, ../scss/_base.scss */
+/* line 89, ../scss/_base.scss */
 input[type="button"], input[type="submit"], .buttontext {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -9887,7 +9897,7 @@ input[type="button"], input[type="submit"], .buttontext {
   border-style: solid;
   border-width: 0;
   cursor: pointer;
-  font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
   font-weight: normal;
   line-height: normal;
   margin: 0 0 1.25rem;
@@ -9913,46 +9923,46 @@ input[type="button"]:hover, input[type="button"]:focus, input[type="submit"]:hov
   color: white;
 }
 
-/* line 83, ../scss/_base.scss */
+/* line 92, ../scss/_base.scss */
 table.basic-table {
   width: 100%;
 }
-/* line 85, ../scss/_base.scss */
+/* line 94, ../scss/_base.scss */
 table.basic-table tr {
   background: none;
 }
-/* line 88, ../scss/_base.scss */
+/* line 97, ../scss/_base.scss */
 table.basic-table tr td {
   height: auto;
   vertical-align: top;
 }
-/* line 94, ../scss/_base.scss */
+/* line 103, ../scss/_base.scss */
 table.basic-table tr.odd {
   background: #fafafa;
 }
-/* line 96, ../scss/_base.scss */
+/* line 105, ../scss/_base.scss */
 table.basic-table input {
   margin: 0px;
 }
 
-/* line 100, ../scss/_base.scss */
+/* line 109, ../scss/_base.scss */
 .reveal-modal {
   box-shadow: none;
 }
 @media only screen and (min-width: 40.0625em) {
-  /* line 100, ../scss/_base.scss */
+  /* line 109, ../scss/_base.scss */
   .reveal-modal {
     top: 12.5rem;
   }
 }
 
-/* line 106, ../scss/_base.scss */
+/* line 115, ../scss/_base.scss */
 .login-box {
   margin: 200px 0;
   padding: 0px;
   min-width: 500px;
 }
-/* line 118, ../scss/_base.scss */
+/* line 127, ../scss/_base.scss */
 .login-box #login-box-content {
   margin-top: 20px;
   padding: 40px 20px 0 20px;
@@ -9964,7 +9974,7 @@ table.basic-table input {
 }
 
 @media (max-width: 610px) {
-  /* line 130, ../scss/_base.scss */
+  /* line 139, ../scss/_base.scss */
   .login-box {
     position: static;
     width: 100%;
@@ -9973,27 +9983,27 @@ table.basic-table input {
     margin-top: 50px;
   }
 }
-/* line 134, ../scss/_base.scss */
+/* line 143, ../scss/_base.scss */
 .inline-list li {
   margin-bottom: 10px;
 }
 
-/* line 138, ../scss/_base.scss */
+/* line 147, ../scss/_base.scss */
 td {
   word-break: normal;
 }
 
-/* line 139, ../scss/_base.scss */
+/* line 148, ../scss/_base.scss */
 td.button-col {
   word-break: normal;
 }
 
-/* line 141, ../scss/_base.scss */
+/* line 150, ../scss/_base.scss */
 td button, td .button, td input[type="button"], td input[type="submit"], td .buttontext {
   word-break: normal;
 }
 
-/* line 144, ../scss/_base.scss */
+/* line 153, ../scss/_base.scss */
 .toggleField fieldset {
   border: none;
   color: #008cba;
@@ -10001,31 +10011,31 @@ td button, td .button, td input[type="button"], td input[type="submit"], td .but
   padding: 8px 0px;
 }
 
-/* line 150, ../scss/_base.scss */
+/* line 159, ../scss/_base.scss */
 fieldset {
   border: none;
   padding-left: 0px;
   padding-right: 0px;
 }
-/* line 155, ../scss/_base.scss */
+/* line 164, ../scss/_base.scss */
 fieldset legend {
   padding: 0px;
   margin: 0px;
   text-align: right;
   background: none;
 }
-/* line 162, ../scss/_base.scss */
+/* line 171, ../scss/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 169, ../scss/_base.scss */
+/* line 178, ../scss/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
-/* line 173, ../scss/_base.scss */
+/* line 182, ../scss/_base.scss */
 .rotate-90 {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
@@ -10033,7 +10043,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 180, ../scss/_base.scss */
+/* line 189, ../scss/_base.scss */
 .rotate-180 {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
@@ -10041,7 +10051,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 187, ../scss/_base.scss */
+/* line 196, ../scss/_base.scss */
 .rotate-270 {
   -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
@@ -10049,7 +10059,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 194, ../scss/_base.scss */
+/* line 203, ../scss/_base.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -10073,36 +10083,36 @@ pre {
   border-width: 1px;
 }
 
-/* line 216, ../scss/_base.scss */
+/* line 225, ../scss/_base.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 221, ../scss/_base.scss */
+/* line 230, ../scss/_base.scss */
 code .INFO {
   color: #333333;
 }
-/* line 223, ../scss/_base.scss */
+/* line 232, ../scss/_base.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 224, ../scss/_base.scss */
+/* line 233, ../scss/_base.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 225, ../scss/_base.scss */
+/* line 234, ../scss/_base.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 226, ../scss/_base.scss */
+/* line 235, ../scss/_base.scss */
 code .TRACE {
   color: #999999;
 }
 
-/* line 230, ../scss/_base.scss */
+/* line 239, ../scss/_base.scss */
 .postfix input[type="submit"], .postfix button {
   background: #f2f2f2;
   border-color: #cccccc;
@@ -10115,62 +10125,62 @@ code .TRACE {
   font-size: 1.2rem;
 }
 
-/* line 242, ../scss/_base.scss */
+/* line 251, ../scss/_base.scss */
 .postfix i {
   font-size: 1.2rem;
 }
 
-/* line 244, ../scss/_base.scss */
+/* line 253, ../scss/_base.scss */
 .postfix .fi {
   font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1.2rem;
   line-height: 0.9rem;
 }
 
-/* line 251, ../scss/_base.scss */
+/* line 260, ../scss/_base.scss */
 ul.chart-legend {
   list-style: none;
 }
 
-/* line 259, ../scss/_base.scss */
+/* line 268, ../scss/_base.scss */
 div.section-screenlet-content {
   margin-bottom: 0.5rem;
 }
 
-/* line 265, ../scss/_base.scss */
+/* line 274, ../scss/_base.scss */
 div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
   margin-bottom: 0;
 }
 
-/* line 274, ../scss/_base.scss */
+/* line 283, ../scss/_base.scss */
 div.section-screenlet-container.no-title, div.section-screenlet-content.no-title.no-menu {
   margin-top: 0.2rem;
 }
 
-/* line 278, ../scss/_base.scss */
+/* line 287, ../scss/_base.scss */
 div.section-screenlet-container.no-title.no-menu {
   margin-top: 0;
 }
 
 /*  FOOTER */
-/* line 283, ../scss/_base.scss */
+/* line 292, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 288, ../scss/_base.scss */
+/* line 297, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 293, ../scss/_base.scss */
+/* line 302, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 297, ../scss/_base.scss */
+/* line 306, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
@@ -10178,12 +10188,12 @@ div.section-screenlet-container.no-title.no-menu {
 }
 
 /*MISC*/
-/* line 307, ../scss/_base.scss */
+/* line 316, ../scss/_base.scss */
 .progress .meter {
   transition-duration: 3s;
 }
 
-/* line 312, ../scss/_base.scss */
+/* line 321, ../scss/_base.scss */
 .button-group .text-entry {
   padding-left: 1em;
   padding-right: 1em;
@@ -10197,18 +10207,18 @@ div.section-screenlet-container.no-title.no-menu {
 }
 */
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 327, ../scss/_base.scss */
+  /* line 336, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 332, ../scss/_base.scss */
+  /* line 341, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 334, ../scss/_base.scss */
+  /* line 343, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }
@@ -10223,84 +10233,84 @@ div.scrollable-table-container > table {
   margin-bottom: 0;
 }
 */
-/* line 351, ../scss/_base.scss */
+/* line 360, ../scss/_base.scss */
 .field-entry-widget.field-entry-type-display:last-child {
   margin-bottom: 1rem;
 }
 
-/* line 355, ../scss/_base.scss */
+/* line 364, ../scss/_base.scss */
 .radio-item-inline.radio-item-separator {
   display: none;
 }
 
-/* line 359, ../scss/_base.scss */
+/* line 368, ../scss/_base.scss */
 .checkbox-item-inline.checkbox-item-separator {
   display: none;
 }
 
-/* line 364, ../scss/_base.scss */
+/* line 373, ../scss/_base.scss */
 .asmListItemRemove {
   margin-left: 1rem;
 }
 
 /* GENERAL ELEMENT COLORS */
-/* line 371, ../scss/_base.scss */
+/* line 380, ../scss/_base.scss */
 .colored-elem.primary, .colored-elem {
   color: #008cba;
 }
 
-/* line 372, ../scss/_base.scss */
+/* line 381, ../scss/_base.scss */
 .colored-elem.secondary {
   color: #e7e7e7;
 }
 
-/* line 373, ../scss/_base.scss */
+/* line 382, ../scss/_base.scss */
 .colored-elem.info {
   color: #a0d3e8;
 }
 
-/* line 374, ../scss/_base.scss */
+/* line 383, ../scss/_base.scss */
 .colored-elem.success {
   color: #43ac6a;
 }
 
-/* line 375, ../scss/_base.scss */
+/* line 384, ../scss/_base.scss */
 .colored-elem.warning {
   color: #f08a24;
 }
 
-/* line 376, ../scss/_base.scss */
+/* line 385, ../scss/_base.scss */
 .colored-elem.alert {
   color: #f04124;
 }
 
 /* TEXT COLORS */
-/* line 381, ../scss/_base.scss */
+/* line 390, ../scss/_base.scss */
 .colored-text.primary, .colored-text {
   color: #008cba;
 }
 
-/* line 382, ../scss/_base.scss */
+/* line 391, ../scss/_base.scss */
 .colored-text.secondary {
   color: #e7e7e7;
 }
 
-/* line 383, ../scss/_base.scss */
+/* line 392, ../scss/_base.scss */
 .colored-text.info {
   color: #a0d3e8;
 }
 
-/* line 384, ../scss/_base.scss */
+/* line 393, ../scss/_base.scss */
 .colored-text.success {
   color: #43ac6a;
 }
 
-/* line 385, ../scss/_base.scss */
+/* line 394, ../scss/_base.scss */
 .colored-text.warning {
   color: #f08a24;
 }
 
-/* line 386, ../scss/_base.scss */
+/* line 395, ../scss/_base.scss */
 .colored-text.alert {
   color: #f04124;
 }
@@ -10313,7 +10323,7 @@ div.scrollable-table-container > table {
   note that system- vs session- vs page- changing actions can be styled separately. */
 /* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
   NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
-/* line 399, ../scss/_base.scss */
+/* line 408, ../scss/_base.scss */
 .action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10335,7 +10345,7 @@ div.scrollable-table-container > table {
 }
 */
 /* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
-/* line 411, ../scss/_base.scss */
+/* line 420, ../scss/_base.scss */
 .action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10351,7 +10361,7 @@ div.scrollable-table-container > table {
 }
 
 /* terminate actions (like cancel order) */
-/* line 416, ../scss/_base.scss */
+/* line 425, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10368,7 +10378,7 @@ div.scrollable-table-container > table {
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 423, ../scss/_base.scss */
+/* line 432, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #a0d3e8;
   border-color: #61b6d9;
@@ -10390,7 +10400,7 @@ div.scrollable-table-container > table {
    @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
 }*/
 /* high-importance modify actions, like create order button */
-/* line 436, ../scss/_base.scss */
+/* line 445, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
   background-color: #f04124;
   border-color: #cf2a0e;
@@ -10406,7 +10416,7 @@ div.scrollable-table-container > table {
 }
 
 /* special nav cancel/back/return action button (alt regular color) */
-/* line 442, ../scss/_base.scss */
+/* line 451, ../scss/_base.scss */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {
   background-color: #e7e7e7;
   border-color: #b9b9b9;
@@ -10422,7 +10432,7 @@ div.scrollable-table-container > table {
 }
 
 /* special run-action cancel action button (warning color) */
-/* line 447, ../scss/_base.scss */
+/* line 456, ../scss/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10759,7 +10769,7 @@ ul[data-pie-id] {
 
 /* line 47, ../scss/_chartsjs.scss */
 .chart-data:before {
-  content: '{"primaryFillColor":"rgba(0, 140, 186, 0.3)","primaryStrokeColor":"rgba(0, 140, 186, 0.7)","primaryPointStrokeColor":"rgba(0, 140, 186, 0.7)","secondaryFillColor":"rgba(231, 231, 231, 0.3)","secondaryStrokeColor":"rgba(231, 231, 231, 0.7)","secondaryPointStrokeColor":"rgba(231, 231, 231, 0.7)","pointColor":"white","pointHighlightFill":"#fafafa","pointHighlightStroke":"#aaaaaa","pointDot":true,"pointHitDetectionRadius":5,"pointDotRadius":3,"pointDotStrokeWidth":1,"scaleLineColor":"rgba(0,0,0,.1)","scaleFontFamily":["Helvetica Neue","Helvetica","Roboto","Arial","sans-serif"],"scaleFontSize":14,"scaleFontColor":"#222222","scaleShowLabels":true,"scaleShowLine":true,"angleShowLineOut":true,"scaleBeginAtZero":true,"showTooltips":true,"tooltipFillColor":"rgba(0,0,0,0.8)","tooltipFontSize":14,"tooltipFontColor":"white","tooltipFontStyle":"normal","tooltipFontFamily":["Helvetica Neue","Helvetica","Roboto","Arial","sans-serif"],"tooltipTitleFontFamily":["Helvetica Neue","Helvetica","Roboto","Arial","sans-serif"],"tooltipTitleFontSize":14,"tooltipTitleFontStyle":"bold","tooltipTitleFontColor":"white","tooltipYPadding":6,"tooltipXPadding":6,"tooltipCaretSize":2,"tooltipCornerRadius":2,"datasetFill":true,"bezierCurve":true,"bezierCurveTension":0.3,"color":"#f7464a","highlight":"#ff5a5e","dataLabels":false}';
+  content: '{"primaryFillColor":"rgba(0, 140, 186, 0.3)","primaryStrokeColor":"rgba(0, 140, 186, 0.7)","primaryPointStrokeColor":"rgba(0, 140, 186, 0.7)","secondaryFillColor":"rgba(231, 231, 231, 0.3)","secondaryStrokeColor":"rgba(231, 231, 231, 0.7)","secondaryPointStrokeColor":"rgba(231, 231, 231, 0.7)","pointColor":"white","pointHighlightFill":"#fafafa","pointHighlightStroke":"#aaaaaa","pointDot":true,"pointHitDetectionRadius":5,"pointDotRadius":3,"pointDotStrokeWidth":1,"scaleLineColor":"rgba(0,0,0,.1)","scaleFontFamily":["Open Sans","Helvetica Neue","Helvetica","Helvetica","Arial","sans-serif"],"scaleFontSize":14,"scaleFontColor":"#222222","scaleShowLabels":true,"scaleShowLine":true,"angleShowLineOut":true,"scaleBeginAtZero":true,"showTooltips":true,"tooltipFillColor":"rgba(0,0,0,0.8)","tooltipFontSize":14,"tooltipFontColor":"white","tooltipFontStyle":"normal","tooltipFontFamily":["Open Sans","Helvetica Neue","Helvetica","Helvetica","Arial","sans-serif"],"tooltipTitleFontFamily":["Open Sans","Helvetica Neue","Helvetica","Helvetica","Arial","sans-serif"],"tooltipTitleFontSize":14,"tooltipTitleFontStyle":"bold","tooltipTitleFontColor":"white","tooltipYPadding":6,"tooltipXPadding":6,"tooltipCaretSize":2,"tooltipCornerRadius":2,"datasetFill":true,"bezierCurve":true,"bezierCurveTension":0.3,"color":"#f7464a","highlight":"#ff5a5e","dataLabels":false}';
   display: none;
 }
 

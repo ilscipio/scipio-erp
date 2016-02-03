@@ -70,11 +70,25 @@ public class ModelViewEntity extends ModelEntity {
         functionPrefixMap.put("extract-year", "EXTRACT(YEAR FROM ");
         functionPrefixMap.put("extract-month", "EXTRACT(MONTH FROM ");
         functionPrefixMap.put("extract-day", "EXTRACT(DAY FROM ");
+        functionPrefixMap.put("extract-hour", "EXTRACT(HOUR FROM ");	// CATO Extension
+        functionPrefixMap.put("extract-minute", "EXTRACT(MINUTE FROM ");// CATO Extension
+        functionPrefixMap.put("year", "YEAR(");		// CATO Extension
+        functionPrefixMap.put("month", "MONTH(");	// CATO Extension
+        functionPrefixMap.put("day", "DAY(");		// CATO Extension
+        functionPrefixMap.put("hour", "HOUR(");		// CATO Extension
+        functionPrefixMap.put("minute", "MINUTE(");	// CATO Extension
         numericFunctionsSet.add("count");
         numericFunctionsSet.add("count-distinct");
         numericFunctionsSet.add("extract-year");
         numericFunctionsSet.add("extract-month");
         numericFunctionsSet.add("extract-day");
+        numericFunctionsSet.add("extract-hour");	// CATO Extension
+        numericFunctionsSet.add("extract-minute"); 	// CATO Extension
+        numericFunctionsSet.add("year");	// CATO Extension
+        numericFunctionsSet.add("month");	// CATO Extension
+        numericFunctionsSet.add("day");		// CATO Extension
+        numericFunctionsSet.add("hour");	// CATO Extension
+        numericFunctionsSet.add("minute"); 	// CATO Extension
     }
 
     /** Contains member-entity alias name definitions: key is alias, value is ModelMemberEntity */

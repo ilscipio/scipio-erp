@@ -24,8 +24,6 @@
         </@field>
             </@cell>
         </@row>
-        <@field type="submitarea">
-            <input type="submit" value="${uiLabelMap.CommonCopy}" class="${styles.link_run_sys!} ${styles.action_copy!}" />
-        </@field>
+        <@field type="submit" text="${uiLabelMap.CommonCopy}" class="${styles.link_run_sys!} ${styles.action_copy!}" />
     </form>
 </@section>

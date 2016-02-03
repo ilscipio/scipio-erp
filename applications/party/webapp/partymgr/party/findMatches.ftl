@@ -42,9 +42,7 @@ under the License.
         
         <@field type="input" name="postalCode" label="${uiLabelMap.PartyZipCode}" value="${parameters.postalCode!}" required=true />
       
-        <@field type="submitarea">
-            <input type="submit" value="${uiLabelMap.PageTitleFindMatches}" class="${styles.link_run_sys!} ${styles.action_find!}" />
-        </@field>
+        <@field type="submit" text="${uiLabelMap.PageTitleFindMatches}" class="${styles.link_run_sys!} ${styles.action_find!}" />
         
       </form>
       <@script>

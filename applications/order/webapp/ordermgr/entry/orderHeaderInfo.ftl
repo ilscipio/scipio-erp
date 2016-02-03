@@ -46,9 +46,7 @@ under the License.
                     <@cell>
                     <form method="post" action="setPoNumber" name="setCartPoNumberForm">
                         <@field type="input" id="correspondingPoId" name="correspondingPoId" size="12" value="${shoppingCart.getPoNumber()?default('')}" label="${uiLabelMap.OrderPONumber}"/>
-                        <@field type="submitarea">
-                            <input type="submit" value="${uiLabelMap.CommonSet}" class="${styles.link_run_session!} ${styles.action_update!}" />
-                        </@field>
+                        <@field type="submit" text="${uiLabelMap.CommonSet}" class="${styles.link_run_session!} ${styles.action_update!}" />
                     </form>
                     </@cell>
                 </@row>

@@ -52,9 +52,7 @@ under the License.
                 </@tr>
             </#list>
         </@table>
-        <@field type="submitarea">
-            <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_update!}" />
-        </@field>
+        <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_update!}" />
     </form>
 <#else>
     <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>

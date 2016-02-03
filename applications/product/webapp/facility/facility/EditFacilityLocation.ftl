@@ -130,7 +130,7 @@ under the License.
             <@field type="generic" label="${uiLabelMap.ProductProductId}"><input type="text" size="10" name="productId" /></@field>
             <@field type="generic" label="${uiLabelMap.ProductMinimumStock}"><input type="text" size="10" name="minimumStock" /></@field>
             <@field type="generic" label="${uiLabelMap.ProductMoveQuantity}"><input type="text" size="10" name="moveQuantity" /></@field>
-            <@field type="submitarea"><input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" /></@field>
+            <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
         </form>
   </@section>
   

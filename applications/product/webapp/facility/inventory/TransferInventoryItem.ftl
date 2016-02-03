@@ -34,9 +34,7 @@ under the License.
             </@field>
           </@cell>
           <@cell columns=3>
-            <@field type="submitarea">
-                <input type="submit" value="${uiLabelMap.ProductGetItem}" class="${styles.link_run_sys!} ${styles.action_transfer!}" />
-            </@field>
+            <@field type="submit" text="${uiLabelMap.ProductGetItem}" class="${styles.link_run_sys!} ${styles.action_transfer!}" />
           </@cell>
         </@row>
             </form>

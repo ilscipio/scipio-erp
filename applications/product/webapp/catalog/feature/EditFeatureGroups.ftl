@@ -49,8 +49,6 @@ under the License.
             <@field type="generic" label="${uiLabelMap.CommonDescription}">
                 <input type="text" size="30" name="description" value="" />
             </@field>
-            <@field type="submitarea">
-              <input type="submit" value="${uiLabelMap.CommonCreate}" class="${styles.link_run_sys!} ${styles.action_add!}" />
-            </@field>
+            <@field type="submit" text="${uiLabelMap.CommonCreate}" class="${styles.link_run_sys!} ${styles.action_add!}" />
         </form>
 </@section>

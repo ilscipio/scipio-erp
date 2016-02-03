@@ -239,9 +239,7 @@ under the License.
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
       <@field type="input" name="productId" label="${uiLabelMap.PartyProduct}" value="" />
       <@field type="input" size="5" name="quantity" label="${uiLabelMap.CommonQuantity}" value="${requestParameters.quantity?default('1')}" />
-      <@field type="submitarea">
-        <input type="submit" value="${uiLabelMap.PartyAddToShoppingList}" class="${styles.link_run_sys!} ${styles.action_add!}" />
-      </@field>
+      <@field type="submit" text="${uiLabelMap.PartyAddToShoppingList}" class="${styles.link_run_sys!} ${styles.action_add!}" />
     </form>
 </@section>
 

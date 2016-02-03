@@ -20,9 +20,7 @@
                     </@field>
                 </@cell>
             </@row>
-            <@field type="submitarea">
-                <input type="submit" value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
-            </@field>
+            <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
           </@fields>
         </form>
     </@section>

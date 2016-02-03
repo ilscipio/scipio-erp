@@ -34,46 +34,33 @@ Cato: Common HTML macro library code
       <#local elemType = headingArgs.elemType> <#-- don't translate for macro; not passed; just for us -->
       <#local class = translateStyleStrClassesArg(headingArgs.elemClass!"")!"">
       <#if headingArgs.isHeadingElem>
+        <#-- Cato: heading labels -->
         <@heading level=translateStyleStrNumberArg(headingArgs.level!"")!"" relLevel=translateStyleStrNumberArg(headingArgs.relLevel!"")!"" 
             class=class id=id consumeLevel=translateStyleStrBoolArg(headingArgs.consumeLevel!"")!""
             containerElemType=translateStyleStrClassesArg(headingArgs.containerElemType!"")!false
             containerClass=translateStyleStrClassesArg(headingArgs.containerElemClass!"")!"">${text}</@heading>
       <#else>
-          <#-- Cato: Because we didn't specify allowedElemTypes, class may contain the elemType in some cases (when no ":", which is most cases). Make sure to remove. -->
+          <#-- Cato: Because we didn't specify allowedElemTypes, class here may contain the elemType in some cases (when no ":", which is most cases). Make sure to remove. -->
           <#if !class?is_boolean && class?has_content>
             <#local class = removeStyleNames(class, elemType)>
           </#if>
-      
-          <#if elemType=="container">
-            <div${idText}<#if !class?is_boolean && class?has_content> class="${class}"</#if>>${text}</div>
-          <#elseif elemType=="div">
-            <div${idText}<#if !class?is_boolean && class?has_content> class="${class}"</#if>>${text}</div>
-          <#elseif elemType=="p">
-            <p${idText}<#if !class?is_boolean && class?has_content> class="${class}"</#if>>${text}</p>
-          <#elseif elemType=="span">
-            <span${idText}<#if !class?is_boolean && class?has_content> class="${class}"</#if>>${text}</span>
-          <#-- specific permission error class -->
-          <#elseif elemType=="perm-error-msg">
-            <@commonMsg type="error-permission" class=("+"+class) id=id>${text}</@commonMsg>
-          <#-- more general security error class -->
-          <#elseif elemType=="security-error-msg">
-            <@commonMsg type="error-security" class=("+"+class) id=id>${text}</@commonMsg>
-          <#elseif elemType=="fail-msg">
-            <@commonMsg type="fail" class=("+"+class) id=id>${text}</@commonMsg>
-          <#-- general error class -->
-          <#elseif elemType=="error-msg">
-            <@commonMsg type="error" class=("+"+class) id=id>${text}</@commonMsg>
-          <#-- result message class: sometimes messages like "no product found" are not an error but expected possible result -->
-          <#elseif elemType=="result-msg">
-            <@commonMsg type="result" class=("+"+class) id=id>${text}</@commonMsg>
+          <#-- Cato: Alias for div -->
+          <#if elemType == "container">
+            <#local elemType = "div">
+          </#if>
+
+          <#-- Cato: generic text container types -->
+          <#if elemType=="div" || elemType=="p" || elemType=="span">
+            <${elemType}${idText}<@compiledClassAttribStr class=class />>${text}</${elemType}>
+          <#-- Cato: common-message handling -->
           <#elseif elemType?starts_with("common-msg-")>
-            <@commonMsg type=elemType["common-msg-"?length..] class=("+"+class) id=id>${text}</@commonMsg>
-          <#elseif elemType=="message">
-            <#-- Cato: legacy message style (DEPRECATED) -->
-            <@alert type="info" class=class id=id>${text}</@alert>
+            <@commonMsg type=elemType["common-msg-"?length..] class=class id=id>${text}</@commonMsg>
+          <#elseif elemType=="generic">
+            <#-- Cato: special case to force stock generic case (in case default style string is not empty) -->
+            <span${idText}<@compiledClassAttribStr class=class />>${text}</span>
           <#else>
-            <#-- Cato: default markup and stock Ofbiz case -->
-            <span${idText} class="${style}">${text}</span>
+            <#-- Cato: default markup and stock Ofbiz case (note: uses original style arg) -->
+            <span${idText}<@compiledClassAttribStr class=style />>${text}</span>
           </#if>
       </#if>
     <#else>

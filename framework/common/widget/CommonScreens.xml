@@ -750,7 +750,7 @@ under the License.
             <widgets>
                 <decorator-screen name="AjaxGlobalDecorator">
                     <decorator-section name="body">
-                        <label style="message" text="${uiLabelMap.CommonSessionTimeoutPleaseLogIn}"/>
+                        <label style="common-msg-info-important" text="${uiLabelMap.CommonSessionTimeoutPleaseLogIn}"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

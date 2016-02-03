@@ -31,7 +31,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonReportDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <label style="message">${uiLabelMap.BirtOrderReportsWarning}</label>
+                        <label style="common-msg-info-important">${uiLabelMap.BirtOrderReportsWarning}</label>
                         <container style="${styles.grid_large}12 ${styles.grid_cell}">
                             <include-portal-page id="OrderReportPage"/>
                         </container>

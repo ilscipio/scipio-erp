@@ -205,12 +205,15 @@ under the License.
                 </screenlet>
                 <screenlet title="Common message labels">
                     <label style="common-msg-result" text="Result message"/>
-                    <label style="common-msg-error" text="Error message"/>
+                    <label style="common-msg-warning" text="General warning message"/>
+                    <label style="common-msg-error" text="General error message"/>
                     <label style="common-msg-error-perm" text="Permission error message"/>
                     <label style="common-msg-error-security" text="Security error message"/>
                     <label style="common-msg-custom" text="Custom common message"/>
                     <label style="common-msg-error:+myclass" text="Error message (with extra class)"/>
                     <label style="common-msg-error:myclass" text="Error message (with extra class that replaces default)"/>
+                    <label style="common-msg-info" text="Regular info message"/>
+                    <label style="common-msg-info-important" text="Important info message"/>
                 </screenlet>
             </widgets>
         </section>

@@ -46,7 +46,7 @@
 * Alert box
 ************
 Alert box for messages that must grab user attention.
-NOTE: Should avoid using this for regular, common inlined message results such as "no records found" unless
+NOTE: Should avoid using this for regular, common inlined message results such as "No records found." unless
     it's an unexpected result, error or one that requires user action.
     For most cases, it is preferrable to use @commonMsg macro because it is higher-level.
 
@@ -130,28 +130,44 @@ NOTE: Should avoid using this for regular, common inlined message results such a
 * Common messages (abstraction)
 ************
 Abstracts and factors out the display format of common messages of specific meanings, such as
-errors (e.g. permission errors) and query results (e.g. "no records found" messages).
+errors (e.g. permission errors) and query results (e.g. "No records found." messages).
+In other words, labels messages according to what they are and lets the theme decide on markup and styling based on content.
 
-This is higher-level than @alert macro; @alert has a specific markup/display and its types are levels of importance,
+This is higher-level than @alert macro; @alert has a specific markup/display and its types are usually levels of severity,
 whereas @commonMsg abstracts markup/display and its messages can be a combination of levels and specific meanings;
 @alert's goal is to grab user attention, whereas @commonMsg's behavior depends on the type of message.
 
-@commonMsg may use @alert to implement itself.
+@commonMsg may use @alert to implement its markup.
 A template should not assume too much about the message markup, but the markup should be kept simple.
 
+WIDGETS: <label.../> elements in screen widgets can be mapped to this macro using the special "common-msg-xxx" style name, where
+    xxx is the message type. e.g.: 
+      <label style="common-msg-error-perm" text="Permission Error" />
+    translates to:
+      <@commonMsg type="error-perm">Permission Error</@commonMsg>
+    Extra classes are also possible using colon syntax (combined with the usual "+" macro additive class instruction):
+      <label style="common-msg-error-perm:+myclass" text="Permission Error" />
+    translates to:
+      <@commonMsg type="error-perm" class="+myclass">Permission Error</@commonMsg>
+      
   * Usage Example *  
     <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>            
-                    
+             
   * Parameters *
-    type        = [default|generic|result|fail|error|error-perm|error-security], default default - the type of message contained.
+    type        = [default|generic|...], default default - the type of message contained.
                   Basic types:
                     default: default. in standard Cato markup, same as generic.
                     generic: no type specified (avoid using - prefer more specific)
                   Types recognizes by Cato standard markup (theme-defined types are possible):
-                    result: an informational result from a query of some kind. e.g., "no records found".
+                    result: an informational result from any kind of query. e.g., "No records found.".
                         is a normal event that shouldn't distract user attention.
-                    fail: a non-fatal error
-                    error, error-*: an error message - typically an unexpected event or fatal error that should not happen in normal use.
+                    info: general information (NOTE: this is not really useful, but supported for completeness)
+                    info-important: general important information
+                    warning: general warning
+                    fail: general non-fatal error
+                    error: general error message - typically an unexpected event or fatal error that should not happen in intended use.
+                    error-perm: permission error
+                    error-security: security error
     id          = id
     class       = classes or additional classes for message container (innermost containing element)
                   (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
@@ -164,23 +180,27 @@ A template should not assume too much about the message markup, but the markup s
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
   <#if !type?has_content>
-    <#local type = "generic">
+    <#local type = "default">
   </#if>
-  <#-- TODO: lookup default class based on type -->
-  <#local defaultClass = styles["commonmsg_" + type?replace("-", "_")]!styles["commonmsg_default"]>
+  <#local styleNamePrefix = "commonmsg_" + type?replace("-", "_")>
+  <#local defaultClass = styles[styleNamePrefix]!styles["commonmsg_default"]>
   <#local class = addClassArgDefault(class, defaultClass)>
-  <@commonMsg_markup type=type class=class id=id origArgs=origArgs passArgs=passArgs><#nested></@commonMsg_markup>
+  <@commonMsg_markup type=type styleNamePrefix=styleNamePrefix class=class id=id origArgs=origArgs passArgs=passArgs><#nested></@commonMsg_markup>
 </#macro>
 
 <#-- @commonMsg main markup - theme override -->
-<#macro commonMsg_markup type="" class="" id="" origArgs={} passArgs={} catchArgs...>
-  <#if type == "result">
+<#macro commonMsg_markup type="" styleNamePrefix="" class="" id="" origArgs={} passArgs={} catchArgs...>
+  <#if type == "result" || type == "info">
     <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#nested></p>
   <#elseif type == "error" || type?starts_with("error-")>
     <#-- NOTE: here we must resolve class arg before passing to @alert and make additive only -->
     <@alert type="error" class=("+"+compileClassArg(class)) id=id><#nested></@alert>
   <#elseif type == "fail">
     <@alert type="error" class=("+"+compileClassArg(class)) id=id><#nested></@alert>
+  <#elseif type == "warning">
+    <@alert type="warning" class=("+"+compileClassArg(class)) id=id><#nested></@alert>
+  <#elseif type == "info-important">
+    <@alert type="info" class=("+"+compileClassArg(class)) id=id><#nested></@alert>
   <#else>
     <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#nested></p>
   </#if>

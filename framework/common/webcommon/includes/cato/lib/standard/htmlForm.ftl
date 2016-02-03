@@ -830,10 +830,16 @@ standard markup.
                       progressArgs={"enabled":true, "progressOptions":progressOptions}      
                       
     * submit *
-    submitType      = [submit|link|button|image], default submit (<input type="submit">)  
-    text            = display text (also value for submitType=="submit")                
-    href            = href for submitType=="link"  
-    src             = image url for submitType=="image"    
+    submitType      = [submit|link|button|image|input-button], default submit (<input type="submit"/>)  
+                      submit: <input type="submit" ... />
+                      input-button: <input type="button" ... />
+                      link: <a href="..." ...>...</a>
+                      button: WARN/FIXME?: currently this is same as input-button: <input type="button" ... />
+                        this may chagne to <button...>...</button>
+                      image: <input type="image" src="..." .../>
+    text            = display text (also value for submitType "submit")                
+    href            = href for submitType "link"  
+    src             = image url for submitType "image"    
     confirmMsg      = confirmation message     
     progressArgs    = same as for submitarea, but only works if this is a top-level submit     
     progressOptions = same as for submitarea, but only works if this is a top-level submit
@@ -1277,13 +1283,14 @@ standard markup.
         <#break>    
       <#case "submit">
         <#if !catoSubmitFieldTypeButtonMap??>
+          <#-- NOTE: currently button is same as input-button, maybe should be different? -->
           <#-- the logical button types (based on form widget types) -->
           <#global catoSubmitFieldButtonTypeMap = {
-            "submit":"button", "button":"button", "link":"text-link", "image":"image"
+            "submit":"button", "button":"button", "link":"text-link", "image":"image", "input-button":"button"
           }>
           <#-- the low-level input type attrib, within the logical button types -->
           <#global catoSubmitFieldInputTypeMap = {
-            "submit":"submit", "button":"button", "link":"", "image":"image"
+            "submit":"submit", "button":"button", "link":"", "image":"image", "input-button":"button"
           }>
         </#if>      
         <#local buttonType = catoSubmitFieldButtonTypeMap[submitType]!"button">

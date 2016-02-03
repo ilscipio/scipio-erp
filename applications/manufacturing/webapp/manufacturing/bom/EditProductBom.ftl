@@ -183,10 +183,11 @@ function lookupBom() {
             <@htmlTemplate.lookupField formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
           </#if>
     </@field>
-    <@field type="submitarea">
-        <input type="submit"<#if !(productAssoc??)> value="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"<#else> value="${uiLabelMap.CommonEdit}" class="${styles.link_run_sys!} ${styles.action_update!}"</#if>/>
-    </@field>
-
+    <#if !(productAssoc??)>
+      <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
+    <#else>
+      <@field type="submit" text="${uiLabelMap.CommonEdit}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+    </#if>
     </form>
     </@cell>
   </@row>

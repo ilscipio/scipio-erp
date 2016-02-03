@@ -94,8 +94,6 @@ under the License.
               <@field type="generic" label="${uiLabelMap.CommonSequenceNum}">
                   <input type="text" size="5" name="sequenceNum" />
               </@field>
-              <@field type="submitarea">
-                  <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.CommonAdd}" />
-              </@field>
+              <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd}" />
         </form>
 </@section>

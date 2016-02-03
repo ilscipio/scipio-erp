@@ -19,9 +19,7 @@
                     ${uiLabelMap.ProductAttributes}&nbsp;<input type="checkbox" name="duplicateAttributes" value="Y" checked="checked" />
                 </@field> 
           
-                <@field type="submitarea">
-                  <input type="submit" class="${styles.link_run_sys!} ${styles.action_copy!}" value="${uiLabelMap.CommonGo}"/>
-                </@field>  
+                <@field type="submit" class="${styles.link_run_sys!} ${styles.action_copy!}" text="${uiLabelMap.CommonGo}"/>  
             </form>
     </@section>
 </#if>

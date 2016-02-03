@@ -120,8 +120,6 @@ function clickAll(e) {
         <@field type="generic" label="${uiLabelMap.ProductVariantProductIds}">
             <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
         </@field>
-        <@field type="submitarea">
-            <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.ProductVariantAdd}"/>
-        </@field>
+        <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.ProductVariantAdd}"/>
     </form>
 </@section>

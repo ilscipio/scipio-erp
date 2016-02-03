@@ -84,9 +84,7 @@ under the License.
                                     <@field type="generic" label="${uiLabelMap.CommonDescription}">
                                         <input type="text" size="30" maxlength="255" name="description" value="${description?if_exists}" />
                                     </@field>
-                                    <@field type="submitarea">
-                                        <input type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" value="${uiLabelMap.CommonAdd}" />
-                                    </@field>
+                                    <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd}" />
                             </form>
                         </#if>
             </@cell>

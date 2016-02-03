@@ -34,9 +34,7 @@ under the License.
           
         </@fieldset>
         <input type="hidden" name="showAll" value="Y"/>
-        <@field type="submitarea">
-            <input type="submit" value="${uiLabelMap.CommonFind}" class="${styles.link_run_sys!} ${styles.action_find!}"/>
-        </@field>
+        <@field type="submit" text="${uiLabelMap.CommonFind}" class="${styles.link_run_sys!} ${styles.action_find!}"/>
     </@cell>
   </@row>    
 </@section>

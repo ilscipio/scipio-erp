@@ -42,9 +42,7 @@ under the License.
     <@field type="generic" label="${uiLabelMap.FacilityGroupFirst}">
         <input type="text" size="4" name="maxNumberOfOrders" value="50"/>    
     </@field>      
-    <@field type="submitarea">
-      <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_select!}" align="right"/>
-    </@field>
+    <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_select!}" align="right"/>
   </form>
 </@section>  
   

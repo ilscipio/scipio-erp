@@ -166,14 +166,10 @@ under the License.
                 <@displayAddress postalAddress = postalAddressTo editable=false />
               </#if>
           </@field>
-          <@field type="submitarea">
-              <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
-          </@field>
+          <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
         <#else>
           <input type="hidden" name="statusId" value="RETURN_REQUESTED" />
-          <@field type="submitarea">
-              <input type="submit" value="${uiLabelMap.CommonNew}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
-          </@field>
+          <@field type="submit" text="${uiLabelMap.CommonNew}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
         </#if>
 
         <#macro displayAddress postalAddress editable>

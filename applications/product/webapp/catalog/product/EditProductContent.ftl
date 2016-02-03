@@ -135,9 +135,7 @@ under the License.
                     </div>
                   </#if>
             </@field>
-            <@field type="submitarea">
-                <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
-            </@field>
+            <@field type="submit" name="Update" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
         </form>
         <@script>
             function setUploadUrl(newUrl) {
@@ -158,9 +156,7 @@ under the License.
                 <input type="radio" name="upload_file_type_bogus" value="detail" onclick="setUploadUrl('<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=detail</@ofbizUrl>');"/>${uiLabelMap.CommonDetail}
                 <input type="radio" name="upload_file_type_bogus" value="original" checked="checked" onclick="setUploadUrl('<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>');"/>${uiLabelMap.ProductOriginal}
             </@field>
-            <@field type="submitarea">
-                <input type="submit" class="${styles.link_run_sys!} ${styles.action_import!}" value="${uiLabelMap.ProductUploadImage}"/>
-            </@field>
+            <@field type="submit" class="${styles.link_run_sys!} ${styles.action_import!}" text="${uiLabelMap.ProductUploadImage}"/>
             <#-- FIXME -->
             <span class="tooltip">${uiLabelMap.ProductOriginalImageMessage} : {ofbiz.home}/applications/product/config/ImageProperties.xml&quot;</span>
           </@fields>

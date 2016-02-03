@@ -102,9 +102,7 @@ under the License.
                         <div>&nbsp;${requestParameters.averageCost?default("&nbsp;")}</div>
                 </@field>
                 <@field type="input" label="${uiLabelMap.ProductNewProductId}" name="productId" value="" />
-                <@field type="submitarea">
-                    <input type="submit" value="${uiLabelMap.ProductCreateNewProduct}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
-                </@field>
+                <@field type="submit" text="${uiLabelMap.ProductCreateNewProduct}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
         </form>
         </@cell>
       </@row>

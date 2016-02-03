@@ -291,9 +291,7 @@ under the License.
                     </@field>
                 </@cell>
                 <@cell columns=3>                 
-                    <@field type="submitarea">
-                        <input type="submit" class="${styles.link_run_session!} ${styles.action_update!}" value="${uiLabelMap.CommonContinue}" />
-                    </@field>
+                    <@field type="submit" class="${styles.link_run_session!} ${styles.action_update!}" text="${uiLabelMap.CommonContinue}" />
                 </@cell>
               </@row>
             </@cell>

@@ -65,9 +65,7 @@ under the License.
             </@cell>
             </@row>
           <#else>
-            <@field type="submitarea">
-                <input type="submit" name="searchLabels" value="${uiLabelMap.CommonFind}" class="${styles.link_run_sys!} ${styles.action_find!}"/>
-            </@field>
+            <@field type="submit" name="searchLabels" text="${uiLabelMap.CommonFind}" class="${styles.link_run_sys!} ${styles.action_find!}"/>
           </#if>
   </form>
  </@cell>

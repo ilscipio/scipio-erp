@@ -58,9 +58,7 @@ under the License.
           </#list>
         </select>
     </@field>
-    <@field type="submitarea">
-        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
-    </@field>
+    <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
 
   </form>
 </@section>

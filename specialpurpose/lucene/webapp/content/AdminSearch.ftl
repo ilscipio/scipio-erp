@@ -70,9 +70,7 @@ under the License.
       </@field>
     </#if>
 
-<@field type="submitarea">
-    <input type="submit" class="${styles.link_run_sys!} ${styles.action_find!}" name="submitButton" value="${uiLabelMap.CommonFind}"/>
-</@field>
+<@field type="submit" class="${styles.link_run_sys!} ${styles.action_find!}" name="submitButton" text="${uiLabelMap.CommonFind}"/>
 </form>
 
 

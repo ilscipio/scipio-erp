@@ -110,16 +110,12 @@ function getFinAccountTransRunningTotalAndBalances() {
                                         <option value="${glReconciliation.glReconciliationId}">${glReconciliation.glReconciliationName!}[[${glReconciliation.glReconciliationId}] [${glReconciliation.reconciledDate!}] [${glReconciliation.reconciledBalance!}]]</option>
                                     </#list>
                                 </@field>
-                                <@field type="submitarea">
-                                    <input id="submitButton" type="submit" value="${uiLabelMap.AccountingAssignToReconciliation}" disabled=true onclick="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />
-                                </@field>                                                                
+                                <@field type="submit" id="submitButton" text="${uiLabelMap.AccountingAssignToReconciliation}" disabled=true onClick="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />                                                                
                             <#else>
                                 ${uiLabelMap.AccountingNoGlReconciliatio??} <a href="<@ofbizUrl>EditFinAccountReconciliations?finAccountId=${parameters.finAccountId!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonClickHere}</a>
                             </#if>
                         <#else>
-                            <@field type="submitarea">
-                                <input id="submitButton" type="submit" onClick="javascript:document.selectAllForm.submit();" value="${uiLabelMap.AccountingReconcile}" disabled=true class="${styles.link_run_sys!} ${styles.action_update!}" />
-                            </@field>
+                            <@field type="submit" id="submitButton" onClick="javascript:document.selectAllForm.submit();" text="${uiLabelMap.AccountingReconcile}" disabled=true class="${styles.link_run_sys!} ${styles.action_update!}" />
                         </#if>
                     </@cell>
                 </@row>

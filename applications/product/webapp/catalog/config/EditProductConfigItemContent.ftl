@@ -102,18 +102,14 @@ function insertImageName(size,nameValue) {
                         </div>
                     </#if>
                 </@field>
-                <@field type="submitarea">
-                    <input type="submit" name="Update" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
-                </@field>
+                <@field type="submit" name="Update" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
             </form>
     </@section>
     
     <@section title="${uiLabelMap.ProductUploadImage}">
             <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductConfigItemImage?configItemId=${configItemId}&amp;upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
                 <@field type="file" size="50" name="fname" />
-                <@field type="submitarea">
-                    <input type="submit" class="${styles.link_run_sys!} ${styles.action_import!}" value="${uiLabelMap.ProductUploadImage}" />
-                </@field>
+                <@field type="submit" class="${styles.link_run_sys!} ${styles.action_import!}" text="${uiLabelMap.ProductUploadImage}" />
             </form>
     </@section>
 </#if>

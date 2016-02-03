@@ -58,9 +58,7 @@ under the License.
               /
               <input type="text" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?default("00001")}"/>
           </@field>
-          <@field type="submitarea">
-              <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}" class="${styles.link_run_sys!} ${styles.action_verify!}"/>
-          </@field>
+          <@field type="submit" text="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}" class="${styles.link_run_sys!} ${styles.action_verify!}"/>
       </form>
       </@section>
      
@@ -71,9 +69,7 @@ under the License.
           <@field type="generic" label="${uiLabelMap.FormFieldTitle_picklistBinId}">
               <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
           </@field>
-          <@field type="submitarea">
-              <input type="submit" value="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}" class="${styles.link_run_sys!} ${styles.action_verify!}"/>
-          </@field>
+          <@field type="submit" text="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}" class="${styles.link_run_sys!} ${styles.action_verify!}"/>
       </form>
       </@section>
 

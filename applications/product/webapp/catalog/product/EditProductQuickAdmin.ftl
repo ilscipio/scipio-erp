@@ -69,9 +69,7 @@ function doPublish() {
             </#if>
             <@field type="display">${productId!}</@field>
             <@field type="input" name="productName" size="40" maxlength="40" value="${product.productName!}" />
-            <@field type="submitarea">
-                <input type="submit" value="${uiLabelMap.ProductUpdateName}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
-            </@field>
+            <@field type="submit" text="${uiLabelMap.ProductUpdateName}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
           </@fields>
         </form>
 </@section>
@@ -329,9 +327,7 @@ function doPublish() {
                     </#list>
                 </select>
             </@field>
-            <@field type="submitarea">
-                <input type="submit" value="${uiLabelMap.ProductAddFeatureType}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
-            </@field>
+            <@field type="submit" text="${uiLabelMap.ProductAddFeatureType}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
         </form>
       </@cell>
     </@row>
@@ -353,9 +349,7 @@ function doPublish() {
                   </#list>
                 </select>
             </@field>
-            <@field type="submitarea">
-                <input type="submit" value="${uiLabelMap.ProductUpdateCategories}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
-            </@field>
+            <@field type="submit" text="${uiLabelMap.ProductUpdateCategories}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
           </@fields>
         </form>
       </@cell>
@@ -412,9 +406,7 @@ function doPublish() {
             <@field type="generic">
                 <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
             </@field>
-            <@field type="submitarea">
-                <input type="submit" value="${uiLabelMap.ProductRemoveFromSite}" class="${styles.link_run_sys!} ${styles.action_remove!}"/>
-            </@field>
+            <@field type="submit" text="${uiLabelMap.ProductRemoveFromSite}" class="${styles.link_run_sys!} ${styles.action_remove!}"/>
           </@fields>
         </form>
       </@cell>

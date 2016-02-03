@@ -137,9 +137,7 @@ under the License.
                     </@field>
                     <@field type="input" size="25" name="itemComment" value="${defaultComment!}" label="${uiLabelMap.CommonComment}"/>
 
-                    <@field type="submitarea">
-                        <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddToOrder}"/>
-                    </@field>
+                    <@field type="submit" class="${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToOrder}"/>
             </form>
 
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
@@ -156,9 +154,7 @@ under the License.
                         <@field type="input" size="3" name="quantity" value="${requestParameters.quantity?default('1')}" label="${uiLabelMap.OrderQuantity}"/>
                         <@field type="input" size="6" name="price" value="${requestParameters.price!}" label="${uiLabelMap.OrderPrice}"/>
                     
-                <@field type="submitarea">
-                    <input type="submit" class="${styles.link_run_session!} ${styles.action_add!}" value="${uiLabelMap.OrderAddToOrder}"/>
-                </@field>
+                <@field type="submit" class="${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToOrder}"/>
             </form>
 
         </#if>

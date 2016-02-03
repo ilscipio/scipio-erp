@@ -46,6 +46,6 @@ under the License.
     <@imageField name=namePrefix + "Eight" />
     <@imageField name=namePrefix + "Nine" />
     <@imageField name=namePrefix + "Ten" />
-    <@field type="submit" text='${uiLabelMap.CommonUpload}'/>
+    <@field type="submit" text="${uiLabelMap.CommonUpload}"/>
   </@fields>
 </form>

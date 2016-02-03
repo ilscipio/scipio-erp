@@ -389,9 +389,7 @@ function doPublish() {
             <@field type="generic">
                 <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
             </@field>
-            <@field type="submitarea">
-                <input type="button" value="${uiLabelMap.ProductPublishAndView}" onclick="doPublish();"/>
-            </@field>
+            <@field type="submit" submitType="input-button" text="${uiLabelMap.ProductPublishAndView}" onClick="doPublish();"/>
           </@fields>
         </form>
       </@cell>

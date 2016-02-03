@@ -112,9 +112,7 @@ function lookupShipments() {
                   </@field>
               </@field>
               
-              <@field type="submitarea">
-                  <a href="javascript:lookupShipments();" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.ProductFindShipment}</a>
-              </@field>
+              <@field type="submit" submitType="link" href="javascript:lookupShipments();" class="${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.ProductFindShipment}" />
         </form>
 </@section>
 

@@ -65,8 +65,8 @@ under the License.
                   <input type="text" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?default("00001")}"/>
               </@field>
               <@field type="submitarea">
-                  <a href="javascript:document.selectOrderForm.action='<@ofbizUrl>PackOrder</@ofbizUrl>';document.selectOrderForm.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductPackOrder}</a>
-                  <a href="javascript:document.selectOrderForm.submit();" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.ProductWeighPackageOnly}</a>
+                  <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.action='${makeOfbizUrl('PackOrder')}';document.selectOrderForm.submit();" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.ProductPackOrder}" />
+                  <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.submit();" class="${styles.link_run_sys!} ${styles.action_verify!}" text="${uiLabelMap.ProductWeighPackageOnly}" />
               </@field>
           </form>
           </@section>
@@ -79,8 +79,8 @@ under the License.
                   <input type="text" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
               </@field>
               <@field type="submitarea">
-                  <a href="javascript:document.selectPicklistBinForm.action='<@ofbizUrl>PackOrder</@ofbizUrl>';document.selectPicklistBinForm.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductPackOrder}</a>
-                  <a href="javascript:document.selectPicklistBinForm.submit();" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.ProductWeighPackageOnly}</a>
+                  <@field type="submit" submitType="link" href="javascript:document.selectPicklistBinForm.action='${makeOfbizUrl('PackOrder')}';document.selectPicklistBinForm.submit();" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.ProductPackOrder}" />
+                  <@field type="submit" submitType="link" href="javascript:document.selectPicklistBinForm.submit();" class="${styles.link_run_sys!} ${styles.action_verify!}" text="${uiLabelMap.ProductWeighPackageOnly}" />
               </@field>
           </form>
           </@section>
@@ -145,9 +145,7 @@ under the License.
                 </#list>
                 </@tbody>
               </@table>
-              <@field type="submitarea">
-                <a href="javascript:document.completePackageForm.submit()" class="${styles.link_run_sys!} ${styles.action_complete!}">${uiLabelMap.ProductComplete}</a>
-              </@field>
+              <@field type="submit" submitType="link" href="javascript:document.completePackageForm.submit()" class="${styles.link_run_sys!} ${styles.action_complete!}" text="${uiLabelMap.ProductComplete}" />
               <form name="completePackageForm" method="post" action="<@ofbizUrl>completePackage</@ofbizUrl>">
                 <input type="hidden" name="orderId" value="${orderId!}"/>
                 <input type="hidden" name="shipGroupSeqId" value="${shipGroupSeqId!}"/>
@@ -248,9 +246,7 @@ under the License.
               </form>
               </@tbody>
             </@table>
-            <@field type="submitarea">
-              <a href="javascript:document.completePackForm.submit()" class="${styles.link_run_sys!} ${styles.action_complete!}">${uiLabelMap.ProductComplete}</a>
-            </@field>
+            <@field type="submit" submitType="link" href="javascript:document.completePackForm.submit()" class="${styles.link_run_sys!} ${styles.action_complete!}" text="${uiLabelMap.ProductComplete}" />
             </@section>
           </#if>
         </#if>

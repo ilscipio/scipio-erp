@@ -80,13 +80,11 @@ under the License.
     <@field type="generic" label="${uiLabelMap.ProductPosition}">
         <input type="text" name="positionId" value="${(facilityLocation.positionId)!}" size="19" maxlength="20" />
     </@field>
-    <@field type="submitarea">
-        <#if locationSeqId??>
-          <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
-        <#else>
-          <input type="submit" value="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_add!}" />
-        </#if>
-    </@field>
+    <#if locationSeqId??>
+      <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+    <#else>
+      <@field type="submit" text="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_add!}" />
+    </#if>
   </form>
   
   <#if locationSeqId??>

@@ -31,9 +31,7 @@ under the License.
                 </@field>
               </@cell>
               <@cell columns=3>
-                <@field type="submitarea">
-                  <a href="javascript:document.activityForm.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderRelease}</a>
-                </@field>
+                <@field type="submit" submitType="link" href="javascript:document.activityForm.submit()" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.OrderRelease}" />
               </@cell>
             </@row>
             </@fields>
@@ -51,9 +49,7 @@ under the License.
                 </@field>
               </@cell>
               <@cell columns=3>
-                <@field type="submitarea">
-                  <a href="javascript:document.activityForm.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderHold}</a>
-                </@field>
+                <@field type="submit" submitType="link" href="javascript:document.activityForm.submit()" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.OrderHold}" />
               </@cell>
             </@row>
             </@fields>
@@ -86,9 +82,7 @@ under the License.
               </@field>
             </@cell>
             <@cell columns=3>
-              <@field type="submitarea">
-                  <a href="javascript:document.transitionForm.submit()" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.CommonContinue}</a>
-              </@field>
+              <@field type="submit" submitType="link" href="javascript:document.transitionForm.submit()" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.CommonContinue}" />
             </@cell>
           </@row>
           </@fields>

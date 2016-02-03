@@ -146,12 +146,10 @@ under the License.
                 <input type="text" name="comments" value="${(inventoryTransfer.comments)!}" size="60" maxlength="250" />
             </@field>
         </#if>
-        <@field type="submitarea">
-            <#if !(inventoryTransfer??)>
-                <input type="submit" value="${uiLabelMap.ProductTransfer}" class="${styles.link_run_sys!} ${styles.action_transfer!}" />
-            <#else>
-                <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
-            </#if>
-        </@field>
+        <#if !(inventoryTransfer??)>
+            <@field type="submit" text="${uiLabelMap.ProductTransfer}" class="${styles.link_run_sys!} ${styles.action_transfer!}" />
+        <#else>
+            <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+        </#if>
         </form>
         </#if>

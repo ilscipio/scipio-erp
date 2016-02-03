@@ -834,8 +834,10 @@ standard markup.
                       submit: <input type="submit" ... />
                       input-button: <input type="button" ... />
                       link: <a href="..." ...>...</a>
+                          NOTE: href should usually be specified for this, or explicitly set to boolean false if using onClick. 
+                              If not specified, generated href will cause form submit with form name (if found and not disabled).
                       button: WARN/FIXME?: currently this is same as input-button: <input type="button" ... />
-                        this may chagne to <button...>...</button>
+                          This could change to <button...>...</button> without notice...
                       image: <input type="image" src="..." .../>
     text            = display text (also value for submitType "submit")                
     href            = href for submitType "link"  

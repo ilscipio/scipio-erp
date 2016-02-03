@@ -230,9 +230,7 @@ under the License.
                   <@td colspan="5"></@td>
                 </@tr>
             </@table>
-              <@field type="submitarea">
-                <a href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.ProductReceiveSelectedShipment}</a>
-              </@field>
+              <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}" text="${uiLabelMap.ProductReceiveSelectedShipment}" />
           </form>
           </@section>
         <#-- Multi-Item PO Receiving -->
@@ -458,9 +456,7 @@ under the License.
               <@field type="generic" label="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductLeaveEntirePoReceiving}">
                   <@htmlTemplate.lookupField value="${requestParameters.productId!}" formName="selectAllForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
               </@field>
-              <@field type="submitarea">
-                  <a href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}">${uiLabelMap.ProductReceiveProduct}</a>
-              </@field>
+              <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}" text="${uiLabelMap.ProductReceiveProduct}" />
           </form>
           </@section>
         </#if>

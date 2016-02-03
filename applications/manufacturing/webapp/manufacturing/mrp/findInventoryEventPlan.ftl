@@ -44,9 +44,7 @@ function lookupInventory() {
           <@field type="generic" label="${uiLabelMap.CommonFromDate}">
               <@htmlTemplate.renderDateTimeField name="eventDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.eventDate!}" size="25" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
           </@field>
-          <@field type="submitarea">
-              <a href="javascript:lookupInventory();" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a>
-          </@field>
+          <@field type="submit" submitType="link" href="javascript:lookupInventory();" class="${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.CommonFind}" />
       </#if>
     </form>
 </@section>

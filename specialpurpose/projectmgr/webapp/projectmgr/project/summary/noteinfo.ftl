@@ -97,13 +97,11 @@ under the License.
               <@field type="display">
                 <i>${uiLabelMap.OrderInternalNoteMessage}</i>
               </@field>
-              <@field type="submitarea">
-                <#if project?has_content>
-                  <a href="javascript:document.createnoteform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.CommonSave}</a>
-                <#else>
-                  <a href="javascript:document.createnoteform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.CommonSave}</a>
-                </#if>
-              </@field>
+              <#if project?has_content>
+                <@field type="submit" submitType="link" href="javascript:document.createnoteform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonSave}" />
+              <#else>
+                <@field type="submit" submitType="link" href="javascript:document.createnoteform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonSave}" />
+              </#if>
           </form>
         </@section>
       </#if>

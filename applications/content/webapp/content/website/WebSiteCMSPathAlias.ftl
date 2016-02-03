@@ -79,7 +79,5 @@
             <@field type="generic" label="Map Key">
                 <input type="text" name="mapKey" value="" />
             </@field>
-            <@field type="submitarea">
-                <input id="submit" type="button" onclick="javascript:pathSave('${contentId}');" class="${styles.link_run_sys!} ${styles.action_add!}" value="Create"/>
-            </@field>
+            <@field type="submit" submitType="input-button" id="submit" onClick="javascript:pathSave('${contentId}');" class="${styles.link_run_sys!} ${styles.action_add!}" text="Create"/>
     </form>

@@ -116,7 +116,5 @@
         <@field type="generic" label="Meta-Keywords">
             <input type="text" name="metaKeywords" value="${(metaKeywords.objectInfo)!}" size="40" />
         </@field>
-        <@field type="submitarea">
-            <input id="submit" type="button" onclick="javascript:saveMetaInfo(cmsmetaform);" class="${styles.link_run_sys!} ${styles.action_update!}" value="${uiLabelMap.CommonSave}"/>
-        </@field>
+        <@field type="submit" submitType="input-button" id="submit" onClick="javascript:saveMetaInfo(cmsmetaform);" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.CommonSave}"/>
 </form>

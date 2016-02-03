@@ -359,9 +359,7 @@ under the License.
                   <input type="text" name="orderId" size="20" maxlength="20" />
               </@field>
             </#if>
-            <@field type="submitarea">
-                <a href="javascript:document.returnItems.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.OrderReturnLoadItems}</a>
-            </@field>
+            <@field type="submit" submitType="link" href="javascript:document.returnItems.submit();" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.OrderReturnLoadItems}" />
         </form>
         </@section>
         </#if>

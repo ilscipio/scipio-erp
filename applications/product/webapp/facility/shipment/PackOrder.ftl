@@ -75,9 +75,9 @@ under the License.
                     <span>${uiLabelMap.ProductHideGrid}</span>&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked=""</#if> />
                 </@field>
                 <@field type="submitarea">
-                    <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.selectOrderForm.submit();" />
-                    <a href="javascript:document.selectOrderForm.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductPackOrder}</a>
-                    <a href="javascript:document.selectOrderForm.action='<@ofbizUrl>WeightPackageOnly</@ofbizUrl>';document.selectOrderForm.submit();" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.ProductWeighPackageOnly}</a>
+                    <@field type="submit" submitType="image" src=makeOfbizContentUrl("/images/spacer.gif") onClick="javascript:document.selectOrderForm.submit();" />
+                    <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.submit();" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.ProductPackOrder}" />
+                    <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.action='${makeOfbizUrl('WeightPackageOnly')}';document.selectOrderForm.submit();" class="${styles.link_run_sys!} ${styles.action_verify!}" text="${uiLabelMap.ProductWeighPackageOnly}" />
                 </@field>
             </form>
             </@section>
@@ -91,9 +91,9 @@ under the License.
                     <span>${uiLabelMap.ProductHideGrid}</span>&nbsp;<input type="checkbox" name="hideGrid" value="Y" <#if (hideGrid == "Y")>checked=""</#if> />
                 </@field>
                 <@field type="submitarea">
-                    <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.selectPicklistBinForm.submit();" />
-                    <a href="javascript:document.selectPicklistBinForm.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductPackOrder}</a>
-                    <a href="javascript:document.selectPicklistBinForm.action='<@ofbizUrl>WeightPackageOnly</@ofbizUrl>';document.selectPicklistBinForm.submit();" class="${styles.link_run_sys!} ${styles.action_verify!}">${uiLabelMap.ProductWeighPackageOnly}</a>
+                    <@field type="submit" submitType="image" src=makeOfbizContentUrl("/images/spacer.gif") onClick="javascript:document.selectPicklistBinForm.submit();" />
+                    <@field type="submit" submitType="link" href="javascript:document.selectPicklistBinForm.submit();" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.ProductPackOrder}" />
+                    <@field type="submit" submitType="link" href="javascript:document.selectPicklistBinForm.action='${makeOfbizUrl('WeightPackageOnly')}';document.selectPicklistBinForm.submit();" class="${styles.link_run_sys!} ${styles.action_verify!}" text="${uiLabelMap.ProductWeighPackageOnly}" />
                 </@field>
             </form>
             </@section>

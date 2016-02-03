@@ -117,8 +117,6 @@ under the License.
     </@section>
 
     <@section title="${uiLabelMap.ProductSearchExportProductList}">
-        <@field type="submitarea">
-            <a href="<@ofbizUrl>searchExportProductList?clearSearch=N</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.ProductSearchExport}</a>
-        </@field>
+        <@field type="submit" submitType="link" href=makeOfbizUrl("searchExportProductList?clearSearch=N") class="${styles.link_nav!} ${styles.action_find!}" text="${uiLabelMap.ProductSearchExport}" />
     </@section>
 </#if>

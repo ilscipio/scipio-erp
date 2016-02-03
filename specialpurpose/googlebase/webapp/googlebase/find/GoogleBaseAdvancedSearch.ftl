@@ -269,9 +269,7 @@ under the License.
 
           <hr />
 
-          <@field type="submitarea">
-              <a href="javascript:submit('advToKeywordSearchform');" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonFind}</a>
-          </@field>
+          <@field type="submit" submitType="link" href="javascript:submit('advToKeywordSearchform');" class="${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.CommonFind}" />
       </fieldset>
     </form>
 </@section>

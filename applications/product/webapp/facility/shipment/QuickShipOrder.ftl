@@ -75,9 +75,7 @@ function setWeight(weight) {
                 </@field>
               </@cell>
               <@cell columns=3>
-                <@field type="submitarea">
-                    <a href="javascript:document.routeForm.submit();" class="${styles.link_run_sys!} ${styles.action_updatestatus!}">${uiLabelMap.ProductConfirmShipmentUps}</a>
-                </@field>
+                <@field type="submit" submitType="link" href="javascript:document.routeForm.submit();" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" text="${uiLabelMap.ProductConfirmShipmentUps}" />
               </@cell>
             </@row>
             <@row>
@@ -97,9 +95,7 @@ function setWeight(weight) {
                 </@field>
               </@cell>
               <@cell columns=3>
-                <@field type="submitarea">
-                    <a href="<@ofbizUrl>quickShipOrder?facilityId=${facilityId}&amp;shipmentId=${shipmentId}&amp;reweigh=Y</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductReWeighPackage}</a>
-                </@field>
+                <@field type="submit" submitType="link" href=makeOfbizUrl("quickShipOrder?facilityId=${facilityId}&amp;shipmentId=${shipmentId}&amp;reweigh=Y") class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.ProductReWeighPackage}" />
               </@cell>
             </@row>
             <@row>
@@ -107,9 +103,7 @@ function setWeight(weight) {
                 &nbsp;
               </@cell>
               <@cell columns=3>
-                <@field type="submitarea">
-                    <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.routeForm.submit();" />
-                </@field>
+                <@field type="submit" submitType="image" src=makeOfbizContentUrl("/images/spacer.gif") onClick="javascript:document.routeForm.submit();" />
               </@cell>
             </@row>
             </@fields>
@@ -146,8 +140,8 @@ function setWeight(weight) {
                   </select>
               </@field>
               <@field type="submitarea">
-                  <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.weightForm.submit();"/>
-                  <a href="javascript:document.weightForm.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductSetWeight}</a>
+                  <@field type="submit" submitType="image" src=makeOfbizContentUrl("/images/spacer.gif") onClick="javascript:document.weightForm.submit();"/>
+                  <@field type="submit" submitType="link" href="javascript:document.weightForm.submit();" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.ProductSetWeight}" />
               </@field>
           </form>
           <@script>
@@ -182,8 +176,8 @@ function setWeight(weight) {
             <input type="text" name="orderId" size="20" maxlength="20" value="${requestParameters.orderId!}" />
         </@field>
         <@field type="submitarea">
-            <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.selectOrderForm.submit();" />
-            <a href="javascript:document.selectOrderForm.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductShipOrder}</a>
+            <@field type="submit" submitType="image" src=makeOfbizContentUrl("/images/spacer.gif") onClick="javascript:document.selectOrderForm.submit();" />
+            <@field type="submit" submitType="link" href="javascript:document.selectOrderForm.submit();" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.ProductShipOrder}" />
         </@field>
     </form>
     <@script>

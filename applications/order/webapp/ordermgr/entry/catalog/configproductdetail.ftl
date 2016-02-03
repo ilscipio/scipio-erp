@@ -345,9 +345,7 @@ function getConfigDetails() {
               <@field type="generic" label="${uiLabelMap.ProductQuantity}">
                 <input type="text" size="5" name="quantity" value="1" />
               </@field>
-              <@field type="submitarea">
-                <a href="javascript:addItem()" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddToCart}</a>
-              </@field>
+              <@field type="submit" submitType="link" href="javascript:addItem()" class="${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToCart}" />
             </#if>
           </#if>
           <#if requestParameters.category_id??>
@@ -383,9 +381,7 @@ function getConfigDetails() {
           <@field type="generic" label="${uiLabelMap.ProductQuantity}">
             <input type="text" size="5" name="quantity" value="1" />
           </@field>
-          <@field type="submitarea">
-            <a href="javascript:document.addToShoppingList.submit();" class="${styles.link_run_sys!} ${styles.action_add!}">[${uiLabelMap.OrderAddToShoppingList}]</a>
-          </@field>
+          <@field type="submit" submitType="link" href="javascript:document.addToShoppingList.submit();" class="${styles.link_run_sys!} ${styles.action_add!}" text="[${uiLabelMap.OrderAddToShoppingList}]" />
         </form>
       <#else> 
         ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>

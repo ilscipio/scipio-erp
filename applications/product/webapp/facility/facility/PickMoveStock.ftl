@@ -166,8 +166,6 @@ under the License.
                 <@field type="generic" label="${uiLabelMap.ProductMoveQuantity}">
                     <input type="text" name="quantityMoved" size="6" />
                 </@field>
-                 <@field type="submitarea">
-                    <a href="javascript:document.quickStockMove.submit();" class="${styles.link_run_sys!} ${styles.action_update!}">${uiLabelMap.ProductQuickStockMove}</a>
-                </@field>
+                 <@field type="submit" submitType="link" href="javascript:document.quickStockMove.submit();" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.ProductQuickStockMove}" />
         </form>
 </@section>

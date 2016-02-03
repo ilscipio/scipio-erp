@@ -105,8 +105,8 @@ under the License.
             </#if>
                 <#--<hr />-->
                 <@field type="submitarea">
-                    <input type="submit" value="${uiLabelMap.PartyLookupParty}" onclick="javascript:document.lookupparty.submit();" class="${styles.link_run_sys!} ${styles.action_find!}"/>
-                    <a href="<@ofbizUrl>findEmployees?roleTypeId=EMPLOYEE&amp;hideFields=Y&amp;lookupFlag=Y</@ofbizUrl>" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.CommonShowAllRecords}</a>
+                    <@field type="submit" text="${uiLabelMap.PartyLookupParty}" onClick="javascript:document.lookupparty.submit();" class="${styles.link_run_sys!} ${styles.action_find!}"/>
+                    <@field type="submit" submitType="link" href=makeOfbizUrl("findEmployees?roleTypeId=EMPLOYEE&amp;hideFields=Y&amp;lookupFlag=Y") class="${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.CommonShowAllRecords}" />
                 </@field>
         </form>
     </#if>

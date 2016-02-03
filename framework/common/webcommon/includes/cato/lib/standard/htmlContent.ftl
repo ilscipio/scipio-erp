@@ -506,7 +506,7 @@ TODO?: @table macros were made before push/popRequestStack was fully realized, s
   autoAltRows="" firstRowAlt="" inheritAltRows=false useFootAltRows=false tableIdNum=0 attribs={} excludeAttribs=[] origArgs={} passArgs={} catchArgs...>
   <#if open>
     <table<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#rt>
-      <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>  
+      <#lt><#if cellspacing?has_content> cellspacing="${cellspacing}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if> width="100%">  
   </#if>
       <#nested>
   <#if close>

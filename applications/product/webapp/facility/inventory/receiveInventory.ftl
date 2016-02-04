@@ -33,7 +33,7 @@ under the License.
         <#-- Receiving Results -->
         <#if receivedItems?has_content>
           <@section title="${uiLabelMap.ProductReceiptPurchaseOrder} ${purchaseOrder.orderId}">
-          <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
+          <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
            <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.ProductShipmentId}</@th>
@@ -237,7 +237,7 @@ under the License.
           <#if !purchaseOrderItems?? || purchaseOrderItems.size() == 0>
             <@commonMsg type="result">${uiLabelMap.ProductNoItemsPoReceive}.</@commonMsg>
           <#else>
-            <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+            <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 <@tr>
                   <@td>
                     <@heading>${uiLabelMap.ProductReceivePurchaseOrder} #${purchaseOrder.orderId}</@heading>
@@ -282,7 +282,7 @@ under the License.
                   </@tr>
                   <@tr>
                     <@td>
-                      <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+                      <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                         <@tr>
                           <#if orderItem.productId??>
                             <#assign product = orderItem.getRelatedOne("Product", true)/>

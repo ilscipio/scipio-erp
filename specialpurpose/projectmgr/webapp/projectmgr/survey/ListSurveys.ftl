@@ -19,7 +19,7 @@ under the License.
 
 <@section title="${uiLabelMap.CommonList} ${uiLabelMap.EcommerceSurveys}">
     <#if workEffortSurveyAppls?has_content>
-      <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+      <@table type="data-list"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
       <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.ContentSurveySurveyId}</@th>

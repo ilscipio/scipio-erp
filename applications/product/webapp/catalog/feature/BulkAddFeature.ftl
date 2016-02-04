@@ -22,7 +22,7 @@ under the License.
         <input type="hidden" name="_checkGlobalScope" value="N" />
         <input type="hidden" name="productFeatureCategoryId" value="${productFeatureCategoryId}" />
       <#-- Cato: don't enable responsive on this table, comes out wrong -->
-      <@table type="data-complex" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
+      <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.CommonDescription}</@th>

@@ -20,7 +20,7 @@ under the License.
         <form method="post" action="<@ofbizUrl>FindGeneric?entityName=${entityName}</@ofbizUrl>">
           <input type="hidden" name="find" value="true"/>
           <input type="hidden" name="searchOptions_collapsed" value="true"/>
-          <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
+          <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
             <@thead>
                 <@tr class="header-row-2">
                   <@th>${uiLabelMap.WebtoolsFieldName}</@th>

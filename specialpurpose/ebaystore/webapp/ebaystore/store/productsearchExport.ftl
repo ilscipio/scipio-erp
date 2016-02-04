@@ -252,7 +252,7 @@ under the License.
                           </#list>
                      </#if>
                      <#if !smallImageUrl?string?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
-                          <@table type="fields" cellspacing="0" width="70%">
+                          <@table type="fields" width="70%"> <#-- orig: cellspacing="0" -->
                             <@tr>
                                 <@td>ItemID</@td>
                                 <@td><input type="text" readonly="readonly" name="item" value="${item.getItemID()!}"/></@td>
@@ -276,7 +276,7 @@ under the License.
                                  <@table type="generic" width="100%" cellspacing="0">
                                      <@tr>
                                      <@td width="60%"  valign="top">
-                                        <@table type="fields" cellspacing="0"> <#-- orig: class="" -->
+                                        <@table type="fields"> <#-- orig: class="" --> <#-- orig: cellspacing="0" -->
                                         <@tr>
                                             <@td>SiteId</@td>
                                             <@td>
@@ -441,7 +441,7 @@ under the License.
                                      </@table>
                                     </@td>
                                     <@td width="40%"  valign="top">
-                                    <@table type="fields" width="100%" height="100%" id="table2" cellspacing="0"> <#-- orig: class="" -->
+                                    <@table type="fields" width="100%" height="100%" id="table2"> <#-- orig: class="" --> <#-- orig: cellspacing="0" -->
                                         <@tr>
                                                     <@td>
                                                         <img src="<@ofbizContentUrl>${contentPathPrefix!}${smallImageUrl}</@ofbizContentUrl>" alt="Small Image"/><br />
@@ -459,7 +459,7 @@ under the License.
                           <#if primaryCate?has_content && primaryCate.getCategoryID()?? && listingTypes?has_content>
                              <#if checkSpecific == "true">
                              <@section title="Item specifices">
-                                        <@table type="fields" width="50%" height="100%" id="table2"  cellspacing="0"> <#-- orig: class="" -->
+                                        <@table type="fields" width="50%" height="100%" id="table2" > <#-- orig: class="" --> <#-- orig: cellspacing="0" -->
                                         <#list mapKeys(categorySpecifix) as key>
                                             <#assign values = categorySpecifix.get(key)!/>
                                             <#assign i = 0/>
@@ -492,7 +492,7 @@ under the License.
                                     <@table type="generic" width="100%" height="100%" cellspacing="0">
                                         <@tr>
                                             <@td width="60%" valign="top">
-                                                 <@table type="fields" cellspacing="0"> <#-- orig: class="" -->
+                                                 <@table type="fields"> <#-- orig: class="" --> <#-- orig: cellspacing="0" -->
                                                     <@tr><@td>
                                                         <@script src=makeOfbizContentUrl("/images/jquery/plugins/elrte-1.3/js/elrte.min.js") />
                                                         <#if language?has_content && language != "en">
@@ -518,7 +518,7 @@ under the License.
                                                  </@table>
                                             </@td>
                                             <@td width="30%" valign="top">
-                                                <@table type="fields" align="left" width="60%"  height="100%" cellspacing="0"> <#-- orig: class="" -->
+                                                <@table type="fields" align="left" width="60%"  height="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" -->
                                                     <@tr>
                                                         <@td></@td>
                                                         <@td><input type="checkbox" value="Y" onclick="javascript:enabledItemTemplate(this.value);" id="enabledTheme" name="enabledTheme" /><b>Add a theme</b></checkbox></@td>
@@ -597,7 +597,7 @@ under the License.
                                         <#if listingType.type.equals("Chinese") > <#assign tabName = "Auction"></#if>
                                         <#if listingType.type.equals("FixedPriceItem") ><#assign tabName = "Fixed Price"></#if>
                                        <div id="tabContent${id}" class="tabContent" <#if id != 1>style="display:none;"</#if>>
-                                            <@table type="fields" width="50%" height="100%" id="table2" cellspacing="0"> <#-- orig: class="" -->
+                                            <@table type="fields" width="50%" height="100%" id="table2"> <#-- orig: class="" --> <#-- orig: cellspacing="0" -->
                                                     <@tr>
                                                          <@td></@td>
                                                         <@td>
@@ -698,7 +698,7 @@ under the License.
                           <!-- payment section -->
                           <#if primaryCate?has_content && primaryCate.getCategoryID()?? && listingTypes?has_content>
                              <@section title="Payment">
-                                     <@table type="fields" width="50%" height="100%" id="table2" cellspacing="0"> <#-- orig: class="" -->
+                                     <@table type="fields" width="50%" height="100%" id="table2"> <#-- orig: class="" --> <#-- orig: cellspacing="0" -->
                                         <@tr><@td colspan="4"><br /></@td></@tr>
                                                      <@tr>
                                                         <@td colspan="4">
@@ -778,7 +778,7 @@ under the License.
                                           <@td><img height="1" src="http://pics.ebaystatic.com/aw/pics/tbx/s.gif" width="10" alt="" /></@td>
                                         </@tr>
                                     </@table>
-                                    <@table type="fields" cellspacing="0" cellpadding="0" width="100%" border="0"> <#-- orig: class="" -->
+                                    <@table type="fields" cellpadding="0" width="100%" border="0"> <#-- orig: class="" --> <#-- orig: cellspacing="0" -->
                                          <@tr>
                                            <@td style="WIDTH: 150px"><b>Ships to locations:</b></@td>
                                          </@tr>
@@ -809,7 +809,7 @@ under the License.
        </@td></@tr>
     </@table>
     <#--if addItemList?has_content>
-        <@table type="fields" cellspacing="0"> <#- orig: class="basic-table" ->
+        <@table type="fields"> <#- orig: class="basic-table" -> <#-- orig: cellspacing="0" -->
             <@tr>
                 <@td align="center" colspan="2">
                     <a href="#" class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}">${uiLabelMap.EbayExportToEbay}</a>

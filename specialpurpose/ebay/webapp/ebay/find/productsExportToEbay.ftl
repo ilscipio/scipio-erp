@@ -80,7 +80,7 @@ under the License.
             </@field>
             <@field type="input" label="${uiLabelMap.FormFieldTitle_webSiteUrl}" name="webSiteUrl" size="100" value="${webSiteUrl!}"/>
             <@field type="generic" label="${uiLabelMap.FormFieldTitle_paymentMethodsAccepted}">
-                    <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+                    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                         <@tr>
                             <@td align="right" width="23%">${uiLabelMap.FormFieldTitle_paymentPayPal}</@td>
                             <@td width="2%"><input type="checkbox" name="paymentPayPal" <#if parameters.paymentPayPal??>checked="checked"</#if> /></@td>

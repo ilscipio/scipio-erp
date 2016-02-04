@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-<@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+<@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
   <@thead>
     <@tr class="header-row">
         <#assign firstRecord = records[0]!/>

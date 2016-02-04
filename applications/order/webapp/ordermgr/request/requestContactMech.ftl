@@ -31,7 +31,7 @@ under the License.
 </#if>
 
   <@section title="${uiLabelMap.PartyContactInformation}">
-        <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
             <@tr>
                 <@td align="right" valign="top" width="25%">
                     &nbsp;${label?default(uiLabelMap.PartyUnknown)}

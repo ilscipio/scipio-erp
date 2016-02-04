@@ -45,7 +45,7 @@ under the License.
         
         <#-- CATO: FIXME: this whole template is full of forms inside table elems = invalid HTML -->
         
-        <@table type="data-complex" class="+order-items" cellspacing="0"> <#-- orig: class="basic-table order-items" -->
+        <@table type="data-complex" class="+order-items"> <#-- orig: class="basic-table order-items" --> <#-- orig: cellspacing="0" -->
 
         <#if orderItemList?has_content>
             <form name="updateItemInfo" method="post" action="<@ofbizUrl>updateOrderItems</@ofbizUrl>">

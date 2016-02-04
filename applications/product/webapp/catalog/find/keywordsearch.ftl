@@ -70,7 +70,7 @@ under the License.
   <@paginate mode="content" url=makeOfbizUrl("keywordsearch") paramStr=paramStr paramDelim="/" paramPrefix="~" viewSize=viewSize!1 previousViewSize=previousViewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paginateToggle=true paginateOn=((paging!"N")=="Y")>
     <form method="post" name="products">
       <input type="hidden" name="productStoreId" value="${parameters.productStoreId!}" />
-      <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
+      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>
           <@tr>
             <@th><input type="checkbox" name="selectAll" value="0" onclick="javascript:toggleAll(this);"/> ${uiLabelMap.ProductProduct}</@th>

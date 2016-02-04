@@ -18,7 +18,7 @@ under the License.
 -->
 <#if shipment??>
   <@section title="${uiLabelMap.PageTitleEditShipmentRouteSegments}">
-        <@table type="data-complex" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead> 
         <@tr class="header-row">
             <@th valign="top">${uiLabelMap.ProductSegment}</@th>
@@ -352,7 +352,7 @@ under the License.
 </@section>
 
 <@section title="${uiLabelMap.PageTitleAddShipmentRouteSegment}">
-        <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
             <form action="<@ofbizUrl>createShipmentRouteSegment</@ofbizUrl>" method="post" name="createShipmentRouteSegmentForm">
             <input type="hidden" name="shipmentId" value="${shipmentId}"/>
             <@tr>

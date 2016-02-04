@@ -38,7 +38,7 @@ under the License.
               <input type="hidden" name="VIEW_INDEX" value="${viewIndex}"/>
               <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
               <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-              <@table type="data-complex" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
+              <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 <@thead>
                  <@tr class="header-row">
                     <@th>${uiLabelMap.CommonProduct}</@th>

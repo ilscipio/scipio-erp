@@ -46,7 +46,7 @@ under the License.
   </#macro>
   <@section id="partyPaymentMethod" title="${uiLabelMap.PartyPaymentMethodInformation}" menuContent=menuContent>
       <#if paymentMethodValueMaps?has_content || billingAccounts?has_content>
-        <@table type="data-complex" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@tbody>
         <#if paymentMethodValueMaps?has_content>
           <#list paymentMethodValueMaps as paymentMethodValueMap>

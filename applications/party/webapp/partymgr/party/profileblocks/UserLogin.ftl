@@ -26,7 +26,7 @@ under the License.
   </#macro>
   <@section id="partyUserLogins" title="${uiLabelMap.PartyUserName}" menuContent=menuContent>
       <#if userLogins?has_content>
-        <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@tbody>
           <#list userLogins as userUserLogin>
             <@tr>

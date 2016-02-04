@@ -21,7 +21,7 @@ under the License.
             <@htmlTemplate.nextPrev position="top" commonUrl=commonUrl listSize=arraySize viewSize=viewSize viewIndex=viewIndex highIndex=highIndex commonDisplaying=commonDisplaying/>
         </#if>
         <#if resultPartialList?has_content>
-          <@table type="data-list" autoAltRows=true cellspacing="0" scrollable=true fixedColumnsLeft=1 fixedColumnsRight=1> <#-- orig: class="basic-table responsive" -->
+          <@table type="data-list" autoAltRows=true scrollable=true fixedColumnsLeft=1 fixedColumnsRight=1> <#-- orig: class="basic-table responsive" --> <#-- orig: cellspacing="0" -->
            <@thead>
             <@tr class="header-row-2">
                     <@th>&nbsp;</@th>

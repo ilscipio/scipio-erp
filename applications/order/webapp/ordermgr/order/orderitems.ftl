@@ -19,7 +19,7 @@ under the License.
 
 <#if orderHeader?has_content>
 <@section title="${uiLabelMap.OrderOrderItems}">
-            <@table type="data-complex" cellspacing="0" role="grid"> <#-- orig: class="basic-table" -->
+            <@table type="data-complex" role="grid"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
               <@thead>
                 <@tr valign="bottom" class="header-row">
                     <@th width="30%">${uiLabelMap.ProductProduct}</@th>
@@ -230,7 +230,7 @@ under the License.
                                             <#if unplannedQuantity < 0><#assign unplannedQuantity = 0></#if>
                                             &nbsp;
                                             <@modal id="${productId}_i" label="${uiLabelMap.ProductInventory}">
-                                                    <@table type="fields" cellspacing="0" cellpadding="0" border="0">
+                                                    <@table type="fields" cellpadding="0" border="0"> <#-- orig: cellspacing="0" -->
                                                         <@tr>
                                                             <@td style="text-align: right; padding-bottom: 10px;">
                                                                 <a class=""
@@ -661,7 +661,7 @@ target="facility"
                             <@td>&nbsp;</@td>
                             <@td colspan="4">
                               <@section>
-                                  <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
+                                  <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                                     <@tr>
                                       <@td class="${styles.text_right!}" nowrap="nowrap">
                                         ${uiLabelMap.CommonComments}

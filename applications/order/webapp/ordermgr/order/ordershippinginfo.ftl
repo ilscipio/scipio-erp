@@ -57,7 +57,7 @@ under the License.
     </@menu>
   </#macro>
   <@section title="${uiLabelMap.OrderShipmentInformation}" menuContent=menuContent>
-      <@table type="data-complex" cellspacing="0" role="grid"> <#-- orig: class="basic-table" -->
+      <@table type="data-complex" role="grid"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>
           <@tr class="header-row">
               <@th width="15%">${uiLabelMap.OrderItemId}</@th>
@@ -106,7 +106,7 @@ under the License.
                 <input type="hidden" name="orderId" value="${orderId}"/>
                 <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
                 
-                <@table type="data-complex" cellspacing="0" border="0" style="border:0"> <#-- orig: class="basic-table" -->
+                <@table type="data-complex" border="0" style="border:0"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 
               <#list OISGAssContents as OISGAssContent>
                 <#assign OISG = OISGAssContent.getRelatedOne("OrderItemShipGroup")>
@@ -166,7 +166,7 @@ under the License.
                 <input type="hidden" name="orderId" value="${orderId}"/>
                 <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
                 <input type="hidden" name="quantity" value="0"/>
-                  <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+                  <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                       <@tr>
                           <@td>
                              <div class="label">${uiLabelMap.OrderAddToshipGroup} : </div>
@@ -227,7 +227,7 @@ under the License.
         <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId!}"/>
         <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
         <input type="hidden" name="oldContactMechId" value="${shipGroup.contactMechId!}"/>
-        <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 <@tr>
                     <@td scope="row" class="${styles.grid_large!}3">
                         ${uiLabelMap.OrderAddress}
@@ -377,7 +377,7 @@ under the License.
                 });
        });
       </@script>
-      <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+      <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <#if shipGroup.supplierPartyId?has_content>
            <#assign OISGAContent = shipGroup.getRelated("OrderItemShipGroupAssoc")>
            <#-- New in Ofbiz 14.12 -->

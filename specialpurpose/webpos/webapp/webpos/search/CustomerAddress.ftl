@@ -27,7 +27,7 @@ under the License.
         <input type="hidden" id="billingLocation" name="billingLocation" value="Y"/>
         <input type="hidden" id="shippingLocation" name="shippingLocation" value="N"/>
         <div id="billingAddress">
-          <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+          <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <#if billingPostalAddress??>
             <#if personBillTo??>
             <@tr>
@@ -58,7 +58,7 @@ under the License.
           </@table>
         </div>
         <div id="shippingAddress" style="display:none">
-          <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+          <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <#if shippingPostalAddress??>
             <#if personShipTo??>
             <@tr>

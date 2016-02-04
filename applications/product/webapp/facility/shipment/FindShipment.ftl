@@ -112,7 +112,7 @@ function lookupShipments() {
       <#assign paramStr = addParamsToStr(StringUtil.wrapString(paramList!""), {"lookupFlag": "Y"}, "&amp;", false)>
       <@paginate mode="content" url=makeOfbizUrl("FindShipment") paramStr=paramStr viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=shipmentList?size>
    
-        <@table type="data-list" autoAltRows=true cellspacing="0" cellpadding="2"> <#-- orig: class="basic-table hover-bar" -->
+        <@table type="data-list" autoAltRows=true cellpadding="2"> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
         <@thead>
           <@tr class="header-row">
             <@th width="5%">${uiLabelMap.ProductShipmentId}</@th>

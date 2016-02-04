@@ -19,7 +19,7 @@ under the License.
 <#if productPromoId?? && productPromo??>
 <@section title="${uiLabelMap.PageTitleEditProductPromoRules}">
   <#-- ======================= Rules ======================== -->
-    <@table type="data-complex" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
+    <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
       <@thead>
         <@tr class="header-row">
           <@th width="10%">${uiLabelMap.ProductRuleId}</@th>
@@ -58,7 +58,7 @@ under the License.
       <@tr valign="top" class="row-level-one" alt=(ruleClass == "1")>
         <@td align="right">${uiLabelMap.ProductConditionsForRule} ${(productPromoRule.productPromoRuleId)!} :</@td>
         <@td colspan="2">
-          <@table type="data-complex" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
+          <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
     <#assign maxCondSeqId = 1>
     <#assign condClass = "2">
     <#list productPromoConds as productPromoCond>
@@ -264,7 +264,7 @@ under the License.
       <@tr valign="top" class="row-level-one" alt=(ruleClass == "1")>
         <@td align="right">${uiLabelMap.ProductActionForRule} ${(productPromoRule.productPromoRuleId)!} :</@td>
         <@td colspan="2">
-          <@table type="data-complex" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
+          <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
     <#assign actionClass = "2">
     <#list productPromoActions as productPromoAction>
             <@tr class="row-level-two" alt=(actionClass == "1")>

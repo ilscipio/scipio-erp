@@ -26,7 +26,7 @@ under the License.
         <#if !goodIdentifications?has_content && !idProduct?has_content>
           <@commonMsg type="result">${uiLabelMap.ProductNoResultsFound}.</@commonMsg>
         <#else>
-          <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
+          <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
             <#if idProduct?has_content>
             <@tr valign="middle">
                 <@td>

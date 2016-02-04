@@ -68,7 +68,7 @@ under the License.
 
 <#if displayParty?has_content || orderContactMechValueMaps?has_content>
   <@section title="${uiLabelMap.OrderContactInformation}">
-      <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+      <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@tr>
           <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonName}</@td>
           <@td width="1%">&nbsp;</@td>

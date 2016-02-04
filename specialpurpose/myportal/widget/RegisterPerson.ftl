@@ -22,7 +22,7 @@ under the License.
         <input type="hidden" value="${webSiteId}" name="webSiteId"/>
         <input type="hidden" name="reload"/>
         <div id="_G0_" class="fieldgroup"><div class="fieldgroup-title-bar"><@table type="generic"><@tbody><@tr><@td class="collapse"> </@td><@td> </@td></@tr></@tbody></@table></div><div class="fieldgroup-body" id="_G0__body">
-            <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+            <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 <@tbody>
                     <@tr>
                         <@td>Why Would You Like To Register</@td>

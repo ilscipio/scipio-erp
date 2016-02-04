@@ -33,7 +33,7 @@
 </#if>
 
 
-    <@table type="data-list" border="1" cellpadding="2" cellspacing="0" class="+calendarTable"> <#-- orig: class="calendarTable" -->
+    <@table type="data-list" border="1" cellpadding="2" class="+calendarTable"> <#-- orig: class="calendarTable" --> <#-- orig: cellspacing="0" -->
       <@thead>
       <@tr class="header-row">
         <@th>Web Site ID</@th>

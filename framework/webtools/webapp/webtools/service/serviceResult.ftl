@@ -21,7 +21,7 @@ under the License.
     <@row>
         <@cell>
         <form method="post" action="<@ofbizUrl>saveServiceResultsToSession</@ofbizUrl>">
-        <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
               <@thead>
           <@tr class="header-row">
                 <@th>${uiLabelMap.WebtoolsParameterName}</@th>

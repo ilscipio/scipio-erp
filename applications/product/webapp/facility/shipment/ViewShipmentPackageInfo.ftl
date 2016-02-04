@@ -18,7 +18,7 @@ under the License.
 -->
 <#if shipmentPackageDatas?has_content>
 <@section>
-      <@table type="data-complex" autoAltRows=true cellspacing="0" cellpadding="2"> <#-- orig: class="basic-table" -->
+      <@table type="data-complex" autoAltRows=true cellpadding="2"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
        <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.ProductPackage}</@th>

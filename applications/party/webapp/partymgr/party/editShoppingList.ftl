@@ -112,7 +112,7 @@ under the License.
   </@menu>
 </#macro>
 <@section title="${uiLabelMap.PartyChildShoppingList} - ${shoppingList.listName}" menuContent=menuContent>
-    <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
+    <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
       <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.PartyListName}</@th>
@@ -160,7 +160,7 @@ under the License.
           <@paginateShoppingListItems position="top"/>
         </#if>
         
-      <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
+      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
        <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.PartyProduct}</@th>

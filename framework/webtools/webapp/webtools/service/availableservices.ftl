@@ -53,7 +53,7 @@ under the License.
       </@row>
     <@row>
         <@cell>
-        <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>
           <@tr>
                 <@th>${uiLabelMap.WebtoolsParameterName}</@th>
@@ -110,7 +110,7 @@ under the License.
     <@cell>
         <@heading>${uiLabelMap.SecurityGroups}</@heading>
       <#if selectedServiceMap.permissionGroups != 'NA'>
-        <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
          <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.WebtoolsNameOrRole}</@th>
@@ -161,7 +161,7 @@ under the License.
 <@row>
    <@cell>
           <@heading>${uiLabelMap.WebtoolsServiceECA}</@heading>
-        <@table type="data-complex" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>
           <@tr class="header-row">
             <@th>${uiLabelMap.WebtoolsEventName}</@th>
@@ -188,7 +188,7 @@ under the License.
               <#if ecaMap.actions?has_content>
                 <@td>
                   <#list ecaMap.actions as action>
-                    <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+                    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                       <@tr>
                         <@td colspan="2"><a href="<@ofbizUrl>${url}?sel_service_name=${action.serviceName}</@ofbizUrl>">${action.serviceName?default(uiLabelMap.CommonNA)}</a></@td>
                       </@tr>
@@ -215,7 +215,7 @@ under the License.
               <#if ecaMap.conditions?has_content>
                 <@td>
                   <#list ecaMap.conditions as condition>
-                    <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+                    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                       <@tr>
                         <@td>${uiLabelMap.WebtoolsCompareType}</b> ${condition.compareType?default(uiLabelMap.CommonNA)}</@td>
                         <@td>
@@ -250,7 +250,7 @@ under the License.
               <#if ecaMap.sets?has_content>
                 <@td>
                   <#list ecaMap.sets as set>
-                    <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+                    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                       <@tr>
                         <@td>${uiLabelMap.WebtoolsFieldName}</b> ${set.fieldName?default(uiLabelMap.CommonNA)}</@td>
                         <@td>&nbsp;</@td>
@@ -298,7 +298,7 @@ under the License.
           <@heading>${paramList.title}</@heading>
 
         <#if paramList.paramList?? && paramList.paramList?has_content>
-          <@table type="data-list" class="+param-table" cellspacing="0"> <#-- orig: class="basic-table param-table" -->
+          <@table type="data-list" class="+param-table"> <#-- orig: class="basic-table param-table" --> <#-- orig: cellspacing="0" -->
             <@thead>
               <@tr class="header-row">
                 <@th>${uiLabelMap.WebtoolsParameterName}</@th>
@@ -366,7 +366,7 @@ under the License.
   <@section menuContent=menuContent>
       <#--
       ${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName?default(uiLabelMap.CommonNA)} (${servicesFoundCount} ${uiLabelMap.CommonFound})-->
-      <@table type="data-list" autoAltRows=true cellspacing="0" scrollable=true> <#-- orig: class="basic-table hover-bar" -->
+      <@table type="data-list" autoAltRows=true scrollable=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
         <@thead>
         <@tr class="header-row">
           <@th id="Service_all">${uiLabelMap.WebtoolsServiceName}</@th>

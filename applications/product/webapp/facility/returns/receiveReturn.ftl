@@ -32,7 +32,7 @@ under the License.
             <@commonMsg type="result">${uiLabelMap.ProductReturnCompletelyReceived}</@commonMsg>
           </#if>
          
-          <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
+          <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
            <@thead>
             <@tr class="header-row">
               <@th>${uiLabelMap.ProductReceipt}</@th>
@@ -72,7 +72,7 @@ under the License.
           <#if !returnItems?? || returnItems?size == 0>
             <@commonMsg type="result">${uiLabelMap.ProductNoItemsToReceive}</@commonMsg>
           <#else>
-            <@table type="data-complex" cellspacing="0"> <#-- orig: class="basic-table" -->
+            <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 <@tr>
                   <@td>
                     <@heading>
@@ -105,7 +105,7 @@ under the License.
                   </@tr>
                   <@tr>
                     <@td>
-                      <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
+                      <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                         <@tr>
                           <#assign productId = "">
                           <#if orderItem.productId??>

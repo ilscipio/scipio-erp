@@ -28,7 +28,7 @@ under the License.
     </#if>
 
     <#if (listSize > 0)>
-      <@table type="data-list" autoAltRows=false width="100%" border="0" cellspacing="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" -->
+      <@table type="data-list" autoAltRows=false width="100%" border="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" --> <#-- orig: cellspacing="0" -->
         <@thead>
           <@tr>
             <@td>${uiLabelMap.CommonQualifier}</@td>

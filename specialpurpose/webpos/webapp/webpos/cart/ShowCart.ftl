@@ -76,7 +76,7 @@ under the License.
 </div>
 </#if>
 <div id="Cart">
-  <@table type="data-complex" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
+  <@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
     <@thead class="CartHead">
       <@tr class="header-row">
         <@th nowrap>${uiLabelMap.OrderProduct}</@th>

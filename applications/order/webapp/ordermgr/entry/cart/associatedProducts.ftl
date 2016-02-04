@@ -23,7 +23,7 @@ under the License.
 
 <#if associatedProducts?has_content>
   <@section title="${uiLabelMap.OrderHelpAlsoInterestedIn}">
-      <@table type="data-complex" autoAltRows=false cellspacing="0" cellpadding="1" border="0">
+      <@table type="data-complex" autoAltRows=false cellpadding="1" border="0"> <#-- orig: cellspacing="0" -->
         <#-- random complementary products -->
         <#list associatedProducts as assocProduct>
           <@tr>

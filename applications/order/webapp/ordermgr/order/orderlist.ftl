@@ -135,7 +135,7 @@ under the License.
 <#if hasPermission>
   <@section title="${uiLabelMap.OrderOrderList}" id="findOrderList">        
       <@paginate mode="content" url=makeOfbizUrl("orderlist") viewSize=state.getViewSize() viewIndex=state.getViewIndex() listSize=state.getSize() altParam=true>
-        <@table type="data-list" autoAltRows=true cellspacing="0">
+        <@table type="data-list" autoAltRows=true> <#-- orig: cellspacing="0" -->
           <@thead>
           <@tr>
             <@th width="10%">${uiLabelMap.OrderOrder} ${uiLabelMap.CommonNbr}</@th>

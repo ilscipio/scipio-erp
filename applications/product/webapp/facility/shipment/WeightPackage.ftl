@@ -87,7 +87,7 @@ under the License.
           <#if !(shipmentPackages?has_content)>
             <@section>
             <#if packedLines?has_content>
-              <@table type="data-complex" cellpadding="2" cellspacing="0"> <#-- orig: class="basic-table" -->
+              <@table type="data-complex" cellpadding="2"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 <@thead>
                 <@tr>
                   <@th>
@@ -166,7 +166,7 @@ under the License.
                   <hr/>
                 </#if>
             <#-- Cato: NOTE/FIXME?: this table is meant to align with the previous table... maybe should be part of it... -->
-            <@table type="data-complex" cellpadding="2" cellspacing="0"> <#-- orig: class="basic-table" -->
+            <@table type="data-complex" cellpadding="2"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 <@tr>
                   <@td>${uiLabelMap.ProductPackedWeight} (${("uiLabelMap.ProductShipmentUomAbbreviation_" + defaultWeightUomId)?eval}):
                       <br />
@@ -201,7 +201,7 @@ under the License.
             </@section>
           <#else>
             <@section>
-            <@table type="data-complex" cellpadding="2" cellspacing="0">  <#-- orig: class="basic-table" -->
+            <@table type="data-complex" cellpadding="2">  <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
              <@thead>
              <@tr>
                 <@th>

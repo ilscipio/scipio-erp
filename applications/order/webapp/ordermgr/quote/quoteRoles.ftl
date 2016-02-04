@@ -18,7 +18,7 @@ under the License.
 -->
 <@section title="${uiLabelMap.OrderOrderQuoteRoles}">
       <#if quoteRoles?has_content>
-        <@table type="data-complex" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
             <#assign row = 1>
             <#list quoteRoles as quoteRole>
                 <#assign roleType = quoteRole.getRelatedOne("RoleType", false)>

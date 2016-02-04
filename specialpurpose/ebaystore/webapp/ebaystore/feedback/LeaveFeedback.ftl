@@ -51,7 +51,7 @@ under the License.
 </@script>
 <form name="leaveFeedback" action="<@ofbizUrl>sendLeaveFeedback</@ofbizUrl>" method="post">
     <input type="hidden" value="${parameters.productStoreId}" name="productStoreId"/>
-<@table type="data-complex" autoAltRows=false cellspacing="0"> <#-- orig: class="basic-table" -->
+<@table type="data-complex" autoAltRows=false> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
     <@tbody>
       <@thead>
         <@tr class="header-row">
@@ -149,7 +149,7 @@ under the License.
                                 <@tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
                                     <@td colspan="2">
                                         Why weren't you satisfied with the item description?
-                                        <@table type="fields" class="+answers" width="100%" border="0" cellpadding="0" cellspacing="0"> <#-- orig: class="answers" -->
+                                        <@table type="fields" class="+answers" width="100%" border="0" cellpadding="0"> <#-- orig: class="answers" --> <#-- orig: cellspacing="0" -->
                                             <@tbody>
                                                 <@tr>
                                                     <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />
@@ -308,7 +308,7 @@ under the License.
                             <@tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
                                 <@td colspan="2">
                                     Why weren't you satisfied with the item description?
-                                    <@table type="fields" class="+answers" width="100%" border="0" cellpadding="0" cellspacing="0"> <#-- orig: class="answers" -->
+                                    <@table type="fields" class="+answers" width="100%" border="0" cellpadding="0"> <#-- orig: class="answers" --> <#-- orig: cellspacing="0" -->
                                         <@tbody>
                                             <@tr>
                                                 <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />
@@ -440,7 +440,7 @@ under the License.
                             <@tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
                                 <@td colspan="2">
                                     Why weren't you satisfied with the item description?
-                                    <@table type="fields" class="+answers" width="100%" border="0" cellpadding="0" cellspacing="0"> <#-- orig: class="answers" -->
+                                    <@table type="fields" class="+answers" width="100%" border="0" cellpadding="0"> <#-- orig: class="answers" --> <#-- orig: cellspacing="0" -->
                                         <@tbody>
                                             <@tr>
                                                 <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />

@@ -28,7 +28,7 @@ under the License.
     <@section title="${uiLabelMap.PageTitleEditCategoryFeatureCategories}">
         <#if productFeatureCatGrpAppls?has_content>
             <#-- Feature Groups -->
-            <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
+            <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
               <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductFeatureGroup}</@th>
@@ -97,7 +97,7 @@ under the License.
     <@section title="${uiLabelMap.ProductApplyFeatureGroupFromCategory}">
         <#if productFeatureCategoryAppls?has_content>
             <#-- Feature Categories -->
-            <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
+            <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
               <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductFeature}</@th>

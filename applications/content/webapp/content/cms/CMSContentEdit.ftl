@@ -65,7 +65,7 @@ ${menuWrapper.renderMenuString()}
   </@tr>
   <@tr>
     <@td width='100%'>
-      <@table type="fields" width="100%" border="0" cellspacing="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" -->
+      <@table type="fields" width="100%" border="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" --> <#-- orig: cellspacing="0" -->
         <@tr>
           <@td>
             <form mode="post" name="publishsite" action="<@ofbizUrl>linkContentToPubPt</@ofbizUrl>">
@@ -106,7 +106,7 @@ ${menuWrapper.renderMenuString()}
   </@tr>
   <@tr>
     <@td width='100%'>
-      <@table type="fields" width="100%" border="0" cellspacing="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" -->
+      <@table type="fields" width="100%" border="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" --> <#-- orig: cellspacing="0" -->
         <@tr>
           <@td>
             <form mode="post" name="updatefeatures" action="<@ofbizUrl>updateFeatures</@ofbizUrl>">
@@ -170,7 +170,7 @@ ${menuWrapper.renderMenuString()}
 <@table type="generic" border="0" width="100%" cellspacing="0" cellpadding="0" class="+boxoutside"> <#- orig: class="boxoutside" ->
   <@tr>
     <@td width='100%'>
-      <@table type="fields" width="100%" border="0" cellspacing="0" cellpadding="0" class="+boxtop"> <#- orig: class="boxtop" ->
+      <@table type="fields" width="100%" border="0" cellpadding="0" class="+boxtop"> <#- orig: class="boxtop" -> <#-- orig: cellspacing="0" -->
         <@tr>
           <@td valign="middle">
             <div class="boxhead">&nbsp;Image Information</div>
@@ -187,7 +187,7 @@ ${menuWrapper.renderMenuString()}
       <@table type="generic" width="100%" border="0" cellspacing="0" cellpadding="0" class="+boxbottom"> <#- orig: class="boxbottom" ->
         <@tr>
           <@td>
-              <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing="0">
+              <@table type="fields" width="100%" border="0" cellpadding="0"> <#-- orig: cellspacing="0" -->
                 <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b>Image</b></div></@td><@td>&nbsp;</@td><@td><div class="tabletext">
                     <img src="<@ofbizUrl>img?imgId=${imgDataResourceId!}</@ofbizUrl>" alt="" />
                     <div></@td></@tr>
@@ -231,7 +231,7 @@ ${menuWrapper.renderMenuString()}
 <@table type="generic" border="0" width="100%" cellspacing="0" cellpadding="0" class="+boxoutside"> <#-- orig: class="boxoutside" -->
   <@tr>
     <@td width='100%'>
-      <@table type="fields" width="100%" border="0" cellspacing="0" cellpadding="0" class="+boxtop"> <#-- orig: class="boxtop" -->
+      <@table type="fields" width="100%" border="0" cellpadding="0" class="+boxtop"> <#-- orig: class="boxtop" --> <#-- orig: cellspacing="0" -->
         <@tr>
           <@td valign="middle">
             <div class="boxhead">&nbsp;</div>
@@ -248,7 +248,7 @@ ${menuWrapper.renderMenuString()}
       <@table type="generic" width="100%" border="0" cellspacing="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <@tr>
           <@td>
-              <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing="0">
+              <@table type="fields" width="100%" border="0" cellpadding="0"> <#-- orig: cellspacing="0" -->
                 <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b>Content Name</b></div></@td><@td><div class="tabletext">${content.contentName!}</div></@td></@tr>
                 <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b>Description</b></div></@td><@td><div class="tabletext">${content.description!}<div></@td></@tr>
               </@table>
@@ -262,7 +262,7 @@ ${menuWrapper.renderMenuString()}
       <@table type="generic" width="100%" border="0" cellspacing="0" cellpadding="0" class="+boxbottom"> <#-- orig: class="boxbottom" -->
         <@tr>
           <@td>
-              <@table type="fields" width="100%" border="0" cellpadding="0" cellspacing="0">
+              <@table type="fields" width="100%" border="0" cellpadding="0"> <#-- orig: cellspacing="0" -->
                 <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b></b></div></@td><@td><div class="tabletext">
                     <#-- ${textData!} -->
                     <@renderContentAsText subContentId=content.contentId  editRequestName="/EditAddContent"/>

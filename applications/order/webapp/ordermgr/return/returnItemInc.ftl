@@ -32,7 +32,7 @@ under the License.
   <#-- information about orders and amount refunded/credited on past returns -->
   <#if orh??>
   <@section>
-        <@table type="summary" cellspacing="0"> <#-- orig: class="basic-table" -->
+        <@table type="summary"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@tr>
             <@td width="25%">${uiLabelMap.OrderOrderTotal}</@td>
             <@td><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orh.getCurrency()/></@td>

@@ -39,7 +39,7 @@ under the License.
       padding: 10px 0 10px 0;
     }
     </style>
-    <@table type="fields" cellspacing=0> <#-- orig: class="" -->
+    <@table type="fields"> <#-- orig: class="" --> <#-- orig: cellspacing=0 -->
       <#-- Work Effort Info -->
       <@tr><@td>${uiLabelMap.CommonDate}</@td><@td>${parameters.eventDateTime?default("&nbsp;")}</@td></@tr>
       <@tr><@td>${uiLabelMap.CommonName}</@td><@td>${workEffort.workEffortName?default("&nbsp;")}</@td></@tr>
@@ -51,7 +51,7 @@ under the License.
     </@table>
     <#if partyAssignments?has_content>
       <div><b>${uiLabelMap.PageTitleListWorkEffortPartyAssigns}</b></div>
-      <@table type="data-list" cellspacing=0 cellpadding=2 border=1> <#-- orig: class="" -->
+      <@table type="data-list" cellpadding=2 border=1> <#-- orig: class="" --> <#-- orig: cellspacing=0 -->
         <@thead><@tr>
           <@th>${uiLabelMap.PartyParty}</@th>
           <@th>${uiLabelMap.PartyRole}</@th>
@@ -76,7 +76,7 @@ under the License.
     </#if>
     <#if fixedAssetAssignments?has_content>
       <div><b>${uiLabelMap.PageTitleListWorkEffortFixedAssetAssigns}</b></div>
-      <@table type="data-list" cellspacing=0 cellpadding=2 border=1> <#-- orig: class="" -->
+      <@table type="data-list" cellpadding=2 border=1> <#-- orig: class="" --> <#-- orig: cellspacing=0 -->
         <@thead><@tr>
           <@th>${uiLabelMap.AccountingFixedAsset}</@th>
           <@th>${uiLabelMap.CommonFromDate}</@th>

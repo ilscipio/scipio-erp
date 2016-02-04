@@ -19,7 +19,7 @@ under the License.
 
 <#if orderTerms?has_content>
   <@section title="${uiLabelMap.OrderOrderTerms}">
-    <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
+    <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
       <@thead> 
         <@tr class="header-row">
           <@th width="35%">${uiLabelMap.OrderOrderTermType}</@th>

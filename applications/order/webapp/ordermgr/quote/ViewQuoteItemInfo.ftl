@@ -26,7 +26,7 @@ under the License.
 
 <@section title="${uiLabelMap.OrderOrderQuoteItems}" menuContent=menuContent>
 
-    <@table type="data-complex" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
+    <@table type="data-complex" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
           <@thead>
             <@tr valign="bottom" class="header-row">
                 <@th width="15%">${uiLabelMap.ProductItem}</@th>

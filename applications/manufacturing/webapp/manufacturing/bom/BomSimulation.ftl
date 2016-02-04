@@ -38,7 +38,7 @@ under the License.
      </#if>
     <@section title=label("ContentTree", "ContentUiLabels")>
     <#if tree?has_content>
-      <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
+      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
        <@thead>
         <@tr class="header-row">
           <@th width="10%">${uiLabelMap.ManufacturingProductLevel}</@th>
@@ -94,7 +94,7 @@ under the License.
     
     <@section title="${uiLabelMap.ProductProducts}">
     <#if productsData?has_content>
-      <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table" -->
+      <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
        <@thead>
         <@tr class="header-row">
           <@th width="20%">${uiLabelMap.ProductProductId}</@th>

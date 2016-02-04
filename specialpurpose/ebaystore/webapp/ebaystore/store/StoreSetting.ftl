@@ -147,9 +147,7 @@ under the License.
             <@field type="generic" label="${uiLabelMap.EbayStoreStoreURL}">
                 <a href="${ebayStore.storeUrl!}" target="_blank">${ebayStore.storeUrl!}</a>
             </@field>
-            <@field type="generic" label="${uiLabelMap.EbayStoreStoreLogoURL}">
-                <input type="text" name="storeLogoURL" size="50" value="${ebayStore.storeLogoURL!}"/>
-            </@field>
+            <@field type="input" label="${uiLabelMap.EbayStoreStoreLogoURL}" name="storeLogoURL" size="50" value="${ebayStore.storeLogoURL!}"/>
             <@field type="generic" label="">
                 <div onclick="javascript:switchTheme();">
                    <input type="radio" name="storeThemeType" <#if themeType! == "Basic">checked="checked"</#if> value="Basic" default="default" /> Basic Theme

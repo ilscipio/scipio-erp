@@ -69,12 +69,8 @@ under the License.
     <form name="updateList" method="post" action="<@ofbizUrl>updateShoppingList</@ofbizUrl>">
       <input type="hidden" name="shoppingListId" value="${shoppingList.shoppingListId}" />
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
-        <@field type="generic" label="${uiLabelMap.PartyListName}">
-            <input type="text" size="25" name="listName" value="${shoppingList.listName}" <#if shoppingList.listName?default("") == "auto-save">disabled="disabled"</#if> />
-        </@field>
-        <@field type="generic" label="${uiLabelMap.CommonDescription}">
-            <input type="text" size="70" name="description" value="${shoppingList.description!}" <#if shoppingList.listName?default("") == "auto-save">disabled="disabled"</#if> />
-        </@field>
+        <@field type="input" label="${uiLabelMap.PartyListName}" size="25" name="listName" value="${shoppingList.listName}" disabled=((shoppingList.listName!"") == "auto-save") />
+        <@field type="input" label="${uiLabelMap.CommonDescription}" size="70" name="description" value="${shoppingList.description!}" disabled=((shoppingList.listName!"") == "auto-save") />
         <@field type="generic" label="${uiLabelMap.PartyListType}">
             <select name="shoppingListTypeId" <#if shoppingList.listName?default("") == "auto-save">disabled</#if>>
               <#if shoppingListType??>

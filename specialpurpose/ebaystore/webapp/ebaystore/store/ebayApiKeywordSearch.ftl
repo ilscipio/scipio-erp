@@ -77,12 +77,8 @@ under the License.
                     <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CATEGORY_ID!}" formName="productSearchform" name="SEARCH_CATEGORY_ID" id="searchCategoryId" fieldFormName="LookupProductCategory"/>
                   </#if>
           </@field>
-          <@field type="generic" label="${uiLabelMap.ProductProductName}">
-              <input type="text" name="SEARCH_PRODUCT_NAME" size="20" value="${requestParameters.SEARCH_PRODUCT_NAME!}" />
-          </@field>
-          <@field type="generic" label="${uiLabelMap.ProductInternalName}">
-              <input type="text" name="SEARCH_INTERNAL_PROD_NAME" size="20" value="${requestParameters.SEARCH_INTERNAL_PROD_NAME!}" />
-          </@field>
+          <@field type="input" label="${uiLabelMap.ProductProductName}" name="SEARCH_PRODUCT_NAME" size="20" value="${requestParameters.SEARCH_PRODUCT_NAME!}" />
+          <@field type="input" label="${uiLabelMap.ProductInternalName}" name="SEARCH_INTERNAL_PROD_NAME" size="20" value="${requestParameters.SEARCH_INTERNAL_PROD_NAME!}" />
           <@field type="generic" label="${uiLabelMap.ProductKeywords}">
               <input type="text" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}" />&nbsp;
                 ${uiLabelMap.CommonAny}<input type="radio" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked="checked"</#if> />

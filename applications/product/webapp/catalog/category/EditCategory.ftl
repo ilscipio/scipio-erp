@@ -60,13 +60,9 @@ function insertImageName(type,nameValue) {
                 <@cell columns=6>
                 <#if !productCategory?has_content>
                   <#if productCategoryId?has_content>
-                    <@field type="generic" label="${uiLabelMap.CommonId}">
-                        <input type="text" name="productCategoryId" size="20" maxlength="40" value="${productCategoryId}"/>
-                    </@field>
+                    <@field type="input" label="${uiLabelMap.CommonId}" name="productCategoryId" size="20" maxlength="40" value="${productCategoryId}"/>
                   <#else>
-                    <@field type="generic" label="${uiLabelMap.CommonId}">
-                        <input type="text" name="productCategoryId" size="20" maxlength="40" value=""/>
-                    </@field>
+                    <@field type="input" label="${uiLabelMap.CommonId}" name="productCategoryId" size="20" maxlength="40" value=""/>
                   </#if>
                 <#else>
                 <@field type="generic" label="${uiLabelMap.CommonId}">
@@ -92,9 +88,7 @@ function insertImageName(type,nameValue) {
             </@row>
             <@row>
                 <@cell columns=6>
-                <@field type="generic" label="${uiLabelMap.CommonName}">
-                    <input type="text" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/>
-                </@field>
+                <@field type="input" label="${uiLabelMap.CommonName}" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/>
                 </@cell>
                 <@cell columns=6>
                 <@field type="generic" label="${uiLabelMap.CommonParent}">

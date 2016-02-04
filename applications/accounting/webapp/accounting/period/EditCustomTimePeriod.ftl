@@ -89,7 +89,7 @@ under the License.
                                     ${uiLabelMap.CommonSetAsCurrent}</a>
                                 </#if>
                                 </@td>
-                            <@td><@field type="input" size='12' name="currentCustomTimePeriod" value="${currentCustomTimePeriod.organizationPartyId!}" /></@td>
+                            <@td><@field type="input" size="12" name="currentCustomTimePeriod" value="${currentCustomTimePeriod.organizationPartyId!}" /></@td>
                             <@td>
                                 <@field type="select" name="periodTypeId">
                                     <#list periodTypes as periodType>
@@ -105,8 +105,8 @@ under the License.
                                     </#list>
                                 </@field>
                             </@td>
-                            <@td><@field type="input" size='4' name="periodNum" value="${currentCustomTimePeriod.periodNum!}" /></@td>
-                            <@td><@field type="input" size='10' name="periodName" value="${currentCustomTimePeriod.periodName!}" /></@td>
+                            <@td><@field type="input" size="4" name="periodNum" value="${currentCustomTimePeriod.periodNum!}" /></@td>
+                            <@td><@field type="input" size="10" name="periodName" value="${currentCustomTimePeriod.periodName!}" /></@td>
                             <@td>
                                 <#assign hasntStarted = false>
                                 <#assign compareDate = currentCustomTimePeriod.getDate("fromDate")>
@@ -121,7 +121,7 @@ under the License.
                                 <#if compareDate?has_content>
                                     <#if nowTimestamp.after(compareDate)><#assign hasExpired = true></#if>
                                 </#if>
-                                <@field type="input" size='13' name="thruDate" value="${currentCustomTimePeriod.thruDate?string('yyyy-MM-dd')}" class="+${alertClass}" />
+                                <@field type="input" size="13" name="thruDate" value="${currentCustomTimePeriod.thruDate?string('yyyy-MM-dd')}" class="+${alertClass}" />
                             </@td>
                             <@td class="button-col">
                             <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
@@ -184,7 +184,7 @@ under the License.
                                         </#list>
                                     </@field>
                                 </@td>
-                                <@td><@field type="input" size='12' name="organizationPartyId" value="${customTimePeriod.organizationPartyId!}" /></@td>
+                                <@td><@field type="input" size="12" name="organizationPartyId" value="${customTimePeriod.organizationPartyId!}" /></@td>
                                 <@td>
                                     <@field type="select" name="periodTypeId">
                                         <#list periodTypes as periodType>
@@ -198,15 +198,15 @@ under the License.
                                         </#list>
                                     </@field>
                                 </@td>
-                                <@td><@field type="input" size='4' name="periodNum" value="${customTimePeriod.periodNum!}" /></@td>
-                                <@td><@field type="input" size='10' name="periodName" value="${customTimePeriod.periodName!}" /></@td>
+                                <@td><@field type="input" size="4" name="periodNum" value="${customTimePeriod.periodNum!}" /></@td>
+                                <@td><@field type="input" size="10" name="periodName" value="${customTimePeriod.periodName!}" /></@td>
                                     <@td>
                                     <#assign hasntStarted = false>
                                     <#assign compareDate = customTimePeriod.getDate("fromDate")>
                                     <#if compareDate?has_content>
                                         <#if nowTimestamp.before(compareDate)><#assign hasntStarted = true></#if>
                                     </#if>
-                                    <@field type="input" size='13' name="fromDate" value="${customTimePeriod.fromDate?string('yyyy-MM-dd')}" class="${alertHasntStartedClass}" />
+                                    <@field type="input" size="13" name="fromDate" value="${customTimePeriod.fromDate?string('yyyy-MM-dd')}" class="${alertHasntStartedClass}" />
                                 </@td>
                                 <@td>
                                     <#assign hasExpired = false>
@@ -214,7 +214,7 @@ under the License.
                                     <#if compareDate?has_content>
                                         <#if nowTimestamp.after(compareDate)><#assign hasExpired = true></#if>
                                     </#if>
-                                    <@field type="input" size='13' name="thruDate" value="${customTimePeriod.thruDate?string('yyyy-MM-dd')}" class="${alertHasExpiredClass}" />
+                                    <@field type="input" size="13" name="thruDate" value="${customTimePeriod.thruDate?string('yyyy-MM-dd')}" class="${alertHasExpiredClass}" />
                                 </@td>
                                 <@td class="button-col">
                                     <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
@@ -259,7 +259,7 @@ under the License.
                     </@field>
                 </div>
                 <div>                      
-                    <@field type="input" size='20' name='organizationPartyId' label="${uiLabelMap.AccountingOrgPartyId}" />                      
+                    <@field type="input" size="20" name="organizationPartyId" label="${uiLabelMap.AccountingOrgPartyId}" />                      
                     <@field type="select" name="periodTypeId" label="${uiLabelMap.AccountingPeriodType}">
                         <#list periodTypes as periodType>
                             <#assign isDefault = false>
@@ -271,12 +271,12 @@ under the License.
                             <option value="${periodType.periodTypeId}" <#if isDefault>selected="selected"</#if>>${periodType.description} [${periodType.periodTypeId}]</option>
                         </#list>
                     </@field>                  
-                    <@field type="input" size='4' name='periodNum' label="${uiLabelMap.AccountingPeriodNumber}" />                      
-                    <@field type="input" size='10' name='periodName' label="${uiLabelMap.AccountingPeriodName}" />
+                    <@field type="input" size="4" name="periodNum" label="${uiLabelMap.AccountingPeriodNumber}" />                      
+                    <@field type="input" size="10" name="periodName" label="${uiLabelMap.AccountingPeriodName}" />
                     </div>
                 <div>                      
-                    <@field type="input" size='14' name='fromDate' label="${uiLabelMap.CommonFromDate}" />                      
-                    <@field type="input" size='14' name='thruDate' label="${uiLabelMap.CommonThruDate}" />
+                    <@field type="input" size="14" name="fromDate" label="${uiLabelMap.CommonFromDate}" />                      
+                    <@field type="input" size="14" name="thruDate" label="${uiLabelMap.CommonThruDate}" />
                     <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
                 </div>
             </form>

@@ -48,9 +48,7 @@ function addRoutingTask() {
     </@row>
     <@row>
       <@cell columns=6>
-        <@field type="generic" label="${uiLabelMap.CommonSequenceNum}">
-            <input type="text" name="sequenceNum" size="10"/>
-        </@field>
+        <@field type="input" label="${uiLabelMap.CommonSequenceNum}" name="sequenceNum" size="10"/>
       </@cell>
       <@cell columns=6>
         <@field type="generic" label="${uiLabelMap.CommonThruDate}">

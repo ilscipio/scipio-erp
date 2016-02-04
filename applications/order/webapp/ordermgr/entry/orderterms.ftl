@@ -72,18 +72,10 @@ under the License.
                                             </#list>
                                         </select>
                                     </@field>
-                                    <@field type="generic" label="${uiLabelMap.OrderOrderTermValue}">
-                                        <input type="text" size="30" maxlength="60" name="termValue" value="${termValue!}" />
-                                    </@field>
-                                    <@field type="generic" label="${uiLabelMap.OrderOrderTermDays}">
-                                        <input type="text" size="30" maxlength="60" name="termDays" value="${termDays!}" />
-                                    </@field>
-                                    <@field type="generic" label="${uiLabelMap.OrderOrderTextValue}">
-                                        <input type="text" size="30" maxlength="60" name="textValue" value="${textValue?if_exists}" />
-                                    </@field>
-                                    <@field type="generic" label="${uiLabelMap.CommonDescription}">
-                                        <input type="text" size="30" maxlength="255" name="description" value="${description?if_exists}" />
-                                    </@field>
+                                    <@field type="input" label="${uiLabelMap.OrderOrderTermValue}" size="30" maxlength="60" name="termValue" value="${termValue!}" />
+                                    <@field type="input" label="${uiLabelMap.OrderOrderTermDays}" size="30" maxlength="60" name="termDays" value="${termDays!}" />
+                                    <@field type="input" label="${uiLabelMap.OrderOrderTextValue}" size="30" maxlength="60" name="textValue" value="${textValue?if_exists}" />
+                                    <@field type="input" label="${uiLabelMap.CommonDescription}" size="30" maxlength="255" name="description" value="${description?if_exists}" />
                                     <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd}" />
                             </form>
                         </#if>

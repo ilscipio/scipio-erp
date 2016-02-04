@@ -39,9 +39,7 @@ function lookupShipments() {
 <@section id="findOrders" menuContent=menuContent> <#-- title="${uiLabelMap.ProductFindShipmentTitle}" -->
         <form method="post" name="lookupShipmentForm" action="<@ofbizUrl>FindShipment</@ofbizUrl>">
             <input type="hidden" name="lookupFlag" value="Y" />
-              <@field type="generic" label="${uiLabelMap.ProductShipmentId}">
-                  <input type="text" name="shipmentId" value="${shipmentId!}" />
-              </@field>
+              <@field type="input" label="${uiLabelMap.ProductShipmentId}" name="shipmentId" value="${shipmentId!}" />
               <@field type="generic" label="${uiLabelMap.ProductShipmentType}">
                   <select name="shipmentTypeId">
                     <#if currentShipmentType?has_content>

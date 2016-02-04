@@ -42,30 +42,18 @@ under the License.
         <#else>
           <#assign toName = "">
         </#if>
-        <@field type="generic" label="${uiLabelMap.CommonToName}">
-            <input type="text" size="30" maxlength="60" name="toName" value="${toName}"/>
-        </@field>
-        <@field type="generic" label="${uiLabelMap.CommonAttentionName}">
-            <input type="text" size="30" maxlength="60" name="attnName" value="${parameters.attnName!}"/>
-        </@field>
-        <@field type="generic" label="${uiLabelMap.CommonAddressLine} 1" required=true>
-            <input type="text" size="30" maxlength="30" name="address1" value="${parameters.address1!}"/>
-        </@field>
-        <@field type="generic" label="${uiLabelMap.CommonAddressLine} 2">
-            <input type="text" size="30" maxlength="30" name="address2" value="${parameters.address2!}"/>
-        </@field>
-        <@field type="generic" label="${uiLabelMap.CommonCity}" required=true>
-            <input type="text" size="30" maxlength="30" name="city" value="${parameters.city!}"/>
-        </@field>
+        <@field type="input" label="${uiLabelMap.CommonToName}" size="30" maxlength="60" name="toName" value="${toName}"/>
+        <@field type="input" label="${uiLabelMap.CommonAttentionName}" size="30" maxlength="60" name="attnName" value="${parameters.attnName!}"/>
+        <@field type="input" label="${uiLabelMap.CommonAddressLine} 1" required=true size="30" maxlength="30" name="address1" value="${parameters.address1!}"/>
+        <@field type="input" label="${uiLabelMap.CommonAddressLine} 2" size="30" maxlength="30" name="address2" value="${parameters.address2!}"/>
+        <@field type="input" label="${uiLabelMap.CommonCity}" required=true size="30" maxlength="30" name="city" value="${parameters.city!}"/>
         <@field type="generic" label="${uiLabelMap.CommonStateProvince}">
             <select name="stateProvinceGeoId">
               <option value=""></option>
               ${screens.render("component://common/widget/CommonScreens.xml#states")}
             </select>
         </@field>
-        <@field type="generic" label="${uiLabelMap.CommonZipPostalCode}" required=true>
-            <input type="text" size="12" maxlength="10" name="postalCode" value="${parameters.postalCode!}"/>
-        </@field>
+        <@field type="input" label="${uiLabelMap.CommonZipPostalCode}" required=true size="12" maxlength="10" name="postalCode" value="${parameters.postalCode!}"/>
         <@field type="generic" label="${uiLabelMap.CommonCountry}" required=true>
             <select name="countryGeoId">
               ${screens.render("component://common/widget/CommonScreens.xml#countries")}

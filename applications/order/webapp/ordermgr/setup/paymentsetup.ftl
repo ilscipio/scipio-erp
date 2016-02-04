@@ -121,21 +121,11 @@ under the License.
                   </#if>
               </@field>
 
-              <@field type="generic" label="Processor Auth Service">
-                  <input type="text" name="paymentAuthService" value="${payInfo.paymentAuthService!}" size="30" maxlength="60" />
-              </@field>
-              <@field type="generic" label="Processor Re-Auth Service">
-                  <input type="text" name="paymentReAuthService" value="${payInfo.paymentReAuthService!}" size="30" maxlength="60" />
-              </@field>
-              <@field type="generic" label="Processor Capture Service">
-                  <input type="text" name="paymentCaptureService" value="${payInfo.paymentCaptureService!}" size="30" maxlength="60" />
-              </@field>
-              <@field type="generic" label="Processor Refund Service">
-                  <input type="text" name="paymentRefundService" value="${payInfo.paymentRefundService!}" size="30" maxlength="60" />
-              </@field>
-              <@field type="generic" label="Processor Properties URL">
-                  <input type="text" name="paymentConfiguration" value="${payInfo.paymentConfiguration!}" size="30" maxlength="60" />
-              </@field>
+              <@field type="input" label="Processor Auth Service" name="paymentAuthService" value="${payInfo.paymentAuthService!}" size="30" maxlength="60" />
+              <@field type="input" label="Processor Re-Auth Service" name="paymentReAuthService" value="${payInfo.paymentReAuthService!}" size="30" maxlength="60" />
+              <@field type="input" label="Processor Capture Service" name="paymentCaptureService" value="${payInfo.paymentCaptureService!}" size="30" maxlength="60" />
+              <@field type="input" label="Processor Refund Service" name="paymentRefundService" value="${payInfo.paymentRefundService!}" size="30" maxlength="60" />
+              <@field type="input" label="Processor Properties URL" name="paymentConfiguration" value="${payInfo.paymentConfiguration!}" size="30" maxlength="60" />
               <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
             </form>
     </@section>

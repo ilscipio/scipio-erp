@@ -65,21 +65,11 @@ under the License.
                 </#list>
             </select>
     </@field>
-    <@field type="generic" label="${uiLabelMap.CommonArea}">
-        <input type="text" name="areaId" value="${(facilityLocation.areaId)!}" size="19" maxlength="20" />
-    </@field>
-    <@field type="generic" label="${uiLabelMap.ProductAisle}">
-        <input type="text" name="aisleId" value="${(facilityLocation.aisleId)!}" size="19" maxlength="20" />
-    </@field>
-    <@field type="generic" label="${uiLabelMap.ProductSection}">
-        <input type="text" name="sectionId" value="${(facilityLocation.sectionId)!}" size="19" maxlength="20" />
-    </@field>
-    <@field type="generic" label="${uiLabelMap.ProductLevel}">
-        <input type="text" name="levelId" value="${(facilityLocation.levelId)!}" size="19" maxlength="20" />
-    </@field>
-    <@field type="generic" label="${uiLabelMap.ProductPosition}">
-        <input type="text" name="positionId" value="${(facilityLocation.positionId)!}" size="19" maxlength="20" />
-    </@field>
+    <@field type="input" label="${uiLabelMap.CommonArea}" name="areaId" value="${(facilityLocation.areaId)!}" size="19" maxlength="20" />
+    <@field type="input" label="${uiLabelMap.ProductAisle}" name="aisleId" value="${(facilityLocation.aisleId)!}" size="19" maxlength="20" />
+    <@field type="input" label="${uiLabelMap.ProductSection}" name="sectionId" value="${(facilityLocation.sectionId)!}" size="19" maxlength="20" />
+    <@field type="input" label="${uiLabelMap.ProductLevel}" name="levelId" value="${(facilityLocation.levelId)!}" size="19" maxlength="20" />
+    <@field type="input" label="${uiLabelMap.ProductPosition}" name="positionId" value="${(facilityLocation.positionId)!}" size="19" maxlength="20" />
     <#if locationSeqId??>
       <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
     <#else>
@@ -125,9 +115,9 @@ under the License.
             <input type="hidden" name="facilityId" value="${facilityId!}" />
             <input type="hidden" name="locationSeqId" value="${locationSeqId!}" />
             <input type="hidden" name="useValues" value="true" />
-            <@field type="generic" label="${uiLabelMap.ProductProductId}"><input type="text" size="10" name="productId" /></@field>
-            <@field type="generic" label="${uiLabelMap.ProductMinimumStock}"><input type="text" size="10" name="minimumStock" /></@field>
-            <@field type="generic" label="${uiLabelMap.ProductMoveQuantity}"><input type="text" size="10" name="moveQuantity" /></@field>
+            <@field type="input" label="${uiLabelMap.ProductProductId}" size="10" name="productId" />
+            <@field type="input" label="${uiLabelMap.ProductMinimumStock}" size="10" name="minimumStock" />
+            <@field type="input" label="${uiLabelMap.ProductMoveQuantity}" size="10" name="moveQuantity" />
             <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
         </form>
   </@section>

@@ -163,9 +163,7 @@ under the License.
                  <@field type="generic" label="${uiLabelMap.ProductToLocation}">
                     <@htmlTemplate.lookupField formName="quickStockMove" name="targetLocationSeqId" id="targetLocationSeqId" fieldFormName="LookupFacilityLocation?facilityId=${facilityId}&amp;locationTypeEnumId=FLT_PICKLOC"/>
                 </@field>
-                <@field type="generic" label="${uiLabelMap.ProductMoveQuantity}">
-                    <input type="text" name="quantityMoved" size="6" />
-                </@field>
+                <@field type="input" label="${uiLabelMap.ProductMoveQuantity}" name="quantityMoved" size="6" />
                  <@field type="submit" submitType="link" href="javascript:document.quickStockMove.submit();" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.ProductQuickStockMove}" />
         </form>
 </@section>

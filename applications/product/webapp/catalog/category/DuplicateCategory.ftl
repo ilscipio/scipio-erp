@@ -4,9 +4,7 @@
     <@section title="${uiLabelMap.ProductDuplicateProductCategory}">
             <form action="<@ofbizUrl>DuplicateProductCategory</@ofbizUrl>" method="post">
                 <input type="hidden" name="oldProductCategoryId" value="${productCategoryId}"/>
-                <@field type="generic" label="${uiLabelMap.ProductDuplicateProductCategorySelected}">
-                  <input type="text" size="20" maxlength="20" name="productCategoryId"/>
-                </@field>
+                <@field type="input" label="${uiLabelMap.ProductDuplicateProductCategorySelected}" size="20" maxlength="20" name="productCategoryId"/>
                          
                 <@field type="generic" label="${uiLabelMap.CommonDuplicate}">
                     ${uiLabelMap.ProductCategoryContent}&nbsp;<input type="checkbox" name="duplicateContent" value="Y" checked="checked" />

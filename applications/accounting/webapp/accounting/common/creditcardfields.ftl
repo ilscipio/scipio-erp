@@ -34,9 +34,9 @@ under the License.
         <option<#if ((creditCard.titleOnCard)?default("") == "Ms.")> selected="selected"</#if>>${uiLabelMap.CommonTitleMs}</option>
         <option<#if ((creditCard.titleOnCard)?default("") == "Dr.")> selected="selected"</#if>>${uiLabelMap.CommonTitleDr}</option>
     </@field>    
-    <@field type="input" size="20" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)!}" label="${uiLabelMap.AccountingFirstNameCard}" required=true tooltip='${uiLabelMap.CommonRequired}'/>     
+    <@field type="input" size="20" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)!}" label="${uiLabelMap.AccountingFirstNameCard}" required=true tooltip="${uiLabelMap.CommonRequired}"/>     
     <@field type="input" size="15" maxlength="60" name="middleNameOnCard" value="${(creditCard.middleNameOnCard)!}" label="${uiLabelMap.AccountingMiddleNameCard}" />    
-    <@field type="input" size="20" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)!}" label="${uiLabelMap.AccountingLastNameCard}" tooltip='${uiLabelMap.CommonRequired}' />  
+    <@field type="input" size="20" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)!}" label="${uiLabelMap.AccountingLastNameCard}" tooltip="${uiLabelMap.CommonRequired}" />  
     <@field type="select" name="suffixOnCard" label="${uiLabelMap.AccountingSuffixCard}">
         <option value="">${uiLabelMap.CommonSelectOne}</option>
         <option<#if ((creditCard.suffixOnCard)?default("") == "Jr.")> selected="selected"</#if>>Jr.</option>
@@ -72,12 +72,12 @@ under the License.
                     <#assign cardNumberDisplay = cardNumber>
                 </#if>
             </#if>
-            <@field type="input" required=true size="20" maxlength="30" name="cardNumber" value="${cardNumberDisplay!}" label="${uiLabelMap.AccountingCardNumber}" tooltip='${uiLabelMap.CommonRequired}' />
+            <@field type="input" required=true size="20" maxlength="30" name="cardNumber" value="${cardNumberDisplay!}" label="${uiLabelMap.AccountingCardNumber}" tooltip="${uiLabelMap.CommonRequired}" />
         <#else>
-            <@field type="input" size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}" label="${uiLabelMap.AccountingCardNumber}" tooltip='${uiLabelMap.CommonRequired}'/>
+            <@field type="input" size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}" label="${uiLabelMap.AccountingCardNumber}" tooltip="${uiLabelMap.CommonRequired}"/>
         </#if>
     <#else>
-        <@field type="input" size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}" label="${uiLabelMap.AccountingCardNumber}" tooltip='${uiLabelMap.CommonRequired}'/>
+        <@field type="input" size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}" label="${uiLabelMap.AccountingCardNumber}" tooltip="${uiLabelMap.CommonRequired}"/>
     </#if>
     
   <#--<@tr>

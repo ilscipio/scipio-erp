@@ -42,9 +42,7 @@ under the License.
     <@section>
         <form action="<@ofbizUrl>updateProductContent</@ofbizUrl>" method="post" name="productForm">
             <input type="hidden" name="productId" value="${productId!}"/>
-            <@field type="generic" label="${uiLabelMap.ProductProductName}">
-                <input type="text" name="productName" value="${(product.productName?html)!}" size="30" maxlength="60"/>
-            </@field>
+            <@field type="input" label="${uiLabelMap.ProductProductName}" name="productName" value="${(product.productName?html)!}" size="30" maxlength="60"/>
             <@field type="generic" label="${uiLabelMap.ProductProductDescription}">
                 <textarea name="description" cols="60" rows="2">${(product.description)!}</textarea>
             </@field>

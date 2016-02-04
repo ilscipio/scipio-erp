@@ -122,28 +122,16 @@ under the License.
         <input type="hidden" name="DONE_PAGE" value="${donePage!}" />
   </#if>
   <#if "POSTAL_ADDRESS" = mechMap.contactMechTypeId!>
-    <@field type="generic" label="${uiLabelMap.PartyToName}">
-        <input type="text" size="50" maxlength="100" name="toName" value="${(mechMap.postalAddress.toName)?default(request.getParameter('toName')!)}" />
-    </@field>
-    <@field type="generic" label="${uiLabelMap.PartyAttentionName}">
-        <input type="text" size="50" maxlength="100" name="attnName" value="${(mechMap.postalAddress.attnName)?default(request.getParameter('attnName')!)}" />
-    </@field>
-    <@field type="generic" label="${uiLabelMap.PartyAddressLine1} *">
-        <input type="text" size="100" maxlength="255" name="address1" value="${(mechMap.postalAddress.address1)?default(request.getParameter('address1')!)}" />
-    </@field>
-    <@field type="generic" label="${uiLabelMap.PartyAddressLine2}">
-        <input type="text" size="100" maxlength="255" name="address2" value="${(mechMap.postalAddress.address2)?default(request.getParameter('address2')!)}" />
-    </@field>
-    <@field type="generic" label="${uiLabelMap.PartyCity} *">
-        <input type="text" size="50" maxlength="100" name="city" value="${(mechMap.postalAddress.city)?default(request.getParameter('city')!)}" />
-    </@field>
+    <@field type="input" label="${uiLabelMap.PartyToName}" size="50" maxlength="100" name="toName" value="${(mechMap.postalAddress.toName)?default(request.getParameter('toName')!)}" />
+    <@field type="input" label="${uiLabelMap.PartyAttentionName}" size="50" maxlength="100" name="attnName" value="${(mechMap.postalAddress.attnName)?default(request.getParameter('attnName')!)}" />
+    <@field type="input" label="${uiLabelMap.PartyAddressLine1} *" size="100" maxlength="255" name="address1" value="${(mechMap.postalAddress.address1)?default(request.getParameter('address1')!)}" />
+    <@field type="input" label="${uiLabelMap.PartyAddressLine2}" size="100" maxlength="255" name="address2" value="${(mechMap.postalAddress.address2)?default(request.getParameter('address2')!)}" />
+    <@field type="input" label="${uiLabelMap.PartyCity} *" size="50" maxlength="100" name="city" value="${(mechMap.postalAddress.city)?default(request.getParameter('city')!)}" />
     <@field type="generic" label="${uiLabelMap.PartyState}">
         <select name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
         </select>
     </@field>
-    <@field type="generic" label="${uiLabelMap.PartyZipCode} *">
-        <input type="text" size="30" maxlength="60" name="postalCode" value="${(mechMap.postalAddress.postalCode)?default(request.getParameter('postalCode')!)}" />
-    </@field>
+    <@field type="input" label="${uiLabelMap.PartyZipCode} *" size="30" maxlength="60" name="postalCode" value="${(mechMap.postalAddress.postalCode)?default(request.getParameter('postalCode')!)}" />
     <@field type="generic" label="${uiLabelMap.CommonCountry}">
         <select name="countryGeoId" id="editcontactmechform_countryGeoId">
           ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
@@ -173,13 +161,9 @@ under the License.
         [${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyContactExt}]
     </@field>
   <#elseif "EMAIL_ADDRESS" = mechMap.contactMechTypeId!>
-    <@field type="generic" label="${mechMap.contactMechType.get('description',locale)}">
-        <input type="text" size="60" maxlength="255" name="emailAddress" value="${(mechMap.contactMech.infoString)?default(request.getParameter('emailAddress')!)}" />
-    </@field>
+    <@field type="input" label="${mechMap.contactMechType.get('description',locale)}" size="60" maxlength="255" name="emailAddress" value="${(mechMap.contactMech.infoString)?default(request.getParameter('emailAddress')!)}" />
   <#else>
-    <@field type="generic" label="${mechMap.contactMechType.get('description',locale)}">
-        <input type="text" size="60" maxlength="255" name="infoString" value="${(mechMap.contactMech.infoString)!}" />
-    </@field>
+    <@field type="input" label="${mechMap.contactMechType.get('description',locale)}" size="60" maxlength="255" name="infoString" value="${(mechMap.contactMech.infoString)!}" />
   </#if>
   <@field type="generic" label="${uiLabelMap.PartyContactAllowSolicitation}?">
       <select name="allowSolicitation">

@@ -46,9 +46,7 @@ under the License.
 
 <@section title="${uiLabelMap.ProductCreateProductFeatureGroup}">
         <form method="post" action="<@ofbizUrl>CreateProductFeatureGroup</@ofbizUrl>">
-            <@field type="generic" label="${uiLabelMap.CommonDescription}">
-                <input type="text" size="30" name="description" value="" />
-            </@field>
+            <@field type="input" label="${uiLabelMap.CommonDescription}" size="30" name="description" value="" />
             <@field type="submit" text="${uiLabelMap.CommonCreate}" class="${styles.link_run_sys!} ${styles.action_add!}" />
         </form>
 </@section>

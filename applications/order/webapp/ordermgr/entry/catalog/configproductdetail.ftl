@@ -333,18 +333,12 @@ function getConfigDetails() {
               <#assign hiddenStyle = styles.hidden!>
             </#if>
             <#-- Cato: NOTE: amount is kg or either; quantity is the number of units buying -->
-            <@field type="generic" containerId="add_amount" label="${uiLabelMap.OrderAmount}" containerClass="+${hiddenStyle}">
-              <input type="text" size="5" name="add_amount" value="" />
-            </@field>
+            <@field type="input" containerId="add_amount" label="${uiLabelMap.OrderAmount}" containerClass="+${hiddenStyle}" size="5" name="add_amount" value="" />
             <#if !configwrapper.isCompleted()>
               <@alert type="info">${uiLabelMap.EcommerceProductNotConfigured}</@alert>
-              <@field type="generic" label="${uiLabelMap.ProductQuantity} (${uiLabelMap.OrderUnits})" disabled=true>
-                <input type="text" size="5" name="quantity" value="0" disabled="disabled" />
-              </@field>
+              <@field type="input" label="${uiLabelMap.ProductQuantity} (${uiLabelMap.OrderUnits})" disabled=true size="5" name="quantity" value="0" disabled="disabled" />
             <#else>
-              <@field type="generic" label="${uiLabelMap.ProductQuantity}">
-                <input type="text" size="5" name="quantity" value="1" />
-              </@field>
+              <@field type="input" label="${uiLabelMap.ProductQuantity}" size="5" name="quantity" value="1" />
               <@field type="submit" submitType="link" href="javascript:addItem()" class="${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToCart}" />
             </#if>
           </#if>
@@ -378,9 +372,7 @@ function getConfigDetails() {
               <option value="">${uiLabelMap.OrderNewShoppingList}</option>
             </select>
           </@field>
-          <@field type="generic" label="${uiLabelMap.ProductQuantity}">
-            <input type="text" size="5" name="quantity" value="1" />
-          </@field>
+          <@field type="input" label="${uiLabelMap.ProductQuantity}" size="5" name="quantity" value="1" />
           <@field type="submit" submitType="link" href="javascript:document.addToShoppingList.submit();" class="${styles.link_run_sys!} ${styles.action_add!}" text="[${uiLabelMap.OrderAddToShoppingList}]" />
         </form>
       <#else> 

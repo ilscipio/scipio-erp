@@ -29,9 +29,7 @@ under the License.
             <input type="hidden" name="facilityId" value="${facilityId}" />
         </#if>        
         <#if !(facilityId??)>
-            <@field type="generic" label="${uiLabelMap.ProductFacility}">
-                <input type="text" value="" size="19" maxlength="20" />
-            </@field>
+            <@field type="input" label="${uiLabelMap.ProductFacility}" value="" size="19" maxlength="20" />
         </#if>
         <@field type="generic" label="${uiLabelMap.ProductLocationSeqId}">
             <#if parameters.facilityId??>
@@ -41,21 +39,11 @@ under the License.
                 </#if>
                 <@htmlTemplate.lookupField formName="findFacilityLocation" name="locationSeqId" id="locationSeqId" fieldFormName="${LookupFacilityLocationView}"/>
         </@field>
-        <@field type="generic" label="${uiLabelMap.CommonArea}">
-            <input type="text" name="areaId" value="" size="19" maxlength="20" />
-        </@field>
-        <@field type="generic" label="${uiLabelMap.ProductAisle}">
-            <input type="text" name="aisleId" value="" size="19" maxlength="20" />
-        </@field>
-        <@field type="generic" label="${uiLabelMap.ProductSection}">
-            <input type="text" name="sectionId" value="" size="19" maxlength="20" />
-        </@field>
-        <@field type="generic" label="${uiLabelMap.ProductLevel}">
-            <input type="text" name="levelId" value="" size="19" maxlength="20" />
-        </@field>
-        <@field type="generic" label="${uiLabelMap.ProductPosition}">
-            <input type="text" name="positionId" value="" size="19" maxlength="20" />
-        </@field>
+        <@field type="input" label="${uiLabelMap.CommonArea}" name="areaId" value="" size="19" maxlength="20" />
+        <@field type="input" label="${uiLabelMap.ProductAisle}" name="aisleId" value="" size="19" maxlength="20" />
+        <@field type="input" label="${uiLabelMap.ProductSection}" name="sectionId" value="" size="19" maxlength="20" />
+        <@field type="input" label="${uiLabelMap.ProductLevel}" name="levelId" value="" size="19" maxlength="20" />
+        <@field type="input" label="${uiLabelMap.ProductPosition}" name="positionId" value="" size="19" maxlength="20" />
         <@field type="submit" name="look_up" text="${uiLabelMap.CommonFind}" class="${styles.link_run_sys!} ${styles.action_find!}" />
     </form>
 

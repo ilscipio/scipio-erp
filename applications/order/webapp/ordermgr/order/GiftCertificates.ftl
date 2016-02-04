@@ -28,15 +28,9 @@ under the License.
             <input type="radio" name="add_product_id" id="productId_${giftCardProduct.price!}" value="${giftCardProduct.productId!}" checked="checked" />
           </@field>
         </#list>
-        <@field type="generic" label="${uiLabelMap.OrderRecipientEmailAdd}" id="emailAddress">
-          <input type="text" id="emailAddress" name="answers_1002" value="" />
-        </@field>
-        <@field type="generic" label="${uiLabelMap.OrderRecipientName}" id="recipientName">
-          <input type="text" id="recipientName" name="answers_1001" value="" />
-        </@field>
-        <@field type="generic" label="${uiLabelMap.OrderSenderName}" id="senderName">
-          <input type="text" id="senderName" name="answers_1000" value="" />
-        </@field>
+        <@field type="input" label="${uiLabelMap.OrderRecipientEmailAdd}" id="emailAddress" name="answers_1002" value="" />
+        <@field type="input" label="${uiLabelMap.OrderRecipientName}" id="recipientName" name="answers_1001" value="" />
+        <@field type="input" label="${uiLabelMap.OrderSenderName}" id="senderName" name="answers_1000" value="" />
         <@field type="generic" label="${uiLabelMap.OrderGiftMessage}" id="message">
           <textarea id="message" name="answers_1003"></textarea>
         </@field>

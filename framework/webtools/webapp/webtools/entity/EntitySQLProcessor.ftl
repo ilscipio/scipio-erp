@@ -27,9 +27,7 @@ under the License.
         <@field type="generic" label="${uiLabelMap.WebtoolsSqlCommand}">
             <textarea name="sqlCommand" cols="100" rows="5">${sqlCommand!}</textarea>
         </@field>
-        <@field type="generic" label="${uiLabelMap.WebtoolsLimitRowsTo}">
-            <input name="rowLimit" type="text" size="5" value="${rowLimit?default(200)}"/>
-        </@field>
+        <@field type="input" label="${uiLabelMap.WebtoolsLimitRowsTo}" name="rowLimit" size="5" value="${rowLimit?default(200)}"/>
         <@field type="generic">
             <input type="submit" name="submitButton" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_begin!}"/>
         </@field>

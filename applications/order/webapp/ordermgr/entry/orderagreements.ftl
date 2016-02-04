@@ -55,19 +55,13 @@ under the License.
       </#if>
 
       <#if "PURCHASE_ORDER" == cart.getOrderType()>
-        <@field type="generic" label="${uiLabelMap.OrderOrderId}">
-            <input type="text" size="15" maxlength="100" name="orderId" value=""/>
-        </@field>
+        <@field type="input" label="${uiLabelMap.OrderOrderId}" size="15" maxlength="100" name="orderId" value=""/>
       </#if>
 
-      <@field type="generic" label="${uiLabelMap.OrderOrderName}">
-          <input type="text" size="60" maxlength="100" name="orderName"/>
-      </@field>
+      <@field type="input" label="${uiLabelMap.OrderOrderName}" size="60" maxlength="100" name="orderName"/>
 
     <#if cart.getOrderType() != "PURCHASE_ORDER">
-      <@field type="generic" label="${uiLabelMap.OrderPONumber}">
-          <input type="text" class="inputBox" name="correspondingPoId" size="15" />
-      </@field>
+      <@field type="input" label="${uiLabelMap.OrderPONumber}" class="inputBox" name="correspondingPoId" size="15" />
     </#if>
 
       <#assign label><#if agreements??>${uiLabelMap.OrderSelectCurrencyOr}<#else>${uiLabelMap.OrderSelectCurrency}</#if></#assign>

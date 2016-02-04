@@ -355,9 +355,7 @@ under the License.
               <@tr>
                 <@td colspan="4" nowrap="nowrap">${uiLabelMap.OrderNoOrderFoundForParty}: <a href="${customerDetailLink}${partyId?default('_NA_')}" class="${styles.link_nav_info_id!}">${partyId?default('[null]')}</a></@td>
               </@tr>
-              <@field type="generic" label="${uiLabelMap.OrderOrderId}" tooltip="${uiLabelMap.OrderReturnLoadItems}">
-                  <input type="text" name="orderId" size="20" maxlength="20" />
-              </@field>
+              <@field type="input" label="${uiLabelMap.OrderOrderId}" tooltip="${uiLabelMap.OrderReturnLoadItems}" name="orderId" size="20" maxlength="20" />
             </#if>
             <@field type="submit" submitType="link" href="javascript:document.returnItems.submit();" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.OrderReturnLoadItems}" />
         </form>

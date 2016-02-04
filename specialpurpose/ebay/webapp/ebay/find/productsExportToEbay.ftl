@@ -64,9 +64,7 @@ under the License.
                         </#if>
                     </select>
             </@field>
-            <@field type="generic" label="${uiLabelMap.FormFieldTitle_location}">
-                <input type="text" name="location" size="50" maxlength="50" value="${parameters.location!}" />
-            </@field>
+            <@field type="input" label="${uiLabelMap.FormFieldTitle_location}" name="location" size="50" maxlength="50" value="${parameters.location!}" />
             <@field type="generic" label="${uiLabelMap.FormFieldTitle_listingDuration}">
                 <select name="listingDuration">
                         <option value="Days_1">1 ${uiLabelMap.CommonDay}</option>
@@ -74,12 +72,9 @@ under the License.
                         <option value="Days_7">7 ${uiLabelMap.CommonDays}</option>
                     </select>
             </@field>
-            <@field type="generic" label="${uiLabelMap.FormFieldTitle_startPrice}">
-                <input type="text" name="startPrice" size="12" maxlength="12" value="${parameters.startPrice!}" />
-            </@field>
-            <@field type="generic" label="${uiLabelMap.CommonQuantity}">
-                <input type="text" name="quantity" size="12" maxlength="12" value="<#if parameters.quantity??>${parameters.quantity!}<#else>1</#if>" />
-            </@field>
+            <@field type="input" label="${uiLabelMap.FormFieldTitle_startPrice}" name="startPrice" size="12" maxlength="12" value="${parameters.startPrice!}" />
+            <#assign fieldValue><#if parameters.quantity??>${parameters.quantity!}<#else>1</#if></#assign>
+            <@field type="input" label="${uiLabelMap.CommonQuantity}" name="quantity" size="12" maxlength="12" value=fieldValue />
             <@field type="generic" label="${uiLabelMap.CommonWebsite}">
                 <select name="webSiteId" onchange="javascript:changeWebSite(document.getElementById('ProductsExportToEbay'));">
                     <#list webSiteList as webSite>
@@ -91,9 +86,7 @@ under the License.
                     </#list>
                   </select>
             </@field>
-            <@field type="generic" label="${uiLabelMap.FormFieldTitle_webSiteUrl}">
-                <input type="text" name="webSiteUrl" size="100" value="${webSiteUrl!}"/>
-            </@field>
+            <@field type="input" label="${uiLabelMap.FormFieldTitle_webSiteUrl}" name="webSiteUrl" size="100" value="${webSiteUrl!}"/>
             <@field type="generic" label="${uiLabelMap.FormFieldTitle_paymentMethodsAccepted}">
                     <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table" -->
                         <@tr>
@@ -128,9 +121,7 @@ under the License.
                         </@tr>
                     </@table>
             </@field>
-            <@field type="generic" label="${uiLabelMap.FormFieldTitle_payPalEmail}">
-                <input type="text" name="payPalEmail" size="50" maxlength="50" value="${parameters.payPalEmail!}" />
-            </@field>
+            <@field type="input" label="${uiLabelMap.FormFieldTitle_payPalEmail}" name="payPalEmail" size="50" maxlength="50" value="${parameters.payPalEmail!}" />
             <@field type="generic" label="${uiLabelMap.FormFieldTitle_customXml}">
                 <textarea cols="60" rows="6" wrap="soft" name="customXml">${customXml!}</textarea>
             </@field>

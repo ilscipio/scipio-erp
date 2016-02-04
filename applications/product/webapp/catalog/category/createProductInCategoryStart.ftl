@@ -43,15 +43,9 @@ under the License.
                     <input type="checkbox" name="pftsel_${productFeatureTypeId}"/>${uiLabelMap.ProductSelectable}
                 </@field>
             </#list>
-                <@field type="generic" label="${uiLabelMap.ProductInternalName}">
-                    <input type="text" name="internalName" size="30" maxlength="60"/>
-                </@field>
-                <@field type="generic" label="${uiLabelMap.ProductProductName}">
-                    <input type="text" name="productName" size="30" maxlength="60"/>
-                </@field>
-                <@field type="generic" label="${uiLabelMap.ProductShortDescription}">
-                    <input type="text" name="description" size="60" maxlength="250"/>
-                </@field>
+                <@field type="input" label="${uiLabelMap.ProductInternalName}" name="internalName" size="30" maxlength="60"/>
+                <@field type="input" label="${uiLabelMap.ProductProductName}" name="productName" size="30" maxlength="60"/>
+                <@field type="input" label="${uiLabelMap.ProductShortDescription}" name="description" size="60" maxlength="250"/>
                 <@field type="generic" label="${uiLabelMap.ProductDefaultPrice}">
                     <input type="text" name="defaultPrice" size="8"/>
                     <#assign findCurrenciesMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("uomTypeId", "CURRENCY_MEASURE")>
@@ -65,9 +59,7 @@ under the License.
                         </select>
                     </#if>
                 </@field>
-                <@field type="generic" label="${uiLabelMap.ProductAverageCost}">
-                    <input type="text" name="averageCost" size="8"/>
-                </@field>
+                <@field type="input" label="${uiLabelMap.ProductAverageCost}" name="averageCost" size="8"/>
                 <@field type="submit" submitType="link" href="javascript:document.createProductInCategoryCheckExistingForm.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.ProductCheckExisting}" />
         </form>
 </@section>

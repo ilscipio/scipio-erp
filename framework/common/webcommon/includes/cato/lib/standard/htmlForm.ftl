@@ -708,7 +708,7 @@ standard markup.
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
                         "=": causes the class to replace non-essential defaults (same as specifying a class name directly)
     containerClass  = optional class for outer container (prefix with +)
-    maxlength       = maxLength
+    maxlength       = max allowed length (e.g. max number of characters for text inputs)
     id              = field id
     containerId     = id for the outer container (optional)
     events          = map of JS event names to script actions. 

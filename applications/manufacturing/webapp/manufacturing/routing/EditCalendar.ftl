@@ -44,13 +44,9 @@ under the License.
   <#if techDataCalendar?has_content>
     <@field type="display" label="${uiLabelMap.ManufacturingCalendarId}" tooltip="(${uiLabelMap.CommonNotModifRecreat})" value="${techDataCalendar.calendarId!}" />
   <#else>
-    <@field type="generic" label="${uiLabelMap.ManufacturingCalendarId}">
-        <input type="text" size="12" name="calendarId" value="${calendarData.calendarId!}" />
-    </@field>
+    <@field type="input" label="${uiLabelMap.ManufacturingCalendarId}" size="12" name="calendarId" value="${calendarData.calendarId!}" />
   </#if>
-    <@field type="generic" label="${uiLabelMap.CommonDescription}">
-        <input type="text" size="40" name="description" value="${calendarData.description!}" />
-    </@field>
+    <@field type="input" label="${uiLabelMap.CommonDescription}" size="40" name="description" value="${calendarData.description!}" />
     <@field type="generic" label="${uiLabelMap.ManufacturingCalendarWeekId}">
         <select name="calendarWeekId">
           <#list calendarWeeks as calendarWeek>

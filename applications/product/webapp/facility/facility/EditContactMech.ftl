@@ -138,19 +138,13 @@ under the License.
     </#if>
 
   <#if "POSTAL_ADDRESS" = mechMap.contactMechTypeId!>
-    <@field type="generic" label="${uiLabelMap.PartyToName}">
-        <input type="text" size="30" maxlength="60" name="toName" value="${(mechMap.postalAddress.toName)?default(request.getParameter('toName')!)}" />
-    </@field>
-    <@field type="generic" label="${uiLabelMap.PartyAttentionName}">
-        <input type="text" size="30" maxlength="60" name="attnName" value="${(mechMap.postalAddress.attnName)?default(request.getParameter('attnName')!)}" />
-    </@field>
+    <@field type="input" label="${uiLabelMap.PartyToName}" size="30" maxlength="60" name="toName" value="${(mechMap.postalAddress.toName)?default(request.getParameter('toName')!)}" />
+    <@field type="input" label="${uiLabelMap.PartyAttentionName}" size="30" maxlength="60" name="attnName" value="${(mechMap.postalAddress.attnName)?default(request.getParameter('attnName')!)}" />
     <@field type="generic" label="${uiLabelMap.PartyAddressLine1}" required=true>
         <input type="text" class="required" size="30" maxlength="30" name="address1" value="${(mechMap.postalAddress.address1)?default(request.getParameter('address1')!)}" />
       *
     </@field>
-    <@field type="generic" label="${uiLabelMap.PartyAddressLine2}">
-        <input type="text" size="30" maxlength="30" name="address2" value="${(mechMap.postalAddress.address2)?default(request.getParameter('address2')!)}" />
-    </@field>
+    <@field type="input" label="${uiLabelMap.PartyAddressLine2}" size="30" maxlength="30" name="address2" value="${(mechMap.postalAddress.address2)?default(request.getParameter('address2')!)}" />
     <@field type="generic" label="${uiLabelMap.PartyCity}" required=true>
         <input type="text" class="required" size="30" maxlength="30" name="city" value="${(mechMap.postalAddress.city)?default(request.getParameter('city')!)}" />
       *

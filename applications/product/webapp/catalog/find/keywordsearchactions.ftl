@@ -63,9 +63,7 @@ under the License.
     <@section title="${uiLabelMap.ProductAddFeatureToResults}">
         <form method="post" action="<@ofbizUrl>searchAddFeature</@ofbizUrl>" name="searchAddFeature">
           <input type="hidden" name="clearSearch" value="N" />
-          <@field type="generic" label="${uiLabelMap.ProductFeatureId}">
-              <input type="text" size="10" name="productFeatureId" value="" />
-          </@field>
+          <@field type="input" label="${uiLabelMap.ProductFeatureId}" size="10" name="productFeatureId" value="" />
           <@field type="generic" label="${uiLabelMap.CommonFrom}">
               <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
           </@field>
@@ -73,12 +71,8 @@ under the License.
               <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
           </@field>
 
-          <@field type="generic" label="${uiLabelMap.CommonAmount}">
-              <input type="text" size="5" name="amount" value="" />
-          </@field>
-          <@field type="generic" label="${uiLabelMap.CommonSequence}">
-              <input type="text" size="5" name="sequenceNum" value="" />
-          </@field>
+          <@field type="input" label="${uiLabelMap.CommonAmount}" size="5" name="amount" value="" />
+          <@field type="input" label="${uiLabelMap.CommonSequence}" size="5" name="sequenceNum" value="" />
           <#-- label for the following field used to be: ${uiLabelMap.ProductCategoryId} ??? -->
           <@field type="generic" label="${uiLabelMap.ProductFeatureApplicationType}">
               <select name="productFeatureApplTypeId" size="1">
@@ -99,9 +93,7 @@ under the License.
     <@section title="${uiLabelMap.ProductRemoveFeatureFromResults}">
         <form method="post" action="<@ofbizUrl>searchRemoveFeature</@ofbizUrl>" name="searchRemoveFeature">
           <input type="hidden" name="clearSearch" value="N" />
-          <@field type="generic" label="${uiLabelMap.ProductFeatureId}">
-              <input type="text" size="10" name="productFeatureId" value="" />
-          </@field>
+          <@field type="input" label="${uiLabelMap.ProductFeatureId}" size="10" name="productFeatureId" value="" />
           
           <@field type="submit" text="${uiLabelMap.ProductRemoveFeature}" class="${styles.link_run_session!} ${styles.action_remove!}" />
         </form>

@@ -19,9 +19,7 @@ under the License.
 <hr />
     <form method="post"  action="/content/control/AdminSearch"  name="searchQuery">
 
-<@field type="generic" label="${uiLabelMap.ContentQueryLine}">
-    <input type="text" class="inputBox" name="queryLine" size="60"/>
-</@field>
+<@field type="input" label="${uiLabelMap.ContentQueryLine}" class="inputBox" name="queryLine" size="60"/>
 
 <@field type="generic" label="${uiLabelMap.CommonSelect} ${uiLabelMap.ContentCategory}">
     <select name="lcSiteId">

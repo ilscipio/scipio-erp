@@ -27,9 +27,7 @@ under the License.
                         </#list>
                     </select>
                 </@field>
-                <@field type="generic" label="${uiLabelMap.ProductName}">
-                    <input type="text" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/>
-                </@field>
+                <@field type="input" label="${uiLabelMap.ProductName}" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/>
                 <@field type="generic" label="${uiLabelMap.ProductCategoryDescription}">
                     <textarea name="description" cols="60" rows="2">${(productCategory.description)!}</textarea>
                 </@field>

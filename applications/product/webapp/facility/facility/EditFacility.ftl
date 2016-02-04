@@ -71,12 +71,8 @@ under the License.
           </#list>
       </select>
   </@field>
-  <@field type="generic" label="${uiLabelMap.ProductName}" required=true>
-      <input type="text" name="facilityName" value="${facility.facilityName!}" size="30" maxlength="60" />
-  </@field>
-  <@field type="generic" label="${uiLabelMap.ProductFacilitySize}">
-      <input type="text" name="facilitySize" value="${facility.facilitySize!}" size="10" maxlength="20" />
-  </@field>
+  <@field type="input" label="${uiLabelMap.ProductName}" required=true name="facilityName" value="${facility.facilityName!}" size="30" maxlength="60" />
+  <@field type="input" label="${uiLabelMap.ProductFacilitySize}" name="facilitySize" value="${facility.facilitySize!}" size="10" maxlength="20" />
   <@field type="generic" label="${uiLabelMap.ProductFacilityDefaultAreaUnit}">
       <select name="facilitySizeUomId">
           <option value="">${uiLabelMap.CommonNone}</option>
@@ -89,12 +85,8 @@ under the License.
           </#list>
       </select>
   </@field>  
-  <@field type="generic" label="${uiLabelMap.ProductProductDescription}">
-      <input type="text" name="description" value="${facility.description!}" size="60" maxlength="250" />
-  </@field>
-  <@field type="generic" label="${uiLabelMap.ProductDefaultDaysToShip}">
-      <input type="text" name="defaultDaysToShip" value="${facility.defaultDaysToShip!}" size="10" maxlength="20" />
-  </@field>
+  <@field type="input" label="${uiLabelMap.ProductProductDescription}" name="description" value="${facility.description!}" size="60" maxlength="250" />
+  <@field type="input" label="${uiLabelMap.ProductDefaultDaysToShip}" name="defaultDaysToShip" value="${facility.defaultDaysToShip!}" size="10" maxlength="20" />
 
   <#if facilityId?has_content>
     <@field type="submit" name="Update" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />

@@ -142,21 +142,11 @@ function lookupBom() {
             </#if>
             <@htmlTemplate.renderDateTimeField value="${value!''}" name="thruDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="30" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
     </@field>
-    <@field type="generic" label="${uiLabelMap.CommonSequenceNum}">
-        <input type="text" name="sequenceNum" <#if useValues>value="${(productAssoc.sequenceNum)!}"<#else>value="${(request.getParameter("sequenceNum"))!}"</#if> size="5" maxlength="10"/>
-    </@field>
-    <@field type="generic" label="${uiLabelMap.ManufacturingReason}">
-        <input type="text" name="reason" <#if useValues>value="${(productAssoc.reason)!}"<#else>value="${(request.getParameter("reason"))!}"</#if> size="60" maxlength="255"/>
-    </@field>
-    <@field type="generic" label="${uiLabelMap.ManufacturingInstruction}">
-        <input type="text" name="instruction" <#if useValues>value="${(productAssoc.instruction)!}"<#else>value="${(request.getParameter("instruction"))!}"</#if> size="60" maxlength="255"/>
-    </@field>
-    <@field type="generic" label="${uiLabelMap.ManufacturingQuantity}">
-        <input type="text" name="quantity" <#if useValues>value="${(productAssoc.quantity)!}"<#else>value="${(request.getParameter("quantity"))!}"</#if> size="10" maxlength="15"/>
-    </@field>
-    <@field type="generic" label="${uiLabelMap.ManufacturingScrapFactor}">
-        <input type="text" name="scrapFactor" <#if useValues>value="${(productAssoc.scrapFactor)!}"<#else>value="${(request.getParameter("scrapFactor"))!}"</#if> size="10" maxlength="15"/>
-    </@field>
+    <@field type="input" label="${uiLabelMap.CommonSequenceNum}" name="sequenceNum" value=useValues?string("${(productAssoc.sequenceNum)!}", "${(request.getParameter('sequenceNum'))!}") size="5" maxlength="10"/>
+    <@field type="input" label="${uiLabelMap.ManufacturingReason}" name="reason" value=useValues?string("${(productAssoc.reason)!}", "${(request.getParameter('reason'))!}") size="60" maxlength="255"/>
+    <@field type="input" label="${uiLabelMap.ManufacturingInstruction}" name="instruction" value=useValues?string("${(productAssoc.instruction)!}", "${(request.getParameter('instruction'))!}") size="60" maxlength="255"/>
+    <@field type="input" label="${uiLabelMap.ManufacturingQuantity}" name="quantity" value=useValues?string("${(productAssoc.quantity)!}", "${(request.getParameter('quantity'))!}") size="10" maxlength="15"/>
+    <@field type="input" label="${uiLabelMap.ManufacturingScrapFactor}" name="scrapFactor" value=useValues?string("${(productAssoc.scrapFactor)!}", "${(request.getParameter('scrapFactor'))!}") size="10" maxlength="15"/>
     <@field type="generic" label="${uiLabelMap.ManufacturingFormula}">
         <select name="estimateCalcMethod">
             <option value="">&nbsp;</option>

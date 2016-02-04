@@ -109,9 +109,7 @@ under the License.
               <@field type="generic" label="${uiLabelMap.ProductProductDescription}">
                   ${product.description!}
               </@field>
-              <@field type="generic" label="${uiLabelMap.ProductItemDescription}">
-                  <input type="text" name="itemDescription" size="30" maxlength="60"/>
-              </@field>
+              <@field type="input" label="${uiLabelMap.ProductItemDescription}" name="itemDescription" size="30" maxlength="60"/>
               <@field type="generic" label="${uiLabelMap.ProductInventoryItemType}">
                   <select name="inventoryItemTypeId" size="1">
                     <#list inventoryItemTypes as nextInventoryItemType>
@@ -147,9 +145,7 @@ under the License.
               </@field>
               
               
-              <@field type="generic" label="${uiLabelMap.lotId}">
-                  <input type="text" name="lotId" size="10"/>
-              </@field>
+              <@field type="input" label="${uiLabelMap.lotId}" name="lotId" size="10"/>
 
               <#-- facility location(s) -->
               <#assign facilityLocations = (product.getRelated("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId), null, false))!/>
@@ -181,12 +177,8 @@ under the License.
                     </#list>
                   </select>
               </@field>
-              <@field type="generic" label="${uiLabelMap.ProductQuantityRejected}">
-                  <input type="text" name="quantityRejected" size="5" value="0" />
-              </@field>
-              <@field type="generic" label="${uiLabelMap.ProductQuantityAccepted}">
-                  <input type="text" name="quantityAccepted" size="5" value="${defaultQuantity?default(1)?string.number}"/>
-              </@field>
+              <@field type="input" label="${uiLabelMap.ProductQuantityRejected}" name="quantityRejected" size="5" value="0" />
+              <@field type="input" label="${uiLabelMap.ProductQuantityAccepted}" name="quantityAccepted" size="5" value="${defaultQuantity?default(1)?string.number}"/>
               <@field type="generic" label="${uiLabelMap.ProductPerUnitPrice}">
                   <#-- get the default unit cost -->
                   <#if (!unitCost?? || unitCost == 0.0)><#assign unitCost = standardCosts.get(product.productId)?default(0)/></#if>

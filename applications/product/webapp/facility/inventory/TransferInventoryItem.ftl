@@ -29,9 +29,7 @@ under the License.
             <input type="hidden" name="facilityId" value="${facilityId}" />
         <@row>
           <@cell columns=9>
-            <@field type="generic" label="${uiLabelMap.ProductInventoryItemId}">
-                <input type="text" name="inventoryItemId" size="20" maxlength="20" />
-            </@field>
+            <@field type="input" label="${uiLabelMap.ProductInventoryItemId}" name="inventoryItemId" size="20" maxlength="20" />
           </@cell>
           <@cell columns=3>
             <@field type="submit" text="${uiLabelMap.ProductGetItem}" class="${styles.link_run_sys!} ${styles.action_transfer!}" />
@@ -118,9 +116,7 @@ under the License.
             <@field type="generic" label="${uiLabelMap.ProductToLocation}">
                 <@htmlTemplate.lookupField value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation"/>
             </@field>
-            <@field type="generic" label="${uiLabelMap.ProductComments}">
-                <input type="text" name="comments" size="60" maxlength="250" />
-            </@field>
+            <@field type="input" label="${uiLabelMap.ProductComments}" name="comments" size="60" maxlength="250" />
             <@field type="generic" label="${uiLabelMap.ProductQuantityToTransfer}">
                 <#if inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
                     <input type="text" size="5" name="xferQty" value="${(inventoryItem.availableToPromiseTotal)!}" />
@@ -142,9 +138,7 @@ under the License.
             <@field type="generic" label="${uiLabelMap.ProductToLocation}">
                 <@htmlTemplate.lookupField value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation?facilityId=${inventoryTransfer.facilityIdTo}"/>
             </@field>
-            <@field type="generic" label="${uiLabelMap.ProductComments}">
-                <input type="text" name="comments" value="${(inventoryTransfer.comments)!}" size="60" maxlength="250" />
-            </@field>
+            <@field type="input" label="${uiLabelMap.ProductComments}" name="comments" value="${(inventoryTransfer.comments)!}" size="60" maxlength="250" />
         </#if>
         <#if !(inventoryTransfer??)>
             <@field type="submit" text="${uiLabelMap.ProductTransfer}" class="${styles.link_run_sys!} ${styles.action_transfer!}" />

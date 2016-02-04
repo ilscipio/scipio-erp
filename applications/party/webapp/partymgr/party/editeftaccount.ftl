@@ -47,9 +47,7 @@ under the License.
             <input type="text" class="required" size="30" maxlength="60" name="nameOnAccount" value="${eftAccountData.nameOnAccount!}" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>
         </@field>
-        <@field type="generic" label="${uiLabelMap.AccountingCompanyNameAccount}">
-            <input type="text" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccountData.companyNameOnAccount!}" />
-        </@field>
+        <@field type="input" label="${uiLabelMap.AccountingCompanyNameAccount}" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccountData.companyNameOnAccount!}" />
         <@field type="generic" label="${uiLabelMap.AccountingBankName}">
             <input type="text" class="required" size="30" maxlength="60" name="bankName" value="${eftAccountData.bankName!}" />
             <span class="tooltip">${uiLabelMap.CommonRequired}</span>

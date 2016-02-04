@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="EditShopList" type="single" target="" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="ShoppingList"/>
         <field name="shoppingListTypeId">
             <drop-down>
@@ -36,7 +36,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListShopLists" type="single" target="" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="ShoppingList" default-field-type="display"/>
         <field name="shoppingListTypeId">
             <display-entity entity-name="ShoppingListType"/>

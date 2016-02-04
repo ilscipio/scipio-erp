@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
-    <form name="NewAccount" type="single" target="createAccount" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+    <form name="NewAccount" type="single" target="createAccount" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="accountType"><hidden value="${accountType}"/></field>
         <field name="groupName" title="${uiLabelMap.PartyGroupName}" required-field="true">
             <text size="30" maxlength="60"/>
@@ -69,7 +69,7 @@ under the License.
     </form>
 
     <form name="FindAccounts" id="FindAccounts" target="${currentUrl}" title="" type="single" default-map-name="parameters"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="all"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find/></field>
         <field name="groupName" title="${uiLabelMap.PartyPartyGroupName}"><text-find/></field>
@@ -86,7 +86,7 @@ under the License.
         </field>
     </form>
     <form name="listAccounts" paginate-target="${currentUrl}" type="list" list-name="listIt"
-        odd-row-style="alternate-row" header-row-style="header-row-2" separate-columns="true"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2" separate-columns="true"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="roleTypeIdFrom" value="OWNER"/>
             <set field="roleTypeIdTo" value="ACCOUNT"/>

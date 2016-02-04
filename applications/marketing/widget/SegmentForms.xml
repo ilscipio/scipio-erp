@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="FindSegmentGroup" list-name="listIt" target="" title="" type="list" paginate-target="FindSegmentGroup"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -48,7 +48,7 @@ under the License.
     </form>
 
     <form name="EditSegmentGroup" type="single" target="updateSegmentGroup" title="" default-map-name="segmentGroup"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="segmentGroup==null" target="createSegmentGroup"/>
 
         <field use-when="segmentGroup!=null" name="segmentGroupId" title="${uiLabelMap.MarketingSegmentGroupSegmentGroupId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
@@ -78,7 +78,7 @@ under the License.
     </form>
 
     <form name="AddSegmentGroupClass" type="single" target="createSegmentGroupClassification" title="" default-map-name="segmentGroupClass"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createSegmentGroupClassification"/>
 
         <field name="segmentGroupId"><hidden/></field>
@@ -89,7 +89,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="text-link"/></field>
     </form>
     <form name="listSegmentGroupClass" list-name="segmentGroupClassList" target="" title="" type="list" paginate-target="listSegmentGroupClass"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="SegmentGroupClassification">
                 <field-map field-name="segmentGroupId"/>
@@ -106,7 +106,7 @@ under the License.
     </form>
 
     <form name="AddSegmentGroupGeo" type="single" target="createSegmentGroupGeo" title="" default-map-name="segmentGroupGeo"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createSegmentGroupGeo"/>
 
         <field name="segmentGroupId"><hidden/></field>
@@ -115,7 +115,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="text-link"/></field>
     </form>
     <form name="listSegmentGroupGeo" list-name="segmentGroupGeos" target="" title="" type="list" paginate-target="listSegmentGroupGeo"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="SegmentGroupGeo">
                 <field-map field-name="segmentGroupId"/>
@@ -132,7 +132,7 @@ under the License.
     </form>
 
     <form name="AddSegmentGroupRole" type="single" target="createSegmentGroupRole" title="" default-map-name="segmentGroupRole"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createSegmentGroupRole"/>
 
         <field name="segmentGroupId"><hidden/></field>
@@ -148,7 +148,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="text-link"/></field>
     </form>
     <form name="listSegmentGroupRole" list-name="listIt" target="" title="" type="list" paginate-target="listSegmentGroupRole"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>

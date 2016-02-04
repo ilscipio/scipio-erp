@@ -22,7 +22,7 @@
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="NewOrganization" type="single" target="${target}${previousParams}"
-        focus-field-name="USER_TITLE" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        focus-field-name="USER_TITLE" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="USE_ADDRESS"><hidden value="${USE_ADDRESS}"/></field>
         <field name="require_email"><hidden value="${require_email}"/></field>
         <field name="partyId"><text/></field>
@@ -84,7 +84,7 @@
     </form>
     
     <form name="EditFacility" type="single" target="UpdateFacility" default-map-name="facility"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="facility==null" target="CreateFacility"/>
 
         <field use-when="facility!=null" name="facilityId" tooltip="${uiLabelMap.ProductNotModificationRecreatingProductStore}"><display/></field>
@@ -104,7 +104,7 @@
     </form>
     
     <form name="EditProductStore" type="single" target="updateProductStore" title="" default-map-name="productStore"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="productStore==null" target="createProductStore"/>
         
         <field use-when="productStore!=null" name="productStoreId" tooltip="${uiLabelMap.ProductNotModificationRecreatingProductStore}"><display/></field>
@@ -220,7 +220,7 @@
     </form>
     
     <form name="EditProductCategory" type="single" header-row-style="header-row" 
-        default-map-name="productCategory" target="updateProductCategory"> <!-- default-table-style="basic-table" -->
+        default-map-name="productCategory" target="updateProductCategory"> <!-- orig: default-table-style=-style="basic-table" -->
         
         <alt-target use-when="productCategory==null" target="createProductCategory"/>
         
@@ -235,7 +235,7 @@
     </form>  
     
     <form name="EditProduct" type="single" target="createUpdateProduct" title="" default-map-name="product"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field use-when="product==null" name="isCreate"><hidden value="true"/></field>
         
         <field position="1" use-when="product!=null" name="productId" title="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductNotModificationRecreatingProduct}"><display/></field>
@@ -256,7 +256,7 @@
         <field name="submitAction" title="${uiLabelMap.ProductCreateProduct}" use-when="product==null" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     
-    <form name="ListProduct" type="single" default-map-name="product" odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+    <form name="ListProduct" type="single" default-map-name="product" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId"><display/></field>
         <field name="internalName"><display/></field>
         <field name="productName"><display/></field>
@@ -264,7 +264,7 @@
     </form>
     
     <form name="ListOrganizations" type="list" title="Internal Organizations" list-name="parties"
-        odd-row-style="alternate-row" view-size="10"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" view-size="10"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="PartyAcctgPreference" value-field="partyAcctgPreference"/>
             <entity-one entity-name="PartyGroup" value-field="partyGroup"/>

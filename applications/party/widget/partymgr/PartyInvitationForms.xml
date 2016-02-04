@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="FindPartyInvitations" type="single" default-map-name="partyInvitations" target="partyInvitation"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field position="1" name="partyInvitationId"><text-find ignore-case="true"/></field>
         <field position="2" name="partyIdFrom" title="${uiLabelMap.PartyPartyFrom}"><lookup target-form-name="LookupPartyName"/></field>
         <field position="1" name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
@@ -43,7 +43,7 @@ under the License.
     </form>
 
     <form name="ListPartyInvitations" type="list" list-name="listIt" default-entity-name="PartyInvitation"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="parameters.lastInviteDate_fld0_value" from-field="parameters.datefrom"/>
             <set field="parameters.lastInviteDate_fld0_op" value="greaterThanEqualTo"/>
@@ -76,7 +76,7 @@ under the License.
     </form>
 
     <form name="EditPartyInvitation" type="single" target="updatePartyInvitation" default-map-name="partyInvitation"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="partyInvitation==null" target="createPartyInvitation"/>
         <auto-fields-service service-name="updatePartyInvitation"/>
         <field name="partyInvitationId"><hidden/></field>
@@ -99,7 +99,7 @@ under the License.
     </form>
 
     <form name="ListPartyInvitationGroupAssocs" type="list" list-name="partyInvitationGroupAssoc"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="PartyInvitationGroupAssoc">
                 <condition-expr field-name="partyInvitationId" from-field="parameters.partyInvitationId"/>
@@ -127,7 +127,7 @@ under the License.
     </form>
 
     <form name="AddPartyInvitationGroupAssoc" type="single" target="createPartyInvitationGroupAssoc" default-map-name="partyInvitationGroupAssoc"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createPartyInvitationGroupAssoc"/>
         <field name="partyInvitationId"><hidden/> </field>
         <field name="partyIdTo">
@@ -142,7 +142,7 @@ under the License.
     </form>
 
     <form name="ListPartyInvitationRoleAssocs" type="list" list-name="partyInvitationRoleAssoc"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="PartyInvitationRoleAssoc">
                 <condition-expr field-name="partyInvitationId" from-field="parameters.partyInvitationId"/>
@@ -164,7 +164,7 @@ under the License.
     </form>
 
     <form name="AddPartyInvitationRoleAssoc" type="single" target="createPartyInvitationRoleAssoc" title="" default-map-name="partyInvitationGroupAssoc"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createPartyInvitationRoleAssoc"/>
         <field name="partyInvitationId"><hidden/> </field>
         <field name="roleTypeId">

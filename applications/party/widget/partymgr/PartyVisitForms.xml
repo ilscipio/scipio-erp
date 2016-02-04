@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="FindVisits" type="single" target="findVisits" title="Find and list party visits"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
 
         <field name="activeOnly"><check /></field>
@@ -38,7 +38,7 @@ under the License.
     </form>
 
     <form name="ListVisits" type="list" separate-columns="true" title="Visits List" list-name="listIt" target="" default-entity-name="Visit" paginate-target="findVisits"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="parameters.sortField" from-field="parameters.sortField" default-value="-visitId"/>
 
@@ -72,7 +72,7 @@ under the License.
     </form>
 
     <form name="ListLoggedInUsers" type="list" separate-columns="true" title="Visits List" list-name="listIt" target="" default-entity-name="Visit" paginate-target="listLoggedInUsers"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="parameters.sortField" from-field="parameters.sortField" default-value="-userLoginId"/>
             <entity-condition entity-name="Visit" list="listIt" distinct="true" filter-by-date="true">

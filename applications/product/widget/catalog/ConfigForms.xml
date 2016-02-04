@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     
     <form name="FindProductConfigItems" type="single" target="FindProductConfigItems"
-        default-map-name="productconfigitems" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        default-map-name="productconfigitems" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="configItemId" title="${uiLabelMap.CommonId}"><text-find/></field>
         <field name="configItemName" title="${uiLabelMap.CommonName}" position="2"><text-find/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
@@ -38,7 +38,7 @@ under the License.
     
     <form name="ListProductConfigItems" type="list" list-name="listIt"
         odd-row-style="alternate-row" paginate-target="FindProductConfigItems"
-        target="" header-row-style="header-row-2" paginate="true"> <!-- default-table-style="basic-table" -->
+        target="" header-row-style="header-row-2" paginate="true"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <service service-name="performFind" result-map-list="listIt" result-map="performFindResult">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -63,7 +63,7 @@ under the License.
     </form>
     
     <form name="EditProductConfigItem" type="single" target="updateProductConfigItem" title="" default-map-name="configItem"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="configItem==null" target="createProductConfigItem"/>
         <field name="longDescription" title="${uiLabelMap.ProductLongDescription}"><ignored/></field>
         <field name="imageUrl"><ignored/></field>
@@ -83,7 +83,7 @@ under the License.
     </form>
     
     <form name="EditConfigOption" type="list" target="updateProductConfigOption" title="" list-name="configOptionList" list-entry-name="configOption"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
 
         <auto-fields-service service-name="updateProductConfigOption" map-name="configOption"/>
         <field use-when="configOption!=null" name="configOptionId"><hidden/></field>
@@ -92,7 +92,7 @@ under the License.
     </form>
     
     <form name="CreateConfigOption" type="single" target="createProductConfigOption" title="" default-map-name="configOption"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="configOption!=null" target="updateProductConfigOption"/>
         <auto-fields-service service-name="createProductConfigOption"/>
 
@@ -105,7 +105,7 @@ under the License.
     </form>
     
     <form name="CreateProductConfigProduct" type="single" target="createProductConfigProduct" title="" default-map-name="productConfigProduct"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="productConfigProduct!=null" target="updateProductConfigProduct"/>
         <auto-fields-service service-name="createProductConfigProduct"/>
 
@@ -121,7 +121,7 @@ under the License.
 
     <!-- ProdConfItemContent -->
     <form name="AddProductConfigItemContentAssoc" type="single" target="addContentToProductConfigItem" title="Add ProdConfItemContent (select Content Id, enter From Date):"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="ProdConfItemContent"/>
         <field name="configItemId" title="${uiLabelMap.ProductConfigItemId}" map-name="productConfigItem"><hidden/></field>
         <field name="contentId" title="${uiLabelMap.ProductContentId}" ></field>
@@ -137,7 +137,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="PrepareAddProductConfigItemContentAssoc" type="single" target="prepareAddContentToProductConfigItem" title="Add ProdConfItemContent (select Content Id, enter From Date):"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="ProdConfItemContent"/>
         <field name="contentId"><ignored/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><ignored/></field>
@@ -154,7 +154,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.ProductPrepareCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="UpdateProductConfigItemContentAssoc" type="list" target="updateContentToProductConfigItem" title="" list-name="productContentDatas"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <!-- each entry in the list will be a Map with the entries: productContent and content -->
         <auto-fields-service service-name="updateProductConfigItemContent" map-name="productContent"/>
         <field name="configItemId"><hidden/></field>
@@ -182,7 +182,7 @@ under the License.
         </field>
     </form>
     <form name="EditProductConfigItemContentSimpleText" type="single" target="updateSimpleTextContentForProductConfigItem" title="Update Simple Text Content for Product"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="contentId==null" target="createSimpleTextContentForProductConfigItem"/>
         <auto-fields-entity entity-name="ProdConfItemContent" map-name="productContentData"/>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ></field>
@@ -201,7 +201,7 @@ under the License.
 
     <form name="ListProductConfigItem" type="list" list-name="productConfigs"
         odd-row-style="alternate-row" paginate-target="FindProductConfigItems"
-        target="" header-row-style="header-row-2" paginate="true"> <!-- default-table-style="basic-table" -->
+        target="" header-row-style="header-row-2" paginate="true"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-condition entity-name="ProductConfigAndProduct" list="productConfigs" distinct="true">
                 <condition-list>
@@ -225,7 +225,7 @@ under the License.
 
     <form name="ProductConfigOptionList" type="list" list-name="configOptionList"
         odd-row-style="alternate-row" paginate-target="FindProductConfigItems"
-        target="" header-row-style="header-row-2" paginate="true"> <!-- default-table-style="basic-table" -->
+        target="" header-row-style="header-row-2" paginate="true"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="ProductConfigOption" default-field-type="display"/>
         <field name="configItemId" widget-style="${styles.link_nav_info_idname}" title="${uiLabelMap.ProductConfigItem}">
             <hyperlink target="EditProductConfigOptions" description="${configOptionId} - ${configOptionName}">
@@ -245,7 +245,7 @@ under the License.
 
     <form name="ProductConfigList" type="list" list-name="configProducts"
         odd-row-style="alternate-row" paginate-target="FindProductConfigItems"
-        target="" header-row-style="header-row-2" paginate="true"> <!-- default-table-style="basic-table" -->
+        target="" header-row-style="header-row-2" paginate="true"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
             <entity-one entity-name="Product" value-field="product">
                 <field-map field-name="productId"/>

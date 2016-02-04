@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="CreateProductionRun" target="createProductionRun" title="" type="single"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId" title="${uiLabelMap.ProductProductId}" required-field="true"><lookup target-form-name="LookupProduct" size="16"/></field>
         <field name="quantity" title="${uiLabelMap.ManufacturingQuantity}" required-field="true"><text size="6"/></field>
         <field name="startDate" title="${uiLabelMap.ManufacturingStartDate}" required-field="true"><date-time/></field>
@@ -46,7 +46,7 @@ under the License.
         </field>
     </form>
     <form name="findProductionRun" target="FindProductionRun" title="" type="single"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="workEffortTypeId"><hidden value="PROD_ORDER_HEADER"/></field>
         <field name="workEffortId" title="${uiLabelMap.ManufacturingProductionRunId}"><text-find/></field>
         <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
@@ -70,7 +70,7 @@ under the License.
     </form>
 
     <form name="listFindProductionRun" list-name="listIt" title="" type="list" paginate-target="FindProductionRun"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="requestParameters"/>
@@ -98,7 +98,7 @@ under the License.
     </form>
 
      <form name="UpdateProductionRun" type="single" target="updateProductionRun" title="" default-map-name="productionRunData"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productionRunId"><hidden/></field>
         <field name="productId" title="${uiLabelMap.ProductProductName}">
             <display-entity entity-name="Product" description="${internalName} [${productId}]"/>
@@ -121,7 +121,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListProductionRunOrderItems" type="list" target="EditProductionRun" title="" list-name="orderItems"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="orderId" widget-style="${styles.link_nav_info_id_long}">
             <hyperlink target="/ordermgr/control/orderview" description="${orderId}/${orderItemSeqId}" also-hidden="false" target-type="inter-app">
                 <parameter param-name="orderId"/>
@@ -139,7 +139,7 @@ under the License.
         -->
     </form>
     <form name="ListProductionRunInventoryItems" type="list" title="" list-name="inventoryItems"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="InventoryItem" value-field="inventoryItem"/>
             <entity-condition entity-name="InventoryItemDetail" list="inventoryItemDetails">
@@ -161,7 +161,7 @@ under the License.
     </form>
 
      <form name="ViewListProductionRunRoutingTasks" type="list" title="" list-name="productionRunRoutingTasks"
-         odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+         odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
          <row-actions>
              <set field="estimatedTotalMilliSeconds" value="${groovy:estimatedMilliSeconds * quantity}" type="BigDecimal"/>
          </row-actions>
@@ -176,7 +176,7 @@ under the License.
         <field name="estimatedTotalMilliSeconds" title="${uiLabelMap.ManufacturingTaskEstimatedTotalMilliSeconds}" ><display/></field>
     </form>
     <form name="ListProductionRunRoutingTasks" type="list" target="ProductionRunTasks" title="" list-name="productionRunRoutingTasks"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <set field="estimatedTotalMilliSeconds" value="${groovy:estimatedMilliSeconds * quantity}" type="BigDecimal"/>
         </row-actions>
@@ -210,7 +210,7 @@ under the License.
     </form>
 
     <form name="ListProductionRunComponents" type="list" target="EditProductionRun" title="" list-name="productionRunComponents"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one value-field="product" entity-name="Product" use-cache="true"/>
         </row-actions>
@@ -225,7 +225,7 @@ under the License.
     </form>
 
     <form name="EditProductionRunRoutingTask" type="single" target="updateProductionRunRoutingTask" title="" default-map-name="productionRunTask"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="productionRunTask==null" target="addProductionRunRoutingTask"/>
         <field name="productionRunId">
             <hidden value="${productionRunId}"/>
@@ -265,7 +265,7 @@ under the License.
 
     <!-- Production Run Declaration -->
     <form name="ShowProductionRun" type="single" target="productionRunProduce" title="" default-map-name="productionRunData"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <set field="useRequestParameters" value="false" type="Boolean"/>
         </actions>
@@ -292,7 +292,7 @@ under the License.
         <field name="quantityRejected" title="${uiLabelMap.ManufacturingQuantityRejected}"><display/></field>
     </form>
     <form name="ProductionRunProduce" type="single" target="productionRunProduce" title="" default-map-name="productionRunData"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="workEffortId"><hidden/></field>
         <field name="quantity" title="${uiLabelMap.ManufacturingProduceQuantity}"><text/></field>
         <field name="inventoryItemTypeId">
@@ -306,7 +306,7 @@ under the License.
         </field>
     </form>
     <form name="ProductionRunDeclareAndProduceTop" type="single" skip-end="true" target="productionRunDeclareAndProduce" title="" default-map-name="productionRunData"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="workEffortId"><hidden/></field>
         <field name="quantity" title="${uiLabelMap.ManufacturingProduceQuantity}" tooltip="${uiLabelMap.ManufacturingProduceQuantityMessage}"><text/></field>
         <field name="inventoryItemTypeId">
@@ -317,7 +317,7 @@ under the License.
         <field name="lotId"><text default-value="${lastLotId}"/></field>
     </form>
     <form name="ProductionRunDeclareAndProduceBottom" skip-start="true" type="multi" title="" list-name="productionRunComponentsDataReadyForIssuance"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="productionRunTaskId" entry-name="workEffortId"><hidden/></field>
         <field name="productId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><hidden/></field>
@@ -356,7 +356,7 @@ under the License.
     </form>
 
     <form name="ListProductionRunDeclRoutingTasks" type="list" target="ProductionRunDeclaration" title="" list-name="productionRunRoutingTasks"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="actionForm"><hidden value="EditRoutingTask"/></field>
         <field name="productionRunId"><hidden value="${workEffortParentId}"/></field>
         <field name="routingTaskId"><hidden value="${workEffortId}"/></field>
@@ -406,7 +406,7 @@ under the License.
         </field>
     </form>
     <form name="ListIssueProductionRunDeclComponents" type="multi" target="issueProductionRunTaskComponents?productionRunId=${productionRunId}" title="" list-name="productionRunComponentsDataReadyForIssuance"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="productId"><hidden/></field>
         <field name="productionRunId"><hidden/></field>
         <field name="workEffortId"><hidden/></field>
@@ -447,7 +447,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="ListReturnProductionRunDeclComponents" type="multi" use-row-submit="true" target="productionRunTaskReturnMaterials?productionRunId=${productionRunId}" title="" list-name="productionRunComponentsAlreadyIssued"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="productId"><hidden/></field>
         <field name="productionRunId"><hidden/></field>
         <field name="workEffortId"><hidden/></field>
@@ -468,7 +468,7 @@ under the License.
     </form>
 
      <form name="EditProductionRunDeclRoutingTask" type="single" target="updateProductionRunTask" title="" default-map-name="routingTaskData"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="actionForm">
             <hidden value="${actionForm}"/>
         </field>
@@ -541,7 +541,7 @@ under the License.
         </field>
     </form>
     <form name="CreateRoutingTaskDelivProduct" type="single" target="createProductionRunTaskProduct" title="" default-map-name="formData"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productionRunId"><hidden/></field>
         <field name="workEffortId"><hidden value="${routingTaskId}"/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="${groovy:delivProducts.size()>0}">
@@ -561,7 +561,7 @@ under the License.
         </field>
     </form>
     <form name="ProductionRunTaskInventoryProducedList" type="list" title="" list-name="prunInventoryProduced"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="inventoryItemId" title="${uiLabelMap.ProductInventoryItem}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="/facility/control/EditInventoryItem" description="${inventoryItemId}" also-hidden="false" target-type="inter-app">
                 <parameter param-name="inventoryItemId"/>
@@ -648,7 +648,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="ProductionRunTaskFixedAssets" type="list" target="updateWorkEffortFixedAssetAssign" paginate-target="" title="" list-name="records"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <auto-fields-entity entity-name="WorkEffortFixedAssetAssign" default-field-type="edit"/>
         <field name="productionRunId"><hidden/></field>
         <field name="workEffortId"><hidden/></field>
@@ -677,7 +677,7 @@ under the License.
         </field>
     </form>
     <form name="ListProductionRunTaskFixedAssets" type="list" title="" list-name="productionRunFixedAssetsData"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <auto-fields-entity entity-name="WorkEffortFixedAssetAssign" default-field-type="display"/>
         <field name="workEffortId">
             <display-entity entity-name="WorkEffort" description="${workEffortName} [${workEffortId}]"/>
@@ -690,7 +690,7 @@ under the License.
         </field>
     </form>
     <form name="ListProductionRunNotes" type="list" title="" list-name="productionRunNoteData"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <auto-fields-entity entity-name="WorkEffortNoteAndData" default-field-type="display"/>
         <field name="workEffortId"><hidden/></field>
         <field name="internalNote"><hidden/></field>
@@ -699,7 +699,7 @@ under the License.
         <field name="noteDateTime"><hidden/></field>
     </form>
     <form name="EditProductionRunTaskFixedAsset" type="single" target="EditProductionRun" title="" default-map-name="fixedAssetData"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="declarationScreen.equals(&quot;Y&quot;)" target="ProductionRunDeclaration"/>
         <auto-fields-entity entity-name="WorkEffortFixedAssetAssign"/>
         <field name="actionForm"><hidden value="${actionForm}"/></field>
@@ -740,7 +740,7 @@ under the License.
         </field>
     </form>
     <form name="AddProductionRunTaskFixedAsset" type="single" target="createWorkEffortFixedAssetAssign" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createWorkEffortFixedAssetAssign"/>
         <field name="productionRunId"><hidden /></field>
         <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingTask}">
@@ -775,7 +775,7 @@ under the License.
     <!-- ******************* -->
     <!-- List for Shipment Plan -->
     <form name="listShipmentPlan" type="list" target="" title="" list-name="shipmentPlan"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="orderId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}">
                 <parameter param-name="orderId" from-field="orderId"/>
@@ -806,7 +806,7 @@ under the License.
     </form>
 
     <form name="listShipmentPlans" type="list" target="" title="" list-name="shipmentPlans"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="shipmentId" widget-style="${styles.link_nav_info_id}" sort-field="true">
             <hyperlink target="/facility/control/ViewShipment" target-type="inter-app" description="${shipmentId}">
                 <parameter param-name="shipmentId" from-field="shipmentId"/>
@@ -823,14 +823,14 @@ under the License.
         </field>
     </form>
     <form name="SelectMrpName" type="single" target="ManufacturingReports" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="mrpName" title="${uiLabelMap.ManufacturingMrpName}"><text size="20"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_select}">
             <submit button-type="button"/>
         </field>
     </form>
     <form name="linkProductionRun" type="single" target="createProductionRunAssoc" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productionRunId"><hidden/></field>
         <field name="workEffortAssocTypeId"><hidden value="WORK_EFF_PRECEDENCY"/></field>
         <field name="productionRunIdTo" title="${uiLabelMap.ManufacturingProductionRunId}">
@@ -854,7 +854,7 @@ under the License.
         </field>
     </form>
     <form name="mandatoryWorkEfforts" type="list" target="" title="" list-name="mandatoryWorkEfforts"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="workEffortIdFrom" title=" " widget-style="${styles.link_nav_info_id}">
             <hyperlink target="ShowProductionRun" description="${workEffortIdFrom}" also-hidden="false" link-type="anchor">
                 <parameter param-name="productionRunId" from-field="workEffortIdFrom"/>
@@ -883,7 +883,7 @@ under the License.
         </field>
     </form>
     <form name="dependentWorkEfforts" type="list" target="" title="" list-name="dependentWorkEfforts"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="workEffortIdTo" title=" " widget-style="${styles.link_nav_info_id}">
             <hyperlink target="ShowProductionRun" description="${workEffortIdTo}" also-hidden="false" link-type="anchor">
                 <parameter param-name="productionRunId" from-field="workEffortIdTo"/>
@@ -912,7 +912,7 @@ under the License.
         </field>
     </form>
     <form name="ProductionRunTaskCosts" type="list" target="" title="" list-name="taskCosts"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <auto-fields-entity entity-name="CostComponent" default-field-type="display"/>
         <field name="workEffortId"><hidden/></field>
         <field name="productId"><hidden/></field>
@@ -927,7 +927,7 @@ under the License.
         </field>
     </form>
     <form name="AddProductionRunComponent" type="single" target="addProductionRunComponent" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="addProductionRunComponent"/>
         <field name="productionRunId"><hidden/></field>
         <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingTask}">
@@ -944,7 +944,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ProductionRunTaskComponents" type="list" target="updateProductionRunComponent" paginate-target="ProductionRunComponents" title="" list-name="records"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one value-field="product" entity-name="Product" use-cache="true"/>
         </row-actions>
@@ -966,7 +966,7 @@ under the License.
         </field>
     </form>
     <form name="ProductionRunTaskActualComponents" type="list" target="updateProductionRunComponent" paginate-target="ProductionRunActualComponents" title="" list-name="records"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <set field="quantityOnHandDiff" value="${groovy:-1*quantityOnHandDiff}" type="BigDecimal"/>
         </row-actions>
@@ -990,7 +990,7 @@ under the License.
         <field name="description"><display/></field>
     </form>
     <form name="IssueProductionRunComponent" type="single" target="issueProductionRunTaskComponent" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="issueProductionRunTaskComponent"/>
         <field name="productionRunId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" ><ignored/></field>

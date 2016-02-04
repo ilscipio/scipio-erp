@@ -23,7 +23,7 @@ under the License.
 
     <!-- Subscription Forms -->
     <form name="FindSubscription" default-map-name="subscription" target="FindSubscription" type="single"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="Subscription" default-field-type="find"/>
 
         <field name="subscriptionResourceId">
@@ -95,7 +95,7 @@ under the License.
     </form>
     <form name="ListFindSubscription" target="" type="list" list-name="listIt"
         header-row-style="header-row-2" odd-row-style="alternate-row"
-        paginate-target="FindSubscription" paginate="true"> <!-- default-table-style="basic-table" -->
+        paginate-target="FindSubscription" paginate="true"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <service service-name="performFind" result-map-list="listIt" result-map="performFindResult">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -184,7 +184,7 @@ under the License.
         </field>
     </form>
     <form name="EditSubscription" type="single" target="updateSubscription" default-map-name="subscription"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="subscription==null" target="createSubscription"/>
         <auto-fields-service service-name="updateSubscription"/>
 
@@ -310,7 +310,7 @@ under the License.
     <!-- SubscriptionResource Forms -->
     <form name="ListSubscriptionResources" type="list" list-name="examples"
         header-row-style="header-row-2" odd-row-style="alternate-row"
-        paginate-target="FindSubscriptionResource"> <!-- default-table-style="basic-table" -->
+        paginate-target="FindSubscriptionResource"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-condition entity-name="SubscriptionResource">
                 <order-by field-name="description"/>
@@ -343,7 +343,7 @@ under the License.
         </field>
     </form>
     <form name="EditSubscriptionResource" type="single" target="updateSubscriptionResource" default-map-name="subscriptionResource"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="subscriptionResource==null" target="createSubscriptionResource"/>
         <auto-fields-service service-name="updateSubscriptionResource"/>
 
@@ -368,7 +368,7 @@ under the License.
 
     <!-- ProductSubscriptionResource -->
     <form name="ListSubscriptionResourceProducts" type="list" list-name="productSubscriptionResource" target="updateProductSubscriptionResourceSr"
-        header-row-style="header-row-2" odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row-2" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-condition entity-name="ProductSubscriptionResource">
                 <condition-expr field-name="subscriptionResourceId" from-field="subscriptionResourceId"/>
@@ -419,7 +419,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="AddSubscriptionResourceProduct" type="single" target="createProductSubscriptionResourceSr" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createProductSubscriptionResource"/>
 
         <field name="subscriptionResourceId"><hidden/></field>
@@ -456,14 +456,14 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="EditSubscriptionAttributes" type="list" list-name="subscriptionAttributes" target="UpdateSubscriptionAttribute"
-        header-row-style="header-row-2" odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row-2" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="updateSubscriptionAttribute"/>
 
         <field name="subscriptionId"><hidden/></field>
         <field name="updateAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="AddSubscriptionAttribute" type="single" target="UpdateSubscriptionAttribute"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="updateSubscriptionAttribute"/>
         <field name="subscriptionId"><hidden/></field>
         <field name="addAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
@@ -471,7 +471,7 @@ under the License.
 
     <!-- Subscription Communication Event  -->
     <form name="listSubscriptionCommEvent" type="list" list-name="subscriptionCommEvent" target="ListSubscriptionCommEvent"
-        header-row-style="header-row-2" odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row-2" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-condition entity-name="SubscriptionAndCommEvent">
                 <condition-expr field-name="subscriptionId" from-field="subscriptionId"/>
@@ -505,7 +505,7 @@ under the License.
         </field>
     </form>
     <form name="createSubscriptionCommEvent" type="single" target="createSubscriptionCommEvent" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createSubscriptionCommEvent"/>
         <field name="subscriptionId"><hidden value="${parameters.subscriptionId}"/></field>
         <field name="communicationEventId">

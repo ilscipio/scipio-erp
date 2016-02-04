@@ -21,7 +21,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="FindTimeSheet" target="FindTimeSheet" title="" type="single"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-condition entity-name="PartyRoleDetailAndPartyDetail" distinct="true" list="parties">
                 <condition-list combine="or">
@@ -55,7 +55,7 @@
         <field name="find" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit/></field>
     </form>
     <form name="ListTimeSheets" type="list" list-name="timesheets" paginate-target="FindTimeSheet"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="complete" value="${uiLabelMap.ScrumToComplete}"/>
             <set field="inProcess" value="Set To In-progress"/>
@@ -88,7 +88,7 @@
         </field>
     </form>
     <form name="ListPartyTimeSheets" type="list" list-name="timesheets" paginate-target="MyTimesheet"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="complete" value="${uiLabelMap.ScrumToComplete}"/>
         </actions>
@@ -113,7 +113,7 @@
     <form name="WeekTimesheet" extends="WeekTimesheet" extends-resource="component://scrum/widget/MyWorkForms.xml" paginate-target="ViewTimeSheet">
     </form>
     <form name="EditWeekTimesheet" type="multi" list-name="timeEntries" use-row-submit="true" paginate-target="ViewTimeSheet"
-        separate-columns="true" target="update${my}Timesheet" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        separate-columns="true" target="update${my}Timesheet" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <service service-name="getProjectInfoFromTask" result-map="result">
                 <field-map field-name="taskId" from-field="workEffortId"/>
@@ -178,7 +178,7 @@
     </form>
 
     <form name="AddWeeklyTimesheet" type="single" target="createWeeklyTimesheet" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="partyId" title="${uiLabelMap.PartyParty}">
             <drop-down allow-empty="true" no-current-selected-key="${timesheet.partyId}">
                 <entity-options entity-name="PartyRoleDetailAndPartyDetail" description="${firstName} ${lastName}">
@@ -193,7 +193,7 @@
     </form>
     
     <form name="AddMyWeeklyTimesheet" type="single" target="createMyWeeklyTimesheet" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="partyId"><hidden value="${userLogin.partyId}"/></field>
         <field entry-name="dummy" name="requiredDate" title="${uiLabelMap.ScrumSelectedDate}"><date-time type="date"/></field>
         <field name="addAction" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>

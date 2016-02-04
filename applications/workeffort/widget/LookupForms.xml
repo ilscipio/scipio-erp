@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <!-- WorkEffort Lookup forms -->
     <form name="lookupWorkEffort" target="LookupWorkEffort" title="" type="single"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="WorkEffort" default-field-type="find"/>
         <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}"><text-find/></field>
         <field name="workEffortParentId"><text-find/></field>
@@ -91,7 +91,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="lookupWorkEffortShort" target="LookupWorkEffortShort" title="" type="single"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="workEffortId" title="${uiLabelMap.WorkEffortWorkEffortId}"><text-find/></field>
         <field name="workEffortParentId"><text-find/></field>
         <field name="workEffortName"><text-find/></field>
@@ -133,7 +133,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
     <form name="listLookupWorkEffort" list-name="listIt" target="" title="" type="list" paginate-target="LookupWorkEffort"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -154,7 +154,7 @@ under the License.
 
     <!-- Timesheet Lookup forms -->
     <form name="lookupTimesheet" target="LookupTimesheet" title="" type="single"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="Timesheet" default-field-type="find"/>
         <field name="timesheetId" title="${uiLabelMap.WorkEffortTimesheetTimesheetId}"><text-find/></field>
         <field name="partyId"><lookup  target-form-name="LookupPartyName"/></field>
@@ -164,7 +164,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
     <form name="listLookupTimesheet" list-name="listIt" target="" title="" type="list" paginate-target="LookupPerson"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>

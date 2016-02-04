@@ -35,7 +35,7 @@ under the License.
     </form>
     <!-- feedback -->
     <form name="ItemsAwaitingFeedback" type="list" list-name="itemsAwaitingFeedbackList"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <set field="leave" value="${commentType}"/>
         </row-actions>
@@ -53,7 +53,7 @@ under the License.
         </field>
     </form>
     <form name="RecentFeedback" type="list" list-name="recentFeedbackList"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="contentId" title="Feedback Id"><display/></field>
         <field name="dataResourceId" title="${uiLabelMap.ContentDataResourceId}">
             <display-entity entity-name="ElectronicText" key-field-name="dataResourceId" description="${textData}"/>
@@ -62,7 +62,7 @@ under the License.
         <field name="createdDate"><display type="date"/></field>
     </form>
     <!-- Personal Information -->
-    <form name="EbayPersonalInformationForm" type="single" default-map-name="results.registrationAddress"> <!-- default-table-style="basic-table" -->
+    <form name="EbayPersonalInformationForm" type="single" default-map-name="results.registrationAddress"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="firstName"><display/></field>
         <field name="lastName"><display/></field>
         <field name="cityName"><display/></field>

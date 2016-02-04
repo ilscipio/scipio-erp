@@ -21,7 +21,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="FindFixedAssets" type="single" target="findFixedAssets" title="${uiLabelMap.AccountingFindFixedAssets}"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"><text-find ignore-case="true"/></field>
         <field name="instanceOfProductId" title="${uiLabelMap.AccountingInstanceOfProductId}"><text-find ignore-case="true"/></field>
         <field name="classEnumId" title="${uiLabelMap.AccountingFixedAssetClassEnumId}">
@@ -38,7 +38,7 @@
 
     <!-- Maintences Search Options form -->
     <form name="FindFixedAssetMaint" default-map-name="timesheet" target="findFixedAssetMaints" type="single"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="fixedAssetId"><text-find ignore-case="true"/></field>
         <field name="maintHistSeqId"><text-find ignore-case="true"/></field>
         <field name="productMaintTypeId" title="${uiLabelMap.AccountingFixedAssetMaintType}">
@@ -64,7 +64,7 @@
     <!-- Special version of the same form in Accounting. This one lists all maintenances, not just
         maintenances for a specific fixed asset. -->
     <form name="ListFixedAssetMaints" target="" title="" type="list" list-name="listIt" paginate-target="findFixedAssetMaints" paginate="true"
-        header-row-style="header-row-2" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        header-row-style="header-row-2" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service  service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -107,7 +107,7 @@
     </form>
 
     <form name="AddItemIssuance" target="issueInventoryItemToFixedAssetMaint" title="PageTitleFixedAssetMaintItemIssuance" default-map-name="newIssuanceItem" type="single"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="facilityId">
             <drop-down>
                 <entity-options description="${description}" entity-name="Facility">
@@ -124,7 +124,7 @@
     </form>
 
     <form name="ListItemIssuance" title="PageTitleFixedAssetMaintItemIssuance" type="list" list-name="itemIssuanceList"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="productId" title="${uiLabelMap.AssetMaintPartId}"><display/></field>
         <field name="quantity" position="1" title="${uiLabelMap.CommonQuantity}"><display/></field>
         <field name="productName" position="1" title="${uiLabelMap.CommonName}"><display/></field>

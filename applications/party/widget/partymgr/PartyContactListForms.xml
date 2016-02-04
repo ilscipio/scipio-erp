@@ -20,7 +20,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="ListPartyContactLists" type="list" target="updateContactListParty"
-        separate-columns="false" header-row-style="header-row-2" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        separate-columns="false" header-row-style="header-row-2" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="ContactListParty">
                 <field-map field-name="partyId"/>
@@ -68,7 +68,7 @@ under the License.
     </form>
 
     <form name="AddPartyContactList" type="single" target="createContactListParty"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="contactListId"><lookup target-form-name="LookupContactList"/></field>
         <field name="partyId"><hidden/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time/></field>
@@ -93,7 +93,7 @@ under the License.
     </form>
 
     <form name="ListLookupContactList" type="list" target="LookupContactList" default-map-name="contactList"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="ContactList"/>
         </actions>

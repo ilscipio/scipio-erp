@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     
     <form name="ListProductStore" type="list" list-name="productStores"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="parameters.sortField" from-field="parameters.sortField" default-value="storeName"/>
             <entity-condition entity-name="ProductStore" use-cache="true" list="productStores">
@@ -57,7 +57,7 @@ under the License.
     </form>
 
     <form name="ListProductStoreRole" type="list" list-name="listIt" paginate-target="FindProductStoreRoles" default-entity-name="ProductStoreRole" separate-columns="true"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -97,7 +97,7 @@ under the License.
     </form>
 
     <form name="EditProductStoreRole" type="single" target="storeUpdateRole" default-map-name="productStoreRole"
-            header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+            header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="productStoreRole==null" target="storeCreateRole"/>
         <field name="partyId" use-when="productStoreRole==null" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="partyId" use-when="productStoreRole!=null" title="${uiLabelMap.PartyPartyId}"><display/></field>
@@ -122,7 +122,7 @@ under the License.
 
     <!-- ProductStoreFacility forms -->
     <form name="ListProductStoreFacility" type="list" list-name="listIt" target=""
-            odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+            odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="ProductStoreFacility">
                 <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -176,7 +176,7 @@ under the License.
 
      <!-- ProductStoreGroup Forms -->
      <form name="ListParentProductStoreGroup" type="list" target="EditProductStoreGroup" paginate="false"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="ProductStoreGroup">
                 <condition-expr field-name="primaryParentGroupId" from-field="nullField"/>
@@ -213,7 +213,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.Common${groovy: context.productStoreGroup?'Submit':'Create'}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="ListProductStoreGroupAssoc" type="list"
-           odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+           odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="ProductStoreGroupRollup" filter-by-date="true">
                 <field-map field-name="parentGroupId" from-field="productStoreGroup.productStoreGroupId"/>
@@ -238,7 +238,7 @@ under the License.
         </field>
     </form>
     <form name="ListProductStoreAssoc" type="list"
-           odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+           odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="ProductStoreGroupAndMember" filter-by-date="true">
                 <field-map field-name="productStoreGroupId" from-field="productStoreGroup.productStoreGroupId"/>

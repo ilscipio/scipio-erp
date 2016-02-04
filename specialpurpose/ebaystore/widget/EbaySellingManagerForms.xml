@@ -70,7 +70,7 @@ under the License.
     </form>
     <!-- Sold Listing -->
     <form name="SoldItemList" type="list" target="doAction" list-name="soldItemList"
-        odd-row-style="alternate-row" header-row-style="header-row-2" use-row-submit="true" separate-columns="true"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2" use-row-submit="true" separate-columns="true"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <script location="component://ebaystore/webapp/ebaystore/WEB-INF/actions/store/SoldAction.groovy"/>
         </row-actions>
@@ -150,7 +150,7 @@ under the License.
     </form>
     <!-- Inventory -->
     <form name="EbayStoreFacilityList" type="single" list-name="productStoreFacilityList" target="ebayStoreInventory"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="productStoreId"><hidden value="${parameters.productStoreId}"/></field>
         <field name="isFacilityId"><hidden value="Y"/></field>
         <field name="facilityId" >
@@ -161,7 +161,7 @@ under the License.
         <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="reserveEbayProductInventory" type="single" list-name="" target="reserveProductInventory"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="productStoreId"><display description="${parameters.productStoreId}"></display></field>
         <field name="facilityId"><display description="${parameters.facilityId}"></display></field>
         <field name="productId"><lookup target-form-name="LookupProduct"></lookup></field>
@@ -169,7 +169,7 @@ under the License.
         <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListEbayProductInventoryDetail" type="multi" use-row-submit="true" target="updateEbayStoreInventory" title="" list-name="ebayProductStoreInventoryList"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="_rowSubmit" position="1" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="productStoreId"><hidden/></field>
         <field name="facilityId"><hidden/></field>
@@ -196,7 +196,7 @@ under the License.
         <field name="updateAction" title="${uiLabelMap.EbayUpdateInventory}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="updateQuantityReserved" type="single" target="updateProductQuantityReserved" default-entity-name="EbayProductStoreInventory" default-map-name="ebayProductStoreInventory"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="productStoreId"><display></display></field>
         <field name="facilityId"><display></display></field>
         <field name="productId"><display></display></field>
@@ -214,7 +214,7 @@ under the License.
     </form>
     <!-- Automatically leave the following positive feedback  -->
     <form name="autoPositiveFeedbackForBuyers" type="single" target="autoPrefLeaveFeedbackOptions"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-one entity-name="EbayProductStorePref" value-field="ebayProductStorePref">
                 <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -287,7 +287,7 @@ under the License.
     </form>
     <!-- Automatically send a Feedback Reminder email if feedback has not been received. Please choose how many days after shipping you want this email sent? -->
     <form name="autoSendFeedbackReminder" type="single" target="autoSendFeedbackReminder"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-one entity-name="EbayProductStorePref" value-field="ebayProductStorePref">
                 <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -311,7 +311,7 @@ under the License.
     </form>
     <!-- Automatically send Payment Received email when payment has been received -->
     <form name="autoSendPaymentReceivedEmail" type="single" target="autoSendPaymentReceivedEmail"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-one entity-name="EbayProductStorePref" value-field="ebayProductStorePref">
                 <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -332,7 +332,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonApply}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <!-- Combine Orders Setting -->
-    <form name="combineOrdersSetting" type="single" target="settingCombineOrders" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+    <form name="combineOrdersSetting" type="single" target="settingCombineOrders" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-one entity-name="EbayProductStorePref" value-field="ebayPrefCombine">
                 <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -346,7 +346,7 @@ under the License.
         <field name="condition2" title="Allow no more than" tooltip-style="h3" tooltip="items per order"><text size="3" default-value="${ebayPrefCombine.condition2}" maxlength="2"></text></field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
-    <form name="winningBuyerNotification" type="single" target="settingWinningBuyerNotification" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+    <form name="winningBuyerNotification" type="single" target="settingWinningBuyerNotification" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-one entity-name="EbayProductStorePref" value-field="ebayPrefCombine">
                 <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -358,7 +358,7 @@ under the License.
         <field name="isRunWinnerNotify" position="1" title="Enable send winner buyer notification automatically"><check></check></field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
-    <form name="itemDispatchedNotification" type="single" target="settingSendItemDispatchedNotification" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+    <form name="itemDispatchedNotification" type="single" target="settingSendItemDispatchedNotification" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-one entity-name="EbayProductStorePref" value-field="ebayPrefCombine">
                 <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -371,7 +371,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="EditEmailTemplate" type="single" target="createEmailTemplate"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
          <actions>
             <set field="includePayment" value="${groovy:
                 includePayment = &quot;N&quot;;
@@ -455,7 +455,7 @@ under the License.
         <field name="includeCrossPromotions" title=" " tooltip="${uiLabelMap.EbayIncludeMyDefaultCrossPromotionInThisEmail}" tooltip-style="h3"><check/></field-->
         <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
-    <form name="blockItemsOutOfStock" type="single" target="runBlockItemOutOfStock" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+    <form name="blockItemsOutOfStock" type="single" target="runBlockItemOutOfStock" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-one entity-name="EbayProductStorePref" value-field="ebayPrefCombine">
                 <field-map field-name="productStoreId" from-field="parameters.productStoreId"/>
@@ -469,7 +469,7 @@ under the License.
     </form>
     <!-- Active Listing -->
     <form name="ActiveItemList" type="list" target="doAction" list-name="activeItemList"
-        odd-row-style="alternate-row" header-row-style="header-row-2" use-row-submit="true" separate-columns="true"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2" use-row-submit="true" separate-columns="true"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="itemId"><display/></field>
         <field name="SKU" title="Product ID"><display/></field>
         <field name="title" widget-style="${styles.link_nav_info_desc} ${styles.action_view}">
@@ -488,7 +488,7 @@ under the License.
     </form>
     <!-- Unsold Listing -->
     <form name="UnsoldItemList" type="list" target="doAction" list-name="unsoldItemList"
-        odd-row-style="alternate-row" header-row-style="header-row-2" use-row-submit="true" separate-columns="true"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2" use-row-submit="true" separate-columns="true"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="productStoreId"><hidden value="${parameters.productStoreId}"/></field>
         <field name="itemId"><display/></field>
         <field name="SKU" title="Product ID"><display/></field>
@@ -618,7 +618,7 @@ under the License.
         <field name="submit" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="bestOfferIncludeMessage" type="list" title="" list-name="listIt"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <set field="productStoreId" from-field="parameters.productStoreId"/>
             <entity-and entity-name="EbayUserBestOffer" list="listIt">
@@ -700,7 +700,7 @@ under the License.
         <field name="updateContactStatus" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ClosedItemList" type="list" target="doAction" list-name="closedList"
-        odd-row-style="alternate-row" header-row-style="header-row-2" use-row-submit="true" separate-columns="true" view-size="100"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2" use-row-submit="true" separate-columns="true" view-size="100"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="itemId" title="Item ID" sort-field="true"><display description="${itemId}"/></field>
         <field name="SKU" title="Product ID"><display description="${SKU}"/></field>
         <field name="title" widget-style="${styles.link_nav_info_desc} ${styles.action_view}">
@@ -714,7 +714,7 @@ under the License.
         <field name="listingType" title="Listing Type"><display description="${listingType}"/></field>
     </form>
     <form name="TransactionList" type="multi" target="EbayStoreImportTransaction" list-name="transactionsList"
-        odd-row-style="alternate-row" header-row-style="header-row-2" use-row-submit="true" separate-columns="true" view-size="100"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2" use-row-submit="true" separate-columns="true" view-size="100"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <script location="component://ebaystore/webapp/ebaystore/WEB-INF/actions/store/CheckOrderStatus.groovy"></script>
         </row-actions>
@@ -756,7 +756,7 @@ under the License.
         <field name="import" title="Import Orders" widget-style="${styles.link_run_sys} ${styles.action_copy}"><submit button-type="button"/></field>
     </form>
     <form name="OrderList" type="multi" target="EbayStoreImportOrder" list-name="orderLists"
-        odd-row-style="alternate-row" header-row-style="header-row-2" use-row-submit="true" separate-columns="true" view-size="100"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2" use-row-submit="true" separate-columns="true" view-size="100"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <script location="component://ebaystore/webapp/ebaystore/WEB-INF/actions/store/OrderListParameters.groovy"/>
         </row-actions>
@@ -793,7 +793,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_copy}"><submit button-type="button"/></field>
     </form>
     <form name="FindEbayStoreOrders" type="single" target="OrderListing"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productStoreId"><hidden value="${productStoreId}"></hidden></field>
         <field name="formSelect"><hidden value="${formSelect}"></hidden></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-time type="date"/></field>

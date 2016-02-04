@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="EditOrderHeader" type="single" target="updateOrderHeader" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-one entity-name="StatusItem" value-field="currentStatus" auto-field-map="false">
                 <field-map field-name="statusId" from-field="orderHeader.statusId"/>
@@ -80,7 +80,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListOrderHeaders" type="single" target="" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-and entity-name="OrderHeader">
                 <field-map field-name="orderId"/>
@@ -96,7 +96,7 @@ under the License.
         <field name="productStoreId"> <display-entity entity-name="ProductStore"/> </field>
     </form>
     <form name="ListOrderTerms" type="list" list-name="orderTerms" target="updateOrderTerm" title=""
-        odd-row-style="alternate-row" header-row-style="header-row-2" paginate-target="ListOrderTerms"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2" paginate-target="ListOrderTerms"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <auto-fields-entity entity-name="OrderTerm" default-field-type="edit"/>
         <field name="termTypeId"><display-entity also-hidden="true" entity-name="TermType"/></field>
         <field name="orderId"><hidden/></field>
@@ -111,7 +111,7 @@ under the License.
         </field>
     </form>
     <form name="AddOrderTerm" type="single" target="createOrderTerm" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="OrderTerm" default-field-type="edit"/>
         <field name="orderId"><hidden value="${parameters.orderId}"/></field>
         <field name="termTypeId">
@@ -124,7 +124,7 @@ under the License.
         <field name="addAction" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="LookupBulkAddSupplierProductsInApprovedOrder" type="multi" use-row-submit="true" list-name="productList" title="" target="bulkAddProductsInApprovedOrder"
-            odd-row-style="alternate-row" paginate-target="LookupBulkAddSupplierProductsInApprovedOrder" view-size="10"> <!-- default-table-style="basic-table hover-bar" -->
+            odd-row-style="alternate-row" paginate-target="LookupBulkAddSupplierProductsInApprovedOrder" view-size="10"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="orderId" from-field="parameters.orderId"/>
         </actions>
@@ -150,14 +150,14 @@ under the License.
     </form>
 
     <form name="OrderShipmentMethodHistory" type="list" list-name="orderShipmentHistories"
-            odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+            odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="shipmentMethod" title="${uiLabelMap.ProductShipmentMethod}"><display/></field>
         <field name="changedDate" title="${uiLabelMap.CommonDate}"><display/></field>
         <field name="changedByUser" title="${uiLabelMap.OrderChangedByUser}"><display/></field>
     </form>
 
     <form name="OrderUnitPriceHistory" type="list" list-name="orderUnitPriceHistories"
-            odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+            odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="productId"><display/></field>
         <field name="oldValue"><display type="currency"/></field>
         <field name="newValue"><display type="currency"/></field>
@@ -166,7 +166,7 @@ under the License.
     </form>
 
     <form name="OrderQuantityHistory" type="list" list-name="orderQuantityHistories"
-            odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+            odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="productId"><display/></field>
         <field name="oldValue"><display/></field>
         <field name="newValue"><display/></field>
@@ -199,7 +199,7 @@ under the License.
         <field name="updateAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="ListCustomerOrders" type="list" target="" list-name="listIt" title="" odd-row-style="alternate-row" 
-        header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="OrderHeaderAndRoles">
                 <field-map field-name="partyId" from-field="partyId"/>
@@ -218,7 +218,7 @@ under the License.
         <field name="roleTypeId" title="${uiLabelMap.FormFieldTitle_roleTypeId}"><display/></field>
     </form>
     <form name="ListPurchaseOrders" type="list" target="" list-name="listIt" title="" odd-row-style="alternate-row" 
-        header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="OrderHeaderAndRoles">
                 <field-map field-name="partyId" from-field="partyId"/>

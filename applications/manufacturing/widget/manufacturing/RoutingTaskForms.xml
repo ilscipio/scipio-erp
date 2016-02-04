@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <!-- Routing forms -->
     <form name="FindRoutings" type="single" target="FindRouting" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingId}">
             <text-find/>
         </field>
@@ -34,7 +34,7 @@ under the License.
         </field>
     </form>
     <form name="ListRoutings" type="list" title="" list-name="listIt"
-        paginate-target="FindRouting" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        paginate-target="FindRouting" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="entityName" value="WorkEffort"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -54,7 +54,7 @@ under the License.
         <field name="quantityToProduce" title="${uiLabelMap.ManufacturingQuantityToProduce}"><display/></field>
     </form>
     <form name="EditRouting" type="single" target="UpdateRouting" title="" default-map-name="routing"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="routing==null" target="CreateRouting"/>
         <field name="workEffortTypeId" use-when="routing==null"><hidden value="ROUTING"/></field>
         <field name="currentStatusId" use-when="routing==null"><hidden value="ROU_ACTIVE"/></field>
@@ -69,7 +69,7 @@ under the License.
 
     <!-- Routing Task Forms -->
     <form name="FindRoutingTasks" type="single" target="FindRoutingTask" title=""
-         header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingTaskId}">
             <text-find/>
         </field>
@@ -88,7 +88,7 @@ under the License.
         </field>
     </form>
     <form name="ListRoutingTasks" type="list" title="" list-name="listIt"
-        paginate-target="FindRoutingTask" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        paginate-target="FindRoutingTask" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="entityName" value="WorkEffort"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -115,7 +115,7 @@ under the License.
         <field name="estimatedMilliSeconds" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}"><display/></field>
     </form>
     <form name="EditRoutingTask" type="single" target="UpdateRoutingTask" title="" default-map-name="routingTask"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="routingTask==null" target="CreateRoutingTask"/>
         <field name="workEffortTypeId" use-when="routingTask==null"><hidden value="ROU_TASK"/></field>
         <field name="currentStatusId" use-when="routingTask==null"><hidden value="ROU_ACTIVE"/></field>
@@ -151,7 +151,7 @@ under the License.
         </field>
     </form>
     <form name="ListRoutingTaskCosts" type="list" title="" list-name="allCosts"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <auto-fields-entity entity-name="WorkEffortCostCalc" default-field-type="display"/>
         <field name="workEffortId"><hidden/></field>
         <field name="costComponentTypeId">
@@ -177,7 +177,7 @@ under the License.
         </field>
     </form>
     <form name="AddRoutingTaskCost" type="single" target="addRoutingTaskCost" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="WorkEffortCostCalc" default-field-type="edit"/>
         <field name="workEffortId"><hidden/></field>
         <field name="costComponentTypeId">
@@ -198,7 +198,7 @@ under the License.
         </field>
     </form>
     <form name="ListRoutingTaskRoutings" type="list" title="" list-name="allRoutings"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="workEffortIdFrom" title="${uiLabelMap.ManufacturingRouting}">
             <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="[${workEffortId}] ${workEffortName}"/>
         </field>
@@ -214,7 +214,7 @@ under the License.
 
     <!-- Routing Task Assoc Forms -->
     <form name="ListRoutingTaskAssoc" type="list" target="EditRoutingTaskAssoc" title="" list-name="allRoutingTasks"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
         <field name="workEffortIdFrom"><hidden/></field>
         <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
@@ -245,7 +245,7 @@ under the License.
     </form>
 
      <form name="UpdateRoutingTaskAssoc" type="single" target="UpdateRoutingTaskAssoc" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
         <field name="workEffortId"><hidden value="${workEffortIdFrom}"/></field>
         <field name="workEffortIdFrom"><hidden/></field>
@@ -265,7 +265,7 @@ under the License.
 
     <!-- Routing Product Assoc -->
     <form name="EditRoutingProductAction" type="single" target="UpdateRoutingProductAction" title="" default-map-name="routingProductAction"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="routingProductLink==null" target="AddRoutingProductAction"/>
         <auto-fields-entity entity-name="WorkEffortGoodStandard" default-field-type="edit"/>
         <field name="workEffortId"><hidden/></field>
@@ -284,7 +284,7 @@ under the License.
     </form>
 
    <form name="ListRoutingProductAction" type="list" target="EditRoutingProductAction" title="" list-name="allRoutingProductLinks"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="productId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${productId}" target="/catalog/control/ViewProductManufacturing" also-hidden="false" target-type="inter-app">
                 <parameter param-name="productId"/>
@@ -314,7 +314,7 @@ under the License.
         </field>
     </form>
    <form name="ListRoutingTaskProducts" type="list" target="ListRoutingTaskProducts" title="" list-name="allProducts"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="productId" title="${uiLabelMap.ProductProductName}">
             <display-entity entity-name="Product" description="${productId} ${internalName}"/>
         </field>
@@ -338,7 +338,7 @@ under the License.
         </field>
     </form>
     <form name="EditRoutingTaskProduct" type="single" target="updateRoutingTaskProduct" title="" default-map-name="routingProductAction"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="routingProductLink==null" target="addRoutingTaskProduct"/>
         <auto-fields-entity entity-name="WorkEffortGoodStandard" default-field-type="edit"/>
         <field name="workEffortId"><hidden/></field>
@@ -359,7 +359,7 @@ under the License.
 
     <!-- RoutingTask-FixedAsset association (WorkEffortFixedAssetStd) -->
     <form name="ListRoutingTaskFixedAssets" type="list" title="" target="updateRoutingTaskFixedAsset" list-name="allFixedAssets"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <auto-fields-entity entity-name="WorkEffortFixedAssetStd"/>
         <field name="workEffortId"><hidden/></field>
         <field name="fixedAssetTypeId">
@@ -376,7 +376,7 @@ under the License.
         </field>
     </form>
     <form name="EditRoutingTaskFixedAsset" type="single" title="" target="createRoutingTaskFixedAsset"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="WorkEffortFixedAssetStd" default-field-type="edit"/>
         <field name="workEffortId"><hidden /></field>
         <field name="fixedAssetTypeId">

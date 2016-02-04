@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="LookupComputerHardware" target="LookupComputerHardware" title="" type="single"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="FixedAsset" default-field-type="hidden"/>
         <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"><text-find/></field>
         <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}"><text-find/></field>
@@ -40,7 +40,7 @@ under the License.
     </form>
 
     <form name="ListLookupComputerHardware" list-name="listIt" title="" type="list" paginate-target="LookupComputerHardware"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -57,7 +57,7 @@ under the License.
     </form>
 
     <form name="LookupComputerSoftware" target="LookupComputerSoftware" title="" type="single"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="FixedAsset" default-field-type="hidden"/>
         <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"><text-find/></field>
         <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}"><text-find/></field>
@@ -75,7 +75,7 @@ under the License.
     </form>
 
     <form name="ListLookupComputerSoftware" list-name="listIt" title="" type="list" paginate-target="LookupComputerSoftware"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>

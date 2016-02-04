@@ -22,7 +22,7 @@ under the License.
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="ListGlAccountOrganization" list-name="listIt" target="" title="" type="list" paginate-target="ListGlAccountOrganization"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="entityName" value="GlAccountOrganization"/>
             <set field="noConditionFind" value="Y"/>
@@ -44,7 +44,7 @@ under the License.
     <!-- Displays the form for assigning accounts to a party or company -->
     <!-- TODO: Localize field names -->
     <form name="AssignGlAccount" type="single" target="createGlAccountOrganization" title="" default-map-name="account"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="glAccountId">
             <drop-down>
                 <entity-options entity-name="GlAccount" description="${accountCode} - ${accountName} [${glAccountId}]">
@@ -66,7 +66,7 @@ under the License.
     </form>
 
     <form name="ListGlAccount" list-name="listIt" target="" title="" type="list" default-entity-name="GlAccount" 
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="entityName" value="GlAccount"/>
             <set field="noConditionFind" value="Y"/>
@@ -102,7 +102,7 @@ under the License.
     </form>
 
     <form name="EditGlAccount" type="single" target="updateGlAccount" title="" default-map-name="glAccount"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="glAccount==null" target="createGlAccount"/>
         <field name="glAccountId" title="${uiLabelMap.CommonId}"><display/></field>
         <field use-when="glAccount==null&amp;&amp;glAccountId!=null" name="glAccountId" tooltip="${uiLabelMap.AccountingCouldNotFindGlAccount} [${glAccountId}]"><display/></field>
@@ -159,7 +159,7 @@ under the License.
 
     <!-- this is used to list AcctgTransEntries and can be called either by using an acctgTransId or a glAccountId -->
     <form name="ListAcctgTransEntries" type="list" list-name="entries" default-entity-name="AcctgTransEntry"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="acctgTransId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="ListAcctgTransEntries">
                 <parameter param-name="acctgTransId"/>
@@ -186,7 +186,7 @@ under the License.
     </form>
 
     <form name="GlAccountsNavForm" type="single" target="" title="GL Accounts" default-map-name="journal"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="backToAdmin" title=" " widget-style="${styles.link_nav_cancel}">
             <hyperlink also-hidden="false" description="${uiLabelMap.AccountingBackToAdmin}" target="AdminMain">
                 <parameter param-name="organizationPartyId"/>
@@ -195,7 +195,7 @@ under the License.
     </form>
 
     <form name="ListGlReconciliations" type="list" list-name="glReconciliations" default-entity-name="GlReconciliation"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="glReconciliationId" widget-style="${styles.link_nav_info_id}">
            <hyperlink also-hidden="false" description="${glReconciliationId}" target="EditGlReconciliation">
                 <parameter param-name="glReconciliationId"/>
@@ -219,7 +219,7 @@ under the License.
     </form>
 
     <form name="ListGlReconciliationEntries" type="list" list-name="glReconciliationEntries" default-entity-name="GlReconciliationEntry"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="glReconciliationId"><display/></field>
         <field name="acctgTransId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" description="${acctgTransId}" target="ListAcctgTransEntries">
@@ -231,7 +231,7 @@ under the License.
     </form>
     
     <form name="ListRateAmounts" type="list" target="deleteRateAmount" paginate-target="viewRateAmounts"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="sortField" from-field="parameters.sortField" default-value="rateTypeId"/>
             <entity-condition entity-name="RateAmountAndRelations" filter-by-date="true">
@@ -259,7 +259,7 @@ under the License.
     </form>
 
     <form name="updateRateAmount" type="single" target="updateRateAmount" default-service-name="updateRateAmount"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <property-to-field field="defaultCurrencyUomId" resource="general" property="currency.uom.id.default" default="USD"/>
         </actions>

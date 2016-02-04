@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="ManageOrdersFromEbay" type="single" target="ImportOrdersSearchFromEbay"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productStoreId">
             <drop-down>
                 <entity-options entity-name="ProductStore" description="${storeName}" key-field-name="productStoreId">
@@ -34,7 +34,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.EbayImportSearchSingleTransactionFromEbay}" widget-style="${styles.link_run_sys} ${styles.action_receive}"><submit button-type="button"/></field>
     </form>
     <form name="ListOrdersFromEbay" type="multi" use-row-submit="true" list-name="orderList" target="ImportOrderFromEbay"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <set field="canImportOrder" value="${bsh: org.ofbiz.base.util.UtilValidate.isEmpty(orderId) &amp;&amp; org.ofbiz.base.util.UtilValidate.isEmpty(errorMessage)}" type="Boolean"/>
             <set field="allowProductIdChange" value="${bsh: org.ofbiz.base.util.UtilValidate.isEmpty(orderId) &amp;&amp; org.ofbiz.base.util.UtilValidate.isNotEmpty(errorMessage)}" type="Boolean"/>
@@ -89,7 +89,7 @@ under the License.
     </form>
     
     <form name="FindEbayOrders" type="single" target="GetEbayOrders"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productStoreId">
             <drop-down>
                 <entity-options entity-name="ProductStore" description="${storeName}" key-field-name="productStoreId">
@@ -103,7 +103,7 @@ under the License.
     </form>
     
     <form name="ListEbayOrders" type="multi" use-row-submit="true" list-name="orderList" target="importEbayOrders"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <set field="canImportOrder" value="${bsh: org.ofbiz.base.util.UtilValidate.isEmpty(orderId)}" type="Boolean"/>
             <set field="isEbayOrder" value="${bsh: org.ofbiz.base.util.UtilValidate.isNotEmpty(isEbayOrder)}" type="Boolean"/>
@@ -131,7 +131,7 @@ under the License.
     
     <!-- Ebay configuration settings forms  -->
     <form name="ListEbayConfigurations" type="list" list-name="listIt" paginate-target="FindEbayConfigurations"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -190,7 +190,7 @@ under the License.
     </form>
     
     <form name="ListEbayShippingMethods" type="list" list-name="eBayShippingMethods" target="updateEbayShippingMethod"
-        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="EbayShippingMethod">
                 <order-by field-name="shipmentMethodName"/>

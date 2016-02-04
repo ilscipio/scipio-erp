@@ -21,7 +21,7 @@
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     
     <form name="ListTimesheets" type="list" list-name="timesheets" paginate-target="MyWork"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="complete" value="${uiLabelMap.ScrumToComplete}"/>
         </actions>
@@ -44,7 +44,7 @@
     </form>
     
     <form name="WeekTimesheet" type="list" list-name="timeEntries" separate-columns="true" paginate-target="MyWork" paginate-index-field="WeekTimesheet_index" paginate-size-field="WeekTimesheet_size"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <service service-name="getProjectInfoFromTask" result-map="result">
                 <field-map field-name="taskId" from-field="workEffortId"/>
@@ -99,7 +99,7 @@
     </form>
     
     <form name="EditWeekTimesheet" type="multi" list-name="timeEntries" use-row-submit="true" paginate-target="MyWork" paginate-index-field="EditWeekTimeshee_index" paginate-size-field="EditWeekTimeshee_size"
-        separate-columns="true" target="update${my}Timesheet?${url}" odd-row-style="alternate-row" > <!-- default-table-style="basic-table hover-bar" -->
+        separate-columns="true" target="update${my}Timesheet?${url}" odd-row-style="alternate-row" > <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <row-actions>
             <service service-name="getProjectInfoFromTask" result-map="result">
                 <field-map field-name="taskId" from-field="workEffortId"/>

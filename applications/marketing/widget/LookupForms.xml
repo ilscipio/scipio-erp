@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <!-- SegmentGroup Lookup forms -->
     <form name="LookupSegmentGroup" target="LookupSegmentGroup" title="" type="single"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="segmentGroupId" title="${uiLabelMap.MarketingSegmentGroupSegmentGroupId}"><text-find/></field>
         <field name="segmentGroupTypeId" title="${uiLabelMap.MarketingSegmentGroupSegmentGroupTypeId}"><text-find/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
@@ -31,7 +31,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupSegmentGroup" list-name="listIt" target="" title="" type="list" paginate-target="LookupSegmentGroup"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -49,7 +49,7 @@ under the License.
     </form>
 
     <form name="listSegmentGroupClass" list-name="listIt" target="" title="" type="list" paginate-target="listSegmentGroupClass"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="SegmentGroupClassification">
                 <field-map field-name="segmentGroupId"/>
@@ -69,7 +69,7 @@ under the License.
         </field>
     </form>
     <form name="LookupSalesForecast" target="LookupSalesForecast" title="" type="single"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="SalesForecast" default-field-type="find"/>
         <field name="currencyUomId">
             <drop-down allow-empty="true" no-current-selected-key="${defaultOrganizationPartyCurrencyUomId}">
@@ -86,7 +86,7 @@ under the License.
     </form>
 
     <form name="ListLookupSalesForecast" list-name="listIt" type="list" paginate-target="LookupSalesForecast" view-size="10"
-            odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+            odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>

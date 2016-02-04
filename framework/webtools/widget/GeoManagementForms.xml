@@ -24,7 +24,7 @@
     <form name="FindGeo" id="FindGeo" target="${currentUrl}" extends="LookupGeo" extends-resource="component://common/widget/LookupForms.xml"/>        
     
     <form name="ListGeos" extends-resource="component://common/widget/LookupForms.xml" extends="listLookupGeo" paginate-target="${currentUrl}"
-        odd-row-style="alternate-row" header-row-style="header-row-2" separate-columns="true" > <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row" header-row-style="header-row-2" separate-columns="true" > <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="geoId" widget-style="${styles.link_nav_info_id}" title="${uiLabelMap.CommonGeoId}">
             <hyperlink also-hidden="false" target-type="plain" description="${geoId}" target="EditGeo">
                 <parameter param-name="geoId"/>
@@ -40,7 +40,7 @@
     </form>
     
     <form name="EditGeo" type="single" target="updateGeo" title="" default-map-name="geo"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="geo==null" target="createGeo"/>
         <field name="geoId" title="${uiLabelMap.CommonGeoId}"><text/></field>
         <field name="geoTypeId" title="${uiLabelMap.CommonGeoTypeId}">
@@ -65,7 +65,7 @@
     </form>
     
     <form name="LinkGeos" type="single" target="linkGeos" title="" focus-field-name="geoId" 
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="geoIds" title="${uiLabelMap.CommonGeos}">
             <drop-down allow-multiple="true">
                 <entity-options entity-name="Geo" key-field-name="geoId" description="${geoName} (${geoId})">

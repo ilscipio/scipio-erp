@@ -9,7 +9,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="FindProduct" type="single" target="FindProduct" title="" default-map-name="product" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="noConditionFind">
             <hidden value="Y" /><!-- if this isn't there then with all fields empty no query will be done -->
         </field>
@@ -35,7 +35,7 @@
     </form>
 
     <form name="ListProducts" list-name="listIt" target="" title="" type="list" paginate-target="FindProduct" odd-row-style="alternate-row"
-        header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
+        header-row-style="header-row-2"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <actions>
             <set field="entityName" value="Product" />
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -70,7 +70,7 @@
 
 
     <form name="EditProduct" type="single" target="updateProduct" title="" default-map-name="product" default-position-span="1"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
 
         <alt-target use-when="product==null" target="createProduct" />
 
@@ -459,7 +459,7 @@
     </form>
 
     <form name="EditProductDup" type="single" target="DuplicateProduct" title="" default-map-name="product" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
 
         <field name="oldProductId">
             <hidden value="${productId}" />
@@ -539,7 +539,7 @@
     </form>
 
     <form name="UpdateProductVariants" type="single" target="UpdateProductVariants?productId=${productId}" title=""
-        default-map-name="product" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        default-map-name="product" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
 
         <field name="virtualProductId">
             <hidden value="${productId}" />
@@ -575,7 +575,7 @@
 
     <!-- ProductPrice -->
     <form name="AddProductPrice" type="single" target="createProductPrice" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -647,7 +647,7 @@
     </form>
     
     <form name="UpdateProductPrice" type="list" target="updateProductPrice" title="" list-name="productPrices" odd-row-style="alternate-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -719,7 +719,7 @@
     </form>
     
     <form name="ListProductPriceHistory" type="list" list-name="productPricesChanges" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productPricePurposeId" title="${uiLabelMap.CommonPurpose}">
             <display-entity entity-name="ProductPricePurpose" />
         </field>
@@ -754,7 +754,7 @@
     
     <!-- ProductPaymentMethodType -->
     <form name="AddProductPaymentMethodType" type="single" target="createProductPaymentMethodType" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -785,7 +785,7 @@
     </form>
     
     <form name="UpdateProductPaymentMethodType" type="list" target="updateProductPaymentMethodType" title=""
-        list-name="productPaymentMethodTypes" odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        list-name="productPaymentMethodTypes" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -817,7 +817,7 @@
 
     <!-- ProductCategoryMember -->
     <form name="AddProductCategoryMember" type="single" target="addProductToCategory" title="${uiLabelMap.ProductAddProductCategoryMemberFromDate}:"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId" title="${uiLabelMap.ProductProductId}" map-name="product">
             <hidden />
         </field>
@@ -845,7 +845,7 @@
     </form>
 
     <form name="UpdateProductCategoryMember" type="list" target="updateProductToCategory" title="" list-name="productCategoryMembers"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -885,7 +885,7 @@
 
     <!-- ProductContent -->
     <form name="ListProductContentInfos" type="list" title="" list-name="productContent" odd-row-style="alternate-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="editProductContentInfo" title="${uiLabelMap.ProductContent}" widget-style="${styles.link_nav_info_desc}">
             <hyperlink target="EditProductContentContent" description="${description} [${contentId}]" also-hidden="false">
                 <parameter param-name="productId" />
@@ -941,7 +941,7 @@
     </form>
 
     <form name="AddProductContentAssoc" type="single" target="addContentToProduct" title="${uiLabelMap.ProductAddProductContentFromDate}"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="ProductContent" />
         <field name="productId" title="${uiLabelMap.ProductProductId}" map-name="product">
             <hidden />
@@ -983,7 +983,7 @@
     </form>
 
     <form name="PrepareAddProductContentAssoc" type="single" target="prepareAddContentToProduct" title="${uiLabelMap.ProductAddProductContentFromDate}"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId" map-name="product">
             <hidden />
         </field>
@@ -1001,7 +1001,7 @@
     </form>
 
     <form name="UpdateProductContentAssoc" type="list" target="updateContentToProduct" title="" list-name="productContentDatas"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <!-- each entry in the list will be a Map with the entries: productContent and content -->
         <auto-fields-service service-name="updateProductContent" map-name="productContent" />
         <field name="productId">
@@ -1033,7 +1033,7 @@
         </field>
     </form>
     <form name="ListAssociatedContentInfos" type="list" title="" list-name="contentInfos" odd-row-style="alternate-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-and entity-name="ContentAssocDataResourceViewTo" list="contentInfos">
                 <field-map field-name="contentIdStart" from-field="contentId" />
@@ -1067,7 +1067,7 @@
         </field>
     </form>
     <form name="CreateSimpleTextContentForAlternateLocale" type="single" target="createSimpleTextContentForAlternateLocale"
-        title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        title="${uiLabelMap.ProductCreateSimpleTextContentForAlternateLocale}" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -1085,7 +1085,7 @@
         </field>
     </form>
     <form name="EditProductContentEmail" type="single" target="updateEmailContentForProduct" title="${uiLabelMap.ProductUpdateEmailContentProduct}"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="contentId==null" target="createEmailContentForProduct" />
         <auto-fields-entity entity-name="ProductContent" map-name="productContentData" />
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" />
@@ -1194,7 +1194,7 @@
         </field>
     </form>
     <form name="EditProductContentExternal" type="single" target="updateExternalContentForProduct" title="${uiLabelMap.ProductUpdateExternalContentProduct}"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="contentId==null" target="createExternalContentForProduct" />
         <auto-fields-entity entity-name="ProductContent" map-name="productContentData" />
         <field name="description" title="${uiLabelMap.ProductProductDescription}" map-name="content">
@@ -1226,7 +1226,7 @@
         </field>
     </form>
     <form name="EditProductContentSimpleText" type="single" target="updateSimpleTextContentForProduct" title="${uiLabelMap.ProductUpdateSimpleTextContentProduct}"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="contentId==null" target="createSimpleTextContentForProduct" />
         <auto-fields-entity entity-name="ProductContent" map-name="productContentData" />
         <field name="fromDate" use-when="contentId==null" title="${uiLabelMap.CommonFrom}" required-field="true">
@@ -1339,7 +1339,7 @@
     </form>
 
     <form name="EditProductContentSEO" type="single" target="updateContentSEOForProduct" title="${uiLabelMap.PageTitleEditProductContent}"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="title" title="${uiLabelMap.PageTitle}">
             <text size="40" />
         </field>
@@ -1362,7 +1362,7 @@
 
     <!-- SupplierProduct -->
     <form name="AddSupplierProduct" type="single" target="updateSupplierProduct" title="" default-map-name="supplierProduct"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="supplierProduct==null" target="createSupplierProduct" />
         <auto-fields-service service-name="updateSupplierProduct" map-name="" />
         <!-- productId, partyId, and availableFromDate, minimumOrderQuantity, currencyUomId are primary keys of SupplierProduct and should 
@@ -1445,7 +1445,7 @@
     </form>
 
     <form name="ListSupplierProducts" type="list" target="updateSupplierProduct" title="" list-name="productSuppliers"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="partyId" title="${uiLabelMap.ProductSupplier}">
             <display-entity entity-name="PartyNameView" also-hidden="true"
                 description="${firstName} ${middleName} ${lastName} ${groupName}">
@@ -1505,7 +1505,7 @@
 
     <!-- ProductConfig -->
     <form name="AddProductConfig" type="single" target="createProductConfig" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden value="${productId}" />
         </field>
@@ -1551,7 +1551,7 @@
     </form>
     
     <form name="UpdateProductConfig" type="list" target="updateProductConfig" title="" list-name="productConfigs"
-        odd-row-style="alternate-row" paginate-target="ViewProductManufacturing"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row" paginate-target="ViewProductManufacturing"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -1606,7 +1606,7 @@
 
     <!-- form for AssetUsage (rental) parameters -->
     <form name="EditProductAssetUsage" type="single" target="updateProductAssetUsage" title="" default-map-name="product"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
 
         <alt-target use-when="product==null" target="createProduct" />
         <field name="productId">
@@ -1629,7 +1629,7 @@
 
     <!-- linked fixed assets -->
     <form name="ListProductFixedAssets" type="list" list-name="fixedAssetProducts" target="updateFixedAssetProduct"
-        odd-row-style="alternate-row" paginate-target="ViewProductManufacturing"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row" paginate-target="ViewProductManufacturing"> <!-- orig: default-table-style=-style="basic-table" -->
         <!-- <display-entity entity-name="FixedAsset" description="${fixedAssetName}[${fixedAssetId}]"/> -->
 
         <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAsset} [${uiLabelMap.AccountingFixedAssetId}]"
@@ -1667,7 +1667,7 @@
     </form>
 
     <form name="addFixedAssetProduct" type="single" target="addFixedAssetProduct" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
 
         <field name="productId">
             <hidden />
@@ -1714,7 +1714,7 @@
     </form>
 
     <form name="showFixedAssetProduct" type="single" default-map-name="fixedAssetProduct" target="updFixedAssetProduct" title=""
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="fixedAssetId==null" target="addFixedAssetProduct" />
 
         <field use-when="fixedAssetId!=null" name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}">
@@ -1845,7 +1845,7 @@
     </form>
 
     <form name="ListProductAssocs" type="list" use-row-submit="true" title="" list-name="assocFromProducts" odd-row-style="alternate-row"
-        paginate-target="EditProductAssoc"> <!-- default-table-style="basic-table" -->
+        paginate-target="EditProductAssoc"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
             <entity-one value-field="productAssoc" entity-name="Product">
                 <field-map field-name="productId" value="${productIdTo}" />
@@ -1891,7 +1891,7 @@
     </form>
 
     <form name="ListProductAssocsTo" type="list" use-row-submit="true" title="" list-name="assocToProduct" odd-row-style="alternate-row"
-        paginate-target="EditProductAssoc"> <!-- default-table-style="basic-table" -->
+        paginate-target="EditProductAssoc"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productIdTo">
             <hidden />
         </field>
@@ -1903,7 +1903,7 @@
     </form>
 
     <form name="ListProductComponents" type="list" use-row-submit="true" title="" list-name="components" odd-row-style="alternate-row"
-        paginate-target="ViewProductManufacturing"> <!-- default-table-style="basic-table" -->
+        paginate-target="ViewProductManufacturing"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="ProductAssoc" default-field-type="display" />
         <field name="productId">
             <hidden />
@@ -1930,7 +1930,7 @@
         </field>
     </form>
     <form name="ListProductParents" type="list" use-row-submit="true" title="" list-name="parents" odd-row-style="alternate-row"
-        paginate-target="ViewProductManufacturing"> <!-- default-table-style="basic-table" -->
+        paginate-target="ViewProductManufacturing"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="ProductAssoc" default-field-type="display" />
         <field name="productIdTo">
             <hidden />
@@ -1966,7 +1966,7 @@
         </field>
     </form>
     <form name="ListProductRoutings" type="list" use-row-submit="true" title="" list-name="routings" odd-row-style="alternate-row"
-        paginate-target="ViewProductManufacturing"> <!-- default-table-style="basic-table" -->
+        paginate-target="ViewProductManufacturing"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-entity entity-name="WorkEffortGoodStandard" default-field-type="display" />
         <field name="productId">
             <hidden />
@@ -1989,7 +1989,7 @@
     </form>
 
     <form name="FilterCostComponents" type="single" target="EditProductCosts" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden value="${productId}" />
         </field>
@@ -2011,7 +2011,7 @@
         </field>
     </form>
     <form name="ListCostComponents" type="list" title="" list-name="listIt" odd-row-style="alternate-row"
-        paginate-target="EditProductCosts"> <!-- default-table-style="basic-table" -->
+        paginate-target="EditProductCosts"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <set field="InParam.productId" from-field="requestParameters.productId" />
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -2046,7 +2046,7 @@
         </field>
     </form>
     <form name="ListProductCostComponentCalcs" type="list" title="" list-name="productCostComponentCalcs" odd-row-style="alternate-row"
-        paginate-target="EditProductCosts"> <!-- default-table-style="basic-table" -->
+        paginate-target="EditProductCosts"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -2077,7 +2077,7 @@
         </field>
     </form>
     <form name="AddProductCostComponentCalc" type="single" target="createProductCostComponentCalc" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createProductCostComponentCalc" />
         <field name="productId">
             <hidden value="${product.productId}" />
@@ -2102,7 +2102,7 @@
         </field>
     </form>
     <form name="EditCostComponent" type="single" target="createCostComponent" title="" default-map-name="costComponent"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <alt-target use-when="costComponent!=null" target="updateCostComponent" />
         <auto-fields-service service-name="createCostComponent" />
         <field name="productId">
@@ -2153,7 +2153,7 @@
     </form>
 
     <form name="CalculateProductCosts" type="single" target="calculateProductCosts" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="calculateProductCosts" map-name="" />
         <field name="productId">
             <hidden value="${productId}" />
@@ -2177,7 +2177,7 @@
     </form>
 
     <form name="OutstandingPurchaseOrders" type="list" list-name="purchaseOrders" odd-row-style="alternate-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="orderDate">
             <display />
         </field>
@@ -2214,7 +2214,7 @@
 
     <!-- create ProductMaint -->
     <form name="AddProductMaint" type="single" target="createProductMaint" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -2260,7 +2260,7 @@
     </form>
 
     <form name="ListProductMaints" type="list" list-name="productMaints" target="updateProductMaint" odd-row-style="alternate-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-condition entity-name="ProductMaint">
                 <condition-expr field-name="productId" from-field="productId" />
@@ -2314,7 +2314,7 @@
 
     <!-- create and update a ProductMeter -->
     <form name="AddProductMeter" type="single" target="createProductMeter" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createProductMeter" />
         <field name="productId">
             <hidden />
@@ -2343,7 +2343,7 @@
     </form>
     
     <form name="ListProductMeters" type="list" list-name="productMeters" target="updateProductMeter" odd-row-style="alternate-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-condition entity-name="ProductMeter">
                 <condition-expr field-name="productId" from-field="productId" />
@@ -2379,7 +2379,7 @@
 
     <!-- create and update a ProductGeo -->
     <form name="AddProductGeo" type="single" target="createProductGeo" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createProductGeo" />
         <field name="productId">
             <hidden />
@@ -2409,7 +2409,7 @@
     </form>
     
     <form name="ListProductGeos" type="list" list-name="productGeos" target="updateProductGeo" odd-row-style="alternate-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-condition entity-name="ProductGeo">
                 <condition-expr field-name="productId" from-field="productId" />
@@ -2444,7 +2444,7 @@
         </field>
     </form>
     <form name="ListFeatureInteractions" list-name="featureInteractions" type="list" odd-row-style="alternate-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -2475,7 +2475,7 @@
         </field>
     </form>
     <form name="AddFeatureInteraction" type="single" target="AddProductFeatureIactn" title="" default-map-name="productFeatureIactn"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden value="${parameters.productId}" />
         </field>
@@ -2510,7 +2510,7 @@
         </field>
     </form>
     <form name="AddProductFeatureApplAttr" type="single" target="createProductFeatureApplAttr" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createProductFeatureApplAttr" />
         <field name="productId">
             <hidden />
@@ -2531,7 +2531,7 @@
         </field>
     </form>
     <form name="ListProductFeatureApplAttrs" type="list" list-name="productFeatureApplAttrs" target="EditProductFeatureAppl"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-condition entity-name="ProductFeatureApplAttr" list="productFeatureApplAttrs">
                 <condition-expr field-name="productId" from-field="productId" />
@@ -2556,7 +2556,7 @@
 
     <!-- ProductSubscriptionResource -->
     <form name="ListProductSubscriptionResources" type="list" list-name="productSubscriptionResources" target="updateProductSubscriptionResource"
-        odd-row-style="alternate-row" paginate-target="EditProductSubscriptionResources"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row" paginate-target="EditProductSubscriptionResources"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-condition entity-name="ProductSubscriptionResource">
                 <condition-expr field-name="productId" from-field="productId" />
@@ -2615,7 +2615,7 @@
         </field>
     </form>
     <form name="AddProductSubscriptionResource" type="single" target="createProductSubscriptionResource" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createProductSubscriptionResource" />
 
         <field name="productId">
@@ -2659,7 +2659,7 @@
     </form>
 
     <form name="ListSupplierProductAgreements" type="list" list-name="supplierProductAgreements" odd-row-style="alternate-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
             <entity-one entity-name="Agreement" value-field="agreement" />
         </row-actions>
@@ -2691,7 +2691,7 @@
             <display />
         </field>
     </form>
-    <form name="ListSalesAgreements" type="list" list-name="salesAgreements" odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+    <form name="ListSalesAgreements" type="list" list-name="salesAgreements" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="agreementId" widget-style="${styles.link_nav_info_id_long}">
             <hyperlink target="/accounting/control/EditAgreementItemProduct" target-type="inter-app"
                 description="${agreementId}/${agreementItemSeqId}" also-hidden="false">
@@ -2723,7 +2723,7 @@
         </field>
     </form>
     <form name="ListProductAgreements" type="list" list-name="productAgreements" odd-row-style="alternate-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="agreementId" widget-style="${styles.link_nav_info_id_long}">
             <hyperlink target="/accounting/control/EditAgreementItemProduct" target-type="inter-app"
                 description="${agreementId}/${agreementItemSeqId}" also-hidden="false">
@@ -2757,7 +2757,7 @@
 
     <!-- ProductWorkEfforts forms -->
     <form name="AddProductWorkEffort" target="createWorkEffortGoodStandard" title="" type="single" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden value="${parameters.productId}" />
         </field>
@@ -2797,7 +2797,7 @@
     </form>
     
     <form name="ListProductWorkEfforts" type="list" target="updateWorkEffortGoodStandard" list-name="productWorkEfforts"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-and entity-name="WorkEffortGoodStandard" use-cache="true" list="productWorkEfforts">
                 <field-map from-field="productId" field-name="productId" />
@@ -2852,7 +2852,7 @@
     </form>
 
     <form name="UpdateProductFacilities" type="list" target="updateProductFacility" title="" list-name="productFacilities"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="updateProductFacility" />
         <field name="productId">
             <hidden />
@@ -2874,7 +2874,7 @@
         </field>
     </form>
     <form name="AddProductFacility" target="createProductFacility" title="" type="single" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -2903,7 +2903,7 @@
     </form>
 
     <form name="UpdateProductFacilityLocations" type="list" target="updateProductFacilityLocation" title=""
-        list-name="productFacilityLocations" odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        list-name="productFacilityLocations" odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
             <entity-one entity-name="FacilityLocation" value-field="facilityLocation">
                 <field-map field-name="facilityId" />
@@ -2949,7 +2949,7 @@
     </form>
 
     <form name="AddProductFacilityLocation" target="createProductFacilityLocation" title="" type="single" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createProductFacilityLocation" />
         <field name="productId">
             <hidden />
@@ -2977,7 +2977,7 @@
     
     <!-- ProductIDs -->
     <form name="AddProductGoodIdentification" type="single" target="createGoodIdentification" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="createGoodIdentification" />
         <field name="productId">
             <hidden />
@@ -2996,7 +2996,7 @@
     </form>
     
     <form name="UpdateProductGoodIdentifications" type="list" target="updateGoodIdentification" title="" list-name="goodIdentifications"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -3017,7 +3017,7 @@
     
     <!-- ProductKeywords -->
     <form name="AddProductKeyword" type="single" target="createProductKeyword" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -3048,7 +3048,7 @@
         </field>
     </form>
     <form name="UpdateProductKeyword" type="list" target="updateProductKeyword" title="" list-name="" odd-row-style="alternate-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-condition entity-name="ProductKeyword">
                 <condition-list combine="and">
@@ -3094,7 +3094,7 @@
 
     <!-- ProductAttribute -->
     <form name="AddProductAttribute" type="single" target="createProductAttribute" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -3112,7 +3112,7 @@
         </field>
     </form>
     <form name="UpdateProductAttribute" type="list" target="updateProductAttribute" title="" list-name="productAttributes"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -3137,7 +3137,7 @@
     </form>
     <!-- GlAccount -->
     <form name="ListProductGlAccounts" type="list" target="updateProductGlAccount" title="" list-name="productGlAccounts"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <row-actions>
             <entity-condition entity-name="GlAccountOrganizationAndClass" list="organizationGlAccounts">
                 <condition-expr field-name="organizationPartyId" from-field="organizationPartyId" />
@@ -3171,7 +3171,7 @@
         </field>
     </form>
     <form name="AddProductGlAccount" type="single" target="createProductGlAccount" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -3200,7 +3200,7 @@
 
     <!-- Vendor Product -->
     <form name="ListVendorProducts" type="list" list-name="vendorProductList" target="deleteVendorProduct" paginate-target="EditVendorProduct"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -3217,7 +3217,7 @@
     </form>
 
     <form name="EditVendorProduct" type="single" target="createVendorProduct" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -3235,7 +3235,7 @@
     </form>
 
     <form name="ListBestProduct" type="list" paginate="false" list-name="bestSellingProducts" view-size="5" header-row-style="header-row"
-        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
         <field name="productName" title="${uiLabelMap.ProductName}">
             <display description="${productName}" />
         </field>
@@ -3247,7 +3247,7 @@
         </field>
     </form>
 
-    <form name="ListCommEvents" list-name="communicationEvents" type="list" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+    <form name="ListCommEvents" list-name="communicationEvents" type="list" header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="communicationEventId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${communicationEventId}" target="/partymgr/control/EditCommunicationEvent?communicationEventId=${communicationEventId}"
                 target-type="inter-app" />
@@ -3286,7 +3286,7 @@
 
     <!-- regarding Parties involved -->
     <form name="UpdateProductRole" type="list" target="updatePartyToProduct" title="" list-name="productRoles" odd-row-style="alternate-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <auto-fields-service service-name="updatePartyToProduct" />
         <field name="productId">
             <hidden />
@@ -3331,7 +3331,7 @@
     </form>
 
     <form name="AddProductRole" type="single" target="addPartyToProduct" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -3360,7 +3360,7 @@
     </form>
 
     <form name="ListProductGroupOrder" type="list" target="" title="" list-name="productGroupOrders" odd-row-style="alternate-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -3399,7 +3399,7 @@
     </form>
 
     <form name="CreateProductGroupOrder" type="single" target="createProductGroupOrder" title="" header-row-style="header-row"
-       > <!-- default-table-style="basic-table" -->
+       > <!-- orig: default-table-style=-style="basic-table" -->
         <field name="productId">
             <hidden />
         </field>
@@ -3424,7 +3424,7 @@
     </form>
 
     <form name="EditProductGroupOrder" type="single" target="updateProductGroupOrder" title="" default-map-name="productGroupOrder"
-        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
+        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="groupOrderId">
             <hidden />
         </field>
@@ -3449,7 +3449,7 @@
     </form>
 
     <form name="ListProductTag" type="multi" target="updateProductTag" title="" list-name="" odd-row-style="alternate-row"
-        paginate-target="EditProductTag" separate-columns="true"> <!-- default-table-style="basic-table" -->
+        paginate-target="EditProductTag" separate-columns="true"> <!-- orig: default-table-style=-style="basic-table" -->
         <actions>
             <entity-condition entity-name="ProductKeyword">
                 <condition-list combine="and">

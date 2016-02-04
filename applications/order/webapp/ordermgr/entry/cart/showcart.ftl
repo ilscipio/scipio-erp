@@ -84,6 +84,8 @@ under the License.
       
       <@row>
         <@cell>
+          <#-- Cato: FIXME? forcing simple checkboxes for this form. may want a new @fields type to style globally instead. also see forced nesting below. -->
+          <@fields checkboxType="simple">
             <form name="qohAtpForm" method="post" action="<@ofbizUrl>${target}</@ofbizUrl>">
                 <input type="hidden" name="facilityId" value="${facilityId!}"/>
                 <input type="hidden" name="productId"/>
@@ -91,50 +93,49 @@ under the License.
             </form>
               
             <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="quickaddform">
-                      <#if orderType=="PURCHASE_ORDER">                        
-                        <#if partyId?has_content>                                               
-                          <#assign fieldFormName="LookupSupplierProduct?partyId=${partyId}">
-                        <#else>
-                          <#assign fieldFormName="LookupSupplierProduct">
-                        </#if>
+                    <#if orderType=="PURCHASE_ORDER">                        
+                      <#if partyId?has_content>                                               
+                        <#assign fieldFormName="LookupSupplierProduct?partyId=${partyId}">
                       <#else>
-                        <#assign fieldFormName="LookupProduct">
+                        <#assign fieldFormName="LookupSupplierProduct">
                       </#if>
+                    <#else>
+                      <#assign fieldFormName="LookupProduct">
+                    </#if>
                           
-                          <@field type="lookup" formName="quickaddform" name="add_product_id" id="add_product_id" fieldFormName=fieldFormName label="${uiLabelMap.ProductProductId}"/>
+                    <@field type="lookup" formName="quickaddform" name="add_product_id" id="add_product_id" fieldFormName=fieldFormName label="${uiLabelMap.ProductProductId}"/>
                           
-                          <@field type="input" size="6" name="quantity" value="1" label="${uiLabelMap.OrderQuantity}"/>
+                    <@field type="input" size="6" name="quantity" value="1" label="${uiLabelMap.OrderQuantity}"/>
                           
                           
-                      <#if useAsDefaultDesiredDeliveryDate??> 
-                        <#assign value = defaultDesiredDeliveryDate>
-                      </#if>
+                    <#if useAsDefaultDesiredDeliveryDate??> 
+                      <#assign value = defaultDesiredDeliveryDate>
+                    </#if>
+                    <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderDesiredDeliveryDate}" name="itemDesiredDeliveryDate" value="${value!}" size="25" maxlength="30" id="additem_itemDesiredDeliveryDate" />
+                     
+                    <#-- Cato: FIXME: this forced nesting of single checkbox/radio should be able to be expressed as a global @fields style setting (label consume logic) -->
+                    <@field type="generic">
+                        <@field type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true" checked=(useAsDefaultDesiredDeliveryDate??) label="${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}" />
+                    </@field>
 
-
-                         <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderDesiredDeliveryDate}" name="itemDesiredDeliveryDate" value="${value!}" size="25" maxlength="30" id="additem_itemDesiredDeliveryDate" />
-                         <@field type="generic">
-                            <input type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true"<#if useAsDefaultDesiredDeliveryDate??> checked="checked"</#if>/>&nbsp;${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}
-                         </@field>
-                          
-                         <#--<@field type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true" checked=(useAsDefaultDesiredDeliveryDate??) label="${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}"/>-->
-
-
-                         <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="shipAfterDate" value="${shoppingCart.getDefaultShipAfterDate()!}" size="25" maxlength="30" id="additem_shipAfterDate" />
-                         <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="shipBeforeDate" value="${shoppingCart.getDefaultShipBeforeDate()!}" size="25" maxlength="30" id="additem_shipBeforeDate"/>
+                    <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="shipAfterDate" value="${shoppingCart.getDefaultShipAfterDate()!}" size="25" maxlength="30" id="additem_shipAfterDate" />
+                    <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="shipBeforeDate" value="${shoppingCart.getDefaultShipBeforeDate()!}" size="25" maxlength="30" id="additem_shipBeforeDate"/>
 
                    
                 <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-                       <@field type="select" label="${uiLabelMap.OrderOrderItemType}" name="add_item_type">
+                    <@field type="select" label="${uiLabelMap.OrderOrderItemType}" name="add_item_type">
                         <option value="">&nbsp;</option>
                         <#list purchaseOrderItemTypeList as orderItemType>
                         <option value="${orderItemType.orderItemTypeId}">${orderItemType.description}</option>
                         </#list>
-                          </@field>
+                    </@field>
                 </#if>
 
+                    <#-- Cato: FIXME: this forced nesting of single checkbox/radio should be able to be expressed as a global @fields style setting (label consume logic) -->
                     <@field type="generic">
-                        <input type="checkbox" name="useAsDefaultComment" value="true" <#if useAsDefaultComment??>checked="checked"</#if> />&nbsp;${uiLabelMap.OrderUseDefaultComment}
+                        <@field type="checkbox" name="useAsDefaultComment" value="true" checked=useAsDefaultComment?? label="${uiLabelMap.OrderUseDefaultComment}" />
                     </@field>
+                    
                     <@field type="input" size="25" name="itemComment" value="${defaultComment!}" label="${uiLabelMap.CommonComment}"/>
 
                     <@field type="submit" class="${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToOrder}"/>
@@ -143,22 +144,22 @@ under the License.
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
 
             <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="bulkworkaddform">
-                    
-                        <@field type="select" label="${uiLabelMap.OrderOrderItemType}" name="add_item_type">
-                        <option value="BULK_ORDER_ITEM">${uiLabelMap.ProductBulkItem}</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option>
-                        </@field>
-                        
-                        <@field type="lookup" formName="bulkworkaddform" value="${requestParameters.add_category_id!}" name="add_category_id" id="add_category_id" fieldFormName="LookupProductCategory" label="${uiLabelMap.ProductProductCategory}"/>
-                        
-                        <@field type="input" size="25" name="add_item_description" value="" label="${uiLabelMap.CommonDescription}"/>
-                        <@field type="input" size="3" name="quantity" value="${requestParameters.quantity?default('1')}" label="${uiLabelMap.OrderQuantity}"/>
-                        <@field type="input" size="6" name="price" value="${requestParameters.price!}" label="${uiLabelMap.OrderPrice}"/>
+                <@field type="select" label="${uiLabelMap.OrderOrderItemType}" name="add_item_type">
+                  <option value="BULK_ORDER_ITEM">${uiLabelMap.ProductBulkItem}</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option>
+                </@field>
+                
+                <@field type="lookup" formName="bulkworkaddform" value="${requestParameters.add_category_id!}" name="add_category_id" id="add_category_id" fieldFormName="LookupProductCategory" label="${uiLabelMap.ProductProductCategory}"/>
+                
+                <@field type="input" size="25" name="add_item_description" value="" label="${uiLabelMap.CommonDescription}"/>
+                <@field type="input" size="3" name="quantity" value="${requestParameters.quantity?default('1')}" label="${uiLabelMap.OrderQuantity}"/>
+                <@field type="input" size="6" name="price" value="${requestParameters.price!}" label="${uiLabelMap.OrderPrice}"/>
                     
                 <@field type="submit" class="${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToOrder}"/>
             </form>
 
         </#if>
 
+        </@fields>
       </@cell>
    </@row>
 </@section>

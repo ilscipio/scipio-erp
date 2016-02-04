@@ -110,8 +110,7 @@ under the License.
                   ${product.description!}
               </@field>
               <@field type="input" label="${uiLabelMap.ProductItemDescription}" name="itemDescription" size="30" maxlength="60"/>
-              <@field type="generic" label="${uiLabelMap.ProductInventoryItemType}">
-                  <select name="inventoryItemTypeId" size="1">
+              <@field type="select" label="${uiLabelMap.ProductInventoryItemType}" name="inventoryItemTypeId" size="1">
                     <#list inventoryItemTypes as nextInventoryItemType>
                       <option value="${nextInventoryItemType.inventoryItemTypeId}"
                         <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
@@ -119,7 +118,6 @@ under the License.
                         </#if>
                       >${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option>
                     </#list>
-                  </select>
               </@field>
 
               <hr />
@@ -127,8 +125,7 @@ under the License.
               <@field type="generic" label="${uiLabelMap.ProductFacilityOwner}">
                   <@htmlTemplate.lookupField formName="selectAllForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
               </@field>
-              <@field type="generic" label="${uiLabelMap.ProductSupplier}">
-                  <select name="partyId">
+              <@field type="select" label="${uiLabelMap.ProductSupplier}" name="partyId">
                     <option value=""></option>
                     <#if supplierPartyIds?has_content>
                       <#list supplierPartyIds as supplierPartyId>
@@ -137,7 +134,6 @@ under the License.
                         </option>
                       </#list>
                     </#if>
-                  </select>
               </@field>
               <@field type="generic" label="${uiLabelMap.ProductDateReceived}">
                   <input type="text" name="datetimeReceived" size="24" value="${nowTimestamp}" />
@@ -169,13 +165,11 @@ under the License.
                     <@htmlTemplate.lookupField formName="selectAllForm" name="locationSeqId" id="locationSeqId" fieldFormName="${LookupFacilityLocationView}"/>
                   </#if>
               </@field>
-              <@field type="generic" label="${uiLabelMap.ProductRejectedReason}">
-                  <select name="rejectionId" size="1">
+              <@field type="select" label="${uiLabelMap.ProductRejectedReason}" name="rejectionId" size="1">
                     <option></option>
                     <#list rejectReasons as nextRejection>
                       <option value="${nextRejection.rejectionId}">${nextRejection.get("description",locale)?default(nextRejection.rejectionId)}</option>
                     </#list>
-                  </select>
               </@field>
               <@field type="input" label="${uiLabelMap.ProductQuantityRejected}" name="quantityRejected" size="5" value="0" />
               <@field type="input" label="${uiLabelMap.ProductQuantityAccepted}" name="quantityAccepted" size="5" value="${defaultQuantity?default(1)?string.number}"/>

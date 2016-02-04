@@ -74,8 +74,7 @@ under the License.
           <@field type="input" label="${uiLabelMap.CommonAmount}" size="5" name="amount" value="" />
           <@field type="input" label="${uiLabelMap.CommonSequence}" size="5" name="sequenceNum" value="" />
           <#-- label for the following field used to be: ${uiLabelMap.ProductCategoryId} ??? -->
-          <@field type="generic" label="${uiLabelMap.ProductFeatureApplicationType}">
-              <select name="productFeatureApplTypeId" size="1">
+          <@field type="select" label="${uiLabelMap.ProductFeatureApplicationType}" name="productFeatureApplTypeId" size="1">
                 <#list applicationTypes as applicationType>
                    <#assign displayDesc = applicationType.get("description", locale)?default("No Description")>
                    <#if 18 < displayDesc?length>
@@ -83,7 +82,6 @@ under the License.
                    </#if>
                    <option value="${applicationType.productFeatureApplTypeId}">${displayDesc}</option>
                 </#list>
-              </select>
           </@field>
           
           <@field type="submit" text="${uiLabelMap.ProductAddFeature}" class="${styles.link_run_session!} ${styles.action_add!}" />

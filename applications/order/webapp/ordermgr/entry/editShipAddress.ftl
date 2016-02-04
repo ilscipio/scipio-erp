@@ -47,23 +47,17 @@ under the License.
         <@field type="input" label="${uiLabelMap.CommonAddressLine} 1" required=true size="30" maxlength="30" name="address1" value="${parameters.address1!}"/>
         <@field type="input" label="${uiLabelMap.CommonAddressLine} 2" size="30" maxlength="30" name="address2" value="${parameters.address2!}"/>
         <@field type="input" label="${uiLabelMap.CommonCity}" required=true size="30" maxlength="30" name="city" value="${parameters.city!}"/>
-        <@field type="generic" label="${uiLabelMap.CommonStateProvince}">
-            <select name="stateProvinceGeoId">
+        <@field type="select" label="${uiLabelMap.CommonStateProvince}" name="stateProvinceGeoId">
               <option value=""></option>
               ${screens.render("component://common/widget/CommonScreens.xml#states")}
-            </select>
         </@field>
         <@field type="input" label="${uiLabelMap.CommonZipPostalCode}" required=true size="12" maxlength="10" name="postalCode" value="${parameters.postalCode!}"/>
-        <@field type="generic" label="${uiLabelMap.CommonCountry}" required=true>
-            <select name="countryGeoId">
+        <@field type="select" label="${uiLabelMap.CommonCountry}" required=true name="countryGeoId">
               ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-            </select>
         </@field>
-        <@field type="generic" label="${uiLabelMap.OrderAllowSolicitation}">
-            <select name="allowSolicitation">
+        <@field type="select" label="${uiLabelMap.OrderAllowSolicitation}" name="allowSolicitation">
               <#assign selectedValue = parameters.allowSolicitation?default("")/>
               <option></option><option${(selectedValue=="Y")?string(" selected=\"selected\"","")}>Y</option><option${(selectedValue=="N")?string(" selected=\"selected\"","")}>N</option>
-            </select>
         </@field>
       </form>
   </@section>

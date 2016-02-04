@@ -86,8 +86,7 @@ under the License.
 
             <hr />
   
-            <@field type="generic" label="${uiLabelMap.ProductTransferStatus}">
-                <select name="statusId">
+            <@field type="select" label="${uiLabelMap.ProductTransferStatus}" name="statusId">
                     <#if (inventoryTransfer.statusId)??>
                         <#assign curStatusItem = inventoryTransfer.getRelatedOne("StatusItem", true)>
                         <option value="${(inventoryTransfer.statusId)!}">${(curStatusItem.get("description",locale))!}</option>
@@ -95,7 +94,7 @@ under the License.
                     <#list statusItems as statusItem>
                     <option value="${(statusItem.statusId)!}">${(statusItem.get("description",locale))!}</option>
                     </#list>
-                </select>
+  
             </@field>
         <@field type="generic" label="${uiLabelMap.ProductTransferSendDate}">
             <input type="text" name="sendDate" value="${(inventoryTransfer.sendDate)!}" size="22" />

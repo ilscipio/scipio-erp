@@ -47,12 +47,10 @@ under the License.
     <@field type="input" label="${uiLabelMap.ManufacturingCalendarId}" size="12" name="calendarId" value="${calendarData.calendarId!}" />
   </#if>
     <@field type="input" label="${uiLabelMap.CommonDescription}" size="40" name="description" value="${calendarData.description!}" />
-    <@field type="generic" label="${uiLabelMap.ManufacturingCalendarWeekId}">
-        <select name="calendarWeekId">
+    <@field type="select" label="${uiLabelMap.ManufacturingCalendarWeekId}" name="calendarWeekId">
           <#list calendarWeeks as calendarWeek>
           <option value="${calendarWeek.calendarWeekId}" <#if calendarData?has_content && calendarData.calendarWeekId?default("") == calendarWeek.calendarWeekId>SELECTED</#if>>${(calendarWeek.get("description",locale))!}</option>
           </#list>
-        </select>
     </@field>
     <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
 

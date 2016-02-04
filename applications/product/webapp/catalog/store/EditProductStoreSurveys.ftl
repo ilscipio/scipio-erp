@@ -56,20 +56,16 @@ under the License.
 <@section title="${uiLabelMap.PageTitleAddProductStoreSurveys}">
         <form name="addSurvey" action="<@ofbizUrl>createProductStoreSurveyAppl</@ofbizUrl>" method="post">
             <input type="hidden" name="productStoreId" value="${productStoreId}" />
-              <@field type="generic" label="${uiLabelMap.CommonType}">
-                  <select name="surveyApplTypeId">
+              <@field type="select" label="${uiLabelMap.CommonType}" name="surveyApplTypeId">
                     <#list surveyApplTypes as type>
                       <option value="${type.surveyApplTypeId}">${type.get("description",locale)}</option>
                     </#list>
-                  </select>
               </@field>
               <@field type="input" label="${uiLabelMap.CommonGroup} ${uiLabelMap.CommonName}" size="20" name="groupName" />
-              <@field type="generic" label="${uiLabelMap.CommonSurveys}">
-                  <select name="surveyId">
+              <@field type="select" label="${uiLabelMap.CommonSurveys}" name="surveyId">
                     <#list surveys as survey>
                       <option value="${survey.surveyId}">${survey.description?default("[" + survey.surveyId + "]")}</option>
                     </#list>
-                  </select>
               </@field>
               <@field type="input" label="${uiLabelMap.ProductProductId}" size="20" name="productId" />
               <@field type="generic" label="${uiLabelMap.ProductCategoryId}">

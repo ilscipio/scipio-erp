@@ -40,8 +40,7 @@ function lookupShipments() {
         <form method="post" name="lookupShipmentForm" action="<@ofbizUrl>FindShipment</@ofbizUrl>">
             <input type="hidden" name="lookupFlag" value="Y" />
               <@field type="input" label="${uiLabelMap.ProductShipmentId}" name="shipmentId" value="${shipmentId!}" />
-              <@field type="generic" label="${uiLabelMap.ProductShipmentType}">
-                  <select name="shipmentTypeId">
+              <@field type="select" label="${uiLabelMap.ProductShipmentType}" name="shipmentTypeId">
                     <#if currentShipmentType?has_content>
                     <option value="${currentShipmentType.shipmentTypeId}">${currentShipmentType.get("description",locale)}</option>
                     <option value="${currentShipmentType.shipmentTypeId}">---</option>
@@ -50,10 +49,8 @@ function lookupShipments() {
                     <#list shipmentTypes as shipmentType>
                       <option value="${shipmentType.shipmentTypeId}">${shipmentType.get("description",locale)}</option>
                     </#list>
-                  </select>
               </@field>
-              <@field type="generic" label="${uiLabelMap.ProductOriginFacility}">
-                  <select name="originFacilityId">
+              <@field type="select" label="${uiLabelMap.ProductOriginFacility}" name="originFacilityId">
                     <#if currentOriginFacility?has_content>
                     <option value="${currentOriginFacility.facilityId}">${currentOriginFacility.facilityName} [${currentOriginFacility.facilityId}]</option>
                     <option value="${currentOriginFacility.facilityId}">---</option>
@@ -62,10 +59,8 @@ function lookupShipments() {
                     <#list facilities as facility>
                       <option value="${facility.facilityId}">${facility.facilityName} [${facility.facilityId}]</option>
                     </#list>
-                  </select>
               </@field>
-              <@field type="generic" label="${uiLabelMap.ProductDestinationFacility}">
-                  <select name="destinationFacilityId">
+              <@field type="select" label="${uiLabelMap.ProductDestinationFacility}" name="destinationFacilityId">
                     <#if currentDestinationFacility?has_content>
                     <option value="${currentDestinationFacility.facilityId}">${currentDestinationFacility.facilityName} [${currentDestinationFacility.facilityId}]</option>
                     <option value="${currentDestinationFacility.facilityId}">---</option>
@@ -74,10 +69,8 @@ function lookupShipments() {
                     <#list facilities as facility>
                       <option value="${facility.facilityId}">${facility.facilityName} [${facility.facilityId}]</option>
                     </#list>
-                  </select>
               </@field>
-              <@field type="generic" label="${uiLabelMap.CommonStatus}">
-                  <select name="statusId">
+              <@field type="select" label="${uiLabelMap.CommonStatus}" name="statusId">
                     <#if currentStatus?has_content>
                     <option value="${currentStatus.statusId}">${currentStatus.get("description",locale)}</option>
                     <option value="${currentStatus.statusId}">---</option>
@@ -98,7 +91,6 @@ function lookupShipments() {
                         <option value="${returnStatus.statusId}">${returnStatus.get("description",locale)}</option>
                       </#if>
                     </#list>
-                  </select>
               </@field>
 
               <@field type="generic" label="${uiLabelMap.ProductDateFilter}">

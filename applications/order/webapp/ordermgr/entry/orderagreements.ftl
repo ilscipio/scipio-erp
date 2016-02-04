@@ -34,23 +34,19 @@ under the License.
     
     <@table type="fields"> <#-- orig: class="basic-table" -->
       <#if agreements??>     
-      <@field type="generic" label="${uiLabelMap.OrderSelectAgreement}">
-            <select name="agreementId">
+      <@field type="select" label="${uiLabelMap.OrderSelectAgreement}" name="agreementId">
             <option value="">${uiLabelMap.CommonNone}</option>
             <#list agreements as agreement>
             <option value="${agreement.agreementId}">${agreement.agreementId} - ${agreement.description!}</option>
             </#list>
-            </select>
       </@field>
       </#if>
       <#if agreementRoles??>
-        <@field type="generic" label="${uiLabelMap.OrderSelectAgreementRoles}">
-              <select name="agreementId">
+        <@field type="select" label="${uiLabelMap.OrderSelectAgreementRoles}" name="agreementId">
               <option value="">${uiLabelMap.CommonNone}</option>
               <#list agreementRoles as agreementRole>
                   <option value="${agreementRole.agreementId!}">${agreementRole.agreementId!} - ${agreementRole.roleTypeId!}</option>
               </#list>
-              </select>
         </@field>
       </#if>
 
@@ -65,13 +61,11 @@ under the License.
     </#if>
 
       <#assign label><#if agreements??>${uiLabelMap.OrderSelectCurrencyOr}<#else>${uiLabelMap.OrderSelectCurrency}</#if></#assign>
-      <@field type="generic" label=label>
-            <select name="currencyUomId">
+      <@field type="select" label=label name="currencyUomId">
               <option value=""></option>
               <#list currencies as currency>
               <option value="${currency.uomId}" <#if currencyUomId?default('') == currency.uomId>selected="selected"</#if> >${currency.uomId}</option>
               </#list>
-            </select>
       </@field>
 
       <@field type="generic" label="${uiLabelMap.ProductChooseCatalog}">

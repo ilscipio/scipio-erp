@@ -82,12 +82,10 @@ under the License.
         <form method="post" action="<@ofbizUrl>addAdditionalParty</@ofbizUrl>" name="addAdditionalPartyForm" id="addAdditionalPartyForm">
         <@fields type="default-nolabels">
           <input type="hidden" name="additionalPartyId" value="${additionalPartyId}" />
-          <@field type="generic" label="${uiLabelMap.CommonRole}">
-            <select name="additionalRoleTypeId" id="additionalRoleTypeId" size="5" multiple="multiple">
+          <@field type="select" label="${uiLabelMap.CommonRole}" name="additionalRoleTypeId" id="additionalRoleTypeId" size="5" multiple=true>
               <#list roles as role>
               <option value="${role.roleTypeId}">${role.get("description",locale)}</option>
               </#list>
-            </select>
           </@field>
           <@field type="submit" class="${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd} "/>
         </form>

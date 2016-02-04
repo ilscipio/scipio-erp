@@ -21,11 +21,10 @@ under the License.
 
 <@field type="input" label="${uiLabelMap.ContentQueryLine}" class="inputBox" name="queryLine" size="60"/>
 
-<@field type="generic" label="${uiLabelMap.CommonSelect} ${uiLabelMap.ContentCategory}">
-    <select name="lcSiteId">
+<@field type="select" label="${uiLabelMap.CommonSelect} ${uiLabelMap.ContentCategory}" name="lcSiteId">
       <option value=""></option>
       <@listSiteIds contentId="WebStoreCONTENT" indentIndex=0/>
-    </select>
+
 </@field>
 
 
@@ -46,13 +45,11 @@ under the License.
       <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
-      <@field type="generic" label="${(productFeatureType.description)!}">
-          <select name="pft_${productFeatureTypeId}">
+      <@field type="select" label="${(productFeatureType.description)!}" name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
               </#list>
-            </select>
       </@field>
     </#list>
     <#if searchConstraintStrings?has_content>

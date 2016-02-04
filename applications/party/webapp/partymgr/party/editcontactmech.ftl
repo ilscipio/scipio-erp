@@ -22,12 +22,10 @@ under the License.
     <@section title="${uiLabelMap.PartyCreateNewContact}">
       <form method="post" action="<@ofbizUrl>editcontactmech</@ofbizUrl>" name="createcontactmechform">
         <input type="hidden" name="partyId" value="${partyId}" />
-        <@field type="generic" label="${uiLabelMap.PartySelectContactType}">
-            <select name="preContactMechTypeId">
+        <@field type="select" label="${uiLabelMap.PartySelectContactType}" name="preContactMechTypeId">
               <#list mechMap.contactMechTypes as contactMechType>
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
-            </select>
         </@field>
         <@field type="submit" submitType="link" href="javascript:document.createcontactmechform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonCreate}" />
       </form>
@@ -127,13 +125,10 @@ under the License.
     <@field type="input" label="${uiLabelMap.PartyAddressLine1} *" size="100" maxlength="255" name="address1" value="${(mechMap.postalAddress.address1)?default(request.getParameter('address1')!)}" />
     <@field type="input" label="${uiLabelMap.PartyAddressLine2}" size="100" maxlength="255" name="address2" value="${(mechMap.postalAddress.address2)?default(request.getParameter('address2')!)}" />
     <@field type="input" label="${uiLabelMap.PartyCity} *" size="50" maxlength="100" name="city" value="${(mechMap.postalAddress.city)?default(request.getParameter('city')!)}" />
-    <@field type="generic" label="${uiLabelMap.PartyState}">
-        <select name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
-        </select>
+    <@field type="select" label="${uiLabelMap.PartyState}" name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
     </@field>
     <@field type="input" label="${uiLabelMap.PartyZipCode} *" size="30" maxlength="60" name="postalCode" value="${(mechMap.postalAddress.postalCode)?default(request.getParameter('postalCode')!)}" />
-    <@field type="generic" label="${uiLabelMap.CommonCountry}">
-        <select name="countryGeoId" id="editcontactmechform_countryGeoId">
+    <@field type="select" label="${uiLabelMap.CommonCountry}" name="countryGeoId" id="editcontactmechform_countryGeoId">
           ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
           <#if (mechMap.postalAddress??) && (mechMap.postalAddress.countryGeoId??)>
             <#assign defaultCountryGeoId = mechMap.postalAddress.countryGeoId>
@@ -144,7 +139,6 @@ under the License.
             <#assign countryGeo = delegator.findOne("Geo",Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId",defaultCountryGeoId), false)>
             ${countryGeo.get("geoName",locale)}
           </option>
-        </select>
     </@field>
     <#assign isUsps = Static["org.ofbiz.party.contact.ContactMechWorker"].isUspsAddress(mechMap.postalAddress)>
     <@field type="display" label="${uiLabelMap.PartyIsUsps}">
@@ -165,14 +159,12 @@ under the License.
   <#else>
     <@field type="input" label="${mechMap.contactMechType.get('description',locale)}" size="60" maxlength="255" name="infoString" value="${(mechMap.contactMech.infoString)!}" />
   </#if>
-  <@field type="generic" label="${uiLabelMap.PartyContactAllowSolicitation}?">
-      <select name="allowSolicitation">
+  <@field type="select" label="${uiLabelMap.PartyContactAllowSolicitation}?" name="allowSolicitation">
         <#if (((mechMap.partyContactMech.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
         <#if (((mechMap.partyContactMech.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
         <option></option>
         <option value="Y">${uiLabelMap.CommonY}</option>
         <option value="N">${uiLabelMap.CommonN}</option>
-      </select>
   </@field>
   </form>
   </div>

@@ -31,8 +31,7 @@ these reports and helping to improve them.</p>
       <@htmlTemplate.renderDateTimeField name="toDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="t" oDate1dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
   </@field>
 <#--
-  <@field type="generic" label="Report">
-      <select name="groupName" tabindex="14"  CLASS="stateSelectBox">
+  <@field type="select" label="Report" name="groupName" tabindex="14" class="+stateSelectBox">
         <option value="orderStatus"></option>
         <option value="orderStatus">Orders by Order Status</option>
         <option value="ship">Orders by Ship Method</option>
@@ -40,7 +39,6 @@ these reports and helping to improve them.</p>
         <option value="adjustment">Order Items by Adjustment</option>
         <option value="itemStatus">Order Items by Status</option>
         <option value="product">Order Items by Product</option>
-      </select>
   </@field>
 -->
   <@field type="submit" tabindex="16" name="GoReport" text="Order Report" class="${styles.link_run_sys!} ${styles.action_export!}"/>
@@ -54,8 +52,7 @@ these reports and helping to improve them.</p>
       <@htmlTemplate.renderDateTimeField name="toDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="toDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
   </@field>
 <#--
-  <@field type="generic" label="Report">
-      <select name="groupName" tabindex="14"  class="stateSelectBox">
+  <@field type="select" label="Report" name="groupName" tabindex="14"  class="+stateSelectBox">
         <option value="orderStatus"></option>
         <option value="orderStatus">Orders by Order Status</option>
         <option value="ship">Orders by Ship Method</option>
@@ -63,7 +60,6 @@ these reports and helping to improve them.</p>
         <option value="adjustment">Order Items by Adjustment</option>
         <option value="itemStatus">Order Items by Status</option>
         <option value="product">Order Items by Product</option>
-      </select>
   </@field>
 -->
   <@field type="submit" tabindex="16" name="GoReport" text="Item Report"  class="${styles.link_run_sys!} ${styles.action_export!}"/>

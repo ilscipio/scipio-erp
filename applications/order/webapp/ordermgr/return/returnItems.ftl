@@ -344,12 +344,10 @@ under the License.
         <form name="returnItems" method="post" action="<@ofbizUrl>returnItems</@ofbizUrl>">
           <input type="hidden" name="returnId" value="${returnId}" />
             <#if partyOrders?has_content>
-              <@field type="generic" label="${uiLabelMap.OrderOrderId}" tooltip="${uiLabelMap.OrderReturnLoadItems}">
-                  <select name="orderId">
+              <@field type="select" label="${uiLabelMap.OrderOrderId}" tooltip="${uiLabelMap.OrderReturnLoadItems}" name="orderId">
                     <#list partyOrders as order>
                       <option value="${order.orderId}">${order.orderId} - ${order.orderDate}</option>
                     </#list>
-                  </select>
               </@field>
             <#else>
               <@tr>

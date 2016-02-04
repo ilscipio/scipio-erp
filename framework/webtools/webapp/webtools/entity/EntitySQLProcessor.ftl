@@ -17,12 +17,10 @@ specific language governing permissions and limitations
 under the License.
 -->
     <form method="post" action="EntitySQLProcessor" name="EntitySQLCommand">
-        <@field type="generic" label="${uiLabelMap.CommonGroup}">
-            <select name="group">
+        <@field type="select" label="${uiLabelMap.CommonGroup}" name="group">
                 <#list groups as group>
                     <option value="${group}" <#if selGroup??><#if group = selGroup>selected="selected"</#if></#if>>${group}</option>
                 </#list>
-            </select>
         </@field>
         <@field type="generic" label="${uiLabelMap.WebtoolsSqlCommand}">
             <textarea name="sqlCommand" cols="100" rows="5">${sqlCommand!}</textarea>

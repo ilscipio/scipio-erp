@@ -118,8 +118,7 @@ under the License.
                 <a href="/partymgr/control/editcreditcard?partyId=${returnHeader.fromPartyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
               </#if>
           </@field>
-          <@field type="generic" label="${uiLabelMap.OrderReturnNeedsAutoReceive}">
-              <select name="needsInventoryReceive">
+          <@field type="select" label="${uiLabelMap.OrderReturnNeedsAutoReceive}" name="needsInventoryReceive">
                 <#if needsInventoryReceive??>
                   <#if "Y" == needsInventoryReceive>
                     <option selected="selected" value="${needsInventoryReceive}">${uiLabelMap.CommonYes}</option>
@@ -130,11 +129,9 @@ under the License.
                 </#if>
                 <option value="Y">${uiLabelMap.CommonYes}</option>
                 <option value="N">${uiLabelMap.CommonNo}</option>
-              </select>
           </@field>
         <#if returnHeader?has_content>
-          <@field type="generic" label="${uiLabelMap.CommonReturnStatus}">
-              <select name="statusId">
+          <@field type="select" label="${uiLabelMap.CommonReturnStatus}" name="statusId">
                 <#if currentStatus??>
                   <option value="${currentStatus.statusId}">${currentStatus.get("description",locale)}</option>
                   <option value="${currentStatus.statusId}">---</option>
@@ -142,7 +139,6 @@ under the License.
                 <#list returnStatus as status>
                   <option value="${status.statusIdTo}">${status.get("transitionName",locale)}</option>
                 </#list>
-              </select>
           </@field>
           <@field type="generic" label="${uiLabelMap.FormFieldTitle_createdBy}">
               ${returnHeader.createdBy?default("Unknown")}

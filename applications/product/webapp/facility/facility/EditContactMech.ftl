@@ -39,12 +39,10 @@ under the License.
       <input type="hidden" name="DONE_PAGE" value="${donePage!}" />
     <@row>
       <@cell columns=9>
-        <@field type="generic" label="${uiLabelMap.PartySelectContactType}">
-            <select name="preContactMechTypeId">
+        <@field type="select" label="${uiLabelMap.PartySelectContactType}" name="preContactMechTypeId">
               <#list mechMap.contactMechTypes as contactMechType>
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
-            </select>
         </@field>
       </@cell>
       <@cell columns=3>
@@ -149,16 +147,13 @@ under the License.
         <input type="text" class="required" size="30" maxlength="30" name="city" value="${(mechMap.postalAddress.city)?default(request.getParameter('city')!)}" />
       *
     </@field>
-    <@field type="generic" label="${uiLabelMap.PartyState}">
-        <select name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
-        </select>
+    <@field type="select" label="${uiLabelMap.PartyState}" name="stateProvinceGeoId" id="editcontactmechform_stateProvinceGeoId">
     </@field>
     <@field type="generic" label="${uiLabelMap.PartyZipCode}" required=true>
         <input type="text" class="required" size="12" maxlength="10" name="postalCode" value="${(mechMap.postalAddress.postalCode)?default(request.getParameter('postalCode')!)}" />
       *
     </@field>
-    <@field type="generic" label="${uiLabelMap.CommonCountry}">
-        <select name="countryGeoId" id="editcontactmechform_countryGeoId">
+    <@field type="select" label="${uiLabelMap.CommonCountry}" name="countryGeoId" id="editcontactmechform_countryGeoId">
           ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
           <#if (mechMap.postalAddress??) && (mechMap.postalAddress.countryGeoId??)>
             <#assign defaultCountryGeoId = mechMap.postalAddress.countryGeoId>
@@ -169,7 +164,6 @@ under the License.
             <#assign countryGeo = delegator.findOne("Geo",Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId",defaultCountryGeoId), false)>
             ${countryGeo.get("geoName",locale)}
           </option>
-        </select>
     </@field>
   <#elseif "TELECOM_NUMBER" = mechMap.contactMechTypeId!>
     <@field type="generic" label="${uiLabelMap.PartyPhoneNumber}">

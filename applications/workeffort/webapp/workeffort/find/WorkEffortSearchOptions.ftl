@@ -45,13 +45,11 @@ under the License.
         <@field type="generic" label="${uiLabelMap.PartyPartyId}">
             <@htmlTemplate.lookupField value="${requestParameters.partyId!}" formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
         </@field>
-        <@field type="generic" label="${uiLabelMap.PartyRoleTypeId}">
-              <select name="partyRoleTypeId">
+        <@field type="select" label="${uiLabelMap.PartyRoleTypeId}" name="partyRoleTypeId">
                 <option value="">- ${uiLabelMap.CommonAnyRoleType} -</option>
                 <#list roleTypes as roleType>
                    <option value="${roleType.roleTypeId}">${roleType.description}</option>
                  </#list>
-              </select>
         </@field>
         <@field type="generic" label="${uiLabelMap.WorkEffortProductId1}">
             <@htmlTemplate.lookupField value="${requestParameters.productId_1!}" formName="advToKeyWordSearchForm" name="productId_1" id="productId_1" fieldFormName="LookupProduct"/>

@@ -21,13 +21,11 @@ under the License.
       <@fields type="default-nolabels">
         <input type="hidden" name="newShipMethod" value="Y"/>
         <input type="hidden" name="productStoreId" value="${productStoreId!}"/>
-        <@field type="generic">
-            <select name="carrierShipmentString">
+        <@field type="select" name="carrierShipmentString">
               <option>${uiLabelMap.ProductSelectOne}</option>
               <#list carrierShipmentMethods as shipmentMethod>
                 <option value="${shipmentMethod.partyId}|${shipmentMethod.roleTypeId}|${shipmentMethod.shipmentMethodTypeId}">${shipmentMethod.shipmentMethodTypeId} (${shipmentMethod.partyId}/${shipmentMethod.roleTypeId})</option>
               </#list>
-            </select>
         </@field>
         <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd}"/>
       </@fields>

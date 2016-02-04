@@ -283,10 +283,8 @@ function getConfigDetails() {
           <#if variantTree?? && 0 < variantTree.size()>
             <#list featureSet as currentType>
             <@fields type="default-nolabels">
-              <@field type="generic">
-                <select name="FT${currentType}" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
+              <@field type="select" name="FT${currentType}" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
                   <option>${featureTypes.get(currentType)}</option>
-                </select>
               </@field>
             </@fields>
             </#list>
@@ -361,8 +359,7 @@ function getConfigDetails() {
           <input type="hidden" name="productId" value="${product.productId}" />
           <input type="hidden" name="product_id" value="${product.productId}" />
           <input type="hidden" name="configId" value="${configId!}" />
-          <@field type="generic" label="${uiLabelMap.PartyShoppingList}">
-            <select name="shoppingListId">
+          <@field type="select" label="${uiLabelMap.PartyShoppingList}" name="shoppingListId">
               <#if shoppingLists?has_content>
                 <#list shoppingLists as shoppingList>
                   <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>
@@ -370,7 +367,6 @@ function getConfigDetails() {
               </#if>
               <option value="">---</option>
               <option value="">${uiLabelMap.OrderNewShoppingList}</option>
-            </select>
           </@field>
           <@field type="input" label="${uiLabelMap.ProductQuantity}" size="5" name="quantity" value="1" />
           <@field type="submit" submitType="link" href="javascript:document.addToShoppingList.submit();" class="${styles.link_run_sys!} ${styles.action_add!}" text="[${uiLabelMap.OrderAddToShoppingList}]" />

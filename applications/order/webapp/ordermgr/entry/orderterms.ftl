@@ -62,15 +62,13 @@ under the License.
                         <#else>
                             <form method="post" action="<@ofbizUrl>addOrderTerm</@ofbizUrl>" name="termform">
                                 <input type="hidden" name="termIndex" value="${termIndex!}" />
-                                    <@field type="generic" label="${uiLabelMap.OrderOrderTermType}">
-                                        <select name="termTypeId">
+                                    <@field type="select" label="${uiLabelMap.OrderOrderTermType}" name="termTypeId">
                                             <option value=""></option>
                                             <#list termTypes! as termType>
                                                 <option value="${termType.termTypeId}"
                                                     <#if termTypeId?default('') == termType.termTypeId>selected="selected"</#if>
                                                 >${termType.get('description', locale)}</option>
                                             </#list>
-                                        </select>
                                     </@field>
                                     <@field type="input" label="${uiLabelMap.OrderOrderTermValue}" size="30" maxlength="60" name="termValue" value="${termValue!}" />
                                     <@field type="input" label="${uiLabelMap.OrderOrderTermDays}" size="30" maxlength="60" name="termDays" value="${termDays!}" />

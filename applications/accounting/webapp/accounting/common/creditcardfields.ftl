@@ -47,7 +47,7 @@ under the License.
         <option<#if ((creditCard.suffixOnCard)?default("") == "IV")> selected="selected"</#if>>IV</option>
         <option<#if ((creditCard.suffixOnCard)?default("") == "V")> selected="selected"</#if>>V</option>
     </@field>
-    <@field type="select" name="cardType" label="${uiLabelMap.AccountingCardType}" required=true tooltip='${uiLabelMap.CommonRequired}'>
+    <@field type="select" name="cardType" label="${uiLabelMap.AccountingCardType}" required=true tooltip="${uiLabelMap.CommonRequired}">
         <#if creditCard.cardType??>
           <option>${creditCard.cardType}</option>
           <option value="${creditCard.cardType}">---</option>
@@ -97,7 +97,7 @@ under the License.
         </#if>
     </#if>
       
-    <@field type="select" name="expMonth" label="${uiLabelMap.AccountingExpirationDate}" required=true tooltip='${uiLabelMap.CommonRequired}'>
+    <@field type="select" name="expMonth" label="${uiLabelMap.AccountingExpirationDate}" required=true tooltip="${uiLabelMap.CommonRequired}">
         <#if creditCard?has_content && expMonth?has_content>
         <#assign ccExprMonth = expMonth>
         <#else>

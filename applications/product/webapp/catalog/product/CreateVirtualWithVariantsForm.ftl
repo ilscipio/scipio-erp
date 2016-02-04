@@ -23,13 +23,12 @@ under the License.
             <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
         </@field>
         
-        <@field type="generic" label="Hazmat">
-            <select name="productFeatureIdOne">
+        <@field type="select" label="Hazmat" name="productFeatureIdOne">
                 <option value="">- ${uiLabelMap.CommonNone} -</option>
                 <#list hazmatFeatures as hazmatFeature>
                     <option value="${hazmatFeature.productFeatureId}">${hazmatFeature.description}</option>
                 </#list>
-            </select>
+        
         </@field>  
         
         <@field type="submit" text="${uiLabelMap.ProductCreateVirtualProduct}" class="${styles.link_run_sys!} ${styles.action_add!}"/> 

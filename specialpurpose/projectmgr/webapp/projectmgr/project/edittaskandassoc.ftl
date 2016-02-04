@@ -68,8 +68,7 @@ under the License.
               <input type="text" name="description" value=""/>
           </#if>
         </@field>
-        <@field type="generic" label="${uiLabelMap.CommonStatus}">
-            <select name="currentStatusId">
+        <@field type="select" label="${uiLabelMap.CommonStatus}" name="currentStatusId">
               <#if task??>
                 <#assign currentStatus = task.geRelatedOne("CurrentStatusItem")!>
                 <option selected="selected" value="${currentStatus.currentStatusId}">${currentStatus.description}</option>
@@ -91,7 +90,6 @@ under the License.
                   <option value="${statusItem.statusId!}">[${uiLabelMap.WorkEffortEvent}]${statusItem.description}</option>
                 </#list>
               </#if>
-            </select>
         </@field>
         <@field type="generic" label="${uiLabelMap.CommonPriority}">
             <#if task?has_content>

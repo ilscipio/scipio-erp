@@ -69,7 +69,6 @@ under the License.
               <#else>
                 <@commonMsg type="result">${uiLabelMap.ProjectMgrTaskNoNotes}.</@commonMsg>
               </#if>
-
             </#if>
           </@td>
         </@tr>
@@ -91,8 +90,10 @@ under the License.
               <@field type="generic" label="${uiLabelMap.OrderNote}">
                   <textarea name="noteInfo" rows="5" cols="70"></textarea>
               </@field>
-              <@field type="generic" label="${uiLabelMap.OrderInternalNote}">
-                  <select name="internalNote" size="1"><option value=""></option><option value="Y" selected>${uiLabelMap.CommonYes}</option><option value="N">${uiLabelMap.CommonNo}</option></select>
+              <@field type="select" label="${uiLabelMap.OrderInternalNote}" name="internalNote" size="1">
+                  <option value=""></option>
+                  <option value="Y" selected>${uiLabelMap.CommonYes}</option>
+                  <option value="N">${uiLabelMap.CommonNo}</option>
               </@field>
               <@field type="display">
                 <i>${uiLabelMap.OrderInternalNoteMessage}</i>

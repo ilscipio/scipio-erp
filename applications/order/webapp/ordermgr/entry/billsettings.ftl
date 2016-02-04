@@ -192,25 +192,21 @@ function makeExpDate() {
             <@field type="input" label="${uiLabelMap.CommonAddressLine} 1" required=true size="30" maxlength="30" name="address1" value="${postalFields.address1!}" disabled=fieldDisabled />
             <@field type="input" label="${uiLabelMap.CommonAddressLine} 2" size="30" maxlength="30" name="address2" value="${postalFields.address2!}" disabled=fieldDisabled />
             <@field type="input" label="${uiLabelMap.CommonCity}" required=true size="30" maxlength="30" name="city" value="${postalFields.city!}" disabled=fieldDisabled />
-            <@field type="generic" label="${uiLabelMap.CommonStateProvince}">
-                <select name="stateProvinceGeoId" <#if fieldDisabled>disabled="disabled"</#if>>
+            <@field type="select" label="${uiLabelMap.CommonStateProvince}" name="stateProvinceGeoId" disabled=fieldDisabled>
                   <#if postalFields.stateProvinceGeoId??>
                   <option>${postalFields.stateProvinceGeoId}</option>
                   <option value="${postalFields.stateProvinceGeoId}">---</option>
                   </#if>
                   <option value=""></option>
                   ${screens.render("component://common/widget/CommonScreens.xml#states")}
-                </select>
             </@field>
             <@field type="input" label="${uiLabelMap.CommonZipPostalCode}" required=true size="12" maxlength="10" name="postalCode" value="${postalFields.postalCode!}" disabled=fieldDisabled />
-            <@field type="generic" label="${uiLabelMap.CommonCountry}" required=true>
-                <select name="countryGeoId" <#if fieldDisabled>disabled="disabled"</#if>>
+            <@field type="select" label="${uiLabelMap.CommonCountry}" required=true name="countryGeoId" disabled=fieldDisabled>
                   <#if postalFields.countryGeoId??>
                   <option>${postalFields.countryGeoId}</option>
                   <option value="${postalFields.countryGeoId}">---</option>
                   </#if>
                   ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-                </select>
             </@field>
 
             <#-- credit card fields -->
@@ -223,20 +219,17 @@ function makeExpDate() {
               <hr />
 
                   <@field type="input" label="${uiLabelMap.AccountingCompanyNameCard}" class="inputBox" size="30" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard!}"/>
-              <@field type="generic" label="${uiLabelMap.AccountingPrefixCard}">
-                  <select name="titleOnCard">
+              <@field type="select" label="${uiLabelMap.AccountingPrefixCard}" name="titleOnCard">
                     <option value="">${uiLabelMap.CommonSelectOne}</option>
                     <option<#if ((creditCard.titleOnCard)?default("") == "Mr.")> checked="checked"</#if>>${uiLabelMap.CommonTitleMr}</option>
                     <option<#if ((creditCard.titleOnCard)?default("") == "Mrs.")> checked="checked"</#if>>${uiLabelMap.CommonTitleMrs}</option>
                     <option<#if ((creditCard.titleOnCard)?default("") == "Ms.")> checked="checked"</#if>>${uiLabelMap.CommonTitleMs}</option>
                     <option<#if ((creditCard.titleOnCard)?default("") == "Dr.")> checked="checked"</#if>>${uiLabelMap.CommonTitleDr}</option>
-                   </select>
               </@field>
               <@field type="input" label="${uiLabelMap.AccountingFirstNameCard}" required=true size="20" maxlength="60" name="firstNameOnCard" value="${(creditCard.firstNameOnCard)!}"/>
               <@field type="input" label="${uiLabelMap.AccountingMiddleNameCard}" size="15" maxlength="60" name="middleNameOnCard" value="${(creditCard.middleNameOnCard)!}"/>
               <@field type="input" label="${uiLabelMap.AccountingLastNameCard}" required=true size="20" maxlength="60" name="lastNameOnCard" value="${(creditCard.lastNameOnCard)!}"/>
-              <@field type="generic" label="${uiLabelMap.AccountingSuffixCard}">
-                  <select name="suffixOnCard">
+              <@field type="select" label="${uiLabelMap.AccountingSuffixCard}" name="suffixOnCard">
                     <option value="">${uiLabelMap.CommonSelectOne}</option>
                     <option<#if ((creditCard.suffixOnCard)?default("") == "Jr.")> checked="checked"</#if>>Jr.</option>
                     <option<#if ((creditCard.suffixOnCard)?default("") == "Sr.")> checked="checked"</#if>>Sr.</option>
@@ -245,17 +238,15 @@ function makeExpDate() {
                     <option<#if ((creditCard.suffixOnCard)?default("") == "III")> checked="checked"</#if>>III</option>
                     <option<#if ((creditCard.suffixOnCard)?default("") == "IV")> checked="checked"</#if>>IV</option>
                     <option<#if ((creditCard.suffixOnCard)?default("") == "V")> checked="checked"</#if>>V</option>
-                  </select>
               </@field>
 
-              <@field type="generic" label="${uiLabelMap.AccountingCardType}" required=true>
-                  <select name="cardType">
+              <@field type="select" label="${uiLabelMap.AccountingCardType}" required=true name="cardType">
                     <#if creditCard.cartType??>
                     <option>${creditCard.cardType}</option>
                     <option value="${creditCard.cardType}">---</option>
                     </#if>
                     ${screens.render("component://common/widget/CommonScreens.xml#cctypes")}
-                  </select>
+
               </@field>
               <@field type="input" label="${uiLabelMap.AccountingCardNumber}" required=true size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber!}"/>
 
@@ -299,13 +290,11 @@ function makeExpDate() {
               <@field type="input" label="${uiLabelMap.AccountingCompanyNameAccount}" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccount.companyNameOnAccount!}"/>
               <@field type="input" label="${uiLabelMap.AccountingBankName}" required=true size="30" maxlength="60" name="bankName" value="${eftAccount.bankName!}"/>
               <@field type="input" label="${uiLabelMap.AccountingRoutingNumber}" required=true size="10" maxlength="30" name="routingNumber" value="${eftAccount.routingNumber!}"/>
-              <@field type="generic" label="${uiLabelMap.AccountingAccountType}" required=true>
-                  <select name="accountType">
+              <@field type="select" label="${uiLabelMap.AccountingAccountType}" required=true name="accountType">
                     <option>${eftAccount.accountType!}</option>
                     <option></option>
                     <option>Checking</option>
                     <option>Savings</option>
-                  </select>
               </@field>
               <@field type="input" label="${uiLabelMap.AccountingAccountNumber}" required=true size="20" maxlength="40" name="accountNumber" value="${eftAccount.accountNumber!}"/>
               <@field type="input" label="${uiLabelMap.CommonDescription}" size="30" maxlength="60" name="description" value="${eftAccount.description!}"/>

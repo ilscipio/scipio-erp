@@ -33,14 +33,13 @@ under the License.
   </@field>
 </#if>
 
-  <@field type="generic" label="${uiLabelMap.ProductFacilityTypeId}">
-      <select name="facilityTypeId">
+  <@field type="select" label="${uiLabelMap.ProductFacilityTypeId}" name="facilityTypeId">
         <option selected="selected" value="${facilityType.facilityTypeId!}">${facilityType.get("description",locale)!}</option>
         <option value="${facilityType.facilityTypeId!}">----</option>
         <#list facilityTypes as nextFacilityType>
           <option value="${nextFacilityType.facilityTypeId!}">${nextFacilityType.get("description",locale)!}</option>
         </#list>
-      </select>
+
   </@field>
   <@field type="generic" label="${uiLabelMap.FormFieldTitle_parentFacilityId}">
       <@htmlTemplate.lookupField value="${facility.parentFacilityId!}" formName="EditFacilityForm" name="parentFacilityId" id="parentFacilityId" fieldFormName="LookupFacility"/>
@@ -48,8 +47,7 @@ under the License.
   <@field type="generic" label="${uiLabelMap.ProductFacilityOwner}" required=true>
       <@htmlTemplate.lookupField value="${facility.ownerPartyId!}" formName="EditFacilityForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
   </@field>
-  <@field type="generic" label="${uiLabelMap.ProductFacilityDefaultWeightUnit}">
-      <select name="defaultWeightUomId">
+  <@field type="select" label="${uiLabelMap.ProductFacilityDefaultWeightUnit}" name="defaultWeightUomId">
           <option value="">${uiLabelMap.CommonNone}</option>
           <#list weightUomList as uom>
             <option value="${uom.uomId}"
@@ -58,10 +56,8 @@ under the License.
                </#if>
              >${uom.get("description",locale)?default(uom.uomId)}</option>
           </#list>
-      </select>
   </@field>
-  <@field type="generic" label="${uiLabelMap.ProductFacilityDefaultInventoryItemType}">
-      <select name="defaultInventoryItemTypeId">
+  <@field type="select" label="${uiLabelMap.ProductFacilityDefaultInventoryItemType}" name="defaultInventoryItemTypeId">
           <#list inventoryItemTypes as nextInventoryItemType>
             <option value="${nextInventoryItemType.inventoryItemTypeId}"
                <#if (facility.defaultInventoryItemTypeId?has_content) && (nextInventoryItemType.inventoryItemTypeId == facility.defaultInventoryItemTypeId)>
@@ -69,12 +65,10 @@ under the License.
                </#if>
              >${nextInventoryItemType.get("description",locale)?default(nextInventoryItemType.inventoryItemTypeId)}</option>
           </#list>
-      </select>
   </@field>
   <@field type="input" label="${uiLabelMap.ProductName}" required=true name="facilityName" value="${facility.facilityName!}" size="30" maxlength="60" />
   <@field type="input" label="${uiLabelMap.ProductFacilitySize}" name="facilitySize" value="${facility.facilitySize!}" size="10" maxlength="20" />
-  <@field type="generic" label="${uiLabelMap.ProductFacilityDefaultAreaUnit}">
-      <select name="facilitySizeUomId">
+  <@field type="select" label="${uiLabelMap.ProductFacilityDefaultAreaUnit}" name="facilitySizeUomId">
           <option value="">${uiLabelMap.CommonNone}</option>
           <#list areaUomList as uom>
             <option value="${uom.uomId}"
@@ -83,7 +77,6 @@ under the License.
                </#if>
              >${uom.get("description",locale)?default(uom.uomId)}</option>
           </#list>
-      </select>
   </@field>  
   <@field type="input" label="${uiLabelMap.ProductProductDescription}" name="description" value="${facility.description!}" size="60" maxlength="250" />
   <@field type="input" label="${uiLabelMap.ProductDefaultDaysToShip}" name="defaultDaysToShip" value="${facility.defaultDaysToShip!}" size="10" maxlength="20" />

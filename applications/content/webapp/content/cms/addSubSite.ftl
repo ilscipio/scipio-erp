@@ -30,12 +30,10 @@ function win_cancel() {
 <form name="addSubSite" method="post" action="<@ofbizUrl>postNewSubSite?rootForumId=${requestParameters.rootForumId}</@ofbizUrl>">
   <@field type="input" label="Site Name:" size="20" name="contentName"/>
   <@field type="input" label="Site Description:" size="40" name="description"/>
-  <@field type="generic" label="Posted Msg Default Status:">
-      <select name="statusId">
+  <@field type="select" label="Posted Msg Default Status:" name="statusId">
         <option value="CTNT_IN_PROGRESS">Draft - not attached to any site</option>
         <option value="CTNT_FINAL_DRAFT">Final Draft - but must be approve (moderated)</option>
         <option value="CTNT_PUBLISHED">Publish immediately</option>
-      </select>
   </@field>
   <@field type="submitarea"> 
       <@field type="submit" name="submitBtn" text="Create" class="${styles.link_run_sys!} ${styles.action_add!}"/>

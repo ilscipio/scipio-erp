@@ -200,22 +200,18 @@ under the License.
             <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId) />
             <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true) />
             <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId] />
-            <@field type="generic" label="${(productFeatureType.get('description',locale))!}">
-                <select name="pft_${productFeatureTypeId}">
+            <@field type="select" label="${(productFeatureType.get('description',locale))!}" name="pft_${productFeatureTypeId}">
                     <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
                     <#list productFeatures as productFeature>
                       <option value="${productFeature.productFeatureId}">${productFeature.description?default("${uiLabelMap.ProductNoDescription}")} [${productFeature.productFeatureId}]</option>
                     </#list>
-                  </select>
             </@field>
           </#list>
-          <@field type="generic" label="${uiLabelMap.ProductSupplier}">
-              <select name="SEARCH_SUPPLIER_ID">
+          <@field type="select" label="${uiLabelMap.ProductSupplier}" name="SEARCH_SUPPLIER_ID">
                   <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
                   <#list supplerPartyRoleAndPartyDetails as supplerPartyRoleAndPartyDetail>
                     <option value="${supplerPartyRoleAndPartyDetail.partyId}">${supplerPartyRoleAndPartyDetail.groupName!} ${supplerPartyRoleAndPartyDetail.firstName!} ${supplerPartyRoleAndPartyDetail.lastName!} [${supplerPartyRoleAndPartyDetail.partyId}]</option>
                   </#list>
-                </select>
           </@field>
           <@field type="generic" label="${uiLabelMap.CommonSortedBy}">
               <select name="sortOrder">
@@ -237,13 +233,11 @@ under the License.
           <@field type="generic" label="${uiLabelMap.ProductPrioritizeProductsInCategory}">
               <@htmlTemplate.lookupField value="${requestParameters.PRIORITIZE_CATEGORY_ID!}" formName="advToKeywordSearchform" name="PRIORITIZE_CATEGORY_ID" id="PRIORITIZE_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
           </@field>
-          <@field type="generic" label="${uiLabelMap.ProductGoodIdentificationType}">
-              <select name="SEARCH_GOOD_IDENTIFICATION_TYPE">
+          <@field type="select" label="${uiLabelMap.ProductGoodIdentificationType}" name="SEARCH_GOOD_IDENTIFICATION_TYPE">
                 <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
                 <#list goodIdentificationTypes as goodIdentificationType>
                   <option value="${goodIdentificationType.goodIdentificationTypeId}">${goodIdentificationType.get("description")!}</option>
                 </#list>
-              </select>
           </@field>
           <@field type="generic" label="${uiLabelMap.ProductGoodIdentificationValue}">
               <input type="text" name="SEARCH_GOOD_IDENTIFICATION_VALUE" size="60" maxlength="60" value="${requestParameters.SEARCH_GOOD_IDENTIFICATION_VALUE!}" />

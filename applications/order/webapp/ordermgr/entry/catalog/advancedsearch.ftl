@@ -42,22 +42,18 @@ under the License.
       <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
-      <@field type="generic" label="${(productFeatureType.get('description',locale))!}">
-          <select name="pft_${productFeatureTypeId}">
+      <@field type="select" label="${(productFeatureType.get('description',locale))!}" name="pft_${productFeatureTypeId}">
               <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
               <#list productFeatures as productFeature>
               <option value="${productFeature.productFeatureId}">${productFeature.get("description",locale)?default(productFeature.productFeatureId)}</option>
               </#list>
-            </select>
       </@field>
     </#list>
-    <@field type="generic" label="${uiLabelMap.ProductSupplier}">
-        <select name="SEARCH_SUPPLIER_ID">
+    <@field type="select" label="${uiLabelMap.ProductSupplier}" name="SEARCH_SUPPLIER_ID">
             <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
             <#list supplerPartyRoleAndPartyDetails as supplerPartyRoleAndPartyDetail>
               <option value="${supplerPartyRoleAndPartyDetail.partyId}"<#if (sessionAttributes.orderPartyId?? & sessionAttributes.orderPartyId = supplerPartyRoleAndPartyDetail.partyId)> selected="selected"</#if>>${supplerPartyRoleAndPartyDetail.groupName!} ${supplerPartyRoleAndPartyDetail.firstName!} ${supplerPartyRoleAndPartyDetail.lastName!} [${supplerPartyRoleAndPartyDetail.partyId}]</option>
             </#list>
-          </select>
     </@field>
     <@field type="generic" label="${uiLabelMap.CommonSortedBy}">
         <select name="sortOrder">

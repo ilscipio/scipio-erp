@@ -60,8 +60,7 @@ function setWeight(weight) {
               <input type="hidden" name="shipmentRouteSegmentId" value="${shipmentRoute.shipmentRouteSegmentId}"/>
             <@row>
               <@cell columns=9>
-                <@field type="generic" label="${uiLabelMap.ProductCarrier}">
-                    <select name="carrierPartyId">
+                <@field type="select" label="${uiLabelMap.ProductCarrier}" name="carrierPartyId">
                       <#if shipmentRoute.carrierPartyId?has_content>
                         <option value="${shipmentRoute.carrierPartyId}">${(carrierPerson.firstName)!} ${(carrierPerson.middleName)!} ${(carrierPerson.lastName)!} ${(carrierPartyGroup.groupName)!} [${shipmentRoute.carrierPartyId}]</option>
                         <option value="${shipmentRoute.carrierPartyId}">---</option>
@@ -71,7 +70,6 @@ function setWeight(weight) {
                       <#list carrierPartyDatas as carrierPartyData>
                         <option value="${carrierPartyData.party.partyId}">${(carrierPartyData.person.firstName)!} ${(carrierPartyData.person.middleName)!} ${(carrierPartyData.person.lastName)!} ${(carrierPartyData.partyGroup.groupName)!} [${carrierPartyData.party.partyId}]</option>
                       </#list>
-                    </select>
                 </@field>
               </@cell>
               <@cell columns=3>
@@ -80,8 +78,7 @@ function setWeight(weight) {
             </@row>
             <@row>
               <@cell columns=9>
-                <@field type="generic" label="${uiLabelMap.ProductShipMethod}">
-                    <select name="shipmentMethodTypeId">
+                <@field type="select" label="${uiLabelMap.ProductShipMethod}" name="shipmentMethodTypeId">
                       <#if shipmentMethodType?has_content>
                         <option value="${shipmentMethodType.shipmentMethodTypeId}">${shipmentMethodType.get("description",locale)}</option>
                         <option value="${shipmentMethodType.shipmentMethodTypeId}">---</option>
@@ -91,7 +88,6 @@ function setWeight(weight) {
                       <#list shipmentMethodTypes as shipmentMethodTypeOption>
                         <option value="${shipmentMethodTypeOption.shipmentMethodTypeId}">${shipmentMethodTypeOption.get("description",locale)}</option>
                       </#list>
-                    </select>
                 </@field>
               </@cell>
               <@cell columns=3>

@@ -81,8 +81,7 @@ function doPublish() {
       <@cell>   
         <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>" method="post" name="selectableFeatureTypeSelector">
             <input type="hidden" name="productId" value="${product.productId!}"/>
-            <@field type="generic" label="${uiLabelMap.CommonType}">
-                <select name="productFeatureTypeId" onchange="javascript:document.selectableFeatureTypeSelector.submit();">
+            <@field type="select" label="${uiLabelMap.CommonType}" name="productFeatureTypeId" onchange="javascript:document.selectableFeatureTypeSelector.submit();">
                     <option value="~~any~~">${uiLabelMap.ProductAnyFeatureType}</option>
                     <#list featureTypes as featureType>
                         <#if (featureType.productFeatureTypeId)! == (productFeatureTypeId)!>
@@ -92,7 +91,6 @@ function doPublish() {
                         </#if>
                         <option ${selected} value="${featureType.productFeatureTypeId!}">${featureType.get("description",locale)!}</option>
                     </#list>
-                </select>
             </@field>
         </form>
       </@cell>
@@ -320,12 +318,10 @@ function doPublish() {
         <form action="<@ofbizUrl>EditProductQuickAdmin</@ofbizUrl>">
             <input type="hidden" name="productFeatureTypeId" value="${(productFeatureTypeId)!}"/>
             <input type="hidden" name="productId" value="${product.productId!}"/>
-            <@field type="generic" label="${uiLabelMap.ProductFeatureTypes}">
-                <select multiple="multiple" name="addFeatureTypeId">
+            <@field type="select" label="${uiLabelMap.ProductFeatureTypes}" multiple=true name="addFeatureTypeId">
                     <#list featureTypes as featureType>
                         <option value="${featureType.productFeatureTypeId!}">${featureType.get("description",locale)!}</option>
                     </#list>
-                </select>
             </@field>
             <@field type="submit" text="${uiLabelMap.ProductAddFeatureType}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
         </form>
@@ -342,12 +338,10 @@ function doPublish() {
           <@fields type="default-nolabels">
             <input type="hidden" name="fromDate" value="${nowTimestampString}"/>
             <input type="hidden" name="productId" value="${product.productId!}"/>
-            <@field type="generic">
-                <select multiple="multiple" name="categoryId">
+            <@field type="select" multiple=true name="categoryId">
                   <#list allCategories as category>
                     <option value="${category.productCategoryId!}">${category.description!} ${category.productCategoryId}</option>
                   </#list>
-                </select>
             </@field>
             <@field type="submit" text="${uiLabelMap.ProductUpdateCategories}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
           </@fields>

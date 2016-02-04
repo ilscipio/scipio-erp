@@ -41,8 +41,7 @@ function lookupBom() {
     <@row>
         <@cell columns=6>
             <a name="topform"></a>
-            <@field type="generic" label="${uiLabelMap.ManufacturingBomType}">
-                <select name="productAssocTypeId" size="1">
+            <@field type="select" label="${uiLabelMap.ManufacturingBomType}" name="productAssocTypeId" size="1">
                 <#if productAssocTypeId?has_content>
                     <#assign curAssocType = delegator.findOne("ProductAssocType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId), false)>
                     <#if curAssocType??>
@@ -53,7 +52,6 @@ function lookupBom() {
                 <#list assocTypes as assocType>
                     <option value="${(assocType.productAssocTypeId)!}">${(assocType.get("description",locale))!}</option>
                 </#list>
-                </select>
             </@field>
         </@cell>
         <@cell columns=6>
@@ -95,8 +93,7 @@ function lookupBom() {
     
 
     <#if !(productAssoc??)>
-          <@field type="generic" label="${uiLabelMap.ManufacturingBomType}">
-              <select name="productAssocTypeId" size="1">
+          <@field type="select" label="${uiLabelMap.ManufacturingBomType}" name="productAssocTypeId" size="1">
                 <#if productAssocTypeId?has_content>
                     <#assign curAssocType = delegator.findOne("ProductAssocType", Static["org.ofbiz.base.util.UtilMisc"].toMap("productAssocTypeId", productAssocTypeId), false)>
                     <#if curAssocType??>
@@ -107,7 +104,6 @@ function lookupBom() {
                 <#list assocTypes as assocType>
                     <option value="${(assocType.productAssocTypeId)!}">${(assocType.get("description",locale))!}</option>
                 </#list>
-                </select>
           </@field>
           <@field type="generic" label="${uiLabelMap.ProductProductId}">
               <@htmlTemplate.lookupField value="${productId!}" formName="editProductAssocForm" name="productId" id="productId2" fieldFormName="LookupProduct"/>
@@ -120,18 +116,10 @@ function lookupBom() {
                 <span class="tooltip">(${uiLabelMap.ManufacturingWillBeSetToNow})</span>
           </@field>
     <#else>
-          <@field type="generic" label="${uiLabelMap.ProductProductId}">
-              ${productId!}
-          </@field>
-          <@field type="generic" label="${uiLabelMap.ManufacturingProductIdTo}">
-              ${productIdTo!}
-          </@field>
-          <@field type="generic" label="${uiLabelMap.ManufacturingBomType}">
-              <#if curProductAssocType??>${(curProductAssocType.get("description",locale))!}<#else> ${productAssocTypeId!}</#if>
-          </@field>
-          <@field type="generic" label="${uiLabelMap.CommonFromDate}">
-              ${fromDate?date?string.short!}
-          </@field>
+          <@field type="display" label="${uiLabelMap.ProductProductId}">${productId!}</@field>
+          <@field type="display" label="${uiLabelMap.ManufacturingProductIdTo}">${productIdTo!}</@field>
+          <@field type="display" label="${uiLabelMap.ManufacturingBomType}"><#if curProductAssocType??>${(curProductAssocType.get("description",locale))!}<#else> ${productAssocTypeId!}</#if></@field>
+          <@field type="display" label="${uiLabelMap.CommonFromDate}">${fromDate?date?string.short!}</@field>
     </#if>
     
     <@field type="generic" label="${uiLabelMap.CommonThruDate}">
@@ -147,8 +135,7 @@ function lookupBom() {
     <@field type="input" label="${uiLabelMap.ManufacturingInstruction}" name="instruction" value=useValues?string("${(productAssoc.instruction)!}", "${(request.getParameter('instruction'))!}") size="60" maxlength="255"/>
     <@field type="input" label="${uiLabelMap.ManufacturingQuantity}" name="quantity" value=useValues?string("${(productAssoc.quantity)!}", "${(request.getParameter('quantity'))!}") size="10" maxlength="15"/>
     <@field type="input" label="${uiLabelMap.ManufacturingScrapFactor}" name="scrapFactor" value=useValues?string("${(productAssoc.scrapFactor)!}", "${(request.getParameter('scrapFactor'))!}") size="10" maxlength="15"/>
-    <@field type="generic" label="${uiLabelMap.ManufacturingFormula}">
-        <select name="estimateCalcMethod">
+    <@field type="select" label="${uiLabelMap.ManufacturingFormula}" name="estimateCalcMethod">
             <option value="">&nbsp;</option>
             <#assign selectedFormula = "">
             <#if useValues>
@@ -159,7 +146,6 @@ function lookupBom() {
             <#list formulae as formula>
                 <option value="${formula.customMethodId}" <#if selectedFormula = formula.customMethodId>selected="selected"</#if>>${formula.get("description",locale)!}</option>
             </#list>
-        </select>
     </@field>
     <@field type="generic" label="${uiLabelMap.ManufacturingRoutingTask}">
           <#if useValues>

@@ -80,12 +80,10 @@ under the License.
         <form method="post" action="<@ofbizUrl>createProductFeatureCatGrpAppl</@ofbizUrl>" name="addNewGroupForm">
           <@fields type="default-nolabels">
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-            <@field type="generic">
-                <select name="productFeatureGroupId">
+            <@field type="select" name="productFeatureGroupId">
                 <#list productFeatureGroups as productFeatureGroup>
                     <option value="${(productFeatureGroup.productFeatureGroupId)!}">${(productFeatureGroup.description)!} [${(productFeatureGroup.productFeatureGroupId)!}]</option>
                 </#list>
-                </select>
             </@field>
             <@field type="generic">
                 <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>

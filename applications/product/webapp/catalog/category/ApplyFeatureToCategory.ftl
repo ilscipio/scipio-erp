@@ -6,12 +6,10 @@
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
             <@row>
                 <@cell columns=6>
-                    <@field type="generic" label="${uiLabelMap.ProductFeature}">
-                        <select name="productFeatureCategoryId">
+                    <@field type="select" label="${uiLabelMap.ProductFeature}" name="productFeatureCategoryId">
                             <#list productFeatureCategories as productFeatureCategory>
                                 <option value="${(productFeatureCategory.productFeatureCategoryId)!}">${(productFeatureCategory.description)!} [${(productFeatureCategory.productFeatureCategoryId)!}]</option>
                             </#list>
-                        </select>
                     </@field>
                 </@cell>
                 <@cell columns=6>

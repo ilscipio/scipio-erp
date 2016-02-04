@@ -68,8 +68,7 @@ under the License.
             <input type="hidden" name="fromDate" value="${fromDate}" />
           <@row>
             <@cell columns=9>
-              <@field type="generic">
-                  <select name="approvalCode">
+              <@field type="select" name="approvalCode">
                     <#list wfTransitions as trans>
                       <#if trans.extendedAttributes?has_content>
                         <#assign attrs = Static["org.ofbiz.base.util.StringUtil"].strToMap(trans.extendedAttributes)>
@@ -78,7 +77,6 @@ under the License.
                         </#if>
                       </#if>
                     </#list>
-                  </select>
               </@field>
             </@cell>
             <@cell columns=3>

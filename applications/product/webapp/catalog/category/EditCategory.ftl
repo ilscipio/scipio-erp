@@ -71,8 +71,7 @@ function insertImageName(type,nameValue) {
                 </#if>
                 </@cell>
                 <@cell columns=6>
-                    <@field type="generic" label="${uiLabelMap.CommonType}">
-                        <select name="productCategoryTypeId" size="1">
+                    <@field type="select" label="${uiLabelMap.CommonType}" name="productCategoryTypeId" size="1">
                             <#assign selectedKey = "">
                             <#list productCategoryTypes as productCategoryTypeData>
                                 <#if requestParameters.productCategoryTypeId?has_content>
@@ -82,7 +81,6 @@ function insertImageName(type,nameValue) {
                                 </#if>
                                 <option <#if selectedKey == productCategoryTypeData.productCategoryTypeId!>selected="selected"</#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description",locale)}</option>
                             </#list>
-                        </select>
                     </@field>
                 </@cell>
             </@row>

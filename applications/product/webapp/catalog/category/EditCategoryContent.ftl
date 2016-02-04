@@ -19,13 +19,11 @@ under the License.
 <@section title="${uiLabelMap.ProductOverrideSimpleFields}">
         <form action="<@ofbizUrl>updateCategoryContent</@ofbizUrl>" method="post" name="categoryForm">
             <input type="hidden" name="productCategoryId" value="${productCategoryId!}" />
-                <@field type="generic" label="${uiLabelMap.ProductProductCategoryType}">
-                    <select name="productCategoryTypeId" size="1">
+                <@field type="select" label="${uiLabelMap.ProductProductCategoryType}" name="productCategoryTypeId" size="1">
                         <option value="">&nbsp;</option>
                         <#list productCategoryTypes as productCategoryTypeData>
                             <option <#if productCategory?has_content><#if productCategory.productCategoryTypeId==productCategoryTypeData.productCategoryTypeId> selected="selected"</#if></#if> value="${productCategoryTypeData.productCategoryTypeId}">${productCategoryTypeData.get("description",locale)}</option>
                         </#list>
-                    </select>
                 </@field>
                 <@field type="input" label="${uiLabelMap.ProductName}" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/>
                 <@field type="generic" label="${uiLabelMap.ProductCategoryDescription}">

@@ -16,11 +16,9 @@
         </@field>
             </@cell>
             <@cell columns=4>
-        <@field type="generic" label="${uiLabelMap.ProductIncludeSubCategories}">
-            <select name="recurse">
+        <@field type="select" label="${uiLabelMap.ProductIncludeSubCategories}" name="recurse">
                 <option value="N">${uiLabelMap.CommonN}</option>
                 <option value="Y">${uiLabelMap.CommonY}</option>
-            </select>
         </@field>
             </@cell>
         </@row>

@@ -10767,15 +10767,15 @@ ul[data-pie-id] {
   padding: 10px;
 }
 
-/* line 48, ../scss/_chartsjs.scss */
+/* line 32, ../scss/_chartsjs.scss */
 .chart-data {
   width: 100% !important;
   max-width: 800px;
   height: auto !important;
 }
-/* line 53, ../scss/_chartsjs.scss */
+/* line 37, ../scss/_chartsjs.scss */
 .chart-data:before {
-  content: '{"primaryFillColor":"rgba(0, 140, 186, 0.3)","primaryStrokeColor":"rgba(0, 140, 186, 0.7)","primaryPointStrokeColor":"rgba(0, 140, 186, 0.7)","secondaryFillColor":"rgba(231, 231, 231, 0.3)","secondaryStrokeColor":"rgba(231, 231, 231, 0.7)","secondaryPointStrokeColor":"rgba(231, 231, 231, 0.7)","pointColor":"white","pointHighlightFill":"#fafafa","pointHighlightStroke":"#aaaaaa","pointDot":true,"pointHitDetectionRadius":5,"pointDotRadius":3,"pointDotStrokeWidth":1,"scaleType":"linear","scaleDisplay":true,"scaleGridLineColor":"rgba(0,0,0,.1)","scaleLabelFontFamily":["Open Sans","Helvetica Neue","Helvetica","Helvetica","Arial","sans-serif"],"scaleLabelFontSize":14,"scaleLabelFontColor":"#222222","scaleLabelDisplay":true,"angleShowLineOut":true,"scaleBeginAtZero":true,"showTooltips":true,"tooltipFillColor":"rgba(0,0,0,0.8)","tooltipFontSize":8,"tooltipFontColor":"white","tooltipFontStyle":"normal","tooltipFontFamily":["Open Sans","Helvetica Neue","Helvetica","Helvetica","Arial","sans-serif"],"tooltipTitleFontFamily":["Open Sans","Helvetica Neue","Helvetica","Helvetica","Arial","sans-serif"],"tooltipTitleFontSize":10,"tooltipTitleFontStyle":"bold","tooltipTitleFontColor":"white","tooltipYPadding":6,"tooltipXPadding":6,"tooltipCaretSize":2,"tooltipCornerRadius":2,"datasetFill":true,"bezierCurve":true,"bezierCurveTension":0.3,"color":"#f7464a","highlight":"#ff5a5e","dataLabels":false}';
+  content: '{"primaryFillColor":"rgba(0, 140, 186, 0.3)","primaryStrokeColor":"rgba(0, 140, 186, 0.7)","primaryPointStrokeColor":"rgba(0, 140, 186, 0.7)","secondaryFillColor":"rgba(231, 231, 231, 0.3)","secondaryStrokeColor":"rgba(231, 231, 231, 0.7)","secondaryPointStrokeColor":"rgba(231, 231, 231, 0.7)","pointColor":"white","pointHighlightFill":"#fafafa","pointHighlightStroke":"#aaaaaa","pointDot":true,"pointHitDetectionRadius":5,"pointDotRadius":3,"pointDotStrokeWidth":1,"scaleType":"linear","scaleDisplay":true,"scaleGridLineColor":"rgba(0,0,0,.1)","scaleLabelFontFamily":["Open Sans","Helvetica Neue","Helvetica","Helvetica","Arial","sans-serif"],"scaleLabelFontSize":14,"scaleLabelFontColor":"#222222","scaleLabelDisplay":true,"angleShowLineOut":true,"scaleBeginAtZero":true,"showTooltips":true,"color":"#f7464a","highlight":"#ff5a5e","dataLabels":false}';
   display: none;
 }
 

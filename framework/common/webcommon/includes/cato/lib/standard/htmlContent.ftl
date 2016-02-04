@@ -1036,7 +1036,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         mode: 'label'
                     },
                     legend: {
-                        position: 'top',
+                        position: 'bottom',
                         labels: {
                             boxWidth: 30
                         }

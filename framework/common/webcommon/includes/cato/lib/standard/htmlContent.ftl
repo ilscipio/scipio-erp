@@ -1019,7 +1019,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     <#assign chartDatasets=chart_get_number_of_datasets(nestedContent, chartLibrary) />
     <#if chartDatasets &lt; 1><#local chartDatasets = 1 /></#if>
     
-    <canvas id="${chartId!}" class="chart-data" height="400" width="600"></canvas>
+    <canvas id="${chartId!}" class="chart-data" height="300" width="500"></canvas>
     <@script>
         $(function(){
             var chartDataEl = $('.chart-data:first-of-type');

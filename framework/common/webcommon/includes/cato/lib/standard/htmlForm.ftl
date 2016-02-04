@@ -464,6 +464,7 @@ or even multiple per fieldset.
                           They are decoupled. This only controls presence of it.
                       NOTE: This is weaker than labelArea arg of @field macro, but stronger than other args of this macro.
     labelAreaExceptions = string of space-delimited @field type names or list of names, defaults specified in styles variables based on fields type  
+                          NOTE: radio and checkbox support special names: radio-single, radio-multi, checkbox-single, checkbox-multi
     labelAreaRequireContent = boolean, if true, the label area will only be included if label or labelDetail have content.
                               this is generally independent of labelArea boolean and other settings. 
                               NOTE: This will not affect
@@ -472,6 +473,7 @@ or even multiple per fieldset.
     labelAreaConsumeExceptions = string of space-delimited @field type names or list of names, defaults specified in styles variables based on fields type  
                                  list of field types that should never have their label appear in the main label area.
                                  for these, the label will trickle down into the field's inline area, if it has any (otherwise no label).
+                                 NOTE: radio and checkbox support special names: radio-single, radio-multi, checkbox-single, checkbox-multi
     formName            = the form name the child fields should assume  
     formId              = the form ID the child fields should assume   
     inlineItems     = change default for @field inlineItems parameter (true/false)    
@@ -1018,6 +1020,12 @@ standard markup.
     <#if (fieldsInfo.labelAreaExceptions)?has_content && (fieldsInfo.labelAreaExceptions)?is_sequence>
       <#if fieldsInfo.labelAreaExceptions?seq_contains(type)>
         <#local labelAreaDefault = !labelAreaDefault>
+      <#elseif (type == "radio" || type == "checkbox")>
+        <#if fieldsInfo.labelAreaExceptions?seq_contains(type + "-single") && !items?is_sequence>
+          <#local labelAreaDefault = !labelAreaDefault>
+        <#elseif fieldsInfo.labelAreaExceptions?seq_contains(type + "-multi") && items?is_sequence>
+          <#local labelAreaDefault = !labelAreaDefault>
+        </#if>
       </#if>
     </#if>
   </#if>
@@ -1067,6 +1075,12 @@ standard markup.
     <#if (fieldsInfo.labelAreaConsumeExceptions)?has_content && (fieldsInfo.labelAreaConsumeExceptions)?is_sequence>
       <#if fieldsInfo.labelAreaConsumeExceptions?seq_contains(type)>
         <#local labelAreaConsumeLabel = false>
+      <#elseif (type == "radio" || type == "checkbox")>
+        <#if fieldsInfo.labelAreaConsumeExceptions?seq_contains(type + "-single") && !items?is_sequence>
+          <#local labelAreaConsumeLabel = false>
+        <#elseif fieldsInfo.labelAreaConsumeExceptions?seq_contains(type + "-multi") && items?is_sequence>
+          <#local labelAreaConsumeLabel = false>
+        </#if>
       </#if>
     </#if>
   </#if>

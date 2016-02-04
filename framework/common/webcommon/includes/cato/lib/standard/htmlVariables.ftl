@@ -742,7 +742,7 @@
     "fields_default_checkboxtype" : "",
 
     <#-- alternate to default with different top-level checkbox styles -->
-    "fields_default_alt1_labelareaconsumeexceptions" : "checkbox radio",
+    "fields_default_alt1_labelareaconsumeexceptions" : "checkbox-single radio-single",
     "fields_default_alt1_checkboxtype" : "simple",
 
     <#-- no left label area (usually for very short forms) -->
@@ -756,7 +756,7 @@
     "fields_default_compact_labeltype" : "vertical",
     "fields_default_compact_labelposition" : "top",
     "fields_default_compact_labelarea" : true, 
-    "fields_default_compact_labelareaexceptions" : "radio checkbox", <#-- having label on top of checkbox or radio is really ugly; let the label inline itself for these -->
+    "fields_default_compact_labelareaexceptions" : "checkbox-single radio-single", <#-- having label on top of checkbox or radio is really ugly; let the label inline itself for these -->
     "fields_default_compact_labelarearequirecontent" : true,
 
     <#-- free-form - NO imposed styles - keep styles out of this -->

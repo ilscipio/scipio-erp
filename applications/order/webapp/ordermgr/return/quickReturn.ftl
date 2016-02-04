@@ -41,7 +41,7 @@ under the License.
         <#if "CUSTOMER_RETURN" == returnHeaderTypeId>
           <@field type="generic" label="${uiLabelMap.FormFieldTitle_paymentMethodId}">
               <#if creditCardList?? || eftAccountList??>
-                <select name="paymentMethodId">
+                <@field type="select" name="paymentMethodId">
                   <option value=""></option>
                   <#if creditCardList?has_content>
                     <#list creditCardList as creditCardPm>
@@ -54,9 +54,9 @@ under the License.
                       <option value="${eftAccount.paymentMethodId}">EFT:&nbsp;${eftAccount.nameOnAccount!}, ${eftAccount.accountNumber!}</option>
                     </#list>
                   </#if>
-                </select>
+                </@field>
               <#else>
-                <input type="text" size="20" name="paymentMethodId" />
+                <@field type="input" size="20" name="paymentMethodId" />
               </#if>
               <#if (party.partyId)?has_content>
                 <a href="/partymgr/control/editcreditcard?partyId=${party.partyId}${StringUtil.wrapString(externalKeyParam)}" target="partymgr" class="${styles.link_nav!} ${styles.action_add!}">${uiLabelMap.AccountingCreateNewCreditCard}</a>
@@ -65,27 +65,28 @@ under the License.
         </#if>
           <#assign label><#if "CUSTOMER_RETURN" == returnHeaderTypeId>${uiLabelMap.OrderReturnShipFromAddress}<#else>${uiLabelMap["checkhelper.select_shipping_destination"]}</#if></#assign>
           <@field type="generic" label=label>
-                <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
-                  <#list shippingContactMechList as shippingContactMech>
-                    <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
-                    <@tr>
-                      <@td align="right" width="1%" valign="top" nowrap="nowrap">
-                        <input type="radio" name="originContactMechId" value="${shippingAddress.contactMechId}"  <#if (shippingContactMechList?size == 1)>checked="checked"</#if> />
-                      </@td>
-                      <@td width="99%" valign="top" nowrap="nowrap">
-                          <#if shippingAddress.toName?has_content><span>${uiLabelMap.CommonTo}</span>&nbsp;${shippingAddress.toName}<br /></#if>
-                          <#if shippingAddress.attnName?has_content><span>${uiLabelMap.CommonAttn}</span></b>&nbsp;${shippingAddress.attnName}<br /></#if>
-                          <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br /></#if>
-                          <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br /></#if>
-                          <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
-                          <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
-                          <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
-                          <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
-                          <#--<a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">[${uiLabelMap.CommonUpdate}]</a>-->
-                        </@td>
-                    </@tr>
-                  </#list>
-                </@table>
+            <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table" -->
+              <#list shippingContactMechList as shippingContactMech>
+                <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress", false)>
+                <@tr>
+                  <@td align="right" width="1%" valign="top" nowrap="nowrap">
+                    <#-- FIXME? labelArea=false is somewhat hardcode -->
+                    <@field type="radio" name="originContactMechId" value="${shippingAddress.contactMechId}" checked=(shippingContactMechList?size == 1) labelArea=false />
+                  </@td>
+                  <@td width="99%" valign="top" nowrap="nowrap">
+                      <#if shippingAddress.toName?has_content><span>${uiLabelMap.CommonTo}</span>&nbsp;${shippingAddress.toName}<br /></#if>
+                      <#if shippingAddress.attnName?has_content><span>${uiLabelMap.CommonAttn}</span></b>&nbsp;${shippingAddress.attnName}<br /></#if>
+                      <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br /></#if>
+                      <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br /></#if>
+                      <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
+                      <#if shippingAddress.stateProvinceGeoId?has_content><br />${shippingAddress.stateProvinceGeoId}</#if>
+                      <#if shippingAddress.postalCode?has_content><br />${shippingAddress.postalCode}</#if>
+                      <#if shippingAddress.countryGeoId?has_content><br />${shippingAddress.countryGeoId}</#if>
+                      <#--<a href="<@ofbizUrl>editcontactmech?DONE_PAGE=checkoutoptions&amp;contactMechId=${shippingAddress.contactMechId}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">[${uiLabelMap.CommonUpdate}]</a>-->
+                    </@td>
+                </@tr>
+              </#list>
+            </@table>
           </@field>
         </form>
     </@section>

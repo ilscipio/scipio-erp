@@ -68,18 +68,16 @@ under the License.
               </#list>
       </@field>
 
-      <@field type="generic" label="${uiLabelMap.ProductChooseCatalog}">
-          <#if catalogCol?has_content>
-          <select name="CURRENT_CATALOG_ID">
-            <#list catalogCol! as catalogId>
-              <#assign thisCatalogName = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogName(request, catalogId)>
-              <option value="${catalogId}" <#if currentCatalogId?default('') == catalogId>selected="selected"</#if> >${thisCatalogName}</option>
-            </#list>
-          </select>
-          <#else>
-             <input type="hidden" name="CURRENT_CATALOG_ID" value=""/> 
-          </#if>
+    <#if catalogCol?has_content>
+      <@field type="generic" name="CURRENT_CATALOG_ID" label="${uiLabelMap.ProductChooseCatalog}">
+        <#list catalogCol! as catalogId>
+          <#assign thisCatalogName = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogName(request, catalogId)>
+          <option value="${catalogId}" <#if (currentCatalogId!'') == catalogId>selected="selected"</#if> >${thisCatalogName}</option>
+        </#list>
       </@field>
+    <#else>
+      <input type="hidden" name="CURRENT_CATALOG_ID" value=""/> 
+    </#if>
 
       <@field type="generic" label="${uiLabelMap.WorkEffortWorkEffortId}">
           <@htmlTemplate.lookupField formName="agreementForm" name="workEffortId" id="workEffortId" fieldFormName="LookupWorkEffort"/>

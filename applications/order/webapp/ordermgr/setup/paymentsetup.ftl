@@ -87,47 +87,46 @@ under the License.
       <#assign sectionTitle = "Add New Setting">
     </#if>
     <@section title=sectionTitle menuContent=menuContent>
-            <#if webSitePayment?has_content>
-              <form method="post" action="<@ofbizUrl>updateWebSitePaymentSetting</@ofbizUrl>">
-            <#else>
-              <form method="post" action="<@ofbizUrl>createWebSitePaymentSetting</@ofbizUrl>">
-            </#if>
-              <@field type="generic" label="WebSite">
-                  <#if webSitePayment?has_content>
-                    <input type="hidden" name="webSiteId" value="${webSitePayment.webSiteId}" />
-                    <div>
-                      <b>${webSitePayment.siteName}</b> (This cannot be changed without re-creating the setting.)
-                    </div>
-                  <#else>
-                    <select name="webSiteId">
-                      <#list webSites as nextWebSite>
-                        <option value="${nextWebSite.webSiteId}">${nextWebSite.siteName}</option>
-                      </#list>
-                    </select>
-                  </#if>
-              </@field>
-              <@field type="generic" label="Payment Method Type">
-                  <#if webSitePayment?has_content>
-                    <input type="hidden" name="paymentMethodTypeId" value="${webSitePayment.paymentMethodTypeId}" />
-                    <div>
-                      <b>${webSitePayment.description}</b> (This cannot be changed without re-creating the setting.)
-                    </div>
-                  <#else>
-                    <select name="paymentMethodTypeId">
-                      <#list paymentMethodTypes as nextPayType>
-                        <option value="${nextPayType.paymentMethodTypeId}">${nextPayType.description}</option>
-                      </#list>
-                    </select>
-                  </#if>
-              </@field>
+        <#assign formAction><#if webSitePayment?has_content><@ofbizUrl>updateWebSitePaymentSetting</@ofbizUrl><#else><@ofbizUrl>createWebSitePaymentSetting</@ofbizUrl></#if></#assign>
+        <form method="post" action="${formAction}">
 
-              <@field type="input" label="Processor Auth Service" name="paymentAuthService" value="${payInfo.paymentAuthService!}" size="30" maxlength="60" />
-              <@field type="input" label="Processor Re-Auth Service" name="paymentReAuthService" value="${payInfo.paymentReAuthService!}" size="30" maxlength="60" />
-              <@field type="input" label="Processor Capture Service" name="paymentCaptureService" value="${payInfo.paymentCaptureService!}" size="30" maxlength="60" />
-              <@field type="input" label="Processor Refund Service" name="paymentRefundService" value="${payInfo.paymentRefundService!}" size="30" maxlength="60" />
-              <@field type="input" label="Processor Properties URL" name="paymentConfiguration" value="${payInfo.paymentConfiguration!}" size="30" maxlength="60" />
-              <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
-            </form>
+        <#if webSitePayment?has_content>
+          <input type="hidden" name="webSiteId" value="${webSitePayment.webSiteId}" />
+          <@field type="display" label="WebSite">
+              <div>
+                <b>${webSitePayment.siteName}</b> (This cannot be changed without re-creating the setting.)
+              </div>
+          </@field>
+        <#else>
+          <@field type="select" name="webSiteId" label="WebSite">
+            <#list webSites as nextWebSite>
+              <option value="${nextWebSite.webSiteId}">${nextWebSite.siteName}</option>
+            </#list>
+          </@field>
+        </#if>
+        <#if webSitePayment?has_content>
+          <input type="hidden" name="paymentMethodTypeId" value="${webSitePayment.paymentMethodTypeId}" />
+          <@field type="display" label="Payment Method Type">
+              <div>
+                <b>${webSitePayment.description}</b> (This cannot be changed without re-creating the setting.)
+              </div>
+          </@field>
+        <#else>
+          <@field type="select" name="paymentMethodTypeId" label="Payment Method Type">
+            <#list paymentMethodTypes as nextPayType>
+              <option value="${nextPayType.paymentMethodTypeId}">${nextPayType.description}</option>
+            </#list>
+          </@field>
+        </#if>
+
+          <@field type="input" label="Processor Auth Service" name="paymentAuthService" value="${payInfo.paymentAuthService!}" size="30" maxlength="60" />
+          <@field type="input" label="Processor Re-Auth Service" name="paymentReAuthService" value="${payInfo.paymentReAuthService!}" size="30" maxlength="60" />
+          <@field type="input" label="Processor Capture Service" name="paymentCaptureService" value="${payInfo.paymentCaptureService!}" size="30" maxlength="60" />
+          <@field type="input" label="Processor Refund Service" name="paymentRefundService" value="${payInfo.paymentRefundService!}" size="30" maxlength="60" />
+          <@field type="input" label="Processor Properties URL" name="paymentConfiguration" value="${payInfo.paymentConfiguration!}" size="30" maxlength="60" />
+
+          <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+        </form>
     </@section>
 </#if>
 

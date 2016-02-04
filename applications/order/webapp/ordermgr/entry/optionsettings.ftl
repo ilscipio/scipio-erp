@@ -73,10 +73,8 @@ under the License.
                 </#if>
                 </@field>  
             <#else>
-                <@field type="generic" label="${uiLabelMap.OrderOrderShipEstimate}">
-                    <input type="hidden" name="${shipGroupIndex?default("0")}_shipping_method" value="STANDARD@_NA_" />
-                    <input type="text" name="${shipGroupIndex?default("0")}_ship_estimate" value="${cart.getItemShipGroupEstimate(shipGroupIndex?default('0'))!}"/>
-                </@field>
+                <input type="hidden" name="${shipGroupIndex?default("0")}_shipping_method" value="STANDARD@_NA_" />
+                <@field type="input" label="${uiLabelMap.OrderOrderShipEstimate}" name="${shipGroupIndex!'0'}_ship_estimate" value="${cart.getItemShipGroupEstimate(shipGroupIndex!'0')!}" />
             </#if>
 
                 <@field type="generic" label="${uiLabelMap.FacilityShipOnceOrAvailable}">
@@ -98,8 +96,8 @@ under the License.
             <#else>
               <#if (productStore.showCheckoutGiftOptions)?default('Y') != 'N'>
                 <@field type="generic" label="${uiLabelMap.OrderIsThisGift}">
-                    <@field type="radio" name="${shipGroupIndex?default('0')}_is_gift" value="true" checked=((cart.getIsGift(shipGroupIndex)!'Y') == 'Y') label="${uiLabelMap.CommonYes}"/>
-                        <@field type="radio" name="${shipGroupIndex?default('0')}_is_gift" value="false" checked=((cart.getIsGift(shipGroupIndex)!'N') == 'N') label="${uiLabelMap.CommonNo}"/>
+                    <@field type="radio" name="${shipGroupIndex!'0'}_is_gift" value="true" checked=((cart.getIsGift(shipGroupIndex)!'Y') == 'Y') label="${uiLabelMap.CommonYes}"/>
+                    <@field type="radio" name="${shipGroupIndex!'0'}_is_gift" value="false" checked=((cart.getIsGift(shipGroupIndex)!'N') == 'N') label="${uiLabelMap.CommonNo}"/>
                 </@field>
               </#if>
                 <@field type="generic" label="${uiLabelMap.OrderGiftMessage}">

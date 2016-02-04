@@ -60,12 +60,12 @@ under the License.
                 <@field type="input" label="${uiLabelMap.CommonAddress2}" name="address2" value="${parameters.address2!}"/>
                 <@field type="input" label="${uiLabelMap.CommonCity}" name="city" value="${parameters.city!}"/>
                 <@field type="select" label="${uiLabelMap.CommonStateProvince}" name="stateProvinceGeoId">
-                        <#if currentStateGeo?has_content>
-                            <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName?default(currentStateGeo.geoId)}</option>
-                            <option value="${currentStateGeo.geoId}">---</option>
-                        </#if>
-                            <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
-                            ${screens.render("component://common/widget/CommonScreens.xml#states")}
+                  <#if currentStateGeo?has_content>
+                    <option value="${currentStateGeo.geoId}">${currentStateGeo.geoName?default(currentStateGeo.geoId)}</option>
+                    <option value="${currentStateGeo.geoId}">---</option>
+                  </#if>
+                    <option value="ANY">${uiLabelMap.CommonAnyStateProvince}</option>
+                    ${screens.render("component://common/widget/CommonScreens.xml#states")}
                 </@field>
                 <@field type="input" label="${uiLabelMap.PartyPostalCode}" name="postalCode" value="${parameters.postalCode!}"/>
             </#if>

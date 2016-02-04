@@ -99,12 +99,12 @@ under the License.
                     <input type="hidden" name="DONE_PAGE" value="${donePage}" />
                     <input type="hidden" name="useValues" value="true" />
                     <input type="hidden" name="contactMechId" value="${contactMechId!}" />
-                    <select name="contactMechPurposeTypeId">
+                    <@field type="select" name="contactMechPurposeTypeId">
                       <option></option>
                       <#list mechMap.purposeTypes as contactMechPurposeType>
                         <option value="${contactMechPurposeType.contactMechPurposeTypeId}">${contactMechPurposeType.get("description",locale)}</option>
                       </#list>
-                    </select>
+                    </@field>
                   </form>
                 </@td>
                 <@td><a href="javascript:document.newpurposeform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.PartyAddPurpose}</a></@td>
@@ -129,16 +129,16 @@ under the License.
     </@field>
     <@field type="input" label="${uiLabelMap.PartyZipCode} *" size="30" maxlength="60" name="postalCode" value="${(mechMap.postalAddress.postalCode)?default(request.getParameter('postalCode')!)}" />
     <@field type="select" label="${uiLabelMap.CommonCountry}" name="countryGeoId" id="editcontactmechform_countryGeoId">
-          ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
-          <#if (mechMap.postalAddress??) && (mechMap.postalAddress.countryGeoId??)>
-            <#assign defaultCountryGeoId = mechMap.postalAddress.countryGeoId>
-          <#else>
-           <#assign defaultCountryGeoId = getPropertyValue("general.properties", "country.geo.id.default")!"">
-          </#if>
-          <option selected="selected" value="${defaultCountryGeoId}">
-            <#assign countryGeo = delegator.findOne("Geo",Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId",defaultCountryGeoId), false)>
-            ${countryGeo.get("geoName",locale)}
-          </option>
+        ${screens.render("component://common/widget/CommonScreens.xml#countries")}        
+        <#if (mechMap.postalAddress??) && (mechMap.postalAddress.countryGeoId??)>
+          <#assign defaultCountryGeoId = mechMap.postalAddress.countryGeoId>
+        <#else>
+         <#assign defaultCountryGeoId = getPropertyValue("general.properties", "country.geo.id.default")!"">
+        </#if>
+        <option selected="selected" value="${defaultCountryGeoId}">
+          <#assign countryGeo = delegator.findOne("Geo",Static["org.ofbiz.base.util.UtilMisc"].toMap("geoId",defaultCountryGeoId), false)>
+          ${countryGeo.get("geoName",locale)}
+        </option>
     </@field>
     <#assign isUsps = Static["org.ofbiz.party.contact.ContactMechWorker"].isUspsAddress(mechMap.postalAddress)>
     <@field type="display" label="${uiLabelMap.PartyIsUsps}">
@@ -146,12 +146,12 @@ under the License.
     </@field>
   <#elseif "TELECOM_NUMBER" = mechMap.contactMechTypeId!>
     <@field type="generic" label="${uiLabelMap.PartyPhoneNumber}">
-        <input type="text" size="4" maxlength="10" name="countryCode" value="${(mechMap.telecomNumber.countryCode)?default(request.getParameter('countryCode')!)}" />
-        -&nbsp;<input type="text" size="4" maxlength="10" name="areaCode" value="${(mechMap.telecomNumber.areaCode)?default(request.getParameter('areaCode')!)}" />
-        -&nbsp;<input type="text" size="15" maxlength="15" name="contactNumber" value="${(mechMap.telecomNumber.contactNumber)?default(request.getParameter('contactNumber')!)}" />
-        &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<input type="text" size="6" maxlength="10" name="extension" value="${(mechMap.partyContactMech.extension)?default(request.getParameter('extension')!)}" />
+        <@field type="input" size="4" maxlength="10" name="countryCode" value="${(mechMap.telecomNumber.countryCode)?default(request.getParameter('countryCode')!)}" />
+        -&nbsp;<@field type="input" size="4" maxlength="10" name="areaCode" value="${(mechMap.telecomNumber.areaCode)?default(request.getParameter('areaCode')!)}" />
+        -&nbsp;<@field type="input" size="15" maxlength="15" name="contactNumber" value="${(mechMap.telecomNumber.contactNumber)?default(request.getParameter('contactNumber')!)}" />
+        &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" size="6" maxlength="10" name="extension" value="${(mechMap.partyContactMech.extension)?default(request.getParameter('extension')!)}" />
     </@field>
-    <@field type="generic" label="">
+    <@field type="display" label="">
         [${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyContactExt}]
     </@field>
   <#elseif "EMAIL_ADDRESS" = mechMap.contactMechTypeId!>
@@ -160,22 +160,24 @@ under the License.
     <@field type="input" label="${mechMap.contactMechType.get('description',locale)}" size="60" maxlength="255" name="infoString" value="${(mechMap.contactMech.infoString)!}" />
   </#if>
   <@field type="select" label="${uiLabelMap.PartyContactAllowSolicitation}?" name="allowSolicitation">
-        <#if (((mechMap.partyContactMech.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
-        <#if (((mechMap.partyContactMech.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
-        <option></option>
-        <option value="Y">${uiLabelMap.CommonY}</option>
-        <option value="N">${uiLabelMap.CommonN}</option>
+      <#if (((mechMap.partyContactMech.allowSolicitation)!"") == "Y")><option value="Y">${uiLabelMap.CommonY}</option></#if>
+      <#if (((mechMap.partyContactMech.allowSolicitation)!"") == "N")><option value="N">${uiLabelMap.CommonN}</option></#if>
+      <option></option>
+      <option value="Y">${uiLabelMap.CommonY}</option>
+      <option value="N">${uiLabelMap.CommonN}</option>
   </@field>
   </form>
   </div>
   
-    <@menu type="button">
-      <@menuitem type="link" href=makeOfbizUrl("backHome") text="${uiLabelMap.CommonGoBack}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
-      <@menuitem type="link" href="javascript:document.editcontactmechform.submit()" text="${uiLabelMap.CommonSave}" class="+${styles.action_run_sys!} ${styles.action_update!}" />
-    </@menu>
+    <@field type="submitarea">
+      <@field type="submit" submitType="link" href=makeOfbizUrl("backHome") text="${uiLabelMap.CommonGoBack}" class="${styles.link_nav_cancel!}" />
+      <@field type="submit" submitType="link" href="javascript:document.editcontactmechform.submit()" text="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+    </@field>
   </@section>
 <#else>
-  <@menu type="button">
-    <@menuitem type="link" href=makeOfbizUrl("backHome") text="${uiLabelMap.CommonGoBack}" class="+${styles.action_nav!} ${styles.action_cancel!}" />
-  </@menu>
+  <@section>
+    <@field type="submitarea">
+      <@field type="submit" submitType="link" href=makeOfbizUrl("backHome") text="${uiLabelMap.CommonGoBack}" class="${styles.link_nav_cancel!}" />
+    </@field>
+  </@section>
 </#if>

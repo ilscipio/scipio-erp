@@ -147,13 +147,16 @@ function lookupBom() {
     <#else>
       <#assign value = request.getParameter("routingWorkEffortId")!>
     </#if>
+  <#if value?has_content>
     <@field type="generic" label="${uiLabelMap.ManufacturingRoutingTask}">
-      <#if value?has_content>
         <@htmlTemplate.lookupField value="${value}" formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
-      <#else>
-        <@htmlTemplate.lookupField formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
-      </#if>
     </@field>
+  <#else>
+    <@field type="generic" label="${uiLabelMap.ManufacturingRoutingTask}">
+        <@htmlTemplate.lookupField formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
+    </@field>
+  </#if>
+    
     <#if !(productAssoc??)>
       <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
     <#else>

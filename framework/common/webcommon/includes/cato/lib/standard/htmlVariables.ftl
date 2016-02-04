@@ -259,8 +259,8 @@
     },
     
     <#-- form widget styles in _addition_ to the @table styles above -->
-    "table_formwidget" : "table-formwidget dark-grid", <#-- default class for form widget tables (in addition to underlying @table macro defaults) -->
-    "table_formwidget_spec" : "table-formwidget",   <#-- specific identifier for form widget tables-->
+    "table_formwidget" : "dark-grid",               <#-- default class for form widget tables (does NOT include _spec because _spec always added) -->
+    "table_formwidget_spec" : "table-formwidget",   <#-- specific identifier for form widget tables. NOTE: this is ALWAYS added so doesn't need to be part of table_formwidget -->
     
     <#-- other table-related styles -->
     "table_basic" : "basic-table",  <#-- this is not a table type, but simply the basic-table style -->

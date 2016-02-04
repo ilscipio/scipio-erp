@@ -81,7 +81,7 @@ under the License.
   <#if serverHits?has_content>
     <#assign paramStr = addParamsToStr("", {"visitId": visitId!})>
     <@paginate mode="content" url=makeOfbizUrl("visitdetail") viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0 paramStr=paramStr>   
-      <@table type="data-list" class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+      <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
        <@thead>
         <@tr class="header-row">
           <@th>${uiLabelMap.PartyContentId}</@th>

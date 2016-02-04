@@ -81,7 +81,7 @@ under the License.
   <#assign sectionTitle>${uiLabelMap.ProductLocationProduct}</#assign>
   <@section title=sectionTitle>
         <#-- ProductFacilityLocation stuff -->
-        <@table type="data-list" class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+        <@table type="data-list" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
         <@thead>
         <@tr class="header-row">
             <@th>${uiLabelMap.ProductProduct}</@th>

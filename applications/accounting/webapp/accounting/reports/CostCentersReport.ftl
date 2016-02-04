@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#if glAcctBalancesByCostCenter?has_content && glAccountCategories?has_content>
-    <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+    <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
         <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.CommonId}</@th>

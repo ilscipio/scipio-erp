@@ -121,7 +121,7 @@ function getFinAccountTransRunningTotalAndBalances() {
                 </@row>
             </#if>
     
-            <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0" responsive=true scrollable=true> <#-- orig: class="basic-table hover-bar" -->
+            <@table type="data-list" autoAltRows=true cellspacing="0" responsive=true scrollable=true> <#-- orig: class="basic-table hover-bar" -->
                 <#-- Header Begins -->
                 <@thead>
                     <@tr class="header-row-2">
@@ -194,7 +194,7 @@ function getFinAccountTransRunningTotalAndBalances() {
                                 -->
                                 <#if payments?has_content>
                                     <@modal id="displayPayments_${finAccountTrans.finAccountTransId}" label="${finAccountTrans.finAccountTransId}">
-                                        <@table type="data-list" autoAltRows=true inheritAltRows=true class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->
+                                        <@table type="data-list" autoAltRows=true inheritAltRows=true> <#-- orig: class="basic-table hover-bar" -->
                                             <@thead>
                                                 <@tr class="header-row-2">
                                                     <@th>${uiLabelMap.AccountingDepositSlipId}</@th>

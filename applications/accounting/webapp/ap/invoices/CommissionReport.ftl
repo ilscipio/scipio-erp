@@ -24,7 +24,7 @@ under the License.
     </@menu>
   </#macro>
   <@section menuContent=menuContent>
-  <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+  <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
     <@thead>
     <@tr class="header-row-2">
       <@th>${uiLabelMap.AccountingLicensedProduct}</@th>

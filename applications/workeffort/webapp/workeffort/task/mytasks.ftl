@@ -26,7 +26,7 @@ under the License.
 <#if tasks?has_content && (tasks.size() > 0)>
     <#--<@section title="${uiLabelMap.WorkEffortAssignedTasks}">-->
     <#--<@paginate mode="content" url=makeOfbizUrl("searchorders") viewSize=viewSize!1 viewIndex=viewIndex! listSize=orderListSize!0 altParam=true paramStr=paramStr forcePost=true viewIndexFirst=1>-->
-        <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+        <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
             <@thead>
                 <@tr class="header-row-2">
                     <@th>${uiLabelMap.CommonStartDateTime}</@th>
@@ -50,7 +50,7 @@ under the License.
   
 <#if activities?has_content && (activities.size() > 0)>
     <#--<@section title="${uiLabelMap.WorkEffortWorkflowActivitiesUser}">-->
-        <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+        <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
             <@tr class="header-row-2">
                 <@td>${uiLabelMap.CommonStartDateTime}</@td>
                 <@td>${uiLabelMap.WorkEffortPriority}</@td>
@@ -79,7 +79,7 @@ under the License.
   
 <#if roleActivities?has_content && (roleActivities.size() > 0)>
     <#--<@section title="${uiLabelMap.WorkEffortWorkflowActivitiesUserRole}">-->
-        <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+        <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
             <@tr class="header-row-2">
                 <@td>${uiLabelMap.CommonStartDateTime}</@td>
                 <@td>${uiLabelMap.WorkEffortPriority}</@td>
@@ -108,7 +108,7 @@ under the License.
 
 <#if groupActivities?has_content && (groupActivities.size() > 0)>
     <#--<@section title="${uiLabelMap.WorkEffortWorkflowActivitiesUserGroup}">-->
-        <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+        <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
             <@tr class="header-row-2">
                 <@td>${uiLabelMap.CommonStartDateTime}</@td>
                 <@td>${uiLabelMap.WorkEffortPriority}</@td>

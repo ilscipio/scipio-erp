@@ -34,7 +34,7 @@
 
 <hr />
 
-<@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+<@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
 <#if tabButtonItem=="ListContentTree">
 <#--Form ListContentTree-->
 <@thead>

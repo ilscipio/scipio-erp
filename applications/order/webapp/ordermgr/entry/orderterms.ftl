@@ -25,7 +25,7 @@ under the License.
         <@row>
             <@cell columns=6>
                         <#if orderTerms?has_content && parameters.createNew?default('') != 'Y'>
-                            <@table type="data-list" autoAltRows=true class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->
+                            <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" -->
                               <@thead>
                                 <@tr class="header-row">
                                   <@th>${uiLabelMap.OrderOrderTermType}</@th>

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <@section title="${uiLabelMap.PageTitleRequestItems}">
-    <@table type="data-complex" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+    <@table type="data-complex" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
     <@thead>
       <@tr class="header-row">
            <@th>
@@ -45,7 +45,7 @@ under the License.
             <#-- now show notes details per line item -->
             <@td colspan="1" align="right" valign="top" width="50%" nowrap="nowrap" style="background-color:white; vertical-align: top;">
                 <#if custRequestItemNoteViews?has_content>
-                    <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+                    <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
                         <@thead>
                         <@tr class="header-row">
                             <@th>

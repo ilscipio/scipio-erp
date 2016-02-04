@@ -352,7 +352,7 @@ document.lookuporder.orderId.focus();
           </@row>
       </#macro>
       <@massOrderChangeButton id="1"/>
-      <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+      <@table type="data-list" autoAltRows=true cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
        <@thead>
         <@tr class="header-row">
           <@th width="5%">

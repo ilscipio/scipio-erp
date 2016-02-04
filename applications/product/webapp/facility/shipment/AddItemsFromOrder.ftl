@@ -68,7 +68,7 @@ under the License.
         </#if>
         <input type="hidden" name="shipmentId" value="${shipmentId}" />
         <input type="hidden" name="_useRowSubmit" value="Y" />
-        <@table type="data-complex" autoAltRows=true cellspacing="0" cellpadding="2" class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->
+        <@table type="data-complex" autoAltRows=true cellspacing="0" cellpadding="2"> <#-- orig: class="basic-table hover-bar" -->
           <@thead>
             <@tr class="header-row">
                 <@th>${uiLabelMap.ProductOrderId}<br />${uiLabelMap.ProductOrderShipGroupId}<br />${uiLabelMap.ProductOrderItem}</@th>

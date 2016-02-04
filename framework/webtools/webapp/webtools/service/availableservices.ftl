@@ -366,7 +366,7 @@ under the License.
   <@section menuContent=menuContent>
       <#--
       ${uiLabelMap.WebtoolsServicesListFor} ${dispatcherName?default(uiLabelMap.CommonNA)} (${servicesFoundCount} ${uiLabelMap.CommonFound})-->
-      <@table type="data-list" autoAltRows=true class="+hover-bar" cellspacing="0" scrollable=true> <#-- orig: class="basic-table hover-bar" -->
+      <@table type="data-list" autoAltRows=true cellspacing="0" scrollable=true> <#-- orig: class="basic-table hover-bar" -->
         <@thead>
         <@tr class="header-row">
           <@th id="Service_all">${uiLabelMap.WebtoolsServiceName}</@th>

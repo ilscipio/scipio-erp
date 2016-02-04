@@ -20,7 +20,7 @@ under the License.
 
 <#assign acctgTransAndEntries = dispatcher.runSync("getAssociatedAcctgTransEntriesWithFinAccountTrans", Static["org.ofbiz.base.util.UtilMisc"].toMap("finAccountTransId", finAccountTrans.finAccountTransId, "userLogin", userLogin))/>
 <#assign acctgTransAndEntries = acctgTransAndEntries.acctgTransAndEntries>
-<@table type="data-list" class="+hover-bar"> <#-- orig: class="basic-table hover-bar" -->
+<@table type="data-list"> <#-- orig: class="basic-table hover-bar" -->
     <@thead>
         <@tr class="header-row-2">
             <@th>${uiLabelMap.FormFieldTitle_acctgTransId}</@th>

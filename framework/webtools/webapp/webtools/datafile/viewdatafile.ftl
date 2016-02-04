@@ -83,7 +83,7 @@ under the License.
             <#if lastRecordName??>
               <@table close=true open=false />
             </#if>
-            <@table type="fields" class="+hover-bar" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
+            <@table type="fields" cellspacing="0"> <#-- orig: class="basic-table hover-bar" -->
               <@tr>
                 <@td><b>Record: ${modelRecord.name}</b></@td>
                 <#if (modelRecord.parentName)?has_content>

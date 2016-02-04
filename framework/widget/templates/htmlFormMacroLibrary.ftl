@@ -246,7 +246,7 @@ WARN: no code run here or indirectly from here should assume full current contex
     <#local dummy = setRequestVar("htmlFormRenderFormInfo", htmlFormRenderFormInfo)>
   </#if>
 
-  <!-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
+  <#-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
   <#local styleSet = splitStyleNamesToSet(style)>
   <#-- Cato: support setting and removing responsive/scrollable settings from widget table via style attribute -->
   <#local responsive = ""> <#-- Cato: empty string means table type default takes effect -->

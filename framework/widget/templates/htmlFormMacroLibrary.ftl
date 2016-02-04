@@ -274,8 +274,9 @@ WARN: no code run here or indirectly from here should assume full current contex
     <#-- with "+" (append only), default class will be selected by @table macro -->
     <#local class = "+form-widget-table dark-grid">
   </#if>
+  <#local class = addClassArg(class, styles.table_formwidget!)>
   <#local tableType = mapOfbizFormTypeToTableType(formType)>
-  <!-- table:
+  <#-- table:
     type: ${tableType}
     responsive: ${responsive?string} 
     scrollable: ${scrollable?string} -->

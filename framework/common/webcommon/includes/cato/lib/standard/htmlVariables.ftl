@@ -253,6 +253,7 @@
     
     <#-- other table-related styles -->
     "table_basic" : "basic-table",  <#-- this is not a table type, but simply the basic-table style -->
+    "table_formwidget" : "form-widget-table", <#-- identifies widget tables for specific needs -->
 
     "row_reg" : "even",
     "row_alt" : "odd",

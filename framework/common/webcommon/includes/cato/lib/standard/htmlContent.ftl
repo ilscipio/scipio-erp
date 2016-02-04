@@ -1042,7 +1042,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         }
                     },
                     title: {
-                        display: chartData.scaleLabelDisplay,
+                        display: false,
                         fontColor: chartData.scaleLabelFontColor,
                         fontFamily: chartData.scaleLabelFontFamily,
                         fontSize: chartData.scaleLabelFontSize

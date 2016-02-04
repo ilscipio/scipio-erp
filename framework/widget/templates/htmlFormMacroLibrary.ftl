@@ -269,12 +269,11 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#-- Cato: use @table macro to open -->
   <#if style?has_content>
     <#-- specified style will replace default class from @table (unless prefixed with "+" in widget defs) -->
-    <#local class = addClassArg(style, "form-widget-table")>
+    <#local class = addClassArg(style, styles.table_formwidget_spec!)>
   <#else>
     <#-- with "+" (append only), default class will be selected by @table macro -->
-    <#local class = "+form-widget-table dark-grid">
+    <#local class = "+${styles.table_formwidget!}">
   </#if>
-  <#local class = addClassArg(class, styles.table_formwidget!)>
   <#local tableType = mapOfbizFormTypeToTableType(formType)>
   <#-- table:
     type: ${tableType}

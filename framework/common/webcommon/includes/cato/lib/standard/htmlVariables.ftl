@@ -208,26 +208,33 @@
   
     <#-- table type-based styles 
          used for default table class and attribute lookups by the @table macro, based on table type. -->
-    "table_generic" : "",    <#-- represents free-form <table>. probably should have no class (let template decide). -->
+    "table_generic" : "table-generic",    <#-- represents free-form <table>. probably should have no class (let template decide). -->
+    "table_generic_spec" : "table-generic",  <#-- specific table identifier -->
     "table_generic_cellspacing" : "",
     "table_generic_rowtype" : "generic",    <#-- the default row type is normally "content", but generic tables need "generic" -->
-    "table_data_list" : "basic-table",  <#-- analogous to ofbiz "list" type form widgets (and still very close to "multi" type) -->
+    "table_data_list" : "basic-table table-data-list",  <#-- analogous to ofbiz "list" type form widgets (and still very close to "multi" type) -->
+    "table_data_list_spec" : "table-data-list",
     "table_data_list_cellspacing" : 0,
     "table_data_list_responsive" : true,
     <#-- "table_data_list_autoaltrows" : true, -->
-    "table_data_list_multiform" : "basic-table",  <#-- analogous to ofbiz "multi" type form widgets (but still basically a "list" type) -->
+    "table_data_list_multiform" : "basic-table table-data-list-multiform",  <#-- analogous to ofbiz "multi" type form widgets (but still basically a "list" type) -->
+    "table_data_list_multiform_spec" : "table-data-list-multiform",
     "table_data_list_multiform_cellspacing" : 0,
     "table_data_list_multiform_responsive" : false,    
-    "table_data_complex" : "basic-table", <#-- like data_list but with complex structure (no form widget equivalent) -->
+    "table_data_complex" : "basic-table table-data-complex", <#-- like data_list but with complex structure (no form widget equivalent) -->
+    "table_data_complex_spec" : "table-data-complex",
     "table_data_complex_cellspacing" : 0,
-    "table_summary" : "basic-table",
+    "table_summary" : "basic-table table-summary",
+    "table_summary_spec" : "table-summary",
     "table_summary_cellspacing" : 0,
-    "table_fields" : "basic-table",    <#-- similar to ofbiz "single" type form widgets; may be acceptable for display-only fields -->
+    "table_fields" : "basic-table table-fields",    <#-- similar to ofbiz "single" type form widgets; may be acceptable for display-only fields -->
+    "table_fields_spec" : "table-fields", 
     "table_fields_cellspacing" : 0,
     <#-- default entry is used by @table for any encountered table types that have no specific entries in this hash. 
          in other words, it is the default style for table types that this theme does not recognize, or "all others". 
          it is also used for individual fallback values. -->    
-    "table_default" : "basic-table",
+    "table_default" : "basic-table table-default",
+    "table_default_spec" : "table-default",
     "table_default_cellspacing" : "",
     "table_default_autoaltrows" : false,
     "table_default_rowtype" : "content",
@@ -251,9 +258,12 @@
         "ordering" : false
     },
     
+    <#-- form widget styles in _addition_ to the @table styles above -->
+    "table_formwidget" : "table-formwidget dark-grid", <#-- default class for form widget tables (in addition to underlying @table macro defaults) -->
+    "table_formwidget_spec" : "table-formwidget",   <#-- specific identifier for form widget tables-->
+    
     <#-- other table-related styles -->
     "table_basic" : "basic-table",  <#-- this is not a table type, but simply the basic-table style -->
-    "table_formwidget" : "form-widget-table", <#-- identifies widget tables for specific needs -->
 
     "row_reg" : "even",
     "row_alt" : "odd",

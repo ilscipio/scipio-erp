@@ -84,8 +84,8 @@ under the License.
       
       <@row>
         <@cell>
-          <#-- Cato: FIXME? forcing simple checkboxes for this form. may want a new @fields type to style globally instead. also see forced nesting below. -->
-          <@fields checkboxType="simple">
+          <#-- Cato: NOTE (2016-02-03): default-alt1 automatically expresses alternate checkbox style. see styles hash. -->
+          <@fields type="default-alt1">
             <form name="qohAtpForm" method="post" action="<@ofbizUrl>${target}</@ofbizUrl>">
                 <input type="hidden" name="facilityId" value="${facilityId!}"/>
                 <input type="hidden" name="productId"/>
@@ -113,10 +113,7 @@ under the License.
                     </#if>
                     <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderDesiredDeliveryDate}" name="itemDesiredDeliveryDate" value="${value!}" size="25" maxlength="30" id="additem_itemDesiredDeliveryDate" />
                      
-                    <#-- Cato: FIXME: this forced nesting of single checkbox/radio should be able to be expressed as a global @fields style setting (label consume logic) -->
-                    <@field type="generic">
-                        <@field type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true" checked=(useAsDefaultDesiredDeliveryDate??) label="${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}" />
-                    </@field>
+                    <@field type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true" checked=(useAsDefaultDesiredDeliveryDate??) label="${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}" />
 
                     <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="shipAfterDate" value="${shoppingCart.getDefaultShipAfterDate()!}" size="25" maxlength="30" id="additem_shipAfterDate" />
                     <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="shipBeforeDate" value="${shoppingCart.getDefaultShipBeforeDate()!}" size="25" maxlength="30" id="additem_shipBeforeDate"/>
@@ -131,10 +128,7 @@ under the License.
                     </@field>
                 </#if>
 
-                    <#-- Cato: FIXME: this forced nesting of single checkbox/radio should be able to be expressed as a global @fields style setting (label consume logic) -->
-                    <@field type="generic">
-                        <@field type="checkbox" name="useAsDefaultComment" value="true" checked=useAsDefaultComment?? label="${uiLabelMap.OrderUseDefaultComment}" />
-                    </@field>
+                    <@field type="checkbox" name="useAsDefaultComment" value="true" checked=useAsDefaultComment?? label="${uiLabelMap.OrderUseDefaultComment}" />
                     
                     <@field type="input" size="25" name="itemComment" value="${defaultComment!}" label="${uiLabelMap.CommonComment}"/>
 

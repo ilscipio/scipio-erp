@@ -469,13 +469,16 @@ or even multiple per fieldset.
                               NOTE: This will not affect
                               the fallback logic of labels to inline labels (a.k.a. whether the label area "consumes" the label for itself),
                               otherwise that would mean labels would always be forced into the label area and never inline.
+    labelAreaConsumeExceptions = string of space-delimited @field type names or list of names, defaults specified in styles variables based on fields type  
+                                 list of field types that should never have their label appear in the main label area.
+                                 for these, the label will trickle down into the field's inline area, if it has any (otherwise no label).
     formName            = the form name the child fields should assume  
     formId              = the form ID the child fields should assume   
     inlineItems     = change default for @field inlineItems parameter (true/false)    
-    checkboxType    = default checkbox type 
+    checkboxType    = default checkbox type     
 -->
 <#assign fields_defaultArgs = {
-  "type":"default", "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", 
+  "type":"default", "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", "labelAreaConsumeExceptions":true,
   "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "checkboxType":"", "passArgs":{}
 }>
 <#macro fields args={} inlineArgs...>
@@ -494,10 +497,11 @@ or even multiple per fieldset.
   
   <#local stylesType = type?replace("-","_")>
   <#local stylesPrefix = "fields_" + stylesType + "_">
+  <#-- DON'T do this, it messes with intuition - individual default fallbacks are good enough
   <#if !styles[stylesPrefix + "labeltype"]??>
     <#local stylesType = "default">
     <#local stylesPrefix = "fields_default_">
-  </#if>
+  </#if>-->
 
   <#if !labelArea?is_boolean>
     <#local stylesLabelArea = styles[stylesPrefix + "labelarea"]!styles["fields_default_labelarea"]!"">
@@ -534,6 +538,21 @@ or even multiple per fieldset.
     <#local labelAreaRequireContent = styles[stylesPrefix + "labelarearequirecontent"]!styles["fields_default_labelarearequirecontent"]!"">
   </#if>
 
+  <#if !labelAreaConsumeExceptions?is_sequence && !labelAreaConsumeExceptions?is_string>
+    <#if labelAreaConsumeExceptions?is_boolean && labelAreaConsumeExceptions == false>
+      <#local labelAreaConsumeExceptions = []>
+    <#else>
+      <#local labelAreaConsumeExceptions = styles[stylesPrefix + "labelareaconsumeexceptions"]!styles["fields_default_labelareaconsumeexceptions"]!"">
+    </#if>
+  </#if>
+  <#if labelAreaConsumeExceptions?is_string> <#-- WARN: ?is_string unreliable -->
+    <#if labelAreaConsumeExceptions?has_content>
+      <#local labelAreaConsumeExceptions = labelAreaConsumeExceptions?split(" ")>
+    <#else>
+      <#local labelAreaConsumeExceptions = []>
+    </#if>
+  </#if>
+
   <#if !collapse?is_boolean>
     <#local collapse = styles[stylesPrefix + "collapse"]!styles["fields_default_collapse"]!"">
   </#if>
@@ -554,7 +573,7 @@ or even multiple per fieldset.
 
   <#return {"type":type, "labelType":labelType, "labelPosition":labelPosition, 
     "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, 
-    "labelAreaRequireContent":labelAreaRequireContent, 
+    "labelAreaRequireContent":labelAreaRequireContent, "labelAreaConsumeExceptions":labelAreaConsumeExceptions,
     "formName":formName, "formId":formId, "inlineItems":inlineItems,
     "collapse":collapse, "collapsePostfix":collapsePostfix, "collapsedInlineLabel":collapsedInlineLabel,
     "checkboxType":checkboxType}>
@@ -701,6 +720,8 @@ standard markup.
     labelAreaRequireContent = boolean, if true, the label area will only be included if label or labelDetail have content.
                               by default, this is empty string (use @fields type default), and if no styles defaults,
                               default is false.
+    labelAreaConsume        = boolean, default true. if set to false, will prevent the label area from consuming (displaying) the label and the
+                              label will trickle down into an inline area if one exists for the field type.
     inlineLabelArea     = manual override for inline label logic. in general can be left to macro (and @fields types stylable via global styles hash). logical default: false (or "").
     inlineLabel         = manual override for inline label logic. in general can be left to macro (and @fields types stylable via global styles hash). logical default: "" (false on interface).
                           NOTE: often if you specify this it means you might want to set inlineLabelArea=true as well.
@@ -872,7 +893,7 @@ standard markup.
   "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"",
   "tooltip":"", "columns":"", "norows":false, "nocells":false, "container":"", "containerId":"", "containerClass":"",
   "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":1, "postfixContent":true, "required":false, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
-  "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "inlineLabelArea":"", "inlineLabel":false,
+  "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "labelAreaConsume":"", "inlineLabelArea":"", "inlineLabel":false,
   "description":"",
   "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
   "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
@@ -1035,12 +1056,20 @@ standard markup.
       
       There is another labelAreaRequireContent control that is separate from the consumation logic.
       In our default setup we want it set to false, but can be changed in styles and calls.
-      
-      TODO: there is a styling need to force labelAreaConsumeLabel off in some specific cases 
-          via styles hash (radio, checkbox when they are single top-level fields)
       -->
   <#local labelAreaConsumeLabel = (labelArea?is_boolean && labelArea == true) || 
-    (!(labelArea?is_boolean && labelArea == false) && (labelAreaDefault))>
+      (!(labelArea?is_boolean && labelArea == false) && (labelAreaDefault))>
+  <#if labelAreaConsume?is_boolean> <#-- this is the user setting -->
+    <#-- user can prevent consuming by setting false -->
+    <#local labelAreaConsumeLabel = labelAreaConsumeLabel && labelAreaConsume>
+  <#else>
+    <#-- check if @fields style prevents consuming -->
+    <#if (fieldsInfo.labelAreaConsumeExceptions)?has_content && (fieldsInfo.labelAreaConsumeExceptions)?is_sequence>
+      <#if fieldsInfo.labelAreaConsumeExceptions?seq_contains(type)>
+        <#local labelAreaConsumeLabel = false>
+      </#if>
+    </#if>
+  </#if>
   
   <#local origLabel = label>
   <#local effInlineLabel = false> <#-- this is really a string -->

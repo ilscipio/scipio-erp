@@ -1017,58 +1017,69 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </#local>
     <#-- Get the number of datasets by inspecting the nested content (chartjs addData function values) -->
     <#assign chartDatasets=chart_get_number_of_datasets(nestedContent, chartLibrary) />
-    ${Static["org.ofbiz.base.util.Debug"].log("chartDatasets ==============> " + chartDatasets)}
     <#if chartDatasets &lt; 1><#local chartDatasets = 1 /></#if>
     
-    <canvas id="${chartId!}" class="${styles.grid_large!}12 chart-data" height="300" style="height:300px;"></canvas>
+    <canvas id="${chartId!}" class="chart-data" height="400" width="600"></canvas>
     <@script>
         $(function(){
             var chartDataEl = $('.chart-data:first-of-type');
             var chartData = chartDataEl.sassToJs({pseudoEl:":before", cssProperty: "content"});
-            var options ={
-                animation: false,
-                responsive: true,
-                maintainAspectRatio: true,
-                scaleLineColor: chartData.scaleLineColor,
-                scaleFontFamily: chartData.scaleFontFamily,
-                scaleFontSize: chartData.scaleFontSize,
-                scaleFontColor: chartData.scaleFontColor,
-                scaleShowLabels: chartData.scaleShowLabels,
-                scaleShowLabels: chartData.scaleShowLabels,
-                scaleShowLine : chartData.scaleShowLine,
-                angleShowLineOut : chartData.angleShowLineOut,
-                scaleBeginAtZero : chartData.scaleBeginAtZero,
-                showTooltips: chartData.showTooltips,
-                tooltipFillColor: chartData.tooltipFillColor,
-                tooltipFontFamily: chartData.tolltipFontFamily,
-                tooltipFontSize: chartData.tooltipFontSize,
-                tooltipFontStyle: chartData.tooltipFontStyle,
-                tooltipFontColor: chartData.tooltipFontColor,
-                tooltipTitleFontFamily: chartData.tooltipTitleFontFamily,
-                tooltipTitleFontSize: chartData.tooltipTitleFontSize,
-                tooltipTitleFontStyle: chartData.tooltipTitleFontStyle,
-                tooltipTitleFontColor: chartData.tooltipTitleFontColor,
-                tooltipYPadding: chartData.tooltipYPadding,
-                tooltipXPadding: chartData.tooltipXPadding,
-                tooltipCaretSize: chartData.tooltipCaretSize,
-                tooltipCornerRadius: chartData.tooltipCornerRadius,
-                datasetFill : chartData.datasetFill,
-                tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= value %>",
-                multiTooltipTemplate: "<%= value %>",
-                pointDot : chartData.pointDot,
-                pointHitDetectionRadius : chartData.pointHitDetectionRadius,
-                pointDotRadius : chartData.pointDotRadius,
-                pointDotStrokeWidth : chartData.pointDotStrokeWidth,
-                <#if type=="line">
-                bezierCurve : chartData.bezierCurve,
-                bezierCurveTension : chartData.bezierCurveTension,
-                legendTemplate : "<ul class=\"legend <%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li style=\"color:<%=datasets[i].strokeColor%> !important \"><span style=\"color:#efefef !important \"><%=datasets[i].value%>  <%if(datasets[i].label){%><%=datasets[i].label%><%}%></span></li><%}%></ul>",
-                dataLabels: chartData.dataLabels
-                <#elseif type=="pie">
-                legendTemplate : "<ul class=\"legend <%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li style=\"color:<%=segments[i].fillColor%> !important \"><span style=\"color:#efefef !important \"><%=segments[i].value%>  <%if(segments[i].label){%><%=segments[i].label%><%}%></span></li><%}%></ul>"
-                <#else>
-                legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
-                </#if>
+            var options =  {
+                    responsive: true, 
+                    responsiveAnimationDuration: 0, 
+                    animation: { duration: 0 },
+                    maintainAspectRatio: true,
+                    tooltips: {
+                        mode: 'label'
+                    },
+                    hover: {
+                        mode: 'label'
+                    },
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            boxWidth: 30
+                        }
+                    },
+                    title: {
+                        display: chartData.scaleLabelDisplay,
+                        fontColor: chartData.scaleLabelFontColor,
+                        fontFamily: chartData.scaleLabelFontFamily,
+                        fontSize: chartData.scaleLabelFontSize
+                    },
+                    scales: {
+                        type: chartData.scaleType,
+                        display: chartData.scaleDisplay,
+                        xAxes: [{
+                            gridLines: {
+                                color: chartData.scaleGridLineColor
+                            },
+                            scaleLabel : {
+                                display: chartData.scaleLabelDisplay,
+                                fontColor: chartData.scaleLabelFontColor,
+                                fontFamily: chartData.scaleLabelFontFamily,
+                                fontSize: chartData.scaleLabelFontSize
+                            },
+                            ticks: {
+                                display: true,
+                                autoSkip: true,
+                                padding:10,
+                                maxRotation:30,
+                                fontColor: chartData.scaleLabelFontColor,
+                                fontFamily: chartData.scaleLabelFontFamily,
+                                fontSize: chartData.scaleLabelFontSize
+                            }
+                          }],
+                        yAxes: [{
+                            ticks: {
+                                display: true,
+                                autoSkip: true,                            
+                                fontColor: chartData.scaleLabelFontColor,
+                                fontFamily: chartData.scaleLabelFontFamily,
+                                fontSize: chartData.scaleLabelFontSize
+                            }
+                        }]
+                    }
                 };
             var ctx_${renderSeqNumber!}_${chartIdNum!} = $('#${chartId!}').get(0).getContext("2d");
             <#if type=="pie">
@@ -1078,23 +1089,25 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                 labels :[],
                 datasets: [
                     {
-                      fillColor: chartData.primaryFillColor,
-                      strokeColor: chartData.primaryStrokeColor,
-                      pointColor: chartData.pointColor,
-                      pointStrokeColor: chartData.primaryPointStrokeColor,
-                      pointHighlightFill: chartData.pointHighlightFill,
-                      pointHighlightStroke: chartData.pointHighlightStroke,
+                      fill: true,
+                      backgroundColor: chartData.primaryFillColor,
+                      borderColor: chartData.primaryStrokeColor,
+                      pointBackgroundColor: chartData.pointColor,
+                      pointBorderColor: chartData.primaryPointStrokeColor,
+                      pointHoverBackgroundColor: chartData.pointHighlightFill,
+                      pointHoverBorderColor: chartData.pointHighlightStroke,
                       label: "",
                       data: []
                     }
                     <#if chartDatasets &gt; 1>
                     ,{
-                      fillColor: chartData.secondaryFillColor,
-                      strokeColor: chartData.secondaryStrokeColor,
-                      pointColor: chartData.pointColor,
-                      pointStrokeColor: chartData.secondaryPointStrokeColor,
-                      pointHighlightFill: chartData.pointHighlightFill,
-                      pointHighlightStroke: chartData.pointHighlightStroke,
+                      fill: true,
+                      backgroundColor: chartData.secondaryFillColor,
+                      borderColor: chartData.secondaryStrokeColor,
+                      pointBackgroundColor: chartData.pointColor,
+                      pointBorderColor: chartData.secondaryPointStrokeColor,
+                      pointHoverBackgroundColor: chartData.pointHighlightFill,
+                      pointHoverBorderColor: chartData.pointHighlightStroke,
                       label: "",
                       data: []
                     }           
@@ -1102,13 +1115,19 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     ]
                 };
             </#if>
-            var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${chartIdNum!})<#if type=="bar">.Bar(data,options);</#if><#if type=="line">.Line(data,options);</#if><#if type=="pie">.Pie(data,options);</#if>
+            var config = {
+                <#if type=="bar">type: 'bar'</#if><#if type=="line">type: 'line'</#if><#if type=="pie">type: 'pie'</#if>,
+                data: data,
+                options: options
+            };
+            var ${chartId!} = new Chart(ctx_${renderSeqNumber!}_${chartIdNum!},config);
             ${nestedContent}
+            ${chartId!}.update();
         });
     </@script>
   </#if>
 </#macro>
-<#--
+<#-- 
 *************
 * chart_get_number_of_datasets
 ************
@@ -1124,36 +1143,19 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 <#function chart_get_number_of_datasets content="" library="chart">
     <#if content?has_content>
         <#if library == "chart">
-            <#local num_of_values_found = [] />
+            <#local num_of_values_found = 0 />
             <#-- cleanup spaces and tabs and split by the regex ';.+\n' -->
             <#-- TODO: check if it works for all OS, in linux works -->
-            <#list content?trim?split(";.+\n", "r") as contentItem>            
-                <#-- make sure we are handling the proper chartjs addData function -->
-                <#if contentItem?has_content && contentItem?length &gt; 0 && contentItem?contains("addData")> 
-                    <#-- isolate the array values passed in the addData function -->
-                    <#assign item = contentItem?trim />
-                    ${Static["org.ofbiz.base.util.Debug"].log("contentItem =====> " + item)}
-                    <#local squareOpenIndex = item?last_index_of("[") />
-                    <#local squareCloseIndex = item?last_index_of("]") />
-                    <#if squareOpenIndex &gt; -1 && squareCloseIndex &gt; -1 && squareOpenIndex &lt; squareCloseIndex>
-                        <#local num_of_values_found = num_of_values_found + [item[squareOpenIndex + 1..squareCloseIndex - 1]?split(",")?size] />
+            <#local res = content?matches(r".*.data.datasets\[(.*)\].*") />
+            
+            <#list res as m>
+                    <#local num_found=m?groups[1]/>
+                    <#if num_found?has_content && num_found?number &gt; num_of_values_found>
+                        <#local num_of_values_found = num_found?number />
                     </#if>
-                </#if>    
             </#list>
             
-            <#-- minimum values we accept (values represent datasets, so always expect one at least) -->
-            <#local min_num_of_values = 1 />
-            <#-- look for inconsistencies -->
-            <#local prev_num_of_values = -1 />           
-            <#list num_of_values_found as num_of_values>
-                <#if prev_num_of_values == -1>
-                    <#local prev_num_of_values = num_of_values />
-                    <#local min_num_of_values = num_of_values />
-                <#elseif num_of_values &lt; prev_num_of_values>
-                    <#local min_num_of_values = num_of_values>
-                </#if>
-            </#list>
-            <#return min_num_of_values />
+            <#return num_of_values_found+1 />
         </#if>
     </#if>
 </#function>
@@ -1185,7 +1187,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     </#if>
   <#else>
     <#if chartType="line" || chartType="bar">
-      ${chartId!}.addData([<#if value?has_content>${value!}</#if><#if value2?has_content>, ${value2}</#if>]<#if title?has_content>,"${title!}"</#if>);      
+      config.data.labels.push('${title!}');
+      <#if value?has_content>config.data.datasets[0].data.push(${value!});</#if>
+      <#if value2?has_content>config.data.datasets[1].data.push(${value2!});</#if>
     <#else>
       ${chartId!}.addData({value:${value!},color:chartData.color,highlight: chartData.highlight<#if title?has_content>,label:"${title!}"</#if>});
     </#if>

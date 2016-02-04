@@ -90,7 +90,7 @@
 
     window.onload = function() {
         var ctx = document.getElementById("canvas").getContext("2d");
-        window.myScatter = new Chart(ctx).Scatter({
+        window.myScatter = Chart.Scatter(ctx, {
         	data: scatterChartData,
         	options: {
 	            responsive: true,
@@ -103,67 +103,21 @@
 	            		}
 	            	}],
 	            	yAxes: [{
-		                scaleType: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+		                type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
 		                display: true,
 		                position: "left",
 		                id: "y-axis-1",
-		        
-		                // grid line settings
-		                gridLines: {
-		                    show: true,
-		                    color: "rgba(0, 0, 0, 0.05)",
-		                    lineWidth: 1,
-		                    drawOnChartArea: true,
-		                    drawTicks: true,
-		                    zeroLineWidth: 1,
-		                    zeroLineColor: "rgba(0,0,0,0.25)",
-		                },
-
-		                // scale numbers
-		                beginAtZero: false,
-		                integersOnly: false,
-		                override: null,
-
-		                // label settings
-		                labels: {
-		                    show: true,
-		                    template: "<%=value%>",
-		                    fontSize: 12,
-		                    fontStyle: "normal",
-		                    fontColor: "#666",
-		                    fontFamily: "Helvetica Neue",
-		                }
 		            }, {
-		                scaleType: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
+		                type: "linear", // only linear but allow scale type registration. This allows extensions to exist solely for log scale for instance
 		                display: true,
 		                position: "right",
+		                reverse: true,
 		                id: "y-axis-2",
 		        
 		                // grid line settings
 		                gridLines: {
-		                    show: true,
-		                    color: "rgba(0, 0, 0, 0.05)",
-		                    lineWidth: 1,
 		                    drawOnChartArea: false, // only want the grid lines for one axis to show up
-		                    drawTicks: false,
-		                    zeroLineWidth: 1,
-		                    zeroLineColor: "rgba(0,0,0,0.25)",
 		                },
-
-		                // scale numbers
-		                beginAtZero: false,
-		                integersOnly: false,
-		                override: null,
-
-		                // label settings
-		                labels: {
-		                    show: true,
-		                    template: "<%=value%>",
-		                    fontSize: 12,
-		                    fontStyle: "normal",
-		                    fontColor: "#666",
-		                    fontFamily: "Helvetica Neue",
-		                }
 		            }],
 	            }
 	        }

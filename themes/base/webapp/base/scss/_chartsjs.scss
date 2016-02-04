@@ -1,4 +1,5 @@
 @import "sass-to-js";
+// ToDo: Update to pattern of chart.js v2 http://nnnick.github.io/Chart.js/docs-v2
 $chartMap: (
   primaryFillColor: rgba($primary-color,.3),
   primaryStrokeColor: rgba($primary-color,.7),
@@ -13,22 +14,23 @@ $chartMap: (
   pointHitDetectionRadius : 5,
   pointDotRadius : 3,
   pointDotStrokeWidth : 1,
-  scaleLineColor: "rgba(0,0,0,.1)",
-  scaleFontFamily: $body-font-family,
-  scaleFontSize: 14,
-  scaleFontColor: $body-font-color,
-  scaleShowLabels: true,
-  scaleShowLine : true,
+  scaleType: "linear",
+  scaleDisplay : true,
+  scaleGridLineColor: "rgba(0,0,0,.1)",
+  scaleLabelFontFamily: $body-font-family,
+  scaleLabelFontSize: 14,
+  scaleLabelFontColor: $body-font-color,
+  scaleLabelDisplay: true,
   angleShowLineOut : true,
   scaleBeginAtZero : true,
   showTooltips: true,
   tooltipFillColor: "rgba(0,0,0,0.8)",
-  tooltipFontSize: 14,
+  tooltipFontSize: 8,
   tooltipFontColor: $white,
   tooltipFontStyle : "normal",
   tooltipFontFamily: $body-font-family,
   tooltipTitleFontFamily: $body-font-family,
-  tooltipTitleFontSize: 14,
+  tooltipTitleFontSize: 10,
   tooltipTitleFontStyle: $font-weight-bold,
   tooltipTitleFontColor: $white,
   tooltipYPadding: 6,
@@ -44,6 +46,10 @@ $chartMap: (
 );
 
 .chart-data{
+        width: 100% !important;
+        max-width: 800px;
+        height: auto !important;
+  
   &:before{
     content: sassToJs($chartMap);
     display: none;

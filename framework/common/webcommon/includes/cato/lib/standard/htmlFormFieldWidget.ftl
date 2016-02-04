@@ -594,7 +594,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- migrated from @renderCheckField (a.k.a. @renderCheckBox) form widget macro -->
 <#assign field_checkbox_widget_defaultArgs = {
   "items":[], "id":"", "class":"", "alert":"", "allChecked":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, 
-  "tooltip":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "passArgs":{}
+  "tooltip":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "checkboxType":"", "passArgs":{}
 }>
 <#macro field_checkbox_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_checkbox_widget_defaultArgs)>
@@ -634,15 +634,18 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <#else>
     <#local defaultValue = []>
   </#if>
+  <#if checkboxType == "default">
+    <#local checkboxType = "">
+  </#if>
   <@field_checkbox_markup_widget items=items id=id class=class alert=alert allChecked=allChecked 
     currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip multiMode=multiMode 
-    fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
+    fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel checkboxType=checkboxType origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
 </#macro>
 
 <#-- field markup - theme override 
      FIXME: the styling for these is strange, can't get it to work no matter what -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
-    events={} tooltip="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
+    events={} tooltip="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false checkboxType="" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -659,7 +662,10 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   </#if>
   <#local class = addClassArg(class, "checkbox-item")>
   <#local class = addClassArg(class, inlineClass)>
-  <#local class = addClassArgDefault(class, "${styles.switch} ${styles.small}")>
+  <#-- simple prevents any fancy checkbox -->
+  <#if checkboxType != "simple">
+    <#local class = addClassArgDefault(class, "${styles.switch} ${styles.small}")>
+  </#if>
 
   <#-- Cato: must have id on each elem or else the foundation switches break 
        The first item receives the exact id passed to macro because this is what original ofbiz macros expect
@@ -682,7 +688,9 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
         <#elseif currentValue?has_content && currentValue?seq_contains(itemValue)> checked="checked"
         <#elseif defaultValue?has_content && defaultValue?seq_contains(itemValue)> checked="checked"</#if> 
         name="${name?html}" value="${itemValue?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#rt/>
+    <#if checkboxType != "simple">
       <label<#if currentId?has_content> for="${currentId}"</#if>></label>
+    </#if>
       <#-- FIXME?: description destroys field if put inside <label> above... also <label> has to be separate from input (not parent)... ? -->
       <#if item.description?has_content><span class="checkbox-label-local">${item.description}</span></#if>
     </span>

@@ -737,18 +737,21 @@
     "fields_default_collapse" : false,
     "fields_default_collapsepostfix" : true,
     "fields_default_collapsedinlinelabel" : "datetime", <#-- can be true, false, or list of type names -->
+    "fields_default_checkboxtype" : "",
 
     "fields_default_nolabels_labeltype" : "horizontal", <#-- note: this should be "none" in principle, but this is used to implement collapsedinlinelabel. labelarea false is good enough. -->
     "fields_default_nolabels_labelposition" : "left",
     "fields_default_nolabels_labelarea" : false,
     "fields_default_nolabels_labelareaexceptions" : "", 
     "fields_default_nolabels_labelarearequirecontent" : false,
+    "fields_default_nolabels_checkboxtype" : "",
 
     "fields_default_compact_labeltype" : "vertical",
     "fields_default_compact_labelposition" : "top",
     "fields_default_compact_labelarea" : true, 
     "fields_default_compact_labelareaexceptions" : "radio checkbox", <#-- having label on top of checkbox or radio is really ugly; let the label inline itself for these -->
     "fields_default_compact_labelarearequirecontent" : true,
+    "fields_default_compact_checkboxtype" : "",
 
     "fields_generic_labeltype" : "horizontal",
     "fields_generic_labelposition" : "left",
@@ -758,7 +761,7 @@
     "fields_generic_collapse" : false,
     "fields_generic_collapsepostfix" : true,
     "fields_generic_collapsedinlinelabel" : "", <#-- can be true, false, or list of type names -->
-
+    "fields_generic_checkboxtype" : "",
 
     <#-- misc field styles -->
     "fields_wrap" : "collapse",

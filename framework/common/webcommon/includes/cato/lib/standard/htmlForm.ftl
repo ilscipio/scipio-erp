@@ -471,11 +471,12 @@ or even multiple per fieldset.
                               otherwise that would mean labels would always be forced into the label area and never inline.
     formName            = the form name the child fields should assume  
     formId              = the form ID the child fields should assume   
-    inlineItems     = change default for @field inlineItems parameter (true/false)     
+    inlineItems     = change default for @field inlineItems parameter (true/false)    
+    checkboxType    = default checkbox type 
 -->
 <#assign fields_defaultArgs = {
   "type":"default", "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", 
-  "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "passArgs":{}
+  "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "checkboxType":"", "passArgs":{}
 }>
 <#macro fields args={} inlineArgs...>
   <#--<#local args = mergeArgMapsBasic(args, inlineArgs, catoStdTmplLib.fields_defaultArgs)>
@@ -547,12 +548,16 @@ or even multiple per fieldset.
       <#local collapsedInlineLabel = collapsedInlineLabel?split(" ")>
     </#if>
   </#if>
+  <#if !checkboxType?has_content>
+    <#local checkboxType = styles[stylesPrefix + "checkboxtype"]!styles["fields_default_checkboxtype"]!"">
+  </#if>
 
   <#return {"type":type, "labelType":labelType, "labelPosition":labelPosition, 
     "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, 
     "labelAreaRequireContent":labelAreaRequireContent, 
     "formName":formName, "formId":formId, "inlineItems":inlineItems,
-    "collapse":collapse, "collapsePostfix":collapsePostfix, "collapsedInlineLabel":collapsedInlineLabel}>
+    "collapse":collapse, "collapsePostfix":collapsePostfix, "collapsedInlineLabel":collapsedInlineLabel,
+    "checkboxType":checkboxType}>
 </#function>
 
 <#-- 
@@ -696,8 +701,9 @@ standard markup.
     labelAreaRequireContent = boolean, if true, the label area will only be included if label or labelDetail have content.
                               by default, this is empty string (use @fields type default), and if no styles defaults,
                               default is false.
-    inlineLabelArea     = manual override for inline label logic. in general can be left to macro. logical default: false (or "").
-    inlineLabel         = manual override for inline label logic. in general can be left to macro. logical default: "" (false on interface).
+    inlineLabelArea     = manual override for inline label logic. in general can be left to macro (and @fields types stylable via global styles hash). logical default: false (or "").
+    inlineLabel         = manual override for inline label logic. in general can be left to macro (and @fields types stylable via global styles hash). logical default: "" (false on interface).
+                          NOTE: often if you specify this it means you might want to set inlineLabelArea=true as well.
     tooltip         = Small field description - to be displayed to the customer
     description     = alternative to tooltip
     name            = field name
@@ -714,6 +720,7 @@ standard markup.
     events          = map of JS event names to script actions. 
                       event names can be specified with or without the "on" prefix ("click" or "onclick").
     onClick         = shortcut for: events={"click": onClick}
+    onChange         = shortcut for: events={"change": onChange}
     disabled        = field disabled
     placeholder     = field placeholder
     alert           = adds additional css alert class
@@ -787,6 +794,9 @@ standard markup.
     value           = Y/N
     currentValue    = current value, used to check if should be checked
     checked         = override checked state (true/false/"") - if set to boolean, overrides currentValue logic
+    checkboxType    = [default|simple], default default
+                      default: default theme checkbox
+                      simple: guarantees a minimalistic checkbox
     
     * Checkbox (multi mode) *
     items           = if specified, multiple-items checkbox field generated; 
@@ -856,7 +866,7 @@ standard markup.
     description     = for image type: image alt
 -->
 <#assign field_defaultArgs = {
-  "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", "onClick":"", 
+  "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", "onClick":"", "onChange":"",
   "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
   "cols":"50", "dateType":"date-time", "multiple":"", "checked":"", 
   "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"",
@@ -866,7 +876,7 @@ standard markup.
   "description":"",
   "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
   "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
-  "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "events":{}, "passArgs":{} 
+  "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "checkboxType":"", "events":{}, "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
   <#-- TODO: the following calls should be combined into a mergeArgMapsToLocals method, but
@@ -896,6 +906,9 @@ standard markup.
 
   <#if onClick?has_content>
     <#local events = events + {"click": onClick}>
+  </#if>
+  <#if onChange?has_content>
+    <#local events = events + {"change": onChange}>
   </#if>
   
   <#-- parent @fields group elem info (if any; may be omitted) -->
@@ -1022,16 +1035,20 @@ standard markup.
       
       There is another labelAreaRequireContent control that is separate from the consumation logic.
       In our default setup we want it set to false, but can be changed in styles and calls.
+      
+      TODO: there is a styling need to force labelAreaConsumeLabel off in some specific cases 
+          via styles hash (radio, checkbox when they are single top-level fields)
       -->
   <#local labelAreaConsumeLabel = (labelArea?is_boolean && labelArea == true) || 
     (!(labelArea?is_boolean && labelArea == false) && (labelAreaDefault))>
   
   <#local origLabel = label>
-  <#local effInlineLabel = false>
+  <#local effInlineLabel = false> <#-- this is really a string -->
   <#if !labelAreaConsumeLabel && !(inlineLabelArea?is_boolean && inlineLabelArea == false)>
     <#-- if there's no label area or if it's not set to receive the label, 
         label was not used up, so label arg becomes an inline label (used on radio and checkbox) 
-        - unless caller overrides with his own inline label for whatever reason -->
+        - unless caller overrides with his own inline label for whatever reason 
+        - and unless he wants to prevent inline area with inlineLabelArea = false -->
     <#if !(inlineLabel?is_boolean && inlineLabel == false)>
       <#local effInlineLabel = inlineLabel>
     <#else>
@@ -1039,6 +1056,7 @@ standard markup.
     </#if>
     <#local label = "">
   <#elseif inlineLabelArea?is_boolean && inlineLabelArea == true>
+    <#-- caller wants a specific inline label -->
     <#local effInlineLabel = inlineLabel>
   </#if>
 
@@ -1221,6 +1239,9 @@ standard markup.
           size=size?string maxlength=maxlength id=id events=events passArgs=passArgs/>
       <#break>
       <#case "checkbox">
+        <#if !checkboxType?has_content>
+          <#local checkboxType = fieldsInfo.checkboxType>
+        </#if>
         <#if !items?is_sequence>
           <#if !checked?is_boolean>
             <#if checked?has_content>
@@ -1239,10 +1260,10 @@ standard markup.
           </#if>
           <#local items=[{"value":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked}]/>
           <@field_checkbox_widget multiMode=false items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel passArgs=passArgs/>
+            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel checkboxType=checkboxType passArgs=passArgs/>
         <#else>
           <@field_checkbox_widget multiMode=true items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs/>
+            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel checkboxType=checkboxType passArgs=passArgs/>
         </#if>
         <#break>
       <#case "radio">

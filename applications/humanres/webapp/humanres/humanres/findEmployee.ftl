@@ -40,15 +40,15 @@ under the License.
             <input type="hidden" name="lookupFlag" value="Y"/>
             <input type="hidden" name="hideFields" value="Y"/>
                 <@field type="generic" label="${uiLabelMap.PartyContactInformation}">
-                    <input type="radio" name="extInfo" value="N" onclick="javascript:refreshInfo();" <#if extInfo == "N">checked="checked"</#if>/>${uiLabelMap.CommonNone}&nbsp;
-                    <input type="radio" name="extInfo" value="P" onclick="javascript:refreshInfo();" <#if extInfo == "P">checked="checked"</#if>/>${uiLabelMap.PartyPostal}&nbsp;
-                    <input type="radio" name="extInfo" value="T" onclick="javascript:refreshInfo();" <#if extInfo == "T">checked="checked"</#if>/>${uiLabelMap.PartyTelecom}&nbsp;
-                    <input type="radio" name="extInfo" value="O" onclick="javascript:refreshInfo();" <#if extInfo == "O">checked="checked"</#if>/>${uiLabelMap.CommonOther}&nbsp;
+                    <@field type="radio" name="extInfo" value="N" onClick="javascript:refreshInfo();" checked=(extInfo == "N") label="${uiLabelMap.CommonNone}"/>
+                    <@field type="radio" name="extInfo" value="P" onClick="javascript:refreshInfo();" checked=(extInfo == "P") label="${uiLabelMap.PartyPostal}"/>
+                    <@field type="radio" name="extInfo" value="T" onClick="javascript:refreshInfo();" checked=(extInfo == "T") label="${uiLabelMap.PartyTelecom}"/>
+                    <@field type="radio" name="extInfo" value="O" onClick="javascript:refreshInfo();" checked=(extInfo == "O") label="${uiLabelMap.CommonOther}"/>
                 </@field>
                 <@field type="input" label="${uiLabelMap.PartyLastName}" name="lastName" value="${parameters.lastName!}"/>
                 <@field type="input" label="${uiLabelMap.PartyFirstName}" name="firstName" value="${parameters.firstName!}"/>
                 <@field type="generic" label="${uiLabelMap.PartyPartyId}">
-                    <@htmlTemplate.lookupField value='${requestParameters.partyId!}' formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPerson"/>
+                    <@htmlTemplate.lookupField value="${requestParameters.partyId!}" formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPerson"/>
                 </@field>
                 <@field type="input" label="${uiLabelMap.PartyUserLogin}" name="userLoginId" value="${parameters.userLoginId!}"/>
                 <input type="hidden" name="groupName" value="${parameters.groupName!}"/>

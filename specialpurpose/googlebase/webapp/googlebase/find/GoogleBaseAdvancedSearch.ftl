@@ -193,8 +193,8 @@ under the License.
               </div>
           </@field>
           <@field type="generic" label="${uiLabelMap.ProductListPriceRange}">
-              <input type="text" name="LIST_PRICE_LOW" size="8" value="${requestParameters.LIST_PRICE_LOW!}" />&nbsp;
-                <input type="text" name="LIST_PRICE_HIGH" size="8" value="${requestParameters.LIST_PRICE_HIGH!}" />&nbsp;
+              <@field type="input" name="LIST_PRICE_LOW" size="8" value="${requestParameters.LIST_PRICE_LOW!}" />&nbsp;
+              <@field type="input" name="LIST_PRICE_HIGH" size="8" value="${requestParameters.LIST_PRICE_HIGH!}" />&nbsp;
           </@field>
           <#list productFeatureTypeIdsOrdered as productFeatureTypeId>
             <#assign findPftMap = Static["org.ofbiz.base.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId) />
@@ -214,7 +214,7 @@ under the License.
                   </#list>
           </@field>
           <@field type="generic" label="${uiLabelMap.CommonSortedBy}">
-              <select name="sortOrder">
+              <@field type="select" name="sortOrder">
                   <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
                   <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
                   <option value="SortProductField:internalName">${uiLabelMap.ProductInternalName}</option>
@@ -226,7 +226,7 @@ under the License.
                   <option value="SortProductPrice:AVERAGE_COST">${uiLabelMap.ProductAverageCost}</option>
                   <option value="SortProductPrice:MINIMUM_PRICE">${uiLabelMap.ProductMinimumPrice}</option>
                   <option value="SortProductPrice:MAXIMUM_PRICE">${uiLabelMap.ProductMaximumPrice}</option>
-                </select>
+                </@field>
                 ${uiLabelMap.ProductLowToHigh}<input type="radio" name="sortAscending" value="Y" checked="checked" />
                 ${uiLabelMap.ProductHighToLow}<input type="radio" name="sortAscending" value="N" />
           </@field>
@@ -240,7 +240,7 @@ under the License.
                 </#list>
           </@field>
           <@field type="generic" label="${uiLabelMap.ProductGoodIdentificationValue}">
-              <input type="text" name="SEARCH_GOOD_IDENTIFICATION_VALUE" size="60" maxlength="60" value="${requestParameters.SEARCH_GOOD_IDENTIFICATION_VALUE!}" />
+              <@field type="input" name="SEARCH_GOOD_IDENTIFICATION_VALUE" size="60" maxlength="60" value="${requestParameters.SEARCH_GOOD_IDENTIFICATION_VALUE!}" />
               ${uiLabelMap.CommonInclude}<input type="radio" name="SEARCH_GOOD_IDENTIFICATION_INCL" value="Y" checked="checked" />
               ${uiLabelMap.CommonExclude}<input type="radio" name="SEARCH_GOOD_IDENTIFICATION_INCL" value="N" />
           </@field>

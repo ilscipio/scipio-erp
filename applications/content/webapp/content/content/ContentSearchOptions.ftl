@@ -22,7 +22,7 @@ under the License.
       <#-- Cato: don't hardcode this... use sys default -->
       <#--<input type="hidden" name="VIEW_SIZE" value="25"/>-->
         <@field type="generic" label="${uiLabelMap.ContentKeywords}">
-            <input type="text" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}"/>&nbsp;
+            <@field type="input" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}"/>&nbsp;
               ${uiLabelMap.CommonAny}<input type="radio" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked="checked"</#if>/>
               ${uiLabelMap.CommonAll}<input type="radio" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked="checked"</#if>/>
         </@field>

@@ -58,9 +58,7 @@ function lookupBom() {
             <@field type="generic" label="${uiLabelMap.ProductProductId}">
               <@htmlTemplate.lookupField value="${productId!}" formName="searchform" name="productId" id="productId" fieldFormName="LookupProduct"/>
             </@field>
-            <@field type="generic">
-                <span><a href="javascript:document.searchform.submit();" class="${styles.link_run_sys!} ${styles.action_find!}">${uiLabelMap.ManufacturingShowBOMAssocs}</a></span>
-            </@field>
+            <@field type="submit" submitType="link" href="javascript:document.searchform.submit();" class="${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.ManufacturingShowBOMAssocs}" />
         </@cell>
     </@row>
     <@row>
@@ -68,9 +66,7 @@ function lookupBom() {
             <@field type="generic" label="${uiLabelMap.ManufacturingCopyToProductId}">
                 <@htmlTemplate.lookupField formName="searchform" name="copyToProductId" id="copyToProductId" fieldFormName="LookupProduct"/>
             </@field>
-            <@field type="generic">
-                <span><a href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="${styles.link_run_sys!} ${styles.action_copy!}">${uiLabelMap.ManufacturingCopyBOMAssocs}</a></span>
-            </@field>
+            <@field type="submit" submitType="link" href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="${styles.link_run_sys!} ${styles.action_copy!}" text="${uiLabelMap.ManufacturingCopyBOMAssocs}" />
         </@cell>
     </@row>
   </form>
@@ -111,9 +107,8 @@ function lookupBom() {
           <@field type="generic" label="${uiLabelMap.ManufacturingProductIdTo}">
               <@htmlTemplate.lookupField value="${productIdTo!}" formName="editProductAssocForm" name="productIdTo" id="productIdTo" fieldFormName="LookupProduct"/>
           </@field>
-          <@field type="generic" label="${uiLabelMap.CommonFromDate}">
+          <@field type="generic" label="${uiLabelMap.CommonFromDate}" tooltip="(${uiLabelMap.ManufacturingWillBeSetToNow})">
               <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="50" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                <span class="tooltip">(${uiLabelMap.ManufacturingWillBeSetToNow})</span>
           </@field>
     <#else>
           <@field type="display" label="${uiLabelMap.ProductProductId}">${productId!}</@field>
@@ -122,13 +117,13 @@ function lookupBom() {
           <@field type="display" label="${uiLabelMap.CommonFromDate}">${fromDate?date?string.short!}</@field>
     </#if>
     
+    <#if useValues> 
+      <#assign value = productAssoc.thruDate!>
+    <#else>
+      <#assign value = request.getParameter("thruDate")!>
+    </#if>
     <@field type="generic" label="${uiLabelMap.CommonThruDate}">
-            <#if useValues> 
-              <#assign value= productAssoc.thruDate!>
-            <#else>
-              <#assign value= request.getParameter("thruDate")!>
-            </#if>
-            <@htmlTemplate.renderDateTimeField value="${value!''}" name="thruDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="30" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
+        <@htmlTemplate.renderDateTimeField value="${value!''}" name="thruDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="30" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
     </@field>
     <@field type="input" label="${uiLabelMap.CommonSequenceNum}" name="sequenceNum" value=useValues?string("${(productAssoc.sequenceNum)!}", "${(request.getParameter('sequenceNum'))!}") size="5" maxlength="10"/>
     <@field type="input" label="${uiLabelMap.ManufacturingReason}" name="reason" value=useValues?string("${(productAssoc.reason)!}", "${(request.getParameter('reason'))!}") size="60" maxlength="255"/>
@@ -136,28 +131,28 @@ function lookupBom() {
     <@field type="input" label="${uiLabelMap.ManufacturingQuantity}" name="quantity" value=useValues?string("${(productAssoc.quantity)!}", "${(request.getParameter('quantity'))!}") size="10" maxlength="15"/>
     <@field type="input" label="${uiLabelMap.ManufacturingScrapFactor}" name="scrapFactor" value=useValues?string("${(productAssoc.scrapFactor)!}", "${(request.getParameter('scrapFactor'))!}") size="10" maxlength="15"/>
     <@field type="select" label="${uiLabelMap.ManufacturingFormula}" name="estimateCalcMethod">
-            <option value="">&nbsp;</option>
-            <#assign selectedFormula = "">
-            <#if useValues>
-                <#assign selectedFormula = (productAssoc.estimateCalcMethod)!>
-            <#else>
-                <#assign selectedFormula = (request.getParameter("estimateCalcMethod"))!>
-            </#if>
-            <#list formulae as formula>
-                <option value="${formula.customMethodId}" <#if selectedFormula = formula.customMethodId>selected="selected"</#if>>${formula.get("description",locale)!}</option>
-            </#list>
+        <option value="">&nbsp;</option>
+        <#assign selectedFormula = "">
+        <#if useValues>
+            <#assign selectedFormula = (productAssoc.estimateCalcMethod)!>
+        <#else>
+            <#assign selectedFormula = (request.getParameter("estimateCalcMethod"))!>
+        </#if>
+        <#list formulae as formula>
+            <option value="${formula.customMethodId}" <#if selectedFormula = formula.customMethodId>selected="selected"</#if>>${formula.get("description",locale)!}</option>
+        </#list>
     </@field>
+    <#if useValues>
+      <#assign value = productAssoc.routingWorkEffortId!>
+    <#else>
+      <#assign value = request.getParameter("routingWorkEffortId")!>
+    </#if>
     <@field type="generic" label="${uiLabelMap.ManufacturingRoutingTask}">
-          <#if useValues>
-            <#assign value = productAssoc.routingWorkEffortId!>
-          <#else>
-            <#assign value = request.getParameter("routingWorkEffortId")!>
-          </#if>
-          <#if value?has_content>
-            <@htmlTemplate.lookupField value="${value}" formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
-          <#else>
-            <@htmlTemplate.lookupField formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
-          </#if>
+      <#if value?has_content>
+        <@htmlTemplate.lookupField value="${value}" formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
+      <#else>
+        <@htmlTemplate.lookupField formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
+      </#if>
     </@field>
     <#if !(productAssoc??)>
       <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />

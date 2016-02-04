@@ -122,9 +122,8 @@ under the License.
               </#if>
             </select>
         </@field>
-        <@field type="generic" label="${uiLabelMap.ProjectMgrWorkEffortScopeEnumId}">
-            <#assign enumerations = delegator.findByAnd("Enumeration", Static["org.ofbiz.base.util.UtilMisc"].toMap("enumTypeId", "WORK_EFF_SCOPE"), null, false)>
-            <select name="scopeEnumId">
+        <#assign enumerations = delegator.findByAnd("Enumeration", Static["org.ofbiz.base.util.UtilMisc"].toMap("enumTypeId", "WORK_EFF_SCOPE"), null, false)>
+        <@field type="select" label="${uiLabelMap.ProjectMgrWorkEffortScopeEnumId}" name="scopeEnumId">
               <#if task??>
                 <#assign scopeEnumId = task.scopeEnumId!>
                 <#list enumerations as enumeration>
@@ -135,7 +134,6 @@ under the License.
                   <option value="${enumeration.enumId}">${enumeration.description}</option>
                 </#list>
               </#if>
-            </select>
         </@field>
         <@field type="generic" label="${uiLabelMap.WorkEffortEstimatedStartDate}">
             <#if task??>

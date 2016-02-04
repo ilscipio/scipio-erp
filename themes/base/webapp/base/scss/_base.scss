@@ -345,6 +345,9 @@ $pie-color: $primary-color; // chart-color
     }
 }
 
+
+/* FIXUPS */
+
 /* no longer used - quick custom workaround for be able to scroll tables.
 div.scrollable-table-container {
   overflow-x: scroll;
@@ -373,6 +376,15 @@ div.scrollable-table-container > table {
 .asmListItemRemove {
   margin-left: 1rem;
 }
+
+// Removes large bottom margin from buttons in data tables because take too much space when they go vertical. 
+table.table-data-common .button {
+  margin-bottom:0.1rem;
+}
+/*table .button {
+  margin-bottom:0.1rem;
+}*/
+
 
 
 /* GENERAL ELEMENT COLORS */

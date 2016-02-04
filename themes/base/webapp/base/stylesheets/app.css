@@ -10223,6 +10223,7 @@ div.section-screenlet-container.no-title.no-menu {
     min-width: 0;
   }
 }
+/* FIXUPS */
 /* no longer used - quick custom workaround for be able to scroll tables.
 div.scrollable-table-container {
   overflow-x: scroll;
@@ -10233,84 +10234,92 @@ div.scrollable-table-container > table {
   margin-bottom: 0;
 }
 */
-/* line 360, ../scss/_base.scss */
+/* line 363, ../scss/_base.scss */
 .field-entry-widget.field-entry-type-display:last-child {
   margin-bottom: 1rem;
 }
 
-/* line 364, ../scss/_base.scss */
+/* line 367, ../scss/_base.scss */
 .radio-item-inline.radio-item-separator {
   display: none;
 }
 
-/* line 368, ../scss/_base.scss */
+/* line 371, ../scss/_base.scss */
 .checkbox-item-inline.checkbox-item-separator {
   display: none;
 }
 
-/* line 373, ../scss/_base.scss */
+/* line 376, ../scss/_base.scss */
 .asmListItemRemove {
   margin-left: 1rem;
 }
 
+/* line 381, ../scss/_base.scss */
+table.table-data-common .button {
+  margin-bottom: 0.1rem;
+}
+
+/*table .button {
+  margin-bottom:0.1rem;
+}*/
 /* GENERAL ELEMENT COLORS */
-/* line 380, ../scss/_base.scss */
+/* line 392, ../scss/_base.scss */
 .colored-elem.primary, .colored-elem {
   color: #008cba;
 }
 
-/* line 381, ../scss/_base.scss */
+/* line 393, ../scss/_base.scss */
 .colored-elem.secondary {
   color: #e7e7e7;
 }
 
-/* line 382, ../scss/_base.scss */
+/* line 394, ../scss/_base.scss */
 .colored-elem.info {
   color: #a0d3e8;
 }
 
-/* line 383, ../scss/_base.scss */
+/* line 395, ../scss/_base.scss */
 .colored-elem.success {
   color: #43ac6a;
 }
 
-/* line 384, ../scss/_base.scss */
+/* line 396, ../scss/_base.scss */
 .colored-elem.warning {
   color: #f08a24;
 }
 
-/* line 385, ../scss/_base.scss */
+/* line 397, ../scss/_base.scss */
 .colored-elem.alert {
   color: #f04124;
 }
 
 /* TEXT COLORS */
-/* line 390, ../scss/_base.scss */
+/* line 402, ../scss/_base.scss */
 .colored-text.primary, .colored-text {
   color: #008cba;
 }
 
-/* line 391, ../scss/_base.scss */
+/* line 403, ../scss/_base.scss */
 .colored-text.secondary {
   color: #e7e7e7;
 }
 
-/* line 392, ../scss/_base.scss */
+/* line 404, ../scss/_base.scss */
 .colored-text.info {
   color: #a0d3e8;
 }
 
-/* line 393, ../scss/_base.scss */
+/* line 405, ../scss/_base.scss */
 .colored-text.success {
   color: #43ac6a;
 }
 
-/* line 394, ../scss/_base.scss */
+/* line 406, ../scss/_base.scss */
 .colored-text.warning {
   color: #f08a24;
 }
 
-/* line 395, ../scss/_base.scss */
+/* line 407, ../scss/_base.scss */
 .colored-text.alert {
   color: #f04124;
 }
@@ -10323,7 +10332,7 @@ div.scrollable-table-container > table {
   note that system- vs session- vs page- changing actions can be styled separately. */
 /* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
   NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
-/* line 408, ../scss/_base.scss */
+/* line 420, ../scss/_base.scss */
 .action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10345,7 +10354,7 @@ div.scrollable-table-container > table {
 }
 */
 /* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
-/* line 420, ../scss/_base.scss */
+/* line 432, ../scss/_base.scss */
 .action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10361,7 +10370,7 @@ div.scrollable-table-container > table {
 }
 
 /* terminate actions (like cancel order) */
-/* line 425, ../scss/_base.scss */
+/* line 437, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10378,7 +10387,7 @@ div.scrollable-table-container > table {
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 432, ../scss/_base.scss */
+/* line 444, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #a0d3e8;
   border-color: #61b6d9;
@@ -10400,7 +10409,7 @@ div.scrollable-table-container > table {
    @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
 }*/
 /* high-importance modify actions, like create order button */
-/* line 445, ../scss/_base.scss */
+/* line 457, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
   background-color: #f04124;
   border-color: #cf2a0e;
@@ -10416,7 +10425,7 @@ div.scrollable-table-container > table {
 }
 
 /* special nav cancel/back/return action button (alt regular color) */
-/* line 451, ../scss/_base.scss */
+/* line 463, ../scss/_base.scss */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {
   background-color: #e7e7e7;
   border-color: #b9b9b9;
@@ -10432,7 +10441,7 @@ div.scrollable-table-container > table {
 }
 
 /* special run-action cancel action button (warning color) */
-/* line 456, ../scss/_base.scss */
+/* line 468, ../scss/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;
   border-color: #cf6e0e;

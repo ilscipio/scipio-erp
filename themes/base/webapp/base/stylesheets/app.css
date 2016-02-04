@@ -10255,7 +10255,7 @@ div.scrollable-table-container > table {
 }
 
 /* line 381, ../scss/_base.scss */
-table.table-data-common .button {
+table.table-type-data .button {
   margin-bottom: 0.1rem;
 }
 

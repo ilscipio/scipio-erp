@@ -87,10 +87,11 @@
        NOTE: The widget attribute "selected" usually translates to "active" in styles hash/FTL/CSS terminology (where "selected" may mean something else).
           This is because there's only one highlight option for widgets and by convention the selected widget attrib should practically always be used to select the "active" menu item. --> 
     <#-- Generic menu types -->
-    "menu_generic" : "",  
+    "menu_generic" : "menu-type-generic",
+    "menu_generic_type" : "menu-type-generic",  <#-- specific type style, normally already included in previous entry, but can reference individually -->
     "menu_generic_item" : "", 
     "menu_generic_itemdisabled" : "disabled", 
-    "menu_generic_itemactive" : "active", 
+    "menu_generic_itemactive" : "active",
     "menu_generic_itemselected" : "selected", 
     "menu_generic_item_contentdisabled" : "disabled", 
     "menu_generic_item_contentactive" : "active", 
@@ -98,7 +99,8 @@
     "menu_generic_item_link" : "",
     "menu_generic_item_text" : "text-entry",
     "menu_generic_item_submit" : "", 
-    "menu_button" : "button-group force-button",
+    "menu_button" : "button-group force-button menu-type-button",
+    "menu_button_type" : "menu-type-button",
     "menu_button_item" : "",
     "menu_button_itemdisabled" : "disabled", 
     "menu_button_itemactive" : "active", 
@@ -110,7 +112,8 @@
     "menu_button_item_text" : "text-entry",
     "menu_button_item_submit" : "button tiny",
     <#-- Main navigation menus -->
-    "menu_main" : "dropdown",
+    "menu_main" : "dropdown menu-type-main",
+    "menu_main_type" : "menu-type-main",
     "menu_main_wrap" : "has-dropdown not-click active",        
     "menu_main_item" : "",
     "menu_main_itemdisabled" : "disabled", 
@@ -122,7 +125,8 @@
     "menu_main_item_link" : "",
     "menu_main_item_text" : "text-entry",
     "menu_main_item_submit" : "", 
-    "menu_sidebar" : "side-nav",
+    "menu_sidebar" : "side-nav menu-type-sidebar",
+    "menu_sidebar_type" : "menu-type-sidebar",
     "menu_sidebar_wrap" :"", 
     "menu_sidebar_item" : "",
     "menu_sidebar_itemdisabled" : "disabled", 
@@ -135,7 +139,8 @@
     "menu_sidebar_item_text" : "text-entry",
     "menu_sidebar_item_submit" : "", 
     <#-- Tab and secondary navigation menus-->
-    "menu_tab" : "button-group force-button", 
+    "menu_tab" : "button-group force-button menu-type-tab", 
+    "menu_tab_type" : "menu-type-tab", 
     "menu_tab_item" : "", 
     "menu_tab_itemdisabled" : "disabled", 
     "menu_tab_itemactive" : "active", 
@@ -146,7 +151,8 @@
     "menu_tab_item_link" : "button tiny",
     "menu_tab_item_text" : "text-entry",
     "menu_tab_item_submit" : "button", 
-    "menu_subtab" : "button-group force-button",
+    "menu_subtab" : "button-group force-button menu-type-subtab",
+    "menu_subtab_type" : "menu-type-subtab",
     "menu_subtab_item" : "",
     "menu_subtab_itemdisabled" : "disabled", 
     "menu_subtab_itemactive" : "active", 
@@ -158,7 +164,8 @@
     "menu_subtab_item_text" : "text-entry",
     "menu_subtab_item_submit" : "button tiny", 
     <#-- Default section menu -->
-    "menu_section" : "button-group",
+    "menu_section" : "button-group menu-type-section",
+    "menu_section_type" : "menu-type-section",
     "menu_section_item" : "",
     "menu_section_itemdisabled" : "disabled", 
     "menu_section_itemactive" : "active", 
@@ -171,7 +178,8 @@
     "menu_section_item_submit" : "button tiny", 
     <#-- Default section menu inlined with title
         FIXME: looks too big/clumsy with these buttons (floats right of title) -->
-    "menu_section_inline" : "button-group",
+    "menu_section_inline" : "button-group menu-type-section-inline",
+    "menu_section_inline_type" : "menu-type-section-inline",
     "menu_section_inline_item" : "",
     "menu_section_inline_itemdisabled" : "disabled", 
     "menu_section_inline_itemactive" : "active", 
@@ -184,7 +192,8 @@
     "menu_section_inline_item_submit" : "button tiny", 
     <#-- default entry is used for any encountered menu types that have no specific entries in this hash, 
          and also for individual value fallbacks for values not defined in the type-specific entries above -->    
-    "menu_default" : "",  
+    "menu_default" : "menu-type-default",  
+    "menu_default_type" : "menu-type-default", 
     "menu_default_item" : "", 
     "menu_default_itemdisabled" : "disabled", 
     "menu_default_itemactive" : "active", 
@@ -208,33 +217,33 @@
   
     <#-- table type-based styles 
          used for default table class and attribute lookups by the @table macro, based on table type. -->
-    "table_generic" : "table-generic",    <#-- represents free-form <table>. probably should have no class (let template decide). -->
-    "table_generic_spec" : "table-generic",  <#-- specific table identifier -->
+    "table_generic" : "table-type-generic",    <#-- represents free-form <table>. probably should have no class (let template decide). -->
+    "table_generic_type" : "table-type-generic",  <#-- specific table identifier -->
     "table_generic_cellspacing" : "",
     "table_generic_rowtype" : "generic",    <#-- the default row type is normally "content", but generic tables need "generic" -->
-    "table_data_list" : "basic-table table-data-common table-data-list",  <#-- analogous to ofbiz "list" type form widgets (and still very close to "multi" type) -->
-    "table_data_list_spec" : "table-data-common table-data-list",
+    "table_data_list" : "basic-table table-type-data table-type-data-list",  <#-- analogous to ofbiz "list" type form widgets (and still very close to "multi" type) -->
+    "table_data_list_type" : "table-type-data table-type-data-list",
     "table_data_list_cellspacing" : 0,
     "table_data_list_responsive" : true,
     <#-- "table_data_list_autoaltrows" : true, -->
-    "table_data_list_multiform" : "basic-table table-data-common table-data-list-multiform",  <#-- analogous to ofbiz "multi" type form widgets (but still basically a "list" type) -->
-    "table_data_list_multiform_spec" : "table-data-common table-data-list-multiform",
+    "table_data_list_multiform" : "basic-table table-type-data table-type-data-list-multiform",  <#-- analogous to ofbiz "multi" type form widgets (but still basically a "list" type) -->
+    "table_data_list_multiform_type" : "table-type-data table-type-data-list-multiform",
     "table_data_list_multiform_cellspacing" : 0,
     "table_data_list_multiform_responsive" : false,    
-    "table_data_complex" : "basic-table table-data-common table-data-complex", <#-- like data_list but with complex structure (no form widget equivalent) -->
-    "table_data_complex_spec" : "table-data-common table-data-complex",
+    "table_data_complex" : "basic-table table-type-data table-type-data-complex", <#-- like data_list but with complex structure (no form widget equivalent) -->
+    "table_data_complex_type" : "table-type-data table-type-data-complex",
     "table_data_complex_cellspacing" : 0,
-    "table_summary" : "basic-table table-summary",
-    "table_summary_spec" : "table-summary",
+    "table_summary" : "basic-table table-type-summary",
+    "table_summary_type" : "table-type-summary",
     "table_summary_cellspacing" : 0,
-    "table_fields" : "basic-table table-fields",    <#-- similar to ofbiz "single" type form widgets; may be acceptable for display-only fields -->
-    "table_fields_spec" : "table-fields", 
+    "table_fields" : "basic-table table-type-fields",    <#-- similar to ofbiz "single" type form widgets; may be acceptable for display-only fields -->
+    "table_fields_type" : "table-type-fields", 
     "table_fields_cellspacing" : 0,
     <#-- default entry is used by @table for any encountered table types that have no specific entries in this hash. 
          in other words, it is the default style for table types that this theme does not recognize, or "all others". 
          it is also used for individual fallback values. -->    
-    "table_default" : "basic-table table-default",
-    "table_default_spec" : "table-default",
+    "table_default" : "basic-table table-type-default",
+    "table_default_type" : "table-type-default",
     "table_default_cellspacing" : "",
     "table_default_autoaltrows" : false,
     "table_default_rowtype" : "content",
@@ -259,8 +268,8 @@
     },
     
     <#-- form widget styles in _addition_ to the @table styles above -->
-    "table_formwidget" : "dark-grid",               <#-- default class for form widget tables (does NOT include _spec because _spec always added) -->
-    "table_formwidget_spec" : "table-formwidget",   <#-- specific identifier for form widget tables. NOTE: this is ALWAYS added so doesn't need to be part of table_formwidget -->
+    "table_formwidget" : "dark-grid",                   <#-- default class for form widget tables (does NOT include _type because _type always added) -->
+    "table_formwidget_type" : "table-type-formwidget",  <#-- specific identifier for form widget tables. NOTE: this is ALWAYS added so doesn't need to be part of table_formwidget -->
     
     <#-- other table-related styles -->
     "table_basic" : "basic-table",  <#-- this is not a table type, but simply the basic-table style -->

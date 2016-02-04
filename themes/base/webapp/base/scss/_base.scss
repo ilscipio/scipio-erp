@@ -378,7 +378,7 @@ div.scrollable-table-container > table {
 }
 
 // Removes large bottom margin from buttons in data tables because take too much space when they go vertical. 
-table.table-data-common .button {
+table.table-type-data .button {
   margin-bottom:0.1rem;
 }
 /*table .button {

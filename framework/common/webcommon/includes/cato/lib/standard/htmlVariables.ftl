@@ -744,14 +744,12 @@
     "fields_default_nolabels_labelarea" : false,
     "fields_default_nolabels_labelareaexceptions" : "", 
     "fields_default_nolabels_labelarearequirecontent" : false,
-    "fields_default_nolabels_checkboxtype" : "",
 
     "fields_default_compact_labeltype" : "vertical",
     "fields_default_compact_labelposition" : "top",
     "fields_default_compact_labelarea" : true, 
     "fields_default_compact_labelareaexceptions" : "radio checkbox", <#-- having label on top of checkbox or radio is really ugly; let the label inline itself for these -->
     "fields_default_compact_labelarearequirecontent" : true,
-    "fields_default_compact_checkboxtype" : "",
 
     "fields_generic_labeltype" : "horizontal",
     "fields_generic_labelposition" : "left",

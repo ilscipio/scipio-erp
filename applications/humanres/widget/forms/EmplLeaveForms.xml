@@ -21,7 +21,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="FindEmplLeaves" type="single" target="FindEmplLeaves"
-        odd-row-style="header-row" default-table-style="${styles.table_basic}">
+        odd-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-entity entity-name="EmplLeave" default-field-type="find"/>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="leaveTypeId">
@@ -48,7 +48,7 @@
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplLeaves" list-name="listIt" type="list" odd-row-style="alternate-row" header-row-style="header-row-2"
-        paginate-target="FindEmplLeaves" default-table-style="${styles.table_basic} hover-bar">
+        paginate-target="FindEmplLeaves"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="entityName" value="EmplLeave"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -93,7 +93,7 @@
         <field name="description"><hidden/></field>
     </form>
     <form name="EditEmplLeave" type="single" target="updateEmplLeaveExt" default-map-name="leaveApp"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="leaveApp==null" target="createEmplLeaveExt"/>
         <auto-fields-service service-name="updateEmplLeave" map-name="leaveApp"/>
         <field name="partyId" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
@@ -130,7 +130,7 @@
         <field name="description"><hidden/></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
-    <form name="ListLeaveApprovals" list-name="listIt" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+    <form name="ListLeaveApprovals" list-name="listIt" type="list" odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="entityName" value="EmplLeave"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">

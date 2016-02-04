@@ -71,7 +71,7 @@ under the License.
                 <set field="demoList[]" from-field="demoMap"/>
                 <set field="altRowStyle" value=""/>
                 <set field="headerStyle" value="header-row-1"/>
-                <set field="tableStyle" value="basic-table light-grid"/>
+                <set field="tableStyle" value="${styles.table_data_list} light-grid"/>
                 <set field="ofbizWidgetsLayoutScreenLocation" value="component://webtools/widget/MiscScreens.xml#WebtoolsLayoutDemoOfbizWidgets" />
             </actions>
             <widgets>
@@ -135,7 +135,7 @@ under the License.
                         <horizontal-separator/>
                         <include-form name="LayoutDemoForm" location="component://webtools/widget/MiscForms.xml"/>                                        <section>
                             <actions>
-                                <set field="tableStyle" value="basic-table dark-grid"/>
+                                <set field="tableStyle" value="${styles.table_data_list} dark-grid"/>
                             </actions>
                             <widgets/>
                         </section>
@@ -143,7 +143,7 @@ under the License.
                             <actions>
                                 <set field="altRowStyle" value="alternate-row"/>
                                 <set field="headerStyle" value="header-row-2"/>
-                                <set field="tableStyle" value="basic-table hover-bar"/>
+                                <set field="tableStyle" value="${styles.table_data_list} hover-bar"/>
                             </actions>
                             <widgets/>
                         </section>
@@ -157,7 +157,7 @@ under the License.
                                 <actions>
                                     <set field="altRowStyle" value="alternate-row"/>
                                     <set field="headerStyle" value="header-row-2"/>
-                                    <set field="tableStyle" value="basic-table hover-bar"/>
+                                    <set field="tableStyle" value="${styles.table_data_list} hover-bar"/>
                                     <set field="viewSize" value="1" type="Integer"/>
                                 </actions>
                                 <widgets/>

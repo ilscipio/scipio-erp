@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="EditShipment" type="single" target="updateShipment" title="" default-map-name="shipment"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="shipment==null&amp;&amp;shipmentTypeId==null" target="createShipment"/>
         <alt-target use-when="shipment==null&amp;&amp;shipmentTypeId!=null&amp;&amp;shipmentTypeId.equals(&quot;PURCHASE_RETURN&quot;)" target="createShipmentAndItemsForVendorReturn"/>
 
@@ -135,7 +135,7 @@ under the License.
     </form>
 
     <form name="FindShipment" type="single" target="FindShipment" title="" default-map-name="Shipment"
-        header-row-style="header-row" default-table-style="${styles.table_basic}" >
+        header-row-style="header-row" > <!-- default-table-style="basic-table" -->
         <field name="shipmentId"><text-find/></field>
         <field name="shipmentTypeId" title="${uiLabelMap.ProductShipmentTypeId}" position="2">
             <drop-down allow-empty="true" current="first-in-list">
@@ -183,7 +183,7 @@ under the License.
     </form>
     
     <form name="ListShipment" type="list" list-name="listIt" paginate-target="FindShipment"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="results" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -222,7 +222,7 @@ under the License.
     <!-- ******************* -->
     <!-- List for Shipment Plan -->
     <form name="listShipmentPlan" type="list" target="" title="" list-name="listShipmentPlanRows"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="shipmentItemSeqId" title="${uiLabelMap.ProductShipmentItemSeqId}"><display/></field>
         <field name="orderId" title="${uiLabelMap.ProductOrderId}"><display/></field>
         <field name="orderItemSeqId" title="${uiLabelMap.ProductOrderItem}"><display/></field>
@@ -257,7 +257,7 @@ under the License.
         </field>
     </form>
     <form name="addToShipmentPlan" type="multi" target="addToShipmentPlan?shipmentId=${shipmentId}" title="" list-name="addToShipmentPlanRows"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="shipmentId"><hidden/></field>
         <field name="orderId"><hidden/></field>
         <field name="orderItemSeqId"><hidden/></field>
@@ -286,7 +286,7 @@ under the License.
 
     <!-- Search by Order Id -->
     <form name="findOrderItems" type="single" target="EditShipmentPlan" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="action"><hidden value="search"/></field>
         <field name="shipmentId"><hidden/></field>
         <field name="orderId" entry-name="shipment.primaryOrderId" title="${uiLabelMap.ProductOrderId}">
@@ -298,7 +298,7 @@ under the License.
         </field>
     </form>
     <form name="ShipmentReceipts" type="list" target="" title="" list-name="shipmentReceiptList"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="ShipmentReceipt" list="shipmentReceiptList">
                 <field-map field-name="shipmentId" from-field="shipmentId"/>
@@ -320,7 +320,7 @@ under the License.
     </form>
     
     <form name="ViewShipment" type="single" default-map-name="shipment"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
             <script location="component://product/webapp/facility/WEB-INF/actions/shipment/orgAddressFormatted.groovy"/>
             <script location="component://product/webapp/facility/WEB-INF/actions/shipment/destAddressFormatted.groovy"/>

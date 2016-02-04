@@ -22,7 +22,7 @@ under the License.
        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="FindFacilityInventoryByProduct" type="single" target="${facilityInventoryByProductScreen}" title=""
-          header-row-style="header-row" default-table-style="${styles.table_basic}">
+          header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="facilityId"><hidden/></field>
         <field name="action"><hidden value="SEARCH"/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}">

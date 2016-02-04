@@ -21,7 +21,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="FindAgreements" target="FindAgreement" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="agreementId" title="${uiLabelMap.CommonId}"><text-find/></field>
         <field name="agreementTypeId" title="${uiLabelMap.CommonType}" position="2">
             <drop-down allow-empty="true">
@@ -63,7 +63,7 @@ under the License.
     </form>
     
     <form name="ListAgreements" list-name="listIt" target="" title="" type="list" paginate-target="FindAgreement"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="entityName" value="Agreement"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -124,7 +124,7 @@ under the License.
     </form>
 
     <form name="EditAgreement" type="single" target="updateAgreement" title="" default-map-name="agreement"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="agreement==null" target="createAgreement"/>
         <auto-fields-service service-name="updateAgreement" default-field-type="edit" map-name="agreement"/>
         <field name="agreementId" use-when="agreementId!=null"><display/></field>
@@ -163,7 +163,7 @@ under the License.
     </form>
 
     <form name="ListAgreementItems" list-name="agreementItems" target="" title="" type="list" paginate-target="ListAgreementItems"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <auto-fields-entity entity-name="AgreementItem" default-field-type="display"/>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId"  title="${uiLabelMap.CommonItem} ${uiLabelMap.ProductSeqId}" 
@@ -185,7 +185,7 @@ under the License.
     </form>
 
     <form name="EditAgreementItem" type="single" target="updateAgreementItem" title="" default-map-name="agreementItem"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="agreementItem==null" target="createAgreementItem"/>
         <auto-fields-entity entity-name="AgreementItem" default-field-type="edit"/>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
@@ -210,7 +210,7 @@ under the License.
     </form>
     
     <form name="ListAgreementTerms" target="updateAgreementTerm" list-name="agreementTerms" paginate-target="EditAgreementTerms" title="" type="list"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="AgreementTerm" list="agreementTerms">
                 <field-map field-name="agreementId" from-field="agreementId"/>
@@ -255,7 +255,7 @@ under the License.
     </form>
     
     <form name="AddAgreementTerm" type="single" target="createAgreementTerm" title="" default-map-name="agreementTerm"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="agreementTermId" title="${uiLabelMap.AccountingAgreementTermId}"><hidden/></field>
         <field name="termTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="false">
@@ -287,7 +287,7 @@ under the License.
     </form>
     
     <form name="EditAgreementGeographicalApplic" type="single" target="updateAgreementGeographicalApplic" title="" default-map-name="agreementGeographicalApplic"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="agreementGeographicalApplic==null" target="createAgreementGeographicalApplic"/>
         <auto-fields-entity entity-name="AgreementGeographicalApplic" default-field-type="edit"/>
         <field name="agreementId"><hidden/></field>
@@ -306,7 +306,7 @@ under the License.
     </form>
     
     <form name="ListAgreementGeographicalApplic" target="" title="" type="list" list-name="agreementGeographicalApplics" paginate-target="ListAgreementGeographicalApplic"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <auto-fields-entity entity-name="AgreementGeographicalApplic" default-field-type="display"/>
         <field name="agreementId"><hidden/></field>
         <field name="agreementItemSeqId"><hidden/></field>
@@ -323,7 +323,7 @@ under the License.
     </form>
     
     <form name="EditAgreementItemFacility" type="single" target="updateAgreementItemFacility" title="" default-map-name="agreementFacilityAppl"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="agreementFacilityAppl==null" target="createAgreementItemFacility"/>
         <auto-fields-entity entity-name="AgreementFacilityAppl" default-field-type="edit"/>
         <field name="agreementId"><hidden/></field>
@@ -338,7 +338,7 @@ under the License.
     </form>
     
     <form name="ListAgreementItemFacilities" list-name="agreementFacilities" target="" title="" type="list" paginate-target="ListAgreementItemFacilities"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one value-field="facility" entity-name="Facility"></entity-one>
         </row-actions>
@@ -361,7 +361,7 @@ under the License.
     </form>
     
     <form name="ViewAgreementInfoForReport" type="single" title="" default-map-name="agreement"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="agreementId"><text/></field>
         <field name="partyIdFrom"><text/></field>
         <field name="partyIdTo">
@@ -372,13 +372,13 @@ under the License.
         <field name="description"><display/></field>
     </form>
     <form name="ViewAgreementItemInfoForReport" type="single" title="" default-map-name="agreementItem"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="agreementItemSeqId"><display/></field>
         <field name="currencyUomId"><display/></field>
     </form>
     
     <form name="EditAgreementItemParty" type="single" target="updateAgreementItemParty" title="" default-map-name="agreementPartyApplic"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="agreementPartyApplic==null" target="createAgreementItemParty"/>
         <auto-fields-entity entity-name="AgreementPartyApplic" default-field-type="edit"/>
         <field name="agreementId"><hidden/></field>
@@ -393,7 +393,7 @@ under the License.
     </form>
     
     <form name="ListAgreementItemParties" list-name="agreementParties" target="" title="" type="list" paginate-target="ListAgreementItemParties"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one value-field="party" entity-name="PartyNameView"/>
         </row-actions>
@@ -416,7 +416,7 @@ under the License.
     </form>
     
     <form name="EditAgreementItemProduct" type="single" target="updateAgreementItemProduct" title="" default-map-name="agreementProductAppl"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="agreementProductAppl==null" target="createAgreementItemProduct"/>
         <auto-fields-entity entity-name="AgreementProductAppl" default-field-type="edit"/>
         <field name="agreementId"><hidden/></field>
@@ -431,7 +431,7 @@ under the License.
     </form>
     
     <form name="ListAgreementItemProducts" list-name="agreementProducts" target="" title="" type="list" paginate-target="ListAgreementItemProducts"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one value-field="product" entity-name="Product"/>
         </row-actions>
@@ -457,7 +457,7 @@ under the License.
     </form>
     
     <form name="ListAgreementItemProductsForReport" list-name="agreementProducts" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="productId" title-area-style="tableheadmedium"><display/></field>
         <field name="internalName" entry-name="productId">
             <display-entity entity-name="Product" key-field-name="productId" description="${internalName}"/>
@@ -466,7 +466,7 @@ under the License.
     </form>
     
 <form name="EditAgreementPromoAppl" type="single" target="updateAgreementPromoAppl" title="" default-map-name="agreementPromoAppl"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="agreementPromoAppl==null" target="createAgreementPromoAppl"/>
         <auto-fields-entity entity-name="AgreementPromoAppl" default-field-type="edit"/>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
@@ -490,7 +490,7 @@ under the License.
     </form>
     
     <form name="ListAgreementPromoAppls" list-name="agreementPromoAppls" target="" title="" type="list" paginate-target="ListAgreementPromoAppls"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one value-field="productPromo" entity-name="ProductPromo"></entity-one>
         </row-actions>
@@ -518,7 +518,7 @@ under the License.
     </form>
     
     <form name="EditAgreementItemSupplierProduct" type="single" target="updateAgreementItemSupplierProduct" title="" default-map-name="agreementProductAppl"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="agreementProductAppl==null" target="createAgreementItemSupplierProduct"/>
         <auto-fields-entity entity-name="SupplierProduct" default-field-type="edit"/>
         <field name="agreementId"><hidden/></field>
@@ -571,7 +571,7 @@ under the License.
     </form>
     
     <form name="ListAgreementItemSupplierProducts" list-name="agreementProducts" target="" title="" type="list" paginate-target="ListAgreementItemSupplierProducts"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <auto-fields-entity entity-name="SupplierProduct" default-field-type="display"/>
         <field name="agreementId"><hidden/></field>
         <field name="agreementItemSeqId"><hidden/></field>
@@ -606,7 +606,7 @@ under the License.
     </form>
     
     <form name="ListAgreementItemSupplierProductsForReport" list-name="agreementProducts" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="productId" title-area-style="tableheadmedium"><display/></field>
         <field name="supplierProductId" title-area-style="tableheadmedium"><display/></field>
         <field name="internalName" entry-name="productId">
@@ -616,7 +616,7 @@ under the License.
     </form>
     
     <form name="EditAgreementItemTerm" type="single" target="updateAgreementItemTerm" title="" default-map-name="agreementTerm"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="agreementTerm==null" target="createAgreementItemTerm"/>
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><display/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}" position="2"><display/></field>
@@ -647,7 +647,7 @@ under the License.
     </form>
     
     <form name="ListAgreementItemTerms" target="" title="" type="list" list-name="agreementTerms" paginate-target="ListAgreementItemTerms"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         
         <field name="agreementId" title="${uiLabelMap.AccountingAgreementId}"><hidden/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.AccountingAgreementItemSeqId}"><hidden/></field>
@@ -675,7 +675,7 @@ under the License.
     
     <!-- Agreement WorkEffort Applic-->
     <form name="AddAgreementWorkEffortApplic" target="createAgreementWorkEffortApplic" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="agreementId"><hidden value="${agreementId}"/></field>
         <field name="agreementItemSeqId" title="${uiLabelMap.CommonItem} ${uiLabelMap.ProductSeqId}">
             <drop-down allow-empty="false">
@@ -692,7 +692,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListAgreementWorkEffortApplics" type="list" target="updateAgreementWorkEffortApplic" list-name="agreementWorkEffortApplics"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="AgreementWorkEffortApplic" use-cache="true" list="agreementWorkEffortApplics">
                 <field-map from-field="agreementId" field-name="agreementId"/>
@@ -724,7 +724,7 @@ under the License.
         </field>
     </form>
     <form name="ListAgreementRoles" list-name="agreementRoles" type="list" paginate-target="EditAgreementRoles"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="AgreementRole" use-cache="true" list="agreementRoles">
                 <field-map field-name="agreementId" from-field="agreementId"/>
@@ -747,7 +747,7 @@ under the License.
         </field>
     </form>
     <form name="AddAgreementRole" type="single" target="createAgreementRole"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-entity entity-name="AgreementRole" default-field-type="edit"/>
         <field name="agreementId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
@@ -762,7 +762,7 @@ under the License.
     </form>
     
     <form name="CopyAgreement" type="single" target="copyAgreement"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="agreementId"><hidden/></field>
         <field name="copyAgreementTerms" title="${uiLabelMap.AccountingAgreementTerms}">
             <check no-current-selected-key="Y">

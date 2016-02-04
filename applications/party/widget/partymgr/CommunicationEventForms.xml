@@ -281,7 +281,7 @@ under the License.
     </form>
 
     <form name="ViewCommEvent" type="single" default-map-name="communicationEvent"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="communicationEventId"><display/></field>
         <field name="contactListId" use-when="contactListId!=null">
             <display-entity entity-name="ContactList" description="${contactListName}">
@@ -342,7 +342,7 @@ under the License.
     </form>
 
     <form name="findCommEvents" type="single" target="FindCommunicationEvents" paginate="true" focus-field-name="submitAction"
-        header-row-style="header-row" default-table-style="${styles.table_basic}" default-position-span="1">
+        header-row-style="header-row" default-position-span="1"> <!-- default-table-style="basic-table" -->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="communicationEventId" position="1"><text-find/></field>
         <field name="parentCommEventId" position="2"><text-find/></field>
@@ -400,7 +400,7 @@ under the License.
     </form>
 
     <form name="ListCommEvents" type="list" paginate="true" list-name="commEvents"
-        odd-row-style="alternate-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <set field="subject" from-field="subject" default-value="${uiLabelMap.PartyNoSubject}"/>
         </row-actions>
@@ -435,7 +435,7 @@ under the License.
     </form>
 
     <form name="FindCommunicationByOrder" type="single" target="FindCommunicationByOrder" paginate="true" focus-field-name="submitAction"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="orderId" position="1"><text-find/></field>
         <field name="communicationEventId" position="1"><text-find/></field>
@@ -485,7 +485,7 @@ under the License.
     </form>
     
     <form name="ListPartyCommEvents" type="list" target="RemoveCommunicationEventRole" list-name="listIt"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar" sort-field-parameter-name="partyCommEventSortField">
+        odd-row-style="alternate-row" header-row-style="header-row-2" sort-field-parameter-name="partyCommEventSortField"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="parameters.partyCommEventSortField" from-field="parameters.partyCommEventSortField" default-value="${groovy: 'true'.equals(parameters.all) ? '-entryDate' : 'entryDate'}"/>
             <set field="searchParameters.partyId" from-field="partyId"/>
@@ -552,7 +552,7 @@ under the License.
         <field name="roleTypeId"><display-entity entity-name="RoleType" description="${description}"/></field>
         <field name="removeAction" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
-    <form name="ListPendingCommEvents" type="list" extends="ListCommEvents" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+    <form name="ListPendingCommEvents" type="list" extends="ListCommEvents" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="CommunicationEvent" list="commEvents">
                 <condition-list combine="and">
@@ -613,7 +613,7 @@ under the License.
     </form>
 
     <form name="ListCommWorkEfforts" type="list" paginate-target="ListCommWorkEfforts"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="CommunicationEventWorkEff" use-cache="false">
                 <field-map field-name="communicationEventId"/>
@@ -632,7 +632,7 @@ under the License.
     <form name="AddCommEventWorkEffort" type="single" extends="EditWorkEffort"
         extends-resource="component://workeffort/widget/WorkEffortForms.xml"
         target="/partymgr/control/createCommEventWorkEffort" target-type="inter-app"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="communicationEventId"><display/></field>
         <field name="workEffortId"  use-when="workEffort==null&amp;&amp;workEffortId==null" ><lookup target-form-name="LookupWorkEffort"/></field>
         <field name="submitButton" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="text-link"/></field>
@@ -645,7 +645,7 @@ under the License.
     </form>
 
     <form name="ListCommPurposes" type="list" paginate-target="UpdateCommPurposes"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="CommunicationEventPurpose" use-cache="true">
                 <field-map field-name="communicationEventId"/>
@@ -663,7 +663,7 @@ under the License.
     </form>
 
     <form name="AddEventPurpose" type="single" target="createCommunicationEventPurpose"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="communicationEventId"><hidden/></field>
         <field name="partyId"><hidden/></field>
         <field name="communicationEventPrpTypId" >
@@ -677,7 +677,7 @@ under the License.
     </form>
 
     <form name="ListCommRoles" type="list" paginate-target="UpdateCommRoles" target="RemoveCommunicationEventRole"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="CommunicationEventRole" use-cache="true">
                 <field-map field-name="communicationEventId" from-field="parameters.communicationEventId"/>
@@ -705,7 +705,7 @@ under the License.
     </form>
 
     <form name="AddEventRole" type="single" target="createCommunicationEventRole"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
             <!-- 
             <set field="AddEventRole_submitAction" from-field="AddEventRole_submitAction" default-value="javascript:(document.AddEventRole.communicationEventId.value=document.EditEmail.communicationEventId.value),(document.AddEventRole.datetimeStarted.value=document.EditEmail.datetimeStarted.value),(document.AddEventRole.partyIdTo.value=document.EditEmail.partyIdTo.value),(document.AddEventRole.subject.value=document.EditEmail.subject.value),(document.AddEventRole.content.value=document.EditEmail.content.value),(document.AddEventRole.submit())" />
@@ -737,7 +737,7 @@ under the License.
     </form>
 
     <form name="listCommContent" type="list" list-name="contentDataResourceList" target="removeAttachFile"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" hide-table-when="${!formHasListResult}" use-alternate-text-when="${false}" paginate="false"> <!-- doesn't work: paginate-target="/ListCommContent" -->
+        odd-row-style="alternate-row" hide-table-when="${!formHasListResult}" use-alternate-text-when="${false}" paginate="false"> <!-- default-table-style="basic-table hover-bar" --> <!-- doesn't work: paginate-target="/ListCommContent" -->
         <actions>
             <entity-and entity-name="CommEventContentDataResource" list="contentDataResourceList">
                 <field-map field-name="communicationEventId" from-field="parameters.communicationEventId"/>
@@ -759,7 +759,7 @@ under the License.
     </form>
 
     <form name="addCommContent" type="single" target="createCommContentDataResource"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="communicationEventId"><hidden/></field>
         <field name="contentId"><ignored/></field>
         <field name="contentName"><text/></field>
@@ -792,7 +792,7 @@ under the License.
     </form>
 
     <form name="editCommContent" type="single" target="updateCommContentDataResource" default-map-name="commEventContentDataResource"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="communicationEventId"><display/></field>
         <field name="contentId"><display/></field>
         <field name="contentTypeId"><hidden/></field>
@@ -912,7 +912,7 @@ under the License.
     </form>      
 
     <form name="editCommTextContent" type="single" target="uploadCommEventContent" default-map-name="commEventContentDataResource"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="contentId" ><hidden/></field>
         <field name="drDataResourceId" ><hidden/></field>
         <field name="drDataResourceTypeId" ><hidden/></field>
@@ -926,7 +926,7 @@ under the License.
     <form name="ListMyUnknownPartyEmails" type="multi" use-row-submit="true"
         title="Email List unknown parties" list-name="commEventsUnknown"
         target="deleteCommunicationEvents" default-entity-name="CommunicationEvent"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <set field="subject" from-field="subject" default-value="${uiLabelMap.PartyNoSubject}"/>
         </row-actions>
@@ -1026,7 +1026,7 @@ under the License.
         <field name="startDate"><display type="date-time"/></field>
         <field name="removeAction" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
-    <form name="ListCommOrders" list-name="ordersList" type="list" target="deleteCommunicationEventOrder" paginate-target="UpdateCommOrders" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" view-size="20">
+    <form name="ListCommOrders" list-name="ordersList" type="list" target="deleteCommunicationEventOrder" paginate-target="UpdateCommOrders" odd-row-style="alternate-row" view-size="20"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="CommunicationEventOrder" list="ordersList">
                 <field-map field-name="communicationEventId"/>
@@ -1048,12 +1048,12 @@ under the License.
         </field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
-    <form name="AddCommOrder" type="single" target="createCommunicationEventOrder" header-row-style="header-row" default-table-style="${styles.table_basic}">
+    <form name="AddCommOrder" type="single" target="createCommunicationEventOrder" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="communicationEventId"><hidden/></field>
         <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
         <field name="submitAction" title="${uiLabelMap.PartyOrderAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
-    <form name="ListCommProducts" list-name="productsList" type="list" target="deleteCommunicationEventProduct" paginate-target="ListCommProducts" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" view-size="20">
+    <form name="ListCommProducts" list-name="productsList" type="list" target="deleteCommunicationEventProduct" paginate-target="ListCommProducts" odd-row-style="alternate-row" view-size="20"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="CommunicationEventProduct" list="productsList">
                 <field-map field-name="communicationEventId"/>
@@ -1069,7 +1069,7 @@ under the License.
         </field>
         <field name="deleteAction" title="${uiLabelMap.CommonDelete}" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
-    <form name="AddCommProduct" type="single" target="createCommunicationEventProduct" header-row-style="header-row" default-table-style="${styles.table_basic}">
+    <form name="AddCommProduct" type="single" target="createCommunicationEventProduct" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="communicationEventId"><hidden/></field>
         <field name="productId" title="${uiLabelMap.PartyProductId}"><lookup target-form-name="LookupProduct"/></field>
         <field name="submitAction" title="${uiLabelMap.PartyProductAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>

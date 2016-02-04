@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     
-    <form name="FindReviews" type="single" target="FindReviews" title="" header-row-style="header-row" default-table-style="${styles.table_basic}" default-map-name="productReview">
+    <form name="FindReviews" type="single" target="FindReviews" title="" header-row-style="header-row" default-map-name="productReview"> <!-- default-table-style="basic-table" -->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="productId" title="${uiLabelMap.ProductId}"><text-find/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
@@ -38,7 +38,7 @@ under the License.
     </form>
     
     <form name="ListReviews" type="list" list-name="listIt" target="updateProductReview" title="" paginate-target="FindReviews"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="entityName" value="ProductReview"/>
             <service service-name="performFind" result-map="result" result-map-list="listIt">

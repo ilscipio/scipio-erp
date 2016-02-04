@@ -23,7 +23,7 @@ under the License.
 
     <!-- CompDoc forms -->
     <form name="FindCompDoc" default-entity-name="Content" target="FindCompDoc" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="contentId" map-name="empty"><text-find/></field>
         <field name="contentName"><text-find/></field>
         <field name="contentTypeId">
@@ -39,7 +39,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListCompDoc" type="list" list-name="listIt" target="" paginate-target="FindCompDoc"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="results" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -96,7 +96,7 @@ under the License.
     </form>
 
     <form name="ListCompDocInstances" target="" type="list" list-name="compDocFindList" paginate-target="ListCompDocInstances"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="contentId"><display/></field>
         <field name="contentName"><display/></field>
         <field name="rootContentId" title="${uiLabelMap.FormFieldTitle_contentIdTo}"><display/></field>
@@ -117,7 +117,7 @@ under the License.
 
     <!-- ContentRevision forms -->
     <form name="EditContentRevision" default-map-name="contentRevision" target="updateContentRevision" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target target="createContentRevision" use-when="contentRevision==null"/>
         <auto-fields-entity entity-name="ContentRevision"/>
 
@@ -137,7 +137,7 @@ under the License.
     </form>
 
     <form name="ListContentRevisions" list-name="contentRevisionList" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="contentId"><display/></field>
         <field name="contentRevisionSeqId"><display/></field>
         <field name="committedByPartyId"><display/></field>
@@ -182,7 +182,7 @@ under the License.
 
     <!-- ContentRevisionItem forms -->
     <form name="EditContentRevisionItem" default-map-name="contentRevisionItem" target="updateContentRevisionItem" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target target="createContentRevisionItem" use-when="contentRevisionItem==null"/>
         <auto-fields-entity entity-name="ContentRevisionItem"/>
 
@@ -197,7 +197,7 @@ under the License.
     </form>
 
     <form name="ListContentRevisionItem" list-name="contentRevisionItemList" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="contentId"><display/></field>
         <field name="contentRevisionSeqId"><display/></field>
         <field name="itemContentId"><display/></field>
@@ -224,7 +224,7 @@ under the License.
 
     <!-- ContentApproval forms -->
     <form name="EditContentApproval" default-map-name="contentApproval" target="updateContentApproval" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="contentApprovalId"><display/></field>
         <field name="contentId" widget-style="inputBox"><hidden/></field>
         <field name="contentRevisionSeqId" widget-style="inputBox"><text></text></field>
@@ -252,7 +252,7 @@ under the License.
     </form>
 
     <form name="AddContentApproval" default-map-name="contentApproval" target="createContentApproval" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="contentId" widget-style="inputBox"><hidden/></field>
         <field name="contentRevisionSeqId" map-name="empty" widget-style="inputBox"><text/></field>
         <field name="partyId" map-name="empty" widget-style="inputBox"><lookup target-form-name="LookupPartyName"/></field>
@@ -272,7 +272,7 @@ under the License.
     </form>
 
     <form name="ListContentApproval" target="updateContentApproval" list-name="contentApprovalList" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="contentApprovalId"><display/></field>
         <field name="contentId"><hidden/></field>
         <field name="rootContentId" map-name="empty"><hidden/></field>
@@ -307,7 +307,7 @@ under the License.
     </form>
 
     <form name="ListWaitingContentApproval" target="updateWaitingContentApproval" list-name="contentApprovalList" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="contentApprovalId"><display/></field>
         <field name="contentId"><hidden/></field>
         <field name="rootContentId" map-name="empty"><hidden/></field>
@@ -334,7 +334,7 @@ under the License.
     </form>
 
     <form name="AddRootCompDocInstance" default-map-name="" type="single" target="genCompDocInstance"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="contentName"><text/></field>
         <field name="instanceOfContentId" entry-name="rootContentId" map-name="parameters"><display-entity entity-name="Content" key-field-name="contentId" description="${contentName} [${contentId}]"/></field>
         <field name="contentTypeId"><hidden value="COMPDOC_INSTANCE"/></field>
@@ -346,7 +346,7 @@ under the License.
     </form>
 
     <form name="EditRootCompDocInstance" default-map-name="content" type="single" target="updateRootCompDocTemplate"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="contentId"><display/></field>
         <field name="contentName"><text/></field>
         <field name="instanceOfContentId"><display/></field>
@@ -355,7 +355,7 @@ under the License.
     </form>
 
     <form name="AddRootCompDocTemplate" default-map-name="" type="single" target="createRootCompDocTemplate"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="contentName" title="${uiLabelMap.ContentCompDocTemplateName}"><text/></field>
         <field name="contentTypeId" map-name="dummy"><hidden value="COMPDOC_TEMPLATE"/></field>
         <field name="rootTemplateContentId"><hidden/></field>
@@ -364,7 +364,7 @@ under the License.
     </form>
 
     <form name="EditRootCompDocTemplate" default-map-name="content" type="single" target="updateRootCompDocTemplate"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="contentId"><display/></field>
         <field name="contentName"><text/></field>
         <field name="contentTypeId" map-name="dummy"><hidden value="COMPDOC_TEMPLATE"/></field>
@@ -372,7 +372,7 @@ under the License.
     </form>
 
     <form name="AddChildCompDoc" default-map-name="" type="single" target="${childCompDocTarget}"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="rootContentId"><hidden/></field>
         <field name="contentId"><ignored/></field>
         <field name="contentName"><text/></field>
@@ -415,7 +415,7 @@ under the License.
     </form>
 
     <form name="EditChildCompDoc" default-map-name="contentAssoc" type="single" target="${childCompDocTarget}"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="contentId"><display/></field>
         <field name="contentName" map-name="itemContent"><text/></field>
         <field name="contentTypeId" map-name="itemContent"><hidden/></field>
@@ -495,7 +495,7 @@ under the License.
     </form>
 
     <form name="ViewChildCompDoc" default-map-name="contentAssoc" type="single" target=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="contentId"><display/></field>
         <field name="contentName" map-name="itemContent"><display/></field>
         <field name="contentTypeId" map-name="itemContent"><hidden/></field>
@@ -519,7 +519,7 @@ under the License.
 
     <!-- ================ CompDoc Revision ================= -->
     <form name="EditContentRevisionAndItem" target="updateContentRevisionAndItem" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-entity entity-name="ContentRevision"/>
         <auto-fields-entity entity-name="ContentRevisionItem"/>
 
@@ -534,7 +534,7 @@ under the License.
     </form>
     <!-- TO BE REMOVED
     <form name="ListContentRevisionItemApproval" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="ContentRevisionItemAndContentApprovalView" use-cache="true">
                 <field-map from-field="contentId" field-name="contentId"/>
@@ -563,7 +563,7 @@ under the License.
     </form>
     -->
     <form name="UploadCompDocContent" type="upload" target="uploadCompDocContent"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="caContentIdTo" entry-name="contentIdTo" map-name="contentAssoc"><hidden/></field>
         <field name="caContentAssocTypeId"><hidden value="COMPDOC_PART"/></field>
         <field name="caFromDate" entry-name="fromDate" map-name="contentAssoc"><hidden/></field>
@@ -579,7 +579,7 @@ under the License.
     </form>
 
     <form name="UploadCompDocPdf2Survey" type="upload" target="persistCompDocPdf2Survey"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="caContentIdTo" entry-name="contentIdTo" map-name="contentAssoc"><hidden/></field>
         <field name="caContentAssocTypeId"><hidden value="COMPDOC_PART"/></field>
         <field name="caFromDate" entry-name="fromDate" map-name="contentAssoc"><hidden/></field>
@@ -596,7 +596,7 @@ under the License.
     </form>
 
     <form name="EditCompDocTextContent" type="single" target="uploadCompDocContent"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="rootContentId" map-name="dummy"><hidden/></field>
         <field name="caContentIdTo" map-name="parameters"><hidden/></field>
         <field name="caContentAssocTypeId" map-name="parameters"><hidden/></field>
@@ -611,7 +611,7 @@ under the License.
     </form>
 
     <form name="UploadCompDocSurveyId" type="single" target="uploadCompDocContent"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="rootContentId" map-name="dummy"><hidden/></field>
         <field name="caContentIdTo" map-name="parameters"><hidden/></field>
         <field name="caContentAssocTypeId" map-name="parameters"><hidden/></field>

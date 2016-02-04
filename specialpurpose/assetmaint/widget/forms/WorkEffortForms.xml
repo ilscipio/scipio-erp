@@ -22,7 +22,7 @@
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="EditWorkEffort" target="updateWorkEffort" title="" type="single" default-map-name="workEffort"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
             <entity-one entity-name="WorkEffortAssoc" value-field="workEffortAssoc"/>
             <set field="workEffortIdFrom" from-field="parameters.workEffortIdFrom"/>
@@ -101,7 +101,7 @@
     </form>
 
     <form name="ListWorkEffortPartyAssigns" extends="ListWorkEffortPartyAssigns" extends-resource="component://workeffort/widget/WorkEffortPartyAssignForms.xml"
-        header-row-style="header-row-2" default-table-style="${styles.table_basic}">
+        header-row-style="header-row-2"> <!-- default-table-style="basic-table" -->
         <field name="partyId">
             <display-entity entity-name="PartyNameView" description="${firstName} ${middleName} ${lastName} ${groupName}"/>
         </field>
@@ -113,7 +113,7 @@
     </form>
 
     <form name="AddWorkEffortChild" target="createWorkEffortAndAssoc" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="fixedAssetId"><hidden/></field>
         <field name="maintHistSeqId"><hidden/></field>
         <field name="workEffortIdTo"><hidden/></field>
@@ -156,7 +156,7 @@
     </form>
 
     <form name="ListWorkEffortChildren" type="list"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table" -->
         <actions>
             <entity-condition entity-name="WorkEffortAssocView">
                 <condition-expr field-name="workEffortIdFrom" operator="equals" from-field="workEffortId"/>
@@ -204,7 +204,7 @@
     </form>
     
     <!-- Cato: -->
-    <form name="WorkEffortAssignedTasks" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="workEfforts">
+    <form name="WorkEffortAssignedTasks" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" paginate="true" list-name="workEfforts"> <!-- default-table-style="basic-table" -->
         <actions>
         <set field="workEffortService" value="getWorkEffortAssignedTasks"/>
         <script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/assetmaint/WorkEffortTaskAndActivities.groovy"/>
@@ -220,7 +220,7 @@
         <field name="partyId" field-name="partyId"><display/></field>
         <field name="statusDescription" field-name="statusDescription"><display/></field>
     </form>
-    <form name="WorkEffortCompletedTasks" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="workEfforts">
+    <form name="WorkEffortCompletedTasks" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" paginate="true" list-name="workEfforts"> <!-- default-table-style="basic-table" -->
         <actions>
             <set field="workEffortService" value="getWorkEffortCompletedTasks"/>
             <script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/assetmaint/WorkEffortTaskAndActivities.groovy"/>
@@ -236,7 +236,7 @@
         <field name="partyId" field-name="partyId"><display/></field>
         <field name="statusDescription" field-name="statusDescription"><display/></field>
     </form>
-    <form name="WorkEffortAssignedActivities" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="workEfforts">
+    <form name="WorkEffortAssignedActivities" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" paginate="true" list-name="workEfforts"> <!-- default-table-style="basic-table" -->
         <actions>           
             <set field="workEffortService" value="getWorkEffortAssignedActivities"/>
             <script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/assetmaint/WorkEffortTaskAndActivities.groovy"/>
@@ -252,7 +252,7 @@
         <field name="partyId" field-name="partyId"><display/></field>
         <field name="statusDescription" field-name="statusDescription"><display/></field>
     </form>
-    <form name="WorkEffortCompletedActivities" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic}" paginate="true" list-name="workEfforts">
+    <form name="WorkEffortCompletedActivities" type="list" odd-row-style="alternate-row" header-row-style="header-row-2" paginate="true" list-name="workEfforts"> <!-- default-table-style="basic-table" -->
         <actions>
         <set field="workEffortService" value="getWorkEffortCompletedActivities"/>
         <script location="component://assetmaint/webapp/assetmaint/WEB-INF/actions/assetmaint/WorkEffortTaskAndActivities.groovy"/>

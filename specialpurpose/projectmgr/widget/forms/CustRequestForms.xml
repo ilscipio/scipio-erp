@@ -78,7 +78,7 @@ under the License.
         </sort-order>
     </form>
     <form name="RequestInfo" type="single" default-entity-name="CustRequest" default-map-name="custRequest"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
             <entity-one entity-name="WorkEffort" value-field="workEffort">
                 <field-map field-name="workEffortId" from-field="workEffortId"/>
@@ -116,7 +116,7 @@ under the License.
         <field name="lastModifiedDate" position="2"><display type="date"/></field>
     </form>
     <form name="RequestRolesInfo" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="CustRequestParty">
                 <field-map field-name="custRequestId" from-field="custRequestId"/>
@@ -135,7 +135,7 @@ under the License.
         <field name="RequestTaker"><display description="${person.personalTitle} ${person.firstName} ${person.middleName} ${person.lastName}"/></field>
     </form>
     <form name="ListRequestsWorkEffortForm" type="list" use-row-submit="true" list-name="listIt" paginate-target="requestlist"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="parameters.sortField" from-field="parameters.sortField" default-value="createdDate"/>
             <set field="parameters.statusId" value="CRQ_REVIEWED"/>

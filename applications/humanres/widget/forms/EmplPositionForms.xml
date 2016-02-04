@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
        xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="ListEmplPositions" type="list" separate-columns="true" default-entity-name="EmplPosition" list-name="listIt" paginate-target="FindEmplPositions" paginate="true"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -57,7 +57,7 @@ under the License.
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date"/></field>
     </form>
     <form name="EditEmplPosition" type="single" target="updateEmplPosition" title="" default-map-name="emplPosition"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="emplPosition==null" target="createEmplPosition"/>
         <auto-fields-service service-name="createEmplPosition"/>
         <field use-when="emplPosition!=null" name="emplPositionId" title="${uiLabelMap.HumanResEmplPositionId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
@@ -99,7 +99,7 @@ under the License.
         <field name="submitAction" use-when="emplPosition!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplPositionFulfillments" type="list" target="updateEmplPositionFulfillment" title="" paginate-target="findEmplPositionFulfillments"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="EmplPositionFulfillment">
                 <condition-expr field-name="emplPositionId" operator="equals" from-field="parameters.emplPositionId"/>
@@ -126,7 +126,7 @@ under the License.
         </field>
     </form>
     <form name="AddEmplPositionFulfillment" type="single" target="createEmplPositionFulfillment" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-service service-name="createEmplPositionFulfillment"/>
         <field name="emplPositionId"><hidden /></field>
         <field name="partyId" title="${uiLabelMap.PartyPartyId}" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupPartyName"/></field>
@@ -135,7 +135,7 @@ under the License.
     </form>
 
     <form name="ListReportsToEmplPositionReportingStructs" type="list" target="updateEmplPositionReportingStruct" title="" paginate-target="EditReportsToEmplPositionReportingStruct"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="EmplPositionReportingStruct" list="emplPositionReportingStructList">
                 <condition-expr field-name="emplPositionIdManagedBy" from-field="parameters.emplPositionId"/>
@@ -159,7 +159,7 @@ under the License.
         </field>
     </form>
     <form name="AddReportsToEmplPositionReportingStruct" type="single" target="createEmplPositionReportingStruct" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-service service-name="createEmplPositionReportingStruct"/>
         <field name="emplPositionId"><hidden value="${parameters.emplPositionId}"/></field>
         <field name="emplPositionIdReportingTo" tooltip="${uiLabelMap.CommonRequired}"><lookup target-form-name="LookupEmplPosition"/></field>
@@ -168,7 +168,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListReportedToEmplPositionReportingStructs" type="list" target="updateEmplPositionReportingStruct" title="" paginate-target="EditReportedToEmplPositionReportingStruct"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar" list-name="emplPositionReportingStructList">
+        odd-row-style="alternate-row" header-row-style="header-row-2" list-name="emplPositionReportingStructList"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="EmplPositionReportingStruct" list="emplPositionReportingStructList">
                 <condition-expr field-name="emplPositionIdReportingTo" from-field="parameters.emplPositionId"/>
@@ -192,7 +192,7 @@ under the License.
         </field>
     </form>
     <form name="AddReportedToEmplPositionReportingStruct" type="single" target="createEmplPositionReportingStruct" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-service service-name="createEmplPositionReportingStruct"/>
         <field name="emplPositionId"><hidden value="${parameters.emplPositionId}"/></field>
         <field name="emplPositionIdReportingTo"><hidden value="${parameters.emplPositionId}"/></field>
@@ -201,7 +201,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListEmplPositionResponsibilities" type="list" target="updateEmplPositionResponsibility" title="" paginate-target="findEmplPositionResponsibilities"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="EmplPositionResponsibility">
                 <condition-expr field-name="emplPositionId" operator="equals" from-field="parameters.emplPositionId"/>
@@ -222,7 +222,7 @@ under the License.
         </field>
     </form>
     <form name="AddEmplPositionResponsibility" type="single" target="createEmplPositionResponsibility" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-service service-name="createEmplPositionResponsibility"/>
         <field name="emplPositionId"><hidden /></field>
         <field name="responsibilityTypeId" tooltip="${uiLabelMap.CommonRequired}">
@@ -235,7 +235,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListValidResponsibilities" type="list" target="updateValidResponsibility" title="" paginate-target="findValidResponsibilities"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="EmplPositionResponsibility"/>
         </actions>
@@ -253,7 +253,7 @@ under the License.
         </field>
     </form>
     <form name="AddValidResponsibility" type="single" target="createValidResponsibility" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-service service-name="createValidResponsibility"/>
         <field name="emplPositionTypeId">
             <drop-down allow-empty="false">
@@ -271,7 +271,7 @@ under the License.
         </field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
-    <form name="FindEmplPositions" type="single" target="FindEmplPositions" header-row-style="header-row" default-table-style="${styles.table_basic}">
+    <form name="FindEmplPositions" type="single" target="FindEmplPositions" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-entity entity-name="EmplPosition" default-field-type="find"/>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="salaryFlag">
@@ -301,7 +301,7 @@ under the License.
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="EmplPositionInfo" type="single" default-map-name="emplPosition" paginate-target="FindEmplPositions"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-service service-name="updateEmplPosition" default-field-type="display"/>
         <field name="partyId"><display-entity entity-name="PartyGroup" description="${groupName}">
             <sub-hyperlink target="EmployeeProfile" description="[${emplPosition.partyId}]">
@@ -315,27 +315,27 @@ under the License.
         </display-entity></field>
     </form>
     <form name="ListEmplPositionFulfilmentInfo" type="list" list-name="emplPositionFulfillments"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <auto-fields-service service-name="updateEmplPositionFulfillment" default-field-type="display"/>
         <field name="emplPositionId"><hidden/></field>
     </form>
     <form name="ListEmplPositionResponsibilityInfo" type="list" list-name="emplPositionResponsibilities"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <auto-fields-service service-name="updateEmplPositionResponsibility" default-field-type="display"/>
         <field name="emplPositionId"><hidden/></field>
     </form>
     <form name="ListEmplPositionReportsToInfo" type="list" list-name="emplPositionReportingStructs"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <auto-fields-service service-name="updateEmplPositionReportingStruct" default-field-type="display"/>
         <field name="emplPositionIdManagedBy"><hidden/></field>
     </form>
     <form name="ListEmplPositionReportedToInfo" type="list" list-name="emplPositionReportingStructs"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <auto-fields-service service-name="updateEmplPositionReportingStruct" default-field-type="display"/>
         <field name="emplPositionIdReportingTo"><hidden/></field>
     </form>
     <form name="ListInternalOrg" type="single" target="createInternalOrg" default-map-name="partyRole"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="headpartyId" parameter-name="headpartyId"><hidden /></field>
         <field name="partyId">
             <drop-down allow-empty="false">

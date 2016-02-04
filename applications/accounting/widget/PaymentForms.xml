@@ -22,7 +22,7 @@ under the License.
  xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="FindPayments" type="single" target="findPayments"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="paymentId" title="${uiLabelMap.CommonId}" position="1"><text-find ignore-case="true"/></field>
         <field name="comments" position="2"><text-find ignore-case="true"/></field>
@@ -50,7 +50,7 @@ under the License.
     </form>
     
     <form name="ListPayments" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate-target="findPayments" paginate="true"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -98,7 +98,7 @@ under the License.
     
     
     <form name="ListPaymentsReduced" type="list" separate-columns="true" default-entity-name="Payment" list-name="listIt" paginate="false"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" view-size="10">
+        odd-row-style="alternate-row" view-size="10"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -136,7 +136,7 @@ under the License.
     </form>
 
     <form name="NewPaymentOut" type="single" target="createPayment" default-map-name="payment"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
             <entity-condition entity-name="PaymentType" list="paymentTypes">
                 <condition-list combine="or">
@@ -193,7 +193,7 @@ under the License.
         </field>
     </form>
     <form name="NewPaymentIn" type="single" target="createPayment" default-map-name="payment"
-        header-row-style="header-row" default-table-style="${styles.table_basic}" >
+        header-row-style="header-row" > <!-- default-table-style="basic-table" -->
         <field name="statusId"><hidden value="PMNT_NOT_PAID"/></field>
         <field name="currencyUomId"><hidden value="${defaultOrganizationPartyCurrencyUomId}"/></field>
         <field name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
@@ -295,7 +295,7 @@ under the License.
     </form>
 
     <form name="editPaymentApplicationsInv" default-entity-name="PaymentApplication" list-name="paymentApplicationsInv" target="removePaymentApplication" type="list" separate-columns="false"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="paymentApplicationId"><hidden/></field>
         <field name="paymentId"><hidden/></field>
         <field name="invoiceId" title="${uiLabelMap.CommonInvoice}">
@@ -310,7 +310,7 @@ under the License.
         <field name="removeAction" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="editPaymentApplicationsPay" default-entity-name="PaymentApplication" list-name="paymentApplicationsPay" target="removePaymentApplication" type="list" separate-columns="false"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="paymentApplicationId"><hidden/></field>
         <field name="paymentId"><hidden/></field>
         <field name="toPaymentId"><display/></field>
@@ -318,7 +318,7 @@ under the License.
         <field name="removeAction" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="editPaymentApplicationsBil" default-entity-name="PaymentApplication" list-name="paymentApplicationsBil" target="removePaymentApplication" type="list" separate-columns="false"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="paymentApplicationId"><hidden/></field>
         <field name="paymentId"><hidden/></field>
         <field name="billingAccountId"><display/></field>
@@ -327,7 +327,7 @@ under the License.
         <field name="removeAction" title="${uiLabelMap.CommonRemove}" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit/></field>
     </form>
     <form name="editPaymentApplicationsTax" default-entity-name="PaymentApplication" list-name="paymentApplicationsTax" target="removePaymentApplication" type="list" separate-columns="false"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="paymentApplicationId"><hidden/></field>
         <field name="paymentId"><hidden/></field>
         <field name="taxAuthGeoId"><display/></field>
@@ -336,7 +336,7 @@ under the License.
     </form>
 
     <form name="listInvoicesNotApplied" type="list" list-name="invoices" target="createPaymentApplication" title=""
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="paymentId"><hidden/></field>
         <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="invoiceOverview" description="${invoiceId}">
@@ -358,7 +358,7 @@ under the License.
     <form name="listInvoicesNotAppliedOtherCurrency" extends="listInvoicesNotApplied" list-name="invoicesOtherCurrency"/>
 
     <form name="listPaymentsNotApplied" type="list" list-name="payments" target="createPaymentApplication" title=""
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="paymentId"><hidden/></field>
         <field name="toPaymentId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="paymentOverview" description="[${toPaymentId}]">
@@ -375,7 +375,7 @@ under the License.
     </form>
 
     <form name="addPaymentApplication" type="single" target="createPaymentApplication" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="paymentId"><hidden/></field>
         <field name="invoiceId" title="${uiLabelMap.CommonInvoice}"><lookup target-form-name="LookupInvoice"/></field>
         <field name="invoiceItemSeqId" use-when="&quot;${uiConfigMap.invoiceProcessing}&quot;.equals(&quot;YY&quot;)"><text size="10"/></field>
@@ -391,7 +391,7 @@ under the License.
     </form>
 
     <form name="paymentHeader" type="single" default-map-name="payment"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
             <service service-name="getPartyNameForDate" result-map="partyNameResultFrom">
                 <field-map field-name="partyId" from-field="payment.partyIdFrom"/>
@@ -434,7 +434,7 @@ under the License.
     </form>
 
     <form name="paymentApplications" type="list" list-name="paymentApplications"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="PaymentApplication">
                 <condition-list combine="or">
@@ -477,7 +477,7 @@ under the License.
     </form>
 
     <form name="AcctgTransAndEntries" type="list" list-name="AcctgTransAndEntries"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="invoiceId" title="${uiLabelMap.CommonInvoice}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="invoiceOverview?invoiceId=${invoiceId}" description="${invoiceId}"/>
         </field>
@@ -511,7 +511,7 @@ under the License.
     </form>
 
     <form name="ListChecksToPrint" type="multi" list-name="payments" target="printChecks" separate-columns="true"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="paymentOverview" description="${paymentId}">
                 <parameter param-name="paymentId"/>
@@ -528,7 +528,7 @@ under the License.
         </field>
     </form>
     <form name="ListChecksToSend" type="multi" use-row-submit="true" list-name="payments" target="quickSendPayment?organizationPartyId=${organizationPartyId}" separate-columns="true"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="paymentId"><hidden/></field>
         <field name="paymentId" title="${uiLabelMap.CommonPayment}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="paymentOverview" description="${paymentId}">
@@ -546,7 +546,7 @@ under the License.
     </form>
 
     <form name="FindSalesInvoicesByDueDate" type="single" target="findSalesInvoicesByDueDate"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="invoiceTypeId"><hidden value="SALES_INVOICE"/></field>
         <field name="organizationPartyId" parameter-name="partyIdFrom">
             <drop-down allow-empty="false">
@@ -564,7 +564,7 @@ under the License.
     </form>
     
     <form name="FindPurchaseInvoicesByDueDate" type="single" target="findPurchaseInvoicesByDueDate"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="invoiceTypeId"><hidden value="PURCHASE_INVOICE"/></field>
         <field name="organizationPartyId" parameter-name="partyId">
             <drop-down allow-empty="false">
@@ -582,7 +582,7 @@ under the License.
     </form>
     
     <form name="ListInvoicesByDueDate" type="list" list-name="invoicePaymentInfoList"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="Invoice" value-field="invoice" ></entity-one>
         </row-actions>
@@ -600,7 +600,7 @@ under the License.
         <field name="outstandingAmount" title="${uiLabelMap.CommonOutstanding}" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${invoice.currencyUomId}"/></field>
     </form>
     
-    <form name="FinAccountTransAssociatedWithPayment" type="single" default-map-name="finAccountTrans" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+    <form name="FinAccountTransAssociatedWithPayment" type="single" default-map-name="finAccountTrans" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="finAccountTransId" position="1"><display/></field>
         <field name="finAccountTransTypeId" title="${uiLabelMap.CommonType}" position="2">
             <display-entity entity-name="FinAccountTransType" description="${description}"/>

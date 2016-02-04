@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="lookupProduct" target="LookupProduct" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <!-- <auto-fields-entity entity-name="Product" default-field-type="hidden"/> -->
         <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find/></field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><text-find/></field>
@@ -45,7 +45,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProduct" list-name="listIt" title="" type="list" paginate-target="LookupProduct"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic}" view-size="20">
+        odd-row-style="alternate-row" view-size="20"> <!-- default-table-style="basic-table" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -71,7 +71,7 @@ under the License.
         </field>
     </form>
     <form name="lookupSupplierProduct" target="LookupSupplierProduct" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="partyId"><hidden/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find/></field>
         <field name="brandName" title="${uiLabelMap.ProductBrandName}"><text-find/></field>
@@ -86,7 +86,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupSupplierProduct" list-name="listIt" title="" type="list" paginate-target="LookupSupplierProduct"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic}" view-size="20">
+        odd-row-style="alternate-row" view-size="20"> <!-- default-table-style="basic-table" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -107,11 +107,11 @@ under the License.
     </form>
 
     <form name="lookupVirtualProduct" extends="lookupProduct" default-map-name= "inputFields" target="LookupVirtualProduct" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="isVirtual"><hidden value="Y"/></field>
     </form>
     <form name="listLookupVirtualProduct" list-name="listIt" title="" type="list" extends="listLookupProduct"
-        paginate-target="LookupVirtualProduct" odd-row-style="alternate-row" default-table-style="${styles.table_basic}" view-size="20">
+        paginate-target="LookupVirtualProduct" odd-row-style="alternate-row" view-size="20"> <!-- default-table-style="basic-table" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -129,7 +129,7 @@ under the License.
     </form>
 
     <form name="lookupProductAndPrice" target="LookupProductAndPrice" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <!-- <auto-fields-entity entity-name="Product" default-field-type="hidden"/> -->
         <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find/></field>
         <field name="internalName" title="${uiLabelMap.ProductInternalName}"><text-find/></field>
@@ -175,7 +175,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductAndPrice" list-name="listIt" title="" type="list"
-        paginate-target="LookupProductAndPrice" odd-row-style="alternate-row" default-table-style="${styles.table_basic}" view-size="20">
+        paginate-target="LookupProductAndPrice" odd-row-style="alternate-row" view-size="20"> <!-- default-table-style="basic-table" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -211,7 +211,7 @@ under the License.
     </form>
 
     <form name="lookupProductCategory" target="LookupProductCategory" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-entity entity-name="ProductCategory" default-field-type="find"/>
         <field name="productCategoryTypeId">
             <drop-down allow-empty="true">
@@ -248,7 +248,7 @@ under the License.
         </sort-order>
     </form>
     <form name="listLookupProductCategory" list-name="listIt" title="" type="list"
-        paginate-target="LookupProductCategory" odd-row-style="alternate-row" default-table-style="${styles.table_basic}" view-size="20">
+        paginate-target="LookupProductCategory" odd-row-style="alternate-row" view-size="20"> <!-- default-table-style="basic-table" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -270,7 +270,7 @@ under the License.
     </form>
 
     <form name="lookupProductFeature" target="LookupProductFeature" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-entity entity-name="ProductFeature" default-field-type="find"/>
         <field name="productFeatureTypeId">
             <drop-down allow-empty="true">
@@ -291,7 +291,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductFeature" list-name="listIt" title="" type="list" paginate-target="LookupProductFeature"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic}" view-size="20">
+        odd-row-style="alternate-row" view-size="20"> <!-- default-table-style="basic-table" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -307,7 +307,7 @@ under the License.
     </form>
 
     <form name="LookupProductStore" target="LookupProductStore" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <!-- <auto-fields-entity entity-name="ProductStore" default-field-type="find"/> -->
 
         <field name="productStoreId"><text-find/></field>
@@ -319,7 +319,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupProductStore" list-name="listIt" target="" title="" type="list"
-        paginate-target="LookupProductStore" odd-row-style="alternate-row" default-table-style="${styles.table_basic}" view-size="20">
+        paginate-target="LookupProductStore" odd-row-style="alternate-row" view-size="20"> <!-- default-table-style="basic-table" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -339,7 +339,7 @@ under the License.
         <!-- <field name="companyName"><display/></field> -->
     </form>
     <form name="lookupCostComponentCalc" target="LookupCostComponentCalc" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="costComponentCalcId" title="${uiLabelMap.ProductCostComponentCalcId}"><text-find/></field>
         <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
         <field name="costGlAccountTypeId" title="${uiLabelMap.ProductCostGlAccountTypeId}">
@@ -360,7 +360,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupCostComponentCalc" list-name="listIt" title="" type="list" paginate-target="LookupCostComponentCalc"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic}" view-size="20">
+        odd-row-style="alternate-row" view-size="20"> <!-- default-table-style="basic-table" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>

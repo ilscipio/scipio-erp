@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form id="productsExportToGoogle" name="ProductsExportToGoogle" type="single" target="searchExportProductListToGoogle"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
             <set field="selectResult" type="List"/>
         </actions>
@@ -72,7 +72,7 @@ under the License.
     </form>
     
     <form name="ListGoogleBaseConfigs" type="list" list-name="googleBaseConfigs" target="updateGoogleBaseConfig"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="GoogleBaseConfig">
                 <order-by field-name="productStoreId"/>
@@ -109,7 +109,7 @@ under the License.
     </form>
     
     <form name="GooglebaseAutoUpdateConfig" type="list" list-name="configList" header-row-style="header-row-2" 
-        default-table-style="${styles.table_basic} hover-bar" odd-row-style="alternate-row">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <script location="component://googlebase/webapp/googlebase/WEB-INF/actions/autoUpdateConfig.groovy"/>
         </actions>

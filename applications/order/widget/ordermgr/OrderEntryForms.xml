@@ -53,7 +53,7 @@ under the License.
         <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="FindQuotes" target="FindQuoteForCart" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-entity entity-name="Quote" default-field-type="find"/>
         <field name="quoteId" title="${uiLabelMap.OrderOrderQuoteId}"></field>
         <field name="quoteTypeId" title="${uiLabelMap.OrderOrderQuoteTypeId}">
@@ -150,7 +150,7 @@ under the License.
     </form>
 
     <form name="LookupBulkAddProducts" type="multi" use-row-submit="true" list-name="productList" title="" target="BulkAddProducts"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="LookupBulkAddProducts">
+        odd-row-style="alternate-row" paginate-target="LookupBulkAddProducts"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="Product" value-field="product" auto-field-map="true"/>
             <set field=""/>
@@ -180,7 +180,7 @@ under the License.
         </field>
     </form>
     <form name="LookupBulkAddSupplierProducts" type="multi" use-row-submit="true" list-name="productList" title="" target="BulkAddProducts"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="LookupBulkAddSupplierProducts" view-size="5">
+        odd-row-style="alternate-row" paginate-target="LookupBulkAddSupplierProducts" view-size="5"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="productId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${productId}" target="/catalog/control/EditProductInventoryItems" target-type="inter-app">
                 <parameter param-name="productId"/>

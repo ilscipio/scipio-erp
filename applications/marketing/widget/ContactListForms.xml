@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="EditContactList" type="single" target="updateContactList" title="" default-map-name="contactList"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="contactList==null" target="createContactList"/>
 
         <field use-when="contactList!=null" name="contactListId" title="${uiLabelMap.MarketingContactListContactListId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
@@ -82,7 +82,7 @@ under the License.
     </form>
 
     <form name="FindContactLists" target="FindContactLists" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="contactListId" title="${uiLabelMap.MarketingContactListContactListId}"><text-find ignore-case="true"/></field>
         <field name="contactListName" title="${uiLabelMap.MarketingContactListContactListName}"><text-find/></field>
@@ -111,7 +111,7 @@ under the License.
     </form>
 
     <form name="ListContactLists" target="ListContactLists" title="" type="list" list-name="listIt"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -143,7 +143,7 @@ under the License.
     </form>
 
     <form name="EditContactListParty" type="single" target="updateContactListParty" title="" default-map-name="contactListParty"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="contactListParty==null" target="createContactListParty"/>
 
         <field name="contactListId"><hidden/></field>
@@ -174,7 +174,7 @@ under the License.
     
 
     <form name="FindContactListParties" type="single" target="FindContactListParties" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="contactListId" title="${uiLabelMap.MarketingContactListContactListId}"><text-find/></field>
         <field name="partyId" title="${uiLabelMap.MarketingContactListPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
@@ -195,7 +195,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListContactListParties" type="list" title="" list-name="listIt" paginate-target="ListContactListParties"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>                   
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -245,7 +245,7 @@ under the License.
     </form>
     
     <form name="FindImportContactListParties" type="single" target="FindImportContactListParties" title="" focus-field-name="contactMechTypeId"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="contactListId"><hidden/></field>
         <field name="statusId"><hidden value="PARTY_DISABLED"/></field>
         <field name="statusId_op"><hidden value="notEqual"/></field>
@@ -270,7 +270,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListImportContactListParties" type="multi" title="" list-name="listIt" target="importContactListParties?contactListId=${parameters.contactListId}" paginate-target="FindImportContactListParties"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="parameters.contactMechTypeId" from-field="contactMechTypeId"/>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
@@ -322,7 +322,7 @@ under the License.
     </form>
 
     <form name="EditContactListCommEvent" default-map-name="communicationEvent" target="updateContactListCommEvent" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
              <set field="contentMimeTypeId" from-field="communicationEvent.contentMimeTypeId" default-value="text/html"/>
              <entity-one entity-name="CommunicationEventType" value-field="communicationEventType">
@@ -436,7 +436,7 @@ under the License.
         </sort-order>
     </form>
     <form name="FindContactListCommEvents" target="ListContactListCommEvents" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="contactListId" title="${uiLabelMap.MarketingContactListContactListId}"><text/></field>
         <field name="commEventId" title="${uiLabelMap.MarketingContactListCommEventId}"><lookup target-form-name="LookupCommEvent"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}">
@@ -451,7 +451,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListContactListCommEvents" list-name="listIt" title="" type="list" paginate-target="ListContactListCommEvents"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -484,7 +484,7 @@ under the License.
     </form>
 
     <form name="LookupContactList" default-map-name="contactList" target="LookupContactList" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="contactListId" title="${uiLabelMap.MarketingContactListContactListId}"><text-find/></field>
         <field name="contactListName" title="${uiLabelMap.MarketingContactListContactListName}"><text-find/></field>
         <field name="contactListTypeId" title="${uiLabelMap.MarketingContactListContactListTypeId}">
@@ -512,7 +512,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListLookupContactList" list-name="listIt" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map from-field="parameters" field-name="inputFields"/>
@@ -531,7 +531,7 @@ under the License.
     </form>
 
     <form name="LookupCommEvent" target="LookupCommEvent" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="communicationEventId" title="${uiLabelMap.MarketingContactListCommEventId}"><text-find/></field>
         <field name="partyIdFrom" title="${uiLabelMap.PartyPartyFrom}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="partyIdTo" title="${uiLabelMap.PartyPartyTo}"><lookup target-form-name="LookupPartyName"/></field>
@@ -559,7 +559,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListLookupCommEvent" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map from-field="parameters" field-name="inputFields"/>
@@ -586,7 +586,7 @@ under the License.
         <field name="datetimeEnded" title="${uiLabelMap.CommonFinishDate}"><display/></field>
     </form>
     <form name="ListPreferredContactMech" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="PartyAndContactMech">
                 <field-map field-name="partyId"/>
@@ -601,7 +601,7 @@ under the License.
     </form>
 
     <form name="ListContactListCommStatuses" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="ContactListCommStatus" use-cache="true">
                 <field-map field-name="communicationEventId" from-field="parameters.communicationEventId"/>
@@ -621,7 +621,7 @@ under the License.
         <field name="statusId" title="${uiLabelMap.CommonStatus}"><display-entity entity-name="StatusItem" description="${description}"/></field>
     </form>    
     <form name="CreateWebSiteContactList" type="single" target="createWebSiteContactList" 
-            default-map-name="contactList" title="" header-row-style="header-row" default-table-style="${styles.table_basic}">
+            default-map-name="contactList" title="" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
             <set field="fromDate" value="${groovy: import org.ofbiz.base.util.UtilDateTime; return UtilDateTime.nowTimestamp();}" type="Timestamp"/>
         </actions>
@@ -636,7 +636,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonCreate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="ViewWebSiteContactList" type="list" target="updateWebSiteContactList" list-name="webSiteContactLists" title="" 
-            header-row-style="header-row" default-table-style="${styles.table_basic}">
+            header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
             <entity-one entity-name="WebSite" value-field="webSite"/>
         </actions>

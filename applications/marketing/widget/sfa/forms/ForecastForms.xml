@@ -23,11 +23,11 @@ under the License.
 
     <form name="FindSalesForecast" type="single" target="FindSalesForecast" extends="LookupSalesForecast"
             extends-resource="component://marketing/widget/LookupForms.xml"
-            header-row-style="header-row" default-table-style="${styles.table_basic}">
+            header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="SalesForecastSearchResults" type="list" list-name="listIt" paginate-target="FindForecasts" view-size="5"
-            odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2" separate-columns="true">
+            odd-row-style="alternate-row" header-row-style="header-row-2" separate-columns="true"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -81,7 +81,7 @@ under the License.
     </form>
 
     <form name="ListSalesForecastDetails" type="list" target="updateSalesForecastDetail" view-size="10"
-            odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" separate-columns="true">
+            odd-row-style="alternate-row" separate-columns="true"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="SalesForecastDetail">
                 <condition-expr field-name="salesForecastId" from-field="parameters.salesForecastId"/>

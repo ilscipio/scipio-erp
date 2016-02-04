@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     
-    <form name="FindBillingAccounts" type="single" target="FindBillingAccount" header-row-style="header-row" default-table-style="${styles.table_basic}">
+    <form name="FindBillingAccounts" type="single" target="FindBillingAccount" header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="billingAccountId" position="1" title="${uiLabelMap.CommonId}"><text-find ignore-case="true"/></field>
         <field name="accountLimit" position="2"><text/></field>
         <field name="description" position="1"><text-find ignore-case="true"/></field>
@@ -32,7 +32,7 @@ under the License.
     </form>
     
     <form name="ListBillingAccounts" type="list" list-name="listIt" paginate-target="FindBillingAccount" default-entity-name="BillingAccount"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -57,7 +57,7 @@ under the License.
     </form>
 
     <form name="ListBillingAccountsByParty" type="list" list-name="billingAccounts" paginate-target="FindBillingAccount"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="billingAccountId" title="${uiLabelMap.CommonId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${billingAccountId}" target="EditBillingAccount">
                 <parameter param-name="billingAccountId"/>
@@ -75,7 +75,7 @@ under the License.
     </form>
 
     <form name="ListBillingAccountInvoices" type="list" list-name="billingAccountInvoices" paginate-target="BillingAccountInvoices" default-entity-name="Invoice"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="Invoice" list="billingAccountInvoices">
                 <condition-list>
@@ -127,7 +127,7 @@ under the License.
     </form>
 
     <form name="EditBillingAccount" type="single" target="updateBillingAccount" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
             <set field="availableBalance" value="${groovy:billingAccount != null ? org.ofbiz.order.order.OrderReadHelper.getBillingAccountBalance(billingAccount) : 0}" type="BigDecimal"/>
         </actions>
@@ -175,7 +175,7 @@ under the License.
     </form>
 
     <form name="ListBillingAccountRoles" type="multi" list-name="billingAccountRoleList" target="updateBillingAccountRole?billingAccountId=${billingAccountId}&amp;viewSize=${viewSize}&amp;viewIndex=${viewIndex}"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar" separate-columns="true" use-row-submit="false">
+        odd-row-style="alternate-row" header-row-style="header-row-2" separate-columns="true" use-row-submit="false"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="BillingAccountRole" list="billingAccountRoleList">
                 <condition-expr field-name="billingAccountId" from-field="billingAccountId"/>
@@ -209,7 +209,7 @@ under the License.
         </field>
     </form>
     <form name="AddBillingAccountRole" type="single" target="createBillingAccountRole" title="" default-map-name="billingAccountRole"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-service service-name="createBillingAccountRole"/>
         <field name="billingAccountId"><hidden/></field>
         <field name="partyId" title="${uiLabelMap.CommonParty}">
@@ -228,7 +228,7 @@ under the License.
     </form>
 
     <form name="ListBillingAccountTerms" type="list" list-name="billingAccountTermsList" default-entity-name="BillingAccountTerm" paginate-target="EditBillingAccountTerms"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="BillingAccountTerm" list="billingAccountTermsList">
                 <condition-expr field-name="billingAccountId" from-field="billingAccountId"/>
@@ -257,7 +257,7 @@ under the License.
     </form>
     
     <form name="EditBillingAccountTerms" type="single" target="updateBillingAccountTerm" title="" default-map-name="billingAccountTerm"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="billingAccountTermId==null" target="createBillingAccountTerm"/>
         <field name="billingAccountId"><hidden/></field>
         <field use-when="billingAccountTermId!=null" name="billingAccountTermId"><hidden/></field>
@@ -281,7 +281,7 @@ under the License.
     </form>
     
     <form name="ListBillingAccountPayments" type="list" list-name="payments" paginate-target="BillingAccountPayments"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="PaymentAndApplication" list="payments">
                 <condition-expr field-name="billingAccountId" from-field="billingAccountId"/>
@@ -307,7 +307,7 @@ under the License.
     </form>
     
     <form name="CreateIncomingBillingAccountPayment" type="single" target="createPaymentAndAssociateToBillingAccount" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
             <set field="partyIdFrom" from-field="billToCustomer.partyId"/>
         </actions>
@@ -343,7 +343,7 @@ under the License.
         </field>
     </form>
     <form name="ListBillingAccountOrders" type="list" list-name="orderPaymentPreferencesList" paginate-target="BillingAccountOrders"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">    
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->    
         <field name="billingAccountId"><hidden/></field>
         <field name="orderId" title="${uiLabelMap.CommonOrder}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}" also-hidden="false">

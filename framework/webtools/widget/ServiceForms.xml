@@ -22,7 +22,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="scheduleJob" type="single" target="setServiceParameters"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="JOB_NAME" title="${uiLabelMap.WebtoolsJob}"><text/></field>
         <field name="SERVICE_NAME" title="${uiLabelMap.WebtoolsService}"><text/></field>
         <field name="POOL_NAME" title="${uiLabelMap.WebtoolsPool}"><text/></field>
@@ -47,7 +47,7 @@ under the License.
     </form>
 
     <form name="runService" type="single" target="setSyncServiceParameters"
-        header-row-style="header-row" default-table-style="${styles.table_basic}" focus-field-name="SERVICE_NAME">
+        header-row-style="header-row" focus-field-name="SERVICE_NAME"> <!-- default-table-style="basic-table" -->
         <field name="SERVICE_NAME" title="${uiLabelMap.WebtoolsService}"><text/></field>
         <field name="POOL_NAME" title="${uiLabelMap.WebtoolsPool}"><text/></field>
         <field name="_RUN_SYNC_"><hidden value="Y"/></field>
@@ -74,7 +74,7 @@ under the License.
     </form>
 
     <form name="ListJobs" type="list" list-name="listIt" paginate-target="FindJob" default-entity-name="JobSandbox" separate-columns="true"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="jobCtx"/>
@@ -109,7 +109,7 @@ under the License.
     <form name="JobDetails" type="single">
         <auto-fields-entity entity-name="JobSandbox" map-name="job" default-field-type="display"/>
     </form>
-    <form name="JobRuntimeDataInfo" type="list" list-name="runtimeInfoList" default-table-style="${styles.table_basic} hover-bar" paginate="false">
+    <form name="JobRuntimeDataInfo" type="list" list-name="runtimeInfoList" paginate="false"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="key"><display/></field>
         <field name="value"><display/></field>
     </form>
@@ -123,7 +123,7 @@ under the License.
         <field name="numberOfCompletedTasks"><display/></field>
     </form>
     <form name="ListJavaThread" type="list" list-name="threads" paginate-target="threadList" separate-columns="true"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="id" title="${uiLabelMap.WebtoolsThread}"><display description="${threadId} ${threadName}"/></field>
         <field name="name" title="${uiLabelMap.WebtoolsJob}"><display default-value="${uiLabelMap.CommonNone}"/></field>
         <field name="serviceName" title="${uiLabelMap.WebtoolsService}"><display default-value="${uiLabelMap.CommonNone}"/></field>
@@ -131,7 +131,7 @@ under the License.
         <field name="runTime" title="${uiLabelMap.CommonTime} (ms)"><display/></field>
     </form>
     <form name="ListServices" type="list" list-name="services" paginate-target="ServiceLog" separate-columns="true"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="serviceName" title="${uiLabelMap.WebtoolsServiceName}" sort-field="true"><display/></field>
         <field name="localName" title="${uiLabelMap.WebtoolsDispatcherName}" sort-field="true"><display/></field>
         <field name="modeStr" title="${uiLabelMap.WebtoolsMode}" sort-field="true"><display default-value="${uiLabelMap.CommonNone}"/></field>

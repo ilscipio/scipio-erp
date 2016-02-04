@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="FindRequirements" type="single" target="FindRequirements" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="requirementId"><text-find/></field>
         <field name="requirementTypeId">
@@ -53,7 +53,7 @@ under the License.
         </field>
     </form>
     <form name="ListRequirements" type="list" target="" title="" list-name="listIt" paginate-target="FindRequirements"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="requestParameters"/>
@@ -111,7 +111,7 @@ under the License.
         </field>
     </form>
     <form name="EditRequirement" type="single" target="updateRequirement" title="" default-map-name="requirement"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="requirement==null" target="createRequirement"/>
         <auto-fields-service service-name="updateRequirement" default-field-type="edit"/>
         <field name="requirementId"><hidden/></field>
@@ -142,7 +142,7 @@ under the License.
         </field>
     </form>
     <form name="ListRequirementCustRequests" type="list" title="" list-name="requirementCustRequests" paginate-target="ListRequirementCustRequests"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <auto-fields-entity entity-name="RequirementCustRequest" default-field-type="display"/>
         <field name="requirementId"><hidden/></field>
         <field name="custRequestId" widget-style="${styles.link_nav_info_id}">
@@ -161,7 +161,7 @@ under the License.
 
     <!-- lists the orders associated with a requirement -->
     <form name="ListRequirementOrders" type="list" title="" list-name="orderRequirements" paginate-target="ListRequirementOrders"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <auto-fields-entity entity-name="OrderRequirementCommitment" default-field-type="display"/>
         <field name="orderId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${orderId}" target-type="inter-app" target="/ordermgr/control/orderview">
@@ -171,7 +171,7 @@ under the License.
     </form>
     <!-- lists the roles associated with a requirement -->
     <form name="ListRequirementRoles" type="list" title="" list-name="requirementRoles" paginate-target="ListRequirementRoles"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <auto-fields-entity entity-name="RequirementRole" default-field-type="display"/>
         <field name="requirementId"><hidden/></field>
         <field name="editAction" widget-style="${styles.link_nav} ${styles.action_update}" title="${uiLabelMap.CommonEdit}">
@@ -192,7 +192,7 @@ under the License.
         </field>
     </form>
     <form name="EditRequirementRole" type="single" target="updateRequirementRole" title="" default-map-name="requirementRole"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="requirementRole==null" target="createRequirementRole"/>
         <field name="requirementId"><hidden/></field>
         <field name="partyId" use-when="requirementRole!=null"><display/></field>
@@ -211,7 +211,7 @@ under the License.
         </field>
     </form>
     <form name="FindNotApprovedRequirements" type="single" target="ApproveRequirements" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="requirementId"><text-find/></field>
         <field name="requirementTypeId">
             <drop-down allow-empty="true">
@@ -234,7 +234,7 @@ under the License.
         </field>
     </form>
     <form name="ApproveRequirements" type="multi" use-row-submit="true" target="approveRequirements" title="" list-name="requirements"
-        paginate-target="ApproveRequirements" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        paginate-target="ApproveRequirements" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="requirementId" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="true" description="${requirementId}" target="EditRequirement">
                 <parameter param-name="requirementId"/>
@@ -256,7 +256,7 @@ under the License.
         </field>
     </form>
     <form name="FindApprovedProductRequirements" type="single" target="ApprovedProductRequirements" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="showList"><hidden value="Y"/></field>
         <field name="requirementId"><text-find/></field>
         <field name="billToCustomerPartyId">
@@ -286,7 +286,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ApprovedProductRequirementsList" type="list" title="" list-name="requirementsForSupplier" paginate-target="RequirementsForSupplier"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="prepareFind" result-map="resultConditions">
                 <field-map field-name="inputFields" from-field="requestParameters"/>
@@ -329,7 +329,7 @@ under the License.
         <field name="comments"><display/></field>
     </form>
     <form name="ApprovedProductRequirements" type="multi" use-row-submit="true" target="quickPurchaseOrderEntry" title="" list-name="requirementsForSupplier"
-        paginate-target="RequirementsForSupplier" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        paginate-target="RequirementsForSupplier" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="orderId" id-name="orderId"><hidden/></field>
         <field name="billToCustomerPartyId"><hidden value="${parameters.billToCustomerPartyId}"/></field>
         <field name="supplierPartyId"><hidden value="${parameters.partyId}"/></field>
@@ -364,20 +364,20 @@ under the License.
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
     </form>
     <form name="ApprovedProductRequirementsSubmit" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="orderId" id-name="orderId_o_0"><text/></field>
         <field name="submitAction" title=" " widget-style="${styles.link_run_sys} ${styles.action_update}">
             <hyperlink also-hidden="false" target-type="plain" description="${uiLabelMap.OrderInputQuickPurchaseOrder}" target="javascript:document.ApprovedProductRequirements.orderId_o_0.value=document.ApprovedProductRequirementsSubmit.orderId_o_0.value;document.ApprovedProductRequirements.submit()"/>
         </field>
     </form>
     <form name="ApprovedProductRequirementsSummary" type="single" default-map-name="quantityReport" target="ApprovedProductRequirements"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="distinctProductCount" title="${uiLabelMap.OrderRequirementNumberOfProducts}"><display/></field>
         <field name="quantityTotal"><display/></field>
         <field name="amountTotal"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
     <form name="ApprovedProductRequirementsByVendor" type="list" use-row-submit="true" list-name="requirements" target="ApprovedProductRequirements" separate-columns="true"
-        paginate-target="ApprovedProductRequirementsByVendor" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        paginate-target="ApprovedProductRequirementsByVendor" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="Party" value-field="supplierParty">
                 <field-map field-name="partyId" from-field="partyId"/>

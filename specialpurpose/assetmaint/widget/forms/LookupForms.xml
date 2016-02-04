@@ -22,7 +22,7 @@
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <!-- Person Lookup forms -->
     <form name="lookupPerson" target="LookupPerson" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <!--<auto-fields-entity entity-name="Person" default-field-type="find"/>-->
         <field name="partyId" title="${uiLabelMap.PartyPartyId}"><text-find/></field>
         <field name="firstName" title="${uiLabelMap.PartyFirstName}"><text-find/></field>

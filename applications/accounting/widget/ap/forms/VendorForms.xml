@@ -20,7 +20,7 @@ under the License.
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
-    <form name="ListVendors" type="list" list-name="listIt" paginate-target="findVendors" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+    <form name="ListVendors" type="list" list-name="listIt" paginate-target="findVendors" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -60,7 +60,7 @@ under the License.
         <field name="submitAction" use-when="partyId!=null&amp;&amp;vendor!=null" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="FindVendors" type="single" target="findVendors" title="Find and List Vendors"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="partyId" title="${uiLabelMap.PartyVendor} ${uiLabelMap.CommonId}" parameter-name="partyId"><text-find size="25"></text-find></field>
         <field name="manifestCompanyName" title="${uiLabelMap.PartyManifestCompanyName}" parameter-name="manifestCompanyName"><text-find size="25"></text-find></field>
         <field name="manifestCompanyTitle" title="${uiLabelMap.PartyManifestCompanyTitle}" parameter-name="manifestCompanyTitle"><text-find size="25"></text-find></field>

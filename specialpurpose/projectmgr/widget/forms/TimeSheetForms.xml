@@ -20,7 +20,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="EditWeekTimesheet" type="multi" list-name="timeEntries" use-row-submit="true"
-        separate-columns="true" target="update${my}Timesheet" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        separate-columns="true" target="update${my}Timesheet" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <service service-name="getProjectIdAndNameFromTask" result-map="result">
                 <field-map field-name="taskId" from-field="workEffortId"/>
@@ -69,7 +69,7 @@
     </form>
 
     <form name="ListTimeSheets" type="list" list-name="timesheets" paginate-target="MyTimesheet"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="complete" value="${uiLabelMap.ProjectMgrToComplete}"/>
         </actions>
@@ -92,7 +92,7 @@
         </field>
     </form>
     <form name="FindTimeSheet" target="FindTimeSheet" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="timesheetId"><text-find ignore-case="true"/></field>
         <field name="comments"><text-find ignore-case="true"/></field>
@@ -118,7 +118,7 @@
         <field name="find" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit/></field>
     </form>
     <form name="ListFindTimeSheet" type="list" list-name="listIt" paginate-target="FindTimeSheet"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -153,14 +153,14 @@
     </form>
 
     <form name="AddMyWeeklyTimesheet" type="single" target="createMyWeeklyTimesheet" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="partyId"><hidden value="${userLogin.partyId}"/></field>
         <field entry-name="dummy" name="requiredDate" title="${uiLabelMap.ProjectMgrSelectedDate}"><date-time type="date"/></field>
         <field name="addAction" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
 
     <form name="AddWeeklyTimesheet" type="single" target="createWeeklyTimesheet" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="partyId" title="${uiLabelMap.PartyParty}">
             <drop-down allow-empty="true" no-current-selected-key="${timesheet.partyId}">
                 <entity-options entity-name="PartyRoleDetailAndPartyDetail" description="${firstName} ${lastName}">
@@ -175,7 +175,7 @@
     </form>
 
     <form name="AddTimesheetEntry" type="single" target="createTimesheetEntry" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-service service-name="createTimeEntry"/>
 
         <field name="timeEntryId"><ignored/><!-- don't pass, will be sequenced --></field>
@@ -204,7 +204,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="QuickCreateTimeEntry" target="createQuickTimeEntry" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
             <entity-one entity-name="WorkEffort">
                 <field-map field-name="workEffortId" from-field=""/>
@@ -233,7 +233,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListTimesheetEntries" type="list" list-name="timesheetEntries" target="updateTimesheetEntry"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="TimeEntry">
                 <condition-expr field-name="timesheetId" from-field="timesheetId"/>
@@ -281,7 +281,7 @@
         </field>
     </form>
     <form name="WeekTimesheet" type="list" list-name="timeEntries" separate-columns="true"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="timesheetId"><hidden/></field>
         <field name="taskWbsId"><display/></field>
         <field name="workEffortName" title="${uiLabelMap.ProjectMgrTaskName}" widget-style="${styles.link_nav_info_name} ${styles.action_view}">

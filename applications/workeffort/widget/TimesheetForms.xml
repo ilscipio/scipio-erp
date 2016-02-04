@@ -20,7 +20,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="ListMyTimesheets" target="" title="" type="list" list-name="timesheets" paginate-target="MyTimesheets" paginate="true"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="Timesheet" list="timesheets">
                 <field-map field-name="partyId" from-field="userLogin.partyId"/>
@@ -37,7 +37,7 @@ under the License.
         <field name="clientPartyId"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${firstName} ${middleName} ${lastName} ${groupName} [${partyId}]"/></field>
     </form>
     <form name="ListMyRates" target="" title="" type="list" list-name="partyRates" paginate="false"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="PartyRate" list="partyRates">
                 <field-map field-name="partyId" from-field="userLogin.partyId"/>
@@ -49,7 +49,7 @@ under the License.
         <field name="partyId"><hidden/></field>
     </form>
     <form name="QuickCreateTimeEntry" target="createQuickTimeEntry" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="timesheetId" map-name="currentTimesheet"><hidden/></field>
         <field name="partyId" map-name="userLogin"><hidden/></field>
         <field name="rateTypeId" title="${uiLabelMap.WorkEffortTimesheetRateType}">
@@ -66,7 +66,7 @@ under the License.
     </form>
 
     <form name="FindTimesheet" default-map-name="timesheet" target="FindTimesheet" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-entity entity-name="Timesheet" default-field-type="find"/>
 
         <field name="partyId" title="${uiLabelMap.PartyParty}"><lookup target-form-name="LookupPartyName"/></field>
@@ -75,7 +75,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListFindTimesheet" target="" title="" type="list" list-name="listIt" paginate-target="FindTimesheet" paginate="true"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -94,7 +94,7 @@ under the License.
     </form>
 
     <form name="EditTimesheet" default-map-name="timesheet" target="updateTimesheet" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target target="createTimesheet" use-when="timesheet==null"/>
         <auto-fields-service service-name="updateTimesheet"/>
 
@@ -115,7 +115,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="DisplayTimesheetEntries" type="list" list-name="timesheetEntries"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="TimeEntry">
                 <condition-expr field-name="timesheetId" from-field="timesheetId"/>
@@ -145,13 +145,13 @@ under the License.
         </field>
     </form>
     <form name="AddTimesheetToInvoice" target="addTimesheetToInvoice" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="timesheetId"><hidden/></field>
         <field name="invoiceId"><lookup target-form-name="LookupInvoice"/></field>
         <field name="submitAction" title="${uiLabelMap.PageTitleAddWorkEffortTimeToInvoice}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="AddTimesheetToNewInvoice" target="addTimesheetToNewInvoice" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="timesheetId"><hidden/></field>
         <field name="partyIdFrom" title="${uiLabelMap.WorkEffortTimeBillFromParty}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="partyId" title="${uiLabelMap.WorkEffortTimeBillToParty}"><lookup target-form-name="LookupPartyName" default-value="${timesheet.clientPartyId}"/></field>
@@ -160,7 +160,7 @@ under the License.
 
     <!-- TimesheetRole -->
     <form name="ListTimesheetRoles" type="list" list-name="timesheetRoles" target=""
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="TimesheetRole">
                 <condition-expr field-name="timesheetId" from-field="timesheetId"/>
@@ -181,7 +181,7 @@ under the License.
         </field>
     </form>
     <form name="AddTimesheetRole" type="single" target="createTimesheetRole" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-service service-name="createTimesheetRole"/>
 
         <field name="timesheetId"><hidden/></field>
@@ -198,7 +198,7 @@ under the License.
 
     <!-- TimesheetEntry -->
     <form name="ListTimesheetEntries" type="list" list-name="timesheetEntries" target="updateTimesheetEntry"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="TimeEntry">
                 <condition-expr field-name="timesheetId" from-field="timesheetId"/>
@@ -244,7 +244,7 @@ under the License.
         </field>
     </form>
     <form name="AddTimesheetEntry" type="single" target="createTimesheetEntry" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-service service-name="createTimeEntry"/>
 
         <field name="timeEntryId"><ignored/><!-- don't pass, will be sequenced --></field>

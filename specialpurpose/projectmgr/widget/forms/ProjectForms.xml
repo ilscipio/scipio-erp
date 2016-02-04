@@ -20,7 +20,7 @@
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="EditProject" type="single" target="updateProject" default-map-name="projectInfo"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
             <entity-one entity-name="PartyGroup" value-field="partyGroup">
                 <field-map field-name="partyId" from-field="partyId"/>
@@ -100,7 +100,7 @@
         <field name="save" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit/></field>
     </form>
     <form name="AddSubProject" type="single" target="AddSubProject"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="workEffortParentId"><hidden value="${projectId}"/></field>
         <field name="projectId"><hidden/></field>
         <field name="workEffortId" title="${uiLabelMap.ProjectMgrProjectName}">
@@ -114,14 +114,14 @@
         <field name="add" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit/></field>
     </form>
     <form name="FindProject" type="single" target="FindProject" title="Find and List Project"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="projectId" title="${uiLabelMap.ProjectMgrProjectId}" parameter-name="workEffortId"><text-find size="25"/></field>
         <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}" parameter-name="workEffortName"><text-find size="25"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" parameter-name="createdStamp"><date-find/></field>
         <field name="find" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit/></field>
     </form>
     <form name="hoursNotYetBilled" type="list" list-name="entryList"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="ProjectPhaseTaskAndTimeEntryTimeSheet" list="entryList">
                 <condition-list combine="and">
@@ -152,7 +152,7 @@
         <field name="fromDate" title="${uiLabelMap.CommonFrom}" position="2"><display type="date"/></field>
     </form>
     <form name="ListProjects" type="list" list-name="listIt" paginate-target="FindProject"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="parameters.workEffortTypeId" value="PROJECT"/>
             <set field="fieldList[]" value="workEffortId"/>
@@ -187,7 +187,7 @@
         <field name="createdStamp" title="${uiLabelMap.FormFieldTitle_createdDate}"><display type="date"/></field>
     </form>
     <form name="ListCurrentProjects" type="list" list-name="projects" paginate-target="main"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <script location="component://projectmgr/webapp/projectmgr/WEB-INF/actions/ListCurrentProjects.groovy"/>
         </actions>
@@ -210,7 +210,7 @@
         <field name="createdStamp" title="${uiLabelMap.FormFieldTitle_createdDate}"><display type="date"/></field>
     </form>
     <form name="EditSubProjects" list-name="projects" type="list" target="RemoveSubProject"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="WorkEffort">
                 <field-map field-name="workEffortParentId" from-field="projectId"/>
@@ -237,7 +237,7 @@
         <!--field name="removeAction"><submit/></field--><!-- TODO: difficult to clear the workEffortParentId field in the record have to find solution-->
     </form>
     <form name="ProjectInfo" type="single" default-map-name="project" paginate-target="FindProject"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="projectName" title="${uiLabelMap.ProjectMgrProjectName}"><display/></field>
         <field name="currentStatusId" title="${uiLabelMap.CommonStatus}">
             <display-entity entity-name="StatusItem" key-field-name="statusId" description="${description}"/>
@@ -260,7 +260,7 @@
         <field name="emailAddress" title="${uiLabelMap.FormFieldTitle_mailingListEmail}"><display/></field>
     </form>
     <form name="ListChildEfforts" target="updateProjectAndAssoc" title="" list-name="projects" type="list" separate-columns="true" paginate-target="FindProject"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="StatusItem" value-field="currentStatus">
                 <field-map field-name="statusId" from-field="currentStatusId"/>
@@ -302,7 +302,7 @@
     </form>
 
     <form name="EditProjectTasks" target="updateProjectTask" title="" list-name="tasks" type="list" separate-columns="true" paginate-target="EditProjectTasks"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <service service-name="getProjectTask" result-map="result">
                 <field-map field-name="taskId" from-field="workEffortId"/>
@@ -357,7 +357,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListUnassignedTasks" target="updateTaskAndAssoc" title="" list-name="tasks" type="list" separate-columns="true" paginate-target="FindTask"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="StatusItem" value-field="currentStatus">
                 <field-map field-name="statusId" from-field="currentStatusId"/>
@@ -395,7 +395,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListPhases" target="updateProjectPhase" title="" list-name="phases" type="list" separate-columns="true" paginate-target="FindPhase"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="projectId"><hidden value="${parameters.projectId}"/></field>
         <field name="phaseId" parameter-name="workEffortId"><hidden/></field>
         <field name="phaseSeqNum" parameter-name="sequenceNum" title="${uiLabelMap.FormFieldTitle_sequenceNum}"><text size="3"/></field>
@@ -412,7 +412,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListPhaseInfo" type="list" list-name="phases"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="wbsId"><display description="${projectId}.${phaseSeqNum}"/></field>
         <field name="phase" widget-style="${styles.link_nav_info_name} ${styles.action_view}">
             <hyperlink target="FindPhase" description="${phaseName}">
@@ -427,7 +427,7 @@
         <field name="actualHours"><display/></field>
     </form>
     <form name="ListTaskInfo" type="list" list-name="tasks"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-and entity-name="WorkEffortPartyAssignView" list="resources">
                 <field-map field-name="workEffortId" from-field="workEffortId"/>
@@ -450,12 +450,12 @@
         <field name="actualHours"><display/></field>
     </form>
     <form name="FindOrders" target="linkProjectOrder?projectId=${projectId}" type="single" title="Find and List Orders"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="orderId"><lookup target-form-name="LookupOrderHeader"/></field>
         <field name="workEffortId"><hidden value="${projectId}"/></field>
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
-    <form name="ListOrderInfo" target="EditProjectOrders?projectId=${projectId}" type="list" list-name="listOrderAssoProject" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+    <form name="ListOrderInfo" target="EditProjectOrders?projectId=${projectId}" type="list" list-name="listOrderAssoProject" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="orderId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="/ordermgr/control/orderview" target-type="inter-app" description="${orderId}">
                 <parameter param-name="orderId"/>
@@ -488,7 +488,7 @@
         </field>
     </form>
     <form name="ListProjectProviderParties" type="list" list-name="assigns"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="WorkEffortPartyAssignView" list="assigns" distinct="true">
                 <condition-list combine="and">
@@ -527,7 +527,7 @@
         <field name="nonBilledHours" entry-name="actualNonBilledHours" map-name="result.projectInfo"><display/></field>
     </form>
     <form name="ListProjectClientParties" type="list" list-name="clientAssigns"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="projectId"><hidden/></field>
         <field name="partyName" title="${uiLabelMap.CommonName}" widget-style="${styles.link_nav_info_idname_long} ${styles.action_view}">
             <hyperlink target="viewprofile" description="${lastName}, ${firstName} ${middleName} ${groupName} [${partyId}]">
@@ -539,7 +539,7 @@
         <field name="thruDate" title="${uiLabelMap.CommonThru}"><display type="date-time"/></field>
     </form>
     <form name="ListProjectCompanyParties" type="list" list-name="companyAssigns"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="PartyAcctgPreference" value-field="orgParty"/>
             <entity-one entity-name="Party" value-field="clientParty"/>
@@ -558,7 +558,7 @@
         <field name="currencyUomId"><display-entity entity-name="Uom" key-field-name="uomId" description="${description}"/></field>
     </form>
     <form name="EditWorkEffortPartyAssigns" target="deleteWorkEffortPartyAssign" title="" type="list" paginate-target="ListWorkEffortPartyAssigns"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="WorkEffortPartyAssignView" >
                 <condition-expr field-name="workEffortId" operator="equals" from-field="workEffortId"/>
@@ -580,7 +580,7 @@
         <field name="expireAction" widget-style="${styles.link_run_sys} ${styles.action_terminate}" use-when="${thruDate==null || (thruDate &gt; nowTimestamp)}"><submit button-type="button"/></field>
     </form>
     <form name="AddWorkEffortPartyAssign" target="createWorkEffortPartyAssign" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <actions>
             <entity-condition entity-name="PartyRoleAndPartyDetail" distinct="true" list="projectResources">
                 <condition-list combine="and">
@@ -661,7 +661,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListProjectNotes" extends="ListWorkEffortNotes" extends-resource="component://workeffort/widget/WorkEffortForms.xml" type="list" paginate-target="EditWorkEffortNotes"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="WorkEffortNoteAndData">
                 <condition-expr field-name="workEffortId" from-field="workEffortId"/>
@@ -677,7 +677,7 @@
         <field name="noteParty" title="${uiLabelMap.CommonBy}"><display description="${partyNameView.lastName} ${partyNameView.middleName} ${partyNameView.firstName} at  ${noteDateTime}"/></field>
     </form>
     <form name="listResourcesTasks" type="list" list-name="tasks" paginate-target="listResourcesTask" target="updateResourcesTaskAssigment"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <service service-name="getProjectIdAndNameFromTask" result-map="resultProject">
                 <field-map field-name="taskId" from-field="workEffortId"/>
@@ -733,7 +733,7 @@
         </field>
     </form>
     <form name="listResourcesProjects" type="list" list-name="parties"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <service service-name="getProject" result-map="result">
                 <field-map field-name="projectId" from-field="workEffortId"/>
@@ -766,7 +766,7 @@
         <field name="createdStamp" ><display type="date"/></field>
     </form>
     <form name="AddResourceProjectParty" target="addWorkEffortPartyAssign" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="projectId"><hidden/></field>
         <field name="statusId"><hidden value="PRTYASGN_ASSIGNED"/></field>
         <field name="workEffortId"><hidden value="${workEffortId}"/></field>
@@ -795,7 +795,7 @@
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="AddResourceTaskParty" target="addTaskPartyAssign" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="projectId"><hidden/></field>
         <field name="statusId"><hidden value="PRTYASGN_ASSIGNED"/></field>
         <field name="workEffortId"><hidden value="${workEffortId}"/></field>
@@ -880,7 +880,7 @@
         </field>
     </form>
     <form name="UploadWorkEffortContent" type="upload" default-map-name="content"
-        focus-field-name="contentTypeId" header-row-style="header-row" default-table-style="${styles.table_basic}" target="updateProjectContent">
+        focus-field-name="contentTypeId" header-row-style="header-row" target="updateProjectContent"> <!-- default-table-style="basic-table" -->
         <actions>
             <set field="projectId" from-field="parameters.projectId" default-value="${parameters.workEffortId}"/>
             <set field="workEffortId" from-field="parameters.workEffortId"/>

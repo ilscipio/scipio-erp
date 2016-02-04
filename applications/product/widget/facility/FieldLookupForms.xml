@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="lookupFacility" target="LookupFacility" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <!--<auto-fields-entity entity-name="Facility" default-field-type="hidden"/> -->
         <field name="facilityId"><text-find/></field>
         <field name="facilityName"><text-find/></field>
@@ -38,7 +38,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupFacility" list-name="listIt" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="LookupFacility">
+        odd-row-style="alternate-row" paginate-target="LookupFacility"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -54,7 +54,7 @@ under the License.
         <field name="facilityTypeId"><display/></field>
     </form>
     <form name="lookupFacilityLocation" target="LookupFacilityLocation" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-entity entity-name="FacilityLocation" default-field-type="find"/>
         <field name="facilityId">
             <drop-down allow-empty="false">
@@ -75,8 +75,8 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listLookupFacilityLocation" list-name="listIt" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar"
-        paginate-target="LookupFacilityLocation">
+        odd-row-style="alternate-row"
+        paginate-target="LookupFacilityLocation"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -96,7 +96,7 @@ under the License.
     </form>
 
     <form name="lookupShipment" type="single" target="LookupShipment"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field position="1" name="shipmentId"><text-find/></field>
         <field position="1" name="shipmentTypeId">
             <drop-down allow-empty="true">
@@ -118,7 +118,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="listShipment" list-name="listIt" title="" type="list" paginate-target="LookupShipment"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -136,7 +136,7 @@ under the License.
         <field name="partyIdTo" title="${uiLabelMap.PartyPartyTo}"><display-entity entity-name="PartyNameView" key-field-name="partyId" description="${groupName}${lastName}[${partyId}]"/></field>
     </form>
     <form name="ListProductInventoryLocation" list-name="LocationList" title="" type="list" paginate-target="ListProductInventoryLocation"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" view-size="20">
+        odd-row-style="alternate-row" view-size="20"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="inventoryItemId"><display/></field>
         <field name="locationSeqId" title=" " widget-style="${styles.link_nav_info_id}" >
             <hyperlink also-hidden="false" target-type="plain" description="${locationSeqId}" target="javascript:set_value('${locationSeqId}')"/>

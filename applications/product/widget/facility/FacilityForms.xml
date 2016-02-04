@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="FindFacility" type="list" list-name="listIt" paginate-target="FindFacility"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -46,7 +46,7 @@ under the License.
     </form>
 
     <form name="FindFacility10" method="get" type="single" target="EditFacility"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="facilityId">
             <drop-down allow-empty="false">
                 <entity-options description="${facilityName}" entity-name="Facility" key-field-name="facilityId"/>
@@ -60,7 +60,7 @@ under the License.
     </form>
 
     <form name="SearchInventoryItemsParams" type="single" target="EditFacilityInventoryItems"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="facilityId">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
@@ -95,7 +95,7 @@ under the License.
         </field>
     </form>
     <form name="ListFacilityInventoryItems" type="list" list-name="listIt" header-row-style="header-row-2"
-        paginate-target="EditFacilityInventoryItems" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        paginate-target="EditFacilityInventoryItems" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="results" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -147,7 +147,7 @@ under the License.
     </form>
     <form name="ListFacilityInventoryItemsNoLocations" type="list" target="" title="" list-name="inventoryItems"
          override-list-size="${inventoryItemsSize}" paginate-target="SearchInventoryItemsByLabels"
-         odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+         odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="inventoryItemId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="EditInventoryItem" description="${inventoryItemId}">
                 <parameter param-name="inventoryItemId"/>
@@ -173,7 +173,7 @@ under the License.
     </form>
 
     <form name="SearchInventoryItemsDetailsParams" type="single" target="ViewFacilityInventoryItemsDetails"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="facilityId">
             <drop-down allow-empty="false">
                 <entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
@@ -218,7 +218,7 @@ under the License.
         </field>
     </form>
     <form name="ListFacilityInventoryItemsDetailsByItem" type="list" target="" title="" list-name="listIt"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="results" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -282,7 +282,7 @@ under the License.
         <field name="returnItemSeqId" position="2"><display/></field>
     </form>
     <form name="ListFacilityInventoryItemsDetailsByProduct" type="list" target="" title="" list-name="listIt"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="results" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -338,7 +338,7 @@ under the License.
         <field name="returnItemSeqId" position="2"><display/></field>
     </form>
     <form name="ListFacilityInventoryItemsDetailsByDate" type="list" target="" title="" list-name="listIt"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="results" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -391,7 +391,7 @@ under the License.
     </form>
 
     <form name="FindFacilityInventoryByProduct" type="single" target="${facilityInventoryByProductScreen}" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="facilityId"><hidden/></field>
         <field name="action"><hidden value="SEARCH"/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}">
@@ -442,8 +442,8 @@ under the License.
         </field>
     </form>
     <form name="ListFacilityInventoryByProduct" type="list" target="" title="" list-name="inventoryByProduct"
-        odd-row-style="alternate-row" header-row-style="header-row-2" default-table-style="${styles.table_basic} hover-bar"
-        paginate-target="${facilityInventoryByProductScreen}" override-list-size="${overrideListSize}">
+        odd-row-style="alternate-row" header-row-style="header-row-2"
+        paginate-target="${facilityInventoryByProductScreen}" override-list-size="${overrideListSize}"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <script location="component://product/webapp/facility/WEB-INF/actions/facility/ComputeProductSellThroughData.groovy"/>
         </row-actions>
@@ -480,7 +480,7 @@ under the License.
 
     <!-- multi-form for list of packages ready to be weighted and scheduled for shipment -->
     <form name="SchedulingList" type="multi" use-row-submit="true" list-name="shipmentRouteSegments" title="${uiLabelMap.PageTitlePackageShipmentScheduling}" target="BatchScheduleShipmentRouteSegments?facilityId=${facilityId}"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" separate-columns="true">
+        odd-row-style="alternate-row" separate-columns="true"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="ViewShipment" description="${shipmentId}">
                 <parameter param-name="shipmentId"/>
@@ -522,7 +522,7 @@ under the License.
     <!-- multi-form to print confirmed shipping labels and to mark shipment route segments as accepted
          (to see how this dual-action multi form works, see batchPrintMarkAsAccepted.ftl) -->
     <form name="Labels" type="multi" use-row-submit="true" list-name="shipmentPackageRouteSegments" title="" target="BatchPrintShippingLabels" separate-columns="true"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="shipmentId" title="${uiLabelMap.ProductShipmentId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="ViewShipment" description="${shipmentId}">
                 <parameter param-name="shipmentId"/>
@@ -557,7 +557,7 @@ under the License.
     </form>
 
     <form name="FindPhysicalInventory" type="single" target="FindFacilityPhysicalInventory" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="facilityId"><hidden/></field>
         <field name="productId" position="1"><lookup target-form-name="LookupProduct"/></field>
         <field name="internalName" title="${uiLabelMap.ProductInternalName}">
@@ -568,7 +568,7 @@ under the License.
         </field>
     </form>
     <form name="ListPhysicalInventory" type="multi" list-name="physicalInventory" target="createPhysicalVariances?facilityId=${parameters.facilityId}&amp;productId=${parameters.productId}&amp;internalName=${parameters.internalName}" use-row-submit="true"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" separate-columns="true">
+        odd-row-style="alternate-row" separate-columns="true"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="inventoryItemId" widget-style="${styles.link_nav_info_id}">
             <hyperlink description="${inventoryItemId}" target="EditInventoryItem">
                 <parameter param-name="inventoryItemId"/>
@@ -598,7 +598,7 @@ under the License.
     </form>
     <!-- FacilityGroups -->
     <form name="EditFacilityGroups" type="list" target="updateGroupToFacility" paginate-target="EditFacilityGroups" title="" list-name="facilityGroupMembers"
-        header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        header-row-style="header-row-2" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <auto-fields-entity entity-name="FacilityGroupMember"/>
         <field name="facilityId"><hidden/></field>
         <field name="facilityGroupId" title="${uiLabelMap.ProductFacilityGroupId}">
@@ -619,7 +619,7 @@ under the License.
         </field>
     </form>
     <form name="addGroupToFacility" type="single" target="addGroupToFacility" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-entity entity-name="FacilityGroupMember"/>
         <field name="facilityId"><hidden/></field>
         <field name="facilityGroupId" title="${uiLabelMap.ProductFacilityGroupId}">
@@ -632,7 +632,7 @@ under the License.
 
     <!-- FacilityParty -->
     <form name="EditFacilityParties" type="list" paginate-target="EditFacilityParties" title="" list-name="facilityParties"
-        header-row-style="header-row-2" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        header-row-style="header-row-2" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="facilityId"><hidden/></field>
         <field name="partyId">
             <display-entity description="${groupName} ${firstName} ${lastName} [${partyId}]" entity-name="PartyNameView"/>
@@ -652,7 +652,7 @@ under the License.
         </field>
     </form>
     <form name="AddPartyToFacility" type="single" target="addPartyToFacility" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-entity entity-name="FacilityParty"/>
         <field name="facilityId"><hidden/></field>
         <field name="partyId">
@@ -666,8 +666,8 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListInventoryItemTotals" type="list" target="" title="" list-name="inventoryItemTotals"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar"
-        paginate-target="InventoryItemTotals" override-list-size="${overrideListSize}">
+        odd-row-style="alternate-row"
+        paginate-target="InventoryItemTotals" override-list-size="${overrideListSize}"> <!-- default-table-style="basic-table hover-bar" -->
 
         <field name="inventoryItemGrandTotals"><hidden/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}"><display/></field>
@@ -679,8 +679,8 @@ under the License.
         <field name="totalRetailPrice" title="${uiLabelMap.CommonTotal} ${uiLabelMap.ProductRetailPrice}"><display/></field>
     </form>
     <form name="ListInventoryAverageCosts" type="list" target="" title="" list-name="inventoryAverageCosts"
-            odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar"
-            paginate-target="InventoryAverageCosts" override-list-size="${overrideListSize}">
+            odd-row-style="alternate-row"
+            paginate-target="InventoryAverageCosts" override-list-size="${overrideListSize}"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="productId2" title="${uiLabelMap.ProductProductId}" entry-name="productId" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="/catalog/control/EditProduct" target-type="inter-app" description="${productId}">
                 <parameter param-name="productId"/>
@@ -693,14 +693,14 @@ under the License.
         <field name="totalInventoryCost" use-when="currencyUomId==null" title="${uiLabelMap.CommonTotalCost}"><display description="${uiLabelMap.ProductDifferentCurrencies}"/></field>
     </form>
     <form name="ListInventoryItemGrandTotals" type="list" list-name="inventoryItemGrandTotals"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="qohGrandTotal" title="${uiLabelMap.ProductQoh} ${uiLabelMap.CommonTotal} ${uiLabelMap.CommonQty}"><display/></field>
         <field name="atpGrandTotal" title="${uiLabelMap.ProductAtp} ${uiLabelMap.CommonTotal} ${uiLabelMap.CommonQty}"><display/></field>
         <field name="totalCostPriceGrandTotal" title="${uiLabelMap.CommonTotal} ${uiLabelMap.ProductCostPrice}"><display/></field>
         <field name="totalRetailPriceGrandTotal" title="${uiLabelMap.CommonTotal} ${uiLabelMap.ProductRetailPrice}"><display/></field>
     </form>
     <form name="InventoryItemTotalsExport" type="list" list-name="inventoryItemTotals"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="productId" title="${uiLabelMap.ProductProductId}"><display/></field>
         <field name="quantityOnHand" title="${uiLabelMap.ProductQoh}"><display/></field>
         <field name="availableToPromise" title="${uiLabelMap.ProductAtp}"><display/></field>
@@ -710,7 +710,7 @@ under the License.
         <field name="totalRetailPrice" title="${uiLabelMap.CommonTotal} ${uiLabelMap.ProductRetailPrice}"><display/></field>
     </form>
     <form name="InventoryItemGrandTotalsExport" type="list" list-name="inventoryItemGrandTotals"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="qohGrandTotal" title="${uiLabelMap.ProductQoh} ${uiLabelMap.CommonTotal} ${uiLabelMap.CommonQty}"><display/></field>
         <field name="atpGrandTotal" title="${uiLabelMap.ProductAtp} ${uiLabelMap.CommonTotal} ${uiLabelMap.CommonQty}"><display/></field>
         <field name="totalCostPriceGrandTotal" title="${uiLabelMap.CommonTotal} ${uiLabelMap.ProductCostPrice}"><display/></field>
@@ -718,7 +718,7 @@ under the License.
     </form>
 
     <form name="ToFacilityTransfers" type="list" target="" title="" list-name="toTransfers"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="InventoryItem" value-field="inventoryItem">
                 <field-map field-name="inventoryItemId"/>
@@ -763,7 +763,7 @@ under the License.
         </field>
     </form>
     <form name="FromFacilityTransfers" type="list" target="" title="" list-name="fromTransfers"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="InventoryItem" value-field="inventoryItem">
                 <field-map field-name="inventoryItemId"/>
@@ -808,7 +808,7 @@ under the License.
     </form>
 
     <form name="FromFacilityTransfersComplete" type="multi" target="CompleteRequestedTransfers?completeRequested=true&amp;facilityId=${facilityId}" title="" list-name="fromTransfers"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true">
+        odd-row-style="alternate-row" use-row-submit="true"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="InventoryItem" value-field="inventoryItem">
                 <field-map field-name="inventoryItemId"/>
@@ -856,7 +856,7 @@ under the License.
 
     <!--Facility Content-->
     <form name="AddFacilityContent" type="upload" focus-field-name="contentId" 
-        header-row-style="header-row" default-table-style="${styles.table_basic}" target="createFacilityContent?facilityId=${facilityId}">
+        header-row-style="header-row" target="createFacilityContent?facilityId=${facilityId}"> <!-- default-table-style="basic-table" -->
         <field name="facilityId"><hidden/></field>
         <field name="contentId" title="${uiLabelMap.FormFieldTitle_existContentId}">
             <lookup target-form-name="LookupContent"/>
@@ -882,7 +882,7 @@ under the License.
     </form>
     
     <form name="ListFacilityContent" type="list" list-name="facilityContentDetails" 
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="facilityId"><hidden/></field>
         <field name="contentId" title="${uiLabelMap.CommonView}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="/content/control/ViewSimpleContent" description="[${contentId}]" target-type="inter-app">
@@ -903,7 +903,7 @@ under the License.
     </form>
 
     <form name="EditFacilityGeoPoint" type="single" target="createUpdateFacilityGeoPoint" default-map-name="geoPoint"
-        default-table-style="${styles.table_basic}">
+       > <!-- default-table-style="basic-table" -->
         <field name="facilityId"><hidden value="${facilityId}"/></field>
         <field name="geoPointId"><hidden/></field>
         <field name="dataSourceId">
@@ -930,7 +930,7 @@ under the License.
     </form>
 
     <form name="ListFacilityAgreements" type="list" list-name="facilityAgreements"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
         <field name="agreementId" widget-style="${styles.link_nav_info_id_long}">
             <hyperlink target="/accounting/control/EditAgreementItemFacility" target-type="inter-app" description="${agreementId}/${agreementItemSeqId}" also-hidden="false">
                 <parameter param-name="agreementId"/>

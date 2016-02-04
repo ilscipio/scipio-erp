@@ -74,7 +74,7 @@ under the License.
     </form>
 
     <form name="ListLookedUpUserLogins" type="list" list-name="listIt" paginate-target="LookupUserLogin"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -99,7 +99,7 @@ under the License.
     </form>
 
     <form name="ListPortalPages" type="list" list-name="listIt" paginate-target="LookupPortalPage"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -122,7 +122,7 @@ under the License.
     </form>
 
     <form name="ListLocales" type="list" list-name="locales" paginate-target="LookupLocale"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="localeString" widget-style="${styles.link_nav_info_id}">
             <hyperlink also-hidden="false" target-type="plain" description="${localeString}" target="javascript:set_value('${localeString}', '${localeName}')"/>
         </field>

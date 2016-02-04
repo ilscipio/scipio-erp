@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="OrderPurchaseReportOptions" type="single" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="productStoreId">
             <drop-down allow-empty="false">
                 <option key="" description="- ${uiLabelMap.CommonAny} -"/>
@@ -72,7 +72,7 @@ under the License.
 
     <!-- form for generating a report of total product sales (quantity and value) -->
     <form name="SalesByStoreReport" type="single" target="SalesByStoreReport.pdf" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}" target-window="_BLANK">
+        header-row-style="header-row" target-window="_BLANK"> <!-- default-table-style="basic-table" -->
         <field name="productStoreId">
             <drop-down allow-empty="false">
                 <option key="" description="- ${uiLabelMap.CommonSelectAny} -"/>
@@ -99,7 +99,7 @@ under the License.
 
     <!-- form for generating a report of open order items -->
     <form name="OpenOrderItemsReport" type="single" target="OpenOrderItemsReport" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="productStoreId">
             <drop-down allow-empty="false">
                 <option key="" description="- ${uiLabelMap.CommonSelectAny} -"/>
@@ -129,7 +129,7 @@ under the License.
 
     <!-- list open order items -->
     <form name="OpenOrderItemsList" type="list" list-name="orderItemList"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="OpenOrderItemsReport">
+        odd-row-style="alternate-row" paginate-target="OpenOrderItemsReport"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="orderDate" title="${uiLabelMap.OrderDate}"><display/></field>
         <field name="orderId" title="${uiLabelMap.OrderOrderId}" widget-style="${styles.link_nav_info_id}">
             <hyperlink target="orderview" description="${orderId}">
@@ -153,7 +153,7 @@ under the License.
     </form>
 
     <form name="OpenOrderItemsTotal" type="list" list-name="totalAmountList"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="total" title="${uiLabelMap.CommonTotal}"><display/></field>
         <field name="totalQuantityOrdered"><display/></field>
         <field name="totalQuantityOpen"><display/></field>
@@ -167,7 +167,7 @@ under the License.
 
     <!-- form for generating a report of total product purchases (quantity and value) -->
     <form name="PurchasesByOrganizationReport" type="single" target="PurchasesByOrganizationReport.pdf" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}" target-window="_BLANK">
+        header-row-style="header-row" target-window="_BLANK"> <!-- default-table-style="basic-table" -->
         <field name="fromPartyId" title="${uiLabelMap.AccountingFromParty}">
             <drop-down allow-empty="false">
                 <option key="" description="- ${uiLabelMap.CommonSelectAny} -"/>

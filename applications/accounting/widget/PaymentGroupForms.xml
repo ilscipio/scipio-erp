@@ -23,7 +23,7 @@ under the License.
 
     <!-- Payment Group -->
     <form name="FindPaymentGroup" type="single" target="FindPaymentGroup"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-entity entity-name="PaymentGroup" default-field-type="find" default-position="2"/>
         <field name="paymentGroupId" title="${uiLabelMap.CommonId}" position="1"><text-find/></field>
         <field name="paymentGroupTypeId" title="${uiLabelMap.CommonType}" position="2">
@@ -38,7 +38,7 @@ under the License.
     </form>
 
     <form name="ListPaymentGroup" type="list" separate-columns="true" default-entity-name="PaymentGroup" list-name="paymentGroupList" 
-        paginate-target="FindPaymentGroup" paginate="true" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row-2">
+        paginate-target="FindPaymentGroup" paginate="true" odd-row-style="alternate-row" header-row-style="header-row-2"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-and entity-name="PaymentGroupMember" list="paymentGroupMembers" filter-by-date="true">
                 <field-map field-name="paymentGroupId"/>
@@ -124,7 +124,7 @@ under the License.
     
     <!-- Payment Group Member -->
     <form name="ListPaymentGroupMember" type="list" list-name="paymentGroupMembers" target="updatePaymentGroupMember"
-            odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" header-row-style="header-row" separate-columns="true" use-row-submit="false">
+            odd-row-style="alternate-row" header-row-style="header-row" separate-columns="true" use-row-submit="false"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="Payment" value-field="payment"/>
             <set field="paymentTypeId" from-field="payment.paymentTypeId"/>
@@ -190,7 +190,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonAdd}" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="PaymentGroupMembers" type="list" list-name="paymentGroupMembers"
-            odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+            odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="Payment" value-field="payment"/>
             <set field="statusId" from-field="payment.statusId"/>

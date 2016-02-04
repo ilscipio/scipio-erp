@@ -21,7 +21,7 @@ under the License.
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <form name="EditTrackingCode" type="single" target="updateTrackingCode" title="" default-map-name="trackingCode"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="trackingCode==null" target="createTrackingCode"/>
 
         <field use-when="trackingCode!=null" name="trackingCodeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
@@ -68,7 +68,7 @@ under the License.
     </form>
 
     <form name="ListTrackingCode" target="ListTrackingCode" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="TrackingCode"/>
         </actions>
@@ -90,12 +90,12 @@ under the License.
     </form>
     <!-- UNUSED FORM
     <form name="FindTrackingCode" type="single" target="ListTrackingCode" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <auto-fields-entity entity-name="TrackingCode"/>
     </form>
     -->
     <form name="EditTrackingCodeOrder" type="single" target="updateTrackingCodeOrder" title="" default-map-name="trackingCodeOrder"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="trackingCodeOrder==null" target="createTrackingCodeOrder"/>
 
         <field name="trackingCodeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}"><display/></field>
@@ -118,7 +118,7 @@ under the License.
      </form>
 
     <form name="FindTrackingCodeOrders" type="single" target="ListTrackingCodeOrders" title=""
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="trackingCodeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}"><text-find/></field>
         <field name="orderId" title="${uiLabelMap.MarketingTrackingCodeOrderOrderId}"><lookup target-form-name="LookupOrderName"/></field>
         <field name="trackingCodeTypeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeTypeId}">
@@ -132,7 +132,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListTrackingCodeOrders" type="list" title="" paginate-target="FindTrackingCodeOrders" list-name="listIt"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
                 <field-map field-name="inputFields" from-field="parameters"/>
@@ -150,7 +150,7 @@ under the License.
     </form>
 
     <form name="EditTrackingCodeVisit" default-map-name="visit" target="updateTrackingCodeVisit" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target target="createTrackingCodeVisit" use-when="visit==null"/>
         <field name="tackingCodeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}"><display/></field>
         <field name="visitId" title="${uiLabelMap.MarketingTrackingCodeVisitVisitId}"><display/></field>
@@ -167,7 +167,7 @@ under the License.
         <field name="cancelAction" title="${uiLabelMap.CommonCancel}" widget-style="${styles.link_nav_cancel}"><hyperlink target="${donePage}" also-hidden="false" description="${uiLabelMap.CommonCancelDone}"/></field>
     </form>
     <form name="FindTrackingCodeVisits" target="ListTrackingCodeVisits" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="trackingCodeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}"><text/></field>
         <field name="visitId" title="${uiLabelMap.MarketingTrackingCodeVisitVisitId}"><lookup target-form-name="LookupVisit"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
@@ -181,7 +181,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListTrackingCodeVisits" list-name="listIt" title="" paginate-target="FindTrackingCodeVisits" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map from-field="requestParameters" field-name="inputFields"/>
@@ -204,7 +204,7 @@ under the License.
     </form>
 
     <form name="LookupTrackingCode" default-map-name="trackingCode" target="LookupTrackingCode" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="trackingCodeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeId}"><text-find/></field>
         <field name="description" title="${uiLabelMap.MarketingTrackingCodeDescription}"><text-find/></field>
         <field name="trackingCodeTypeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeTypeId}">
@@ -231,7 +231,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListLookupTrackingCode" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map from-field="parameters" field-name="inputFields"/>
@@ -250,7 +250,7 @@ under the License.
     </form>
 
     <form name="LookupVisit" target="LookupVisit" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="visitId" title="${uiLabelMap.MarketingTrackingCodeVisitVisitId}"><text-find/></field>
         <field name="partyId" title="${uiLabelMap.MarketingTrackingCodeVisitPartyId}"><lookup target-form-name="LookupPartyName"/></field>
         <field name="fromDate" title="${uiLabelMap.CommonFrom}"><date-find/></field>
@@ -258,7 +258,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>
     </form>
     <form name="ListLookupVisit" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map from-field="parameters" field-name="inputFields"/>
@@ -287,7 +287,7 @@ under the License.
         <field name="sessionId" title="${uiLabelMap.MarketingTrackingCodeVisitSessionId}"><display/></field>
     </form>
     <form name="EditTrackingCodeType" type="single" target="updateTrackingCodeType" title="" default-map-name="trackingCodeType"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <alt-target use-when="trackingCodeType==null" target="createTrackingCodeType"/>
 
         <field use-when="trackingCodeType!=null" name="trackingCodeTypeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeTypeId}" tooltip="${uiLabelMap.CommonNotModifRecreat}"><display/></field>
@@ -301,7 +301,7 @@ under the License.
     </form>
 
     <form name="ListTrackingCodeType" target="ListTrackingCodeType" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="TrackingCodeType"/>
         </actions>
@@ -319,13 +319,13 @@ under the License.
         </field>
     </form>
     <form name="LookupTrackingCodeType" default-map-name="trackingCode" target="LookupTrackingCodeType" title="" type="single"
-        header-row-style="header-row" default-table-style="${styles.table_basic}">
+        header-row-style="header-row"> <!-- default-table-style="basic-table" -->
         <field name="trackingCodeTypeId" title="${uiLabelMap.MarketingTrackingCodeTrackingCodeTypeId}"><text-find/></field>
         <field name="description" title="${uiLabelMap.MarketingTrackingCodeTypeDescription}"><text-find/></field>
         <field name="submitAction" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListLookupTrackingCodeType" target="" title="" type="list"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <service result-map-list="listIt" result-map="result" service-name="performFind">
                 <field-map from-field="parameters" field-name="inputFields"/>

@@ -21,7 +21,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="sprintList" type="list" use-row-submit="true" list-name="listIt" target="DeleteSprint" paginate-target="SprintList" separate-columns="true"
-        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="input.noConditionFind" value="N"/>
             <set field="input.workEffortParentId" from-field="parameters.projectId"/>
@@ -69,7 +69,7 @@ under the License.
     </form>
     
     <form name="sprintBacklogList" type="list" use-row-submit="true" list-name="custRequestAndCustRequestItem" paginate-target="sprintBacklogListTarget" separate-columns="true"
-        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="WorkEffortAndProduct" list="projectList">
                 <field-map field-name="workEffortId" from-field="parameters.projectId"/>
@@ -96,7 +96,7 @@ under the License.
     </form>
     
     <form name="sprintBacklogListItems" type="list" use-row-submit="true" list-name="listIt" target="UpdateHours" paginate-target="ViewSprint" separate-columns="true"
-        odd-row-style="alternate-row" default-table-style="hover-bar basic-table">
+        odd-row-style="alternate-row"> <!-- default-table-style="hover-bar basic-table" -->
         <row-actions>
             <!-- get total backlog item's plan hours -->
             <set field="nullField" type="String"/>
@@ -449,7 +449,7 @@ under the License.
         <field name="sprintId"><hidden value="${parameters.sprintId}"/></field>
     </form>
      <form name="listSprintMember" type="list" target="delSprintMember" list-name="listIt" use-row-submit="true" paginate-target="ViewSprint" separate-columns="true"
-        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="input.noConditionFind" from-field="parameters.noConditionFind" default-value="Y"/>
             <set field="input.workEffortId" from-field="parameters.sprintId"/>
@@ -921,7 +921,7 @@ under the License.
     </form>
     
     <form name="ListProdBacklog" type="multi" use-row-submit="true" list-name="custRequestAndCustRequestItems" target="updateProductBacklogItemRow?productId=${productId}&amp;sequence=${sequence}&amp;" paginate-target="AddProdBacklog" separate-columns="true"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate="true">
+        odd-row-style="alternate-row" paginate="true"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="parentCustRequestId" from-field="parameters.parentCustRequestId" default-value=""/>
         </actions>
@@ -1046,7 +1046,7 @@ under the License.
          <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
     </form>
     <form name="ListProdBacklogBySeq" type="multi" use-row-submit="false" list-name="custRequestAndCustRequestItems" target="updateProductBacklogItemRow?productId=${productId}&amp;sequence=${sequence}&amp;backStatusId=CRQ_ACCEPTED" 
-        paginate-target="AddProdBacklog" separate-columns="true" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate="true">
+        paginate-target="AddProdBacklog" separate-columns="true" odd-row-style="alternate-row" paginate="true"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="CustRequest" value-field="custRequest"/>
             <set field="product" from-field="custRequest.description"/>
@@ -1176,7 +1176,7 @@ under the License.
         <field name="estimatedHours"><display/></field>
         <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
     </form>
-    <form name="projectList" type="list" target="main" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="Sprints" list-name="sprints">
+    <form name="projectList" type="list" target="main" odd-row-style="alternate-row" paginate-target="Sprints" list-name="sprints"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="isCurrentProject" value="${groovy: request.setAttribute(&quot;isCurrentProject&quot;, false);}" type="Boolean"/>
             <set field="currentProject" value="${groovy: request.setAttribute(&quot;currentProject&quot;, ' ');}" type="String"/>
@@ -1277,7 +1277,7 @@ under the License.
         </field>
     </form>
     <form name="projectAndSprintListInfo" type="list" target="ViewProduct" paginate-target="ViewProduct" 
-          odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" list-name="sprints">
+          odd-row-style="alternate-row" list-name="sprints"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="isCurrentProject" value="${groovy: request.setAttribute(&quot;isCurrentProject&quot;, false);}" type="Boolean"/>
             <set field="currentProject" value="${groovy: request.setAttribute(&quot;currentProject&quot;, ' ');}" type="String"/>
@@ -1340,7 +1340,7 @@ under the License.
         <field name="sprintActualStartDate" title="${uiLabelMap.CommonStartDate}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display type="date"></display></field>
         <field name="sprintActualCompletionDate" title="${uiLabelMap.CommonEndDate}" position="2" use-when="&quot;${sprintId}&quot;!=&quot;&quot;"><display type="date"></display></field>
     </form>
-    <form name="SprintListInfo" extends="sprintList" odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="viewScrumProject">
+    <form name="SprintListInfo" extends="sprintList" odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" paginate-target="viewScrumProject"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="input.noConditionFind" value="N"/>
             <set field="input.workEffortParentId" from-field="parameters.projectId"/>
@@ -1388,7 +1388,7 @@ under the License.
 
     <form name="ListDailyMeetingMinute" type="list" list-name="workEffortNoteAndDataList" use-row-submit="true" separate-columns="true" 
     odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" 
-    default-table-style="${styles.table_basic} hover-bar" paginate-target="DailyScrumMeetingMinute">
+    paginate-target="DailyScrumMeetingMinute"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="projectId" from-field="parameters.workEffortId"/>
             <entity-condition entity-name="WorkEffortNoteAndData" list="workEffortNoteAndDataList">
@@ -1582,7 +1582,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonSubmit}" use-when="product==null" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListProductBacklogCategories" type="list" use-row-submit="true" list-name="listIt" target="DeleteSprint" paginate-target="SprintList" separate-columns="true"
-        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="CustRequestAndCustRequestItem" list="listIt">
                 <condition-list combine="and">
@@ -1624,7 +1624,7 @@ under the License.
         <field name="finished" title="${uiLabelMap.ScrumFinished}"><display/></field>
     </form>
     <form name="ListProductBacklogCategoriesNoAction" type="list" use-row-submit="true" list-name="listIt" target="DeleteSprint" paginate-target="SprintList" separate-columns="true"
-        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-condition entity-name="CustRequestAndCustRequestItem" list="listIt">
                 <condition-list combine="and">
@@ -1646,7 +1646,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpdate}" use-when="custRequest!=null" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="button"/></field>
     </form>
     <form name="ListProductByAdmin" type="list" default-entity-name="ProductRole" use-row-submit="true" list-name="listIt" target="deleteProduct" paginate-target="EditProduct" separate-columns="true"
-        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="parameters.roleTypeId" value="PRODUCT_OWNER"></set>
             <service service-name="performFind" result-map="result" result-map-list="listIt">
@@ -1803,8 +1803,8 @@ under the License.
                 <sort-field name="searchAction"/>
             </sort-order>
         </form>
-    <form name="hoursNotYetBilled" type="multi" list-name="hoursNotYetBilledTasks" use-row-submit="false" paginate-target="ProductBilling" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" 
-        target="updateNotBilledBacklog?productId=${productId}&amp;fromDate=${fromDate}&amp;thruDate=${thruDate}&amp;includeMeeting=${includeMeeting}&amp;VIEW_SIZE_1=${parameters.VIEW_SIZE_1}&amp;VIEW_INDEX_1=${parameters.VIEW_INDEX_1}">
+    <form name="hoursNotYetBilled" type="multi" list-name="hoursNotYetBilledTasks" use-row-submit="false" paginate-target="ProductBilling" odd-row-style="alternate-row" 
+        target="updateNotBilledBacklog?productId=${productId}&amp;fromDate=${fromDate}&amp;thruDate=${thruDate}&amp;includeMeeting=${includeMeeting}&amp;VIEW_SIZE_1=${parameters.VIEW_SIZE_1}&amp;VIEW_INDEX_1=${parameters.VIEW_INDEX_1}"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <set field="showPosition1" value="${groovy:String prev=(String)previousItem.get(&quot;custRequestId&quot;);return !(prev!=null&amp;&amp;prev.equals(custRequestId));}" type="Boolean"/>
             <entity-one entity-name="WorkEffort" value-field="project">
@@ -2008,7 +2008,7 @@ under the License.
         <field name="noteInfo" title="${uiLabelMap.ScrumHowToTest}"><display description="${noteInfo}"/></field>
     </form>
     <form name="ViewListProdBacklog" type="list" target="ViewAddProdBacklog" paginate-target="ViewProduct" separate-columns="true"
-        list-name="backlogItems" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        list-name="backlogItems" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="parentCustRequestId" from-field="parameters.parentCustRequestId" default-value=""/>
         </actions>
@@ -2045,7 +2045,7 @@ under the License.
     <form name="ViewTotalProdBacklog" type="list" extends="ViewListProdBacklog" paginate-target="ViewTotalBacklog">
     </form>
     <form name="TotalProdBacklog" type="list" paginate-target="FindTotalBacklog" separate-columns="true"
-    list-name="backlogItems" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+    list-name="backlogItems" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="CustRequest" value-field="custRequest"/>
             <set field="description" from-field="custRequest.description"/>
@@ -2118,7 +2118,7 @@ under the License.
     </form>
     
     <form name="SprintTasksList" type="list" list-name="projectSprintBacklogAndTasks" target="updateSprintTask" paginate-target="SprintTask" separate-columns="true"
-        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true">
+        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" use-row-submit="true"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-and entity-name="WorkEffortPartyAssignment" list="assignTo" filter-by-date="true">
                 <field-map field-name="workEffortId" from-field="taskId"/>
@@ -2395,7 +2395,7 @@ under the License.
     </form>
     
     <form name="ListProduct" type="list" default-entity-name="ProductRole" use-row-submit="true" list-name="listIt" target="deleteProduct" paginate-target="main" separate-columns="true"
-        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <set field="isCurrentCompany" value="${groovy: request.setAttribute(&quot;isCurrentCompany&quot;, false);}" type="Boolean"/>
             <set field="currentCompany" value="${groovy: request.setAttribute(&quot;currentCompany&quot;, ' ');}" type="String"/>
@@ -2483,7 +2483,7 @@ under the License.
         <field name="backlogId" title="Product Backlog Id"><display description="${dataCustRequest.custRequestId}"/></field>
         <field name="backlogItem" title="Product Backlog Item"><display description="${dataCustRequest.description}"/></field>
     </form>
-    <form name="listBacklogTask" type="list" list-name="listIt" paginate-target="findTask" odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+    <form name="listBacklogTask" type="list" list-name="listIt" paginate-target="findTask" odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
     <actions>
             <entity-condition entity-name="ProjectSprintBacklogAndTask" list="listIt">
                 <condition-list>
@@ -2513,7 +2513,7 @@ under the License.
    </form>
    
    <form name="ListTaskSprint" list-name="notes" title="" type="list" paginate-target="backlogView"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="custRequestId" title="Backlog ID" widget-style="${styles.link_nav_info_id}">
         <hyperlink target="backlogView" description="${custRequestId}">
             <parameter param-name="custRequestId" from-field="${custRequestId}"/>
@@ -2524,7 +2524,7 @@ under the License.
     
     <!--Project contents -->
     <form name="ListContents" extends="ListWorkEffortContents" extends-resource="component://workeffort/widget/WorkEffortForms.xml"
-         odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar">
+         odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="Content" value-field="contentMap">
                 <field-map field-name="contentId" from-field="contentId"/>
@@ -2563,7 +2563,7 @@ under the License.
         </sort-order>
     </form>
     <form name="UploadWorkEffortContent" type="upload" default-map-name="content"
-        focus-field-name="contentTypeId" header-row-style="header-row" default-table-style="${styles.table_basic}" target="createProjectContent?projectId=${parameters.projectId}">
+        focus-field-name="contentTypeId" header-row-style="header-row" target="createProjectContent?projectId=${parameters.projectId}"> <!-- default-table-style="basic-table" -->
         <field name="workEffortId" map-name="parameters"><hidden/></field>
         <field name="projectId" map-name="parameters"><hidden/></field>
         <field name="workEffortContentTypeId"><hidden value="PROJECT_SPEC"/></field>
@@ -2581,7 +2581,7 @@ under the License.
         <field name="createAction" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListProjectContent" type="list" paginate-target="/ListCommContent"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="WorkEffortAndContentDataResource">
                 <field-map field-name="workEffortId" from-field="workEffortId"/>
@@ -2600,7 +2600,7 @@ under the License.
     
     <!-- ProductContent -->
     <form name="ListProductContentInfos" type="list" title="" list-name="productContent" 
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic}">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table" -->
         <row-actions>
             <entity-one entity-name="Content" value-field="contentMap">
                 <field-map field-name="contentId" from-field="contentId"/>
@@ -2641,7 +2641,7 @@ under the License.
         </sort-order>
     </form>
     <form name="ListProductContent" type="list" extends="ListProductContentInfos" list-name="productContent" paginate-target="/ListCommContent"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
          <row-actions>
             <entity-one entity-name="Content" value-field="contentMap">
                 <field-map field-name="contentId" from-field="contentId"/>
@@ -2656,14 +2656,14 @@ under the License.
         </field>
         <field name="deleteAction"><ignored/></field>
     </form>
-    <form name="AddProdBacklogNote" type="single" header-row-style="header-row" default-table-style="${styles.table_basic}" 
-        target="createProdBacklogNote?custRequestId=${parameters.custRequestId}&amp;productId=${parameters.productId}">
+    <form name="AddProdBacklogNote" type="single" header-row-style="header-row" 
+        target="createProdBacklogNote?custRequestId=${parameters.custRequestId}&amp;productId=${parameters.productId}"> <!-- default-table-style="basic-table" -->
         <field name="noteName"><text/> </field>
         <field name="noteInfo"><textarea/></field>
         <field name="createAction widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListProdBacklogNote" type="list" list-name="custNoteList"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="ProdBacklogNote">
+        odd-row-style="alternate-row" paginate-target="ProdBacklogNote"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="NoteData" auto-field-map="true"/>
         </row-actions>
@@ -2687,7 +2687,7 @@ under the License.
     </form>
     <!-- Backlog Item Contents -->
     <form name="AddCustRequestContent" type="upload" default-map-name="content"
-        header-row-style="header-row" default-table-style="${styles.table_basic}" target="createBacklogItemContent?custRequestId=${parameters.custRequestId}&amp;productId=${parameters.productId}">
+        header-row-style="header-row" target="createBacklogItemContent?custRequestId=${parameters.custRequestId}&amp;productId=${parameters.productId}"> <!-- default-table-style="basic-table" -->
         <field name="custRequestId" map-name="parameters"><hidden/></field>
         <field name="contentTypeId">
             <drop-down allow-empty="false" no-current-selected-key="DOCUMENT">
@@ -2705,7 +2705,7 @@ under the License.
         <field name="createAction" widget-style="${styles.link_run_sys} ${styles.action_add}"><submit button-type="button"/></field>
     </form>
     <form name="ListCustRequestContent" type="list" list-name="custRequestAndContents"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="EditBacklogItemContent">
+        odd-row-style="alternate-row" paginate-target="EditBacklogItemContent"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="Content" value-field="contentMap">
                 <field-map field-name="contentId" from-field="contentId"/>
@@ -2733,7 +2733,7 @@ under the License.
         </field>
     </form>
     <form name="ViewListCustRequestContent" type="list" list-name="custRequestAndContents" extends="ListCustRequestContent"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar" paginate-target="EditBacklogItemContent">
+        odd-row-style="alternate-row" paginate-target="EditBacklogItemContent"> <!-- default-table-style="basic-table hover-bar" -->
         <row-actions>
             <entity-one entity-name="Content" value-field="contentMap">
                 <field-map field-name="contentId" from-field="contentId"/>
@@ -2749,7 +2749,7 @@ under the License.
         <field name="deleteAction"><ignored/> </field>
         </form>
     <form name="taskRelateBacklog" type="list" separate-columns="true" list-name="projectSprintBacklogAndTasks"
-        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" default-table-style="${styles.table_basic} hover-bar" use-row-submit="true">
+        odd-row-style="alternate-row" even-row-style="even-row" header-row-style="header-row" use-row-submit="true"> <!-- default-table-style="basic-table hover-bar" -->
         <actions>
             <entity-and entity-name="CustRequestWorkEffort" list="sprintList">
                 <field-map field-name="custRequestId" from-field="parameters.custRequestId"/>
@@ -2846,7 +2846,7 @@ under the License.
         <field name="buttonSubmit" title="${uiLabelMap.CommonSave}" widget-style="${styles.link_run_sys} ${styles.action_remove}"><submit request-confirmation="true" confirmation-message="${actualHoursMessage}"/></field>
     </form>
     <form name="ViewBacklogStatus" type="list" extends="ViewRequestStatus" extends-resource="component://order/widget/ordermgr/CustRequestForms.xml"
-        odd-row-style="alternate-row" default-table-style="${styles.table_basic} hover-bar">
+        odd-row-style="alternate-row"> <!-- default-table-style="basic-table hover-bar" -->
         <field name="custRequestItemSeqId"><ignored/></field>
     </form>
 
@@ -2988,7 +2988,7 @@ under the License.
         <field name="submitAction" widget-style="${styles.link_run_sys} ${styles.action_update}"><submit button-type="text-link"/></field>
     </form>
     <form name="unplanBacklogListItems" type="list" use-row-submit="true" list-name="listIt" target="UpdateUnplanBacklogHours" paginate-target="unplanBacklog" separate-columns="true"
-        odd-row-style="alternate-row" default-table-style="hover-bar basic-table">
+        odd-row-style="alternate-row"> <!-- default-table-style="hover-bar basic-table" -->
         <row-actions>
             <!-- get total backlog item's plan hours -->
             <set field="nullField" type="String"/>

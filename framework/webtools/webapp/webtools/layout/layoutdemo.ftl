@@ -204,7 +204,7 @@
     <@row>
         <@heading>Chart.js</@heading>
         <@cell columns="4">
-            <@chart type="pie" library="chart">
+            <@chart type="pie" library="chart" label1="Number" label2="Item">
                 <@chartdata value="36" title="Peperoni"/>
                 <@chartdata value="2" title="Sausage"/> 
                 <@chartdata value="19" title="Cheese"/> 
@@ -214,7 +214,7 @@
         </@cell>
         
         <@cell columns="4">
-            <@chart type="bar" library="chart">
+            <@chart type="bar" library="chart" label1="Number" label2="Item">
                 <@chartdata value="36" title="Peperoni"/>
                 <@chartdata value="14" title="Sausage"/> 
                 <@chartdata value="8" title="Cheese"/> 
@@ -224,7 +224,7 @@
         </@cell>
         
         <@cell columns="4">
-            <@chart type="line" library="chart">
+            <@chart type="line" library="chart" label1="Number" label2="Item">
                 <@chartdata value="36" value2="1" title="Peperoni"/>
                 <@chartdata value="2" value2="2" title="Sausage"/> 
                 <@chartdata value="19" value2="3" title="Cheese"/> 

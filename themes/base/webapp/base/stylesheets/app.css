@@ -10262,64 +10262,75 @@ table.table-type-data .button {
 /*table .button {
   margin-bottom:0.1rem;
 }*/
+/* Tables where having zero cellspacing is extremely important (should be rare) 
+  TODO?: along with this we could have styles for table.table-hint-spacing-tiny and similar... but in this theme currently seems minor...
+      .table-hint-spacing-tiny alone can get cellspacing and/or cellpadding (as theme chooses), while
+      .table-hint-spacing-tiny.table-hint-nocellspacing should get zero cellspacing and compensatory (?) cellpadding instead
+  */
+/* line 394, ../scss/_base.scss */
+table.table-nocellspacing, table.table-nocellspacing-hint {
+  border-spacing: 0 !important;
+  border-collapse: collapse !important;
+}
+
 /* GENERAL ELEMENT COLORS */
-/* line 392, ../scss/_base.scss */
+/* line 402, ../scss/_base.scss */
 .colored-elem.primary, .colored-elem {
   color: #008cba;
 }
 
-/* line 393, ../scss/_base.scss */
+/* line 403, ../scss/_base.scss */
 .colored-elem.secondary {
   color: #e7e7e7;
 }
 
-/* line 394, ../scss/_base.scss */
+/* line 404, ../scss/_base.scss */
 .colored-elem.info {
   color: #a0d3e8;
 }
 
-/* line 395, ../scss/_base.scss */
+/* line 405, ../scss/_base.scss */
 .colored-elem.success {
   color: #43ac6a;
 }
 
-/* line 396, ../scss/_base.scss */
+/* line 406, ../scss/_base.scss */
 .colored-elem.warning {
   color: #f08a24;
 }
 
-/* line 397, ../scss/_base.scss */
+/* line 407, ../scss/_base.scss */
 .colored-elem.alert {
   color: #f04124;
 }
 
 /* TEXT COLORS */
-/* line 402, ../scss/_base.scss */
+/* line 412, ../scss/_base.scss */
 .colored-text.primary, .colored-text {
   color: #008cba;
 }
 
-/* line 403, ../scss/_base.scss */
+/* line 413, ../scss/_base.scss */
 .colored-text.secondary {
   color: #e7e7e7;
 }
 
-/* line 404, ../scss/_base.scss */
+/* line 414, ../scss/_base.scss */
 .colored-text.info {
   color: #a0d3e8;
 }
 
-/* line 405, ../scss/_base.scss */
+/* line 415, ../scss/_base.scss */
 .colored-text.success {
   color: #43ac6a;
 }
 
-/* line 406, ../scss/_base.scss */
+/* line 416, ../scss/_base.scss */
 .colored-text.warning {
   color: #f08a24;
 }
 
-/* line 407, ../scss/_base.scss */
+/* line 417, ../scss/_base.scss */
 .colored-text.alert {
   color: #f04124;
 }
@@ -10332,7 +10343,7 @@ table.table-type-data .button {
   note that system- vs session- vs page- changing actions can be styled separately. */
 /* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
   NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
-/* line 420, ../scss/_base.scss */
+/* line 430, ../scss/_base.scss */
 .action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10354,7 +10365,7 @@ table.table-type-data .button {
 }
 */
 /* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
-/* line 432, ../scss/_base.scss */
+/* line 442, ../scss/_base.scss */
 .action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10370,7 +10381,7 @@ table.table-type-data .button {
 }
 
 /* terminate actions (like cancel order) */
-/* line 437, ../scss/_base.scss */
+/* line 447, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10387,7 +10398,7 @@ table.table-type-data .button {
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 444, ../scss/_base.scss */
+/* line 454, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #a0d3e8;
   border-color: #61b6d9;
@@ -10409,7 +10420,7 @@ table.table-type-data .button {
    @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
 }*/
 /* high-importance modify actions, like create order button */
-/* line 457, ../scss/_base.scss */
+/* line 467, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
   background-color: #f04124;
   border-color: #cf2a0e;
@@ -10425,7 +10436,7 @@ table.table-type-data .button {
 }
 
 /* special nav cancel/back/return action button (alt regular color) */
-/* line 463, ../scss/_base.scss */
+/* line 473, ../scss/_base.scss */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {
   background-color: #e7e7e7;
   border-color: #b9b9b9;
@@ -10441,7 +10452,7 @@ table.table-type-data .button {
 }
 
 /* special run-action cancel action button (warning color) */
-/* line 468, ../scss/_base.scss */
+/* line 478, ../scss/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;
   border-color: #cf6e0e;

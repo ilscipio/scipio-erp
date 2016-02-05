@@ -31,7 +31,7 @@ under the License.
     <#-- Cato: FIXME: see ContentSearchEvents.java -->
     <p>NOTE: This search currently only shows the first ${listSize!0} results and supports no pagination.</p>
     <@paginate mode="content" url=makeOfbizUrl("ContentSearchResults") paramStr="/~clearSearch=N" paramDelim="/" paramPrefix="~" viewSize=viewSize!1 viewIndex=viewIndex! listSize=listSize!0>
-      <@table type="data-complex" width="100%" cellpadding="0"> <#-- orig: class="" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-complex" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
         <#assign listIndex = lowIndex>
         <#list contentIds as contentId><#-- note that there is no boundary range because that is being done before the list is put in the content -->
           <#assign content = delegator.findOne("Content", Static["org.ofbiz.base.util.UtilMisc"].toMap("contentId", contentId), false)>

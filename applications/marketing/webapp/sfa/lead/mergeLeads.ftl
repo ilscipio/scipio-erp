@@ -36,7 +36,7 @@ under the License.
           <input type="hidden" name="phoneContactMechId" value="${contactInfo2.phoneContactMechId!}" />
           <input type="hidden" name="emailContactMechId" value="${contactInfo2.emailContactMechId!}" />
 
-          <@table type="fields" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+          <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
             <@tr>
               <@td width="20%"></@td>
               <@td width="30%"><@heading>${uiLabelMap.SfaFirstContact}</@heading></@td>

@@ -36,7 +36,7 @@ under the License.
     
     <@section title="${uiLabelMap.AccountingPreviousBankReconciliation}">
         <#if previousGlReconciliation?has_content>
-            <@table type="fields" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+            <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                 <@tr>
                     <@td>${uiLabelMap.FormFieldTitle_glReconciliationName}</@td>
                     <@td>${previousGlReconciliation.glReconciliationName!}</@td>

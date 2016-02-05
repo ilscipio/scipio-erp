@@ -127,7 +127,7 @@ under the License.
                   <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
                 </#if>
                 <#assign carrier = orderItemShipGroup.carrierPartyId?default("N/A")>
-                <@table type="fields" class="+${styles.table_hint_spacing_medium!}"> <#-- orig: class="basic-table" --> <#-- orig:  cellpadding="4" cellspacing="4" -->
+                <@table type="fields" class="+${styles.table_spacing_medium_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellpadding="4" cellspacing="4" -->
                   <@tr>
                     <@td valign="top">
                       <#if postalAddress?exists >
@@ -338,7 +338,7 @@ under the License.
                   <input type="hidden" name="weightUomId" value="${defaultWeightUomId}"/>
                   <input type="hidden" name="showInput" value="N"/>
                   <hr/>
-                  <@table type="fields" cellpadding="2"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                  <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
                     <@tr>
                         <#assign packageSeqIds = packingSession.getPackageSeqIds()/>
                         <#if packageSeqIds?has_content>

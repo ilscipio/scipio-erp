@@ -37,7 +37,7 @@ under the License.
         <input type="hidden" name="finalizeReqPayInfo" value="false"/>
         <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
       </#if>
-      <@table type="data-complex" autoAltRows=true cellpadding="1" border="0"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+      <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" autoAltRows=true border="0"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" -->
         <@thead>
         <@tr>
           <@th>&nbsp;</@th>

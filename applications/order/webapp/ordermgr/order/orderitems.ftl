@@ -230,7 +230,7 @@ under the License.
                                             <#if unplannedQuantity < 0><#assign unplannedQuantity = 0></#if>
                                             &nbsp;
                                             <@modal id="${productId}_i" label="${uiLabelMap.ProductInventory}">
-                                                    <@table type="fields" cellpadding="0" border="0"> <#-- orig: cellspacing="0" -->
+                                                    <@table type="fields" border="0"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
                                                         <@tr>
                                                             <@td style="text-align: right; padding-bottom: 10px;">
                                                                 <a class=""

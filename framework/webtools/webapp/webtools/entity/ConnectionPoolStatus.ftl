@@ -19,7 +19,7 @@ under the License.
 <@heading>Connection Pool Status</@heading>
 
 <#assign groups = delegator.getModelGroupReader().getGroupNames(delegator.getDelegatorName())!/>
-<@table type="data-list" autoAltRows=true class="+light-grid ${styles.table_hint_spacing_tiny!}"> <#-- orig: class="basic-table light-grid hover-bar" --> <#-- orig: cellspacing="" -->
+<@table type="data-list" autoAltRows=true class="+light-grid ${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table light-grid hover-bar" --> <#-- orig: cellspacing="" -->
   <@thead>
     <@tr class="header-row">
         <@th>Helper Name</@th>

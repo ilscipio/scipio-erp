@@ -18,7 +18,7 @@ under the License.
 -->
 <div id="chooseVariant" style="display:none">
   <form method="post" action="javascript:void(0);" id="ChooseVariantForm">
-    <@table type="fields" class="+${styles.table_hint_spacing_tiny!}" border="0" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+    <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" border="0" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
       <@tr>
         <@td colspan="2">&nbsp;</@td>
       </@tr>

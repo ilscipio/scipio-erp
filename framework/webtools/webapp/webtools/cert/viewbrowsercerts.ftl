@@ -26,7 +26,7 @@ under the License.
 <@section title="${uiLabelMap.WebtoolsCertsX509}">
   <#if (isSecure)>
     <#if (clientCerts?has_content)>
-      <@table type="data-list" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="" -->
+      <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="" -->
         <#list clientCerts as cert>
           <#assign certString = Static["org.ofbiz.base.util.KeyStoreUtil"].certToString(cert)!>
           <#if (certString?has_content)>

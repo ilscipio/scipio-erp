@@ -207,7 +207,7 @@ under the License.
             <@tr>
               <@td align="right" valign="middle">${uiLabelMap.EbayStoreStoreChangeFont}</@td>
               <@td valign="middle">
-                    <@table type="fields" class="+${styles.table_hint_spacing_tiny!}" width="450"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                    <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="450"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                         <@tr>
                             <@td><b>Font</b></@td>
                             <@td><b>Font size</b></@td>
@@ -225,7 +225,7 @@ under the License.
                     <#else>
                         <#assign storeFontColor = storeFontTheme.storeFontTypeNameFaceColor!>
                     </#if>
-                    <@table type="fields" class="+${styles.table_hint_spacing_tiny!}" width="450"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                    <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="450"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                         <@tr>
                             <@td>
                                 <select id="storeNameFont" name="storeNameFont">
@@ -258,7 +258,7 @@ under the License.
                     <#else>
                         <#assign storeTitleColor = storeFontTheme.storeFontTypeTitleColor!>
                     </#if>
-                    <@table type="fields" class="+${styles.table_hint_spacing_tiny!}" width="450"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                    <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="450"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                         <@tr>
                             <@td>
                                 <select id="storeTitleFont" name="storeTitleFont">
@@ -291,7 +291,7 @@ under the License.
                     <#else>
                         <#assign storeDescColor = storeFontTheme.storeFontTypeDescColor!>
                     </#if>
-                    <@table type="fields" class="+${styles.table_hint_spacing_tiny!}" width="450"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                    <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="450"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                         <@tr>
                             <@td>
                                 <select id="storeDescFont" name="storeDescFont">

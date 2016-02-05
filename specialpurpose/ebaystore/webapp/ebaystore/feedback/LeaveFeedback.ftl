@@ -132,7 +132,7 @@ under the License.
                             <input type="text" value="" maxlength="80" size="80" name="commentText${feedbackCounter}" label="Tell us more"/>
                             <br />80 characters left<br /><br />
                             <b>Rate details about this purchase</b>
-                            <@table type="fields" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                            <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                                 <@tr>
                                     <@td>
                                         How accurate was the item description?
@@ -149,7 +149,7 @@ under the License.
                                 <@tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
                                     <@td colspan="2">
                                         Why weren't you satisfied with the item description?
-                                        <@table type="fields" class="+answers" width="100%" border="0" cellpadding="0"> <#-- orig: class="answers" --> <#-- orig: cellspacing="0" -->
+                                        <@table type="fields" class="+answers" width="100%" border="0"> <#-- orig: class="answers" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
                                             <@tbody>
                                                 <@tr>
                                                     <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />
@@ -291,7 +291,7 @@ under the License.
                         <input type="text" value="" maxlength="80" size="80" name="commentText${feedbackCounter}" label="Tell us more"/>
                         <br />80 characters left<br /><br />
                         <b>Rate details about this purchase</b>
-                        <@table type="fields" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                        <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                             <@tr>
                                 <@td>
                                     How accurate was the item description?
@@ -308,7 +308,7 @@ under the License.
                             <@tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
                                 <@td colspan="2">
                                     Why weren't you satisfied with the item description?
-                                    <@table type="fields" class="+answers" width="100%" border="0" cellpadding="0"> <#-- orig: class="answers" --> <#-- orig: cellspacing="0" -->
+                                    <@table type="fields" class="+answers" width="100%" border="0"> <#-- orig: class="answers" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
                                         <@tbody>
                                             <@tr>
                                                 <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />
@@ -423,7 +423,7 @@ under the License.
                         <input type="text" value="" maxlength="80" size="80" name="commentText${feedbackCounter}" label="Tell us more"/>
                         <br />80 characters left<br /><br />
                         <b>Rate details about this purchase</b>
-                        <@table type="fields" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                        <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                             <@tr>
                                 <@td>
                                     How accurate was the item description?
@@ -440,7 +440,7 @@ under the License.
                             <@tr id="itemOption${feedbackCounter}" style="display:none;border:#eeeeee solid thin;text-indent:10px">
                                 <@td colspan="2">
                                     Why weren't you satisfied with the item description?
-                                    <@table type="fields" class="+answers" width="100%" border="0" cellpadding="0"> <#-- orig: class="answers" --> <#-- orig: cellspacing="0" -->
+                                    <@table type="fields" class="+answers" width="100%" border="0"> <#-- orig: class="answers" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
                                         <@tbody>
                                             <@tr>
                                                 <@td width="25"><input name="AqItemAsDescribedId${feedbackCounter}" value="5" type="radio" />

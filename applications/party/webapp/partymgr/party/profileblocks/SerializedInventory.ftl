@@ -19,7 +19,7 @@ under the License.
 
 <@section id="serialized-inventory-summary" title="${uiLabelMap.ProductSerializedInventorySummary}">
 
-        <@table type="data-list" id="serialized-inventory" cellpadding="2"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+        <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}" id="serialized-inventory"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
             <@thead>
                 <@tr class="header-row">
                     <@th>${uiLabelMap.ProductInventoryItemId}</@th>

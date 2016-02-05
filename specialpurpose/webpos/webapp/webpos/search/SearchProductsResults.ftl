@@ -18,7 +18,7 @@ under the License.
 -->
 <div id="searchProductsResults" style="display:none">
   <form method="post" action="javascript:void(0);" id="SearchProductsResultsForm" name="SearchProductsResultsForm">
-    <@table type="fields" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+    <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
       <@tr>
         <@td width="25%">
           <label for="searchByProductIdValue"><b>&nbsp;${uiLabelMap.ProductGoodIdentification}</b></label>
@@ -48,7 +48,7 @@ under the License.
         </@td>
       </@tr>
     </@table>
-    <@table type="data-list" cellpadding="2"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
       <@thead class="searchProductsResultsHead">
         <@tr class="header-row">
           <@th nowrap>&nbsp;</@th>

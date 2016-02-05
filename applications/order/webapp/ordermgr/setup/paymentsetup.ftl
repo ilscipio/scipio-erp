@@ -28,7 +28,7 @@ under the License.
     </#macro>
     <@section title="Payment Processor Setup" menuContent=menuContent>
         <#if paymentSetups?has_content> 
-          <@table type="data-list" autoAltRows=false width="100%" class="+${styles.table_hint_spacing_small!}" border="0"> <#-- orig: cellpadding="2" cellspacing="2" -->
+          <@table type="data-list" autoAltRows=false width="100%" class="+${styles.table_spacing_small_hint!}" border="0"> <#-- orig: cellpadding="2" cellspacing="2" -->
             <@thead>
               <@tr class="header-row">
                 <@th nowrap="nowrap">WebSite</@th>

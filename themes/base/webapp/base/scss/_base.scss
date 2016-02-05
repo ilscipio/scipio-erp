@@ -386,6 +386,16 @@ table.table-type-data .button {
 }*/
 
 
+/* Tables where having zero cellspacing is extremely important (should be rare) 
+  TODO?: along with this we could have styles for table.table-hint-spacing-tiny and similar... but in this theme currently seems minor...
+      .table-hint-spacing-tiny alone can get cellspacing and/or cellpadding (as theme chooses), while
+      .table-hint-spacing-tiny.table-hint-nocellspacing should get zero cellspacing and compensatory (?) cellpadding instead
+  */
+table.table-nocellspacing, table.table-nocellspacing-hint {
+  border-spacing:0 !important;
+  border-collapse:collapse !important;
+}
+
 
 /* GENERAL ELEMENT COLORS */
 

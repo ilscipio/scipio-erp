@@ -18,7 +18,7 @@ under the License.
 -->
 <div id="searchPartiesResults" style="display:none">
   <form method="post" action="javascript:void(0);" id="SearchPartiesResultsForm" name="SearchPartiesResultsForm">
-    <@table type="fields" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+    <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
       <@tr>
         <@td width="12.5%">
           <label for="searchByPartyLastName"><b>&nbsp;${uiLabelMap.PartyLastName}</b></label>
@@ -60,7 +60,7 @@ under the License.
         <@td width="25%" colspan="2"></@td>
       </@tr>
     </@table>
-    <@table type="data-list" cellpadding="2"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+    <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
       <@thead class="searchPartiesResultsHead">
         <@tr class="header-row">
           <@th>&nbsp;</@th>

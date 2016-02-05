@@ -51,7 +51,7 @@ under the License.
         <fieldset>
           <input type="hidden" name="productStoreId" value="${parameters.productStoreId!}" />
           <input type="hidden" name="SEARCH_CATEGORY_ID" value="${(requestParameters.SEARCH_CATEGORY_ID)!}" />
-          <@table type="data-list" autoAltRows=true firstRowAlt=true class="+border-top border-bottom ${styles.table_hint_spacing_tiny!}"> <#-- orig: class="basic-table border-top border-bottom" --> <#-- orig: cellspacing="" -->
+          <@table type="data-list" autoAltRows=true firstRowAlt=true class="+border-top border-bottom ${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table border-top border-bottom" --> <#-- orig: cellspacing="" -->
             <#assign listIndex = lowIndex />
             <#list productIds as productId>
               <#assign product = delegator.findOne("Product", {"productId" : productId}, true) />

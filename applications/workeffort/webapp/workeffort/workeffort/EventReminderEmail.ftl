@@ -51,7 +51,7 @@ under the License.
     </@table>
     <#if partyAssignments?has_content>
       <div><b>${uiLabelMap.PageTitleListWorkEffortPartyAssigns}</b></div>
-      <@table type="data-list" cellpadding=2 border=1> <#-- orig: class="" --> <#-- orig: cellspacing=0 -->
+      <@table type="data-list" class="+${styles.table_spacing_small_hint!}" border=1> <#-- orig: class="" --> <#-- orig: cellspacing=0 --> <#-- orig: cellpadding=2 -->
         <@thead><@tr>
           <@th>${uiLabelMap.PartyParty}</@th>
           <@th>${uiLabelMap.PartyRole}</@th>
@@ -76,7 +76,7 @@ under the License.
     </#if>
     <#if fixedAssetAssignments?has_content>
       <div><b>${uiLabelMap.PageTitleListWorkEffortFixedAssetAssigns}</b></div>
-      <@table type="data-list" cellpadding=2 border=1> <#-- orig: class="" --> <#-- orig: cellspacing=0 -->
+      <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}" border=1> <#-- orig: class="" --> <#-- orig: cellspacing=0 --> <#-- orig: cellpadding=2 -->
         <@thead><@tr>
           <@th>${uiLabelMap.AccountingFixedAsset}</@th>
           <@th>${uiLabelMap.CommonFromDate}</@th>

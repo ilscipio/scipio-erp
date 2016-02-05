@@ -29,7 +29,7 @@ under the License.
 
     <#-- Cato: FIXME: the java in org.ofbiz.workeffort.workeffort.WorkEffortSearchEvents.getWorkEffortSearchResult doesn't actually support pagination; though this fails gracefully -->
     <@paginate mode="content" url=makeOfbizUrl("WorkEffortSearchResults") paramStr="~clearSearch=N" paramDelim="/" paramPrefix="~" viewSize=viewSize!1 viewIndex=viewIndex!0 listSize=listSize!0>
-      <@table type="data-list" width="100%" cellpadding="0"> <#-- orig: cellspacing="0" -->
+      <@table type="data-list" width="100%"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
         <#assign listIndex = lowIndex>
         <#list workEffortIds as workEffortId><#-- note that there is no boundary range because that is being done before the list is put in the content -->
           <#assign workEffort = delegator.findOne("WorkEffort", Static["org.ofbiz.base.util.UtilMisc"].toMap("workEffortId", workEffortId), false)>

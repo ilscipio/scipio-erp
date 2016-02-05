@@ -710,7 +710,7 @@ under the License.
                                                         <@td colspan="4">
                                                             <#assign is_payPal = false>
                                                             <#if paymentMethods?has_content>
-                                                                <@table type="fields" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                                                                <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                                                                     <#assign j = 0>
                                                                     <#list paymentMethods as paymentMethod>
                                                                         <#if paymentMethod.value()??>
@@ -778,14 +778,14 @@ under the License.
                                           <@td><img height="1" src="http://pics.ebaystatic.com/aw/pics/tbx/s.gif" width="10" alt="" /></@td>
                                         </@tr>
                                     </@table>
-                                    <@table type="fields" cellpadding="0" width="100%" border="0"> <#-- orig: class="" --> <#-- orig: cellspacing="0" -->
+                                    <@table type="fields" width="100%" border="0"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
                                          <@tr>
                                            <@td style="WIDTH: 150px"><b>Ships to locations:</b></@td>
                                          </@tr>
                                          <@tr>
                                            <@td>
                                              <#if shippingLocationDetails?has_content>
-                                             <@table type="fields" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                                             <@table type="fields" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                                                     <#assign j=0>
                                                     <#list shippingLocationDetails as shippingLocationDetail>
                                                         <#assign shippingLocation = shippingLocationDetail.getShippingLocation()!>
@@ -809,7 +809,7 @@ under the License.
        </@td></@tr>
     </@table>
     <#--if addItemList?has_content>
-        <@table type="fields"> <#- orig: class="basic-table" -> <#-- orig: cellspacing="0" -->
+        <@table type="fields"> <#- orig: class="basic-table" -> <#- orig: cellspacing="0" ->
             <@tr>
                 <@td align="center" colspan="2">
                     <a href="#" class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}">${uiLabelMap.EbayExportToEbay}</a>

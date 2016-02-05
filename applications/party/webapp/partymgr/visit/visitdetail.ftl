@@ -128,7 +128,7 @@ https://issues.apache.org/jira/browse/OFBIZ-4488
 *******************************************************************************
 <@section title="${uiLabelMap.PartyPagePushFollowing}">
       <#if security.hasPermission("SEND_CONTROL_APPLET", session)>
-        <@table type="fields"> <#- orig: class="basic-table" -> <#-- orig: cellspacing="0" -->
+        <@table type="fields"> <#- orig: class="basic-table" -> <#- orig: cellspacing="0" ->
             <@tr>
               <@th>${uiLabelMap.PartyPushURL}</@th>
               <@td>

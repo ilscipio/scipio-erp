@@ -25,7 +25,7 @@ under the License.
         <input type="hidden" name="finalizeReqNewShipAddress" value="true" />
         <@tr>
           <@td>
-            <@table type="fields" width="100%" border="0" cellpadding="1"> <#-- orig: cellspacing="0" -->
+            <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%" border="0"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" -->
               <@tr>
                 <@td width="26%" align="right">${uiLabelMap.CommonTitle}</@td>
                 <@td width="74%">

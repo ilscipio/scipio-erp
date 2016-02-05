@@ -20,6 +20,10 @@ under the License.
 <#assign chartValue=chartValue!"total"/> <#-- (total|count) default: total -->
 <#assign chartData=chartData!"week"/>
 <#assign library=chartLibrary!"foundation"/>
+<#assign xlabel=xlabel!""/>
+<#assign ylabel=ylabel!""/>
+<#assign label1=label1!""/>
+<#assign label2=label2!""/>
 <#assign chartDataMap={"day":dailyStats,"week":weeklyStats,"month":monthlyStats}/>
 <#assign currData=chartDataMap[chartData]/>
 <#assign fieldIdNum=fieldIdNum!0/>
@@ -27,7 +31,7 @@ under the License.
 
 <#if title?has_content><@heading relLevel=1>${title!}</@heading></#if>
 <#if ((currData.isEmpty())!true) == false>
-  <@chart type=chartType library=library>
+  <@chart type=chartType library=library xlabel=xlabel ylabel=ylabel label1=label1 label2=label2>
     <#list currData.keySet() as key>
       <#if chartType=="bar" || chartType=="line">
         <@chartdata value="${(currData[key][chartValue])!0}" value2="${(currData[key].pos)!0}" title="${key}"/>

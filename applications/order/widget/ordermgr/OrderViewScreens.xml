@@ -576,6 +576,7 @@ under the License.
         </section>
     </screen>
 
+    <!-- TODO: Move to CATO DashboardWidget.xml -->
     <screen name="ListSalesOrders">
         <section>
             <actions>
@@ -601,6 +602,7 @@ under the License.
         </section>
     </screen>
 
+    <!-- TODO: Move to CATO DashboardWidget.xml -->
     <screen name="ListPurchaseOrders">
         <section>
             <actions>

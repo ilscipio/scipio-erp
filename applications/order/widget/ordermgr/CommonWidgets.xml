@@ -40,6 +40,10 @@ under the License.
                 <set field="chartLibrary" value="chart"/>
                 <set field="chartIntervalScope" value="month"/> <!-- day|week|month|year -->
                 <set field="chartIntervalCount" value="1"/>     <!-- Look back x days/weeks/months/years -->
+                <set field="xlabel" value="Net Sales"/>
+                <set field="ylabel" value="Day"/>
+                <set field="label1" value="Total"/>
+                <set field="label2" value="Orders"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
                 <set field="title" value="Gross Sales (per day)"/>
             </actions>
@@ -58,7 +62,11 @@ under the License.
                 <set field="chartValue" value="total"/>
                 <set field="chartData" value="week"/>
                 <set field="chartLibrary" value="chart"/>
-                <set field="title" value="Gross Sales (per week)"/>
+                <set field="title" value="Net Sales (per week)"/>
+                <set field="xlabel" value="Net Sales"/>
+                <set field="ylabel" value="Week"/>
+                <set field="label1" value="Total"/>
+                <set field="label2" value="Orders"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
             </actions>
             <widgets>
@@ -76,6 +84,10 @@ under the License.
                 <set field="chartValue" value="total"/>
                 <set field="chartData" value="month"/>
                 <set field="chartLibrary" value="chart"/>
+                <set field="xlabel" value="Net Sales"/>
+                <set field="ylabel" value="Month"/>
+                <set field="label1" value="Total"/>
+                <set field="label2" value="Orders"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
                 <set field="title" value="Gross Sales (per month)"/>
             </actions>
@@ -96,6 +108,10 @@ under the License.
                 <set field="chartLibrary" value="chart"/>
                 <set field="chartIntervalScope" value="month"/> <!-- day|week|month|year -->
                 <set field="chartIntervalCount" value="1"/>     <!-- Look back x days/weeks/months/years -->
+                <set field="xlabel" value="Sales"/>
+                <set field="ylabel" value="Products Sold"/>
+                <set field="label1" value="Total"/>
+                <set field="label2" value="Orders"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
                 <set field="title" value="Orders (per day)"/>
             </actions>
@@ -115,6 +131,10 @@ under the License.
                 <set field="chartData" value="week"/>
                 <set field="chartLibrary" value="chart"/>
                 <set field="title" value="Orders (per week)"/>
+                <set field="xlabel" value="Sales"/>
+                <set field="ylabel" value="Week"/>
+                <set field="label1" value="Products Sold"/>
+                <set field="label2" value="Orders"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
             </actions>
             <widgets>
@@ -131,7 +151,11 @@ under the License.
                 <set field="chartType" value="bar"/>
                 <set field="chartValue" value="count"/>
                 <set field="chartData" value="month"/>
-                <set field="chartLibrary" value="foundation"/>
+                <set field="chartLibrary" value="chart"/>
+                <set field="xlabel" value="Sales"/>
+                <set field="ylabel" value="Month"/>
+                <set field="label1" value="Products Sold"/>
+                <set field="label2" value="Orders"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/stats/StatsOrderTotal.groovy"/>
                 <set field="title" value="Orders (per month)"/>
             </actions>

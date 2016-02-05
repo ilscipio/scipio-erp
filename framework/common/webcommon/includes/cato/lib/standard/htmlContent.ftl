@@ -978,9 +978,13 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
     type           = (pie|bar|line) (default:pie)
     library        = (foundation|chart) (default:foundation)
     title          = Data Title  (default:empty)    
+    xlabel         = x-axis label
+    ylabel         = y-axis label
+    label1         = dataset 1 label
+    label2         = dataset 2 label
 -->
 <#assign chart_defaultArgs = {
-  "type":"pie", "library":"foundation", "title":"", "passArgs":{}
+  "type":"pie", "library":"foundation", "title":"", "xlabel":"","ylabel":"","label1":"","label2":"","passArgs":{}
 }>
 <#macro chart args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.chart_defaultArgs)>
@@ -996,11 +1000,12 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
   <#global chartDataIndex = 0/>
   
   <@chart_markup type=type chartId=chartId chartIdNum=chartIdNum chartLibrary=chartLibrary chartDatasets=chartDatasets title=title 
+    xlabel=xlabel ylabel=ylabel label1=label1 label2=label2
     renderSeqNumber=renderSeqNumber origArgs=origArgs passArgs=passArgs><#nested></@chart_markup>
 </#macro>
 
 <#-- @chart main markup - theme override -->
-<#macro chart_markup type="" chartLibrary="" title="" chartId="" chartIdNum=0 renderSeqNumber=0 origArgs={} passArgs={} catchArgs...>
+<#macro chart_markup type="" chartLibrary="" title="" chartId="" xlabel="" ylabel="" label1="" label2="" chartIdNum=0 renderSeqNumber=0 origArgs={} passArgs={} catchArgs...>
   <#if chartLibrary=="foundation">
     <@row>
       <@cell columns=3>    
@@ -1056,6 +1061,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                             },
                             scaleLabel : {
                                 display: chartData.scaleLabelDisplay,
+                                <#if xlabel?has_content>labelString: '${xlabel!}',</#if>
                                 fontColor: chartData.scaleLabelFontColor,
                                 fontFamily: chartData.scaleLabelFontFamily,
                                 fontSize: chartData.scaleLabelFontSize
@@ -1071,6 +1077,13 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                             }
                           }],
                         yAxes: [{
+                            scaleLabel : {
+                                display: chartData.scaleLabelDisplay,
+                                <#if ylabel?has_content>scaleLabel: '${ylabel!}',</#if>
+                                fontColor: chartData.scaleLabelFontColor,
+                                fontFamily: chartData.scaleLabelFontFamily,
+                                fontSize: chartData.scaleLabelFontSize
+                            },
                             ticks: {
                                 display: true,
                                 autoSkip: true,                            
@@ -1089,6 +1102,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                 labels :[],
                 datasets: [
                     {
+                      label: '${label1!}',
                       fill: true,
                       backgroundColor: chartData.primaryFillColor,
                       borderColor: chartData.primaryStrokeColor,
@@ -1096,11 +1110,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                       pointBorderColor: chartData.primaryPointStrokeColor,
                       pointHoverBackgroundColor: chartData.pointHighlightFill,
                       pointHoverBorderColor: chartData.pointHighlightStroke,
-                      label: "",
                       data: []
                     }
                     <#if chartDatasets &gt; 1>
                     ,{
+                      label: '${label2!}',
                       fill: true,
                       backgroundColor: chartData.secondaryFillColor,
                       borderColor: chartData.secondaryStrokeColor,
@@ -1108,7 +1122,6 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                       pointBorderColor: chartData.secondaryPointStrokeColor,
                       pointHoverBackgroundColor: chartData.pointHighlightFill,
                       pointHoverBorderColor: chartData.pointHighlightStroke,
-                      label: "",
                       data: []
                     }           
                     </#if>        

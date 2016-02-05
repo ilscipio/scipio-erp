@@ -359,7 +359,7 @@ function getConfigDetails() {
           <input type="hidden" name="productId" value="${product.productId}" />
           <input type="hidden" name="product_id" value="${product.productId}" />
           <input type="hidden" name="configId" value="${configId!}" />
-          <@field type="select" label="${uiLabelMap.PartyShoppingList}" name="shoppingListId">
+          <@field type="select" label="${uiLabelMap.PageTitleShoppingList}" name="shoppingListId">
               <#if shoppingLists?has_content>
                 <#list shoppingLists as shoppingList>
                   <option value="${shoppingList.shoppingListId}">${shoppingList.listName}</option>

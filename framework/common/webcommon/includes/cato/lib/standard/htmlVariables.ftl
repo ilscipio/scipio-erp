@@ -61,7 +61,7 @@
     "dropdown" : "dropdown",
     
   <#-- Common messages (default message type container styles)
-      NOTE: these styles are secondary to choices directly in theme markup -->
+      NOTE: these styles are secondary to markup choices made by theme markup macro -->
     "commonmsg_result" : "result-msg",
     "commonmsg_info" : "info-msg",
     "commonmsg_info_important" : "info-msg info-important",
@@ -209,14 +209,12 @@
     "menu_subappitem" : "subappitem",
     "menu_subappitem_link" : "subapplink",
     
-  <#-- Data and Tables -->  
-    <#-- 
-      NOTES:
-        * currently, despite settings here, responsive tables will automatically be disabled for tables that have no header. see @table.
-    -->
-  
+  <#-- Data and Tables 
+    NOTES:
+      * Currently, despite settings here, responsive tables will automatically be disabled for tables that have no header. See @table.
+  -->
     <#-- table type-based styles 
-         used for default table class and attribute lookups by the @table macro, based on table type. -->
+         Used for default table class and attribute lookups by the @table macro, based on table type. -->
     "table_generic" : "table-type-generic",    <#-- represents free-form <table>. probably should have no class (let template decide). -->
     "table_generic_type" : "table-type-generic",  <#-- specific table identifier -->
     "table_generic_cellspacing" : "",

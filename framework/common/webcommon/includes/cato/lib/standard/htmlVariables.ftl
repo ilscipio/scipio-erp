@@ -270,7 +270,10 @@
     "table_formwidget_type" : "table-type-formwidget",  <#-- specific identifier for form widget tables. NOTE: this is ALWAYS added so doesn't need to be part of table_formwidget -->
     
     <#-- other table-related styles -->
-    "table_basic" : "basic-table",  <#-- this is not a table type, but simply the basic-table style -->
+    "table_basic" : "basic-table",                                      <#-- This is not a table type, but simply the basic-table style. -->
+    "table_require_spacing_small" : "table-require-spacing-small",      <#-- Extra style to indicate a table that normally needs a bit of spacing such as cellspacing. -->
+    "table_hint_spacing_small" : "table-hint-spacing-small",            <#-- Extra style to indicate a table that might look better with a little cellspacing or more spacing in general, but may be ignored depending on theme.
+                                                                            NOTE: At time of creation, this was mostly used to identify stock Ofbiz tables that used cellspacing="" resets (effective non-zero cellspacing, about 1-2px). --> 
 
     "row_reg" : "even",
     "row_alt" : "odd",

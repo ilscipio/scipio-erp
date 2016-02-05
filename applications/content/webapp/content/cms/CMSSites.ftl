@@ -150,7 +150,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 
 
 <#macro moderateSite forumId rootForumId >
-<@table type="fields" cellspacing="" width="100%" border="0"> <#-- orig: class="" -->
+<@table type="fields" class="+${styles.table_hint_spacing_small!}" width="100%" border="0"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
  <form name="mostrecent" method="post" action="<@ofbizUrl>publishResponse</@ofbizUrl>"/>
   <#assign row=0/>
   <#list mostRecentList as content>
@@ -206,7 +206,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 
 
 <#macro grantSiteRoles forumId rootForumId >
-<@table type="fields" cellspacing="" width="100%" border="0"> <#-- orig: class="" -->
+<@table type="fields" class="+${styles.table_hint_spacing_small!}" width="100%" border="0"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
   <@tr>
     <@td width='100%'>
       <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">

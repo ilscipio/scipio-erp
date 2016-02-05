@@ -26,7 +26,7 @@ under the License.
 <#assign  title = "Return policy is "+(not!)+" enabled for this category.">
 
 <form name="APIForm" id="APIForm" method="post" action="ReturnPolicyServlet">
-  <@table type="fields" cellspacing="" align="center" border="0"> <#-- orig: class="" -->
+  <@table type="fields" class="+${styles.table_hint_spacing_small!}" align="center" border="0"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
     <@tr><@td><img src="ebay.gif" alt="" /></@td></@tr>
     <@tr><@td>${title!}</@td></@tr>
     <@tr>

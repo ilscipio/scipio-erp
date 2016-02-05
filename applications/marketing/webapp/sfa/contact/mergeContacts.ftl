@@ -32,7 +32,7 @@ under the License.
           <input type="hidden" name="phoneContactMechId" value="${contactInfo2.phoneContactMechId!}" />
           <input type="hidden" name="emailContactMechId" value="${contactInfo2.emailContactMechId!}" />
 
-          <@table type="fields" cellspacing=""> <#-- orig: class="" -->
+          <@table type="fields" class="+${styles.table_hint_spacing_small!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
             <@thead>
               <@tr>
                 <@th width="20%"></@th>

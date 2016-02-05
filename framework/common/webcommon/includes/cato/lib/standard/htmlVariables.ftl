@@ -59,6 +59,7 @@
     "heading_level_prefix" : "heading-level-",  
     "switch" : "switch",
     "dropdown" : "dropdown",
+    "fullwidth" : "elem-fullwidth",
     
   <#-- Common messages (default message type container styles)
       NOTE: these styles are secondary to markup choices made by theme markup macro -->

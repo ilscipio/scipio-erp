@@ -10278,64 +10278,69 @@ table.table-noborder, table.table-noborder-hint {
   border: none !important;
 }
 
+/* line 403, ../scss/_base.scss */
+.elem-fullwidth {
+  width: 100% !important;
+}
+
 /* GENERAL ELEMENT COLORS */
-/* line 406, ../scss/_base.scss */
+/* line 410, ../scss/_base.scss */
 .colored-elem.primary, .colored-elem {
   color: #008cba;
 }
 
-/* line 407, ../scss/_base.scss */
+/* line 411, ../scss/_base.scss */
 .colored-elem.secondary {
   color: #e7e7e7;
 }
 
-/* line 408, ../scss/_base.scss */
+/* line 412, ../scss/_base.scss */
 .colored-elem.info {
   color: #a0d3e8;
 }
 
-/* line 409, ../scss/_base.scss */
+/* line 413, ../scss/_base.scss */
 .colored-elem.success {
   color: #43ac6a;
 }
 
-/* line 410, ../scss/_base.scss */
+/* line 414, ../scss/_base.scss */
 .colored-elem.warning {
   color: #f08a24;
 }
 
-/* line 411, ../scss/_base.scss */
+/* line 415, ../scss/_base.scss */
 .colored-elem.alert {
   color: #f04124;
 }
 
 /* TEXT COLORS */
-/* line 416, ../scss/_base.scss */
+/* line 420, ../scss/_base.scss */
 .colored-text.primary, .colored-text {
   color: #008cba;
 }
 
-/* line 417, ../scss/_base.scss */
+/* line 421, ../scss/_base.scss */
 .colored-text.secondary {
   color: #e7e7e7;
 }
 
-/* line 418, ../scss/_base.scss */
+/* line 422, ../scss/_base.scss */
 .colored-text.info {
   color: #a0d3e8;
 }
 
-/* line 419, ../scss/_base.scss */
+/* line 423, ../scss/_base.scss */
 .colored-text.success {
   color: #43ac6a;
 }
 
-/* line 420, ../scss/_base.scss */
+/* line 424, ../scss/_base.scss */
 .colored-text.warning {
   color: #f08a24;
 }
 
-/* line 421, ../scss/_base.scss */
+/* line 425, ../scss/_base.scss */
 .colored-text.alert {
   color: #f04124;
 }
@@ -10348,7 +10353,7 @@ table.table-noborder, table.table-noborder-hint {
   note that system- vs session- vs page- changing actions can be styled separately. */
 /* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
   NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
-/* line 434, ../scss/_base.scss */
+/* line 438, ../scss/_base.scss */
 .action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10370,7 +10375,7 @@ table.table-noborder, table.table-noborder-hint {
 }
 */
 /* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
-/* line 446, ../scss/_base.scss */
+/* line 450, ../scss/_base.scss */
 .action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10386,7 +10391,7 @@ table.table-noborder, table.table-noborder-hint {
 }
 
 /* terminate actions (like cancel order) */
-/* line 451, ../scss/_base.scss */
+/* line 455, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10403,7 +10408,7 @@ table.table-noborder, table.table-noborder-hint {
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 458, ../scss/_base.scss */
+/* line 462, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #a0d3e8;
   border-color: #61b6d9;
@@ -10425,7 +10430,7 @@ table.table-noborder, table.table-noborder-hint {
    @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
 }*/
 /* high-importance modify actions, like create order button */
-/* line 471, ../scss/_base.scss */
+/* line 475, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
   background-color: #f04124;
   border-color: #cf2a0e;
@@ -10441,7 +10446,7 @@ table.table-noborder, table.table-noborder-hint {
 }
 
 /* special nav cancel/back/return action button (alt regular color) */
-/* line 477, ../scss/_base.scss */
+/* line 481, ../scss/_base.scss */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {
   background-color: #e7e7e7;
   border-color: #b9b9b9;
@@ -10457,7 +10462,7 @@ table.table-noborder, table.table-noborder-hint {
 }
 
 /* special run-action cancel action button (warning color) */
-/* line 482, ../scss/_base.scss */
+/* line 486, ../scss/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;
   border-color: #cf6e0e;

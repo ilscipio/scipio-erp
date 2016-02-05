@@ -172,8 +172,39 @@
 <@section>
     <@heading attribs=makeMagTargetAttribMap("charts") id="charts">Charts</@heading>
     <@row>
+        <@heading>Foundation</@heading>
         <@cell columns="4">
-            <@chart type="pie">
+            <@chart type="pie" library="foundation">
+                <@chartdata value="36" title="Peperoni"/>
+                <@chartdata value="2" title="Sausage"/> 
+                <@chartdata value="19" title="Cheese"/> 
+                <@chartdata value="6" title="Chicken"/> 
+                <@chartdata value="27" title="Other"/>  
+            </@chart>
+        </@cell>
+        <@cell columns="4">
+            <@chart type="bar" library="foundation">
+                <@chartdata value="36" title="Peperoni"/>
+                <@chartdata value="14" title="Sausage"/> 
+                <@chartdata value="8" title="Cheese"/> 
+                <@chartdata value="11" title="Chicken"/> 
+                <@chartdata value="7" title="Other"/>  
+            </@chart>
+        </@cell>
+        <@cell columns="4">
+            <@chart type="line" library="foundation">
+                <@chartdata value="36" value2="1" title="Peperoni"/>
+                <@chartdata value="2" value2="2" title="Sausage"/> 
+                <@chartdata value="19" value2="3" title="Cheese"/> 
+                <@chartdata value="6" value2="4" title="Chicken"/> 
+                <@chartdata value="27" value2="5" title="Other"/>  
+            </@chart>
+        </@cell>
+    </@row>
+    <@row>
+        <@heading>Chart.js</@heading>
+        <@cell columns="4">
+            <@chart type="pie" library="chart">
                 <@chartdata value="36" title="Peperoni"/>
                 <@chartdata value="2" title="Sausage"/> 
                 <@chartdata value="19" title="Cheese"/> 
@@ -183,7 +214,7 @@
         </@cell>
         
         <@cell columns="4">
-            <@chart type="bar">
+            <@chart type="bar" library="chart">
                 <@chartdata value="36" title="Peperoni"/>
                 <@chartdata value="14" title="Sausage"/> 
                 <@chartdata value="8" title="Cheese"/> 
@@ -193,7 +224,7 @@
         </@cell>
         
         <@cell columns="4">
-            <@chart type="line">
+            <@chart type="line" library="chart">
                 <@chartdata value="36" value2="1" title="Peperoni"/>
                 <@chartdata value="2" value2="2" title="Sausage"/> 
                 <@chartdata value="19" value2="3" title="Cheese"/> 

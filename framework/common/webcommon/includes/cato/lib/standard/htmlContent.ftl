@@ -1051,7 +1051,7 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                         fontColor: chartData.scaleLabelFontColor,
                         fontFamily: chartData.scaleLabelFontFamily,
                         fontSize: chartData.scaleLabelFontSize
-                    },
+                    }<#if type=="line" || type=="bar">,
                     scales: {
                         type: chartData.scaleType,
                         display: chartData.scaleDisplay,
@@ -1093,15 +1093,14 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                             }
                         }]
                     }
+                    </#if>
                 };
             var ctx_${renderSeqNumber!}_${chartIdNum!} = $('#${chartId!}').get(0).getContext("2d");
-            <#if type=="pie">
-            var data = [];
-            <#else>
             var data = {
                 labels :[],
                 datasets: [
                     {
+                      <#if type=="line" || type=="bar">
                       label: '${label1!}',
                       fill: true,
                       backgroundColor: chartData.primaryFillColor,
@@ -1110,10 +1109,29 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                       pointBorderColor: chartData.primaryPointStrokeColor,
                       pointHoverBackgroundColor: chartData.pointHighlightFill,
                       pointHoverBorderColor: chartData.pointHighlightStroke,
+                      <#else>
+                      backgroundColor: [
+                            chartData.pieFillColor1,
+                            chartData.pieFillColor2,
+                            chartData.pieFillColor3,
+                            chartData.pieFillColor4,
+                            chartData.pieFillColor5,
+                            chartData.pieFillColor6
+                        ],
+                        hoverBackgroundColor: [
+                            chartData.pieHighlightColor1,
+                            chartData.pieHighlightColor2,
+                            chartData.pieHighlightColor3,
+                            chartData.pieHighlightColor4,
+                            chartData.pieHighlightColor5,
+                            chartData.pieHighlightColor6
+                        ],
+                      </#if>
                       data: []
                     }
                     <#if chartDatasets &gt; 1>
                     ,{
+                      <#if (type=="line" || type=="bar")>
                       label: '${label2!}',
                       fill: true,
                       backgroundColor: chartData.secondaryFillColor,
@@ -1122,12 +1140,21 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                       pointBorderColor: chartData.secondaryPointStrokeColor,
                       pointHoverBackgroundColor: chartData.pointHighlightFill,
                       pointHoverBorderColor: chartData.pointHighlightStroke,
+                      <#else>
+                       backgroundColor: [
+                            chartData.pieFillColor1,
+                            chartData.pieFillColor2,
+                            chartData.pieFillColor3,
+                            chartData.pieFillColor4,
+                            chartData.pieFillColor5,
+                            chartData.pieFillColor6
+                        ]
+                      </#if>
                       data: []
                     }           
                     </#if>        
                     ]
                 };
-            </#if>
             var config = {
                 <#if type=="bar">type: 'bar'</#if><#if type=="line">type: 'line'</#if><#if type=="pie">type: 'pie'</#if>,
                 data: data,
@@ -1199,13 +1226,9 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
       <li data-value="${value!}">${title!}</li>
     </#if>
   <#else>
-    <#if chartType="line" || chartType="bar">
       config.data.labels.push('${title!}');
       <#if value?has_content>config.data.datasets[0].data.push(${value!});</#if>
       <#if value2?has_content>config.data.datasets[1].data.push(${value2!});</#if>
-    <#else>
-      ${chartId!}.addData({value:${value!},color:chartData.color,highlight: chartData.highlight<#if title?has_content>,label:"${title!}"</#if>});
-    </#if>
   </#if>
 </#macro>
 

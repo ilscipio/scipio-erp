@@ -267,7 +267,7 @@ function submitForm(form, mode, value) {
     </@section>
 
     <@section title="3)${uiLabelMap.OrderHowShallYouPay}?">
-                <@table type="fields" class="+${styles.table_hint_spacing_small!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="" -->
+                <@table type="fields" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="" -->
                   <@tr>
                     <@td colspan="2">
                       <span>${uiLabelMap.CommonAdd}:</span>

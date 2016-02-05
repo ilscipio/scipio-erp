@@ -18,7 +18,7 @@ under the License.
 -->
 <div id="searchPartiesResults" style="display:none">
   <form method="post" action="javascript:void(0);" id="SearchPartiesResultsForm" name="SearchPartiesResultsForm">
-    <@table type="fields" class="+${styles.table_hint_spacing_small!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+    <@table type="fields" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
       <@tr>
         <@td width="12.5%">
           <label for="searchByPartyLastName"><b>&nbsp;${uiLabelMap.PartyLastName}</b></label>

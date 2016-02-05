@@ -271,10 +271,16 @@
     
     <#-- other table-related styles -->
     "table_basic" : "basic-table",                                      <#-- This is not a table type, but simply the basic-table style. -->
-    "table_require_spacing_small" : "table-require-spacing-small",      <#-- Extra style to indicate a table that normally needs a bit of spacing such as cellspacing. -->
-    "table_hint_spacing_small" : "table-hint-spacing-small",            <#-- Extra style to indicate a table that might look better with a little cellspacing or more spacing in general, but may be ignored depending on theme.
-                                                                            NOTE: At time of creation, this was mostly used to identify stock Ofbiz tables that used cellspacing="" resets (effective non-zero cellspacing, about 1-2px). --> 
-
+    "table_spacing_tiny" : "table-spacing-tiny",                        <#-- Extra style to indicate a table that normally needs a bit of spacing such as cellspacing. If the spacing is more optional, use table_hint_spacing_tiny instead. -->
+    "table_spacing_small" : "table-spacing-small",      
+    "table_spacing_medium" : "table-spacing-medium",    
+    "table_spacing_large" : "table-spacing-large",
+    "table_hint_spacing_tiny" : "table-hint-spacing-tiny",              <#-- Extra style to indicate a table that might look better with a little cellspacing or more spacing in general, but may be ignored depending on theme.
+                                                                            NOTE: At time of creation, this was mostly used to identify stock Ofbiz tables that used cellspacing="" resets (effective non-zero cellspacing, about 1-2px?). --> 
+    "table_hint_spacing_small" : "table-hint-spacing-small",            <#-- Hint for small spacing (2-4px?) -->
+    "table_hint_spacing_medium" : "table-hint-spacing-medium",          <#-- Hint for medium spacing (6-10px?) -->
+    "table_hint_spacing_large" : "table-hint-spacing-large",
+    
     "row_reg" : "even",
     "row_alt" : "odd",
     "row_selected" : "selected",

@@ -127,7 +127,7 @@ under the License.
                   <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
                 </#if>
                 <#assign carrier = orderItemShipGroup.carrierPartyId?default("N/A")>
-                <@table type="fields" cellpadding="4" cellspacing="4"> <#-- orig: class="basic-table" -->
+                <@table type="fields" class="+${styles.table_hint_spacing_medium!}"> <#-- orig: class="basic-table" --> <#-- orig:  cellpadding="4" cellspacing="4" -->
                   <@tr>
                     <@td valign="top">
                       <#if postalAddress?exists >

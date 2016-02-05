@@ -30,7 +30,7 @@ under the License.
       <input type="hidden" name="requirePasswordChange" value="Y"/>
       <input type="hidden" name="USERNAME" value="${username}"/>
       <input type="hidden" name="userTenantId" value="${tenantId!}"/>
-      <@table cellspacing="0">
+      <@table type="generic" cellspacing="0">
         <@tr>
           <@td class="label">${uiLabelMap.CommonUsername}</@td>
           <@td>${username}</@td>

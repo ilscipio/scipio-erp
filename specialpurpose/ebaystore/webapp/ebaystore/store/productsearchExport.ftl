@@ -710,7 +710,7 @@ under the License.
                                                         <@td colspan="4">
                                                             <#assign is_payPal = false>
                                                             <#if paymentMethods?has_content>
-                                                                <@table type="fields" class="+${styles.table_hint_spacing_small!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                                                                <@table type="fields" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                                                                     <#assign j = 0>
                                                                     <#list paymentMethods as paymentMethod>
                                                                         <#if paymentMethod.value()??>
@@ -785,7 +785,7 @@ under the License.
                                          <@tr>
                                            <@td>
                                              <#if shippingLocationDetails?has_content>
-                                             <@table type="fields" class="+${styles.table_hint_spacing_small!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                                             <@table type="fields" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                                                     <#assign j=0>
                                                     <#list shippingLocationDetails as shippingLocationDetail>
                                                         <#assign shippingLocation = shippingLocationDetail.getShippingLocation()!>

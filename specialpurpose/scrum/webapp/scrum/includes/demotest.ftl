@@ -28,7 +28,7 @@ The table shows the demo user's which are setup in the demo data for this compon
 When you click on the User Login ID,the system will login to the Scrum Component of that User Login ID <br/><br/>
 </div>
 
-<@table type="data-list" class="+${styles.table_hint_spacing_small!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+<@table type="data-list" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
     <@tr>
         <@th>USER LOGIN ID</@th>
         <@th>DESCRIPTION</@th>

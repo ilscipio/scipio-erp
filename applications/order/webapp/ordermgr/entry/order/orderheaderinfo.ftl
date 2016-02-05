@@ -54,7 +54,7 @@ under the License.
                     &nbsp;<b>${uiLabelMap.OrderOrderTerms}</b>
                 </@td>
                 <@td colspan="2">
-                    <@table type="data-complex" class="+${styles.table_hint_spacing_small!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+                    <@table type="data-complex" class="+${styles.table_hint_spacing_tiny!}"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
                         <@tr>
                             <@td width="35%"><b>${uiLabelMap.OrderOrderTermType}</b></@td>
                             <@td width="10%"><b>${uiLabelMap.OrderOrderTermValue}</b></@td>

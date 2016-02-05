@@ -21,7 +21,7 @@ under the License.
 
 <#if (shoppingCartSize > 0)>
 <div id="CartHeader">
-  <@table type="fields" cellspacing="1" cellpadding="1"> <#-- orig: class="basic-table" -->
+  <@table type="fields" class="+${styles.table_hint_spacing_tiny!}" > <#-- orig: class="basic-table" --> <#-- orig: cellspacing="1" cellpadding="1" -->
     <input type="hidden" id="totalDue" value="${totalDue}"/>
     <input type="hidden" id="totalCash" value="${cashAmount}"/>
     <input type="hidden" id="totalCheck" value="${checkAmount}"/>

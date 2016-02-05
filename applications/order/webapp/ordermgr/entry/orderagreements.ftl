@@ -69,7 +69,7 @@ under the License.
       </@field>
 
     <#if catalogCol?has_content>
-      <@field type="generic" name="CURRENT_CATALOG_ID" label="${uiLabelMap.ProductChooseCatalog}">
+      <@field type="select" name="CURRENT_CATALOG_ID" label="${uiLabelMap.ProductChooseCatalog}">
         <#list catalogCol! as catalogId>
           <#assign thisCatalogName = Static["org.ofbiz.product.catalog.CatalogWorker"].getCatalogName(request, catalogId)>
           <option value="${catalogId}" <#if (currentCatalogId!'') == catalogId>selected="selected"</#if> >${thisCatalogName}</option>

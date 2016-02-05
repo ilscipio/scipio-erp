@@ -53,7 +53,8 @@ under the License.
             <input type="hidden" name="orderItemSeqId" value=""/>
             <input type="hidden" name="shipGroupSeqId" value=""/>
             <#if (orderHeader.orderTypeId == 'PURCHASE_ORDER')>
-              <input type="hidden" name="supplierPartyId" value="${partyId}"/>
+              <#-- Cato: FIXME? why is supplierPartyId the partyId? should have a supplierPartyId explicitly in groovy script to clarify this -->
+              <input type="hidden" name="supplierPartyId" value="${partyId!}"/>
               <input type="hidden" name="orderTypeId" value="PURCHASE_ORDER"/>
             </#if>
               <@thead>

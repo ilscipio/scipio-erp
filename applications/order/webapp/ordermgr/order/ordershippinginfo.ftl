@@ -106,7 +106,7 @@ under the License.
                 <input type="hidden" name="orderId" value="${orderId}"/>
                 <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
                 
-                <@table type="data-complex" border="0" style="border:0"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
+                <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: border="0" -->
                 
               <#list OISGAssContents as OISGAssContent>
                 <#assign OISG = OISGAssContent.getRelatedOne("OrderItemShipGroup")>

@@ -274,7 +274,8 @@
     
     <#-- table spacing styles: currently "spacing" is a high level term meaning cellspacing and/or cellpadding; theme decides.
         In most cases spacing seems like a secondary display concern, which means use -hint style. If a table has to prevent cellspacing specifically, can set table_nocellspacing, but should be rarely needed. 
-        At time of creation these were mostly used (hint versions) on previously stock tables that used to specify non-zero cellspacing or cellpadding (adding both together). -->
+        At time of creation these were mostly used (hint versions) on previously stock tables that used to specify non-zero cellspacing or cellpadding (adding both together). 
+        WARN: Higher-level CSS cato and custom table classes should be preferred to these. -->
     "table_spacing_tiny_hint" : "table-spacing-tiny-hint",              <#-- Extra style to indicate a table that might look better with a little cellspacing or more spacing in general, but may be ignored depending on theme. --> 
     "table_spacing_small_hint" : "table-spacing-small-hint",            <#-- Hint for small spacing (2-4px?) -->
     "table_spacing_medium_hint" : "table-spacing-medium-hint",          <#-- Hint for medium spacing (6-10px?) -->
@@ -287,6 +288,15 @@
     "table_nocellspacing_hint" : "table-nocellspacing-hint",            <#-- Hint that table will look better without cellspacing. -->
     "table_nocellspacing" : "table-nocellspacing",                      <#-- Request for table to always have zero cellspacing (collapse). Meant to be used for rare things like calendars. This combines logically with table_spacing_xxx and usually will mean intra-cell padding should be used instead of inter-cell spacing. -->
     
+    <#-- table border styles
+        WARN: higher-level CSS cato and custom table classes should be preferred to these. -->
+    "table_border_on_hint" : "table-border-on-hint",                   
+    "table_border_on" : "table-border-on",
+    
+    "table_noborder_hint" : "table-noborder-hint",
+    "table_noborder" : "table-noborder",
+    
+    <#-- row styles -->
     "row_reg" : "even",
     "row_alt" : "odd",
     "row_selected" : "selected",

@@ -281,7 +281,7 @@ ${virtualJavaScript!}
 
 <div id="productdetail">
 
-<@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" border="0" width="100%"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+<@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" --> <#-- orig: border="0" -->
   <#-- Category next/previous -->
   <#if category??>
     <@tr>

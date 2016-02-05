@@ -23,7 +23,7 @@ under the License.
     <form method="post" action="<@ofbizUrl>finalizeOrder</@ofbizUrl>" name="checkoutsetupform">
       <input type="hidden" name="finalizeMode" value="ship"/>
     
-      <@table type="data-complex" width="100%" border="0" class="+boxbottom"> <#-- orig: class="boxbottom" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
+      <@table type="data-complex" width="100%" class="+boxbottom"> <#-- orig: class="boxbottom" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
         <@tr type="util"><@td colspan="3"><hr /></@td></@tr>
 
         <#-- postal addresses for chosen id -->

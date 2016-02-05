@@ -40,7 +40,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
   <@tr>
     <@td width='100%'>
       <form name="userform" method="post" action="<@ofbizUrl>CMSSites</@ofbizUrl>" >
-      <@table type="fields" width="100%" border="0" class="+appTitle"> <#-- orig: class="appTitle" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
+      <@table type="fields" width="100%" class="+appTitle"> <#-- orig: class="appTitle" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
         <@tr>
           <@td colspan="1" valign="middle" align="right">
             <div class="boxhead">&nbsp; Root Site ID&nbsp;&nbsp; </div>
@@ -60,7 +60,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
   </@tr>
   <@tr>
     <@td width='100%'>
-      <@table type="fields" width="100%" border="0" class="+boxbottom"> <#-- orig: class="boxbottom" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
+      <@table type="fields" width="100%" class="+boxbottom"> <#-- orig: class="boxbottom" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
         <@tr>
           <@td>
             <form method="post" name="publishsite" action="<@ofbizUrl>linkContentToPubPt</@ofbizUrl>">
@@ -83,7 +83,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 <#if requestParameters.moderatedSiteId?has_content>
   <@tr>
     <@td width='100%'>
-      <@table type="fields" border="0" width="100%" class="+boxoutside"> <#-- orig: class="boxoutside" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
+      <@table type="fields" width="100%" class="+boxoutside"> <#-- orig: class="boxoutside" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
          <@tr type="util"><@td><hr /></@td></@tr>
          <@tr><@td align="center"><@heading>Unapproved entries for forum Id: ${requestParameters.moderatedSiteId}</@heading></@td></@tr>
          <@tr type="util"><@td><hr /></@td></@tr>
@@ -95,7 +95,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 <#if requestParameters.permRoleSiteId?has_content>
   <@tr>
     <@td width='100%'>
-      <@table type="fields" border="0" width="100%" class="+boxoutside"> <#-- orig: class="boxoutside" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
+      <@table type="fields" width="100%" class="+boxoutside"> <#-- orig: class="boxoutside" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
          <@tr type="util"><@td><hr /></@td></@tr>
          <@tr><@td align="center"><@heading>Associated roles for forum Id: ${requestParameters.permRoleSiteId}</@heading></@td></@tr>
          <@tr type="util"><@td><hr /></@td></@tr>
@@ -150,7 +150,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 
 
 <#macro moderateSite forumId rootForumId >
-<@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%" border="0"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+<@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="" --> <#-- orig: border="0" -->
  <form name="mostrecent" method="post" action="<@ofbizUrl>publishResponse</@ofbizUrl>"/>
   <#assign row=0/>
   <#list mostRecentList as content>
@@ -206,14 +206,14 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 
 
 <#macro grantSiteRoles forumId rootForumId >
-<@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%" border="0"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+<@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="" --> <#-- orig: border="0" -->
   <@tr>
     <@td width='100%'>
       <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
       <input type="hidden" name="permRoleSiteId" value="${forumId}"/>
       <input type="hidden" name="forumId" value="${forumId}"/>
       <input type="hidden" name="rootForumId" value="${rootForumId}"/>
-      <@table type="fields" width="100%" border="0" class="+${styles.table_spacing_small_hint!} boxoutside"> <#-- orig: class="boxoutside" --> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="4" -->
+      <@table type="fields" width="100%" class="+${styles.table_spacing_small_hint!} boxoutside"> <#-- orig: class="boxoutside" --> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="4" --> <#-- orig: border="0" -->
         <@tr>
             <@td>User</@td>
             <#list blogRoleIdList as roleTypeId>

@@ -85,7 +85,7 @@ function submitForm(form, mode, value) {
       </#if>
     </#assign>
     <@section title=sectionTitle>
-                <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%" border="0"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" -->
+                <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
                   <@tr>
                     <@td colspan="2">
                       <span>${uiLabelMap.OrderShipToParty}:</span>
@@ -156,7 +156,7 @@ function submitForm(form, mode, value) {
         </#if>
     </#assign>
     <@section title=sectionTitle>
-                <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%" border="0"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: cellpadding="1" -->
+                <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
                  <#if shipping == true>
                   <#list carrierShipmentMethodList as carrierShipmentMethod>
                     <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>

@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 <div id="closeTerminal" style="display:none">
-  <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" border="0" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+  <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="" --> <#-- orig: border="0" -->
     <@tr>
       <@td colspan="2">&nbsp;</@td>
     </@tr>

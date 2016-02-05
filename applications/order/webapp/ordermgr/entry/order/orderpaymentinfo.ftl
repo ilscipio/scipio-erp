@@ -20,7 +20,7 @@ under the License.
 <#if paymentMethod?has_content || paymentMethodType?has_content || billingAccount?has_content>
 <@section title="${uiLabelMap.AccountingPaymentInformation}">
       <#-- order payment info -->
-      <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%" border="0"> <#-- orig: cellpadding="1" -->
+      <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
         <#-- offline payment address infomation :: change this to use Company's address -->
         <#if !paymentMethod?has_content && paymentMethodType?has_content>
           <@tr>

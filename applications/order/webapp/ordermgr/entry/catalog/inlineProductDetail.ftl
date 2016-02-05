@@ -255,7 +255,7 @@ ${virtualJavaScript!}
 
 <#assign price = priceMap!/>
 <div id="inlineproductdetail${inlineCounter}">
-<@table type="fields" class="+${styles.table_spacing_tiny_hint!}" border="0" width="100%"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" -->
+<@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="2" --> <#-- orig: border="0" -->
   <@tr>
     <@td align="left" valign="top" width="0">
       <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL", "url")!>

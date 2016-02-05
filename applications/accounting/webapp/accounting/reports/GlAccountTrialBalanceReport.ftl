@@ -29,7 +29,7 @@ under the License.
             <@heading>${uiLabelMap.FormFieldTitle_companyName} : ${(currentOrganization.groupName)!}</@heading>
             <@heading>${uiLabelMap.AccountingTimePeriod} : <#if currentTimePeriod?has_content>${(currentTimePeriod.fromDate)!} ${uiLabelMap.CommonTo} ${(currentTimePeriod.thruDate)!}</#if></@heading>
             <@heading>${uiLabelMap.AccountingGlAccountNameAndGlAccountCode} : ${(glAccount.accountCode)!} - ${(glAccount.accountName)!}</@heading>
-            <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" border=2 responsive=true scrollable=true> <#-- orig: class="" --> <#-- orig: cellspacing="" -->
+            <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" responsive=true scrollable=true> <#-- orig: class="" --> <#-- orig: cellspacing="" --> <#-- orig: border=2 -->
                 <@thead>
                     <@tr>
                         <@th align="left"><b>${uiLabelMap.FormFieldTitle_transactionDate}</b></@th>

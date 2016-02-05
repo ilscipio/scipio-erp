@@ -751,7 +751,7 @@ under the License.
                           </#if>
                           <#if primaryCate?has_content && primaryCate.getCategoryID()?? && listingTypes?has_content>
                              <@section title="Shipping Service">
-                                    <@table type="fields" cellSpacing="0" cellPadding="0" width="100%" border="0"> <#-- orig: class="" -->
+                                    <@table type="fields" cellSpacing="0" cellPadding="0" width="100%"> <#-- orig: class="" --> <#-- orig: border="0" -->
                                         <@tr>
                                           <@td></@td>
                                           <@td width="100%"><b>Demestic Shipping Service</b></@td>
@@ -778,7 +778,7 @@ under the License.
                                           <@td><img height="1" src="http://pics.ebaystatic.com/aw/pics/tbx/s.gif" width="10" alt="" /></@td>
                                         </@tr>
                                     </@table>
-                                    <@table type="fields" width="100%" border="0"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" -->
+                                    <@table type="fields" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="0" --> <#-- orig: border="0" -->
                                          <@tr>
                                            <@td style="WIDTH: 150px"><b>Ships to locations:</b></@td>
                                          </@tr>

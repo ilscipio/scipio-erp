@@ -37,7 +37,7 @@ under the License.
         <input type="hidden" name="finalizeReqPayInfo" value="false"/>
         <input type="hidden" name="finalizeReqAdditionalParty" value="false"/>
       </#if>
-      <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" autoAltRows=true border="0"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" -->
+      <@table type="data-complex" class="+${styles.table_spacing_tiny_hint!}" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" --> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
         <@thead>
         <@tr>
           <@th>&nbsp;</@th>
@@ -71,7 +71,7 @@ under the License.
           <@tr valign="top">
             <@td>&nbsp;</@td>
             <@td>
-          <@table type="fields" inheritAltRows=true border="0"> <#-- orig: class="basic-table" -->
+          <@table type="fields" inheritAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: border="0" -->
           <@tr><@td colspan="2">
                   <#if cartLine.getProductId()??>
                     <#-- product item -->

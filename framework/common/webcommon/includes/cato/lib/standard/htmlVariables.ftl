@@ -784,6 +784,7 @@
     "fields_default_collapsepostfix" : true,
     "fields_default_collapsedinlinelabel" : "datetime", <#-- can be true, false, or list of type names -->
     "fields_default_checkboxtype" : "",
+    "fields_default_radiotype" : "",
 
     <#-- alternate to default with different top-level checkbox styles -->
     "fields_default_alt1_labelareaconsumeexceptions" : "checkbox-single radio-single",
@@ -818,7 +819,20 @@
     <#-- misc field styles -->
     "fields_wrap" : "collapse",
     "fields_label" : "prefix",
-
+    
+    <#-- checkbox type styles -->
+    "field_checkbox_default" : "switch small",
+    "field_checkbox_default_labeltype" : "extralabel",  <#-- FIXME? this should really be "standard" and the CSS made to cooperate with "standard" mode - see checkbox markup macro for issues -->
+    "field_checkbox_default_labelposition" : "after",
+    "field_checkbox_simple" : "",
+    "field_checkbox_simple_labeltype" : "spanonly",     <#-- FIXME? this should be "standard", but because "extralabel" is implemented oddly, currently need "spanonly" to make label look the same -->
+    "field_checkbox_simple_labelposition" : "after",
+    
+    <#-- radio type styles -->
+    "field_radio_default" : "",
+    "field_radio_default_labeltype" : "standard",
+    "field_radio_default_labelposition" : "after",
+    
     <#-- Field type style name maps
         These map cato and ofbiz field types to style names to represent the fields in CSS, so they can be unified.
         For any entries not specified, "default" entry is consulted.

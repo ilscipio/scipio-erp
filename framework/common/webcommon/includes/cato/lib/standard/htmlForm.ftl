@@ -477,11 +477,12 @@ or even multiple per fieldset.
     formName            = the form name the child fields should assume  
     formId              = the form ID the child fields should assume   
     inlineItems     = change default for @field inlineItems parameter (true/false)    
-    checkboxType    = default checkbox type     
+    checkboxType    = default checkbox type
+    radioType       = default radio type  
 -->
 <#assign fields_defaultArgs = {
   "type":"default", "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", "labelAreaConsumeExceptions":true,
-  "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "checkboxType":"", "passArgs":{}
+  "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "checkboxType":"", "radioType":"", "passArgs":{}
 }>
 <#macro fields args={} inlineArgs...>
   <#--<#local args = mergeArgMapsBasic(args, inlineArgs, catoStdTmplLib.fields_defaultArgs)>
@@ -572,13 +573,16 @@ or even multiple per fieldset.
   <#if !checkboxType?has_content>
     <#local checkboxType = styles[stylesPrefix + "checkboxtype"]!styles["fields_default_checkboxtype"]!"">
   </#if>
+  <#if !radioType?has_content>
+    <#local radioType = styles[stylesPrefix + "radiotype"]!styles["fields_default_radiotype"]!"">
+  </#if>
 
   <#return {"type":type, "labelType":labelType, "labelPosition":labelPosition, 
     "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, 
     "labelAreaRequireContent":labelAreaRequireContent, "labelAreaConsumeExceptions":labelAreaConsumeExceptions,
     "formName":formName, "formId":formId, "inlineItems":inlineItems,
     "collapse":collapse, "collapsePostfix":collapsePostfix, "collapsedInlineLabel":collapsedInlineLabel,
-    "checkboxType":checkboxType}>
+    "checkboxType":checkboxType, "radioType":radioType}>
 </#function>
 
 <#-- 
@@ -817,9 +821,11 @@ standard markup.
     value           = Y/N
     currentValue    = current value, used to check if should be checked
     checked         = override checked state (true/false/"") - if set to boolean, overrides currentValue logic
-    checkboxType    = [default|simple], default default
-                      default: default theme checkbox
-                      simple: guarantees a minimalistic checkbox
+    checkboxType    = [default|...], default default
+                      Generic:
+                        default: default theme checkbox
+                      Cato standard theme:
+                        simple: guarantees a minimalistic checkbox
     
     * Checkbox (multi mode) *
     items           = if specified, multiple-items checkbox field generated; 
@@ -837,6 +843,9 @@ standard markup.
     value           = Y/N, only used if single radio item mode (items not specified)
     currentValue    = current value, used to check if should be checked
     checked         = override checked state (true/false/"") - if set to boolean, overrides currentValue logic
+    radioType       = [default], default default
+                      Generic:
+                        default: default theme radio
     
     * radio (multi mode) *
     items           = if specified, multiple-items radio generated; 
@@ -899,7 +908,7 @@ standard markup.
   "description":"",
   "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
   "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
-  "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "checkboxType":"", "events":{}, "passArgs":{} 
+  "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "checkboxType":"", "radioType":"", "events":{}, "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
   <#-- TODO: the following calls should be combined into a mergeArgMapsToLocals method, but
@@ -1303,13 +1312,16 @@ standard markup.
           </#if>
           <#local items=[{"value":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked}]/>
           <@field_checkbox_widget multiMode=false items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel checkboxType=checkboxType passArgs=passArgs/>
+            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name tooltip="" inlineLabel=effInlineLabel type=checkboxType passArgs=passArgs/>
         <#else>
           <@field_checkbox_widget multiMode=true items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel checkboxType=checkboxType passArgs=passArgs/>
+            currentValue=currentValue defaultValue=defaultValue allChecked=allChecked name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=checkboxType passArgs=passArgs/>
         </#if>
         <#break>
       <#case "radio">
+        <#if !radioType?has_content>
+          <#local radioType = fieldsInfo.radioType>
+        </#if>
         <#if !items?is_sequence>
           <#-- single radio button item mode -->
           <#if !checked?is_boolean>
@@ -1329,11 +1341,11 @@ standard markup.
           </#if>
           <#local items=[{"key":value, "description":description, "tooltip":tooltip, "events":events, "checked":checked}]/>
           <@field_radio_widget multiMode=false items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue name=name tooltip="" inlineLabel=effInlineLabel passArgs=passArgs/>
+            currentValue=currentValue defaultValue=defaultValue name=name tooltip="" inlineLabel=effInlineLabel type=radioType passArgs=passArgs/>
         <#else>
           <#-- multi radio button item mode -->
           <@field_radio_widget multiMode=true items=items inlineItems=inlineItems id=id class=class alert=alert 
-            currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip inlineLabel=effInlineLabel passArgs=passArgs/>
+            currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip inlineLabel=effInlineLabel type=radioType passArgs=passArgs/>
         </#if>
         <#break>
       <#case "file">

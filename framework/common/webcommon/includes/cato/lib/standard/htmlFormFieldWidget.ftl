@@ -594,7 +594,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- migrated from @renderCheckField (a.k.a. @renderCheckBox) form widget macro -->
 <#assign field_checkbox_widget_defaultArgs = {
   "items":[], "id":"", "class":"", "alert":"", "allChecked":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, 
-  "tooltip":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "checkboxType":"", "passArgs":{}
+  "tooltip":"", "fieldTitleBlank":false, "multiMode":true, "inlineItems":"", "inlineLabel":false, "type":"", "passArgs":{}
 }>
 <#macro field_checkbox_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_checkbox_widget_defaultArgs)>
@@ -634,18 +634,24 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <#else>
     <#local defaultValue = []>
   </#if>
-  <#if checkboxType == "default">
-    <#local checkboxType = "">
+  <#if type == "default">
+    <#local type = "">
   </#if>
+  <#local defaultClass = styles["field_checkbox_" + type]!styles["field_checkbox_default"]!"">
+  <#local class = addClassArgDefault(class, defaultClass)>
+  <#local labelType = styles["field_checkbox_" + type + "_labeltype"]!styles["field_checkbox_default_labeltype"]!"standard">
+  <#local labelPosition = styles["field_checkbox_" + type + "_labelposition"]!styles["field_checkbox_default_labelposition"]!"after">
   <@field_checkbox_markup_widget items=items id=id class=class alert=alert allChecked=allChecked 
     currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip multiMode=multiMode 
-    fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel checkboxType=checkboxType origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
+    fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel type=type 
+    labelType=labelType labelPosition=labelPosition origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
 </#macro>
 
 <#-- field markup - theme override 
      FIXME: the styling for these is strange, can't get it to work no matter what -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
-    events={} tooltip="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false checkboxType="" origArgs={} passArgs={} catchArgs...>
+    events={} tooltip="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" 
+    labelType="standard" labelPosition="after" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -662,10 +668,6 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   </#if>
   <#local class = addClassArg(class, "checkbox-item")>
   <#local class = addClassArg(class, inlineClass)>
-  <#-- simple prevents any fancy checkbox -->
-  <#if checkboxType != "simple">
-    <#local class = addClassArgDefault(class, "${styles.switch} ${styles.small}")>
-  </#if>
 
   <#-- Cato: must have id on each elem or else the foundation switches break 
        The first item receives the exact id passed to macro because this is what original ofbiz macros expect
@@ -682,17 +684,25 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       <#local inputClass = addClassArg(inputClass, "has-tip tip-right")>
     </#if>
     <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if>>
+      <#local labelMarkup>
+        <#if labelType == "extralabel">
+          <label<#if currentId?has_content> for="${currentId}"</#if>></label>
+          <#-- FIXME?: description destroys field if put inside <label> above... also <label> has to be separate from input (not parent)... ? -->
+          <#if item.description?has_content><span class="checkbox-label-local">${item.description}</span></#if>
+        <#elseif labelType == "spanonly">
+          <#if item.description?has_content><span class="checkbox-label-local">${item.description}</span></#if>
+        <#else> <#-- labelType == "standard" -->
+          <#if item.description?has_content><label class="checkbox-label-local"<#if currentId?has_content> for="${currentId}"</#if>>${item.description}</label></#if>
+        </#if>
+      </#local>
+      <#if labelPosition == "before">${labelMarkup}</#if>
       <input type="checkbox"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#if currentId?has_content> id="${currentId}"</#if><#rt/>
         <#if item.tooltip?has_content || tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="<#if item.tooltip?has_content>${item.tooltip}<#else>${tooltip!}</#if>"</#if><#rt/>
         <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif allChecked?has_content><#if allChecked> checked="checked"</#if>
         <#elseif currentValue?has_content && currentValue?seq_contains(itemValue)> checked="checked"
         <#elseif defaultValue?has_content && defaultValue?seq_contains(itemValue)> checked="checked"</#if> 
         name="${name?html}" value="${itemValue?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#rt/>
-    <#if checkboxType != "simple">
-      <label<#if currentId?has_content> for="${currentId}"</#if>></label>
-    </#if>
-      <#-- FIXME?: description destroys field if put inside <label> above... also <label> has to be separate from input (not parent)... ? -->
-      <#if item.description?has_content><span class="checkbox-label-local">${item.description}</span></#if>
+      <#if labelPosition != "before">${labelMarkup}</#if>
     </span>
     <#local sepClass = "">
     <#local sepClass = addClassArg(sepClass, "checkbox-item-separator")>
@@ -710,7 +720,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#-- migrated from @renderRadioField form widget macro -->
 <#assign field_radio_widget_defaultArgs = {
   "items":"", "id":"", "class":"", "alert":"", "currentValue":"", "defaultValue":"", "name":"", "events":{}, "tooltip":"", 
-  "multiMode":true, "inlineItems":"", "fieldTitleBlank":false, "inlineLabel":false, "passArgs":{}
+  "multiMode":true, "inlineItems":"", "fieldTitleBlank":false, "inlineLabel":false, "type":"", "passArgs":{}
 }>
 <#macro field_radio_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_radio_widget_defaultArgs)>
@@ -722,12 +732,22 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       <#local inlineItems = inlineItems?boolean>
     </#if>
   </#if>
+  <#if !type?has_content>
+    <#local type = "default">
+  </#if>
+  <#local defaultClass = styles["field_radio_" + type]!styles["field_radio_default"]!"">
+  <#local class = addClassArgDefault(class, defaultClass)>
+  <#local labelType = styles["field_radio_" + type + "_labeltype"]!styles["field_radio_default_labeltype"]!"standard">
+  <#local labelPosition = styles["field_radio_" + type + "_labelposition"]!styles["field_radio_default_labelposition"]!"after">
   <@field_radio_markup_widget items=items id=id class=class alert=alert currentValue=currentValue defaultValue=defaultValue name=name 
-    events=events tooltip=tooltip multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
+    events=events tooltip=tooltip multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
+    type=type labelType=labelType labelPosition=labelPosition origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
-<#macro field_radio_markup_widget items="" id="" class="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" multiMode=true inlineItems="" fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
+<#macro field_radio_markup_widget items="" id="" class="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" multiMode=true inlineItems="" 
+    type="default" fieldTitleBlank=false inlineLabel=false 
+    labelType="standard" labelPosition="after" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
   </#if>
@@ -760,13 +780,17 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
       <#local inputClass = addClassArg(inputClass, "has-tip tip-right")>
     </#if>
     <span<@fieldClassAttribStr class=itemClass alert=itemAlert /><#if currentId?has_content> id="${currentId}_item"</#if>><#rt/>
+      <#local labelMarkup>
+        <#if item.description?has_content>
+          <label class="radio-label-local"<#if currentId?has_content> for="${currentId}"</#if>>${item.description}</label>
+        </#if>
+      </#local>
+      <#if labelPosition == "before">${labelMarkup}</#if>
       <input type="radio"<@fieldClassAttribStr class=inputClass alert=inputAlert /><#if currentId?has_content> id="${currentId}"</#if><#if item.tooltip?has_content || tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="<#if item.tooltip?has_content>${item.tooltip}<#else>${tooltip!}</#if>"</#if><#rt/>
         <#if item.checked?has_content><#if item.checked> checked="checked"</#if><#elseif currentValue?has_content><#if currentValue==itemValue> checked="checked"</#if>
         <#elseif defaultValue?has_content && defaultValue == itemValue> checked="checked"</#if> 
         name="${name?html}" value="${itemValue!""?html}"<@commonElemEventAttribStr events=((events!{}) + (item.events!{})) />/><#rt/>
-      <#if item.description?has_content>
-        <label class="radio-label-local"<#if currentId?has_content> for="${currentId}"</#if>>${item.description}</label>
-      </#if>
+      <#if labelPosition != "before">${labelMarkup}</#if>
     </span>
     <#local sepClass = "">
     <#local sepClass = addClassArg(sepClass, "radio-item-separator")>

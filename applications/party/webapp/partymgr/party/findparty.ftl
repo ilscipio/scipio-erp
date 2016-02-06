@@ -65,10 +65,10 @@ under the License.
       <@cell columns=9>        
         
         <#assign radioItems = [
-          { "key": "N", "description": "${uiLabelMap.CommonNone}", "event": "onclick", "action": "javascript:refreshInfo();" },
-          { "key": "P", "description": "${uiLabelMap.PartyPostal}", "event": "onclick", "action": "javascript:refreshInfo();" },
-          { "key": "T", "description": "${uiLabelMap.PartyTelecom}", "event": "onclick", "action": "javascript:refreshInfo();" },
-          { "key": "O", "description": "${uiLabelMap.CommonOther}", "event": "onclick", "action": "javascript:refreshInfo();" }
+          { "key": "N", "description": "${uiLabelMap.CommonNone}", "events": {"click": "javascript:refreshInfo();"} },
+          { "key": "P", "description": "${uiLabelMap.PartyPostal}", "events": {"click": "javascript:refreshInfo();"} },
+          { "key": "T", "description": "${uiLabelMap.PartyTelecom}", "events": {"click": "javascript:refreshInfo();"} },
+          { "key": "O", "description": "${uiLabelMap.CommonOther}", "events": {"click": "javascript:refreshInfo();"} }
         ]>
         <@field type="radio" label="${uiLabelMap.PartyContactInformation}" name="extInfo" items=radioItems currentValue="${extInfo!}"/>
         

@@ -1021,7 +1021,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
         <#nested />
     </#local>
     <#-- Get the number of datasets by inspecting the nested content (chartjs addData function values) -->
-    <#assign chartDatasets=chart_get_number_of_datasets(nestedContent, chartLibrary) />
+    <#if nestedContent?has_content>
+        <#assign chartDatasets=chart_get_number_of_datasets(nestedContent, chartLibrary) />
+        <#else>
+        <#assign chartDatasets=0/>
+    </#if>
     <#if chartDatasets &lt; 1><#local chartDatasets = 1 /></#if>
     
     <canvas id="${chartId!}" class="chart-data" height="300" width="500"></canvas>

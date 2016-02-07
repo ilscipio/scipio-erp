@@ -9793,21 +9793,30 @@ input, select, text-area {
 
 /* NAVIGATION */
 /* line 50, ../scss/_base.scss */
-.sidebar {
+.side-nav {
   margin-top: 0px;
   background: #FAFAFA;
-  padding: 10px;
+  padding: 0px;
 }
 /* line 55, ../scss/_base.scss */
-.sidebar form {
+.side-nav form {
   padding: 0px;
 }
 /* line 57, ../scss/_base.scss */
-.sidebar input[type="search"]:focus {
+.side-nav input[type="search"]:focus {
   box-shadow: 0 0 0 !important;
 }
+/* line 61, ../scss/_base.scss */
+.side-nav li.dashboard {
+  background-color: whitesmoke;
+  border-bottom: 1px solid #dddddd;
+}
+/* line 65, ../scss/_base.scss */
+.side-nav li.dashboard a {
+  color: #222222;
+}
 
-/* line 62, ../scss/_base.scss */
+/* line 73, ../scss/_base.scss */
 .sub-top-bar {
   display: block;
   margin: -0.25rem 0 1.125rem;
@@ -9863,7 +9872,7 @@ input, select, text-area {
 .sub-top-bar li.active a:hover {
   background: #0078a0;
 }
-/* line 65, ../scss/_base.scss */
+/* line 76, ../scss/_base.scss */
 .sub-top-bar dt a, .sub-top-bar dd a, .sub-top-bar li a {
   background-color: #fafafa;
   color: #008cba;
@@ -9871,25 +9880,43 @@ input, select, text-area {
 }
 
 /* CONTENT */
-/* line 73, ../scss/_base.scss */
+/* line 84, ../scss/_base.scss */
+.align-right {
+  text-align: right;
+  word-break: normal;
+}
+
+/* line 89, ../scss/_base.scss */
+.align-center {
+  text-align: center;
+  word-break: normal;
+}
+
+/* line 94, ../scss/_base.scss */
+.amount {
+  text-align: right;
+  word-break: normal;
+}
+
+/* line 99, ../scss/_base.scss */
 #content-main-section {
   padding-top: 32px;
   padding-bottom: 32px;
 }
 
-/* line 78, ../scss/_base.scss */
+/* line 104, ../scss/_base.scss */
 #content-main-body {
   width: 100%;
   min-height: 100%;
   position: relative;
 }
 
-/* line 84, ../scss/_base.scss */
+/* line 110, ../scss/_base.scss */
 h1 {
   margin-bottom: 1rem;
 }
 
-/* line 89, ../scss/_base.scss */
+/* line 115, ../scss/_base.scss */
 input[type="button"], input[type="submit"], .buttontext {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -9923,46 +9950,46 @@ input[type="button"]:hover, input[type="button"]:focus, input[type="submit"]:hov
   color: white;
 }
 
-/* line 92, ../scss/_base.scss */
+/* line 118, ../scss/_base.scss */
 table.basic-table {
   width: 100%;
 }
-/* line 94, ../scss/_base.scss */
+/* line 120, ../scss/_base.scss */
 table.basic-table tr {
   background: none;
 }
-/* line 97, ../scss/_base.scss */
+/* line 123, ../scss/_base.scss */
 table.basic-table tr td {
   height: auto;
   vertical-align: top;
 }
-/* line 103, ../scss/_base.scss */
+/* line 129, ../scss/_base.scss */
 table.basic-table tr.odd {
   background: #fafafa;
 }
-/* line 105, ../scss/_base.scss */
+/* line 131, ../scss/_base.scss */
 table.basic-table input {
   margin: 0px;
 }
 
-/* line 109, ../scss/_base.scss */
+/* line 135, ../scss/_base.scss */
 .reveal-modal {
   box-shadow: none;
 }
 @media only screen and (min-width: 40.0625em) {
-  /* line 109, ../scss/_base.scss */
+  /* line 135, ../scss/_base.scss */
   .reveal-modal {
     top: 12.5rem;
   }
 }
 
-/* line 115, ../scss/_base.scss */
+/* line 141, ../scss/_base.scss */
 .login-box {
   margin: 200px 0;
   padding: 0px;
   min-width: 500px;
 }
-/* line 127, ../scss/_base.scss */
+/* line 153, ../scss/_base.scss */
 .login-box #login-box-content {
   margin-top: 20px;
   padding: 40px 20px 0 20px;
@@ -9974,7 +10001,7 @@ table.basic-table input {
 }
 
 @media (max-width: 610px) {
-  /* line 139, ../scss/_base.scss */
+  /* line 165, ../scss/_base.scss */
   .login-box {
     position: static;
     width: 100%;
@@ -9983,27 +10010,27 @@ table.basic-table input {
     margin-top: 50px;
   }
 }
-/* line 143, ../scss/_base.scss */
+/* line 169, ../scss/_base.scss */
 .inline-list li {
   margin-bottom: 10px;
 }
 
-/* line 147, ../scss/_base.scss */
+/* line 173, ../scss/_base.scss */
 td {
   word-break: normal;
 }
 
-/* line 148, ../scss/_base.scss */
+/* line 174, ../scss/_base.scss */
 td.button-col {
   word-break: normal;
 }
 
-/* line 150, ../scss/_base.scss */
+/* line 176, ../scss/_base.scss */
 td button, td .button, td input[type="button"], td input[type="submit"], td .buttontext {
   word-break: normal;
 }
 
-/* line 153, ../scss/_base.scss */
+/* line 179, ../scss/_base.scss */
 .toggleField fieldset {
   border: none;
   color: #008cba;
@@ -10011,31 +10038,31 @@ td button, td .button, td input[type="button"], td input[type="submit"], td .but
   padding: 8px 0px;
 }
 
-/* line 159, ../scss/_base.scss */
+/* line 185, ../scss/_base.scss */
 fieldset {
   border: none;
   padding-left: 0px;
   padding-right: 0px;
 }
-/* line 164, ../scss/_base.scss */
+/* line 190, ../scss/_base.scss */
 fieldset legend {
   padding: 0px;
   margin: 0px;
   text-align: right;
   background: none;
 }
-/* line 171, ../scss/_base.scss */
+/* line 197, ../scss/_base.scss */
 fieldset legend:hover {
   color: #0078a0;
   cursor: pointer;
 }
 
-/* line 178, ../scss/_base.scss */
+/* line 204, ../scss/_base.scss */
 .collapsed {
   display: inline-block;
 }
 
-/* line 182, ../scss/_base.scss */
+/* line 208, ../scss/_base.scss */
 .rotate-90 {
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
@@ -10043,7 +10070,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 189, ../scss/_base.scss */
+/* line 215, ../scss/_base.scss */
 .rotate-180 {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
@@ -10051,7 +10078,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 196, ../scss/_base.scss */
+/* line 222, ../scss/_base.scss */
 .rotate-270 {
   -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
@@ -10059,7 +10086,7 @@ fieldset legend:hover {
   writing-mode: tb-rl;
 }
 
-/* line 203, ../scss/_base.scss */
+/* line 229, ../scss/_base.scss */
 pre {
   /* original is white background with no border */
   background-color: #fff;
@@ -10083,36 +10110,36 @@ pre {
   border-width: 1px;
 }
 
-/* line 225, ../scss/_base.scss */
+/* line 251, ../scss/_base.scss */
 code {
   margin: 0px;
   padding: 0px;
   border: none;
   background: none;
 }
-/* line 230, ../scss/_base.scss */
+/* line 256, ../scss/_base.scss */
 code .INFO {
   color: #333333;
 }
-/* line 232, ../scss/_base.scss */
+/* line 258, ../scss/_base.scss */
 code .WARN {
   color: #f08a24;
 }
-/* line 233, ../scss/_base.scss */
+/* line 259, ../scss/_base.scss */
 code .ERROR {
   color: #f04124;
 }
-/* line 234, ../scss/_base.scss */
+/* line 260, ../scss/_base.scss */
 code .FATAL {
   color: #f04124;
   font-weight: bold;
 }
-/* line 235, ../scss/_base.scss */
+/* line 261, ../scss/_base.scss */
 code .TRACE {
   color: #999999;
 }
 
-/* line 239, ../scss/_base.scss */
+/* line 265, ../scss/_base.scss */
 .postfix input[type="submit"], .postfix button {
   background: #f2f2f2;
   border-color: #cccccc;
@@ -10125,62 +10152,62 @@ code .TRACE {
   font-size: 1.2rem;
 }
 
-/* line 251, ../scss/_base.scss */
+/* line 277, ../scss/_base.scss */
 .postfix i {
   font-size: 1.2rem;
 }
 
-/* line 253, ../scss/_base.scss */
+/* line 279, ../scss/_base.scss */
 .postfix .fi {
   font-family: 'foundation-icons', 'FontAwesome', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 1.2rem;
   line-height: 0.9rem;
 }
 
-/* line 260, ../scss/_base.scss */
+/* line 286, ../scss/_base.scss */
 ul.chart-legend {
   list-style: none;
 }
 
-/* line 268, ../scss/_base.scss */
+/* line 294, ../scss/_base.scss */
 div.section-screenlet-content {
   margin-bottom: 0.5rem;
 }
 
-/* line 274, ../scss/_base.scss */
+/* line 300, ../scss/_base.scss */
 div.section-screenlet-content:empty, div.section-screenlet-content.no-content {
   margin-bottom: 0;
 }
 
-/* line 283, ../scss/_base.scss */
+/* line 309, ../scss/_base.scss */
 div.section-screenlet-container.no-title, div.section-screenlet-content.no-title.no-menu {
   margin-top: 0.2rem;
 }
 
-/* line 287, ../scss/_base.scss */
+/* line 313, ../scss/_base.scss */
 div.section-screenlet-container.no-title.no-menu {
   margin-top: 0;
 }
 
 /*  FOOTER */
-/* line 292, ../scss/_base.scss */
+/* line 318, ../scss/_base.scss */
 #body-content {
   min-height: 100%;
   margin-bottom: -26px;
 }
 
-/* line 297, ../scss/_base.scss */
+/* line 323, ../scss/_base.scss */
 #body-content:after {
   content: "";
   display: block;
 }
 
-/* line 302, ../scss/_base.scss */
+/* line 328, ../scss/_base.scss */
 #body-content:after, #footer {
   height: 26px;
 }
 
-/* line 306, ../scss/_base.scss */
+/* line 332, ../scss/_base.scss */
 #footer {
   background: #333333;
   color: #eeeeee;
@@ -10188,12 +10215,12 @@ div.section-screenlet-container.no-title.no-menu {
 }
 
 /*MISC*/
-/* line 316, ../scss/_base.scss */
+/* line 342, ../scss/_base.scss */
 .progress .meter {
   transition-duration: 3s;
 }
 
-/* line 321, ../scss/_base.scss */
+/* line 347, ../scss/_base.scss */
 .button-group .text-entry {
   padding-left: 1em;
   padding-right: 1em;
@@ -10207,18 +10234,18 @@ div.section-screenlet-container.no-title.no-menu {
 }
 */
 @media only screen and (min-width: 40.0625em) and (max-width: 64em) {
-  /* line 336, ../scss/_base.scss */
+  /* line 362, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 }
 @media only screen and (max-width: 40em) {
-  /* line 341, ../scss/_base.scss */
+  /* line 367, ../scss/_base.scss */
   input, select, text-area {
     max-width: 100%;
   }
 
-  /* line 343, ../scss/_base.scss */
+  /* line 369, ../scss/_base.scss */
   .login-box {
     min-width: 0;
   }
@@ -10234,27 +10261,27 @@ div.scrollable-table-container > table {
   margin-bottom: 0;
 }
 */
-/* line 363, ../scss/_base.scss */
+/* line 389, ../scss/_base.scss */
 .field-entry-widget.field-entry-type-display:last-child {
   margin-bottom: 1rem;
 }
 
-/* line 367, ../scss/_base.scss */
+/* line 393, ../scss/_base.scss */
 .radio-item-inline.radio-item-separator {
   display: none;
 }
 
-/* line 371, ../scss/_base.scss */
+/* line 397, ../scss/_base.scss */
 .checkbox-item-inline.checkbox-item-separator {
   display: none;
 }
 
-/* line 376, ../scss/_base.scss */
+/* line 402, ../scss/_base.scss */
 .asmListItemRemove {
   margin-left: 1rem;
 }
 
-/* line 381, ../scss/_base.scss */
+/* line 407, ../scss/_base.scss */
 table.table-type-data .button {
   margin-bottom: 0.1rem;
 }
@@ -10267,80 +10294,80 @@ table.table-type-data .button {
       .table-hint-spacing-tiny alone can get cellspacing and/or cellpadding (as theme chooses), while
       .table-hint-spacing-tiny.table-hint-nocellspacing should get zero cellspacing and compensatory (?) cellpadding instead
   */
-/* line 394, ../scss/_base.scss */
+/* line 420, ../scss/_base.scss */
 table.table-nocellspacing, table.table-nocellspacing-hint {
   border-spacing: 0 !important;
   border-collapse: collapse !important;
 }
 
-/* line 399, ../scss/_base.scss */
+/* line 425, ../scss/_base.scss */
 table.table-noborder, table.table-noborder-hint {
   border: none !important;
 }
 
-/* line 403, ../scss/_base.scss */
+/* line 429, ../scss/_base.scss */
 .elem-fullwidth {
   width: 100% !important;
 }
 
 /* GENERAL ELEMENT COLORS */
-/* line 410, ../scss/_base.scss */
+/* line 436, ../scss/_base.scss */
 .colored-elem.primary, .colored-elem {
   color: #008cba;
 }
 
-/* line 411, ../scss/_base.scss */
+/* line 437, ../scss/_base.scss */
 .colored-elem.secondary {
   color: #e7e7e7;
 }
 
-/* line 412, ../scss/_base.scss */
+/* line 438, ../scss/_base.scss */
 .colored-elem.info {
   color: #a0d3e8;
 }
 
-/* line 413, ../scss/_base.scss */
+/* line 439, ../scss/_base.scss */
 .colored-elem.success {
   color: #43ac6a;
 }
 
-/* line 414, ../scss/_base.scss */
+/* line 440, ../scss/_base.scss */
 .colored-elem.warning {
   color: #f08a24;
 }
 
-/* line 415, ../scss/_base.scss */
+/* line 441, ../scss/_base.scss */
 .colored-elem.alert {
   color: #f04124;
 }
 
 /* TEXT COLORS */
-/* line 420, ../scss/_base.scss */
+/* line 446, ../scss/_base.scss */
 .colored-text.primary, .colored-text {
   color: #008cba;
 }
 
-/* line 421, ../scss/_base.scss */
+/* line 447, ../scss/_base.scss */
 .colored-text.secondary {
   color: #e7e7e7;
 }
 
-/* line 422, ../scss/_base.scss */
+/* line 448, ../scss/_base.scss */
 .colored-text.info {
   color: #a0d3e8;
 }
 
-/* line 423, ../scss/_base.scss */
+/* line 449, ../scss/_base.scss */
 .colored-text.success {
   color: #43ac6a;
 }
 
-/* line 424, ../scss/_base.scss */
+/* line 450, ../scss/_base.scss */
 .colored-text.warning {
   color: #f08a24;
 }
 
-/* line 425, ../scss/_base.scss */
+/* line 451, ../scss/_base.scss */
 .colored-text.alert {
   color: #f04124;
 }
@@ -10353,7 +10380,7 @@ table.table-noborder, table.table-noborder-hint {
   note that system- vs session- vs page- changing actions can be styled separately. */
 /* individual nav creation links and nav creation links in menu items (i.e., that link to a page with creation form)
   NOTE: scope is usually not set on nav links, but in 99% of cases it's implied sys scope, or is not really meaningful to navigation */
-/* line 438, ../scss/_base.scss */
+/* line 464, ../scss/_base.scss */
 .action-nav.action-modify.action-add.button, .action-nav.action-modify.action-add .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10375,7 +10402,7 @@ table.table-noborder, table.table-noborder-hint {
 }
 */
 /* "continue" session action buttons (if any for sys scope, will get different color below, to indicate changes are made permanent) */
-/* line 450, ../scss/_base.scss */
+/* line 476, ../scss/_base.scss */
 .action-run.action-scope-session.action-modify.action-continue.button, .action-run.action-scope-session.action-modify.action-continue .button {
   background-color: #43ac6a;
   border-color: #368a55;
@@ -10391,7 +10418,7 @@ table.table-noborder, table.table-noborder-hint {
 }
 
 /* terminate actions (like cancel order) */
-/* line 455, ../scss/_base.scss */
+/* line 481, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-terminate.button, .action-run.action-scope-sys.action-modify.action-terminate .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10408,7 +10435,7 @@ table.table-noborder, table.table-noborder-hint {
 
 /* individual actions that modify state of system when clicked; should be made clear to user (so don't confuse with nav links and other links and accidentally change system) 
   FIXME?: this should have an emphasis, but not sure if "info" color is appropriate... */
-/* line 462, ../scss/_base.scss */
+/* line 488, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.button, .action-run.action-scope-sys.action-modify .button {
   background-color: #a0d3e8;
   border-color: #61b6d9;
@@ -10430,7 +10457,7 @@ table.table-noborder, table.table-noborder-hint {
    @include button-style($bg:$info-button-bg-color, $bg-hover:$info-button-bg-hover, $border-color:$info-button-border-color);
 }*/
 /* high-importance modify actions, like create order button */
-/* line 475, ../scss/_base.scss */
+/* line 501, ../scss/_base.scss */
 .action-run.action-scope-sys.action-modify.action-importance-high.button, .action-run.action-scope-sys.action-modify.action-importance-high .button {
   background-color: #f04124;
   border-color: #cf2a0e;
@@ -10446,7 +10473,7 @@ table.table-noborder, table.table-noborder-hint {
 }
 
 /* special nav cancel/back/return action button (alt regular color) */
-/* line 481, ../scss/_base.scss */
+/* line 507, ../scss/_base.scss */
 .action-nav.action-cancel.button, .action-nav.action-cancel .button {
   background-color: #e7e7e7;
   border-color: #b9b9b9;
@@ -10462,7 +10489,7 @@ table.table-noborder, table.table-noborder-hint {
 }
 
 /* special run-action cancel action button (warning color) */
-/* line 486, ../scss/_base.scss */
+/* line 512, ../scss/_base.scss */
 .action-run.action-cancel.button, .action-run.action-cancel .button {
   background-color: #f08a24;
   border-color: #cf6e0e;
@@ -10807,22 +10834,4 @@ ul[data-pie-id] {
 .chart-data:before {
   content: '{"primaryFillColor":"rgba(0, 140, 186, 0.5)","primaryStrokeColor":"rgba(0, 140, 186, 0.7)","primaryPointStrokeColor":"rgba(0, 140, 186, 0.7)","secondaryFillColor":"rgba(231, 231, 231, 0.3)","secondaryStrokeColor":"rgba(231, 231, 231, 0.7)","secondaryPointStrokeColor":"rgba(231, 231, 231, 0.7)","pieFillColor1":"#008cba","pieFillColor2":"#e7e7e7","pieFillColor3":"#f04124","pieFillColor4":"#43ac6a","pieFillColor5":"#f08a24","pieFillColor6":"#a0d3e8","pieHighlightColor1":"rgba(0, 140, 186, 0.6)","pieHighlightColor2":"rgba(231, 231, 231, 0.6)","pieHighlightColor3":"rgba(240, 65, 36, 0.6)","pieHighlightColor4":"rgba(67, 172, 106, 0.6)","pieHighlightColor5":"rgba(240, 138, 36, 0.6)","pieHighlightColor6":"rgba(160, 211, 232, 0.6)","pointColor":"white","pointHighlightFill":"#fafafa","pointHighlightStroke":"#aaaaaa","pointDot":true,"pointHitDetectionRadius":5,"pointDotRadius":3,"pointDotStrokeWidth":1,"scaleType":"linear","scaleDisplay":true,"scaleGridLineColor":"rgba(0,0,0,.1)","scaleLabelFontFamily":["Open Sans","Helvetica Neue","Helvetica","Helvetica","Arial","sans-serif"],"scaleLabelFontSize":14,"scaleLabelFontColor":"#222222","scaleLabelDisplay":false,"angleShowLineOut":true,"scaleBeginAtZero":true,"showTooltips":true,"color":"#f7464a","highlight":"#ff5a5e","dataLabels":false}';
   display: none;
-}
-
-/* line 51, ../scss/app.scss */
-.align-right {
-  text-align: right;
-  word-break: normal;
-}
-
-/* line 56, ../scss/app.scss */
-.align-center {
-  text-align: center;
-  word-break: normal;
-}
-
-/* line 61, ../scss/app.scss */
-.amount {
-  text-align: right;
-  word-break: normal;
 }

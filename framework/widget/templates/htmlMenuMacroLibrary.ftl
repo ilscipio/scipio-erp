@@ -65,7 +65,10 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
            not sure should keep that behavior or not, but might not consistent with foundation styles? -->
       <#local classes = joinStyleNames(styles.menu_default!, style)>
     </#if>
-        <ul<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if>> 
+        <ul<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if>>
+            <#-- Hardcoded alternative that will always display a Dashboard link on top of the sidebar
+            <#local dashboardLink><a href="<@ofbizUrl>/main</@ofbizUrl>">${uiLabelMap.CommonDashboard!}</a></#local>
+            <@renderMenuItemBegin style="${styles.menu_sidebar_itemdashboard!}" linkStr=dashboardLink! /><@renderMenuItemEnd/>-->
   </#if>
    <#local dummy = pushRequestStack("renderMenuStack", {"style":style,"remStyle":remStyle,"id":id,"inlineEntires":inlineEntries})> <#-- pushing info to stack, so that this can be used by subsequently --> 
 </#macro>
@@ -149,10 +152,10 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 <#if (linkType?has_content && "hidden-form" == linkType) || linkUrl?has_content></a><#rt/></#if>
 </#macro>
 
-<#macro renderMenuItemBegin style toolTip linkStr containsNestedMenus menuCtxRole="">
+<#macro renderMenuItemBegin style linkStr toolTip="" containsNestedMenus=false menuCtxRole="">
         <li<#if style?has_content> class="${style}"</#if><#if toolTip?has_content> title="${toolTip}"</#if>><#if linkStr?has_content>${linkStr}</#if><#if containsNestedMenus><ul></#if><#rt/>
 </#macro>
 
-<#macro renderMenuItemEnd containsNestedMenus menuCtxRole="">
+<#macro renderMenuItemEnd containsNestedMenus=false menuCtxRole="">
 <#if containsNestedMenus></ul></#if></li>
 </#macro>

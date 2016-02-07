@@ -133,6 +133,7 @@
     "menu_sidebar_itemdisabled" : "disabled", 
     "menu_sidebar_itemactive" : "active", 
     "menu_sidebar_itemselected" : "selected", 
+    "menu_sidebar_itemdashboard" : "dashboard",
     "menu_sidebar_item_contentdisabled" : "disabled", 
     "menu_sidebar_item_contentactive" : "active", 
     "menu_sidebar_item_contentselected" : "selected", 

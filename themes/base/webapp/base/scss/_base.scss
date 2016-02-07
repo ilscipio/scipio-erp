@@ -47,15 +47,26 @@ input,select,text-area {max-width:50em;}
 /* NAVIGATION */
   
 
-.sidebar {
+.side-nav {
     margin-top:0px;
     background: #FAFAFA;
-    padding: 10px; 
+    padding:0px;
 
     form {padding:0px;}
 
     input[type="search"]:focus {
         box-shadow: 0 0 0 !important; }
+        
+    li {
+        &.dashboard {
+            background-color: $white-smoke;
+            border-bottom: 1px solid $gainsboro;
+            
+            a {
+                color: $jet;
+            }
+        }
+    }
 }
 
 
@@ -70,6 +81,21 @@ input,select,text-area {max-width:50em;}
 }
 
 /* CONTENT */
+.align-right {
+  text-align: right;
+  word-break: normal;
+}
+
+.align-center {
+  text-align: center;
+  word-break: normal;
+}
+
+.amount {
+  text-align: right;
+  word-break: normal;
+}
+
 #content-main-section{
     padding-top:32px;
     padding-bottom:32px;

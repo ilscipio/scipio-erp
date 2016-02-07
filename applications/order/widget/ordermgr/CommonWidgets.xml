@@ -49,7 +49,7 @@ under the License.
             </actions>
             <widgets>
                 <platform-specific>
-                    <html><html-template location="component://order/webapp/ordermgr/stats/statsOrderTotal.ftl"/></html>
+                    <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
                 </platform-specific>
             </widgets>
       </section>
@@ -71,7 +71,7 @@ under the License.
             </actions>
             <widgets>
                 <platform-specific>
-                    <html><html-template location="component://order/webapp/ordermgr/stats/statsOrderTotal.ftl"/></html>
+                    <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
                 </platform-specific>
             </widgets>
       </section>
@@ -93,7 +93,7 @@ under the License.
             </actions>
             <widgets>
                 <platform-specific>
-                    <html><html-template location="component://order/webapp/ordermgr/stats/statsOrderTotal.ftl"/></html>
+                    <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
                 </platform-specific>
             </widgets>
       </section>
@@ -117,7 +117,7 @@ under the License.
             </actions>
             <widgets>
                 <platform-specific>
-                    <html><html-template location="component://order/webapp/ordermgr/stats/statsOrderTotal.ftl"/></html>
+                    <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
                 </platform-specific>
             </widgets>
       </section>
@@ -139,7 +139,7 @@ under the License.
             </actions>
             <widgets>
                 <platform-specific>
-                    <html><html-template location="component://order/webapp/ordermgr/stats/statsOrderTotal.ftl"/></html>
+                    <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
                 </platform-specific>
             </widgets>
       </section>
@@ -161,7 +161,7 @@ under the License.
             </actions>
             <widgets>
                 <platform-specific>
-                    <html><html-template location="component://order/webapp/ordermgr/stats/statsOrderTotal.ftl"/></html>
+                    <html><html-template location="component://order/webapp/ordermgr/dashboard/statsOrderTotal.ftl"/></html>
                 </platform-specific>
             </widgets>
       </section>

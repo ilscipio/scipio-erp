@@ -1160,7 +1160,11 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
                     ]
                 };
             var config = {
-                <#if type=="bar">type: 'bar'</#if><#if type=="line">type: 'line'</#if><#if type=="pie">type: 'pie'</#if>,
+                <#switch type>
+                    <#case "bar">type: 'bar'<#break>
+                    <#case "pie">type: 'pie'<#break>
+                    <#default>type: 'line'
+                </#switch>,
                 data: data,
                 options: options
             };

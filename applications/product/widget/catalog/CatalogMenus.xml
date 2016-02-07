@@ -36,7 +36,8 @@ under the License.
     </menu>
     <menu name="CatalogAppSideBar" title="${uiLabelMap.ProductCatalogManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
-        <menu-item name="menu" title="${uiLabelMap.CommonDashboard}" sort-mode="off"><link target="main"></link></menu-item> 
+        <!-- Already included in CommonSidebar 
+        <menu-item name="menu" title="${uiLabelMap.CommonDashboard}" sort-mode="off"><link target="main"></link></menu-item>--> 
         <menu-item name="catalogs" title="${uiLabelMap.ProductCatalogs}"><link target="FindCatalog"/></menu-item>
         <menu-item name="categories" title="${uiLabelMap.ProductCategories}"><link target="FindCategory"/></menu-item>
         <menu-item name="products" title="${uiLabelMap.ProductProducts}"><link target="FindProduct"/></menu-item>               

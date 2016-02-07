@@ -22,7 +22,7 @@ under the License.
     <menu name="ScrumAppBar" title="${uiLabelMap.ScrumApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="headerItem"> <!-- id="app-navigation" type="simple"
                 default-selected-style="${styles.menu_default_itemactive}" menu-container-style="button-bar tab-bar" default-menu-item-name="products" -->
-        <menu-item name="products" title="${uiLabelMap.ScrumProductBacklog}">
+        <menu-item name="main" title="${uiLabelMap.ScrumProductBacklog}" override-mode="replace" widget-style="${styles.menu_sidebar_itemdashboard}">
             <condition>
                 <if-service-permission service-name="scrumPermissionCheck" main-action="VIEW" resource-description="SCRUM"/>
             </condition>

@@ -1006,20 +1006,24 @@ Chart.js: http://www.chartjs.org/docs/ (customization through _charsjs.scss)
 
 <#-- @chart main markup - theme override -->
 <#macro chart_markup type="" chartLibrary="" title="" chartId="" xlabel="" ylabel="" label1="" label2="" chartIdNum=0 renderSeqNumber=0 origArgs={} passArgs={} catchArgs...>
+  <#local nestedContent><#nested /></#local>
   <#if chartLibrary=="foundation">
+    <#if nestedContent?has_content>
     <@row>
-      <@cell columns=3>    
+      <@cell columns=3>
         <ul data-${type!}-id="chart_${renderSeqNumber!}_${chartIdNum!}" class="${styles.chart_legend!}">
-          <#nested/>
-          <#--<#if !nestedContent?has_content><@chartdata value="0" title=""/></#if>-->
+            <#nested/>
         </ul>
       </@cell>
       <@cell columns=9><div id="chart_${renderSeqNumber!}_${chartIdNum!}" style="height:300px;"></div></@cell>
     </@row>
+    <#else>
+        <#-- Default to chart.js chart for now, as this is capable of rendering an empty chart -->
+        <@chart type=type library="chart" xlabel=xlabel ylabel=ylabel label1=label1 label2=label2>
+            <#nested>
+        </@chart>
+    </#if>
   <#else>
-    <#local nestedContent>
-        <#nested />
-    </#local>
     <#-- Get the number of datasets by inspecting the nested content (chartjs addData function values) -->
     <#if nestedContent?has_content>
         <#assign chartDatasets=chart_get_number_of_datasets(nestedContent, chartLibrary) />

@@ -386,6 +386,7 @@
         <value xml:lang="zh_TW">銷售</value>
     </property>
     <property key="AcctgTransType.description.SALES_INVOICE">
+        <value xml:lang="cs">Vystavená faktura</value>
         <value xml:lang="de">Rechnung</value>
         <value xml:lang="en">Sales Invoice</value>
         <value xml:lang="fr">Facture de vente</value>
@@ -4472,6 +4473,7 @@
         <value xml:lang="zh_TW">購物發票模板</value>
     </property>
     <property key="InvoiceType.description.SALES_INVOICE">
+        <value xml:lang="cs">Faktura - daňový doklad</value>
         <value xml:lang="de">Verkaufsrechnung</value>
         <value xml:lang="en">Sales Invoice</value>
         <value xml:lang="fr">Facture de vente</value>
@@ -4488,6 +4490,7 @@
         <value xml:lang="zh_TW">銷售發票</value>
     </property>
     <property key="InvoiceType.description.SALES_INV_TEMPLATE">
+        <value xml:lang="cs">Vzor faktury</value>
         <value xml:lang="de">Vorlage Verkaufsrechnung</value>
         <value xml:lang="en">Sales Invoice Template</value>
         <value xml:lang="fr">Modèle de facture de vente</value>
@@ -4514,6 +4517,7 @@
         <value xml:lang="zh_TW">發票模板</value>
     </property>
     <property key="PaymentMethodType.description.CASH">
+        <value xml:lang="cs">Hotově</value>
         <value xml:lang="de">Bargeld</value>
         <value xml:lang="en">Cash</value>
         <value xml:lang="fr">Espèces</value>
@@ -4594,6 +4598,7 @@
         <value xml:lang="zh_TW">信用卡</value>
     </property>
     <property key="PaymentMethodType.description.EFT_ACCOUNT">
+        <value xml:lang="cs">Bankovní převod</value>
         <value xml:lang="de">Elektronische Bezahlung</value>
         <value xml:lang="en">Electronic Funds Transfer</value>
         <value xml:lang="fr">Transfert de fonds électronique</value>
@@ -5053,7 +5058,7 @@
         <value xml:lang="en">Average Pay Rate</value>
         <value xml:lang="fr">Prix moyen</value>
         <value xml:lang="ja">平均支払レート</value>
-        <value xml:lang="nl">Gem. tarief</value>
+        <value xml:lang="nl">Tarief - gemiddeld</value>
         <value xml:lang="vi">Tỷ lệ thanh toán trung bình</value>
         <value xml:lang="zh">平均支付费率</value>
         <value xml:lang="zh_TW">平均支付費率</value>
@@ -5063,6 +5068,7 @@
         <value xml:lang="en">Discounted Rate</value>
         <value xml:lang="fr">Réduit</value>
         <value xml:lang="ja">割引レート</value>
+        <value xml:lang="nl">Tarief - met korting</value>
         <value xml:lang="vi">Tỷ lệ giảm giá</value>
         <value xml:lang="zh">贴现率</value>
         <value xml:lang="zh_TW">貼現率</value>
@@ -5072,6 +5078,7 @@
         <value xml:lang="en">Highest Pay Rate</value>
         <value xml:lang="fr">Prix haut</value>
         <value xml:lang="ja">最高支払レート</value>
+        <value xml:lang="nl">Tarief - hoogste</value>
         <value xml:lang="vi">Tỷ lệ thanh toán cao nhất</value>
         <value xml:lang="zh">最高支付费率</value>
         <value xml:lang="zh_TW">最高支付費率</value>
@@ -5081,6 +5088,7 @@
         <value xml:lang="en">Lowest Pay Rate</value>
         <value xml:lang="fr">Prix bas</value>
         <value xml:lang="ja">最低支払レート</value>
+        <value xml:lang="nl">Tarief - laagste</value>
         <value xml:lang="vi">Tỷ lệ thanh toán thấp nhất</value>
         <value xml:lang="zh">最低支付费率</value>
         <value xml:lang="zh_TW">最低支付費率</value>
@@ -5136,6 +5144,7 @@
         <value xml:lang="zh_TW">遺產稅豁免</value>
     </property>
     <property key="TaxAuthorityRateType.description.EXPORT_TAX">
+        <value xml:lang="cs">Exportní clo</value>
         <value xml:lang="de">Ausfuhrsteuer</value>
         <value xml:lang="en">Export Tax</value>
         <value xml:lang="fr">Taxes à l'exportation</value>
@@ -5152,6 +5161,7 @@
         <value xml:lang="zh_TW">出口稅</value>
     </property>
     <property key="TaxAuthorityRateType.description.IMPORT_TAX">
+        <value xml:lang="cs">Dovozní clo</value>
         <value xml:lang="de">Einfuhrzoll</value>
         <value xml:lang="en">Import Tax</value>
         <value xml:lang="fr">Taxes à l'importation</value>
@@ -5168,6 +5178,7 @@
         <value xml:lang="zh_TW">進口稅</value>
     </property>
     <property key="TaxAuthorityRateType.description.INCOME_TAX">
+        <value xml:lang="cs">Daň z příjmu</value>
         <value xml:lang="de">Einkommenssteuer</value>
         <value xml:lang="en">Income Tax</value>
         <value xml:lang="fr">Impôt sur le revenu</value>
@@ -5184,6 +5195,7 @@
         <value xml:lang="zh_TW">所得稅</value>
     </property>
     <property key="TaxAuthorityRateType.description.SALES_TAX">
+        <value xml:lang="cs">Sales Tax (US)</value>
         <value xml:lang="de">MwSt.</value>
         <value xml:lang="en">Sales Tax</value>
         <value xml:lang="es">Impuesto de ventas</value>
@@ -5201,6 +5213,7 @@
         <value xml:lang="zh_TW">營業稅</value>
     </property>
     <property key="TaxAuthorityRateType.description.USE_TAX">
+        <value xml:lang="cs">Use Tax (US)</value>
         <value xml:lang="de">Gebrauchssteuer</value>
         <value xml:lang="en">Use Tax</value>
         <value xml:lang="es">Impuesto de uso</value>

@@ -59,7 +59,8 @@ under the License.
     <menu name="CommonTabBarMenu" selected-menuitem-context-field-name="tabButtonItem" type="simple"
           menu-container-style="menu-tab" default-selected-style="${styles.menu_tab_itemactive}" default-link-style="${styles.menu_tab_item_link}"/>
     
-    <!-- Cato: New menu for sub-tar bars. -->
+    <!-- Cato: New menu for sub-tar bars. 
+        NOTE: I'm not sure if tabButtonItem is appropriate, but individual menus can always override... -->
     <menu name="CommonSubTabBarMenu" selected-menuitem-context-field-name="tabButtonItem" type="simple"
           menu-container-style="menu-tab" default-selected-style="${styles.menu_subtab_itemactive}" default-link-style="${styles.menu_subtab_item_link}"/>
 

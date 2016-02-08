@@ -230,9 +230,8 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="BlogArticleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-selected-style="${styles.menu_default_itemactive}" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
-        default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="tabButtonItem"
-        title="" type="simple">
+    <menu name="BlogArticleTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
+        default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" title="">
         <menu-item name="ListlogArt" title="${uiLabelMap.CommonList}">
             <link target="blogContent">
                 <parameter param-name="blogContentId" from-field="parameters.blogContentId"/>

@@ -22,6 +22,7 @@ under the License.
     * The widget attribute "selected" usually translates to "active" in styles hash/FTL/CSS terminology (where "selected" may mean something else).
       This is because there's only one highlight option for widgets and by convention the selected widget attrib should practically always be used to select the "active" menu item. 
     * menu-container-style is currently specially interpreted by htmlMenuMacroLibrary.ftl, and recognized plain "menu-xxx" style names are already mapped to "menu_xxx" entries in styles hash.
+    * The base class choice may affect more than only styling; may affect some functionality, such as choice of selected-menuitem-context-field-name.
     * See standard Cato global styles hash for other notes. -->
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
 

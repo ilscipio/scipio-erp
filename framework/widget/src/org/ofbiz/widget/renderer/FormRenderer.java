@@ -357,12 +357,6 @@ public class FormRenderer {
                 if ("".equals(modelFormFieldTitle)) {
                     continue;
                 }
-                
-                // Cato: Skip the rendering of the header if the field doesn't meet the use-when conditions
-                if (!modelFormField.shouldUse(context)) {
-                    continue;
-                }
-                
                 // don't do any header for hidden or ignored fields
                 if (fieldInfo.getFieldType() == FieldInfo.HIDDEN
                         || fieldInfo.getFieldType() == FieldInfo.IGNORED) {
@@ -472,7 +466,7 @@ public class FormRenderer {
                         Iterator<ModelFormField> innerFormFieldsIt = innerFormFields.iterator();
                         while (innerFormFieldsIt.hasNext()) {
                             ModelFormField modelFormField = innerFormFieldsIt.next();
-                          
+
                             if ((modelForm.getSeparateColumns() || modelFormField.getSeparateColumn()) && modelForm.getUseRowSubmit()) {
                                 formStringRenderer.renderFormatItemRowCellOpen(writer, context, modelForm, modelFormField, 1);
                             } else if (!modelForm.getUseRowSubmit()) {
@@ -495,7 +489,6 @@ public class FormRenderer {
                                             modelFormField, false);
                                 }
                             }
-                            
                         }
 //                        if (modelForm.getUseRowSubmit())
 //                            formStringRenderer.renderFormatHeaderRowFormCellClose(writer, context, modelForm);
@@ -922,14 +915,10 @@ public class FormRenderer {
                         }
 
                         // if this is a list or multi form don't skip here because we don't want to skip the table cell, will skip the actual field later
-                        // Cato: Actually that's precisely waht we want it, don't we?
-                        if (!"list".equals(modelForm.getType()) && !"multi".equals(modelForm.getType())) {
+                        if (!"list".equals(modelForm.getType()) && !"multi".equals(modelForm.getType())
+                                && !modelFormField.shouldUse(localContext)) {
                             continue;
                         }
-                        if (!modelFormField.shouldUse(localContext)) {
-                            continue;
-                        }
-                        
                         innerDisplayHyperlinkFieldsBegin.add(modelFormField);
                         currentPosition = modelFormField.getPosition();
                     }
@@ -953,12 +942,8 @@ public class FormRenderer {
                         }
 
                         // if this is a list or multi form don't skip here because we don't want to skip the table cell, will skip the actual field later
-                        // Cato: Actually that's precisely waht we want it, don't we?
                         if (!"list".equals(modelForm.getType()) && !"multi".equals(modelForm.getType())
                                 && !modelFormField.shouldUse(localContext)) {
-                            continue;
-                        }
-                        if (!modelFormField.shouldUse(localContext)) {
                             continue;
                         }
                         innerFormFields.add(modelFormField);
@@ -983,11 +968,8 @@ public class FormRenderer {
                         }
 
                         // if this is a list or multi form don't skip here because we don't want to skip the table cell, will skip the actual field later
-                        // Cato: Actually that's precisely waht we want it, don't we?
-                        if (!"list".equals(modelForm.getType()) && !"multi".equals(modelForm.getType())) {
-                            continue;
-                        }
-                        if (!modelFormField.shouldUse(localContext)) {
+                        if (!"list".equals(modelForm.getType()) && !"multi".equals(modelForm.getType())
+                                && !modelFormField.shouldUse(localContext)) {
                             continue;
                         }
                         innerDisplayHyperlinkFieldsEnd.add(modelFormField);

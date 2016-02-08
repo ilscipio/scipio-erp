@@ -43,6 +43,9 @@ under the License.
                             <widgets>
                                 <include-menu name="MarketingCampaignSideBar" location="component://marketing/widget/MarketingCampaignMenus.xml"/>
                             </widgets>
+                            <fail-widgets>
+                                <include-menu name="MarketingAppSideBar" location="component://marketing/widget/MarketingMenus.xml"/>
+                            </fail-widgets>
                         </section>
                     </decorator-section>
                     <decorator-section name="body">

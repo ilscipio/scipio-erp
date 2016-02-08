@@ -90,7 +90,7 @@ under the License.
     </form>
     <!-- UNUSED FORM
     <form name="FindTrackingCode" type="single" target="ListTrackingCode" title=""
-        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        header-row-style="header-row">
         <auto-fields-entity entity-name="TrackingCode"/>
     </form>
     -->

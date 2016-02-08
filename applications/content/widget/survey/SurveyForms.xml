@@ -171,7 +171,7 @@ under the License.
 
     <!-- UNUSED FORM
     <form name="ListSurveyQuestions" type="list" target="updateSurveyQuestion" title="" list-name="surveyQuestionList" list-entry-name="surveyQuestion"
-        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row">
         <auto-fields-service service-name="updateSurveyQuestion" map-name="surveyQuestion"/>
 
         <field name="surveyId"><hidden/></field>

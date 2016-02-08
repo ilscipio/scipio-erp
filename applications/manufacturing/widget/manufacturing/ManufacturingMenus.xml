@@ -77,7 +77,7 @@ under the License.
             <link target="ManufacturingReports"/>
         </menu-item>
     </menu>
-    <menu name="ManufacturingAppSideBar" title="${uiLabelMap.ManufacturingManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="ManufacturingAppSideBar" title="${uiLabelMap.ManufacturingManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
         <include-elements menu-name="ManufacturingAppBar" recursive="full" />
     </menu>

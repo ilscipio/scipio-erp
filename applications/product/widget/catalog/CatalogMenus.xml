@@ -34,7 +34,7 @@ under the License.
         <menu-item name="shipping" title="${uiLabelMap.ProductShipping}"><link target="ListShipmentMethodTypes"/></menu-item>
         <menu-item name="Imagemanagement" title="${uiLabelMap.ImageManagement}"><link target="Imagemanagement"/></menu-item>
     </menu>
-    <menu name="CatalogAppSideBar" title="${uiLabelMap.ProductCatalogManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="CatalogAppSideBar" title="${uiLabelMap.ProductCatalogManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
         <!-- Already included in CommonSidebar 
         <menu-item name="menu" title="${uiLabelMap.CommonDashboard}" sort-mode="off"><link target="main"></link></menu-item>--> 

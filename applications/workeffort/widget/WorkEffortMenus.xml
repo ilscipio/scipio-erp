@@ -31,7 +31,7 @@ under the License.
         <menu-item name="userJobs" title="${uiLabelMap.WorkEffortJobList}"><link target="UserJobs"/></menu-item>
         <menu-item name="WorkEffortICalendar" title="${uiLabelMap.WorkEffortICalendar}"><link target="FindICalendars"/></menu-item>
     </menu>
-    <menu name="WorkEffortAppSideBar" title="${uiLabelMap.WorkEffortManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="WorkEffortAppSideBar" title="${uiLabelMap.WorkEffortManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active" default-menu-item-name="task">
         <include-elements menu-name="WorkEffortAppBar" recursive="full" />
     </menu>

@@ -52,7 +52,7 @@
             <link target="requestlist"/>
         </menu-item>
     </menu>
-    <menu name="ProjectMgrAppSideBar" title="${uiLabelMap.ProjectMgr}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="ProjectMgrAppSideBar" title="${uiLabelMap.ProjectMgr}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
         <include-elements menu-name="ProjectMgrAppBar" recursive="full" />
     </menu>

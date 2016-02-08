@@ -24,7 +24,7 @@ under the License.
     <menu name="BirtAppBar" title="${uiLabelMap.BirtApplication}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
     </menu>
     
-    <menu name="BirtAppSideBar" title="${uiLabelMap.BirtApplication}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="BirtAppSideBar" title="${uiLabelMap.BirtApplication}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
           <include-elements menu-name="BirtAppBar" recursive="full" />
     </menu>

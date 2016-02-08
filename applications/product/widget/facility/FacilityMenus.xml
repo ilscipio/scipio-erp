@@ -42,7 +42,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="FacilityAppSideBar" title="${uiLabelMap.ProductFacilityManager}" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="FacilityAppSideBar" title="${uiLabelMap.ProductFacilityManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="active">
         <include-elements menu-name="FacilityAppBar" recursive="full" />
     </menu>

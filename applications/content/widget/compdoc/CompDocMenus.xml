@@ -20,20 +20,19 @@ under the License.
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
-    <menu name="empty" menu-container-style="button-bar tab-bar" default-menu-item-name="content" menu-width="100%"
-        default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
+    <menu name="empty" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="content" menu-width="100%"
+        default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName" title="">
     </menu>
 
-    <menu name="find" menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemactive}" default-menu-item-name="content"
-        default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
+    <menu name="find" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="content"
+        default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName" title="">
         <menu-item name="find" title="${uiLabelMap.CommonFind}">
             <link target="FindCompDocTemplate"/>
         </menu-item>
     </menu>
 
-
-    <menu name="tree" menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemactive}" default-menu-item-name="content"
-        selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
+    <menu name="tree" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="content"
+        selected-menuitem-context-field-name="currentMenuItemName" title="">
         <menu-item name="viewtree" title="${uiLabelMap.ContentCompDocViewTree}">
             <condition>
                 <or>
@@ -78,8 +77,8 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="subtree" menu-container-style="button-bar tab-bar" default-selected-style="${styles.menu_default_itemactive}" default-menu-item-name="content"
-        selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
+    <menu name="subtree" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="content"
+        selected-menuitem-context-field-name="currentMenuItemName" title="">
         <menu-item name="viewtree" title="${uiLabelMap.PageTitleViewCompDocTree}">
             <condition>
                 <or>

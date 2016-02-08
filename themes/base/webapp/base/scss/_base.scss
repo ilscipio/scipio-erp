@@ -58,6 +58,11 @@ input,select,text-area {max-width:50em;}
         box-shadow: 0 0 0 !important; }
         
     li {
+        &.disabled {
+            padding: $side-nav-link-padding;
+            color: $aluminum;
+            cursor: $input-disabled-cursor;
+        }
         &.dashboard {
             background-color: $white-smoke;
             border-bottom: 1px solid $gainsboro;

@@ -33,8 +33,7 @@ under the License.
         <menu-item name="reports" title="${uiLabelMap.AccountingReports}"><link target="listReports"/></menu-item>
     </menu>
     
-    <menu name="ApAppSideBar" title="${uiLabelMap.AccountingApManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="ApAppSideBar" title="${uiLabelMap.AccountingApManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ApAppBar" recursive="full" />
     </menu>
     
@@ -48,8 +47,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ApInvoiceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="ApInvoiceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ApInvoiceTabBar" recursive="includes-only" />
     </menu>
     
@@ -63,8 +61,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ApReportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="ApReportSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ApReportTabBar" recursive="includes-only" />
     </menu>
     

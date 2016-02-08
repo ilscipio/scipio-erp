@@ -76,7 +76,7 @@
     </menu>
 
     <menu name="AccountingAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu"
-        extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="active">
+        extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="AccountingAppBar" recursive="full" />
     </menu>
 
@@ -108,8 +108,7 @@
         </menu-item>
     </menu>
 
-    <menu name="AgreementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="AgreementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="AgreementTabBar" recursive="includes-only" />
     </menu>
 
@@ -380,8 +379,7 @@
         </menu-item>
     </menu>
 
-    <menu name="BillingAccountSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="BillingAccountSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="BillingAccountTabBar" recursive="includes-only" />
     </menu>
 
@@ -431,8 +429,7 @@
         </menu-item>
     </menu>
 
-    <menu name="BudgetSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="BudgetSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="BudgetTabBar" recursive="includes-only" />
     </menu>
 
@@ -549,8 +546,7 @@
         </menu-item>
     </menu>
 
-    <menu name="FinAccountSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="FinAccountSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="FinAccountTabBar" recursive="includes-only" />
     </menu>
 
@@ -584,8 +580,7 @@
         </menu-item>
     </menu>
 
-    <menu name="FinAccountMainSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="FinAccountMainSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="FinAccountMainTabBar" recursive="includes-only" />
     </menu>
 
@@ -650,8 +645,7 @@
         </menu-item>
     </menu>
 
-    <menu name="FixedAssetMaintSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="FixedAssetMaintSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="FixedAssetMainTabBar" recursive="includes-only" />
     </menu>
 
@@ -883,8 +877,7 @@
         </menu-item>
     </menu>
 
-    <menu name="InvoiceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="InvoiceSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="InvoiceTabBar" recursive="includes-only" />
     </menu>
 
@@ -1183,8 +1176,7 @@
         </menu-item>
     </menu>
     
-    <menu name="OrganizationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="OrganizationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="OrganizationTabBar" recursive="includes-only" />
     </menu>
     
@@ -1307,8 +1299,7 @@
         </menu-item>
     </menu>
 
-    <menu name="PartyTopSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="PartyTopSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="PartyTopTabBar" recursive="includes-only" />
     </menu>
 
@@ -1470,8 +1461,7 @@
         </menu-item>
     </menu>
 
-    <menu name="PaymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="PaymentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="PaymentTabBar" recursive="includes-only" />
     </menu>
 
@@ -1627,8 +1617,7 @@
         </menu-item>
     </menu>
 
-    <menu name="PaymentGroupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="PaymentGroupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="PaymentGroupTabBar" recursive="includes-only" />
     </menu>
 
@@ -1714,8 +1703,7 @@
         </menu-item>
     </menu>
 
-    <menu name="PaymentGatewayConfigSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="PaymentGatewayConfigSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="PaymentGatewayConfigTabBar" recursive="includes-only" />
     </menu>
 
@@ -1734,8 +1722,7 @@
         </menu-item>
     </menu>
 
-    <menu name="TransactionsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="TransactionsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="TransactionsTabBar" recursive="includes-only" />
     </menu>
 

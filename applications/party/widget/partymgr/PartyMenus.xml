@@ -37,8 +37,7 @@
         <menu-item name="partyinv" title="${uiLabelMap.PartyInvitation}"><link target="partyInvitation"/></menu-item>
         <menu-item name="importexport" title="${uiLabelMap.CommonImportExport}"><link target="ImportExport"/></menu-item>
     </menu>
-    <menu name="PartyAppSideBar" title="${uiLabelMap.PartyManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="PartyAppSideBar" title="${uiLabelMap.PartyManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="PartyAppBar" recursive="full" />
     </menu>
 
@@ -150,7 +149,7 @@
         </menu-item>
     </menu>
     <menu name="ProfileSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        default-menu-item-name="viewprofile" selected-menuitem-context-field-name="active">
+        default-menu-item-name="viewprofile">
         <include-elements menu-name="ProfileTabBar" recursive="includes-only" />
     </menu>
     
@@ -267,8 +266,7 @@
             </link>
         </menu-item>
     </menu>
-    <menu name="PartyInvitationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="PartyInvitationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="PartyInvitationTabBar" recursive="includes-only" />
     </menu>
 
@@ -598,8 +596,7 @@
             </link>
         </menu-item>
     </menu>
-    <menu name="CommEventSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="CommEventSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="CommEventTabBar" recursive="includes-only" />
     </menu>
     
@@ -733,8 +730,7 @@
         </menu-item>
     </menu>
     
-    <menu name="PartyClassificationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        selected-menuitem-context-field-name="active">
+    <menu name="PartyClassificationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="PartyClassificationTabBar" recursive="includes-only" />
     </menu>
 </menus>

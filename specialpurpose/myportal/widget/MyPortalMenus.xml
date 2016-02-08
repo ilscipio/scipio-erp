@@ -30,8 +30,7 @@ under the License.
         </menu-item>
     </menu>
     <menu name="MyPortalAppSideBar" title="${uiLabelMap.PageTitleMyPortal}"
-        extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+        extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="MyPortalAppBar" recursive="full" />
     </menu>
 </menus>

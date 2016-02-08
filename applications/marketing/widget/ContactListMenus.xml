@@ -49,8 +49,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ContactListSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="ContactListSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ContactListTabBar" recursive="includes-only" />
     </menu>
     

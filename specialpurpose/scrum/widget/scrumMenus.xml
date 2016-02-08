@@ -78,8 +78,7 @@ under the License.
             </link>
         </menu-item>
     </menu>
-    <menu name="ScrumAppSideBar" title="${uiLabelMap.ScrumApplication}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="ScrumAppSideBar" title="${uiLabelMap.ScrumApplication}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ScrumAppBar" recursive="full" />
     </menu>
     

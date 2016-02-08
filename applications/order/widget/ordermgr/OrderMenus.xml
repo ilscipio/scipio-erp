@@ -99,8 +99,7 @@ under the License.
             <link target="orderstats"/>
         </menu-item>
     </menu>
-    <menu name="OrderAppSideBar" title="${uiLabelMap.OrderManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="OrderAppSideBar" title="${uiLabelMap.OrderManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="OrderAppBar" recursive="full" />
     </menu>
 
@@ -128,8 +127,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="OrderSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="OrderSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="OrderTabBar" recursive="includes-only" />
     </menu>
     
@@ -266,8 +264,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="RequirementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="RequirementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="RequirementTabBar" recursive="includes-only" />
     </menu>
     
@@ -327,8 +324,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="RequestSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="RequestSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="RequestTabBar" recursive="includes-only" />
     </menu>
     
@@ -375,8 +371,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ReturnSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="ReturnSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ReturnTabBar" recursive="includes-only" />
     </menu>
     

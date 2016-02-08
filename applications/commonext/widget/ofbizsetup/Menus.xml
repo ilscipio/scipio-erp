@@ -28,8 +28,7 @@
             <link target="EntityExportAll"/>
         </menu-item>
     </menu>
-    <menu name="SetupAppSideBar" title="${uiLabelMap.SetupApp}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="SetupAppSideBar" title="${uiLabelMap.SetupApp}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="SetupAppBar" recursive="full" />
     </menu>
     
@@ -81,8 +80,7 @@
         </menu-item>
     </menu>
     
-    <menu name="SetupSubSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="SetupSubSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="SetupSubTabBar" recursive="includes-only" />
     </menu>
     

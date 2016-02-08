@@ -32,8 +32,7 @@ under the License.
         <menu-item name="CMS" title="${uiLabelMap.ContentCMS}"><link target="CMSContentFind"/></menu-item>
         <menu-item name="CompDoc" title="${uiLabelMap.ContentCompDoc}"><link target="FindCompDoc"/></menu-item>
     </menu>
-    <menu name="ContentAppSideBar" title="${uiLabelMap.ContentContentManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="ContentAppSideBar" title="${uiLabelMap.ContentContentManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ContentAppBar" recursive="full" />
     </menu>
 
@@ -116,8 +115,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ContentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="ContentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ContentTabBar" recursive="includes-only" />
     </menu>
     
@@ -185,8 +183,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="WebSiteSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="WebSiteSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="WebSiteButtonBar" recursive="includes-only" />
     </menu>
     
@@ -213,8 +210,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="BlogSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="BlogSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="BlogButtonBar" recursive="includes-only" />
     </menu>
     
@@ -280,8 +276,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ContentTopSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="ContentTopSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ContentTopButtonBar" recursive="includes-only" />
     </menu>
     

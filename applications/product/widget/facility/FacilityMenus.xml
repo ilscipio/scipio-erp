@@ -42,8 +42,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="FacilityAppSideBar" title="${uiLabelMap.ProductFacilityManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="FacilityAppSideBar" title="${uiLabelMap.ProductFacilityManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="FacilityAppBar" recursive="full" />
     </menu>
     
@@ -243,8 +242,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ShipmentGatewayConfigSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="ShipmentGatewayConfigSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ShipmentGatewayConfigTabBar" recursive="includes-only" />
     </menu>
     
@@ -309,8 +307,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="FacilityGroupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="FacilityGroupSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="FacilityGroupTabBar" recursive="includes-only" />
     </menu>
     

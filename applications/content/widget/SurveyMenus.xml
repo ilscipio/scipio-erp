@@ -48,8 +48,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="SurveySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="active">
+    <menu name="SurveySideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="SurveyTabBar" recursive="includes-only" />
     </menu>
     

@@ -110,7 +110,7 @@ under the License.
     </form>
     <!-- UNUSED FORM
     <form name="ReturnItems" type="multi" list-name="orderItems" target="createReturnItem"
-        odd-row-style="alternate-row"> <!-- orig: default-table-style=-style="basic-table hover-bar" -->
+        odd-row-style="alternate-row"> 
         <auto-fields-service service-name="createReturnItem"/>
         <field name="itemDescription"><display/></field>
         <field name="returnId"><hidden/></field>

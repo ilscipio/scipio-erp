@@ -53,7 +53,8 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
       <#local remStyle = removeStyleNames(style, "menu-tab")>
       <#local classes = joinStyleNames(styles.menu_tab!, remStyle)>
     <#elseif styleSet.contains("button-bar")>
-      <#local remStyle = removeStyleNames(style, ["button-bar", "no-clear"])>
+      <#-- NOTE (2016-02-08): There should be no more "button-bar" style left in *Menus.xml... should all go through CommonButtonBarMenu (menu-button) or alternative base menu -->
+      <#local remStyle = removeStyleNames(style, ["button-bar"])> <#-- ["button-bar", "no-clear"] -->
       <#-- right now translating button-bar menu-container-style here to avoid modifying all menu styles
            note: in stock, button-bar usually accompanied by one of: button-style-2, tab-bar; also found: no-clear (removed above) -->
       <#-- WARN: stock ofbiz usually applied styles to a containing div, 

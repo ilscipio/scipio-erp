@@ -114,8 +114,8 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="rootTemplateLine" menu-container-style="button-bar button-style-1" default-menu-item-name="content"
-        selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
+    <menu name="rootTemplateLine" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+button-style-1" default-menu-item-name="content"
+        selected-menuitem-context-field-name="currentMenuItemName" title="">
         <menu-item name="edit-inplace" title="${contentName}[${contentId}]" widget-style="+h2">
             <link target="EditRootCompDoc">
                 <parameter param-name="rootContentId"/>
@@ -161,7 +161,7 @@ under the License.
             -->
     </menu>
 
-    <menu extra-index="${contentId}" name="childTemplateLine" menu-container-style="button-bar button-style-1" default-menu-item-name="content" selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
+    <menu extra-index="${contentId}" name="childTemplateLine" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+button-style-1" default-menu-item-name="content" selected-menuitem-context-field-name="currentMenuItemName" title="">
         <menu-item name="edit-inplace" title="${contentName} [${contentId}]">
             <link target="EditChildCompDoc">
                 <parameter param-name="contentId"/>
@@ -244,7 +244,7 @@ under the License.
         </menu-item>
     </menu>
 
-    <menu name="rootInstanceLine" menu-container-style="button-bar button-style-1" default-menu-item-name="content" selected-menuitem-context-field-name="currentMenuItemName" title="" type="simple">
+    <menu name="rootInstanceLine" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+button-style-1" default-menu-item-name="content" selected-menuitem-context-field-name="currentMenuItemName" title="">
         <menu-item name="edit-inplace" title="${instanceContent.contentName}[${instanceContent.contentId}]"  widget-style="+h2">
             <link target="EditRootCompDoc">
                 <parameter param-name="rootContentId"/>

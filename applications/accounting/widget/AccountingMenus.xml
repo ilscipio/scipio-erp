@@ -113,7 +113,7 @@
     </menu>
 
     <menu name="AgreementSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="button-bar button-style-2">
+        menu-container-style="+button-style-2">
         <!-- 
         <menu-item name="NewAgreement" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonAgreement}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditAgreement">
@@ -281,7 +281,7 @@
     </menu>
 
     <menu name="AgreementItemSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="button-bar button-style-2">
+        menu-container-style="+button-style-2">
         <menu-item name="NewItem" title="${uiLabelMap.CommonNew} ${uiLabelMap.CommonItem}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditAgreementItem">
                 <parameter param-name="agreementId" from-field="agreement.agreementId" />
@@ -434,7 +434,7 @@
     </menu>
 
     <menu name="BudgetSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="button-bar button-style-2">
+        menu-container-style="+button-style-2">
         <menu-item name="EditBudget" title="${uiLabelMap.CommonEdit}">
             <condition>
                 <and>
@@ -550,7 +550,7 @@
         <include-elements menu-name="FinAccountTabBar" recursive="includes-only" />
     </menu>
 
-    <menu name="FinAccountSubTabBar" menu-container-style="button-bar button-style-2" extends="CommonTabBarMenu"
+    <menu name="FinAccountSubTabBar" menu-container-style="+button-style-2" extends="CommonTabBarMenu"
         extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="createNew" title="${uiLabelMap.CommonNew} ${uiLabelMap.AccountingFinAccount}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditFinAccount" />
@@ -882,7 +882,7 @@
     </menu>
 
     <menu name="InvoiceSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="button-bar button-style-2">
+        menu-container-style="+button-style-2">
         <menu-item name="createNew" title="${uiLabelMap.AccountingCreateNewInvoice}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="newInvoice" />
         </menu-item>
@@ -1128,7 +1128,7 @@
     </menu>
 
     <menu name="OrganizationSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="button-bar button-style-2">
+        menu-container-style="+button-style-2">
         <menu-item name="addCompany" title="${uiLabelMap.AccountingNewCompany}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <if-compare field="hasPrefPermission" operator="equals" value="true" type="Boolean" />
@@ -1240,7 +1240,7 @@
     </menu>
 
     <menu name="PartyGlShortCuts" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="button-bar button-style-2">
+        menu-container-style="+button-style-2">
         <menu-item name="CreateSalesAcctgTrans">
             <link target="CreateAcctgTransAndEntries" text="${uiLabelMap.AccountingCreateSalesAcctgTrans}">
                 <parameter param-name="organizationPartyId" />
@@ -1466,7 +1466,7 @@
     </menu>
 
     <menu name="PaymentSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="button-bar button-style-2">
+        menu-container-style="+button-style-2">
         <actions>
             <set field="isDisbursement" value="${groovy:if(payment!=void)return org.ofbiz.accounting.util.UtilAccounting.isDisbursement(payment)}" />
         </actions>
@@ -1622,7 +1622,7 @@
     </menu>
 
     <menu name="PaymentGroupSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="button-bar button-style-2">
+        menu-container-style="+button-style-2">
         <menu-item name="createNew" title="${uiLabelMap.AccountingCreateNewPaymentGroup}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <not>

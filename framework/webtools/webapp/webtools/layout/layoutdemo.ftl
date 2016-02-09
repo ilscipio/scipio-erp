@@ -170,9 +170,9 @@
 </@section>
 
 <@section>
-    <@heading attribs=makeMagTargetAttribMap("charts") id="charts">Charts</@heading>
+    <@heading attribs=makeMagTargetAttribMap("charts") id="charts" level=2>Charts</@heading>
+    <@heading level=3>Foundation</@heading>
     <@row>
-        <@heading>Foundation</@heading>
         <@cell columns="4">
             <@chart type="pie" library="foundation">
                 <@chartdata value="36" title="Peperoni"/>
@@ -201,8 +201,8 @@
             </@chart>
         </@cell>
     </@row>
+    <@heading level=3>Chart.js (default)</@heading>
     <@row>
-        <@heading>Chart.js</@heading>
         <@cell columns="4">
             <@chart type="pie" library="chart" label1="Number" label2="Item">
                 <@chartdata value="36" title="Peperoni"/>

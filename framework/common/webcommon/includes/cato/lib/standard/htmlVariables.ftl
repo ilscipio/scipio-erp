@@ -210,6 +210,7 @@
     <#-- Misc menu styles -->
     "menu_subappitem" : "subappitem",
     "menu_subappitem_link" : "subapplink",
+    "menu_noclear" : "menu-no-clear",       <#-- A remnant from stock Ofbiz menu widgets, some of which label with a "no-clear" style -->
     
   <#-- Data and Tables 
     NOTES:

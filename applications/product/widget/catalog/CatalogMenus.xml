@@ -635,7 +635,7 @@ under the License.
     
 
     <menu name="ImageManagementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-           selected-menuitem-context-field-name="userTabButtonImage" menu-container-style="+button-style-2 no-clear">
+           selected-menuitem-context-field-name="userTabButtonImage" menu-container-style="+button-style-2 ${styles.menu_noclear}">
         <menu-item name="main" title="${uiLabelMap.CommonMain}" sort-mode="off">
             <condition>
                 <if-has-permission permission="IMAGE_MANAGEMENT_ADMIN"/>

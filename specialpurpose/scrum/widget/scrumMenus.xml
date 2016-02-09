@@ -178,7 +178,7 @@ under the License.
     </menu>
     
     <menu name="SprintSubMenu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="+button-style-2">
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="AddSprintBacklog" title="${uiLabelMap.ScrumAddSprintBacklog}">
             <condition>
                <and>
@@ -504,7 +504,7 @@ under the License.
     </menu>
     
     <menu name="ProductBackLogItemStatusTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          menu-container-style="+button-style-2">
+          menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="addProdBacklog" title="${uiLabelMap.ScrumNewBacklogItem}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
@@ -640,7 +640,7 @@ under the License.
     </menu>
     
     <menu name="ProductSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          menu-container-style="+button-style-2">
+          menu-container-style="+${styles.menu_buttonstyle_alt2}">
           <actions>
             <set field="productId" from-field="parameters.productId"/>
             <set field="hasViewPermission" value="${bsh:
@@ -870,7 +870,7 @@ under the License.
     </menu>
     
     <menu name="TaskSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          menu-container-style="+button-style-2">
+          menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="new" title="${uiLabelMap.CommonNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
@@ -957,7 +957,7 @@ under the License.
     </menu>
     
     <menu name="ProjectSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          menu-container-style="+button-style-2">
+          menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="AddSprint" title="${uiLabelMap.ScrumNewSprint}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <and>
@@ -1092,7 +1092,7 @@ under the License.
         </menu-item>
     </menu>
     <menu name="ProductBacklogEmailTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          menu-container-style="+button-style-2">
+          menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="NewEmail" title="${uiLabelMap.ScrumNewEmail}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                     <if-service-permission service-name="scrumPermissionCheck" main-action="UPDATE" resource-description="TASK"/>

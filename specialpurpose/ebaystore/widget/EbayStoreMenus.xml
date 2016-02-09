@@ -26,7 +26,7 @@
     </menu>
     
     <menu name="EbaySubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="+button-style-2">
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="NewEbayAccount" title="New Ebay Account" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="newEbayAccount"/>
         </menu-item>
@@ -139,7 +139,7 @@
     </menu> 
     
     <menu name="EbayFeedbackTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" selected-menuitem-context-field-name="feedbackItem" 
-        menu-container-style="+button-style-2">
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="Feedback">
             <condition>
                 <not><if-empty  field="parameters.productStoreId"/></not>
@@ -158,7 +158,7 @@
         </menu-item>
     </menu>
     <menu name="EbayFeedbackSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="+button-style-2" selected-menuitem-context-field-name="role">
+        menu-container-style="+${styles.menu_buttonstyle_alt2}" selected-menuitem-context-field-name="role">
         <menu-item name="all" title="${uiLabelMap.CommonAll}">
             <link target="LeaveFeedback">
                 <parameter param-name="productStoreId" value="${parameters.productStoreId}"/>
@@ -178,7 +178,7 @@
             </link>
         </menu-item>
     </menu>
-    <menu name="EbayOrderSubBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+button-style-2" selected-menuitem-context-field-name="role">
+    <menu name="EbayOrderSubBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+${styles.menu_buttonstyle_alt2}" selected-menuitem-context-field-name="role">
         <menu-item name="SelectTransaction" title="${uiLabelMap.EbayStoreStoreSelectTransaction}">
             <link target="OrderListing">
                 <parameter param-name="formSelect" value="transaction"/>

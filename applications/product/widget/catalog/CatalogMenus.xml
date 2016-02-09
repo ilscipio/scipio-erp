@@ -75,7 +75,7 @@ under the License.
     </menu>
     
     <menu name="CatalogSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="+button-style-2">
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="EditProductCatalog" title="${uiLabelMap.ProductNewProdCatalog}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditProdCatalog"/>
         </menu-item>
@@ -174,7 +174,7 @@ under the License.
     </menu>
 
     <menu name="CategorySubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="+button-style-2">
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="EditCategory" title="${uiLabelMap.ProductNewCategory}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditCategory"/>
         </menu-item>
@@ -299,7 +299,7 @@ under the License.
     </menu>
     
     <menu name="ProductStoreSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="+button-style-2">
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="Expand" title="${uiLabelMap.CommonExpandAll}" widget-style="+${styles.action_run_local} ${styles.action_show}">
             <condition>
                 <or>
@@ -558,7 +558,7 @@ under the License.
 
 <!-- Deprecated - replaced by component://product/webapp/catalog/menu/ProductSubTabBar.ftl -->
     <menu name="ProductSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-        menu-container-style="+button-style-2">
+        menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="EditProduct" title="${uiLabelMap.ProductNewProduct}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditProduct"/>
         </menu-item>
@@ -635,7 +635,7 @@ under the License.
     
 
     <menu name="ImageManagementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-           selected-menuitem-context-field-name="userTabButtonImage" menu-container-style="+button-style-2 ${styles.menu_noclear}">
+           selected-menuitem-context-field-name="userTabButtonImage" menu-container-style="+${styles.menu_buttonstyle_alt2} ${styles.menu_noclear}">
         <menu-item name="main" title="${uiLabelMap.CommonMain}" sort-mode="off">
             <condition>
                 <if-has-permission permission="IMAGE_MANAGEMENT_ADMIN"/>

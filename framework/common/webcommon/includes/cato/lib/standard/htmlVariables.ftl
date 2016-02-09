@@ -210,7 +210,9 @@
     <#-- Misc menu styles -->
     "menu_subappitem" : "subappitem",
     "menu_subappitem_link" : "subapplink",
-    "menu_noclear" : "menu-no-clear",       <#-- A remnant from stock Ofbiz menu widgets, some of which label with a "no-clear" style -->
+    "menu_buttonstyle_alt1" : "button-style-1",         <#-- stock Ofbiz remnant, "button-style-1" in originals -->
+    "menu_buttonstyle_alt2" : "button-style-2",         <#-- stock Ofbiz remnant, "button-style-2" in originals -->
+    "menu_noclear" : "menu-no-clear",                   <#-- A remnant from stock Ofbiz menu widgets, some of which label with a "no-clear" style -->
     
   <#-- Data and Tables 
     NOTES:

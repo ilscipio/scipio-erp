@@ -118,7 +118,7 @@ under the License.
         <include-elements menu-name="ContentTabBar" recursive="includes-only" />
     </menu>
     
-    <menu name="ContentSubButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+button-style-2" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
+    <menu name="ContentSubButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+${styles.menu_buttonstyle_alt2}" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName" 
         title="">
         <menu-item name="NewContent" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
@@ -253,7 +253,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="BlogArticleButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+button-style-2" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
+    <menu name="BlogArticleButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+${styles.menu_buttonstyle_alt2}" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" selected-menuitem-context-field-name="currentMenuItemName"
         title="">
         <menu-item name="NewBlogArticle" title="${uiLabelMap.ContentCreateNewBlogArticle}" widget-style="+${styles.action_nav} ${styles.action_add}">
@@ -284,7 +284,7 @@ under the License.
             <link target="showHelp?helpTopic=navigateHelp"/>
         </menu-item>
     </menu>
-    <menu name="contentMenu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+button-style-2">
+    <menu name="contentMenu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="EditContent" title="${uiLabelMap.CommonCreateNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditContent"/>
         </menu-item>
@@ -295,7 +295,7 @@ under the License.
             <link target="updateContentAllKeywords"/>
         </menu-item>
     </menu>
-    <menu name="websiteMenu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+button-style-2">
+    <menu name="websiteMenu" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="EditWebSite" title="${uiLabelMap.ContentCreateNewWebSite}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="EditWebSite"/>
         </menu-item>

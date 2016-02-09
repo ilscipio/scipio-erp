@@ -411,7 +411,7 @@
     </menu>
     
     <menu name="TaskSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          menu-container-style="+button-style-2">
+          menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="new" title="${uiLabelMap.CommonNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <condition>
                 <or>
@@ -481,7 +481,7 @@
         </menu-item>
     </menu>
     <menu name="TimesheetSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          menu-container-style="+button-style-2" default-menu-item-name="StatustoProgress">
+          menu-container-style="+${styles.menu_buttonstyle_alt2}" default-menu-item-name="StatustoProgress">
         <menu-item name="addTimesheet" title="${uiLabelMap.CommonNew}" widget-style="+${styles.action_nav} ${styles.action_add}">
             <link target="addWeeklyTimesheet"/>
         </menu-item>
@@ -512,7 +512,7 @@
     </menu>
     
     <menu name="MyTimeSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          menu-container-style="+button-style-2">
+          menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="TimeSheetStatusToComplete" title="${uiLabelMap.CommonStatustoComplete}" widget-style="+${styles.action_run_sys} ${styles.action_complete}">
             <condition>
                 <and>
@@ -614,7 +614,7 @@
         </menu-item>
     </menu>
     <menu name="RequestSubTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          menu-container-style="+button-style-2">
+          menu-container-style="+${styles.menu_buttonstyle_alt2}">
         <menu-item name="cancelledRequest" title="${uiLabelMap.CommonCancel} ${uiLabelMap.OrderRequest}" >
             <condition>
                 <and>

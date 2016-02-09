@@ -46,10 +46,10 @@ under the License.
                 <parameter param-name="invoiceId"/>
             </hyperlink>
         </field>
-        <field name="invoiceTypeId" title="${uiLabelMap.CommonType}" use-when="isReduced==false"><display-entity entity-name="InvoiceType"/></field>
+        <!--<field name="invoiceTypeId" title="${uiLabelMap.CommonType}" use-when="isReduced==false"><display-entity entity-name="InvoiceType"/></field> -->
         <field name="invoiceDate"><display type="date"/></field>
         <field name="statusId" title="${uiLabelMap.CommonStatus}" use-when="isReduced==false"><display-entity entity-name="StatusItem"/></field>
-        <field name="description" use-when="isReduced==false"><display/></field>
+        <!--<field name="description" use-when="isReduced==false"><display/></field> -->
         <field name="partyIdFrom" use-when="isReduced==false" widget-style="${styles.link_nav_info_idname} ${styles.action_view}">
             <hyperlink target="/partymgr/control/viewprofile" description="${partyNameResultFrom.fullName} [${partyIdFrom}]" target-type="inter-app">
                 <parameter param-name="partyId" from-field="partyIdFrom"/>

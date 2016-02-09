@@ -22,9 +22,9 @@ under the License.
 <@row>
   <@cell class="${styles.grid_large!}10 ${styles.grid_large!}centered" last=true id="error">
   <@section>
-    <@heading level=1><i class="${styles.icon!} ${styles.icon_error!}" style="font-size: 4rem;"></i> ${label('PageTitleError')!}</@heading>
+    <@heading level=1><i class="${styles.icon!} ${styles.icon_error!}" style="font-size: 4rem;"></i> ${getLabel('PageTitleError')!}</@heading>
 
-        ${label('CommonFollowingErrorsOccurred')}
+        ${getLabel('CommonFollowingErrorsOccurred')}
         <#if errorMessage?has_content>
                         ${StringUtil.wrapString(errorMessage)}
         </#if>

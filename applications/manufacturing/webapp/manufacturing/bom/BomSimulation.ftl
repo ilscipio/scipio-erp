@@ -36,7 +36,7 @@ under the License.
          <p>${selectedFeature.productFeatureTypeId} = ${selectedFeature.description!} [${selectedFeature.productFeatureId}]</p>
        </#list>
      </#if>
-    <@section title=label("ContentTree", "ContentUiLabels")>
+    <@section title=getLabel("ContentTree", "ContentUiLabels")>
     <#if tree?has_content>
       <@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
        <@thead>

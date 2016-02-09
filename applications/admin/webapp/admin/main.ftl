@@ -26,10 +26,10 @@ under the License.
         <#if thisApp != "/">
           <#assign thisURL = thisURL + "main">
         </#if>
-        <#assign tileIcon ="${label('AdminTileIcon'+display.name)!}"/>
-        <#assign tileBackground = "${label('AdminTileBackground'+display.name)!}"/>
+        <#assign tileIcon ="${getLabel('AdminTileIcon'+display.name)!}"/>
+        <#assign tileBackground = "${getLabel('AdminTileBackground'+display.name)!}"/>
         <@tile size="large" color=color title="${display.title}" link="${thisURL!}?${StringUtil.wrapString(externalKeyParam)!}" icon="${tileIcon!}" image="${tileBackground!}"><#rt>
-            <#if label(display.description)?has_content && uiLabelMap[display.description]!=uiLabelMap[display.title]>${label(display.description)}</#if><#t>
+            <#if getLabel(display.description)?has_content && uiLabelMap[display.description]!=uiLabelMap[display.title]>${getLabel(display.description)}</#if><#t>
         </@tile><#lt>
         <#if color+1 gt 8>
             <#assign color = 0/>

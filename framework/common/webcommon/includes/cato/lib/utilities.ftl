@@ -104,7 +104,7 @@ Returns empty string if no label is found
                       usually uiLabelMap preferred but sometimes not worth importing
                       a whole file for one label. 
 -->
-<#function label name resource="">
+<#function getLabel name resource="">
   <#if name?has_content>
     <#local var=uiLabelMap[name]!"" />
     <#if var!=name>

@@ -406,6 +406,10 @@ under the License.
 
     <screen name="main">
         <section>
+            <actions>
+                <set field="headerItem" value="main"/>
+                <set field="tabButtonItem" from-field="headerItem"/>
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">

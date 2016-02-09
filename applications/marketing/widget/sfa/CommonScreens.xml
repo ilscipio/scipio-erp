@@ -69,6 +69,7 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" from-field="parameters.headerItem" default-value="main"/>
+                <set field="tabButtonItem" from-field="headerItem"/>
                 <set field="removeAccountDescription" value="${groovy:session.removeAttribute(&quot;accountDescription&quot;)}"/>
                 <set field="removeContactDescription" value="${groovy:session.removeAttribute(&quot;contactDescription&quot;)}"/>
                 <set field="removeLeadDescription" value="${groovy:session.removeAttribute(&quot;leadDescription&quot;)}"/>

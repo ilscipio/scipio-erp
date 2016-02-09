@@ -280,7 +280,8 @@ under the License.
             the user. -->
         <section>
             <actions>
-                <set field="tabButtonItem" value="main"/>
+                <set field="headerItem" value="main"/>
+                <set field="tabButtonItem" from-field="headerItem"/>
             </actions>
             <widgets>
                  <include-screen name="FindExample" location="component://example/widget/example/ExampleScreens.xml"/>

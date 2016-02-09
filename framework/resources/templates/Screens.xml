@@ -6,6 +6,7 @@
         <section>
             <actions>
                 <set field="headerItem" value="main"/><!-- this highlights the selected menu-item with name "main" -->
+                <set field="tabButtonItem" from-field="headerItem"/>
             </actions>
             <widgets>
                 <decorator-screen name="@component-resource-name@CommonDecorator" location="${parameters.mainDecoratorLocation}">

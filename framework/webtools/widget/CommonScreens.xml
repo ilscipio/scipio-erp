@@ -76,6 +76,7 @@ under the License.
             <actions>
                 <set field="titleProperty" value="WebtoolsMainPage"/>
                 <set field="headerItem" value="main"/>
+                <set field="tabButtonItem" from-field="headerItem"/>
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

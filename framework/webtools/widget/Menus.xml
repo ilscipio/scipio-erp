@@ -20,6 +20,7 @@ under the License.
 
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-menu.xsd">
     <menu name="WebtoolsAppBar" title="${uiLabelMap.FrameworkWebTools}" extends="CommonAppBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <!-- ToDo: Remove in favor of "Server" menu
         <menu-item name="logging" title="${uiLabelMap.WebtoolsLogging}">
             <link target="LogView"/>
         </menu-item>
@@ -28,6 +29,22 @@ under the License.
         </menu-item>
         <menu-item name="artifact" title="${uiLabelMap.WebtoolsArtifactInfo}">
             <link target="ViewComponents"/>
+        </menu-item>
+        <menu-item name="security" title="${uiLabelMap.CommonSecurity}">
+            <condition>
+                <if-service-permission service-name="securityPermissionCheck" main-action="VIEW"/>
+            </condition>
+            <link target="security"/>
+        </menu-item>
+         <menu-item name="stats" title="${uiLabelMap.WebtoolsStatistics}">
+            <link target="StatsSinceStart"/>
+        </menu-item>
+        <menu-item name="configuration" title="${uiLabelMap.WebtoolsCertsX509}">
+            <link target="myCertificates"/>
+        </menu-item>
+         -->
+        <menu-item name="server" title="${uiLabelMap.WebtoolsServer}">
+            <link target="server"/>
         </menu-item>
         <menu-item name="entity" title="${uiLabelMap.WebtoolsEntityEngine}">
             <link target="entitymaint"/>
@@ -41,24 +58,12 @@ under the License.
         <menu-item name="importExport" title="${uiLabelMap.WebtoolsImportExport}">
             <link target="xmldsdump"/>
         </menu-item>
-        <menu-item name="stats" title="${uiLabelMap.WebtoolsStatistics}">
-            <link target="StatsSinceStart"/>
-        </menu-item>
-        <menu-item name="configuration" title="${uiLabelMap.WebtoolsCertsX509}">
-            <link target="myCertificates"/>
-        </menu-item>
         <menu-item name="geoManagement" title="${uiLabelMap.WebtoolsGeoManagement}">
             <link target="FindGeo"/>
         </menu-item>        
         <menu-item name="portalAdmin" title="${uiLabelMap.WebtoolsAdminPortalPage}">
             <condition><if-has-permission permission="PORTALPAGE_ADMIN"/></condition>
             <link target="FindPortalPage"/>
-        </menu-item>
-        <menu-item name="security" title="${uiLabelMap.CommonSecurity}">
-            <condition>
-                <if-service-permission service-name="securityPermissionCheck" main-action="VIEW"/>
-            </condition>
-            <link target="security"/>
         </menu-item>
         <menu-item name="LayoutDemo" title="${uiLabelMap.WebtoolsLayoutDemo}">
             <link target="WebtoolsLayoutDemo" />
@@ -122,6 +127,11 @@ under the License.
         <menu-item name="serviceList" title="${uiLabelMap.WebtoolsServiceReference}">
             <link target="ServiceList"/>
         </menu-item>
+        <!-- ToDo: Taken over from LogView. Can probably be safely removed entirely.
+        <menu-item name="serviceLog" title="${uiLabelMap.WebtoolsServiceLog}">
+            <link target="ServiceLog"/>
+        </menu-item>
+         -->
         <menu-item name="findJob" title="${uiLabelMap.WebtoolsJobList}">
             <link target="FindJob"/>
         </menu-item>
@@ -140,31 +150,58 @@ under the License.
         <include-elements menu-name="serviceTabBar" recursive="includes-only" />
     </menu>
 
-    <menu name="LoggingTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="logView" title="${uiLabelMap.WebtoolsViewLog}">
+    
+    <!-- CATO: new Sidebar menu. Includes LogView, Cache Maintenance, Statistics, Certificates -->
+    <menu name="ServerSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem">
+        <include-elements menu-name="ServerTabBar" recursive="includes-only" />
+    </menu>
+    <menu name="ServerTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem">
+        <menu-item name="logging" title="${uiLabelMap.WebtoolsLogging}">
             <link target="LogView"/>
         </menu-item>
-        <menu-item name="serviceLog" title="${uiLabelMap.WebtoolsServiceLog}">
-            <link target="ServiceLog"/>
+        <menu-item name="cache" title="${uiLabelMap.WebtoolsCacheMaintenance}">
+            <link target="FindUtilCache"/>
         </menu-item>
-        <menu-item name="logConfiguration" title="${uiLabelMap.PageTitleLogConfiguration}">
-            <link target="LogConfiguration"/>
+        <menu-item name="artifact" title="${uiLabelMap.WebtoolsArtifactInfo}">
+            <link target="ViewComponents"/>
         </menu-item>
-    </menu>
-    <menu name="LoggingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-elements menu-name="LoggingTabBar" recursive="includes-only" />
+        <menu-item name="security" title="${uiLabelMap.CommonSecurity}">
+            <condition>
+                <if-service-permission service-name="securityPermissionCheck" main-action="VIEW"/>
+            </condition>
+            <link target="security"/>
+        </menu-item>
+         <menu-item name="stats" title="${uiLabelMap.WebtoolsStatistics}">
+            <link target="StatsSinceStart"/>
+        </menu-item>
+        <menu-item name="configuration" title="${uiLabelMap.WebtoolsCertsX509}">
+            <link target="myCertificates"/>
+        </menu-item>
     </menu>
 
+
+    <!-- ToDo: Remove
+    <menu name="LoggingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+          selected-menuitem-context-field-name="tabButtonItem">
+        <include-elements menu-name="LoggingTabBar" recursive="includes-only" />
+    </menu>
+    
+    
     <menu name="CacheTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="logMenuItem">
         <menu-item name="findUtilCache" title="${uiLabelMap.WebtoolsCacheMaintenance}">
             <link target="FindUtilCache"/>
         </menu-item>
-    </menu>
+    </menu>  
+
+     
     <menu name="CacheSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="logMenuItem">
         <include-elements menu-name="CacheTabBar" recursive="includes-only" />
     </menu>
+    -->
 
     <menu name="artifactTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="viewents" title="${uiLabelMap.WebtoolsViewComponents}">

@@ -30,7 +30,7 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                      <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
-                        <include-menu name="FindCacheSideBar" location="component://webtools/widget/Menus.xml"/>
+                        <include-menu name="ServerSideBar" location="component://webtools/widget/Menus.xml"/>
                      </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -39,6 +39,8 @@ under the License.
                                 <if-has-permission permission="UTIL_CACHE" action="_VIEW"/>
                             </condition>
                             <widgets>
+                                <include-menu name="FindCacheTabBar" location="component://webtools/widget/Menus.xml" />
+
                                 <screenlet title="${uiLabelMap.WebtoolsMemory}">
                                     <include-form name="MemoryInfo" location="component://webtools/widget/CacheForms.xml"/>
                                 </screenlet>

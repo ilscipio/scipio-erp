@@ -24,6 +24,7 @@ under the License.
     <resource-loader name="main" type="component"/>
     <classpath type="jar" location="build/lib/*"/>
     <classpath type="dir" location="config"/>
+    <entity-resource type="model" reader-name="main" loader="main" location="entitydef/cato_entitymodel.xml"/>
     <entity-resource type="data" reader-name="seed" loader="main" location="data/WebtoolsSecurityPermissionSeedData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/WebtoolsSecurityGroupDemoData.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
@@ -33,5 +34,5 @@ under the License.
         server="default-server"
         location="webapp/webtools"
         base-permission="OFBTOOLS,WEBTOOLS"
-        mount-point="/webtools"/>
+        mount-point="/webtools"/>   
 </ofbiz-component>

@@ -4650,6 +4650,19 @@
         <value xml:lang="zh">服务器击中统计工具</value>
         <value xml:lang="zh_TW">伺服器拜訪統計工具</value>
     </property>
+    <property key="WebtoolsServer">
+        <value xml:lang="de">Server</value>
+        <value xml:lang="en">Server</value>
+        <value xml:lang="fr">Server</value>
+        <value xml:lang="it">Server</value>
+        <value xml:lang="ja">Server</value>
+        <value xml:lang="pt">Server</value>
+        <value xml:lang="ro">Server</value>
+        <value xml:lang="th">Server</value>
+        <value xml:lang="vi">Server</value>
+        <value xml:lang="zh">Server</value>
+        <value xml:lang="zh_TW">Server</value>
+    </property>
     <property key="WebtoolsService">
         <value xml:lang="de">Dienst</value>
         <value xml:lang="en">Service</value>

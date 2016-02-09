@@ -33,7 +33,7 @@ under the License.
                                 <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
                             </condition>
                             <widgets>
-                                <include-menu location="component://webtools/widget/Menus.xml" name="LoggingSideBar"/>
+                                <include-menu location="component://webtools/widget/Menus.xml" name="ServerSideBar"/>
                             </widgets>
                         </section>
                     </decorator-section>
@@ -74,6 +74,7 @@ under the License.
         </section>
     </screen>  
 
+    <!-- Merging with LogView
     <screen name="LogConfiguration">
          <section>
              <actions>
@@ -91,7 +92,7 @@ under the License.
                  </decorator-screen>
                </widgets>
          </section>
-     </screen>
+     </screen>-->
 
      <screen name="LogView">
          <section>
@@ -102,15 +103,19 @@ under the License.
                               my guess is that the base/config/debug.properties file is not found in the classpath -->
                  <property-to-field resource="debug" property="log4j.appender.css.File" field="logFileName" default="runtime/logs/ofbiz.log" no-locale="true"/>
                  <script location="component://webtools/webapp/webtools/WEB-INF/actions/log/LogView.groovy"/>
-
+                 <script location="component://webtools/webapp/webtools/WEB-INF/actions/log/LogConfiguration.groovy"/>                
              </actions>
              <widgets>
                  <decorator-screen name="log-decorator">
                      <decorator-section name="body">
+                         <screenlet title="${uiLabelMap.WebtoolsDebuggingLevelFormDescription}">
+                             <include-form name="LevelSwitch" location="component://webtools/widget/LogForms.xml"/>
+                         </screenlet>
                          <screenlet>
+                             <!-- Remove?!
                              <container style="button-bar">
                                  <link target="LogView" text="${uiLabelMap.CommonRefresh}" style="${styles.link_run_sys} ${styles.action_reload}"/>
-                             </container>
+                             </container>-->
                              <container style="">
                                  <label style="">${uiLabelMap.WebtoolsLogFileName}:</label>
                                  <label style="">${logFileName}</label>

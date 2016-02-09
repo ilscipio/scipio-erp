@@ -86,6 +86,31 @@ under the License.
             </widgets>
         </section>
     </screen>
+    <screen name="server">
+        <section>
+            <actions>
+                <set field="titleProperty" value="WebtoolsServer"/>
+                <set field="headerItem" value="server"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                        <section>
+                            <condition>
+                                <if-has-permission permission="WEBTOOLS" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <include-menu location="component://webtools/widget/Menus.xml" name="ServerSideBar"/>
+                            </widgets>
+                        </section>
+                    </decorator-section>
+                    <decorator-section name="body">
+                        <platform-specific><html><html-template location="component://webtools/webapp/webtools/dashboard/server.ftl"/></html></platform-specific>
+                    </decorator-section>                    
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
     <screen name="printStart">
         <section>
             <widgets>

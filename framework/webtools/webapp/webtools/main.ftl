@@ -35,7 +35,6 @@ under the License.
             <li>
               <@pul title="${uiLabelMap.WebtoolsCacheDebugTools}">
                 <@pli><a href="<@ofbizUrl>FindUtilCache</@ofbizUrl>">${uiLabelMap.WebtoolsCacheMaintenance}</a></@pli>
-                <@pli><a href="<@ofbizUrl>LogConfiguration</@ofbizUrl>">${uiLabelMap.WebtoolsAdjustDebuggingLevels}</a></@pli>
                 <@pli><a href="<@ofbizUrl>LogView</@ofbizUrl>">${uiLabelMap.WebtoolsViewLog}</a></@pli>
                 <@pli><a href="<@ofbizUrl>ViewComponents</@ofbizUrl>">${uiLabelMap.WebtoolsViewComponents}</a></@pli>
               </@pul>  

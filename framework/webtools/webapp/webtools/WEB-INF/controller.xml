@@ -105,6 +105,10 @@ under the License.
         <security https="true" auth="false"/>
         <response name="success" type="view" value="main"/>
     </request-map>
+    <request-map uri="server">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="server"/>
+    </request-map>
 
     <!-- Entity Information Requests -->
     <request-map uri="entitymaint">
@@ -239,14 +243,10 @@ under the License.
 
 
     <!-- Loggin Setup -->
-    <request-map uri="LogConfiguration">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="LogConfiguration"/>
-    </request-map>
     <request-map uri="AdjustDebugLevels">
         <security https="true" auth="true"/>
         <event type="service" invoke="adjustDebugLevels"/>
-        <response name="success" type="view" value="LogConfiguration"/>
+        <response name="success" type="view" value="LogView"/>
     </request-map>
     <request-map uri="LogView">
         <security https="true" auth="true"/>
@@ -617,6 +617,7 @@ under the License.
 
     <!-- View Mappings -->
     <view-map name="main" type="screen" page="component://webtools/widget/CommonScreens.xml#main"/>
+    <view-map name="server" type="screen" page="component://webtools/widget/CommonScreens.xml#server"/>
     <view-map name="ping" type="ftl" page="component://webtools/webapp/webtools/ping.ftl"/>
     <view-map name="showDateTime" type="ftl" page="component://webtools/webapp/webtools/showDateTime.ftl"/>
 
@@ -650,7 +651,6 @@ under the License.
 
     <view-map name="viewdatafile" type="screen" page="component://webtools/widget/MiscScreens.xml#viewdatafile"/>
 
-    <view-map name="LogConfiguration" type="screen" page="component://webtools/widget/LogScreens.xml#LogConfiguration"/>
     <view-map name="LogView" type="screen" page="component://webtools/widget/LogScreens.xml#LogView"/>
 
     <view-map name="StatsSinceStart" type="screen" page="component://webtools/widget/StatsScreens.xml#StatsSinceStart"/>

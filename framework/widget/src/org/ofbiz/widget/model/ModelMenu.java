@@ -616,7 +616,9 @@ public class ModelMenu extends ModelWidget {
     }
 
     public String getDefaultAlignStyle() {
-        return this.defaultAlignStyle;
+        return getStyle("defaultAlign", this.defaultAlignStyle, 
+                parentMenu != null ? parentMenu.defaultAlignStyle : null, 
+                "");
     }
 
     public FlexibleStringExpander getDefaultAssociatedContentId() {
@@ -632,7 +634,9 @@ public class ModelMenu extends ModelWidget {
     }
 
     public String getDefaultDisabledTitleStyle() {
-        return this.defaultDisabledTitleStyle;
+        return getStyle("defaultDisabledTitle", this.defaultDisabledTitleStyle, 
+                parentMenu != null ? parentMenu.defaultDisabledTitleStyle : null, 
+                "");
     }
 
     public String getDefaultEntityName() {
@@ -656,23 +660,33 @@ public class ModelMenu extends ModelWidget {
     }
 
     public String getDefaultSelectedStyle() {
-        return this.defaultSelectedStyle;
+        return getStyle("defaultSelected", this.defaultSelectedStyle, 
+                parentMenu != null ? parentMenu.defaultSelectedStyle : null, 
+                "");
     }
 
     public String getDefaultTitleStyle() {
-        return this.defaultTitleStyle;
+        return getStyle("defaultTitle", this.defaultTitleStyle, 
+                parentMenu != null ? parentMenu.defaultTitleStyle : null, 
+                "");
     }
 
     public String getDefaultTooltipStyle() {
-        return this.defaultTooltipStyle;
+        return getStyle("defaultTooltip", this.defaultTooltipStyle, 
+                parentMenu != null ? parentMenu.defaultTooltipStyle : null, 
+                "");
     }
 
     public String getDefaultWidgetStyle() {
-        return this.defaultWidgetStyle;
+        return getStyle("defaultWidget", this.defaultWidgetStyle, 
+                parentMenu != null ? parentMenu.defaultWidgetStyle : null, 
+                "");
     }
     
     public String getDefaultLinkStyle() {
-        return this.defaultLinkStyle;
+        return getStyle("defaultLink", this.defaultLinkStyle, 
+                parentMenu != null ? parentMenu.defaultLinkStyle : null, 
+                "");
     }
 
     public FlexibleStringExpander getExtraIndex() {
@@ -688,7 +702,9 @@ public class ModelMenu extends ModelWidget {
     }
 
     public String getFillStyle() {
-        return this.fillStyle;
+        return getStyle("fill", this.fillStyle, 
+                parentMenu != null ? parentMenu.fillStyle : null, 
+                "");
     }
 
     public String getId() {
@@ -696,13 +712,75 @@ public class ModelMenu extends ModelWidget {
     }
 
     public String getMenuContainerStyle(Map<String, Object> context) {
-        return menuContainerStyleExdr.expandString(context);
+        return getStyle("container", this.menuContainerStyleExdr.expandString(context), 
+                parentMenu != null ? parentMenu.getMenuContainerStyle(context) : null, 
+                "");
     }
 
     public FlexibleStringExpander getMenuContainerStyleExdr() {
         return menuContainerStyleExdr;
     }
 
+    /**
+     * Cato: Gets style.
+     * <p>
+     * TODO?: this could probably cache based on passed name for faster access, but not certain
+     * if safe.
+     */
+    String getStyle(String name, String style, String parentStyle, String defaultStyle) {
+        return buildStyle(style, parentStyle, defaultStyle);
+    }
+    
+    /**
+     * Cato: Builds a style string from current, parent, and default, based on "+"/"="
+     * combination logic.
+     * <p>
+     * NOTE: subtle difference between null and empty string.
+     * <p>
+     * FIXME: this is inefficient in cases where parent style does not need to be visited,
+     * but can't change easily in java.
+     */
+    static String buildStyle(String style, String parentStyle, String defaultStyle) {
+        String res;
+        if (!style.isEmpty()) {
+            // Cato: support extending styles
+            if (style.startsWith("+")) {
+                String addStyles = style.substring(1);
+                String inheritedStyles;
+                if (parentStyle != null) {
+                    inheritedStyles = parentStyle;
+                } else {
+                    inheritedStyles = defaultStyle;
+                }
+                if (inheritedStyles != null && !inheritedStyles.isEmpty()) {
+                    if (!addStyles.isEmpty()) {
+                        res = inheritedStyles + (addStyles.startsWith(" ") ? "" : " ") + addStyles;
+                    }
+                    else {
+                        res = inheritedStyles;
+                    }
+                }
+                else {
+                    res = addStyles;
+                }
+            }
+            else {
+                if (style.startsWith("=")) {
+                    style = style.substring(1);
+                }
+                res = style;
+            }
+        } else if (parentStyle != null) {
+            res = parentStyle;
+        } else {
+            res = defaultStyle;
+        }
+        if (res != null) {
+            res = res.trim();
+        }
+        return res;
+    }
+    
     public List<ModelMenuItem> getMenuItemList() {
         return menuItemList;
     }

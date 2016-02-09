@@ -507,57 +507,7 @@ public class ModelMenuItem extends ModelWidget {
      * if safe.
      */
     String getStyle(String name, String style, String parentStyle, String defaultStyle) {
-        return buildStyle(style, parentStyle, defaultStyle);
-    }
-    
-    /**
-     * Cato: Builds a style string from current, parent, and default, based on "+"/"="
-     * combination logic.
-     * <p>
-     * NOTE: subtle difference between null and empty string.
-     * <p>
-     * FIXME: this is inefficient in cases where parent style does not need to be visited,
-     * but can't change easily in java.
-     */
-    String buildStyle(String style, String parentStyle, String defaultStyle) {
-        String res;
-        if (!style.isEmpty()) {
-            // Cato: support extending styles
-            if (style.startsWith("+")) {
-                String addStyles = style.substring(1);
-                String inheritedStyles;
-                if (parentStyle != null) {
-                    inheritedStyles = parentStyle;
-                } else {
-                    inheritedStyles = defaultStyle;
-                }
-                if (inheritedStyles != null && !inheritedStyles.isEmpty()) {
-                    if (!addStyles.isEmpty()) {
-                        res = inheritedStyles + (addStyles.startsWith(" ") ? "" : " ") + addStyles;
-                    }
-                    else {
-                        res = inheritedStyles;
-                    }
-                }
-                else {
-                    res = addStyles;
-                }
-            }
-            else {
-                if (style.startsWith("=")) {
-                    style = style.substring(1);
-                }
-                res = style;
-            }
-        } else if (parentStyle != null) {
-            res = parentStyle;
-        } else {
-            res = defaultStyle;
-        }
-        if (res != null) {
-            res = res.trim();
-        }
-        return res;
+        return ModelMenu.buildStyle(style, parentStyle, defaultStyle);
     }
     
     public String getOverrideMode() {

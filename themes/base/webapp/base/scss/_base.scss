@@ -74,9 +74,8 @@ input,select,text-area {max-width:50em;}
         
         &.active {
             //Overrides side_nav
-            background: $sub-nav-active-bg;
+            background: rgba(0, 64, 84, 0.05);
             > a:first-child:not(.button) {
-                color: $sub-nav-active-color;
                 cursor: $sub-nav-active-cursor;
             }
         }

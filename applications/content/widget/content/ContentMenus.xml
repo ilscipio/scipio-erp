@@ -32,6 +32,7 @@ under the License.
         <menu-item name="CMS" title="${uiLabelMap.ContentCMS}"><link target="CMSContentFind"/></menu-item>
         <menu-item name="CompDoc" title="${uiLabelMap.ContentCompDoc}"><link target="FindCompDoc"/></menu-item>
     </menu>
+    
     <menu name="ContentAppSideBar" title="${uiLabelMap.ContentContentManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ContentAppBar" recursive="full" />
     </menu>
@@ -114,7 +115,8 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ContentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ContentSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
+        default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" title="">
         <include-elements menu-name="ContentTabBar" recursive="includes-only" />
     </menu>
     
@@ -181,7 +183,8 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="WebSiteSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="WebSiteSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
+        default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" title="">
         <include-elements menu-name="WebSiteButtonBar" recursive="includes-only" />
     </menu>
     
@@ -207,7 +210,8 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="BlogSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="BlogSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-selected-style="${styles.menu_default_itemactive}" default-menu-item-name="content" default-permission-operation="CONTENT_ADMIN"
+        default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}" title="">
         <include-elements menu-name="BlogButtonBar" recursive="includes-only" />
     </menu>
     

@@ -429,7 +429,8 @@
         </menu-item>
     </menu>
 
-    <menu name="BudgetSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="BudgetSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="EditBudget">
         <include-elements menu-name="BudgetTabBar" recursive="includes-only" />
     </menu>
 
@@ -546,7 +547,8 @@
         </menu-item>
     </menu>
 
-    <menu name="FinAccountSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="FinAccountSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="EditFinAccount">
         <include-elements menu-name="FinAccountTabBar" recursive="includes-only" />
     </menu>
 
@@ -645,7 +647,8 @@
         </menu-item>
     </menu>
 
-    <menu name="FixedAssetMaintSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="FixedAssetMaintSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        selected-menuitem-context-field-name="tabButtonItemFixedAssetMaint" default-menu-item-name="EditFixedAssetMaint">
         <include-elements menu-name="FixedAssetMainTabBar" recursive="includes-only" />
     </menu>
 
@@ -1176,7 +1179,8 @@
         </menu-item>
     </menu>
     
-    <menu name="OrganizationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="OrganizationSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="PartyAccountsSummary">
         <include-elements menu-name="OrganizationTabBar" recursive="includes-only" />
     </menu>
     
@@ -1299,7 +1303,8 @@
         </menu-item>
     </menu>
 
-    <menu name="PartyTopSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="PartyTopSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        selected-menuitem-context-field-name="tabButtonItemTop" default-menu-item-name="PartyAccountsSummary">
         <include-elements menu-name="PartyTopTabBar" recursive="includes-only" />
     </menu>
 

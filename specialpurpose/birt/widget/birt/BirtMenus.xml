@@ -25,7 +25,7 @@ under the License.
     </menu>
     
     <menu name="BirtAppSideBar" title="${uiLabelMap.BirtApplication}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-          <include-elements menu-name="BirtAppBar" recursive="full" />
+        <include-elements menu-name="BirtAppBar" recursive="full" />
     </menu>
     
     <menu name="BirtTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
@@ -38,7 +38,7 @@ under the License.
     </menu>
     
     <menu name="BirtSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-          <include-elements menu-name="BirtTabBar" recursive="includes-only" />
+        <include-elements menu-name="BirtTabBar" recursive="includes-only" />
     </menu>
     
 </menus>

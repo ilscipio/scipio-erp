@@ -22,7 +22,7 @@ under the License.
     <menu name="CmsButtonBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
           default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}"
           selected-menuitem-context-field-name="currentCMSMenuItemName" title="">
-        <menu-item name="contentfind" title="${uiLabelMap.ContentContent}" >
+        <menu-item name="contentfind" title="${uiLabelMap.ContentContent}">
             <link id="contentfind" target="CMSContentFind"/>
         </menu-item>
         <menu-item name="subsites" title="${uiLabelMap.ContentSubSites}" >
@@ -41,7 +41,9 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="CmsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="CmsSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="content" default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
+          default-permission-entity-action="_ADMIN" default-associated-content-id="${userLogin.userLoginId}"
+          selected-menuitem-context-field-name="currentCMSMenuItemName" title="">
         <include-elements menu-name="CmsButtonBar" recursive="includes-only" />
     </menu>
     

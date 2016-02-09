@@ -31,7 +31,8 @@ under the License.
         <menu-item name="userJobs" title="${uiLabelMap.WorkEffortJobList}"><link target="UserJobs"/></menu-item>
         <menu-item name="WorkEffortICalendar" title="${uiLabelMap.WorkEffortICalendar}"><link target="FindICalendars"/></menu-item>
     </menu>
-    <menu name="WorkEffortAppSideBar" title="${uiLabelMap.WorkEffortManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="task">
+    <menu name="WorkEffortAppSideBar" title="${uiLabelMap.WorkEffortManager}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" 
+        default-menu-item-name="task">
         <include-elements menu-name="WorkEffortAppBar" recursive="full" />
     </menu>
     
@@ -367,7 +368,8 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="ICalendarSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="ICalendarSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="WorkEffort">
         <include-elements menu-name="ICalendarTabBar" recursive="includes-only" />
     </menu>
     

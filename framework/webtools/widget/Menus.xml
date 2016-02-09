@@ -69,7 +69,7 @@ under the License.
             <link target="WebtoolsLayoutDemo" />
         </menu-item>
     </menu>
-    <menu name="WebtoolsAppSideBar" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="WebtoolsAppSideBar" title="${uiLabelMap.FrameworkWebTools}" extends="CommonAppSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="WebtoolsAppBar" recursive="full" />
     </menu>
 
@@ -150,14 +150,7 @@ under the License.
         <include-elements menu-name="serviceTabBar" recursive="includes-only" />
     </menu>
 
-    
-    <!-- CATO: new Sidebar menu. Includes LogView, Cache Maintenance, Statistics, Certificates -->
-    <menu name="ServerSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="tabButtonItem">
-        <include-elements menu-name="ServerTabBar" recursive="includes-only" />
-    </menu>
-    <menu name="ServerTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="tabButtonItem">
+    <menu name="ServerTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <menu-item name="logging" title="${uiLabelMap.WebtoolsLogging}">
             <link target="LogView"/>
         </menu-item>
@@ -181,13 +174,15 @@ under the License.
         </menu-item>
     </menu>
 
+    <!-- CATO: new Sidebar menu. Includes LogView, Cache Maintenance, Statistics, Certificates -->
+    <menu name="ServerSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <include-elements menu-name="ServerTabBar" recursive="includes-only" />
+    </menu>
 
     <!-- ToDo: Remove
-    <menu name="LoggingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          selected-menuitem-context-field-name="tabButtonItem">
+    <menu name="LoggingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="LoggingTabBar" recursive="includes-only" />
     </menu>
-    
     
     <menu name="CacheTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="logMenuItem">
@@ -195,7 +190,6 @@ under the License.
             <link target="FindUtilCache"/>
         </menu-item>
     </menu>  
-
      
     <menu name="CacheSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
           selected-menuitem-context-field-name="logMenuItem">

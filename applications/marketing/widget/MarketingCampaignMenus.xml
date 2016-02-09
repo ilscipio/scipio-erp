@@ -33,7 +33,8 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="MarketingCampaignSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="MarketingCampaignSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="MarketingCampaign" selected-menuitem-context-field-name="campaignTabButtonItem">
         <include-elements menu-name="MarketingCampaignTabBar" recursive="includes-only" />
     </menu>
     

@@ -100,7 +100,6 @@ under the License.
     
     <menu name="QuoteSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="QuoteTabBar" recursive="includes-only" />
-        
     </menu>
     
     <menu name="QuoteSubTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml"

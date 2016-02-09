@@ -80,7 +80,8 @@
         </menu-item>
     </menu>
     
-    <menu name="SetupSubSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="SetupSubSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        selected-menuitem-context-field-name="tabButtonItemTop">
         <include-elements menu-name="SetupSubTabBar" recursive="includes-only" />
     </menu>
     

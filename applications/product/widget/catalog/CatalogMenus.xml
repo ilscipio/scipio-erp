@@ -629,10 +629,10 @@ under the License.
             </link>
         </menu-item>
     </menu>
+    
     <menu name="ConfigItemSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
         <include-elements menu-name="ConfigItemTabBar" recursive="includes-only" />
     </menu>
-    
 
     <menu name="ImageManagementTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
            selected-menuitem-context-field-name="userTabButtonImage" menu-container-style="+${styles.menu_buttonstyle_alt2} ${styles.menu_noclear}">
@@ -710,6 +710,7 @@ under the License.
             </link>
         </menu-item>
     </menu>
+    
     <menu name="ImageManagementSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
            selected-menuitem-context-field-name="userTabButtonImage">
         <include-elements menu-name="ImageManagementTabBar" recursive="includes-only" />

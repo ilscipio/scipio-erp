@@ -101,7 +101,7 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="LayoutSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="LayoutSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="content" default-associated-content-id="${userLogin.userLoginId}" title="">
         <include-elements menu-name="LayoutButtonBar" recursive="includes-only" />
     </menu>
     

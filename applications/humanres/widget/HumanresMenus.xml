@@ -125,7 +125,7 @@
         </menu-item>
     </menu>
     
-    <menu name="EmplPositionSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="EmplPositionSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="EmplPositionView">
         <include-elements menu-name="EmplPositionBar" recursive="includes-only" />
     </menu>
     
@@ -196,12 +196,12 @@
         </menu-item>
     </menu>
     
-    <menu name="GlobalHRSettingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="GlobalHRSettingSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="SkillType">
         <include-elements menu-name="GlobalHRSettingMenus" recursive="includes-only" />
     </menu>
     
     <menu name="EmployeeProfileTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
-          default-menu-item-name="EditEmployeeSkills">
+        default-menu-item-name="EditEmployeeSkills">
         <menu-item name="EmployeeProfile" title="${uiLabelMap.PartyProfile}">
             <link target="EmployeeProfile">
                 <parameter param-name="partyId"/>
@@ -260,7 +260,8 @@
         </menu-item>
     </menu>
     
-    <menu name="EmployeeProfileSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="EmployeeProfileSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="EditEmployeeSkills">
         <include-elements menu-name="EmployeeProfileTabBar" recursive="includes-only" />
     </menu>
     
@@ -278,7 +279,7 @@
         </menu-item>
     </menu>
     
-    <menu name="RecruitmentTypeMenu" type="simple" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+    <menu name="RecruitmentTypeMenu" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         default-menu-item-name="JobRequisition">
         <menu-item name="JobRequisition" title="${uiLabelMap.HumanResJobRequisition}">
             <condition><if-has-permission permission="HUMANRES" action="_VIEW"/></condition>
@@ -290,7 +291,8 @@
         </menu-item>
     </menu>
     
-    <menu name="RecruitmentTypeSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="RecruitmentTypeSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="JobRequisition">
         <include-elements menu-name="RecruitmentTypeMenu" recursive="includes-only" />
     </menu>
     
@@ -313,7 +315,7 @@
         </menu-item>
     </menu>
     
-    <menu name="TrainingTypeMenu" type="simple" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="FindTrainings">
+    <menu name="TrainingTypeMenu" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="FindTrainings">
         <menu-item name="TrainingCalendar" title="${uiLabelMap.HumanResTraining} ${uiLabelMap.WorkEffortCalendar}">
             <link target="TrainingCalendar"/>
         </menu-item>
@@ -327,7 +329,7 @@
         </menu-item>
     </menu>
     
-    <menu name="TrainingTypeSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="TrainingTypeSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml" default-menu-item-name="FindTrainings">
         <include-elements menu-name="TrainingTypeMenu" recursive="includes-only" />
     </menu>
     
@@ -353,7 +355,8 @@
         </menu-item>
     </menu>
     
-    <menu name="EmplLeaveSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="EmplLeaveSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="EmployeeLeave">
         <include-elements menu-name="EmplLeaveTabBar" recursive="includes-only" />
     </menu>
     

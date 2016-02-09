@@ -49,7 +49,8 @@ under the License.
         </menu-item>
     </menu>
     
-    <menu name="TrackingCodeSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+    <menu name="TrackingCodeSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="TrackingCode" selected-menuitem-context-field-name="trackingCodeTabButtonItem">
         <include-elements menu-name="TrackingCodeTabBar" recursive="includes-only" />
     </menu>
     

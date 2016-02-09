@@ -26,6 +26,7 @@
                 <set field="titleProperty" value="WebtoolsGeosFind"/>
                 <set field="currentUrl" value="FindGeo"/>
                 <set field="headerItem" value="Geos"/>
+                <set field="tabButtonItem" value="FindGeo"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonGeoManagementDecorator" location="${parameters.mainDecoratorLocation}">
@@ -97,6 +98,7 @@
                 <set field="titleProperty" value="WebtoolsGeosLink"/>
                 <set field="currentUrl" value="LinkGeos"/>
                 <set field="headerItem" value="Geos"/>
+                <set field="tabButtonItem" value="LinkGeos"/>
                 
                 <set field="noId" value="true"/><!-- see CommonGeoManagementDecorator -->
                 

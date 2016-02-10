@@ -35,6 +35,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilCodec;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.base.util.template.FreeMarkerWorker;
@@ -56,6 +57,22 @@ import freemarker.template.TemplateException;
 public class MacroMenuRenderer implements MenuStringRenderer {
 
     public static final String module = MacroMenuRenderer.class.getName();
+    
+    /**
+     * Cato: Maps traditional Ofbiz macro names to one-shot macro render entries.
+     */
+    static final Map<String, OneShotMacro.Entry> renderEntryMacroNameMap;
+    static {
+        Map<String, OneShotMacro.Entry> map = new HashMap<String, OneShotMacro.Entry>();
+        map.put("renderMenuBegin", new OneShotMacro.BeginEntry(OneShotMacro.VarType.SINGLE, "menu"));
+        map.put("renderMenuEnd", new OneShotMacro.EndEntry());
+        map.put("renderMenuItemBegin", new OneShotMacro.BeginEntry(OneShotMacro.VarType.LIST, "items"));
+        map.put("renderMenuItemEnd", new OneShotMacro.EndEntry());
+        map.put("renderLink", new OneShotMacro.SingleEntry(OneShotMacro.VarType.SINGLE, "linkInfo"));
+        map.put("renderImage", new OneShotMacro.SingleEntry(OneShotMacro.VarType.SINGLE, "imageInfo"));
+        renderEntryMacroNameMap = map;
+    }
+    
     private int macroCount = 999;
     private final Map<Appendable, Environment> environments = new HashMap<Appendable, Environment>();
     private final Template macroLibrary;
@@ -63,6 +80,14 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     private final HttpServletResponse response;
 
     private ContextHandler contextHandler = new ContextHandler("menu");
+
+    
+    /**
+     * Cato: One-shot macro helper class. Controls whether render macros piecemeal or
+     * in one invocation upon close.
+     */
+    private final OneShotMacro oneShotMacro = new OneShotMacro(UtilProperties.getPropertyAsBoolean("catoWebapp", "cato.templating.widget.oneshotmacros", false), 
+            "renderMenuFull", renderEntryMacroNameMap);
     
     public MacroMenuRenderer(String macroLibraryPath, HttpServletRequest request, HttpServletResponse response) throws TemplateException, IOException {
         this.macroLibrary = FreeMarkerWorker.getTemplate(macroLibraryPath);
@@ -116,7 +141,10 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         FreeMarkerWorker.includeTemplate(template, environment);
     }
 
-    private void executeMacro(Appendable writer, String macroName, Map<String, Object> macroParameters) throws IOException, TemplateException {
+    /**
+     * Cato: This is the original executeMacro.
+     */
+    private void executeMacroReal(Appendable writer, String macroName, Map<String, Object> macroParameters) throws IOException, TemplateException {
         StringBuilder sb = new StringBuilder("<@");
         sb.append(macroName);
         if (macroParameters != null) {
@@ -140,7 +168,19 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         }
         executeMacro(writer, sb.toString());
     }
-
+    
+    /**
+     * Cato: Modified executeMacro.
+     */
+    private void executeMacro(Appendable writer, String macroName, Map<String, Object> macroParameters) throws IOException, TemplateException {
+        if (oneShotMacro.isEnabled()) {
+            oneShotMacro.appendData(writer, macroName, macroParameters);
+        }
+        else {
+            executeMacroReal(writer, macroName, macroParameters);
+        }
+    }
+    
     private Environment getEnvironment(Appendable writer) throws TemplateException, IOException {
         Environment environment = environments.get(writer);
         if (environment == null) {
@@ -175,7 +215,18 @@ public class MacroMenuRenderer implements MenuStringRenderer {
         Boolean hideIfSelected = menuItem.getHideIfSelected();
         return (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName));
     }
-
+    
+    /**
+     * Cato: Renders full menu in one macro call using data previously collected in buffer.
+     */
+    protected void renderMenuFull(Appendable writer, Map<String, Object> context, ModelMenu menu, StringBuffer sb) throws IOException {
+        try {
+            executeMacro(writer, sb.toString());
+        } catch (TemplateException e) {
+            throw new IOException(e);
+        }
+    }
+    
     @Override
     public void renderFormatSimpleWrapperClose(Appendable writer, Map<String, Object> context, ModelMenu menu) throws IOException {
         // Nothing to do.
@@ -315,6 +366,11 @@ public class MacroMenuRenderer implements MenuStringRenderer {
             executeMacro(writer, "renderMenuEnd", parameters);
         } catch (TemplateException e) {
             throw new IOException(e);
+        }
+        // Cato: reset one-shot macro buffer
+        if (oneShotMacro.isReady()) {
+            renderMenuFull(writer, context, menu, oneShotMacro.getBuffer());
+            oneShotMacro.resetState();
         }
     }
 

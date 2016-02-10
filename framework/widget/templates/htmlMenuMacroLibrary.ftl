@@ -22,6 +22,35 @@ Cato: NOTE: since macro renderer initial context mod, macros here now have acces
 context, such as request, response, locale, and to some extent (since 2016-01-06), uiLabelMap.
 WARN: no code run here or indirectly from here should assume full current context present. only use well-known generic vars.
 -->
+
+<#-- Cato: Experimental one-shot macro menu rendering 
+ items: list of maps, each entry corresponding roughly to old @renderMenuItemBegin arguments
+    item map contains "linkInfo" and "imageInfo" maps, corresponding roughly to @renderLink and @renderImage args.
+-->
+<#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[]>
+  <#--<p><@objectAsScript lang="raw" object=items /></p>-->
+  <#-- TODO: unfragment this (the point is to not have to have this fragmented, but need to test) -->
+  <@renderMenuBegin boundaryComment=boundaryComment id=id style=style title=title inlineEntries=inlineEntries menuCtxRole=menuCtxRole />
+  <#list items as item>
+    <#local linkStr = "">
+    <#if item.linkInfo?has_content>
+      <#local linkInfo = item.linkInfo>
+      <#local linkStr><@renderLink linkInfo.linkUrl linkInfo.parameterList linkInfo.targetWindow linkInfo.uniqueItemName linkInfo.actionUrl linkInfo.linkType linkInfo.id linkInfo.style linkInfo.name linkInfo.height linkInfo.width linkInfo.text linkInfo.imgStr linkInfo.menuCtxRole /></#local>
+    </#if>
+    <#local imgStr = "">
+    <#if item.imageInfo?has_content>
+      <#local imgInfo = item.imageInfo>
+      <#local imgStr><@renderImage imgInfo.src imgInfo.id imgInfo.style imgInfo.width imgInfo.height imgInfo.border imgInfo.menuCtxRole /></#local>
+    </#if>
+
+    <@renderMenuItemBegin item.style linkStr item.toolTip item.containsNestedMenus item.menuCtxRole />
+      <#-- TODO: what else goes here... nested menus? image? -->
+    <@renderMenuItemEnd item.containsNestedMenus item.menuCtxRole />
+  </#list>
+  <@renderMenuEnd boundaryComment=boundaryComment style=style inlineEntries=inlineEntries menuCtxRole=menuCtxRole />
+</#macro>
+
+
 <#-- 
 Menu styles can be set via menu-container-style attribute. The rendering will differ if one of the following classes is set
     * menu-main

@@ -35,16 +35,19 @@ Until this is tested and sorted out, please apply changes to both copies.
 TODO/FIXME:
 * I don't see a good way to separate markup in these yet...
 * expand renderLink/renderImage... maybe...
-* the java is inefficient (see OneShotMacro.java)
+* the java is inefficient and implementation maybe not final (see OneShotMacro.java) - depends
+  on how much end up using and where
 -->
 
 <#-- Cato: One-shot macro menu rendering
   Data structure (indented means member of): 
-  items: list of maps, each entry corresponding to old @renderMenuItemBegin arguments
-    "linkArgs": link args corresponding to @renderLink args. in some cases, this will be missing, and linkStr (string) will be present instead. must test for both cases. this is because some cases don't render an actual link but text instead.
-      "imgArgs": image args corresponding to @renderImage args
-    "items": list of sub-menu items. same format as parent items. will be non-empty if parent items.containsNestedMenus is true. NOTE: there's no dedicated submenu open/close element or map.
-      "items": this goes on recursively for nested menus...
+  items: List of maps, each entry corresponding to old @renderMenuItemBegin arguments
+    (item)
+      "linkArgs": Link args corresponding to @renderLink args. In some cases, this will be missing, and linkStr (string) will be present instead. must test for both cases. This is because some cases don't render an actual link but text instead (misleading ofbiz var name).
+        "imgArgs": Image args corresponding to @renderImage args, for menu entries that are images instead of text.
+      "items": List of sub-menu items. Same format as parent items. Will be non-empty if parent item.containsNestedMenus is true. NOTE: there's no dedicated submenu (<ul>) open/close element or map. Implementation decides how to handle and what to call recursively.
+        (item)
+          "items": This goes on recursively for nested menus...
 -->
 <#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[]>
   <#--<p><@objectAsScript lang="raw" object=items /></p>-->
@@ -139,7 +142,7 @@ TODO/FIXME:
 </#macro>
 
 <#-- Cato: Render full menu item. Separate macro required due to recursive nested menus. 
-    NOTE: if linkArgs empty, there may still be content in linkStr (that was not traditionally passed through a macro call). -->
+    NOTE: if linkArgs empty, there may still be content in linkStr (that was not traditionally passed through a macro call), which is not necessarily a link! -->
 <#macro renderMenuItemFull style="" toolTip="" linkArgs={} linkStr="" containsNestedMenus=false menuCtxRole="" items=[]>
   <#-- TODO? maybe want to expand the renderLink/renderImage calls -->
   <#if linkArgs?has_content>

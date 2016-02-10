@@ -365,7 +365,7 @@ under the License.
     </menu>
     
     <menu name="LayoutDemoSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <menu-item name="Selected" title="${uiLabelMap.CommonSelected}" widget-style="+${styles.menu_sidebar_itemactive}">
+        <menu-item name="Selected" title="${uiLabelMap.CommonSelected}"> <!-- widget-style="+${styles.menu_sidebar_itemactive}" -->
             <link target="${demoTargetUrl}">
                 <parameter param-name="demoParam1"/>
                 <parameter param-name="demoParam2"/>
@@ -379,7 +379,7 @@ under the License.
                 <parameter param-name="demoParam3"/>
             </link>
         </menu-item>
-        <menu-item name="Disabled" title="${uiLabelMap.CommonDisabled}" widget-style="+disabled">
+        <menu-item name="Disabled" title="${uiLabelMap.CommonDisabled}" widget-style="${styles.menu_default_itemdisabled}">
         </menu-item>
     </menu>
     

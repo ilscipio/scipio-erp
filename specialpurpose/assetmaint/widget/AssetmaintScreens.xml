@@ -256,11 +256,11 @@
                                     <fail-widgets>
                                         <container style="button-bar">
                                             <link target="EditWorkEfforts" style="${styles.link_nav} ${styles.action_add}" text="${uiLabelMap.CommonNew}">
-                                            <parameter param-name="fixedAssetId" from-field="fixedAssetMaint.fixedAssetId"/>
-                                            <parameter param-name="maintHistSeqId" from-field="fixedAssetMaint.maintHistSeqId"/>
-                                              <parameter param-name="workEffortId"/>
-                                               <parameter param-name="mode" value="addChildTask"/>
-                                        </link>
+                                                <parameter param-name="fixedAssetId" from-field="fixedAssetMaint.fixedAssetId"/>
+                                                <parameter param-name="maintHistSeqId" from-field="fixedAssetMaint.maintHistSeqId"/>
+                                                <parameter param-name="workEffortId"/>
+                                                <parameter param-name="mode" value="addChildTask"/>
+                                            </link>
                                         </container>
                                     </fail-widgets>
                                 </section>

@@ -64,7 +64,7 @@ public class MacroMenuRenderer implements MenuStringRenderer {
     static final Map<String, OneShotMacro.Entry> renderEntryMacroNameMap;
     static {
         Map<String, OneShotMacro.Entry> map = new HashMap<String, OneShotMacro.Entry>();
-        map.put("renderMenuBegin", new OneShotMacro.BeginEntry(OneShotMacro.VarType.SINGLE, "menu"));
+        map.put("renderMenuBegin", new OneShotMacro.BeginEntry(OneShotMacro.VarType.SINGLE, "submenu"));
         map.put("renderMenuEnd", new OneShotMacro.EndEntry());
         map.put("renderMenuItemBegin", new OneShotMacro.BeginEntry(OneShotMacro.VarType.LIST, "items"));
         map.put("renderMenuItemEnd", new OneShotMacro.EndEntry());

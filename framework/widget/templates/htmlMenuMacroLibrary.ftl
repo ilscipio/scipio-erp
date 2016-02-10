@@ -23,31 +23,44 @@ context, such as request, response, locale, and to some extent (since 2016-01-06
 WARN: no code run here or indirectly from here should assume full current context present. only use well-known generic vars.
 -->
 
-<#-- Cato: Experimental one-shot macro menu rendering 
- items: list of maps, each entry corresponding roughly to old @renderMenuItemBegin arguments
-    item map contains "linkInfo" and "imageInfo" maps, corresponding roughly to @renderLink and @renderImage args.
+<#-- Cato: Experimental one-shot macro menu rendering
+  Data structure (indented means member of): 
+  items: list of maps, each entry corresponding to old @renderMenuItemBegin arguments
+    "linkArgs": link args corresponding to @renderLink args
+      "imgArgs": image args corresponding to @renderImage args
+    "items": list of sub-menu items. same format as parent items. will be non-empty if parent items.containsNestedMenus is true. NOTE: there's no dedicated submenu open/close element or map.
+      "items": this goes on recursively for nested menus...
 -->
 <#macro renderMenuFull boundaryComment="" id="" style="" title="" inlineEntries=false menuCtxRole="" items=[]>
   <#--<p><@objectAsScript lang="raw" object=items /></p>-->
-  <#-- TODO: unfragment this (the point is to not have to have this fragmented, but need to test) -->
+  <#-- TODO: unfragment/expand after testing (the point is to not have to have this fragmented, but need to test) -->
   <@renderMenuBegin boundaryComment=boundaryComment id=id style=style title=title inlineEntries=inlineEntries menuCtxRole=menuCtxRole />
   <#list items as item>
-    <#local linkStr = "">
-    <#if item.linkInfo?has_content>
-      <#local linkInfo = item.linkInfo>
-      <#local linkStr><@renderLink linkInfo.linkUrl linkInfo.parameterList linkInfo.targetWindow linkInfo.uniqueItemName linkInfo.actionUrl linkInfo.linkType linkInfo.id linkInfo.style linkInfo.name linkInfo.height linkInfo.width linkInfo.text linkInfo.imgStr linkInfo.menuCtxRole /></#local>
-    </#if>
-    <#local imgStr = "">
-    <#if item.imageInfo?has_content>
-      <#local imgInfo = item.imageInfo>
-      <#local imgStr><@renderImage imgInfo.src imgInfo.id imgInfo.style imgInfo.width imgInfo.height imgInfo.border imgInfo.menuCtxRole /></#local>
-    </#if>
-
-    <@renderMenuItemBegin item.style linkStr item.toolTip item.containsNestedMenus item.menuCtxRole />
-      <#-- TODO: what else goes here... nested menus? image? -->
-    <@renderMenuItemEnd item.containsNestedMenus item.menuCtxRole />
+    <@renderMenuItemFull item.style item.linkArgs!{} item.toolTip item.containsNestedMenus item.menuCtxRole item.items![]/>
   </#list>
   <@renderMenuEnd boundaryComment=boundaryComment style=style inlineEntries=inlineEntries menuCtxRole=menuCtxRole />
+</#macro>
+
+<#-- Cato: Render full menu item. Separate macro required due to recursive nested menus. -->
+<#macro renderMenuItemFull style linkArgs toolTip="" containsNestedMenus=false menuCtxRole="" items=[]>
+  <#-- TODO: unfragment/expand after testing -->
+  <#local linkStr = "">
+  <#if linkArgs?has_content>
+    <#local imgStr = "">
+    <#if linkArgs.imgArgs?has_content>
+      <#local imgArgs = linkArgs.imgArgs>
+      <#local imgStr><@renderImage imgArgs.src imgArgs.id imgArgs.style imgArgs.width imgArgs.height imgArgs.border imgArgs.menuCtxRole /></#local>
+    </#if>
+    <#local linkStr><@renderLink linkArgs.linkUrl linkArgs.parameterList linkArgs.targetWindow linkArgs.uniqueItemName linkArgs.actionUrl linkArgs.linkType linkArgs.id linkArgs.style linkArgs.name linkArgs.height linkArgs.width linkArgs.text imgStr linkArgs.menuCtxRole /></#local>
+  </#if>
+
+  <@renderMenuItemBegin style linkStr toolTip containsNestedMenus menuCtxRole /> <#-- includes sub-menu <ul> -->
+    <#if containsNestedMenus>
+      <#list items as item>
+        <@renderMenuItemFull item.style item.linkArgs!{} item.toolTip item.containsNestedMenus item.menuCtxRole item.items![] />
+      </#list>
+    </#if>
+  <@renderMenuItemEnd containsNestedMenus menuCtxRole />
 </#macro>
 
 

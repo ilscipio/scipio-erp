@@ -479,19 +479,22 @@ or even multiple per fieldset.
     inlineItems     = change default for @field inlineItems parameter (true/false)    
     checkboxType    = default checkbox type
     radioType       = default radio type  
+    open/close      = advanced structure logic
 -->
 <#assign fields_defaultArgs = {
-  "type":"default", "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", "labelAreaConsumeExceptions":true,
+  "type":"default", "open":true, "close":true, "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", "labelAreaConsumeExceptions":true,
   "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "checkboxType":"", "radioType":"", "passArgs":{}
 }>
 <#macro fields args={} inlineArgs...>
-  <#--<#local args = mergeArgMapsBasic(args, inlineArgs, catoStdTmplLib.fields_defaultArgs)>
-  <#local dummy = localsPutAll(args)>
-  <#local fieldsInfo = makeFieldsInfo(args)>-->
+  <#-- NOTE: this is non-standard args usage -->
   <#local fieldsInfo = makeFieldsInfo(mergeArgMapsBasic(args, inlineArgs))>
-  <#local dummy = pushRequestStack("catoFieldsInfoStack", fieldsInfo)>
-  <#nested>
-  <#local dummy = popRequestStack("catoFieldsInfoStack")>
+  <#if (fieldsInfo.open!true) == true>
+    <#local dummy = pushRequestStack("catoFieldsInfoStack", fieldsInfo)>
+  </#if>
+    <#nested>
+  <#if (fieldsInfo.close!true) == true>
+    <#local dummy = popRequestStack("catoFieldsInfoStack")>
+  </#if>
 </#macro>
 
 <#function makeFieldsInfo args={}>

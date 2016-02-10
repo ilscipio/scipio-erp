@@ -95,7 +95,7 @@ under the License.
                                 <include-menu name="BudgetSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
                             </widgets>
                         </section>
-                        <decorator-section-include name="pre-body"/>
+                        <!--<decorator-section-include name="pre-body"/>-->
                     </decorator-section>
                     <decorator-section name="body">
                         <section>

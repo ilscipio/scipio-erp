@@ -130,13 +130,10 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.emplPosition}" override-by-auto-include="true">
                         <section>
                             <condition>
-                                <and>
-                                    <if-has-permission permission="HUMANRES" action="_VIEW"/>
-                                    <not><if-empty field="emplPosition"/></not>
-                                </and>
+                                <if-has-permission permission="HUMANRES" action="_VIEW"/>
                             </condition>
                             <widgets>
                                 <include-menu name="EmplPositionSideBar" location="component://humanres/widget/HumanresMenus.xml"/>

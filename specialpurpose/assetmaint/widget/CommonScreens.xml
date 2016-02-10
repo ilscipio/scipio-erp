@@ -116,16 +116,9 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
-                        <section>
-                            <condition>
-                                <not><if-empty field="fixedAssetId"/></not>
-                            </condition>
-                            <widgets>
-                                <include-menu name="FixedAssetSideBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
-                            </widgets>
-                        </section>
-                        <decorator-section-include name="pre-body"/>
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.fixedAssetId}" override-by-auto-include="true"> <!-- Cato: quick setting lets callers override this section -->
+                        <include-menu name="FixedAssetSideBar" location="component://assetmaint/widget/AssetmaintMenus.xml"/>
+                        <!--<decorator-section-include name="pre-body"/>-->
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -141,7 +134,7 @@ under the License.
                                         <label style="heading" text="${uiLabelMap[titleProperty]} ${uiLabelMap.CommonFor} ${fixedAsset.fixedAssetName} [${fixedAssetId}]  ${${extraFunctionName}}"/>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="heading" text="${uiLabelMap[titleProperty]}"/>
+                                        <!-- Cato: duplicate <label style="heading" text="${uiLabelMap[titleProperty]}"/>-->
                                     </fail-widgets>
                                 </section>
                                 <decorator-section-include name="body"/>

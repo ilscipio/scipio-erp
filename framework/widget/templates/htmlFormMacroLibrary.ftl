@@ -185,7 +185,7 @@ WARN: no code run here or indirectly from here should assume full current contex
   </#if>
   <#-- showProgress=false progressOptions="" progressSuccessAction=""  -->
   <!-- extra form attribs: <@objectAsScript lang="raw" escape=false object=attribs /> -->
-  <#-- Cato process extra attribs -->
+  <#-- Cato: process extra attribs -->
   <#local showProgress = (attribs.showProgress)!false>
   <#if !showProgress?is_boolean>
     <#if showProgress?has_content>
@@ -193,6 +193,10 @@ WARN: no code run here or indirectly from here should assume full current contex
     <#else>
       <#local showProgress = false>
     </#if>
+  </#if>
+  <#-- Cato: support fieldsType="xxx" in form widget extra attribs, equivalent to setting @fields type="xxx" -->
+  <#if attribs.fieldsType?has_content>
+    <@fields type=attribs.fieldsType open=true close=false />
   </#if>
   <#local progressOptions = (attribs.progressOptions)!{}> <#-- NOTE: this may be a string repr of a map! -->
   <#local progressSuccessAction = (attribs.progressSuccessAction)!"">
@@ -209,8 +213,13 @@ WARN: no code run here or indirectly from here should assume full current contex
       </#if>
     </#if>
 </#macro>
+<#-- Cato: WARN: also exists renderMultiFormClose below -->
 <#macro renderFormClose focusFieldName formName containerId hasRequiredField>
+  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
   </form><#lt/>
+  <#if (htmlFormRenderFormInfo.attribs.fieldsType)?has_content>
+    <@fields type=htmlFormRenderFormInfo.attribs.fieldsType open=false close=true />
+  </#if>
   <#if focusFieldName?has_content>
     <@script>
       var form = document.${formName};
@@ -235,7 +244,11 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#local dummy = setRequestVar("htmlFormRenderFormInfo", {})>
 </#macro>
 <#macro renderMultiFormClose>
+  <#local htmlFormRenderFormInfo = getRequestVar("htmlFormRenderFormInfo")!{}>
   </form><#lt/>
+  <#if (htmlFormRenderFormInfo.attribs.fieldsType)?has_content>
+    <@fields type=htmlFormRenderFormInfo.attribs.fieldsType open=false close=true />
+  </#if>
 </#macro>
 
 <#macro renderFormatListWrapperOpen formName style columnStyles formType="" attribs={}>
@@ -452,6 +465,8 @@ WARN: no code run here or indirectly from here should assume full current contex
   <#-- NOTE: using explicit version for compatibility! -->
   <#local outerClasses = compileClassArgExplicit(outerClass, outerClassDefault)>
 
+  <#-- Cato: TODO: form widgets currently only support left-position grid-like label arrangement; @field supports much more;
+      not currently sure if easy way to reuse the stuff in @field here -->
   <@cell open=true close=false class=outerClasses />
     <@row open=true close=false class="+form-field-entry ${fieldEntryTypeClass}" />
     

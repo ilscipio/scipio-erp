@@ -818,7 +818,7 @@ standard markup.
     
     * lookup *
     formName        = The name of the form that contains the lookup field.
-    fieldForName    = Contains the lookup window form name.
+    fieldFormName   = Contains the lookup window form name.
     
     * Checkbox (single mode) *
     value           = Y/N

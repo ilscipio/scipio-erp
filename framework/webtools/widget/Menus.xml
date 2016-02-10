@@ -400,4 +400,51 @@ under the License.
         </menu-item>
     </menu>
 
+    <!-- Cato: nested menu test -->
+    <menu name="LayoutDemoNestedButton" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
+        <menu-item name="top1" title="Toplevel1">
+            <link target="${demoTargetUrl}">
+                <parameter param-name="demoParam1"/>
+                <parameter param-name="demoParam2"/>
+                <parameter param-name="demoParam3"/>
+            </link>
+            <menu-item name="nested1" title="Nested1">
+                <link target="${demoTargetUrl}">
+                    <parameter param-name="demoParam1"/>
+                    <parameter param-name="demoParam2"/>
+                    <parameter param-name="demoParam3"/>
+                </link>
+            </menu-item>
+            <menu-item name="nested2" title="Nested2">
+                <link target="${demoTargetUrl}">
+                    <parameter param-name="demoParam1"/>
+                    <parameter param-name="demoParam2"/>
+                    <parameter param-name="demoParam3"/>
+                </link>
+                <menu-item name="nestednested1" title="Nestednested1">
+                    <link target="${demoTargetUrl}">
+                        <parameter param-name="demoParam1"/>
+                        <parameter param-name="demoParam2"/>
+                        <parameter param-name="demoParam3"/>
+                    </link>
+                </menu-item>
+                <menu-item name="nestednested2" title="Nestednested2">
+                    <link target="${demoTargetUrl}">
+                        <parameter param-name="demoParam1"/>
+                        <parameter param-name="demoParam2"/>
+                        <parameter param-name="demoParam3"/>
+                    </link>
+                </menu-item>
+            </menu-item>
+            <menu-item name="nested3" title="Nested3"></menu-item>
+        </menu-item>
+        <menu-item name="top2" title="Toplevel2">
+            <link target="${demoTargetUrl}" link-type="hidden-form">
+                <parameter param-name="demoParam1"/>
+                <parameter param-name="demoParam2"/>
+                <parameter param-name="demoParam3"/>
+            </link>
+        </menu-item>
+    </menu>
+
 </menus>

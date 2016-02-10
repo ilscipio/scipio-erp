@@ -215,6 +215,10 @@ under the License.
                     <label style="common-msg-info" text="Regular info message"/>
                     <label style="common-msg-info-important" text="Important info message"/>
                 </screenlet>
+                <screenlet title="Widget menus">
+                    <label style="heading" text="Nested button menu (markup test only)" />
+                    <include-menu name="LayoutDemoNestedButton" location="component://webtools/widget/Menus.xml"/>
+                </screenlet>
             </widgets>
         </section>
     </screen>

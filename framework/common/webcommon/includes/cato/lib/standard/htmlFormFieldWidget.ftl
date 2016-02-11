@@ -129,7 +129,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   "timeDropdownParamName":"", "defaultDateTimeString":"", "localizedIconTitle":"", "timeDropdown":"", "timeHourName":"", 
   "classString":"", "hour1":"", "hour2":"", "timeMinutesName":"", "minutes":"", "isTwelveHour":"", "ampmName":"", "amSelected":"", 
   "pmSelected":"", "compositeType":"", "formName":"", "alert":false, "mask":"", "events":{}, "step":"", "timeValues":"", "tooltip":"", 
-  "collapse":false, "fieldTitleBlank":false, "inlineLabel":false, "passArgs":{}
+  "collapse":false, "fieldTitleBlank":false, "origLabel":"", "inlineLabel":false, "passArgs":{}
 }>
 <#macro field_datetime_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_datetime_widget_defaultArgs)>
@@ -138,39 +138,55 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <@field_datetime_markup_widget name=name class=class title=title value=value size=size maxlength=maxlength id=id dateType=dateType shortDateInput=shortDateInput 
     timeDropdownParamName=timeDropdownParamName defaultDateTimeString=defaultDateTimeString localizedIconTitle=localizedIconTitle timeDropdown=timeDropdown timeHourName=timeHourName classString=classString 
     hour1=hour1 hour2=hour2 timeMinutesName=timeMinutesName minutes=minutes isTwelveHour=isTwelveHour ampmName=ampmName amSelected=amSelected pmSelected=pmSelected compositeType=compositeType formName=formName 
-    alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_datetime_markup_widget>
+    alert=alert mask=mask events=events step=step timeValues=timeValues tooltip=tooltip collapse=false fieldTitleBlank=fieldTitleBlank origLabel=origLabel inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_datetime_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_datetime_markup_widget name="" class="" title="" value="" size="" maxlength="" id="" dateType="" shortDateInput=false 
     timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" 
     hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName="" 
-    alert=false mask="" events={} step="" timeValues="" tooltip="" collapse=false fieldTitleBlank=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
+    alert=false mask="" events={} step="" timeValues="" tooltip="" collapse=false fieldTitleBlank=false origLabel="" inlineLabel=false origArgs={} passArgs={} catchArgs...>
   
   <#local fdatepickerOptions>{format:"yyyy-mm-dd", forceParse:false}</#local>
   <#-- Note: ofbiz never handled dateType=="date" here because it pass shortDateInput=true in renderer instead-->
   <#-- These should be ~uiLabelMap.CommonFormatDate/Time/DateTime -->
-  <#local dateFormat><#if (shortDateInput!false) == true>yyyy-MM-dd<#elseif dateType=="time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
-  <#local useTsFormat = (((shortDateInput!false) == false) && dateType!="time")>
+  <#local dateFormat><#if shortDateInput>yyyy-MM-dd<#elseif dateType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
+  <#local useTsFormat = ((!shortDateInput) && dateType != "time")>
 
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
         <div class="${styles.grid_small!}11 ${styles.grid_cell!}">
           <#if tooltip?has_content> 
             <#local class = addClassArg(class, "has-tip tip-right")>
+            <#-- tooltip supplants title -->
+            <#local title = tooltip>
+          </#if>
+          <#if title?is_boolean && title == false>
+            <#local title = "">
+          <#else>
+            <#if title?is_boolean && title == true>
+              <#local title = "">
+            </#if>
+            <#if !title?has_content>
+              <#local title = styles.field_datetime_default_title!>
+            </#if>
+            <#-- TODO: fully localize format-->
+            <#if title?starts_with("#PROP:")>
+              <#local title = getPropertyMsgFromLocExpr(title?substring(6), true, {"dateLabel":origLabel, "dateFormat":dateFormat})!"">
+            </#if>
           </#if>
           <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>
           <#if dateType == "time">
             <input type="text" name="${name}"<@fieldClassAttribStr class=class alert=alert /><#rt/>
-            <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
-            <#if title?has_content> title="${title}"</#if>
-            <#if value?has_content> value="${value}"</#if>
+            <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true"</#if><#rt/>
+            <#if title?has_content> title="${title}"</#if><#rt/>
+            <#if value?has_content> value="${value}"</#if><#rt/>
             <#if size?has_content> size="${size}"</#if><#rt/>
             <#if maxlength?has_content>  maxlength="${maxlength}"</#if>
             <#if id?has_content> id="${id}"</#if> /><#rt/>
           <#else>
             <input type="text" name="${name}_i18n"<@fieldClassAttribStr class=class alert=alert /><#rt/>
-            <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true" title="${tooltip!}"</#if><#rt/>
-            <#if title?has_content> title="${title}"</#if>
+            <#if tooltip?has_content> data-tooltip aria-haspopup="true" data-options="disable_for_touch:true"</#if><#rt/>
+            <#if title?has_content> title="${title}"</#if><#rt/>
             <#if value?has_content> value="${value}"</#if>
             <#if size?has_content> size="${size}"</#if><#rt/>
             <#if maxlength?has_content>  maxlength="${maxlength}"</#if>

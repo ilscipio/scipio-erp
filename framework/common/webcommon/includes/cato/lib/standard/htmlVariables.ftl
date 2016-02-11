@@ -837,6 +837,9 @@
     "field_radio_default_labeltype" : "standard",
     "field_radio_default_labelposition" : "after",
     
+    <#-- datetime type styles -->
+    "field_datetime_default_title" : "#PROP:CommonUiLabels#CommonDateInfoLabelAndFormat",    <#-- can be a property label from CommonUiLabels; prefix with "#PROP:". Can also add colon and resource afterward. -->
+    
     <#-- Field type style name maps
         These map cato and ofbiz field types to style names to represent the fields in CSS, so they can be unified.
         For any entries not specified, "default" entry is consulted.

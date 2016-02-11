@@ -155,10 +155,24 @@ TODO: java transform.
   </#if>
   <#if msgArgs?is_sequence>
     <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, specLocale))?string>
+  <#elseif msgArgs?is_hash>
+    <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, msgArgs, specLocale))?string>
   <#else>
     <#-- WARN: context variable _could_ be missing! -->
     <#return StringUtil.wrapString(Static["org.ofbiz.base.util.UtilProperties"].getMessage(resource, name, context!{}, specLocale))?string>
   </#if>
+</#function>
+
+<#function getPropertyMsgFromLocExpr resourceExpr specLocale=true msgArgs=false>
+  <#local parts = resourceExpr?split("#")>
+  <#if (parts?size >= 2)>
+    <#local resource = parts[0]>
+    <#local name = parts[1]>
+  <#else>
+    <#local resource = "CommonUiLabels">
+    <#local name = parts[0]>
+  </#if>
+  <#return getPropertyMsg(resource, name, specLocale, msgArgs)> 
 </#function>
 
 <#-- 

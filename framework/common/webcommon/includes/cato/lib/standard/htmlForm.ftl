@@ -784,7 +784,11 @@ standard markup.
     
     * dateTime *
     dateType        = [date-time|date|time] (default: date-time) type of datetime
-                      note: date-time is equivalent to "timestamp" in form widgets
+                      NOTE: date-time is equivalent to "timestamp" in form widgets
+    title           = shows requested title.
+                      If empty, markup/theme decides what to show.
+                      Can also be a special value in format "#PROP:resource#propname". If no resource, taken from CommonUiLabels.
+                      NOTE: Tooltip has priority over title.
     
     * select *
     multiple        = allow multiple select true/false
@@ -1211,7 +1215,7 @@ standard markup.
         <@field_datetime_widget name=name 
                               class=class 
                               alert=alert 
-                              title=origLabel 
+                              title=title 
                               value=value 
                               size=size 
                               maxlength=maxlength 
@@ -1235,6 +1239,7 @@ standard markup.
                               compositeType="" 
                               formName=""
                               tooltip=tooltip
+                              origLabel=origLabel
                               inlineLabel=effInlineLabel
                               passArgs=passArgs/>                
         <#break>

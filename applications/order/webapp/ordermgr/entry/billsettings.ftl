@@ -218,7 +218,7 @@ function makeExpDate() {
               
               <hr />
 
-              <@field type="input" label="${uiLabelMap.AccountingCompanyNameCard}" class="inputBox" size="30" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard!}"/>
+              <@field type="input" label="${uiLabelMap.AccountingCompanyNameCard}" class="+inputBox" size="30" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard!}"/>
               <@field type="select" label="${uiLabelMap.AccountingPrefixCard}" name="titleOnCard">
                   <option value="">${uiLabelMap.CommonSelectOne}</option>
                   <option<#if ((creditCard.titleOnCard)?default("") == "Mr.")> checked="checked"</#if>>${uiLabelMap.CommonTitleMr}</option>
@@ -259,14 +259,14 @@ function makeExpDate() {
                       <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
                     </#if>
                   </#if>
-                  <@field type="select" name="expMonth" onchange="javascript:makeExpDate();">
+                  <@field type="select" name="expMonth" onChange="javascript:makeExpDate();">
                     <#if creditCard?has_content && expMonth?has_content><#assign ccExprMonth = expMonth><#else><#assign ccExprMonth = requestParameters.expMonth!></#if>
                     <#if ccExprMonth?has_content>
                       <option value="${ccExprMonth!}">${ccExprMonth!}</option>
                     </#if>
                     ${screens.render("component://common/widget/CommonScreens.xml#ccmonths")}
                   </@field>
-                  <@field type="select" name="expYear" onchange="javascript:makeExpDate();">
+                  <@field type="select" name="expYear" onChange="javascript:makeExpDate();">
                     <#if creditCard?has_content && expYear?has_content><#assign ccExprYear = expYear><#else><#assign ccExprYear = requestParameters.expYear!></#if>
                     <#if ccExprYear?has_content>
                       <option value="${ccExprYear!}">${ccExprYear!}</option>

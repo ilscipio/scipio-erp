@@ -53,7 +53,7 @@ jQuery(document).ready(function(){
         <#assign jsHtmlString>
           '<@field type="submitarea">
             <@field type="submit" text="${uiLabelMap.CommonSubmit}" name="submitButton"/> 
-            <@field type="submit" submitType="link" class="${styles.link_nav_cancel!}" title=" " href="/catalog/control/ListImageManage?productId=' + productId + '" text="${uiLabelMap.CommonCancel}" />
+            <@field type="submit" submitType="link" class="+${styles.link_nav_cancel!}" title=" " href="/catalog/control/ListImageManage?productId=' + productId + '" text="${uiLabelMap.CommonCancel}" />
           </@field>'
         </#assign>
         jQuery('#ImageCropping').append(${compressStringBlankspace(jsHtmlString)});

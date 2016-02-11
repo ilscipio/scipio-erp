@@ -38,7 +38,7 @@ under the License.
             <option value="">${uiLabelMap.OrderNewShoppingList}</option>
           </@field>
           
-          <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToShoppingList}"/>
+          <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToShoppingList}"/>
         </form>
     </@section>
 </#if>

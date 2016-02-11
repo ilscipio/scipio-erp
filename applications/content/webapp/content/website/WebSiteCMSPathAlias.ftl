@@ -75,5 +75,5 @@
             </@field>
             <@field type="input" label="Path Alias" name="pathAlias" value="" />
             <@field type="input" label="Map Key" name="mapKey" value="" />
-            <@field type="submit" submitType="input-button" id="submit" onClick="javascript:pathSave('${contentId}');" class="${styles.link_run_sys!} ${styles.action_add!}" text="Create"/>
+            <@field type="submit" submitType="input-button" id="submit" onClick="javascript:pathSave('${contentId}');" class="+${styles.link_run_sys!} ${styles.action_add!}" text="Create"/>
     </form>

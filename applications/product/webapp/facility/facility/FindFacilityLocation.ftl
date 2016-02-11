@@ -44,7 +44,7 @@ under the License.
         <@field type="input" label="${uiLabelMap.ProductSection}" name="sectionId" value="" size="19" maxlength="20" />
         <@field type="input" label="${uiLabelMap.ProductLevel}" name="levelId" value="" size="19" maxlength="20" />
         <@field type="input" label="${uiLabelMap.ProductPosition}" name="positionId" value="" size="19" maxlength="20" />
-        <@field type="submit" name="look_up" text="${uiLabelMap.CommonFind}" class="${styles.link_run_sys!} ${styles.action_find!}" />
+        <@field type="submit" name="look_up" text="${uiLabelMap.CommonFind}" class="+${styles.link_run_sys!} ${styles.action_find!}" />
     </form>
 
     <#if foundLocations??>

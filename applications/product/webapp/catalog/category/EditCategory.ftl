@@ -94,9 +94,7 @@ function insertImageName(type,nameValue) {
             </@row>
             <@row>
                 <@cell columns=12>
-                <@field type="generic" label="${uiLabelMap.CommonDescription}">
-                    <textarea name="description" cols="60" rows="2"><#if productCategory?has_content>${(productCategory.description)!}</#if></textarea>
-                </@field>
+                <@field type="textarea" label="${uiLabelMap.CommonDescription}" name="description" cols="60" rows="2"><#if productCategory?has_content>${(productCategory.description)!}</#if></@field>
                 </@cell>
             </@row>
             <@row>
@@ -163,7 +161,7 @@ function insertImageName(type,nameValue) {
                 </@field>
                 </@cell>
             </@row>
-                <@field type="submit" name="Update" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
+                <@field type="submit" name="Update" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
 
         </form>
 </@section>

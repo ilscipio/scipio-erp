@@ -137,7 +137,7 @@ under the License.
       </#list>
       </@field>
       
-      <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
+      <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
     </form>
 </@section>
 
@@ -166,7 +166,7 @@ under the License.
       <@field type="datetime" dateType="date" label="${uiLabelMap.CommonThru}" name="thruDate" size="25" maxlength="30" id="thruDate1" />
       <@field type="input" label="${uiLabelMap.CommonSequence}" size=5 name="sequenceNum" value="" />
     
-      <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
+      <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
     </form>
 </@section>
 
@@ -189,7 +189,7 @@ under the License.
       <@field type="datetime" dateType="date" label="${uiLabelMap.CommonThru}" name="thruDate" size="25" maxlength="30" id="thruDate2" />
       <@field type="input" label="${uiLabelMap.CommonSequence}" size=5 name="sequenceNum" value="" />
     
-      <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
+      <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
     </form>
 </@section>
 

@@ -27,7 +27,7 @@ under the License.
 <#-- FIXME?: should specify a form/fields type here that implies manual row/cell markup 
      instead of norows=true nocells=true-->
 <form id="addAdditionalImagesForm" method="post" action="<@ofbizUrl>addAdditionalImagesForProduct</@ofbizUrl>" enctype="multipart/form-data">
-  <@fields type="generic">
+  <@fields type="default-manual">
   <input id="additionalImageProductId" type="hidden" name="productId" value="${productId!}" />
     <#macro imageField name imageHtml id="">
       <#if imageHtml?trim?has_content>
@@ -64,7 +64,7 @@ under the License.
       </#assign>
       <@imageField name="additionalImageFour" imageHtml=imageHtml />
       
-      <@field type="submit" text="${uiLabelMap.CommonUpload}" class="${styles.link_run_sys!} ${styles.action_import!}" />
+      <@field type="submit" text="${uiLabelMap.CommonUpload}" class="+${styles.link_run_sys!} ${styles.action_import!}" />
 
   <div class="right" style="margin-top:-250px;">
     <a href="javascript:void(0);" class="${styles.link_type_image!} ${styles.action_run_sys!} ${styles.action_view!}"><img id="detailImage" name="mainImage" vspace="5" hspace="5" width="150" height="150" style="margin-left:50px" src="" alt="" /></a>

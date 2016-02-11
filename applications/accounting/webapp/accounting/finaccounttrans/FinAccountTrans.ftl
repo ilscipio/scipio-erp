@@ -110,12 +110,12 @@ function getFinAccountTransRunningTotalAndBalances() {
                                         <option value="${glReconciliation.glReconciliationId}">${glReconciliation.glReconciliationName!}[[${glReconciliation.glReconciliationId}] [${glReconciliation.reconciledDate!}] [${glReconciliation.reconciledBalance!}]]</option>
                                     </#list>
                                 </@field>
-                                <@field type="submit" id="submitButton" text="${uiLabelMap.AccountingAssignToReconciliation}" disabled=true onClick="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_updatestatus!}" />                                                                
+                                <@field type="submit" id="submitButton" text="${uiLabelMap.AccountingAssignToReconciliation}" disabled=true onClick="javascript:document.selectAllForm.submit();" class="+${styles.link_run_sys!} ${styles.action_updatestatus!}" />                                                                
                             <#else>
                                 ${uiLabelMap.AccountingNoGlReconciliatio??} <a href="<@ofbizUrl>EditFinAccountReconciliations?finAccountId=${parameters.finAccountId!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_update!}">${uiLabelMap.CommonClickHere}</a>
                             </#if>
                         <#else>
-                            <@field type="submit" id="submitButton" onClick="javascript:document.selectAllForm.submit();" text="${uiLabelMap.AccountingReconcile}" disabled=true class="${styles.link_run_sys!} ${styles.action_update!}" />
+                            <@field type="submit" id="submitButton" onClick="javascript:document.selectAllForm.submit();" text="${uiLabelMap.AccountingReconcile}" disabled=true class="+${styles.link_run_sys!} ${styles.action_update!}" />
                         </#if>
                     </@cell>
                 </@row>

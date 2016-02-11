@@ -83,9 +83,7 @@ under the License.
                 </@field>
                 <@field type="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="sgi${shipGroupIndex?default('0')}_shipBeforeDate" value="${(cart.getShipBeforeDate(shipGroupIndex))!}" size="25" maxlength="30" id="sgi${shipGroupIndex?default('0')}_shipBeforeDate"/>
                 <@field type="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="sgi${shipGroupIndex?default('0')}_shipAfterDate" value="${(cart.getShipAfterDate(shipGroupIndex))!}" size="25" maxlength="30" id="sgi${shipGroupIndex?default('0')}_shipAfterDate"/>
-                <@field type="generic" label="${uiLabelMap.FacilitySpecialInstructions}">
-                    <textarea cols="30" rows="3" name="${shipGroupIndex?default("0")}_shipping_instructions">${cart.getShippingInstructions(shipGroupIndex)!}</textarea>
-                </@field>
+                <@field type="textarea" label="${uiLabelMap.FacilitySpecialInstructions}" cols="30" rows="3" name="${shipGroupIndex?default("0")}_shipping_instructions">${cart.getShippingInstructions(shipGroupIndex)!}</@field>
 
             <#if cart.getOrderType() == 'PURCHASE_ORDER'>
                 <input type="hidden" name="${shipGroupIndex?default('0')}_is_gift" value="false" />
@@ -96,9 +94,7 @@ under the License.
                     <@field type="radio" name="${shipGroupIndex!'0'}_is_gift" value="false" checked=((cart.getIsGift(shipGroupIndex)!'N') == 'N') label="${uiLabelMap.CommonNo}"/>
                 </@field>
               </#if>
-                <@field type="generic" label="${uiLabelMap.OrderGiftMessage}">
-                    <textarea cols="30" rows="3" name="${shipGroupIndex?default('0')}_gift_message">${cart.getGiftMessage(shipGroupIndex)!}</textarea>
-                </@field>
+                <@field type="textarea" label="${uiLabelMap.OrderGiftMessage}" cols="30" rows="3" name="${shipGroupIndex?default('0')}_gift_message">${cart.getGiftMessage(shipGroupIndex)!}</@field>
             </#if>
 
           </@cell>

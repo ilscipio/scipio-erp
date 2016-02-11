@@ -108,5 +108,5 @@
         <@field type="input" label="Title Property" name="titleProperty" value="${(titleProperty.objectInfo)!}" size="40" />
         <@field type="input" label="Meta-Description" name="metaDescription" value="${(metaDescription.objectInfo)!}" size="40" />
         <@field type="input" label="Meta-Keywords" name="metaKeywords" value="${(metaKeywords.objectInfo)!}" size="40" />
-        <@field type="submit" submitType="input-button" id="submit" onClick="javascript:saveMetaInfo(cmsmetaform);" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.CommonSave}"/>
+        <@field type="submit" submitType="input-button" id="submit" onClick="javascript:saveMetaInfo(cmsmetaform);" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.CommonSave}"/>
 </form>

@@ -32,58 +32,27 @@ under the License.
       <@actionMenu />
       
       <form method="post" action="<@ofbizUrl>sendconfirmationmail/${donePage}</@ofbizUrl>" name="sendConfirmationForm">
+        <@fields type="default">
         <input type="hidden" name="orderId" value="${orderId!}" />
         <#if ! productStoreEmailSetting??>
-            <#assign productStoreEmailSetting = {} />
+          <#assign productStoreEmailSetting = {} />
         </#if>
         <input type="hidden" name="partyId" value="${partyId!}" />
-        <input type="hidden" name="contentType" value="${productStoreEmailSetting.contentType?default("")}" />
-        <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
-            <@tr>
-                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailSubject}&nbsp;</@td>
-                <@td>
-                    <input type="text" size="40" name="subject" value="${productStoreEmailSetting.subject?default(uiLabelMap.OrderOrderConfirmation + " " + uiLabelMap.OrderNbr + orderId)?replace("\\$\\{orderId\\}",orderId,"r")}" />
-                </@td>
-            </@tr>
-            <@tr>
-                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailSendTo}&nbsp;</@td>
-                <@td>
-                    <input type="text" size="40" name="sendTo" value="${sendTo}"/>
-                </@td>
-            </@tr>
-            <@tr>
-                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailCCTo}&nbsp;</@td>
-                <@td>
-                    <input type="text" size="40" name="sendCc" value="${productStoreEmailSetting.ccAddress?default("")}" />
-                </@td>
-            </@tr>
-            <@tr>
-                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailBCCTo}&nbsp;</@td>
-                <@td>
-                    <input type="text" size="40" name="sendBcc" value="${productStoreEmailSetting.bccAddress?default("")}" />
-                </@td>
-            </@tr>
-            <@tr>
-                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.CommonFrom}&nbsp;</@td>
-                <@td>
-                    <#if productStoreEmailSetting.fromAddress??>
-                        <input type="hidden" name="sendFrom" value="${productStoreEmailSetting.fromAddress}" />
-                    <#else>
-                        <input type="text" size="40" name="sendFrom" value="" />
-                    </#if>
-                </@td>
-            </@tr>
-            <@tr>
-                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailContentType}&nbsp;</@td>
-                <@td>${productStoreEmailSetting.contentType?default("text/html")}</@td>
-            </@tr>
-            <@tr>
-                <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderSendConfirmationEmailBody}&nbsp;</@td>
-                <@td>
-                    <textarea name="body" rows="30" cols="80">${screens.render(productStoreEmailSetting.bodyScreenLocation?default(""))}</textarea>
-                </@td>
-            </@tr>
-        </@table>
+        <input type="hidden" name="contentType" value="${productStoreEmailSetting.contentType!""}" />
+        
+        <#assign fieldValue>${productStoreEmailSetting.subject!(uiLabelMap.OrderOrderConfirmation + " " + uiLabelMap.OrderNbr + orderId)?replace("\\$\\{orderId\\}",orderId,"r")}</#assign>
+        <@field type="input" size="40" name="subject" value=fieldValue label="${uiLabelMap.OrderSendConfirmationEmailSubject}" />
+        <@field type="input" size="40" name="sendTo" value="${sendTo}" label="${uiLabelMap.OrderSendConfirmationEmailSendTo}" />
+        <@field type="input" size="40" name="sendCc" value="${productStoreEmailSetting.ccAddress!''}" label="${uiLabelMap.OrderSendConfirmationEmailCCTo}" />
+        <@field type="input" size="40" name="sendBcc" value="${productStoreEmailSetting.bccAddress!''}" label="${uiLabelMap.OrderSendConfirmationEmailBCCTo}" />
+      <#if productStoreEmailSetting.fromAddress??>
+        <input type="hidden" name="sendFrom" value="${productStoreEmailSetting.fromAddress}" />
+      <#else>
+        <@field type="input" size="40" name="sendFrom" value="" label="${uiLabelMap.CommonFrom}"/>
+      </#if>
+        <@field type="display" label="${uiLabelMap.OrderSendConfirmationEmailContentType}">${productStoreEmailSetting.contentType!"text/html"}</@field>
+        <@field type="textarea" name="body" rows="30" cols="80" label="${uiLabelMap.OrderSendConfirmationEmailBody}">${screens.render(productStoreEmailSetting.bodyScreenLocation!"")}</@field>
+        </@fields>
       </form>
       
       <@actionMenu />

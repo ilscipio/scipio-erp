@@ -355,7 +355,7 @@ under the License.
               </@tr>
               <@field type="input" label="${uiLabelMap.OrderOrderId}" tooltip="${uiLabelMap.OrderReturnLoadItems}" name="orderId" size="20" maxlength="20" />
             </#if>
-            <@field type="submit" submitType="link" href="javascript:document.returnItems.submit();" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.OrderReturnLoadItems}" />
+            <@field type="submit" submitType="link" href="javascript:document.returnItems.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.OrderReturnLoadItems}" />
         </form>
         </@section>
         </#if>

@@ -52,7 +52,7 @@ under the License.
           <option value="${calendarWeek.calendarWeekId}" <#if calendarData?has_content && calendarData.calendarWeekId?default("") == calendarWeek.calendarWeekId>SELECTED</#if>>${(calendarWeek.get("description",locale))!}</option>
           </#list>
     </@field>
-    <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
+    <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
 
   </form>
 </@section>

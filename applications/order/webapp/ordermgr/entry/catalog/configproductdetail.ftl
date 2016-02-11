@@ -283,7 +283,7 @@ function getConfigDetails() {
           <#if variantTree?? && 0 < variantTree.size()>
             <#list featureSet as currentType>
             <@fields type="default-nolabels">
-              <@field type="select" name="FT${currentType}" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
+              <@field type="select" name="FT${currentType}" onChange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
                   <option>${featureTypes.get(currentType)}</option>
               </@field>
             </@fields>
@@ -337,7 +337,7 @@ function getConfigDetails() {
               <@field type="input" label="${uiLabelMap.ProductQuantity} (${uiLabelMap.OrderUnits})" disabled=true size="5" name="quantity" value="0" disabled="disabled" />
             <#else>
               <@field type="input" label="${uiLabelMap.ProductQuantity}" size="5" name="quantity" value="1" />
-              <@field type="submit" submitType="link" href="javascript:addItem()" class="${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToCart}" />
+              <@field type="submit" submitType="link" href="javascript:addItem()" class="+${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToCart}" />
             </#if>
           </#if>
           <#if requestParameters.category_id??>
@@ -369,7 +369,7 @@ function getConfigDetails() {
               <option value="">${uiLabelMap.OrderNewShoppingList}</option>
           </@field>
           <@field type="input" label="${uiLabelMap.ProductQuantity}" size="5" name="quantity" value="1" />
-          <@field type="submit" submitType="link" href="javascript:document.addToShoppingList.submit();" class="${styles.link_run_sys!} ${styles.action_add!}" text="[${uiLabelMap.OrderAddToShoppingList}]" />
+          <@field type="submit" submitType="link" href="javascript:document.addToShoppingList.submit();" class="+${styles.link_run_sys!} ${styles.action_add!}" text="[${uiLabelMap.OrderAddToShoppingList}]" />
         </form>
       <#else> 
         ${uiLabelMap.OrderYouMust} <a href="<@ofbizUrl>checkLogin/showcart</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_login!}">${uiLabelMap.CommonBeLogged}</a>

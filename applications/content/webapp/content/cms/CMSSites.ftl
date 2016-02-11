@@ -209,8 +209,8 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="" --> <#-- orig: border="0" -->
   <@tr>
     <@td width='100%'>
-      <@fields type="generic">
       <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
+        <@fields type="default-manual">
       <input type="hidden" name="permRoleSiteId" value="${forumId}"/>
       <input type="hidden" name="forumId" value="${forumId}"/>
       <input type="hidden" name="rootForumId" value="${rootForumId}"/>
@@ -258,8 +258,8 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
           </@tr>
       </@table>
           <input type="hidden" name="_rowCount" value="${blogRoleIdList}"/>
+        </@fields>
       </form>
-      </@fields>
     </@td>
   </@tr>
 </@table>

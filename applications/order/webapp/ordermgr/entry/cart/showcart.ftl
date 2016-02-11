@@ -93,50 +93,41 @@ under the License.
             </form>
               
             <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="quickaddform">
-                    <#if orderType=="PURCHASE_ORDER">                        
-                      <#if partyId?has_content>                                               
-                        <#assign fieldFormName="LookupSupplierProduct?partyId=${partyId}">
-                      <#else>
-                        <#assign fieldFormName="LookupSupplierProduct">
-                      </#if>
-                    <#else>
-                      <#assign fieldFormName="LookupProduct">
-                    </#if>
-                          
-                    <@field type="lookup" formName="quickaddform" name="add_product_id" id="add_product_id" fieldFormName=fieldFormName label="${uiLabelMap.ProductProductId}"/>
-                          
-                    <@field type="input" size="6" name="quantity" value="1" label="${uiLabelMap.OrderQuantity}"/>
-                          
-                          
-                    <#if useAsDefaultDesiredDeliveryDate??> 
-                      <#assign value = defaultDesiredDeliveryDate>
-                    </#if>
-                    <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderDesiredDeliveryDate}" name="itemDesiredDeliveryDate" value="${value!}" size="25" maxlength="30" id="additem_itemDesiredDeliveryDate" />
-                     
-                    <@field type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true" checked=(useAsDefaultDesiredDeliveryDate??) label="${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}" />
-
-                    <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="shipAfterDate" value="${shoppingCart.getDefaultShipAfterDate()!}" size="25" maxlength="30" id="additem_shipAfterDate" />
-                    <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="shipBeforeDate" value="${shoppingCart.getDefaultShipBeforeDate()!}" size="25" maxlength="30" id="additem_shipBeforeDate"/>
-
-                   
-                <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-                    <@field type="select" label="${uiLabelMap.OrderOrderItemType}" name="add_item_type">
-                        <option value="">&nbsp;</option>
-                        <#list purchaseOrderItemTypeList as orderItemType>
-                        <option value="${orderItemType.orderItemTypeId}">${orderItemType.description}</option>
-                        </#list>
-                    </@field>
+                <#if orderType=="PURCHASE_ORDER">                        
+                  <#if partyId?has_content>                                               
+                    <#assign fieldFormName="LookupSupplierProduct?partyId=${partyId}">
+                  <#else>
+                    <#assign fieldFormName="LookupSupplierProduct">
+                  </#if>
+                <#else>
+                  <#assign fieldFormName="LookupProduct">
                 </#if>
+                      
+                <@field type="lookup" formName="quickaddform" name="add_product_id" id="add_product_id" fieldFormName=fieldFormName label="${uiLabelMap.ProductProductId}"/>
+                <@field type="input" size="6" name="quantity" value="1" label="${uiLabelMap.OrderQuantity}"/>
 
-                    <@field type="checkbox" name="useAsDefaultComment" value="true" checked=useAsDefaultComment?? label="${uiLabelMap.OrderUseDefaultComment}" />
-                    
-                    <@field type="input" size="25" name="itemComment" value="${defaultComment!}" label="${uiLabelMap.CommonComment}"/>
-
-                    <@field type="submit" class="${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToOrder}"/>
+                <#if useAsDefaultDesiredDeliveryDate??> 
+                  <#assign value = defaultDesiredDeliveryDate>
+                </#if>
+                <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderDesiredDeliveryDate}" name="itemDesiredDeliveryDate" value="${value!}" size="25" maxlength="30" id="additem_itemDesiredDeliveryDate" />
+                <@field type="checkbox" name="useAsDefaultDesiredDeliveryDate" value="true" checked=(useAsDefaultDesiredDeliveryDate??) label="${uiLabelMap.OrderUseDefaultDesiredDeliveryDate}" />
+                <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="shipAfterDate" value="${shoppingCart.getDefaultShipAfterDate()!}" size="25" maxlength="30" id="additem_shipAfterDate" />
+                <@field type="datetime" dateType="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="shipBeforeDate" value="${shoppingCart.getDefaultShipBeforeDate()!}" size="25" maxlength="30" id="additem_shipBeforeDate"/>
+               
+              <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
+                <@field type="select" label="${uiLabelMap.OrderOrderItemType}" name="add_item_type">
+                    <option value="">&nbsp;</option>
+                    <#list purchaseOrderItemTypeList as orderItemType>
+                    <option value="${orderItemType.orderItemTypeId}">${orderItemType.description}</option>
+                    </#list>
+                </@field>
+              </#if>
+                <@field type="checkbox" name="useAsDefaultComment" value="true" checked=useAsDefaultComment?? label="${uiLabelMap.OrderUseDefaultComment}" />
+                <@field type="input" size="25" name="itemComment" value="${defaultComment!}" label="${uiLabelMap.CommonComment}"/>
+                <@field type="submit" class="+${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToOrder}"/>
             </form>
 
         <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
-
             <form method="post" action="<@ofbizUrl>additem</@ofbizUrl>" name="bulkworkaddform">
                 <@field type="select" label="${uiLabelMap.OrderOrderItemType}" name="add_item_type">
                   <option value="BULK_ORDER_ITEM">${uiLabelMap.ProductBulkItem}</option><option value="WORK_ORDER_ITEM">${uiLabelMap.ProductWorkItem}</option>
@@ -148,9 +139,8 @@ under the License.
                 <@field type="input" size="3" name="quantity" value="${requestParameters.quantity?default('1')}" label="${uiLabelMap.OrderQuantity}"/>
                 <@field type="input" size="6" name="price" value="${requestParameters.price!}" label="${uiLabelMap.OrderPrice}"/>
                     
-                <@field type="submit" class="${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToOrder}"/>
+                <@field type="submit" class="+${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddToOrder}"/>
             </form>
-
         </#if>
 
         </@fields>

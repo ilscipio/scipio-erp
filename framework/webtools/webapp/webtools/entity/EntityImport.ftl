@@ -22,22 +22,20 @@ under the License.
 <hr />
 
   <form method="post" action="<@ofbizUrl>entityImport</@ofbizUrl>">
-    ${uiLabelMap.WebtoolsAbsoluteFileNameOrUrl}:<br />
-    <input type="text" size="60" name="filename" value="${filename!}"/><br />
-    ${uiLabelMap.WebtoolsAbsoluteFTLFilename}:<br />
-    <input type="text" size="40" name="fmfilename" value="${fmfilename!}"/><br />
-    <input type="checkbox" name="isUrl" <#if isUrl??>checked="checked"</#if>/>${uiLabelMap.WebtoolsIsURL}<br />
-    <input type="checkbox" name="mostlyInserts" <#if mostlyInserts??>checked="checked"</#if>/>${uiLabelMap.WebtoolsMostlyInserts}<br />
-    <input type="checkbox" name="maintainTimeStamps" <#if keepStamps??>checked="checked"</#if>/>${uiLabelMap.WebtoolsMaintainTimestamps}<br />
-    <input type="checkbox" name="createDummyFks" <#if createDummyFks??>checked="checked"</#if>/>${uiLabelMap.WebtoolsCreateDummyFks}<br />
-    <input type="checkbox" name="checkDataOnly" <#if checkDataOnly??>checked="checked"</#if>/>${uiLabelMap.WebtoolsCheckDataOnly}<br />
-    ${uiLabelMap.WebtoolsTimeoutSeconds}:<input type="text" size="6" value="${txTimeoutStr?default("7200")}" name="txTimeout"/><br />
-    <div class="button-bar"><input type="submit" value="${uiLabelMap.WebtoolsImportFile}" class="${styles.link_run_sys!} ${styles.action_import!}"/></div>
+    <@field type="input" size="60" name="filename" value="${filename!}" label="${uiLabelMap.WebtoolsAbsoluteFileNameOrUrl}"/>
+    <@field type="input" size="40" name="fmfilename" value="${fmfilename!}" label="${uiLabelMap.WebtoolsAbsoluteFTLFilename}"/>
+    <@field type="checkbox" name="isUrl" checked=isUrl?? label="${uiLabelMap.WebtoolsIsURL}"/>
+    <@field type="checkbox" name="mostlyInserts" checked=mostlyInserts?? label="${uiLabelMap.WebtoolsMostlyInserts}"/>
+    <@field type="checkbox" name="maintainTimeStamps" checked=keepStamps?? label="${uiLabelMap.WebtoolsMaintainTimestamps}"/>
+    <@field type="checkbox" name="createDummyFks" checked=createDummyFks?? label="${uiLabelMap.WebtoolsCreateDummyFks}"/>
+    <@field type="checkbox" name="checkDataOnly" checked=checkDataOnly?? label="${uiLabelMap.WebtoolsCheckDataOnly}"/>
+    <@field type="input" size="6" value="${txTimeoutStr!'7200'}" name="txTimeout" label="${uiLabelMap.WebtoolsTimeoutSeconds}"/>
+    <@field type="submit" value="${uiLabelMap.WebtoolsImportFile}" class="+${styles.link_run_sys!} ${styles.action_import!}"/>
   </form>
+<hr />
   <form method="post" action="<@ofbizUrl>entityImport</@ofbizUrl>">
-    ${uiLabelMap.WebtoolsCompleteXMLDocument}:<br />
-    <textarea rows="20" cols="85" name="fulltext">${fulltext?default("<entity-engine-xml>\n</entity-engine-xml>")}</textarea>
-    <div class="button-bar"><input type="submit" value="${uiLabelMap.WebtoolsImportText}" class="${styles.link_run_sys!} ${styles.action_import!}"/></div>
+    <@field type="textarea" rows="20" cols="85" name="fulltext" label="${uiLabelMap.WebtoolsCompleteXMLDocument}">${fulltext!"<entity-engine-xml>\n</entity-engine-xml>"}</@field>
+    <@field type="submit" text="${uiLabelMap.WebtoolsImportText}" class="+${styles.link_run_sys!} ${styles.action_import!}"/>
   </form>
   <#if messages??>
       <hr />

@@ -281,7 +281,7 @@ under the License.
     <#-- select a party id to ship to instead -->
     <@section title="${uiLabelMap.OrderShipToAnotherParty}">
       <form method="post" action="setShipping" name="partyshipform">
-        <@fields type="generic">
+        <@fields type="default-manual">
           <@row>
             <@cell columns=6>
               <@row>
@@ -289,7 +289,7 @@ under the License.
                     <@field type="lookup" label="${uiLabelMap.PartyPartyId}" value='${thisPartyId!}' formName="partyshipform" name="shipToPartyId" id="shipToPartyId" fieldFormName="LookupPartyName"/>
                 </@cell>
                 <@cell columns=3>                 
-                    <@field type="submit" class="${styles.link_run_session!} ${styles.action_update!}" text="${uiLabelMap.CommonContinue}" />
+                    <@field type="submit" class="+${styles.link_run_session!} ${styles.action_update!}" text="${uiLabelMap.CommonContinue}" />
                 </@cell>
               </@row>
             </@cell>

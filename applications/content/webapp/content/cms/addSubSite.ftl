@@ -36,10 +36,10 @@ function win_cancel() {
         <option value="CTNT_PUBLISHED">Publish immediately</option>
   </@field>
   <@field type="submitarea"> 
-      <@field type="submit" name="submitBtn" text="Create" class="${styles.link_run_sys!} ${styles.action_add!}"/>
+      <@field type="submit" name="submitBtn" text="Create" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
       <#--
-      <@field type="submit" submitType="link" href="javascript:submit_add()" class="${styles.link_run_sys!} ${styles.action_add!}" text="Create" />
-      <@field type="submit" submitType="link" href="javascript:win_cancel()" class="${styles.link_nav_cancel!}" text="Cancel" />
+      <@field type="submit" submitType="link" href="javascript:submit_add()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="Create" />
+      <@field type="submit" submitType="link" href="javascript:win_cancel()" class="+${styles.link_nav_cancel!}" text="Cancel" />
       -->
   </@field>
 <input type="hidden" name="contentIdTo" value="${requestParameters.parentForumId}" />

@@ -98,7 +98,7 @@ function lookupShipments() {
                   <@field type="datetime" label="${uiLabelMap.CommonThru}" name="maxDate" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate1"/>
               </@field>
               
-              <@field type="submit" submitType="link" href="javascript:lookupShipments();" class="${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.ProductFindShipment}" />
+              <@field type="submit" submitType="link" href="javascript:lookupShipments();" class="+${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.ProductFindShipment}" />
         </form>
 </@section>
 

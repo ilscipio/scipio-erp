@@ -80,12 +80,8 @@ function insertImageName(size,nameValue) {
     <@section title="${uiLabelMap.ProductOverrideSimpleFields}">
             <form action="<@ofbizUrl>updateProductConfigItemContent</@ofbizUrl>" method="post" name="productForm">
                 <input type="hidden" name="configItemId" value="${configItemId!}" />
-                <@field type="generic" label="${uiLabelMap.CommonDescription}">
-                    <textarea name="description" cols="60" rows="2">${(configItem.description)!}</textarea>
-                </@field>
-                <@field type="generic" label="${uiLabelMap.ProductLongDescription}">
-                    <textarea name="longDescription" cols="60" rows="7">${(configItem.longDescription)!}</textarea>
-                </@field>
+                <@field type="textarea" label="${uiLabelMap.CommonDescription}" name="description" cols="60" rows="2">${(configItem.description)!}</@field>
+                <@field type="textarea" label="${uiLabelMap.ProductLongDescription}" name="longDescription" cols="60" rows="7">${(configItem.longDescription)!}</@field>
                 <#assign labelDetail>
                     <#if (configItem.imageUrl)??>
                         <a href="<@ofbizContentUrl>${configItem.imageUrl}</@ofbizContentUrl>" target="_blank"><img alt="Image" src="<@ofbizContentUrl>${configItem.imageUrl}</@ofbizContentUrl>" class="cssImgSmall" /></a>
@@ -102,14 +98,14 @@ function insertImageName(size,nameValue) {
                         </div>
                     </#if>
                 </@field>
-                <@field type="submit" name="Update" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+                <@field type="submit" name="Update" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
             </form>
     </@section>
     
     <@section title="${uiLabelMap.ProductUploadImage}">
             <form method="post" enctype="multipart/form-data" action="<@ofbizUrl>UploadProductConfigItemImage?configItemId=${configItemId}&amp;upload_file_type=small</@ofbizUrl>" name="imageUploadForm">
                 <@field type="file" size="50" name="fname" />
-                <@field type="submit" class="${styles.link_run_sys!} ${styles.action_import!}" text="${uiLabelMap.ProductUploadImage}" />
+                <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_import!}" text="${uiLabelMap.ProductUploadImage}" />
             </form>
     </@section>
 </#if>

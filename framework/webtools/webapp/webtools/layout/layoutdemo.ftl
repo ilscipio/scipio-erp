@@ -644,13 +644,13 @@
     </@row>
   </@section>
 
-  <@section title="Custom arranged form fields (@fields type=\"generic\")">
+  <@section title="Custom arranged form fields (@fields type=\"default-manual\")">
     <#-- NOTE: To get labels on custom (@fields group type "generic") fields, 
         must enable label area manually using labelArea=true. presence of label argument is not enough
         because label argument may be intended as an inline label (for default arrangements, this is
         controlled in styles hash as needed, but for generic fields, it should always be left to caller). -->
     <@form name="form5">
-    <@fields type="generic"> <#-- see styles.fields_generic_xxx -->
+    <@fields type="default-manual"> <#-- see styles.fields_generic_xxx -->
       <@row>
         <@cell columns=6>
           <@field type="input" name="input1" label="Input 1 and 2" labelArea=true />

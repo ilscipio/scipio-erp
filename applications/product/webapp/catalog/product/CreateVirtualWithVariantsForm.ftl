@@ -19,9 +19,7 @@ under the License.
 
 <@section title="${uiLabelMap.ProductQuickCreateVirtualFromVariants}">
     <form action="<@ofbizUrl>quickCreateVirtualWithVariants</@ofbizUrl>" method="post" name="quickCreateVirtualWithVariants">
-        <@field type="generic" label="${uiLabelMap.ProductVariantProductIds}">
-            <textarea name="variantProductIdsBag" rows="6" cols="20"></textarea>
-        </@field>
+        <@field type="textarea" label="${uiLabelMap.ProductVariantProductIds}" name="variantProductIdsBag" rows="6" cols="20"></@field>
         
         <@field type="select" label="Hazmat" name="productFeatureIdOne">
                 <option value="">- ${uiLabelMap.CommonNone} -</option>
@@ -31,6 +29,6 @@ under the License.
         
         </@field>  
         
-        <@field type="submit" text="${uiLabelMap.ProductCreateVirtualProduct}" class="${styles.link_run_sys!} ${styles.action_add!}"/> 
+        <@field type="submit" text="${uiLabelMap.ProductCreateVirtualProduct}" class="+${styles.link_run_sys!} ${styles.action_add!}"/> 
     </form>
 </@section>

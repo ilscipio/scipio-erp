@@ -28,7 +28,7 @@ under the License.
     <@field type="input" name="mapKey" label="${uiLabelMap.PartyAddressMatchKey}" />
     <@field type="input" name="mapValue" label="${uiLabelMap.PartyAddressMatchValue}" />
     <@field type="input" name="sequenceNum" label="${uiLabelMap.CommonSequence}" value="0" size=5/>
-    <@field type="submit" submitType="link" href="javascript:document.addaddrmap.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonCreate}" />
+    <@field type="submit" submitType="link" href="javascript:document.addaddrmap.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonCreate}" />
   </form>
   </@section>
   

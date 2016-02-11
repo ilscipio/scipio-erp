@@ -18,6 +18,6 @@
         </@field>
             </@cell>
         </@row>
-        <@field type="submit" text="${uiLabelMap.CommonCopy}" class="${styles.link_run_sys!} ${styles.action_copy!}" />
+        <@field type="submit" text="${uiLabelMap.CommonCopy}" class="+${styles.link_run_sys!} ${styles.action_copy!}" />
     </form>
 </@section>

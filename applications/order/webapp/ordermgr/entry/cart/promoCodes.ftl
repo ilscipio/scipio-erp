@@ -21,7 +21,7 @@ under the License.
     <@section title="${uiLabelMap.OrderPromotionCouponCodes_spaced}">
         <form method="post" action="<@ofbizUrl>addpromocode<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addpromocodeform">
           <@field type="input" size="15" name="productPromoCodeId" value="" />
-          <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.OrderAddCode}" />
+          <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.OrderAddCode}" />
           <#assign productPromoCodeIds = (shoppingCart.getProductPromoCodesEntered())!>
           <#if productPromoCodeIds?has_content>
             <@row>

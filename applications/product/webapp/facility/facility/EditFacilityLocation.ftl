@@ -70,9 +70,9 @@ under the License.
     <@field type="input" label="${uiLabelMap.ProductLevel}" name="levelId" value="${(facilityLocation.levelId)!}" size="19" maxlength="20" />
     <@field type="input" label="${uiLabelMap.ProductPosition}" name="positionId" value="${(facilityLocation.positionId)!}" size="19" maxlength="20" />
     <#if locationSeqId??>
-      <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+      <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
     <#else>
-      <@field type="submit" text="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_add!}" />
+      <@field type="submit" text="${uiLabelMap.CommonSave}" class="+${styles.link_run_sys!} ${styles.action_add!}" />
     </#if>
   </form>
   
@@ -117,7 +117,7 @@ under the License.
             <@field type="input" label="${uiLabelMap.ProductProductId}" size="10" name="productId" />
             <@field type="input" label="${uiLabelMap.ProductMinimumStock}" size="10" name="minimumStock" />
             <@field type="input" label="${uiLabelMap.ProductMoveQuantity}" size="10" name="moveQuantity" />
-            <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
+            <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}" />
         </form>
   </@section>
   

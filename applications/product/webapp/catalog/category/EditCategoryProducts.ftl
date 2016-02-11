@@ -34,6 +34,7 @@ under the License.
       <#if (listSize > 0)>
         <@paginate mode="content" url=makeOfbizUrl("EditCategoryProducts") paramStr="productCategoryId=${productCategoryId!}&amp;activeOnly=${activeOnly.toString()}" viewSize=viewSize!1 viewIndex=viewIndex! listSize=listSize!0>
             <form method="post" action="<@ofbizUrl>updateCategoryProductMember</@ofbizUrl>" name="updateCategoryProductForm">
+              <@fields type="default-manual">
               <input type="hidden" name="VIEW_SIZE" value="${viewSize}"/>
               <input type="hidden" name="VIEW_INDEX" value="${viewIndex}"/>
               <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
@@ -70,10 +71,10 @@ under the License.
                         <input type="hidden" name="fromDate${suffix}" value="${(productCategoryMember.fromDate)!}" />
                         <#if hasExpired><#assign class="alert"></#if>
                         <@htmlTemplate.renderDateTimeField name="thruDate${suffix}" event="" action="" className="${class!''}"  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${(productCategoryMember.thruDate)!}" size="25" maxlength="30" id="thruDate${suffix}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                        <input type="text" size="5" name="sequenceNum${suffix}" value="${(productCategoryMember.sequenceNum)!}" />
-                        <input type="text" size="5" name="quantity${suffix}" value="${(productCategoryMember.quantity)!}" />
+                        <@field type="input" size="5" name="sequenceNum${suffix}" value="${(productCategoryMember.sequenceNum)!}" />
+                        <@field type="input" size="5" name="quantity${suffix}" value="${(productCategoryMember.quantity)!}" />
                         <br />
-                        <textarea name="comments${suffix}" rows="2" cols="40">${(productCategoryMember.comments)!}</textarea>
+                        <@field type="textarea" name="comments${suffix}" rows="2" cols="40">${(productCategoryMember.comments)!}</@field>
                     </@td>
                     <@td align="center">
                       <a href="javascript:document.deleteProductFromCategory_o_${rowCount}.submit()" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonDelete}</a>
@@ -81,13 +82,14 @@ under the License.
                   </@tr>
                   <@tr valign="middle" groupLast=true>
                       <@td colspan="4" align="center">
-                          <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+                          <@field type="submit" value="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
                           <input type="hidden" value="${productCategoryMembers.size()}" name="_rowCount" />
                       </@td>
                   </@tr>
                   <#assign rowCount = rowCount + 1>
               </#list>
               </@table>
+              </@fields>
             </form>
             <#assign rowCount = 0>
             <#list productCategoryMembers as productCategoryMember>

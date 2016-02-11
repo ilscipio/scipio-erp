@@ -60,6 +60,6 @@ under the License.
                     </#if>
                 </@field>
                 <@field type="input" label="${uiLabelMap.ProductAverageCost}" name="averageCost" size="8"/>
-                <@field type="submit" submitType="link" href="javascript:document.createProductInCategoryCheckExistingForm.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.ProductCheckExisting}" />
+                <@field type="submit" submitType="link" href="javascript:document.createProductInCategoryCheckExistingForm.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.ProductCheckExisting}" />
         </form>
 </@section>

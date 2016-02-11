@@ -158,7 +158,7 @@ under the License.
     
         <span>${uiLabelMap.AccountingTotalCapital} </span><@ofbizCurrency amount=transactionTotalAmount.grandTotal isoCode=defaultOrganizationPartyCurrencyUomId/>
         <#if isReconciled == false>
-            <@field type="submit" text="${uiLabelMap.AccountingReconcile}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
+            <@field type="submit" text="${uiLabelMap.AccountingReconcile}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
         </#if>
     </@section>
 </form>

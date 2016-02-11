@@ -40,7 +40,7 @@ under the License.
                 <option value="${list.shoppingListId}">${list.listName}</option>
               </#list>
         </@field>
-        <@field type="submit" submitType="link" href="javascript:document.selectShoppingList.submit();" class="${styles.link_nav!} ${styles.action_update!}" text="${uiLabelMap.CommonEdit}" />
+        <@field type="submit" submitType="link" href="javascript:document.selectShoppingList.submit();" class="+${styles.link_nav!} ${styles.action_update!}" text="${uiLabelMap.CommonEdit}" />
         </@fields>
       </form>
     <#else>
@@ -100,7 +100,7 @@ under the License.
             </#if>
         </@field>
         <#if !isAutoSave>
-          <@field type="submit" submitType="link" href="javascript:document.updateList.submit();" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.CommonSave}" />
+          <@field type="submit" submitType="link" href="javascript:document.updateList.submit();" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.CommonSave}" />
         </#if>
     </form>
 </@section>
@@ -226,7 +226,7 @@ under the License.
       <input type="hidden" name="partyId" value="${shoppingList.partyId!}" />
       <@field type="input" name="productId" label="${uiLabelMap.PartyProduct}" value="" />
       <@field type="input" size="5" name="quantity" label="${uiLabelMap.CommonQuantity}" value="${requestParameters.quantity?default('1')}" />
-      <@field type="submit" text="${uiLabelMap.PartyAddToShoppingList}" class="${styles.link_run_sys!} ${styles.action_add!}" />
+      <@field type="submit" text="${uiLabelMap.PartyAddToShoppingList}" class="+${styles.link_run_sys!} ${styles.action_add!}" />
     </form>
 </@section>
 

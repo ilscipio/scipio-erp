@@ -14,11 +14,9 @@
         </@row>
         <@row>
             <@cell columns=12>
-        <@field type="generic" label="${uiLabelMap.CommonComments}">
-            <textarea name="comments" rows="2" cols="40"></textarea>
-        </@field>
+        <@field type="textarea" label="${uiLabelMap.CommonComments}" name="comments" rows="2" cols="40"></@field>
             </@cell>
         </@row>
-        <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
+        <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}" />
     </form>
 </@section>

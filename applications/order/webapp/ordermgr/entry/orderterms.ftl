@@ -74,7 +74,7 @@ under the License.
                                     <@field type="input" label="${uiLabelMap.OrderOrderTermDays}" size="30" maxlength="60" name="termDays" value="${termDays!}" />
                                     <@field type="input" label="${uiLabelMap.OrderOrderTextValue}" size="30" maxlength="60" name="textValue" value="${textValue?if_exists}" />
                                     <@field type="input" label="${uiLabelMap.CommonDescription}" size="30" maxlength="255" name="description" value="${description?if_exists}" />
-                                    <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd}" />
+                                    <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd}" />
                             </form>
                         </#if>
             </@cell>

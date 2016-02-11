@@ -29,10 +29,8 @@ under the License.
         <@field type="input" label="${uiLabelMap.OrderRecipientEmailAdd}" id="emailAddress" name="answers_1002" value="" />
         <@field type="input" label="${uiLabelMap.OrderRecipientName}" id="recipientName" name="answers_1001" value="" />
         <@field type="input" label="${uiLabelMap.OrderSenderName}" id="senderName" name="answers_1000" value="" />
-        <@field type="generic" label="${uiLabelMap.OrderGiftMessage}" id="message">
-          <textarea id="message" name="answers_1003"></textarea>
-        </@field>
-        <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
+        <@field type="textarea" label="${uiLabelMap.OrderGiftMessage}" id="message" name="answers_1003"></@field>
+        <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
       <#else>
         <@commonMsg type="result">${uiLabelMap.OrderNoGiftCertificatesFound}</@commonMsg>
       </#if>

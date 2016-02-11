@@ -52,7 +52,7 @@ under the License.
                 </@tr>
             </#list>
         </@table>
-        <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+        <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
     </form>
 <#else>
     <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>

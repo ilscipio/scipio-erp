@@ -26,6 +26,7 @@ under the License.
 <@section title="${uiLabelMap.WebtoolsCertsX509}">
   <#if (isSecure)>
     <#if (clientCerts?has_content)>
+      <@fields type="default-manual">
       <@table type="data-list" class="+${styles.table_spacing_tiny_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="" -->
         <#list clientCerts as cert>
           <#assign certString = Static["org.ofbiz.base.util.KeyStoreUtil"].certToString(cert)!>
@@ -41,19 +42,20 @@ under the License.
             <@tr>
               <@td>&nbsp;</@td>
               <@td>
-                <textarea rows="4" cols="130">
+                <@field type="textarea" rows="4" cols="130">
 ${certString}
 
 -----BEGIN PUBLIC KEY HEX-----
 ${Static["org.ofbiz.base.util.KeyStoreUtil"].pemToPkHex(certString)}
 -----END PUBLIC KEY HEX-----
 
-                </textarea>
+                </@field>
               </@td>
             </@tr>
           </#if>
         </#list>
       </@table>
+      </@fields>
     <#else>
       <@alert type="info">${uiLabelMap.WebtoolsCertsNotFound}.</@alert>
     </#if>

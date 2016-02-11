@@ -206,7 +206,7 @@ under the License.
                                     <#if compareDate?has_content>
                                         <#if nowTimestamp.before(compareDate)><#assign hasntStarted = true></#if>
                                     </#if>
-                                    <@field type="input" size="13" name="fromDate" value="${customTimePeriod.fromDate?string('yyyy-MM-dd')}" class="${alertHasntStartedClass}" />
+                                    <@field type="input" size="13" name="fromDate" value="${customTimePeriod.fromDate?string('yyyy-MM-dd')}" class="+${alertHasntStartedClass}" />
                                 </@td>
                                 <@td>
                                     <#assign hasExpired = false>
@@ -214,10 +214,10 @@ under the License.
                                     <#if compareDate?has_content>
                                         <#if nowTimestamp.after(compareDate)><#assign hasExpired = true></#if>
                                     </#if>
-                                    <@field type="input" size="13" name="thruDate" value="${customTimePeriod.thruDate?string('yyyy-MM-dd')}" class="${alertHasExpiredClass}" />
+                                    <@field type="input" size="13" name="thruDate" value="${customTimePeriod.thruDate?string('yyyy-MM-dd')}" class="+${alertHasExpiredClass}" />
                                 </@td>
                                 <@td class="button-col">
-                                    <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
+                                    <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
                                     <a href="<@ofbizUrl>deleteCustomTimePeriod?customTimePeriodId=${customTimePeriod.customTimePeriodId!}&amp;currentCustomTimePeriodId=${currentCustomTimePeriodId!}&amp;findOrganizationPartyId=${findOrganizationPartyId!}</@ofbizUrl>">
                                     ${uiLabelMap.CommonDelete}</a>
                                     <a href="<@ofbizUrl>EditCustomTimePeriod?currentCustomTimePeriodId=${customTimePeriod.customTimePeriodId!}&amp;findOrganizationPartyId=${findOrganizationPartyId!}</@ofbizUrl>">
@@ -277,7 +277,7 @@ under the License.
                 <div>                      
                     <@field type="input" size="14" name="fromDate" label="${uiLabelMap.CommonFromDate}" />                      
                     <@field type="input" size="14" name="thruDate" label="${uiLabelMap.CommonThruDate}" />
-                    <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
+                    <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
                 </div>
             </form>
         </@section>

@@ -40,7 +40,7 @@ function lookupInventory() {
       <#if requestParameters.hideFields?default("N") != "Y">
           <@field type="lookup" label="${uiLabelMap.ManufacturingProductId}" value='${requestParameters.productId!}' formName="lookupinventory" name="productId" id="productId" fieldFormName="LookupProduct"/>
           <@field type="datetime" label="${uiLabelMap.CommonFromDate}" name="eventDate" value="${requestParameters.eventDate!}" size="25" maxlength="30" id="fromDate_2"/>
-          <@field type="submit" submitType="link" href="javascript:lookupInventory();" class="${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.CommonFind}" />
+          <@field type="submit" submitType="link" href="javascript:lookupInventory();" class="+${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.CommonFind}" />
       </#if>
     </form>
 </@section>

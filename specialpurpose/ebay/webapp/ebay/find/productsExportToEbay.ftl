@@ -69,7 +69,7 @@ under the License.
             <@field type="input" label="${uiLabelMap.FormFieldTitle_startPrice}" name="startPrice" size="12" maxlength="12" value="${parameters.startPrice!}" />
             <#assign fieldValue><#if parameters.quantity??>${parameters.quantity!}<#else>1</#if></#assign>
             <@field type="input" label="${uiLabelMap.CommonQuantity}" name="quantity" size="12" maxlength="12" value=fieldValue />
-            <@field type="select" label="${uiLabelMap.CommonWebsite}" name="webSiteId" onchange="javascript:changeWebSite(document.getElementById('ProductsExportToEbay'));">
+            <@field type="select" label="${uiLabelMap.CommonWebsite}" name="webSiteId" onChange="javascript:changeWebSite(document.getElementById('ProductsExportToEbay'));">
                 <#list webSiteList as webSite>
                   <#assign displayDesc = webSite.siteName?default("${uiLabelMap.ProductNoDescription}")>
                   <#if (18 < displayDesc?length)>
@@ -114,10 +114,8 @@ under the License.
                     </@table>
             </@field>
             <@field type="input" label="${uiLabelMap.FormFieldTitle_payPalEmail}" name="payPalEmail" size="50" maxlength="50" value="${parameters.payPalEmail!}" />
-            <@field type="generic" label="${uiLabelMap.FormFieldTitle_customXml}">
-                <textarea cols="60" rows="6" wrap="soft" name="customXml">${customXml!}</textarea>
-            </@field>
-            <@field type="submit" text="${uiLabelMap.EbayExportToEbay}" name="submitButton" class="${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}" />
+            <@field type="textarea" label="${uiLabelMap.FormFieldTitle_customXml}" cols="60" rows="6" wrap="soft" name="customXml">${customXml!}</@field>
+            <@field type="submit" text="${uiLabelMap.EbayExportToEbay}" name="submitButton" class="+${styles.link_run_sys!} ${styles.action_send!} ${styles.action_external!}" />
             </#if>
     </form>
     <@script>

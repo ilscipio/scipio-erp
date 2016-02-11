@@ -22,9 +22,7 @@ under the License.
                     <option value="${group}" <#if selGroup??><#if group = selGroup>selected="selected"</#if></#if>>${group}</option>
                 </#list>
         </@field>
-        <@field type="generic" label="${uiLabelMap.WebtoolsSqlCommand}">
-            <textarea name="sqlCommand" cols="100" rows="5">${sqlCommand!}</textarea>
-        </@field>
+        <@field type="textarea" label="${uiLabelMap.WebtoolsSqlCommand}" name="sqlCommand" cols="100" rows="5">${sqlCommand!}</@field>
         <@field type="input" label="${uiLabelMap.WebtoolsLimitRowsTo}" name="rowLimit" size="5" value="${rowLimit?default(200)}"/>
         <@field type="generic">
             <input type="submit" name="submitButton" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_begin!}"/>

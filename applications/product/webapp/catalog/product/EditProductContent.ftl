@@ -43,12 +43,8 @@ under the License.
         <form action="<@ofbizUrl>updateProductContent</@ofbizUrl>" method="post" name="productForm">
             <input type="hidden" name="productId" value="${productId!}"/>
             <@field type="input" label="${uiLabelMap.ProductProductName}" name="productName" value="${(product.productName?html)!}" size="30" maxlength="60"/>
-            <@field type="generic" label="${uiLabelMap.ProductProductDescription}">
-                <textarea name="description" cols="60" rows="2">${(product.description)!}</textarea>
-            </@field>
-            <@field type="generic" label="${uiLabelMap.ProductLongDescription}">
-                <textarea class="dojo-ResizableTextArea" name="longDescription" cols="60" rows="7">${(product.longDescription)!}</textarea>
-            </@field>
+            <@field type="textarea" label="${uiLabelMap.ProductProductDescription}" name="description" cols="60" rows="2">${(product.description)!}</@field>
+            <@field type="textarea" label="${uiLabelMap.ProductLongDescription}" class="+dojo-ResizableTextArea" name="longDescription" cols="60" rows="7">${(product.longDescription)!}</@field>
             <@field type="generic" label="${uiLabelMap.ProductDetailScreen}">
                 <input type="text" name="detailScreen" value="${(product.detailScreen)!}" size="60" maxlength="250"/>
                     <br /><span class="tooltip">${uiLabelMap.ProductIfNotSpecifiedDefaultsIsProductdetail} &quot;productdetail&quot;, ${uiLabelMap.ProductDetailScreenMessage}: &quot;component://ecommerce/widget/CatalogScreens.xml#productdetail&quot;</span>
@@ -133,7 +129,7 @@ under the License.
                     </div>
                   </#if>
             </@field>
-            <@field type="submit" name="Update" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
+            <@field type="submit" name="Update" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
         </form>
         <@script>
             function setUploadUrl(newUrl) {
@@ -154,7 +150,7 @@ under the License.
                 <input type="radio" name="upload_file_type_bogus" value="detail" onclick="setUploadUrl('<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=detail</@ofbizUrl>');"/>${uiLabelMap.CommonDetail}
                 <input type="radio" name="upload_file_type_bogus" value="original" checked="checked" onclick="setUploadUrl('<@ofbizUrl>UploadProductImage?productId=${productId}&amp;upload_file_type=original</@ofbizUrl>');"/>${uiLabelMap.ProductOriginal}
             </@field>
-            <@field type="submit" class="${styles.link_run_sys!} ${styles.action_import!}" text="${uiLabelMap.ProductUploadImage}"/>
+            <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_import!}" text="${uiLabelMap.ProductUploadImage}"/>
             <#-- FIXME -->
             <span class="tooltip">${uiLabelMap.ProductOriginalImageMessage} : {ofbiz.home}/applications/product/config/ImageProperties.xml&quot;</span>
           </@fields>

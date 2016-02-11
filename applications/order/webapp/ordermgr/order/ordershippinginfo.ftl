@@ -57,6 +57,7 @@ under the License.
     </@menu>
   </#macro>
   <@section title="${uiLabelMap.OrderShipmentInformation}" menuContent=menuContent>
+    <@fields type="default-manual">
       <@table type="data-complex" role="grid"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <@thead>
           <@tr class="header-row">
@@ -171,12 +172,12 @@ under the License.
                           <@td>
                              <div class="label">${uiLabelMap.OrderAddToshipGroup} : </div>
                              <div>
-                                 <select name="shipGroupSeqId" class="selectBox" onChange="showShipByDate(this, 'shipByDate${index}')">
-                      <#list shipGroups as shipGroup>
+                                 <@field type="select" name="shipGroupSeqId" class="+selectBox" onChange="showShipByDate(this, 'shipByDate${index}')">
+                                    <#list shipGroups as shipGroup>
                                      <option value="${shipGroup.shipGroupSeqId}">[${shipGroup.shipGroupSeqId}]<#if shipGroup.shipByDate?has_content>, ${shipGroup.shipByDate?date}</#if></option>
-                      </#list>
+                                    </#list>
                                      <option value="new">${uiLabelMap.CommonNew}</option>
-                                 </select>
+                                 </@field>
                              </div>
                          </@td>
                      </@tr>
@@ -184,13 +185,13 @@ under the License.
                          <@td>
                              <div style="display:none" id="shipByDate${index}">
                                  <div class="label">${uiLabelMap.OrderShipBeforeDate} : </div>
-                                 <div><@htmlTemplate.renderDateTimeField name="shipByDate" event="" action="" value="${requestParameters.maxDate!}" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipByDate_${index}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/></div>
+                                 <div><@field type="datetime" name="shipByDate" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="shipByDate_${index}" /></div>
                              </div>
                          </@td>
                      </@tr>
                      <@tr>
                          <@td>
-                             <a href="javascript:document.addOISGForm${index}.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.CommonAdd}</a>
+                             <@field type="submit" submitType="link" href="javascript:document.addOISGForm${index}.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd}"/>
                          </@td>
                      </@tr>
                  </@table>
@@ -204,6 +205,7 @@ under the License.
           </#list>
         </@tbody>
       </@table>
+    </@fields>
   </@section>
 <#else>
 <#list shipGroups as shipGroup>
@@ -222,11 +224,13 @@ under the License.
     </#macro>
     <@section title="${uiLabelMap.OrderShipmentInformation} - ${shipGroup.shipGroupSeqId}" menuContent=menuContent>
     <div id="ShipGroupScreenletBody_${shipGroup.shipGroupSeqId}">
-          <form name="updateOrderItemShipGroup" method="post" action="<@ofbizUrl>updateShipGroupShipInfo</@ofbizUrl>">
+      <form name="updateOrderItemShipGroup" method="post" action="<@ofbizUrl>updateShipGroupShipInfo</@ofbizUrl>">
+        <@fields type="default-manual">
         <input type="hidden" name="orderId" value="${orderId!}"/>
         <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId!}"/>
         <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
         <input type="hidden" name="oldContactMechId" value="${shipGroup.contactMechId!}"/>
+      
         <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 <@tr>
                     <@td scope="row" class="${styles.grid_large!}3">
@@ -234,20 +238,20 @@ under the License.
                     </@td>
                     <@td valign="top" width="80%">
                             <#if orderHeader?has_content && orderHeader.statusId != "ORDER_CANCELLED" && orderHeader.statusId != "ORDER_COMPLETED" && orderHeader.statusId != "ORDER_REJECTED">
-                            <select name="contactMechId">
+                            <@field type="select" name="contactMechId">
                                 <option selected="selected" value="${shipGroup.contactMechId!}">${(shipGroupAddress.address1)?default("")} - ${shipGroupAddress.city?default("")}</option>
-                                <#if shippingContactMechList?has_content>
+                              <#if shippingContactMechList?has_content>
                                 <option disabled="disabled" value=""></option>
-                                <#list shippingContactMechList as shippingContactMech>
+                              <#list shippingContactMechList as shippingContactMech>
                                 <#assign shippingPostalAddress = shippingContactMech.getRelatedOne("PostalAddress", false)!>
                                 <#if shippingContactMech.contactMechId?has_content>
-                                <option value="${shippingContactMech.contactMechId!}">${(shippingPostalAddress.address1)?default("")} - ${shippingPostalAddress.city?default("")}</option>
+                                  <option value="${shippingContactMech.contactMechId!}">${(shippingPostalAddress.address1)?default("")} - ${shippingPostalAddress.city?default("")}</option>
                                 </#if>
-                                </#list>
-                                </#if>
-                            </select>
+                              </#list>
+                              </#if>
+                            </@field>
                             <#else>
-                            ${(shipGroupAddress.address1)?default("")}
+                                ${(shipGroupAddress.address1)?default("")}
                             </#if>
                         </@td>
                 </@tr>
@@ -264,7 +268,7 @@ under the License.
                             i.e shipmentMethodTypeId & carrierPartyId & roleTypeId. Values are separated by
                             "@" symbol.
                             -->
-                            <select name="shipmentMethod">
+                            <@field type="select" name="shipmentMethod">
                                 <#if shipGroup.shipmentMethodTypeId?has_content>
                                   <option value="${shipGroup.shipmentMethodTypeId}@${shipGroup.carrierPartyId!}@${shipGroup.carrierRoleTypeId!}"><#if shipGroup.carrierPartyId?? && shipGroup.carrierPartyId != "_NA_">${shipGroup.carrierPartyId!}</#if>&nbsp;${shipmentMethodType.get("description",locale)!}</option>
                                 </#if>
@@ -274,7 +278,7 @@ under the License.
                                     <option value="${shipmentMethodTypeAndParty!}"><#if productStoreShipmentMethod.partyId != "_NA_">${productStoreShipmentMethod.partyId!}</#if>&nbsp;${productStoreShipmentMethod.get("description",locale)?default("")}</option>
                                   </#if>
                                 </#list>
-                            </select>
+                            </@field>
                             <#else>
                                 <#if (shipGroup.carrierPartyId)?default("_NA_") != "_NA_">
                                     ${shipGroup.carrierPartyId!}
@@ -290,7 +294,7 @@ under the License.
                 <@tr>
                     <@td scope="row" class="${styles.grid_large!}3">&nbsp;</@td>
                     <@td valign="top" width="80%">
-                        <input type="submit" value="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
+                        <@field type="submit" value="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
                         <a class="${styles.link_nav!} ${styles.action_add!}" id="newShippingAddress" href="javascript:void(0);">${uiLabelMap.OrderNewShippingAddress}</a>
                         <@script>
                             jQuery("#newShippingAddress").click(function(){jQuery("#newShippingAddressForm").dialog("open")});
@@ -298,67 +302,50 @@ under the License.
                     </@td>
                 </@tr>
                 </#if>
-                <#if !shipGroup.contactMechId?has_content && !shipGroup.shipmentMethodTypeId?has_content>
-                <#assign noShipment = "true">
+              <#if !shipGroup.contactMechId?has_content && !shipGroup.shipmentMethodTypeId?has_content>
+              <#assign noShipment = "true">
                 <@tr type="meta">
                     <@td colspan="2" align="center"><@commonMsg type="result">${uiLabelMap.OrderNotShipped}</@commonMsg></@td>
                 </@tr>
-                </#if>
+              </#if>
       </@table>
+        </@fields>
       </form>
       </div>
       <div id="newShippingAddressForm" class="popup" style="display: none;">
         <form id="addShippingAddress" name="addShippingAddress" method="post" action="addShippingAddress">
+          <@fields type="default">
           <input type="hidden" name="orderId" value="${orderId!}"/>
           <input type="hidden" name="partyId" value="${partyId!}"/>
           <input type="hidden" name="oldContactMechId" value="${shipGroup.contactMechId!}"/>
           <input type="hidden" name="shipGroupSeqId" value="${shipGroup.shipGroupSeqId!}"/>
           <input type="hidden" name="contactMechPurposeTypeId" value="SHIPPING_LOCATION"/>
-          <div class="form-row">
-            <label for="address1">${uiLabelMap.PartyAddressLine1}*</label>
-            <div class="form-field"><input type="text" class="required" name="shipToAddress1" id="address1" value="" size="30" maxlength="30" /></div>
-          </div>
-          <div class="form-row">
-            <label for="address2">${uiLabelMap.PartyAddressLine2}</label>
-            <div class="form-field"><input type="text" name="shipToAddress2" id="address2" value="" size="30" maxlength="30" /></div>
-          </div>
-          <div class="form-row">
-            <label for="city">${uiLabelMap.PartyCity}* </label>
-            <div class="form-field"><input type="text" class="required" name="shipToCity" id="city" value="" size="30" maxlength="30" /></div>
-          </div>
-          <div class="form-row">
-            <label for="postalCode">${uiLabelMap.PartyZipCode}* </label>
-            <div class="form-field"><input type="text" class="required number" name="shipToPostalCode" id="postalCode" value="" size="30" maxlength="10" /></div>
-          </div>
-          <div class="form-row">
-            <label for="countryGeoId">${uiLabelMap.CommonCountry}* </label>
-            <div class="form-field">
-              <select name="shipToCountryGeoId" id="countryGeoId" class="required">
-                <#if countryGeoId??>
-                  <option value="${countryGeoId}">${countryGeoId}</option>
-                </#if>
-                ${screens.render("component://common/widget/CommonScreens.xml#countries")}
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <label for="stateProvinceGeoId">${uiLabelMap.PartyState}* </label>
-            <div class="form-field">
-              <select name="shipToStateProvinceGeoId" id="stateProvinceGeoId">
-                <#if stateProvinceGeoId?has_content>
-                  <option value="${stateProvinceGeoId}">${stateProvinceGeoId}</option>
-                <#else>
-                  <option value="_NA_">${uiLabelMap.PartyNoState}</option>
-                </#if>
-              </select>
-            </div>
-          </div>
-          <div class="form-row">
-            <input id="submitAddShippingAddress" type="button" value="${uiLabelMap.CommonSubmit}" style="display:none"/>
+          <@field type="input" required=true name="shipToAddress1" id="address1" value="" size="30" maxlength="30" label="${uiLabelMap.PartyAddressLine1}"/>
+          <@field type="input" name="shipToAddress2" id="address2" value="" size="30" maxlength="30" label="${uiLabelMap.PartyAddressLine2}"/>
+          <@field type="input" required=true name="shipToCity" id="city" value="" size="30" maxlength="30" label="${uiLabelMap.PartyCity}" />
+          <@field type="input" required=true class="+number" name="shipToPostalCode" id="postalCode" value="" size="30" maxlength="10" label="${uiLabelMap.PartyZipCode}"/>
+          <@field type="select" required=true name="shipToCountryGeoId" id="countryGeoId" label="${uiLabelMap.CommonCountry}">
+            <#if countryGeoId??>
+              <option value="${countryGeoId}">${countryGeoId}</option>
+            </#if>
+            ${screens.render("component://common/widget/CommonScreens.xml#countries")}
+          </@field>
+          <@field type="select" name="shipToStateProvinceGeoId" id="stateProvinceGeoId" label="${uiLabelMap.PartyState}">
+            <#if stateProvinceGeoId?has_content>
+              <option value="${stateProvinceGeoId}">${stateProvinceGeoId}</option>
+            <#else>
+              <option value="_NA_">${uiLabelMap.PartyNoState}</option>
+            </#if>
+          </@field>
+
+          <@field type="submitarea">
+            <@field type="submit" submitType="input-button" id="submitAddShippingAddress" value="${uiLabelMap.CommonSubmit}" style="display:none"/>
+            <#-- FIXME: form within form -->
             <form action="">
-              <input class="popup_closebox ${styles.link_run_local!} ${styles.action_close!}" type="button" value="${uiLabelMap.CommonClose}" style="display:none"/>
+              <@field type="submit" submitType="input-button" class="+popup_closebox ${styles.link_run_local!} ${styles.action_close!}" value="${uiLabelMap.CommonClose}" style="display:none"/>
             </form>
-          </div>
+          </@field>
+          </@fields>
         </form>
       </div>
       <@script>
@@ -377,6 +364,7 @@ under the License.
                 });
        });
       </@script>
+    <@fields type="default-manual">
       <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
         <#if shipGroup.supplierPartyId?has_content>
            <#assign OISGAContent = shipGroup.getRelated("OrderItemShipGroupAssoc")>
@@ -527,7 +515,7 @@ under the License.
                   <a href="javascript:addInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_local!} ${styles.action_show!}" id="addInstruction_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonAdd}</a>
                 </#if>
                 <a href="javascript:saveInstruction('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_sys!} ${styles.action_update!}" id="saveInstruction_${shipGroup.shipGroupSeqId}" style="display:none">${uiLabelMap.CommonSave}</a>
-                <textarea name="shippingInstructions" id="shippingInstructions_${shipGroup.shipGroupSeqId}" style="display:none" rows="0" cols="0">${shipGroup.shippingInstructions!}</textarea>
+                <@field type="textarea" name="shippingInstructions" id="shippingInstructions_${shipGroup.shipGroupSeqId}" style="display:none" rows="0" cols="0">${shipGroup.shippingInstructions!}</@field>
               </form>
             <#else>
               <#if shipGroup.shippingInstructions?has_content>
@@ -555,7 +543,7 @@ under the License.
               <#else>
                 <a href="javascript:addGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_local!} ${styles.action_show!}" id="addGiftMessage_${shipGroup.shipGroupSeqId}">${uiLabelMap.CommonAdd}</a>
               </#if>
-              <textarea name="giftMessage" id="giftMessage_${shipGroup.shipGroupSeqId}" style="display:none" rows="0" cols="0">${shipGroup.giftMessage!}</textarea>
+              <@field type="textarea" name="giftMessage" id="giftMessage_${shipGroup.shipGroupSeqId}" style="display:none" rows="0" cols="0">${shipGroup.giftMessage!}</@field>
               <a href="javascript:saveGiftMessage('${shipGroup.shipGroupSeqId}');" class="${styles.link_run_sys!} ${styles.action_update!}" id="saveGiftMessage_${shipGroup.shipGroupSeqId}" style="display:none">${uiLabelMap.CommonSave}</a>
             </form>
           </@td>
@@ -676,6 +664,7 @@ under the License.
        </#if>
 
       </@table>
+    </@fields>
     </@section>
 </#list>
 </#if>

@@ -37,7 +37,7 @@ these reports and helping to improve them.</p>
         <option value="product">Order Items by Product</option>
   </@field>
 -->
-  <@field type="submit" tabindex="16" name="GoReport" text="Order Report" class="${styles.link_run_sys!} ${styles.action_export!}"/>
+  <@field type="submit" tabindex="16" name="GoReport" text="Order Report" class="+${styles.link_run_sys!} ${styles.action_export!}"/>
 </form>
 
 <form method="post" name="itemreportform" action="<@ofbizUrl>orderitemreportjasper.pdf</@ofbizUrl>" target="OrderReport">
@@ -54,5 +54,5 @@ these reports and helping to improve them.</p>
         <option value="product">Order Items by Product</option>
   </@field>
 -->
-  <@field type="submit" tabindex="16" name="GoReport" text="Item Report"  class="${styles.link_run_sys!} ${styles.action_export!}"/>
+  <@field type="submit" tabindex="16" name="GoReport" text="Item Report"  class="+${styles.link_run_sys!} ${styles.action_export!}"/>
 </form>

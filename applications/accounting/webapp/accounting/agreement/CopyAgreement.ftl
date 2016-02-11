@@ -25,7 +25,7 @@ under the License.
         <@field type="checkbox" label="${uiLabelMap.Party}" name="copyAgreementParties" value="Y" checked="checked" />
         <@field type="checkbox" label="${uiLabelMap.ProductFacilities}" name="copyAgreementFacilities" value="Y" checked="checked" />
         
-        <@field type="submit" text="${uiLabelMap.CommonCopy}" class="${styles.link_run_sys!} ${styles.action_copy!}" />
+        <@field type="submit" text="${uiLabelMap.CommonCopy}" class="+${styles.link_run_sys!} ${styles.action_copy!}" />
     </form>
 </@section>
 </#if>

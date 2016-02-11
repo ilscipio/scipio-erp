@@ -125,7 +125,7 @@ under the License.
           <@field type="input" label="Processor Refund Service" name="paymentRefundService" value="${payInfo.paymentRefundService!}" size="30" maxlength="60" />
           <@field type="input" label="Processor Properties URL" name="paymentConfiguration" value="${payInfo.paymentConfiguration!}" size="30" maxlength="60" />
 
-          <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+          <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
         </form>
     </@section>
 </#if>

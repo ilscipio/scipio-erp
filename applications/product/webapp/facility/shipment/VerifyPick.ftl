@@ -58,7 +58,7 @@ under the License.
               /
               <input type="text" name="shipGroupSeqId" size="6" maxlength="6" value="${shipGroupSeqId?default("00001")}"/>
           </@field>
-          <@field type="submit" text="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}" class="${styles.link_run_sys!} ${styles.action_verify!}"/>
+          <@field type="submit" text="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}" class="+${styles.link_run_sys!} ${styles.action_verify!}"/>
       </form>
       </@section>
      
@@ -67,7 +67,7 @@ under the License.
       <form name="selectPicklistBinForm" method="post" action="<@ofbizUrl>VerifyPick</@ofbizUrl>">
         <input type="hidden" name="facilityId" value="${facility.facilityId!}"/>
           <@field type="input" label="${uiLabelMap.FormFieldTitle_picklistBinId}" name="picklistBinId" size="29" maxlength="60" value="${picklistBinId!}"/>
-          <@field type="submit" text="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}" class="${styles.link_run_sys!} ${styles.action_verify!}"/>
+          <@field type="submit" text="${uiLabelMap.ProductVerify}&nbsp;${uiLabelMap.OrderOrder}" class="+${styles.link_run_sys!} ${styles.action_verify!}"/>
       </form>
       </@section>
 

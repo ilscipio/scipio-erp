@@ -176,7 +176,7 @@ under the License.
                   <#if (!unitCost?? || unitCost == 0.0)><#assign unitCost = standardCosts.get(product.productId)?default(0)/></#if>
                   <input type="text" name="unitCost" size="10" value="${unitCost}"/>
               </@field>
-              <@field type="submit" text="${uiLabelMap.CommonReceive}" class="${styles.link_run_sys!} ${styles.action_receive!}" />
+              <@field type="submit" text="${uiLabelMap.CommonReceive}" class="+${styles.link_run_sys!} ${styles.action_receive!}" />
             <@script>
               document.selectAllForm.quantityAccepted.focus();
             </@script>
@@ -214,7 +214,7 @@ under the License.
                   <@td colspan="5"></@td>
                 </@tr>
             </@table>
-              <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}" text="${uiLabelMap.ProductReceiveSelectedShipment}" />
+              <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="+${styles.link_run_sys!} ${styles.action_receive!}" text="${uiLabelMap.ProductReceiveSelectedShipment}" />
           </form>
           </@section>
         <#-- Multi-Item PO Receiving -->
@@ -436,7 +436,7 @@ under the License.
             <input type="hidden" name="initialSelected" value="Y"/>
               <@field type="lookup" label="${uiLabelMap.ProductPurchaseOrderNumber}" tooltip="${uiLabelMap.ProductLeaveSingleProductReceiving}" value="${requestParameters.purchaseOrderId!}" formName="selectAllForm" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupPurchaseOrderHeaderAndShipInfo"/>
               <@field type="lookup" label="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductLeaveEntirePoReceiving}" value="${requestParameters.productId!}" formName="selectAllForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
-              <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}" text="${uiLabelMap.ProductReceiveProduct}" />
+              <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="+${styles.link_run_sys!} ${styles.action_receive!}" text="${uiLabelMap.ProductReceiveProduct}" />
           </form>
           </@section>
         </#if>

@@ -161,6 +161,6 @@ under the License.
                <@htmlTemplate.renderDateTimeField name="actualCompletionDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="actualCompletionDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
              </#if>
          </@field>
-         <@field type="submit" name="submit" text="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
+         <@field type="submit" name="submit" text="${uiLabelMap.CommonSave}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
      </form>
 </@section>

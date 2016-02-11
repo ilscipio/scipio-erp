@@ -27,7 +27,7 @@ under the License.
                 <option value="${shipmentMethod.partyId}|${shipmentMethod.roleTypeId}|${shipmentMethod.shipmentMethodTypeId}">${shipmentMethod.shipmentMethodTypeId} (${shipmentMethod.partyId}/${shipmentMethod.roleTypeId})</option>
               </#list>
         </@field>
-        <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd}"/>
+        <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd}"/>
       </@fields>
     </form>
 </@section>

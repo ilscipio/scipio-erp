@@ -56,13 +56,13 @@ function lookupBom() {
         </@cell>
         <@cell columns=6>
             <@field type="lookup" label="${uiLabelMap.ProductProductId}" value="${productId!}" formName="searchform" name="productId" id="productId" fieldFormName="LookupProduct"/>
-            <@field type="submit" submitType="link" href="javascript:document.searchform.submit();" class="${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.ManufacturingShowBOMAssocs}" />
+            <@field type="submit" submitType="link" href="javascript:document.searchform.submit();" class="+${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.ManufacturingShowBOMAssocs}" />
         </@cell>
     </@row>
     <@row>
         <@cell columns=6 offset=6>
             <@field type="lookup" label="${uiLabelMap.ManufacturingCopyToProductId}" formName="searchform" name="copyToProductId" id="copyToProductId" fieldFormName="LookupProduct"/>
-            <@field type="submit" submitType="link" href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="${styles.link_run_sys!} ${styles.action_copy!}" text="${uiLabelMap.ManufacturingCopyBOMAssocs}" />
+            <@field type="submit" submitType="link" href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="+${styles.link_run_sys!} ${styles.action_copy!}" text="${uiLabelMap.ManufacturingCopyBOMAssocs}" />
         </@cell>
     </@row>
   </form>
@@ -142,9 +142,9 @@ function lookupBom() {
   </#if>
     
     <#if !(productAssoc??)>
-      <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
+      <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}" />
     <#else>
-      <@field type="submit" text="${uiLabelMap.CommonEdit}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+      <@field type="submit" text="${uiLabelMap.CommonEdit}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
     </#if>
     </form>
     </@cell>

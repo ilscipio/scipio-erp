@@ -22,7 +22,7 @@ under the License.
           <#-- Suspended Processes -->
           <#if workEffortStatus == "WF_SUSPENDED">
             <form action="<@ofbizUrl>releasehold</@ofbizUrl>" method="post" name="activityForm">
-            <@fields type="generic">
+            <@fields type="default-manual">
               <input type="hidden" name="workEffortId" value="${workEffortId}" />
             <@row>
               <@cell columns=9>
@@ -31,7 +31,7 @@ under the License.
                 </@field>
               </@cell>
               <@cell columns=3>
-                <@field type="submit" submitType="link" href="javascript:document.activityForm.submit()" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.OrderRelease}" />
+                <@field type="submit" submitType="link" href="javascript:document.activityForm.submit()" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.OrderRelease}" />
               </@cell>
             </@row>
             </@fields>
@@ -40,7 +40,7 @@ under the License.
           <#-- Active Processes -->
           <#if workEffortStatus == "WF_RUNNING">
             <form action="<@ofbizUrl>holdorder</@ofbizUrl>" method="post" name="activityForm">
-            <@fields type="generic">
+            <@fields type="default-manual">
               <input type="hidden" name="workEffortId" value="${workEffortId}" />
             <@row>
               <@cell columns=9>
@@ -49,7 +49,7 @@ under the License.
                 </@field>
               </@cell>
               <@cell columns=3>
-                <@field type="submit" submitType="link" href="javascript:document.activityForm.submit()" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.OrderHold}" />
+                <@field type="submit" submitType="link" href="javascript:document.activityForm.submit()" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.OrderHold}" />
               </@cell>
             </@row>
             </@fields>
@@ -61,7 +61,7 @@ under the License.
 <#if wfTransitions?? && wfTransitions?has_content>
   <@section title="${uiLabelMap.OrderProcessingTransitions}">
           <form action="<@ofbizUrl>completeassignment</@ofbizUrl>" method="post" name="transitionForm">
-          <@fields type="generic">
+          <@fields type="default-manual">
             <input type="hidden" name="workEffortId" value="${workEffortId}" />
             <input type="hidden" name="partyId" value="${assignPartyId}" />
             <input type="hidden" name="roleTypeId" value="${assignRoleTypeId}" />
@@ -80,7 +80,7 @@ under the License.
               </@field>
             </@cell>
             <@cell columns=3>
-              <@field type="submit" submitType="link" href="javascript:document.transitionForm.submit()" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.CommonContinue}" />
+              <@field type="submit" submitType="link" href="javascript:document.transitionForm.submit()" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.CommonContinue}" />
             </@cell>
           </@row>
           </@fields>

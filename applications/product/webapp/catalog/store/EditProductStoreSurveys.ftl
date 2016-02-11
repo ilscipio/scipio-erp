@@ -74,6 +74,6 @@ under the License.
               <@field type="input" label="${uiLabelMap.ProductStoreSurveyTemplatePath}" size="30" name="surveyTemplate" />
               <@field type="input" label="${uiLabelMap.ProductStoreSurveyResultTemplatePath}" size="30" name="resultTemplate" />
               <@field type="input" label="${uiLabelMap.CommonSequenceNum}" size="5" name="sequenceNum" />
-              <@field type="submit" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd}" />
+              <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonAdd}" />
         </form>
 </@section>

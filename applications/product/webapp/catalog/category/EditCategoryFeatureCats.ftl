@@ -86,7 +86,7 @@ under the License.
                 </#list>
             </@field>
             <@field type="datetime" name="fromDate" value="" size="25" maxlength="30" id="fromDate2"/>
-            <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />
+            <@field type="submit" text="${uiLabelMap.CommonAdd}" class="+${styles.link_run_sys!} ${styles.action_add!}" />
           </@fields>
         </form> 
     </@section>

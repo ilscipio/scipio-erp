@@ -242,7 +242,7 @@ under the License.
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}" />
             <input type="hidden" name="initialSelected" value="Y" />
               <@field type="input" label="${uiLabelMap.ProductReturnNumber}" name="returnId" size="20" maxlength="20" value="${requestParameters.returnId!}" />
-              <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}" text="${uiLabelMap.ProductReceiveProduct}" />
+              <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="+${styles.link_run_sys!} ${styles.action_receive!}" text="${uiLabelMap.ProductReceiveProduct}" />
           </form>
           </@section>
         </#if>

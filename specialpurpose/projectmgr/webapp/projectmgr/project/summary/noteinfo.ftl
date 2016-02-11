@@ -87,9 +87,7 @@ under the License.
                 <#else>
                   <input type="hidden" name="workEffortId" value="${task.workEffortId}" />
                 </#if>
-              <@field type="generic" label="${uiLabelMap.OrderNote}">
-                  <textarea name="noteInfo" rows="5" cols="70"></textarea>
-              </@field>
+              <@field type="textarea" label="${uiLabelMap.OrderNote}" name="noteInfo" rows="5" cols="70"></@field>
               <@field type="select" label="${uiLabelMap.OrderInternalNote}" name="internalNote" size="1">
                   <option value=""></option>
                   <option value="Y" selected>${uiLabelMap.CommonYes}</option>
@@ -99,9 +97,9 @@ under the License.
                 <i>${uiLabelMap.OrderInternalNoteMessage}</i>
               </@field>
               <#if project?has_content>
-                <@field type="submit" submitType="link" href="javascript:document.createnoteform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonSave}" />
+                <@field type="submit" submitType="link" href="javascript:document.createnoteform.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonSave}" />
               <#else>
-                <@field type="submit" submitType="link" href="javascript:document.createnoteform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonSave}" />
+                <@field type="submit" submitType="link" href="javascript:document.createnoteform.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonSave}" />
               </#if>
           </form>
         </@section>

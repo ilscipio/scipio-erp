@@ -40,7 +40,7 @@ under the License.
  
     <#-- TODO: these two were align=right... -->
     <@field type="input" label="${uiLabelMap.FacilityGroupFirst}" size="4" name="maxNumberOfOrders" value="50"/>      
-    <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_select!}" align="right"/>
+    <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="+${styles.link_run_sys!} ${styles.action_select!}" align="right"/>
   </form>
 </@section>  
   

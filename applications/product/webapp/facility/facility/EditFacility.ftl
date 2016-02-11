@@ -78,9 +78,9 @@ under the License.
   <@field type="input" label="${uiLabelMap.ProductDefaultDaysToShip}" name="defaultDaysToShip" value="${facility.defaultDaysToShip!}" size="10" maxlength="20" />
 
   <#if facilityId?has_content>
-    <@field type="submit" name="Update" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+    <@field type="submit" name="Update" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
   <#else>
-    <@field type="submit" name="Update" text="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_add!}" />
+    <@field type="submit" name="Update" text="${uiLabelMap.CommonSave}" class="+${styles.link_run_sys!} ${styles.action_add!}" />
   </#if>
 
 </form>

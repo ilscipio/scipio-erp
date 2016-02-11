@@ -27,7 +27,7 @@ under the License.
                 <option value="${contactMechType.contactMechTypeId}">${contactMechType.get("description",locale)}</option>
               </#list>
         </@field>
-        <@field type="submit" submitType="link" href="javascript:document.createcontactmechform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonCreate}" />
+        <@field type="submit" submitType="link" href="javascript:document.createcontactmechform.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonCreate}" />
       </form>
     </@section>
   </#if>
@@ -170,14 +170,14 @@ under the License.
   </div>
   
     <@field type="submitarea">
-      <@field type="submit" submitType="link" href=makeOfbizUrl("backHome") text="${uiLabelMap.CommonGoBack}" class="${styles.link_nav_cancel!}" />
-      <@field type="submit" submitType="link" href="javascript:document.editcontactmechform.submit()" text="${uiLabelMap.CommonSave}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+      <@field type="submit" submitType="link" href=makeOfbizUrl("backHome") text="${uiLabelMap.CommonGoBack}" class="+${styles.link_nav_cancel!}" />
+      <@field type="submit" submitType="link" href="javascript:document.editcontactmechform.submit()" text="${uiLabelMap.CommonSave}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
     </@field>
   </@section>
 <#else>
   <@section>
     <@field type="submitarea">
-      <@field type="submit" submitType="link" href=makeOfbizUrl("backHome") text="${uiLabelMap.CommonGoBack}" class="${styles.link_nav_cancel!}" />
+      <@field type="submit" submitType="link" href=makeOfbizUrl("backHome") text="${uiLabelMap.CommonGoBack}" class="+${styles.link_nav_cancel!}" />
     </@field>
   </@section>
 </#if>

@@ -19,7 +19,7 @@ under the License.
 <hr />
     <form method="post"  action="/content/control/AdminSearch"  name="searchQuery">
 
-<@field type="input" label="${uiLabelMap.ContentQueryLine}" class="inputBox" name="queryLine" size="60"/>
+<@field type="input" label="${uiLabelMap.ContentQueryLine}" class="+inputBox" name="queryLine" size="60"/>
 
 <@field type="select" label="${uiLabelMap.CommonSelect} ${uiLabelMap.ContentCategory}" name="lcSiteId">
       <option value=""></option>
@@ -65,7 +65,7 @@ under the License.
       </@field>
     </#if>
 
-<@field type="submit" class="${styles.link_run_sys!} ${styles.action_find!}" name="submitButton" text="${uiLabelMap.CommonFind}"/>
+<@field type="submit" class="+${styles.link_run_sys!} ${styles.action_find!}" name="submitButton" text="${uiLabelMap.CommonFind}"/>
 </form>
 
 

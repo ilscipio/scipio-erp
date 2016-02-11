@@ -77,7 +77,7 @@ under the License.
             <#-- amount field -->
             <@field type="input" label="${uiLabelMap.CommonAmount}" size="20" maxlength="30" name="amount" required=true tooltip="${uiLabelMap.CommonRequired}"/>
             <#-- submit button -->
-            <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_add!}"/>
+            <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
         <#elseif txType?has_content>
             <@commonMsg type="result">${uiLabelMap.AccountingTransactionTypeNotYetSupported}</@commonMsg>
         </#if>

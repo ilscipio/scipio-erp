@@ -28,7 +28,7 @@ under the License.
         <form method="post" action="<@ofbizUrl>searchRemoveFromCategory</@ofbizUrl>" name="searchRemoveFromCategory">
           <input type="hidden" name="clearSearch" value="N" />
           <@field type="lookup" label="${uiLabelMap.ProductCategory}" formName="searchRemoveFromCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
-          <@field type="submit" text="${uiLabelMap.CommonRemove}" class="${styles.link_run_session!} ${styles.action_remove!}" />
+          <@field type="submit" text="${uiLabelMap.CommonRemove}" class="+${styles.link_run_session!} ${styles.action_remove!}" />
         </form>
     </@section>
 
@@ -37,7 +37,7 @@ under the License.
           <input type="hidden" name="clearSearch" value="N" />
           <@field type="lookup" label="${uiLabelMap.ProductCategory}" formName="searchExpireFromCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
           <@field type="datetime" label="${uiLabelMap.CommonThru}" name="thruDate" value="" size="25" maxlength="30" id="thruDate1"/>
-          <@field type="submit" text="${uiLabelMap.CommonExpire}" class="${styles.link_run_session!} ${styles.action_terminate!}" />
+          <@field type="submit" text="${uiLabelMap.CommonExpire}" class="+${styles.link_run_session!} ${styles.action_terminate!}" />
         </form>
     </@section>
 
@@ -46,7 +46,7 @@ under the License.
           <input type="hidden" name="clearSearch" value="N" />
           <@field type="lookup" label="${uiLabelMap.ProductCategory}" formName="searchAddToCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
           <@field type="datetime" label="${uiLabelMap.CommonFrom}" name="fromDate" value="" size="25" maxlength="30" id="fromDate1"/>
-          <@field type="submit" text="${uiLabelMap.ProductAddToCategory}" class="${styles.link_run_session!} ${styles.action_add!}" />
+          <@field type="submit" text="${uiLabelMap.ProductAddToCategory}" class="+${styles.link_run_session!} ${styles.action_add!}" />
         </form>
     </@section>
 
@@ -70,7 +70,7 @@ under the License.
                 </#list>
           </@field>
           
-          <@field type="submit" text="${uiLabelMap.ProductAddFeature}" class="${styles.link_run_session!} ${styles.action_add!}" />
+          <@field type="submit" text="${uiLabelMap.ProductAddFeature}" class="+${styles.link_run_session!} ${styles.action_add!}" />
         </form>
     </@section>
 
@@ -79,7 +79,7 @@ under the License.
           <input type="hidden" name="clearSearch" value="N" />
           <@field type="input" label="${uiLabelMap.ProductFeatureId}" size="10" name="productFeatureId" value="" />
           
-          <@field type="submit" text="${uiLabelMap.ProductRemoveFeature}" class="${styles.link_run_session!} ${styles.action_remove!}" />
+          <@field type="submit" text="${uiLabelMap.ProductRemoveFeature}" class="+${styles.link_run_session!} ${styles.action_remove!}" />
         </form>
     </@section>
 
@@ -93,6 +93,6 @@ under the License.
     </@section>
 
     <@section title="${uiLabelMap.ProductSearchExportProductList}">
-        <@field type="submit" submitType="link" href=makeOfbizUrl("searchExportProductList?clearSearch=N") class="${styles.link_nav!} ${styles.action_find!}" text="${uiLabelMap.ProductSearchExport}" />
+        <@field type="submit" submitType="link" href=makeOfbizUrl("searchExportProductList?clearSearch=N") class="+${styles.link_nav!} ${styles.action_find!}" text="${uiLabelMap.ProductSearchExport}" />
     </@section>
 </#if>

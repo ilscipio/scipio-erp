@@ -32,7 +32,7 @@ under the License.
             <@field type="input" label="${uiLabelMap.ProductInventoryItemId}" name="inventoryItemId" size="20" maxlength="20" />
           </@cell>
           <@cell columns=3>
-            <@field type="submit" text="${uiLabelMap.ProductGetItem}" class="${styles.link_run_sys!} ${styles.action_transfer!}" />
+            <@field type="submit" text="${uiLabelMap.ProductGetItem}" class="+${styles.link_run_sys!} ${styles.action_transfer!}" />
           </@cell>
         </@row>
             </form>
@@ -136,9 +136,9 @@ under the License.
             <@field type="input" label="${uiLabelMap.ProductComments}" name="comments" value="${(inventoryTransfer.comments)!}" size="60" maxlength="250" />
         </#if>
         <#if !(inventoryTransfer??)>
-            <@field type="submit" text="${uiLabelMap.ProductTransfer}" class="${styles.link_run_sys!} ${styles.action_transfer!}" />
+            <@field type="submit" text="${uiLabelMap.ProductTransfer}" class="+${styles.link_run_sys!} ${styles.action_transfer!}" />
         <#else>
-            <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="${styles.link_run_sys!} ${styles.action_update!}" />
+            <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
         </#if>
         </form>
         </#if>

@@ -46,7 +46,7 @@ under the License.
         </@field>
       </@cell>
       <@cell columns=3>
-        <@field type="submit" submitType="link" href="javascript:document.createcontactmechform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonCreate}" />
+        <@field type="submit" submitType="link" href="javascript:document.createcontactmechform.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.CommonCreate}" />
       </@cell>
     </@row>
     </form>
@@ -186,7 +186,7 @@ under the License.
       *
     </@field>
   </#if>
-    <@field type="submit" submitType="link" href="javascript:document.editcontactmechform.submit()" class="${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.CommonSave}" />
+    <@field type="submit" submitType="link" href="javascript:document.editcontactmechform.submit()" class="+${styles.link_run_sys!} ${styles.action_update!}" text="${uiLabelMap.CommonSave}" />
   </form>
   </#if>
 </#if>

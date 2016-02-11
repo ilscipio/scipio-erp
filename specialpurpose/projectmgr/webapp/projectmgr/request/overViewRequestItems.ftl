@@ -38,7 +38,7 @@ under the License.
             </@td>
             <@td colspan="2">
               <#if custRequestItemList.story?has_content>
-                <textarea readonly="readonly" rows="15" cols="72">${custRequestItemList.story}</textarea>
+                <@field type="textarea" readonly=true rows="15" cols="72">${custRequestItemList.story}</@field>
               </#if>
             </@td>
             

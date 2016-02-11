@@ -184,6 +184,6 @@ under the License.
           </@field>
         </#if>
         
-        <@field type="submit" submitType="link" href="javascript:document.advtokeywordsearchform.submit()" class="${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.CommonFind}" />
+        <@field type="submit" submitType="link" href="javascript:document.advtokeywordsearchform.submit()" class="+${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.CommonFind}" />
     </form>
 </@section>

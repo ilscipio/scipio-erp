@@ -19,7 +19,7 @@ under the License.
 
 <@section title="${uiLabelMap.ProductSearchCatalog}" id="keywordsearchbox">
     <form name="keywordsearchform" id="keywordsearchbox_keywordsearchform" method="post" action="<@ofbizUrl>keywordsearch</@ofbizUrl>">
-      <@fields type="generic"> <#-- no auto label areas or fancy things -->
+      <@fields type="default-manual"> <#-- no auto label areas or fancy things -->
         <#-- Cato: don't hardcode these
         <input type="hidden" name="VIEW_SIZE" value="10" />
         <input type="hidden" name="PAGING" value="Y" />-->
@@ -28,19 +28,19 @@ under the License.
         <#if (0 < otherSearchProdCatalogCategories?size)>
           <@field type="select" label="${uiLabelMap.ProductCategoryId}" name="SEARCH_CATEGORY_ID" size="1">
               <option value="${searchCategoryId!}">${uiLabelMap.ProductEntireCatalog}</option>
-              <#list otherSearchProdCatalogCategories as otherSearchProdCatalogCategory>
-                <#assign searchProductCategory = otherSearchProdCatalogCategory.getRelatedOne("ProductCategory", true)>
-                <#if searchProductCategory??>
-                  <option value="${searchProductCategory.productCategoryId}">${searchProductCategory.description?default("No Description " + searchProductCategory.productCategoryId)}</option>
-                </#if>
-              </#list>
+            <#list otherSearchProdCatalogCategories as otherSearchProdCatalogCategory>
+              <#assign searchProductCategory = otherSearchProdCatalogCategory.getRelatedOne("ProductCategory", true)>
+              <#if searchProductCategory??>
+                <option value="${searchProductCategory.productCategoryId}">${searchProductCategory.description?default("No Description " + searchProductCategory.productCategoryId)}</option>
+              </#if>
+            </#list>
           </@field>
         <#else>
           <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId!}" />
         </#if>
           <@field type="radio" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_OR" value="OR" checked=(searchOperator == "OR") label="${uiLabelMap.CommonAny}"/>
           <@field type="radio" name="SEARCH_OPERATOR" id="SEARCH_OPERATOR_AND" value="AND" checked=(searchOperator == "AND") label="${uiLabelMap.CommonAll}"/>
-          <@field type="submit" text="${uiLabelMap.CommonFind}" class="${styles.link_run_sys!} ${styles.action_find!}" />
+          <@field type="submit" text="${uiLabelMap.CommonFind}" class="+${styles.link_run_sys!} ${styles.action_find!}" />
       </@fields>
     </form>
     
@@ -59,7 +59,7 @@ under the License.
         <#else>
           <input type="hidden" name="SEARCH_CATEGORY_ID" value="${searchCategoryId!}" />
         </#if>
-          <@field type="submit" text="${uiLabelMap.ProductAdvancedSearch}" class="${styles.link_run_sys!} ${styles.action_find!}" />
+          <@field type="submit" text="${uiLabelMap.ProductAdvancedSearch}" class="+${styles.link_run_sys!} ${styles.action_find!}" />
       </@fieldset>
     </form>
 </@section>

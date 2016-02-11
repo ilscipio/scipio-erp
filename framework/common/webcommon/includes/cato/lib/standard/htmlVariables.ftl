@@ -59,7 +59,7 @@
     "heading_level_prefix" : "heading-level-",  
     "switch" : "switch",
     "dropdown" : "dropdown",
-    "fullwidth" : "elem-fullwidth",
+    "fullwidth" : "fullWidth",
     
   <#-- Common messages (default message type container styles)
       NOTE: these styles are secondary to markup choices made by theme markup macro -->
@@ -832,7 +832,7 @@
     "fields_generic_collapsedinlinelabel" : "", <#-- can be true, false, or list of type names -->
     "fields_generic_checkboxtype" : "",
 
-    <#-- misc field styles -->
+    <#-- misc fields styles -->
     "fields_wrap" : "collapse",
     "fields_label" : "prefix",
     
@@ -851,6 +851,9 @@
     
     <#-- datetime type styles -->
     "field_datetime_default_title" : "LABEL+FORMAT",    <#-- can be a property label from CommonUiLabels; prefix with "#PROP:". Can also add colon and resource afterward. Also supports these predefined: LABEL, FORMAT, LABEL+FORMAT -->
+    
+    <#-- misc single field styles -->
+    "field_inline" : "field-inline",                    <#-- a field (usually input) that has to inline with other inputs or inline html elements -->
     
     <#-- Field type style name maps
         These map cato and ofbiz field types to style names to represent the fields in CSS, so they can be unified.

@@ -723,6 +723,7 @@ standard markup.
                       re-implemented using the label area - see collapsedInlineLabel parameter.
                       NOTE: Presence of label arg does not guarantee a label area will be shown; this is controlled
                           by labelArea (and labelType) and its defaults, optionally coming from @fields container.
+                          label arg is mainly to provide data; theme and other flags decide what to do with it.
                           For generic parent fields, label type must be specified explicitly, e.g.
                             <@fields type="generic"><@field labelType="horizontal" label="mylabel">...</@fields> 
                       NOTE: label area behavior may also be influenced by containing macros such as @fields
@@ -778,6 +779,10 @@ standard markup.
                             this may be needed for some field types.
     norows          = render without the rows-container
     nocells         = render without the cells-container
+    container       = defaul true. if false, sets norows=true and nocells=true.
+    inline          = default false. If true, forces container=false and 
+                      Marks the field with styles.field_inline.
+                      Theme should act on this style to prevent taking up all the width.
     required        = required input
     postfix         = boolean true/false, controls whether an extra area is appended after widget area
     postfixSize     = manual postfix size, in (large) grid columns
@@ -928,7 +933,9 @@ standard markup.
   "description":"",
   "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
   "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
-  "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "checkboxType":"", "radioType":"", "events":{}, "wrap":"", "passArgs":{} 
+  "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "checkboxType":"", "radioType":"", 
+  "inline":"",
+  "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
   <#-- TODO: the following calls should be combined into a mergeArgMapsToLocals method, but
@@ -945,6 +952,12 @@ standard markup.
   <#if !valueType?has_content>
     <#local valueType = "generic">
   </#if>
+
+  <#if inline?is_boolean && inline == true>
+    <#local container = false>
+    <#local class = addClassArg(class, styles.field_inline!)>
+  </#if>
+
   <#-- treat tooltip and description as synonyms for now -->
   <#if tooltip?has_content>
     <#if !description?has_content>

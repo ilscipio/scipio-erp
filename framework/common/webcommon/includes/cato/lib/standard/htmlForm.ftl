@@ -750,7 +750,8 @@ standard markup.
     events          = map of JS event names to script actions. 
                       event names can be specified with or without the "on" prefix ("click" or "onclick").
     onClick         = shortcut for: events={"click": onClick}
-    onChange         = shortcut for: events={"change": onChange}
+    onChange        = shortcut for: events={"change": onChange}
+    onFocus         = shortcut for: events={"focus": onChange}
     disabled        = field disabled
     placeholder     = field placeholder
     alert           = adds additional css alert class
@@ -907,7 +908,8 @@ standard markup.
 -->
 <#assign field_defaultArgs = {
   <#-- TODO: group these arguments so easier to read... -->
-  "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", "onClick":"", "onChange":"",
+  "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", 
+  "onClick":"", "onChange":"", "onFocus":"",
   "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
   "cols":"50", "dateType":"date-time", "multiple":"", "checked":"", 
   "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"",
@@ -950,6 +952,9 @@ standard markup.
   </#if>
   <#if onChange?has_content>
     <#local events = events + {"change": onChange}>
+  </#if>
+  <#if onFocus?has_content>
+    <#local events = events + {"focus": onFocus}>
   </#if>
   
   <#-- parent @fields group elem info (if any; may be omitted) -->

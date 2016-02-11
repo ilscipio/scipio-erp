@@ -145,7 +145,7 @@ if msgArgs not specified, property has access to context (occasionally this is u
 if msgArgs is a sequence, they are passed instead of context to the property.
 TODO: java transform.
 -->
-<#function getPropertyMsg resource name specLocale=true msgArgs=false>
+<#function getPropertyMsg resource name msgArgs=false specLocale=true>
   <#if specLocale?is_boolean>
     <#if specLocale>
       <#local specLocale = locale!"">
@@ -163,7 +163,7 @@ TODO: java transform.
   </#if>
 </#function>
 
-<#function getPropertyMsgFromLocExpr resourceExpr specLocale=true msgArgs=false>
+<#function getPropertyMsgFromLocExpr resourceExpr msgArgs=false specLocale=true>
   <#local parts = resourceExpr?split("#")>
   <#if (parts?size >= 2)>
     <#local resource = parts[0]>
@@ -172,7 +172,7 @@ TODO: java transform.
     <#local resource = "CommonUiLabels">
     <#local name = parts[0]>
   </#if>
-  <#return getPropertyMsg(resource, name, specLocale, msgArgs)> 
+  <#return getPropertyMsg(resource, name, msgArgs, specLocale)> 
 </#function>
 
 <#-- 

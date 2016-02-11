@@ -171,7 +171,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
             </#if>
             <#-- TODO: fully localize format-->
             <#if title?starts_with("#PROP:")>
-              <#local title = getPropertyMsgFromLocExpr(title?substring(6), true, {"dateLabel":origLabel, "dateFormat":dateFormat})!"">
+              <#local title = getPropertyMsgFromLocExpr(title?substring(6), {"dateLabel":origLabel, "dateFormat":dateFormat})!"">
             </#if>
           </#if>
           <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>

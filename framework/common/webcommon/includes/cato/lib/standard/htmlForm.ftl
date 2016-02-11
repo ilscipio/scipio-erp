@@ -484,14 +484,15 @@ or even multiple per fieldset.
                                  NOTE: radio and checkbox support special names: radio-single, radio-multi, checkbox-single, checkbox-multi
     formName            = the form name the child fields should assume  
     formId              = the form ID the child fields should assume   
-    inlineItems     = change default for @field inlineItems parameter (true/false)    
-    checkboxType    = default checkbox type
-    radioType       = default radio type  
-    open/close      = advanced structure logic
+    inlineItems         = change default for @field inlineItems parameter (true/false)    
+    checkboxType        = default checkbox type
+    radioType           = default radio type  
+    open/close          = advanced structure logic
+    ignoreParentField   = default false. If true, causes all fields within to ignore their parent and behave as if no parent.
 -->
 <#assign fields_defaultArgs = {
   "type":"default", "open":true, "close":true, "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", "labelAreaConsumeExceptions":true,
-  "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "checkboxType":"", "radioType":"", "passArgs":{}
+  "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "checkboxType":"", "radioType":"", "ignoreParentField":"", "passArgs":{}
 }>
 <#macro fields args={} inlineArgs...>
   <#-- NOTE: this is non-standard args usage -->
@@ -593,7 +594,8 @@ or even multiple per fieldset.
     "labelAreaRequireContent":labelAreaRequireContent, "labelAreaConsumeExceptions":labelAreaConsumeExceptions,
     "formName":formName, "formId":formId, "inlineItems":inlineItems,
     "collapse":collapse, "collapsePostfix":collapsePostfix, "collapsedInlineLabel":collapsedInlineLabel,
-    "checkboxType":checkboxType, "radioType":radioType}>
+    "checkboxType":checkboxType, "radioType":radioType,
+    "ignoreParentField":ignoreParentField}>
 </#function>
 
 <#-- 
@@ -779,10 +781,11 @@ standard markup.
                             this may be needed for some field types.
     norows          = render without the rows-container
     nocells         = render without the cells-container
-    container       = defaul true. if false, sets norows=true and nocells=true.
+    container       = defaul true. If false, sets norows=true and nocells=true.
     inline          = default false. If true, forces container=false and 
                       Marks the field with styles.field_inline.
                       Theme should act on this style to prevent taking up all the width.
+    ignoreParentField    = default false. If true causes a child field to act as if it had no parent field. Rarely needed.
     required        = required input
     postfix         = boolean true/false, controls whether an extra area is appended after widget area
     postfixSize     = manual postfix size, in (large) grid columns
@@ -934,7 +937,7 @@ standard markup.
   "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
   "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
   "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "checkboxType":"", "radioType":"", 
-  "inline":"",
+  "inline":"", "ignoreParentField":"",
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
@@ -991,6 +994,16 @@ standard markup.
   
   <#-- parent @field elem info (if any; is possible) -->
   <#local parentFieldInfo = readRequestStack("catoFieldInfoStack")!{}>
+  <#-- allow ignore parent -->
+  <#if ignoreParentField?is_boolean>
+    <#if ignoreParentField>
+      <#local parentFieldInfo = {}>
+    </#if>
+  <#elseif fieldsInfo.ignoreParentField?is_boolean>
+    <#if fieldsInfo.ignoreParentField>
+      <#local parentFieldInfo = {}>
+    </#if>
+  </#if>
   <#local hasParentField = ((parentFieldInfo.type)!"")?has_content>
   <#local isTopLevelField = !hasParentField>
   <#local isChildField = hasParentField>

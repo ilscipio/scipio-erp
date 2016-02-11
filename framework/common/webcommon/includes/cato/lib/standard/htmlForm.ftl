@@ -435,14 +435,16 @@ or even multiple per fieldset.
     </@field>
     
   * Parameters *
-    type            = [default|default-nolabels|default-compact|generic], default default. the type of fields arrangement.
+    type            = [default|default-nolabels|default-compact|default-manual|generic], default default. the type of fields arrangement. affects layout and styling of contained fields.
                       default: default cato field arrangement. this is the type assumed when no @fields element is present.
                           currently, it mostly influences the label area (present for all @field types except submit).
                       default-nolabels: default cato field arrangement for common sets of fields with no labels.
                           it expects that @field entries won't be passed any labels.
                       default-compact: default cato field arrangement for fields that are in limited space.
                           by default, this means the labels will be arranged vertically with the fields.
-                      generic: generic field arrangement of no specific pattern. means field arrangement is custom and field macro should not
+                      default-manual: manual field arrangement. means field arrangement is custom and field macro and theme should not impose
+                          any layout, but may still apply minor low-level default styling choices and non-optional layout fallbacks. caller determines arrangement/layout/label type/etc.
+                      generic: generic field arrangement of no specific pattern and no specific styling. means field arrangement is custom and field macro and theme should not
                           make any assumptions except where a default is required. caller determines arrangement/layout/label type/etc.
     labelType       = [horizontal|vertical|none], defaults specified in styles variables based on fields type. override for type of the field labels themselves.
                       horizontal: a label area added to the left (or potentially to the right) a field, horizontally. 

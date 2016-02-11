@@ -808,7 +808,19 @@
     "fields_default_compact_labelareaexceptions" : "checkbox-single radio-single", <#-- having label on top of checkbox or radio is really ugly; let the label inline itself for these -->
     "fields_default_compact_labelarearequirecontent" : true,
 
-    <#-- free-form - NO imposed styles - keep styles out of this -->
+    <#-- free-form/manual layout - NO imposed layout (but may have some low-level field styling) -->
+    "fields_default_manual_labeltype" : "horizontal",
+    "fields_default_manual_labelposition" : "left",
+    "fields_default_manual_labelarea" : false,
+    "fields_default_manual_labelareaexceptions" : "", 
+    "fields_default_manual_labelarearequirecontent" : false, 
+    "fields_default_manual_labelareaconsumeexceptions" : "",
+    "fields_default_manual_collapse" : false,
+    "fields_default_manual_collapsepostfix" : true,
+    "fields_default_manual_collapsedinlinelabel" : "", <#-- can be true, false, or list of type names -->
+    "fields_default_manual_checkboxtype" : "",
+
+    <#-- completely generic - NO imposed styles - keep styles out of this -->
     "fields_generic_labeltype" : "horizontal",
     "fields_generic_labelposition" : "left",
     "fields_generic_labelarea" : false,

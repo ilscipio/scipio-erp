@@ -446,6 +446,11 @@ or even multiple per fieldset.
                           any layout, but may still apply minor low-level default styling choices and non-optional layout fallbacks. caller determines arrangement/layout/label type/etc.
                       generic: generic field arrangement of no specific pattern and no specific styling. means field arrangement is custom and field macro and theme should not
                           make any assumptions except where a default is required. caller determines arrangement/layout/label type/etc.
+                      NOTE: For default-manual, generic and similar where styles hash does not specify a label area by default, 
+                          to show a label area for a field, it is NOT sufficient to specify label="xxx".
+                          You must specify both labelArea=true and label="xxx". label arg does not influence presence of label area.
+                          This is explicitly intended, as the label arg is general-purpose in nature and is not associated only with the label area (and anything else will break logic).
+                          In the majority of cases, this should rarely be used anyway; use another more appropriate @fields type instead.
     labelType       = [horizontal|vertical|none], defaults specified in styles variables based on fields type. override for type of the field labels themselves.
                       horizontal: a label area added to the left (or potentially to the right) a field, horizontally. 
                           the implementation decides how to do this.

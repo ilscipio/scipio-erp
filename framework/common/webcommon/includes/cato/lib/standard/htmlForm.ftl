@@ -699,7 +699,7 @@ standard markup.
       <@field attr="" />
     </@fields>
     
-    <@fields type="generic"> <#- use @field as low-level control ->
+    <@fields type="default-manual"> <#- use @field as low-level control ->
       <@field attr="" labelArea=true label="My Label" />
     </@fields>    
     
@@ -752,6 +752,7 @@ standard markup.
     events          = map of JS event names to script actions. 
                       event names can be specified with or without the "on" prefix ("click" or "onclick").
     onClick         = shortcut for: events={"click": onClick}
+                      WARN: Beware of character case. It's onClick, not onclick!
     onChange        = shortcut for: events={"change": onChange}
     onFocus         = shortcut for: events={"focus": onChange}
     disabled        = field disabled

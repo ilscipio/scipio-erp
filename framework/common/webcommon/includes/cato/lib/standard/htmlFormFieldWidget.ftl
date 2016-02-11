@@ -152,6 +152,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <#-- Note: ofbiz never handled dateType=="date" here because it pass shortDateInput=true in renderer instead-->
   <#-- These should be ~uiLabelMap.CommonFormatDate/Time/DateTime -->
   <#local dateFormat><#if shortDateInput>yyyy-MM-dd<#elseif dateType == "time">HH:mm:ss.SSS<#else>yyyy-MM-dd HH:mm:ss.SSS</#if></#local>
+  <#local dateFormatProp><#if shortDateInput>CommonFormatDate<#elseif dateType == "time">CommonFormatTime<#else>CommonFormatDateTime</#if></#local>
   <#local useTsFormat = ((!shortDateInput) && dateType != "time")>
 
   <div class="${styles.grid_row!} ${styles.collapse!} date" data-date="" data-date-format="${dateFormat}">
@@ -170,9 +171,22 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
             <#if !title?has_content>
               <#local title = styles.field_datetime_default_title!>
             </#if>
-            <#-- TODO: fully localize format-->
-            <#if title?starts_with("#PROP:")>
-              <#local title = getPropertyMsgFromLocExpr(title?substring(6), {"dateLabel":origLabel, "dateFormat":dateFormat})!"">
+            <#if title?has_content>
+              <#-- NOTE: two property lookups kind of inefficient, but at least customizable, no sense going back -->
+              <#local dateFormatString = getPropertyMsg("CommonUiLabels", dateFormatProp)>
+              <#if title == "FORMAT">
+                <#local title = dateFormatString>
+              <#elseif title == "LABEL">
+                <#local title = origLabel>
+              <#elseif title == "LABEL+FORMAT">
+                <#if origLabel?has_content>
+                  <#local title = origLabel + " (" + dateFormatString + ")">
+                <#else>
+                  <#local title = dateFormatString>
+                </#if>
+              <#elseif title?starts_with("#PROP:")>
+                <#local title = getPropertyMsgFromLocExpr(title?substring(6), {"dateLabel":origLabel, "dateFormatString":dateFormatString})!"">
+              </#if>
             </#if>
           </#if>
           <#local class = addClassArg(class, "${styles.grid_small!}3 ${styles.grid_cell!}")>

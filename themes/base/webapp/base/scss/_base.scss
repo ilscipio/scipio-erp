@@ -441,7 +441,7 @@ table.table-noborder, table.table-noborder-hint {
 
 
 // Fields
-input.field-inline {
+input.field-inline, select.field-inline, textarea.field-inline {
   display: inline;
   width: auto;
 }

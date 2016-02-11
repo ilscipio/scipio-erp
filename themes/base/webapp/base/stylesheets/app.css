@@ -10320,7 +10320,7 @@ table.table-noborder, table.table-noborder-hint {
 }
 
 /* line 444, ../scss/_base.scss */
-input.field-inline {
+input.field-inline, select.field-inline, textarea.field-inline {
   display: inline;
   width: auto;
 }

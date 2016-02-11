@@ -137,11 +137,12 @@ function ShowTab(lname) {
                         <@td>${entityField.name}</@td>
                         <@td>
                           <#if entityField.fieldType == 'DateTime'>
-                            <@field type="datetime" name="${entityField.name}" value="${entityField.value}" size="25" maxlength="30" id="${entityField.name}" />
+                            <#-- Cato: NOTE: when using default-manual, there is no label area, and label="xxx" arg won't turn on label area. label="xxx" is specified so it gets picked up by title/tooltip. -->
+                            <@field type="datetime" label="${entityField.name}" name="${entityField.name}" value="${entityField.value}" size="25" maxlength="30" id="${entityField.name}" />
                           <#elseif entityField.fieldType == 'Date'>
-                            <@field type="datetime" dateType="date" name="${entityField.name}" value="${entityField.value}" size="25" maxlength="30" id="${entityField.name}" />
+                            <@field type="datetime" label="${entityField.name}" dateType="date" name="${entityField.name}" value="${entityField.value}" size="25" maxlength="30" id="${entityField.name}" />
                           <#elseif entityField.fieldType == 'Time'>
-                            <@field type="datetime" dateType="time" name="${entityField.name}" size="6" maxlength="10" value="${entityField.value}" />
+                            <@field type="datetime" label="${entityField.name}" dateType="time" name="${entityField.name}" size="6" maxlength="10" value="${entityField.value}" />
                           <#elseif entityField.fieldType == 'Integer'>
                             <@field type="input" size="20" name="${entityField.name}" value="${entityField.value}" />
                           <#elseif entityField.fieldType == 'Long'>
@@ -175,11 +176,11 @@ function ShowTab(lname) {
                       <@td>${entityField.name}</@td>
                       <@td>
                         <#if entityField.fieldType == 'DateTime'>
-                          <@field type="datetime" name="${entityField.name}" value="${entityField.value}" size="25" maxlength="30" id="${entityField.name}" />
+                          <@field type="datetime" label="${entityField.name}" name="${entityField.name}" value="${entityField.value}" size="25" maxlength="30" id="${entityField.name}" />
                         <#elseif entityField.fieldType == 'Date'>
-                          <@field type="datetime" dateType="date" name="${entityField.name}" value="${entityField.value}" size="25" maxlength="30" id="${entityField.name}" />
+                          <@field type="datetime" label="${entityField.name}" dateType="date" name="${entityField.name}" value="${entityField.value}" size="25" maxlength="30" id="${entityField.name}" />
                         <#elseif entityField.fieldType == 'Time'>
-                          <@field type="datetime" dateType="time" size="6" maxlength="10" name="${entityField.name}" value="${entityField.value}" />
+                          <@field type="datetime" label="${entityField.name}" dateType="time" size="6" maxlength="10" name="${entityField.name}" value="${entityField.value}" />
                         <#elseif entityField.fieldType == 'Integer'>
                           <@field type="input" size="20" name="${entityField.name}" value="${entityField.value}" />
                         <#elseif entityField.fieldType == 'Long'>

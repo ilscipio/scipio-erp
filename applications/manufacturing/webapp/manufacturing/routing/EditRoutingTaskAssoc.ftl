@@ -36,14 +36,10 @@ function addRoutingTask() {
     <input type="hidden" name="copyTask" value="N"/>
     <@row>
       <@cell columns=6>
-        <@field type="generic" label="${uiLabelMap.ManufacturingRoutingTaskId}">
-            <@htmlTemplate.lookupField formName="addtaskassocform" name="workEffortIdTo" id="workEffortIdTo" fieldFormName="LookupRoutingTask"/>
-        </@field>
+        <@field type="lookup" label="${uiLabelMap.ManufacturingRoutingTaskId}" formName="addtaskassocform" name="workEffortIdTo" id="workEffortIdTo" fieldFormName="LookupRoutingTask"/>
       </@cell>
       <@cell columns=6>
-        <@field type="generic" label="${uiLabelMap.CommonFromDate}">
-            <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-        </@field>
+        <@field type="datetime" label="${uiLabelMap.CommonFromDate}" name="fromDate" value="" size="25" maxlength="30" id="fromDate_1"/>
       </@cell>
     </@row>
     <@row>
@@ -51,9 +47,7 @@ function addRoutingTask() {
         <@field type="input" label="${uiLabelMap.CommonSequenceNum}" name="sequenceNum" size="10"/>
       </@cell>
       <@cell columns=6>
-        <@field type="generic" label="${uiLabelMap.CommonThruDate}">
-            <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-        </@field>
+        <@field type="datetime" label="${uiLabelMap.CommonThruDate}" name="thruDate" value="" size="25" maxlength="30" id="thruDate_1"/>
       </@cell>
     </@row>
 

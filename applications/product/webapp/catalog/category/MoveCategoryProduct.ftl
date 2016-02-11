@@ -6,14 +6,10 @@
         <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
         <@row>
             <@cell columns=4>
-        <@field type="generic" label="${uiLabelMap.ProductTargetProductCategory}">
-            <@htmlTemplate.lookupField formName="copyCategoryProductMembersForm" name="productCategoryIdTo" id="productCategoryIdTo" fieldFormName="LookupProductCategory"/>
-        </@field>
+        <@field type="lookup" label="${uiLabelMap.ProductTargetProductCategory}" formName="copyCategoryProductMembersForm" name="productCategoryIdTo" id="productCategoryIdTo" fieldFormName="LookupProductCategory"/>
             </@cell>
             <@cell columns=4>
-        <@field type="generic" label="${uiLabelMap.ProductOptionalFilterWithDate}">
-            <@htmlTemplate.renderDateTimeField name="validDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="validDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-        </@field>
+        <@field type="datetime" label="${uiLabelMap.ProductOptionalFilterWithDate}" name="validDate" value="" size="25" maxlength="30" id="validDate1"/>
             </@cell>
             <@cell columns=4>
         <@field type="select" label="${uiLabelMap.ProductIncludeSubCategories}" name="recurse">

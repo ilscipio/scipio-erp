@@ -600,7 +600,7 @@ Parameter: lastViewName, String, optional - If the ajaxEnabled parameter is true
   <#else>
     <#local events = {}>
   </#if>
-  <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=className alert=alert value=value size=size maxlength=maxlength id=id events=events readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width height=height position=position fadeBackground=fadeBackground clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed lastViewName=lastViewName  title=title fieldTitleBlank=fieldTitleBlank />
+  <@field_lookup_widget name=name formName=formName fieldFormName=fieldFormName class=className alert=alert value=value size=size maxlength=maxlength id=id events=events readonly=readonly autocomplete=autocomplete descriptionFieldName=descriptionFieldName targetParameterIter=targetParameterIter imgSrc=imgSrc ajaxUrl=ajaxUrl ajaxEnabled=ajaxEnabled presentation=presentation width=width height=height position=position fadeBackground=fadeBackground clearText=clearText showDescription=showDescription initiallyCollapsed=initiallyCollapsed lastViewName=lastViewName title=title fieldTitleBlank=fieldTitleBlank />
 </#macro>
 
 <#-- Cato: new params: paginate, forcePost, viewIndexFirst, listItemsOnly, paginateToggle*

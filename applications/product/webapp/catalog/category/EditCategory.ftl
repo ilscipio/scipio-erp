@@ -89,9 +89,7 @@ function insertImageName(type,nameValue) {
                 <@field type="input" label="${uiLabelMap.CommonName}" value="${(productCategory.categoryName)!}" name="categoryName" size="60" maxlength="60"/>
                 </@cell>
                 <@cell columns=6>
-                <@field type="generic" label="${uiLabelMap.CommonParent}">
-                    <@htmlTemplate.lookupField value="${(productCategory.primaryParentCategoryId)?default('')}" formName="productCategoryForm" name="primaryParentCategoryId" id="primaryParentCategoryId" fieldFormName="LookupProductCategory"/>
-                </@field>
+                <@field type="lookup" label="${uiLabelMap.CommonParent}" value="${(productCategory.primaryParentCategoryId)?default('')}" formName="productCategoryForm" name="primaryParentCategoryId" id="primaryParentCategoryId" fieldFormName="LookupProductCategory"/>
                 </@cell>
             </@row>
             <@row>

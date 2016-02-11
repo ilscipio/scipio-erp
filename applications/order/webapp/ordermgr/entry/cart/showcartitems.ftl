@@ -184,8 +184,8 @@ under the License.
             <@tr>
               <@td colspan="2">
                 <@fields type="default-compact">
-                  <@field type="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="shipAfterDate_${cartLineIndex}" value="${cartLine.getShipAfterDate()!''}" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipAfterDate_${cartLineIndex}" dateType="date-time" />
-                  <@field type="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="shipBeforeDate_${cartLineIndex}" value="${cartLine.getShipBeforeDate()!''}" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipBeforeDate_${cartLineIndex}" dateType="date-time" />
+                  <@field type="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="shipAfterDate_${cartLineIndex}" value="${cartLine.getShipAfterDate()!''}" size="25" maxlength="30" id="shipAfterDate_${cartLineIndex}" dateType="date-time" />
+                  <@field type="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="shipBeforeDate_${cartLineIndex}" value="${cartLine.getShipBeforeDate()!''}" size="25" maxlength="30" id="shipBeforeDate_${cartLineIndex}" dateType="date-time" />
                 </@fields>
               </@td>
             </@tr>

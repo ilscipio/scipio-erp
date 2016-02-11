@@ -6,14 +6,10 @@
         <input type="hidden" name="activeOnly" value="${activeOnly.toString()}" />
         <@row>
             <@cell columns=6>
-                <@field type="generic" label="${uiLabelMap.CommonProduct}" required=true>
-                    <@htmlTemplate.lookupField formName="addProductCategoryMemberForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
-                </@field>
+                <@field type="lookup" label="${uiLabelMap.CommonProduct}" required=true formName="addProductCategoryMemberForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
             </@cell>
             <@cell columns=6>
-                <@field type="generic" label="${uiLabelMap.CommonFrom}" required=true>
-                    <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                </@field>
+                <@field type="datetime" label="${uiLabelMap.CommonFrom}" required=true name="fromDate" value="" size="25" maxlength="30" id="fromDate1"/>
             </@cell>
         </@row>
         <@row>

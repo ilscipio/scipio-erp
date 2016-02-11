@@ -55,17 +55,13 @@ function lookupBom() {
             </@field>
         </@cell>
         <@cell columns=6>
-            <@field type="generic" label="${uiLabelMap.ProductProductId}">
-              <@htmlTemplate.lookupField value="${productId!}" formName="searchform" name="productId" id="productId" fieldFormName="LookupProduct"/>
-            </@field>
+            <@field type="lookup" label="${uiLabelMap.ProductProductId}" value="${productId!}" formName="searchform" name="productId" id="productId" fieldFormName="LookupProduct"/>
             <@field type="submit" submitType="link" href="javascript:document.searchform.submit();" class="${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.ManufacturingShowBOMAssocs}" />
         </@cell>
     </@row>
     <@row>
         <@cell columns=6 offset=6>
-            <@field type="generic" label="${uiLabelMap.ManufacturingCopyToProductId}">
-                <@htmlTemplate.lookupField formName="searchform" name="copyToProductId" id="copyToProductId" fieldFormName="LookupProduct"/>
-            </@field>
+            <@field type="lookup" label="${uiLabelMap.ManufacturingCopyToProductId}" formName="searchform" name="copyToProductId" id="copyToProductId" fieldFormName="LookupProduct"/>
             <@field type="submit" submitType="link" href="javascript:document.searchform.UPDATE_MODE.value='COPY';document.searchform.submit();" class="${styles.link_run_sys!} ${styles.action_copy!}" text="${uiLabelMap.ManufacturingCopyBOMAssocs}" />
         </@cell>
     </@row>
@@ -101,15 +97,9 @@ function lookupBom() {
                     <option value="${(assocType.productAssocTypeId)!}">${(assocType.get("description",locale))!}</option>
                 </#list>
           </@field>
-          <@field type="generic" label="${uiLabelMap.ProductProductId}">
-              <@htmlTemplate.lookupField value="${productId!}" formName="editProductAssocForm" name="productId" id="productId2" fieldFormName="LookupProduct"/>
-          </@field>
-          <@field type="generic" label="${uiLabelMap.ManufacturingProductIdTo}">
-              <@htmlTemplate.lookupField value="${productIdTo!}" formName="editProductAssocForm" name="productIdTo" id="productIdTo" fieldFormName="LookupProduct"/>
-          </@field>
-          <@field type="generic" label="${uiLabelMap.CommonFromDate}" tooltip="(${uiLabelMap.ManufacturingWillBeSetToNow})">
-              <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="50" id="fromDate_1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-          </@field>
+          <@field type="lookup" label="${uiLabelMap.ProductProductId}" value="${productId!}" formName="editProductAssocForm" name="productId" id="productId2" fieldFormName="LookupProduct"/>
+          <@field type="lookup" label="${uiLabelMap.ManufacturingProductIdTo}" value="${productIdTo!}" formName="editProductAssocForm" name="productIdTo" id="productIdTo" fieldFormName="LookupProduct"/>
+          <@field type="datetime" label="${uiLabelMap.CommonFromDate}" tooltip="(${uiLabelMap.ManufacturingWillBeSetToNow})" name="fromDate" value="" size="25" maxlength="50" id="fromDate_1"/>
     <#else>
           <@field type="display" label="${uiLabelMap.ProductProductId}">${productId!}</@field>
           <@field type="display" label="${uiLabelMap.ManufacturingProductIdTo}">${productIdTo!}</@field>
@@ -122,9 +112,7 @@ function lookupBom() {
     <#else>
       <#assign value = request.getParameter("thruDate")!>
     </#if>
-    <@field type="generic" label="${uiLabelMap.CommonThruDate}">
-        <@htmlTemplate.renderDateTimeField value="${value!''}" name="thruDate" className="" event="" action=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="30" maxlength="30" id="fromDate_2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-    </@field>
+    <@field type="datetime" label="${uiLabelMap.CommonThruDate}" value="${value!''}" name="thruDate" size="30" maxlength="30" id="fromDate_2"/>
     <@field type="input" label="${uiLabelMap.CommonSequenceNum}" name="sequenceNum" value=useValues?string("${(productAssoc.sequenceNum)!}", "${(request.getParameter('sequenceNum'))!}") size="5" maxlength="10"/>
     <@field type="input" label="${uiLabelMap.ManufacturingReason}" name="reason" value=useValues?string("${(productAssoc.reason)!}", "${(request.getParameter('reason'))!}") size="60" maxlength="255"/>
     <@field type="input" label="${uiLabelMap.ManufacturingInstruction}" name="instruction" value=useValues?string("${(productAssoc.instruction)!}", "${(request.getParameter('instruction'))!}") size="60" maxlength="255"/>
@@ -148,13 +136,9 @@ function lookupBom() {
       <#assign value = request.getParameter("routingWorkEffortId")!>
     </#if>
   <#if value?has_content>
-    <@field type="generic" label="${uiLabelMap.ManufacturingRoutingTask}">
-        <@htmlTemplate.lookupField value="${value}" formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
-    </@field>
+    <@field type="lookup" label="${uiLabelMap.ManufacturingRoutingTask}" value="${value}" formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
   <#else>
-    <@field type="generic" label="${uiLabelMap.ManufacturingRoutingTask}">
-        <@htmlTemplate.lookupField formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
-    </@field>
+    <@field type="lookup" label="${uiLabelMap.ManufacturingRoutingTask}" formName="editProductAssocForm" name="routingWorkEffortId" id="routingWorkEffortId" fieldFormName="LookupRoutingTask"/>
   </#if>
     
     <#if !(productAssoc??)>

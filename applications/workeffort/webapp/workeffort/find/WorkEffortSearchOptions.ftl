@@ -21,57 +21,43 @@ under the License.
         <#-- Cato: don't hardcode
         <input type="hidden" name="VIEW_SIZE" value="25"/>-->
         <@field type="generic" label="${uiLabelMap.WorkEffortKeywords}">
-            <input type="text" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}"/>&nbsp;
-              ${uiLabelMap.CommonAny}<input type="radio" name="SEARCH_OPERATOR" value="OR" <#if searchOperator == "OR">checked="checked"</#if>/>
-              ${uiLabelMap.CommonAll}<input type="radio" name="SEARCH_OPERATOR" value="AND" <#if searchOperator == "AND">checked="checked"</#if>/>
+            <@field type="input" name="SEARCH_STRING" size="40" value="${requestParameters.SEARCH_STRING!}"/>&nbsp;
+            <@field type="radio" name="SEARCH_OPERATOR" value="OR" checked=(searchOperator == "OR") label="${uiLabelMap.CommonAny}"/>
+            <@field type="radio" name="SEARCH_OPERATOR" value="AND" checked=(searchOperator == "AND") label="${uiLabelMap.CommonAll}"/>
         </@field>
-        <@field type="generic" label="${uiLabelMap.WorkEffortReviews}">
-            <input type="text" name="SEARCH_STRING_REVIEW_TEXT" size="40" value="${requestParameters.SEARCH_STRING_REVIEW_TEXT!}"/>&nbsp;
-        </@field>
-        <@field type="generic" label="${uiLabelMap.FormFieldTitle_workEffortId}">
-            <@htmlTemplate.lookupField value="${requestParameters.SEARCH_WORK_EFFORT_ID!}" formName="advToKeyWordSearchForm" name="SEARCH_WORK_EFFORT_ID" id="SEARCH_WORK_EFFORT_ID" fieldFormName="LookupWorkEffort"/>
-        </@field>
+        <@field type="input" label="${uiLabelMap.WorkEffortReviews}" name="SEARCH_STRING_REVIEW_TEXT" size="40" value="${requestParameters.SEARCH_STRING_REVIEW_TEXT!}" />
+        <@field type="lookup" label="${uiLabelMap.FormFieldTitle_workEffortId}" value="${requestParameters.SEARCH_WORK_EFFORT_ID!}" formName="advToKeyWordSearchForm" name="SEARCH_WORK_EFFORT_ID" id="SEARCH_WORK_EFFORT_ID" fieldFormName="LookupWorkEffort"/>
         <@field type="generic" label="${uiLabelMap.FormFieldTitle_workEffortAssocTypeId}">
-              <select name="workEffortAssocTypeId">
-                <option value="">- ${uiLabelMap.WorkEffortAnyAssocType} -</option>
-                  <#list workEffortAssocTypes as workEffortAssocType>
-                      <option value="${workEffortAssocType.workEffortAssocTypeId}">${workEffortAssocType.description}</option>
-                  </#list>
-              </select>
-                  ${uiLabelMap.WorkEffortIncludeAllSubWorkEfforts}?
-                  ${uiLabelMap.CommonYes}<input type="radio" name="SEARCH_SUB_WORK_EFFORTS" value="Y" checked="checked"/>
-                  ${uiLabelMap.CommonNo}<input type="radio" name="SEARCH_SUB_WORK_EFFORTS" value="N"/>
+            <@field type="select" name="workEffortAssocTypeId">
+                 <option value="">- ${uiLabelMap.WorkEffortAnyAssocType} -</option>
+               <#list workEffortAssocTypes as workEffortAssocType>
+                 <option value="${workEffortAssocType.workEffortAssocTypeId}">${workEffortAssocType.description}</option>
+               </#list>
+            </@field>
+            ${uiLabelMap.WorkEffortIncludeAllSubWorkEfforts}?
+            <@field type="radio" name="SEARCH_SUB_WORK_EFFORTS" value="Y" checked="checked" label="${uiLabelMap.CommonYes}"/>
+            <@field type="radio" name="SEARCH_SUB_WORK_EFFORTS" value="N" label="${uiLabelMap.CommonNo}"/>
         </@field>
-        <@field type="generic" label="${uiLabelMap.PartyPartyId}">
-            <@htmlTemplate.lookupField value="${requestParameters.partyId!}" formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
-        </@field>
+        <@field type="lookup" label="${uiLabelMap.PartyPartyId}" value="${requestParameters.partyId!}" formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
         <@field type="select" label="${uiLabelMap.PartyRoleTypeId}" name="partyRoleTypeId">
-                <option value="">- ${uiLabelMap.CommonAnyRoleType} -</option>
-                <#list roleTypes as roleType>
-                   <option value="${roleType.roleTypeId}">${roleType.description}</option>
-                 </#list>
+            <option value="">- ${uiLabelMap.CommonAnyRoleType} -</option>
+          <#list roleTypes as roleType>
+            <option value="${roleType.roleTypeId}">${roleType.description}</option>
+          </#list>
         </@field>
-        <@field type="generic" label="${uiLabelMap.WorkEffortProductId1}">
-            <@htmlTemplate.lookupField value="${requestParameters.productId_1!}" formName="advToKeyWordSearchForm" name="productId_1" id="productId_1" fieldFormName="LookupProduct"/>
-        </@field>
-        <@field type="generic" label="${uiLabelMap.WorkEffortProductId2}">
-            <@htmlTemplate.lookupField value="${requestParameters.productId_2!}" formName="advToKeyWordSearchForm" name="productId_2" id="productId_2" fieldFormName="LookupProduct"/>
-        </@field>
+        <@field type="lookup" label="${uiLabelMap.WorkEffortProductId1}" value="${requestParameters.productId_1!}" formName="advToKeyWordSearchForm" name="productId_1" id="productId_1" fieldFormName="LookupProduct"/>
+        <@field type="lookup" label="${uiLabelMap.WorkEffortProductId2}" value="${requestParameters.productId_2!}" formName="advToKeyWordSearchForm" name="productId_2" id="productId_2" fieldFormName="LookupProduct"/>
         <@field type="generic" label="${uiLabelMap.WorkEffortLastUpdatedDateFilter}">
-            <@field type="generic" label="${uiLabelMap.CommonFrom}">
-                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.fromDate!}" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>     
-            </@field>
-            <@field type="generic" label="${uiLabelMap.CommonThru}">
-                <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.thruDate!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-            </@field>
+            <@field type="datetime" label="${uiLabelMap.CommonFrom}" name="fromDate" value="${requestParameters.fromDate!}" size="25" maxlength="30" id="fromDate1"/>
+            <@field type="datetime" label="${uiLabelMap.CommonThru}" name="thruDate" value="${requestParameters.thruDate!}" size="25" maxlength="30" id="thruDate1"/>
         </@field>
         <@field type="generic" label="${uiLabelMap.CommonSortedBy}">
-            <select name="sortOrder">
+            <@field type="select" name="sortOrder">
                 <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
                 <option value="SortWorkEffortField:workEffortName">${uiLabelMap.WorkEffortName}</option>
-              </select>
-              ${uiLabelMap.ProductLowToHigh}<input type="radio" name="sortAscending" value="Y" checked="checked"/>
-              ${uiLabelMap.ProductHighToLow}<input type="radio" name="sortAscending" value="N"/>
+            </@field>
+            <@field type="radio" name="sortAscending" value="Y" checked="checked" label="${uiLabelMap.ProductLowToHigh}"/>
+            <@field type="radio" name="sortAscending" value="N" label="${uiLabelMap.ProductHighToLow}"/>
         </@field>
         <#if searchConstraintStrings?has_content>
           <@field type="generic" label="${uiLabelMap.ProductLastSearch}">
@@ -80,12 +66,14 @@ under the License.
                 </#list>
                 <div>${uiLabelMap.CommonSortedBy} ${searchSortOrderString}</div>
                 <div>
-                  ${uiLabelMap.ProductNewSearch}<input type="radio" name="clearSearch" value="Y" checked="checked"/>
-                  ${uiLabelMap.CommonRefineSearch}<input type="radio" name="clearSearch" value="N"/>
+                  <@field type="radio" name="clearSearch" value="Y" checked="checked" label="${uiLabelMap.ProductNewSearch}"/>
+                  <@field type="radio" name="clearSearch" value="N" label="${uiLabelMap.CommonRefineSearch}"/>
                 </div>
           </@field>
         </#if>
-        <@field type="submit" submitType="link" href="javascript:document.advToKeyWordSearchForm.submit()" class="${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.CommonFind}" />
-        <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onclick="javascript:document.advToKeyWordSearchForm.submit();"/>
+        <@field type="submitarea">
+            <@field type="submit" submitType="link" href="javascript:document.advToKeyWordSearchForm.submit()" class="${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.CommonFind}" />
+            <@field type="submit" submitType="image" src=makeOfbizContentUrl("/images/spacer.gif") onClick="javascript:document.advToKeyWordSearchForm.submit();"/>
+        </@field>
     </form>
 </@section>

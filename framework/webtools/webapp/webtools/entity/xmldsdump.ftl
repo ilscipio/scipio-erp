@@ -63,8 +63,8 @@ under the License.
     <@field type="input" label="${uiLabelMap.WebtoolsOutputDirectory}" size="60" name="outpath" value="${parameters.outpath!}"/>
     <@field type="input" label="${uiLabelMap.WebtoolsMaxRecordsPerFile}" size="10" name="maxrecords"/>
     <@field type="input" label="${uiLabelMap.WebtoolsSingleFilename}" size="60" name="filename" value="${parameters.filename!}"/>
-    <@field type="datetime" dateType="datetime" label="${uiLabelMap.WebtoolsRecordsUpdatedSince}" name="entityFrom"  value="" size="25" maxlength="30" id="entityFrom1" dateType="date" />
-    <@field type="datetime" dateType="datetime" label="${uiLabelMap.WebtoolsRecordsUpdatedBefore}" name="entityThru" value="" size="25" maxlength="30" id="entityThru1" dateType="date" />
+    <@field type="datetime" label="${uiLabelMap.WebtoolsRecordsUpdatedSince}" name="entityFrom"  value="" size="25" maxlength="30" id="entityFrom1" />
+    <@field type="datetime" label="${uiLabelMap.WebtoolsRecordsUpdatedBefore}" name="entityThru" value="" size="25" maxlength="30" id="entityThru1" />
     <@field type="checkbox" name="tobrowser" value="N" label="${StringUtil.wrapString(uiLabelMap.WebtoolsOutToBrowser)}"/>
     </@cell>
   </@row>

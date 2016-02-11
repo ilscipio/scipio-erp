@@ -74,12 +74,8 @@ under the License.
         <#else>
           <#assign thisPartyId = requestParameters.partyId!>
         </#if>
-        <@field type="generic" label="${uiLabelMap.CommonUserLoginId}" id="userLoginId_sales">
-            <@htmlTemplate.lookupField value="${parameters.userLogin.userLoginId}" formName="salesentryform" name="userLoginId" id="userLoginId_sales" fieldFormName="LookupUserLoginAndPartyDetails"/>
-        </@field>
-        <@field type="generic" label="${uiLabelMap.OrderCustomer}" id="partyId">
-            <@htmlTemplate.lookupField value='${thisPartyId!}' formName="salesentryform" name="partyId" id="partyId" fieldFormName="LookupCustomerName"/>
-        </@field>
+        <@field type="lookup" label="${uiLabelMap.CommonUserLoginId}" id="userLoginId_sales" value="${parameters.userLogin.userLoginId}" formName="salesentryform" name="userLoginId" id="userLoginId_sales" fieldFormName="LookupUserLoginAndPartyDetails"/>
+        <@field type="lookup" label="${uiLabelMap.OrderCustomer}" id="partyId" value='${thisPartyId!}' formName="salesentryform" name="partyId" id="partyId" fieldFormName="LookupCustomerName"/>
       </form>
     </@section>
   </#if>
@@ -114,9 +110,7 @@ under the License.
                 </#if>
             </#list>
         </@field>
-        <@field type="generic" label="${uiLabelMap.CommonUserLoginId}" id="userLoginId_purchase">
-            <@htmlTemplate.lookupField value='${parameters.userLogin.userLoginId}'formName="poentryform" name="userLoginId" id="userLoginId_purchase" fieldFormName="LookupUserLoginAndPartyDetails"/>
-        </@field>
+        <@field type="lookup" label="${uiLabelMap.CommonUserLoginId}" id="userLoginId_purchase" value='${parameters.userLogin.userLoginId}'formName="poentryform" name="userLoginId" id="userLoginId_purchase" fieldFormName="LookupUserLoginAndPartyDetails"/>
         <@field type="select" label="${uiLabelMap.PartySupplier}" name="supplierPartyId">
             <option value="">${uiLabelMap.OrderSelectSupplier}</option>
             <#list suppliers as supplier>

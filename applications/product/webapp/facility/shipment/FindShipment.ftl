@@ -94,12 +94,8 @@ function lookupShipments() {
               </@field>
 
               <@field type="generic" label="${uiLabelMap.ProductDateFilter}">
-                  <@field type="generic" label="${uiLabelMap.CommonFrom}">                 
-                    <@htmlTemplate.renderDateTimeField name="minDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                  </@field>
-                  <@field type="generic" label="${uiLabelMap.CommonThru}">
-                    <@htmlTemplate.renderDateTimeField name="maxDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                  </@field>
+                  <@field type="datetime" label="${uiLabelMap.CommonFrom}" name="minDate" value="${requestParameters.minDate!}" size="25" maxlength="30" id="minDate1"/>
+                  <@field type="datetime" label="${uiLabelMap.CommonThru}" name="maxDate" value="${requestParameters.maxDate!}" size="25" maxlength="30" id="maxDate1"/>
               </@field>
               
               <@field type="submit" submitType="link" href="javascript:lookupShipments();" class="${styles.link_run_sys!} ${styles.action_find!}" text="${uiLabelMap.ProductFindShipment}" />

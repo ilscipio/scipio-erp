@@ -380,9 +380,7 @@ function doPublish() {
           <@fields type="default-nolabels">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="categoryId" value="${allCategoryId!}"/>
-            <@field type="generic">
-                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-            </@field>
+            <@field type="datetime" name="fromDate" value="" size="25" maxlength="30" id="fromDate1"/>
             <@field type="submit" submitType="input-button" text="${uiLabelMap.ProductPublishAndView}" onClick="doPublish();"/>
           </@fields>
         </form>
@@ -395,9 +393,7 @@ function doPublish() {
           <@fields type="default-nolabels">
             <input type="hidden" name="productId" value="${product.productId!}"/>
             <input type="hidden" name="productCategoryId" value="${allCategoryId!}"/>
-            <@field type="generic">
-                <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-            </@field>
+            <@field type="datetime" name="thruDate" value="" size="25" maxlength="30" id="thruDate1"/>
             <@field type="submit" text="${uiLabelMap.ProductRemoveFromSite}" class="${styles.link_run_sys!} ${styles.action_remove!}"/>
           </@fields>
         </form>

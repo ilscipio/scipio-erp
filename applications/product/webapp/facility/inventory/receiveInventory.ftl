@@ -122,9 +122,7 @@ under the License.
 
               <hr />
               
-              <@field type="generic" label="${uiLabelMap.ProductFacilityOwner}">
-                  <@htmlTemplate.lookupField formName="selectAllForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
-              </@field>
+              <@field type="lookup" label="${uiLabelMap.ProductFacilityOwner}" formName="selectAllForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
               <@field type="select" label="${uiLabelMap.ProductSupplier}" name="partyId">
                     <option value=""></option>
                     <#if supplierPartyIds?has_content>
@@ -436,12 +434,8 @@ under the License.
           <form name="selectAllForm" method="post" action="<@ofbizUrl>ReceiveInventory</@ofbizUrl>">
             <input type="hidden" name="facilityId" value="${requestParameters.facilityId!}"/>
             <input type="hidden" name="initialSelected" value="Y"/>
-              <@field type="generic" label="${uiLabelMap.ProductPurchaseOrderNumber}" tooltip="${uiLabelMap.ProductLeaveSingleProductReceiving}">
-                  <@htmlTemplate.lookupField value="${requestParameters.purchaseOrderId!}" formName="selectAllForm" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupPurchaseOrderHeaderAndShipInfo"/>
-              </@field>
-              <@field type="generic" label="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductLeaveEntirePoReceiving}">
-                  <@htmlTemplate.lookupField value="${requestParameters.productId!}" formName="selectAllForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
-              </@field>
+              <@field type="lookup" label="${uiLabelMap.ProductPurchaseOrderNumber}" tooltip="${uiLabelMap.ProductLeaveSingleProductReceiving}" value="${requestParameters.purchaseOrderId!}" formName="selectAllForm" name="purchaseOrderId" id="purchaseOrderId" fieldFormName="LookupPurchaseOrderHeaderAndShipInfo"/>
+              <@field type="lookup" label="${uiLabelMap.ProductProductId}" tooltip="${uiLabelMap.ProductLeaveEntirePoReceiving}" value="${requestParameters.productId!}" formName="selectAllForm" name="productId" id="productId" fieldFormName="LookupProduct"/>
               <@field type="submit" submitType="link" href="javascript:document.selectAllForm.submit();" class="${styles.link_run_sys!} ${styles.action_receive!}" text="${uiLabelMap.ProductReceiveProduct}" />
           </form>
           </@section>

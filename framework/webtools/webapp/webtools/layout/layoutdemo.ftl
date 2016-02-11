@@ -495,8 +495,8 @@
       <@field type="display">Display value</@field>
       <@field type="input" name="input3" label="Input 3" />
 
-      <@field type="datetime" label="Date 1" name="date1" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
-      <@field type="datetime" label="Date 2" name="date2" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datetime" label="Date 1" name="date1" value="" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datetime" label="Date 2" name="date2" value="" size="25" maxlength="30" dateType="date-time" />
 
       <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
       <@field type="radio" name="radio2" label="Radio 2" value="Y" checked=true/>
@@ -562,8 +562,8 @@
       <#assign postfixContent><span>postfix!</span></#assign>
       <@field type="input" name="input3" postfix=true postfixContent=postfixContent />
 
-      <@field type="datetime" name="date1" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
-      <@field type="datetime" name="date2" label="Date 2" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datetime" name="date1" value="" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datetime" name="date2" label="Date 2" value="" size="25" maxlength="30" dateType="date-time" />
 
       <@field type="radio" name="radio1" label="Radio 1" value="Y"/>
       <@field type="radio" name="radio2" label="Radio 2" value="Y" checked=true/>
@@ -612,8 +612,8 @@
         <@field type="radio" name="radio2" label="Radio 2-b" value="val2" />
       </@field>
       <@field type="generic" label="Dates">
-        <@field type="datetime" label="Date 1" name="date1" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
-        <@field type="datetime" label="Date 2" name="date2" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+        <@field type="datetime" label="Date 1" name="date1" value="" size="25" maxlength="30" dateType="date-time" />
+        <@field type="datetime" label="Date 2" name="date2" value="" size="25" maxlength="30" dateType="date-time" />
       </@field>
       <@field type="submitarea">
         <@field type="submit" submitType="link" text="Save" disabled=true />
@@ -636,8 +636,8 @@
       <@field type="checkbox" name="checkbox1" label="Checkbox 1" value="val2" />
       <@field type="checkbox" name="checkbox1" label="Checkbox 2" value="val2" />
       <@field type="submit" submitType="button" text="Submit" events={"click": "alert('submitted!');"} />
-      <@field type="datetime" label="Date 1" name="date1" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
-      <@field type="datetime" label="Date 2" name="date2" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datetime" label="Date 1" name="date1" value="" size="25" maxlength="30" dateType="date-time" />
+      <@field type="datetime" label="Date 2" name="date2" value="" size="25" maxlength="30" dateType="date-time" />
     </@fields>
     </@form>
       </@cell>
@@ -688,16 +688,16 @@
       </@row>
       <@row>
         <@cell offset=6 columns=6>     
-          <@field type="datetime" name="date1" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
-          <@field type="datetime" name="date2" labelArea=true value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
-          <@field type="datetime" name="date3" labelArea=true label="Date 3" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" />
+          <@field type="datetime" name="date1" value="" size="25" maxlength="30" dateType="date-time" />
+          <@field type="datetime" name="date2" labelArea=true value="" size="25" maxlength="30" dateType="date-time" />
+          <@field type="datetime" name="date3" labelArea=true label="Date 3" value="" size="25" maxlength="30" dateType="date-time" />
           <#-- for "generic" @fields, needs explicit collapse (see styles hash) -->
           <span>Date with collapsed label:</span>
-          <@field type="datetime" name="date4" labelArea=true label="Date 4" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" collapse=true />
+          <@field type="datetime" name="date4" labelArea=true label="Date 4" value="" size="25" maxlength="30" dateType="date-time" collapse=true />
           <span>Date with inlined label - auto-implements inline label with collapsed label area (should look same as previous):</span>
-          <@field type="datetime" name="date5" labelArea=false collapsedInlineLabel=true label="Date 5" value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" collapse=true />
+          <@field type="datetime" name="date5" labelArea=false collapsedInlineLabel=true label="Date 5" value="" size="25" maxlength="30" dateType="date-time" collapse=true />
           <span>Date with forced inlined label (should look same as previous):</span>
-          <@field type="datetime" name="date6" inlineLabelArea=true inlineLabel="Date 6" collapsedInlineLabel=true value="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" dateType="date-time" collapse=true />
+          <@field type="datetime" name="date6" inlineLabelArea=true inlineLabel="Date 6" collapsedInlineLabel=true value="" size="25" maxlength="30" dateType="date-time" collapse=true />
         </@cell>
       </@row>  
       

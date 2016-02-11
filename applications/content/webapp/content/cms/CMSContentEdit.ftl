@@ -111,6 +111,7 @@ ${menuWrapper.renderMenuString()}
           <@td>
             <form mode="post" name="updatefeatures" action="<@ofbizUrl>updateFeatures</@ofbizUrl>">
               <input type="hidden" name="contentId" value="${contentId}"/>
+              <@fields type="generic">
               <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: cellpadding="1" --> <#-- orig: border="0" -->
                     <@thead>
                        <@tr>
@@ -139,7 +140,7 @@ ${menuWrapper.renderMenuString()}
                     <@tr>
                       <@td valign="middle">
                         <div class="boxhead">
-                          <@htmlTemplate.lookupField formName="updatefeatures" name="fieldValue0_o_${rowCount}" id="fieldValue0_o_${rowCount}" fieldFormName="LookupProductFeature"/>
+                          <@field type="lookup" formName="updatefeatures" name="fieldValue0_o_${rowCount}" id="fieldValue0_o_${rowCount}" fieldFormName="LookupProductFeature"/>
                         </div>
                       </@td>
                           <input type="hidden" name="fieldName0_o_${rowCount}" value="productFeatureId"/>
@@ -156,6 +157,7 @@ ${menuWrapper.renderMenuString()}
                       </@td>
                     </@tr>
               </@table>
+              </@fields>
               <input type="hidden" name="_rowCount" value="${rowCount}"/>
             </form>
           </@td>

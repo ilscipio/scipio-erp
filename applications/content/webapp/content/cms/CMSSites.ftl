@@ -209,6 +209,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
 <@table type="fields" class="+${styles.table_spacing_tiny_hint!}" width="100%"> <#-- orig: class="" --> <#-- orig: cellspacing="" --> <#-- orig: border="0" -->
   <@tr>
     <@td width='100%'>
+      <@fields type="generic">
       <form name="siteRoleForm" method="post" action="<@ofbizUrl>updateSiteRoles</@ofbizUrl>">
       <input type="hidden" name="permRoleSiteId" value="${forumId}"/>
       <input type="hidden" name="forumId" value="${forumId}"/>
@@ -239,7 +240,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
         </#list>
         <@tr>
           <@td valign="middle">
-            <@htmlTemplate.lookupField formName="siteRoleForm" name="partyId_o_${rowCount}" id="partyId_o_${rowCount}" fieldFormName="LookupPerson"/><#-- FIXME check if should be changed -->
+            <@field type="lookup" formName="siteRoleForm" name="partyId_o_${rowCount}" id="partyId_o_${rowCount}" fieldFormName="LookupPerson"/><#-- FIXME check if should be changed -->
           </@td>
             <#list blogRoleIdList as roleTypeId>
               <#assign cappedSiteRole= Static["org.ofbiz.entity.model.ModelUtil"].dbNameToVarName(roleTypeId) />
@@ -258,6 +259,7 @@ function call_fieldlookup4(rootForumId, parentForumId ) {
       </@table>
           <input type="hidden" name="_rowCount" value="${blogRoleIdList}"/>
       </form>
+      </@fields>
     </@td>
   </@tr>
 </@table>

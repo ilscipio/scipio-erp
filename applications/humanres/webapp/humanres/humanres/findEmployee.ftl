@@ -47,9 +47,7 @@ under the License.
                 </@field>
                 <@field type="input" label="${uiLabelMap.PartyLastName}" name="lastName" value="${parameters.lastName!}"/>
                 <@field type="input" label="${uiLabelMap.PartyFirstName}" name="firstName" value="${parameters.firstName!}"/>
-                <@field type="generic" label="${uiLabelMap.PartyPartyId}">
-                    <@htmlTemplate.lookupField value="${requestParameters.partyId!}" formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPerson"/>
-                </@field>
+                <@field type="lookup" label="${uiLabelMap.PartyPartyId}" value="${requestParameters.partyId!}" formName="lookupparty" name="partyId" id="partyId" fieldFormName="LookupPerson"/>
                 <@field type="input" label="${uiLabelMap.PartyUserLogin}" name="userLoginId" value="${parameters.userLoginId!}"/>
                 <input type="hidden" name="groupName" value="${parameters.groupName!}"/>
                 <input type="hidden" name="roleTypeId" value="EMPLOYEE"/>

@@ -44,9 +44,7 @@ under the License.
             
         <@heading>${uiLabelMap.ProjectMgrTaskDetails}</@heading>    
 
-        <@field type="generic" label="${uiLabelMap.ProjectMgrQuickAssignPartyId}">
-            <@htmlTemplate.lookupField formName="addTaskAndAssocForm" name="quickAssignPartyId" id="quickAssignPartyId" fieldFormName="LookupPartyName"/>
-        </@field>
+        <@field type="lookup" label="${uiLabelMap.ProjectMgrQuickAssignPartyId}" formName="addTaskAndAssocForm" name="quickAssignPartyId" id="quickAssignPartyId" fieldFormName="LookupPartyName"/>
         
         <#if task??>
           <@field type="display" label="${uiLabelMap.ProjectMgrWorkEffortId}">

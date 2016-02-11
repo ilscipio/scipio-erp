@@ -230,9 +230,7 @@ under the License.
                 ${uiLabelMap.ProductLowToHigh}<input type="radio" name="sortAscending" value="Y" checked="checked" />
                 ${uiLabelMap.ProductHighToLow}<input type="radio" name="sortAscending" value="N" />
           </@field>
-          <@field type="generic" label="${uiLabelMap.ProductPrioritizeProductsInCategory}">
-              <@htmlTemplate.lookupField value="${requestParameters.PRIORITIZE_CATEGORY_ID!}" formName="advToKeywordSearchform" name="PRIORITIZE_CATEGORY_ID" id="PRIORITIZE_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
-          </@field>
+          <@field type="lookup" label="${uiLabelMap.ProductPrioritizeProductsInCategory}" value="${requestParameters.PRIORITIZE_CATEGORY_ID!}" formName="advToKeywordSearchform" name="PRIORITIZE_CATEGORY_ID" id="PRIORITIZE_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
           <@field type="select" label="${uiLabelMap.ProductGoodIdentificationType}" name="SEARCH_GOOD_IDENTIFICATION_TYPE">
                 <option value="">- ${uiLabelMap.CommonSelectAny} -</option>
                 <#list goodIdentificationTypes as goodIdentificationType>

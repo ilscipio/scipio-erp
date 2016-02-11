@@ -81,12 +81,8 @@ under the License.
                     <@field type="radio" inlineItems=false name="${shipGroupIndex?default(0)}_may_split" value="false" checked=((cart.getMaySplit(shipGroupIndex)!"N") == "N") label="${uiLabelMap.FacilityWaitEntireOrderReady}"/>
                     <@field type="radio" inlineItems=false name="${shipGroupIndex?default(0)}_may_split" value="true" checked=((cart.getMaySplit(shipGroupIndex)!"N") == "Y") label="${uiLabelMap.FacilityShipAvailable}"/>
                 </@field>
-                <@field type="generic" label="${uiLabelMap.OrderShipBeforeDate}">
-                    <@htmlTemplate.renderDateTimeField name="sgi${shipGroupIndex?default('0')}_shipBeforeDate" event="" action="" value="${(cart.getShipBeforeDate(shipGroupIndex))!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="sgi${shipGroupIndex?default('0')}_shipBeforeDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                </@field>
-                <@field type="generic" label="${uiLabelMap.OrderShipAfterDate}">
-                    <@htmlTemplate.renderDateTimeField name="sgi${shipGroupIndex?default('0')}_shipAfterDate" event="" action="" value="${(cart.getShipAfterDate(shipGroupIndex))!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="sgi${shipGroupIndex?default('0')}_shipAfterDate" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                </@field>
+                <@field type="datetime" label="${uiLabelMap.OrderShipBeforeDate}" name="sgi${shipGroupIndex?default('0')}_shipBeforeDate" value="${(cart.getShipBeforeDate(shipGroupIndex))!}" size="25" maxlength="30" id="sgi${shipGroupIndex?default('0')}_shipBeforeDate"/>
+                <@field type="datetime" label="${uiLabelMap.OrderShipAfterDate}" name="sgi${shipGroupIndex?default('0')}_shipAfterDate" value="${(cart.getShipAfterDate(shipGroupIndex))!}" size="25" maxlength="30" id="sgi${shipGroupIndex?default('0')}_shipAfterDate"/>
                 <@field type="generic" label="${uiLabelMap.FacilitySpecialInstructions}">
                     <textarea cols="30" rows="3" name="${shipGroupIndex?default("0")}_shipping_instructions">${cart.getShippingInstructions(shipGroupIndex)!}</textarea>
                 </@field>

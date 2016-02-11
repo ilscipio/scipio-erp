@@ -79,22 +79,14 @@ under the License.
       <input type="hidden" name="CURRENT_CATALOG_ID" value=""/> 
     </#if>
 
-      <@field type="generic" label="${uiLabelMap.WorkEffortWorkEffortId}">
-          <@htmlTemplate.lookupField formName="agreementForm" name="workEffortId" id="workEffortId" fieldFormName="LookupWorkEffort"/>
-      </@field>
+      <@field type="lookup" label="${uiLabelMap.WorkEffortWorkEffortId}" formName="agreementForm" name="workEffortId" id="workEffortId" fieldFormName="LookupWorkEffort"/>
 
-      <@field type="generic" label="${uiLabelMap.OrderShipAfterDateDefault}">
-          <@htmlTemplate.renderDateTimeField name="shipAfterDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipAfterDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-      </@field>
+      <@field type="datetime" label="${uiLabelMap.OrderShipAfterDateDefault}" name="shipAfterDate" value="" size="25" maxlength="30" id="shipAfterDate1"/>
 
-      <@field type="generic" label="${uiLabelMap.OrderShipBeforeDateDefault}">
-          <@htmlTemplate.renderDateTimeField name="shipBeforeDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="shipBeforeDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-      </@field>
+      <@field type="datetime" label="${uiLabelMap.OrderShipBeforeDateDefault}" name="shipBeforeDate" value="" size="25" maxlength="30" id="shipBeforeDate1"/>
 
       <#if cart.getOrderType() == "PURCHASE_ORDER">
-        <@field type="generic" label="${uiLabelMap.FormFieldTitle_cancelBackOrderDate}">
-            <@htmlTemplate.renderDateTimeField name="cancelBackOrderDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="cancelBackOrderDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-        </@field>
+        <@field type="datetime" label="${uiLabelMap.FormFieldTitle_cancelBackOrderDate}" name="cancelBackOrderDate" value="" size="25" maxlength="30" id="cancelBackOrderDate1"/>
       </#if>
 
     </@table>

@@ -52,12 +52,8 @@ under the License.
           <#if returnInfo.entryDate??>
             <#assign entryDate = returnInfo.get("entryDate").toString()>
           </#if>
-          <@field type="generic" label="${uiLabelMap.OrderEntryDate}">
-              <@htmlTemplate.renderDateTimeField name="entryDate" event="" action="" value="${entryDate!}" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="entryDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-          </@field>
-          <@field type="generic" label="${uiLabelMap.OrderReturnFromParty}">
-              <@htmlTemplate.lookupField value='${returnInfo.fromPartyId!}' formName="returnhead" name="fromPartyId" id="fromPartyId" fieldFormName="LookupPartyName"/>
-          </@field>
+          <@field type="datetime" label="${uiLabelMap.OrderEntryDate}" name="entryDate" value="${entryDate!}" size="25" maxlength="30" id="entryDate1"/>
+          <@field type="lookup" label="${uiLabelMap.OrderReturnFromParty}" value='${returnInfo.fromPartyId!}' formName="returnhead" name="fromPartyId" id="fromPartyId" fieldFormName="LookupPartyName"/>
           <@field type="select" name="destinationFacilityId" label="${uiLabelMap.OrderReturnToFacility}">
             <#if currentFacility??>
               <option value="${currentFacility.facilityId}">${currentFacility.facilityName?default(currentFacility.facilityId)}</option>

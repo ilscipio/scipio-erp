@@ -27,9 +27,7 @@ under the License.
     <@section title="${uiLabelMap.ProductRemoveResultsFrom} ${uiLabelMap.ProductCategory}">
         <form method="post" action="<@ofbizUrl>searchRemoveFromCategory</@ofbizUrl>" name="searchRemoveFromCategory">
           <input type="hidden" name="clearSearch" value="N" />
-          <@field type="generic" label="${uiLabelMap.ProductCategory}">
-              <@htmlTemplate.lookupField formName="searchRemoveFromCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
-          </@field>
+          <@field type="lookup" label="${uiLabelMap.ProductCategory}" formName="searchRemoveFromCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
           <@field type="submit" text="${uiLabelMap.CommonRemove}" class="${styles.link_run_session!} ${styles.action_remove!}" />
         </form>
     </@section>
@@ -37,12 +35,8 @@ under the License.
     <@section title="${uiLabelMap.ProductExpireResultsFrom} ${uiLabelMap.ProductCategory}">
         <form method="post" action="<@ofbizUrl>searchExpireFromCategory</@ofbizUrl>" name="searchExpireFromCategory">
           <input type="hidden" name="clearSearch" value="N" />
-          <@field type="generic" label="${uiLabelMap.ProductCategory}">
-              <@htmlTemplate.lookupField formName="searchExpireFromCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
-          </@field>
-          <@field type="generic" label="${uiLabelMap.CommonThru}">
-              <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-          </@field>
+          <@field type="lookup" label="${uiLabelMap.ProductCategory}" formName="searchExpireFromCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
+          <@field type="datetime" label="${uiLabelMap.CommonThru}" name="thruDate" value="" size="25" maxlength="30" id="thruDate1"/>
           <@field type="submit" text="${uiLabelMap.CommonExpire}" class="${styles.link_run_session!} ${styles.action_terminate!}" />
         </form>
     </@section>
@@ -50,12 +44,8 @@ under the License.
     <@section title="${uiLabelMap.ProductAddResultsTo} ${uiLabelMap.ProductCategory}">
         <form method="post" action="<@ofbizUrl>searchAddToCategory</@ofbizUrl>" name="searchAddToCategory">
           <input type="hidden" name="clearSearch" value="N" />
-          <@field type="generic" label="${uiLabelMap.ProductCategory}">
-              <@htmlTemplate.lookupField formName="searchAddToCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
-          </@field>
-          <@field type="generic" label="${uiLabelMap.CommonFrom}">
-              <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-          </@field>
+          <@field type="lookup" label="${uiLabelMap.ProductCategory}" formName="searchAddToCategory" name="SE_SEARCH_CATEGORY_ID" id="SE_SEARCH_CATEGORY_ID" fieldFormName="LookupProductCategory"/>
+          <@field type="datetime" label="${uiLabelMap.CommonFrom}" name="fromDate" value="" size="25" maxlength="30" id="fromDate1"/>
           <@field type="submit" text="${uiLabelMap.ProductAddToCategory}" class="${styles.link_run_session!} ${styles.action_add!}" />
         </form>
     </@section>
@@ -64,12 +54,8 @@ under the License.
         <form method="post" action="<@ofbizUrl>searchAddFeature</@ofbizUrl>" name="searchAddFeature">
           <input type="hidden" name="clearSearch" value="N" />
           <@field type="input" label="${uiLabelMap.ProductFeatureId}" size="10" name="productFeatureId" value="" />
-          <@field type="generic" label="${uiLabelMap.CommonFrom}">
-              <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-          </@field>
-          <@field type="generic" label="${uiLabelMap.CommonThru}">
-              <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-          </@field>
+          <@field type="datetime" label="${uiLabelMap.CommonFrom}" name="fromDate" value="" size="25" maxlength="30" id="fromDate2"/>
+          <@field type="datetime" label="${uiLabelMap.CommonThru}" name="thruDate" value="" size="25" maxlength="30" id="thruDate2"/>
 
           <@field type="input" label="${uiLabelMap.CommonAmount}" size="5" name="amount" value="" />
           <@field type="input" label="${uiLabelMap.CommonSequence}" size="5" name="sequenceNum" value="" />

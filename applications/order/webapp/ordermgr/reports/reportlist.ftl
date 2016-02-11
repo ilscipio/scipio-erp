@@ -24,12 +24,8 @@ control over. special thanks for Britton LaRoche for creating the first pass of
 these reports and helping to improve them.</p>
 
 <form method="post" name="orderreportform" action="<@ofbizUrl>orderreportjasper.pdf</@ofbizUrl>" target="OrderReport">
-  <@field type="generic" label="From Date">
-      <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-  </@field>
-  <@field type="generic" label="To Date">
-      <@htmlTemplate.renderDateTimeField name="toDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="t" oDate1dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-  </@field>
+  <@field type="datetime" label="From Date" name="fromDate" value="" size="22" maxlength="25" id="fromDate1"/>
+  <@field type="datetime" label="To Date" name="toDate" value="" size="22" maxlength="25" id="toDate1"/>
 <#--
   <@field type="select" label="Report" name="groupName" tabindex="14" class="+stateSelectBox">
         <option value="orderStatus"></option>
@@ -45,12 +41,8 @@ these reports and helping to improve them.</p>
 </form>
 
 <form method="post" name="itemreportform" action="<@ofbizUrl>orderitemreportjasper.pdf</@ofbizUrl>" target="OrderReport">
-  <@field type="generic" label="From Date">
-      <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-  </@field>
-  <@field type="generic" label="To Date">
-      <@htmlTemplate.renderDateTimeField name="toDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="22" maxlength="25" id="toDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-  </@field>
+  <@field type="datetime" label="From Date" name="fromDate" value="" size="22" maxlength="25" id="fromDate2"/>
+  <@field type="datetime" label="To Date" name="toDate" value="" size="22" maxlength="25" id="toDate2"/>
 <#--
   <@field type="select" label="Report" name="groupName" tabindex="14"  class="+stateSelectBox">
         <option value="orderStatus"></option>

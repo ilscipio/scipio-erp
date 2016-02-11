@@ -13,9 +13,7 @@
                     </@field>
                 </@cell>
                 <@cell columns=6>
-                    <@field type="generic" label="${uiLabelMap.CommonFrom}">
-                        <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" value="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" size="25" maxlength="30" id="fromDate2" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                    </@field>
+                    <@field type="datetime" label="${uiLabelMap.CommonFrom}" name="fromDate" value="" size="25" maxlength="30" id="fromDate2"/>
                 </@cell>
             </@row>
             <@field type="submit" text="${uiLabelMap.CommonAdd}" class="${styles.link_run_sys!} ${styles.action_add!}" />

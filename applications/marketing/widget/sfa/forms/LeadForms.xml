@@ -119,7 +119,7 @@ under the License.
         <field name="submitAction" title="${uiLabelMap.CommonUpload}" widget-style="${styles.link_run_sys} ${styles.action_import}"><submit button-type="button"/></field>
     </form>
 
-    <form name="QuickAddLead" type="single" target="quickAddLead">
+    <form name="QuickAddLead" type="single" target="quickAddLead" attribs="{'fieldsType':'default-compact'}">
         <field name="firstName" title="${uiLabelMap.PartyFirstName}*" widget-style="required"><text size="15"/></field>
         <field name="lastName" title="${uiLabelMap.PartyLastName}*" widget-style="required"><text size="15"/></field>
         <field name="groupName" title="${uiLabelMap.CommonGroup}"><text size="15"/></field>

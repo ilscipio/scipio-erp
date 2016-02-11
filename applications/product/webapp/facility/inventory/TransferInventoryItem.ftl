@@ -112,9 +112,7 @@ under the License.
                 <input type="text" name="containerIdTo" value="${(inventoryTransfer.containerIdTo)!}" size="20" maxlength="20" />
                 <span class="tooltip">${uiLabelMap.ProductOrEnterContainerId}</span>
             </@field>
-            <@field type="generic" label="${uiLabelMap.ProductToLocation}">
-                <@htmlTemplate.lookupField value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation"/>
-            </@field>
+            <@field type="lookup" label="${uiLabelMap.ProductToLocation}" value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation"/>
             <@field type="input" label="${uiLabelMap.ProductComments}" name="comments" size="60" maxlength="250" />
             <@field type="generic" label="${uiLabelMap.ProductQuantityToTransfer}">
                 <#if inventoryItem?? && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
@@ -134,9 +132,7 @@ under the License.
             <@field type="generic" label="${uiLabelMap.ProductToFacilityContainer}">
                 <#assign fac = delegator.findOne("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", inventoryTransfer.facilityIdTo), false)> ${(fac.facilityName)?default("&nbsp;")}
             </@field>
-            <@field type="generic" label="${uiLabelMap.ProductToLocation}">
-                <@htmlTemplate.lookupField value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation?facilityId=${inventoryTransfer.facilityIdTo}"/>
-            </@field>
+            <@field type="lookup" label="${uiLabelMap.ProductToLocation}" value="${(inventoryTransfer.locationSeqIdTo)!}" formName="transferform" name="locationSeqIdTo" id="locationSeqIdTo" fieldFormName="LookupFacilityLocation?facilityId=${inventoryTransfer.facilityIdTo}"/>
             <@field type="input" label="${uiLabelMap.ProductComments}" name="comments" value="${(inventoryTransfer.comments)!}" size="60" maxlength="250" />
         </#if>
         <#if !(inventoryTransfer??)>

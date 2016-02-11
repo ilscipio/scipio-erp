@@ -68,15 +68,9 @@ under the License.
                     </#list>
               </@field>
               <@field type="input" label="${uiLabelMap.ProductProductId}" size="20" name="productId" />
-              <@field type="generic" label="${uiLabelMap.ProductCategoryId}">
-                  <@htmlTemplate.lookupField formName="addSurvey" name="productCategoryId" id="productCategoryId" fieldFormName="LookupProductCategory"/>
-              </@field>
-              <@field type="generic" label="${uiLabelMap.CommonFromDate}">
-                  <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-              </@field>
-              <@field type="generic" label="${uiLabelMap.CommonThruDate}">
-                  <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-              </@field>
+              <@field type="lookup" label="${uiLabelMap.ProductCategoryId}" formName="addSurvey" name="productCategoryId" id="productCategoryId" fieldFormName="LookupProductCategory"/>
+              <@field type="datetime" label="${uiLabelMap.CommonFromDate}" name="fromDate" value="" size="25" maxlength="30" id="fromDate1"/>
+              <@field type="datetime" label="${uiLabelMap.CommonThruDate}" name="thruDate" value="" size="25" maxlength="30" id="thruDate1"/>
               <@field type="input" label="${uiLabelMap.ProductStoreSurveyTemplatePath}" size="30" name="surveyTemplate" />
               <@field type="input" label="${uiLabelMap.ProductStoreSurveyResultTemplatePath}" size="30" name="resultTemplate" />
               <@field type="input" label="${uiLabelMap.CommonSequenceNum}" size="5" name="sequenceNum" />

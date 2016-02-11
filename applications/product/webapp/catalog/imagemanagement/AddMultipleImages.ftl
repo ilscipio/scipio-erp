@@ -19,9 +19,7 @@ under the License.
 
 <form id="addMultipleImagesForm" name="addMultipleImagesForm" method="post" action="<@ofbizUrl>addImageForProduct</@ofbizUrl>" enctype="multipart/form-data">
 
-  <@field type="generic" label="${uiLabelMap.ProductProductId}">
-    <@htmlTemplate.lookupField name="productId" id="productId" formName="addMultipleImagesForm" fieldFormName="LookupProduct" value="${productId!}"/>
-  </@field>
+  <@field type="lookup" label="${uiLabelMap.ProductProductId}" name="productId" id="productId" formName="addMultipleImagesForm" fieldFormName="LookupProduct" value="${productId!}"/>
 
   <@fields type="default-nolabels">
     <@field type="select" name="imageResize">

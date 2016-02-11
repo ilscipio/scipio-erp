@@ -286,9 +286,7 @@ under the License.
             <@cell columns=6>
               <@row>
                 <@cell columns=9>
-                    <@field type="generic" label="${uiLabelMap.PartyPartyId}">
-                        <@htmlTemplate.lookupField value='${thisPartyId!}' formName="partyshipform" name="shipToPartyId" id="shipToPartyId" fieldFormName="LookupPartyName"/>
-                    </@field>
+                    <@field type="lookup" label="${uiLabelMap.PartyPartyId}" value='${thisPartyId!}' formName="partyshipform" name="shipToPartyId" id="shipToPartyId" fieldFormName="LookupPartyName"/>
                 </@cell>
                 <@cell columns=3>                 
                     <@field type="submit" class="${styles.link_run_session!} ${styles.action_update!}" text="${uiLabelMap.CommonContinue}" />

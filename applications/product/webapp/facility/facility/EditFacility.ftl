@@ -41,12 +41,8 @@ under the License.
         </#list>
 
   </@field>
-  <@field type="generic" label="${uiLabelMap.FormFieldTitle_parentFacilityId}">
-      <@htmlTemplate.lookupField value="${facility.parentFacilityId!}" formName="EditFacilityForm" name="parentFacilityId" id="parentFacilityId" fieldFormName="LookupFacility"/>
-  </@field>
-  <@field type="generic" label="${uiLabelMap.ProductFacilityOwner}" required=true>
-      <@htmlTemplate.lookupField value="${facility.ownerPartyId!}" formName="EditFacilityForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
-  </@field>
+  <@field type="lookup" label="${uiLabelMap.FormFieldTitle_parentFacilityId}" value="${facility.parentFacilityId!}" formName="EditFacilityForm" name="parentFacilityId" id="parentFacilityId" fieldFormName="LookupFacility"/>
+  <@field type="lookup" label="${uiLabelMap.ProductFacilityOwner}" required=true value="${facility.ownerPartyId!}" formName="EditFacilityForm" name="ownerPartyId" id="ownerPartyId" fieldFormName="LookupPartyName"/>
   <@field type="select" label="${uiLabelMap.ProductFacilityDefaultWeightUnit}" name="defaultWeightUomId">
           <option value="">${uiLabelMap.CommonNone}</option>
           <#list weightUomList as uom>

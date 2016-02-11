@@ -26,9 +26,7 @@ under the License.
             <@field type="radio" name="SEARCH_OPERATOR" value="OR" checked=(searchOperator == "OR") label="${uiLabelMap.CommonAny}" />
             <@field type="radio" name="SEARCH_OPERATOR" value="AND" checked=(searchOperator == "AND") label="${uiLabelMap.CommonAll}" />
         </@field>
-        <@field type="generic" label="${uiLabelMap.FormFieldTitle_contentId}">
-            <@htmlTemplate.lookupField value="${requestParameters.SEARCH_CONTENT_ID!}" formName="advToKeyWordSearchForm" name="SEARCH_CONTENT_ID" id="SEARCH_CONTENT_ID" fieldFormName="LookupContent"/>
-        </@field>
+        <@field type="lookup" label="${uiLabelMap.FormFieldTitle_contentId}" value="${requestParameters.SEARCH_CONTENT_ID!}" formName="advToKeyWordSearchForm" name="SEARCH_CONTENT_ID" id="SEARCH_CONTENT_ID" fieldFormName="LookupContent"/>
         <@field type="generic" label="${uiLabelMap.FormFieldTitle_contentAssocTypeId}">
             <@field type="select" name="contentAssocTypeId">
                 <option value="">- ${uiLabelMap.ContentAnyAssocType} -</option>
@@ -40,9 +38,7 @@ under the License.
             <@field type="radio" name="SEARCH_SUB_CONTENTS" value="Y" checked=true label="${uiLabelMap.CommonYes}" />
             <@field type="radio" name="SEARCH_SUB_CONTENTS" value="N" label="${uiLabelMap.CommonNo}" />
         </@field>
-        <@field type="generic" label="${uiLabelMap.PartyPartyId}">
-            <@htmlTemplate.lookupField value="${requestParameters.partyId!}" formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
-        </@field>
+        <@field type="lookup" label="${uiLabelMap.PartyPartyId}" value="${requestParameters.partyId!}" formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
         <@field type="select" label="${uiLabelMap.PartyRoleTypeId}" name="partyRoleTypeId">
             <option value="">- ${uiLabelMap.CommonAnyRoleType} -</option>
             <#list roleTypes as roleType>
@@ -50,12 +46,8 @@ under the License.
             </#list>
         </@field>
         <@field type="generic" label="${uiLabelMap.ContentLastUpdatedDateFilter}">
-            <@field type="generic" label="${uiLabelMap.CommonFrom}">
-                <@htmlTemplate.renderDateTimeField name="fromDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.fromDate!}" size="25" maxlength="30" id="fromDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-            </@field>
-            <@field type="generic" label="${uiLabelMap.CommonThru}">
-                <@htmlTemplate.renderDateTimeField name="thruDate" event="" action="" className=""  title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${requestParameters.thruDate!}" size="25" maxlength="30" id="thruDate1" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-            </@field>
+            <@field type="datetime" label="${uiLabelMap.CommonFrom}" name="fromDate" value="${requestParameters.fromDate!}" size="25" maxlength="30" id="fromDate1"/>
+            <@field type="datetime" label="${uiLabelMap.CommonThru}" name="thruDate" value="${requestParameters.thruDate!}" size="25" maxlength="30" id="thruDate1"/>
         </@field>
         <@field type="generic" label="${uiLabelMap.CommonSortedBy}">
               <@field type="select" name="sortOrder">

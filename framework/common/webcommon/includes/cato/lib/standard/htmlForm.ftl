@@ -781,6 +781,7 @@ standard markup.
     readonly        = readonly
     rows            = number of rows
     cols            = number of columns
+    wrap            = HTML5 wrap attribute
     
     * dateTime *
     dateType        = [date-time|date|time] (default: date-time) type of datetime
@@ -905,6 +906,7 @@ standard markup.
     description     = for image type: image alt
 -->
 <#assign field_defaultArgs = {
+  <#-- TODO: group these arguments so easier to read... -->
   "type":"", "label":"", "labelDetail":"", "name":"", "value":"", "valueType":"", "currentValue":"", "defaultValue":"", "class":"", "size":20, "maxlength":"", "id":"", "onClick":"", "onChange":"",
   "disabled":false, "placeholder":"", "autoCompleteUrl":"", "mask":false, "alert":"false", "readonly":false, "rows":"4", 
   "cols":"50", "dateType":"date-time", "multiple":"", "checked":"", 
@@ -915,7 +917,7 @@ standard markup.
   "description":"",
   "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
   "selected":false, "allowEmpty":false, "currentFirst":false, "currentDescription":"",
-  "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "checkboxType":"", "radioType":"", "events":{}, "passArgs":{} 
+  "manualItems":"", "manualItemsOnly":"", "asmSelectArgs":{}, "title":"", "allChecked":"", "checkboxType":"", "radioType":"", "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
   <#-- TODO: the following calls should be combined into a mergeArgMapsToLocals method, but
@@ -1201,6 +1203,7 @@ standard markup.
                               placeholder=placeholder
                               tooltip=tooltip
                               inlineLabel=effInlineLabel
+                              wrap=wrap
                               passArgs=passArgs><#nested></@field_textarea_widget>
         <#break>
       <#case "datetime">

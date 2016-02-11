@@ -72,19 +72,19 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
 <#assign field_textarea_widget_defaultArgs = {
   "name":"", "class":"", "alert":"", "cols":"", "rows":"", "id":"", "readonly":"", "value":"", "visualEditorEnable":true, 
   "buttons":"", "language":"", "placeholder":"", "tooltip":"", "title":"", "fieldTitleBlank":false, "collapse":false, 
-  "inlineLabel":false, "passArgs":{}
+  "inlineLabel":false, "wrap":"", "passArgs":{}
 }>
 <#macro field_textarea_widget args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_textarea_widget_defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
   <@field_textarea_markup_widget name=name class=class alert=alert cols=cols rows=rows id=id readonly=readonly value=value visualEditorEnable=visualEditorEnable 
-    buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse inlineLabel=inlineLabel origArgs=origArgs passArgs=passArgs><#nested></@field_textarea_markup_widget>
+    buttons=buttons language=language placeholder=placeholder tooltip=tooltip title=title fieldTitleBlank=fieldTitleBlank collapse=collapse inlineLabel=inlineLabel wrap=wrap origArgs=origArgs passArgs=passArgs><#nested></@field_textarea_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_textarea_markup_widget name="" class="" alert="" cols="" rows="" id="" readonly="" value="" visualEditorEnable=true 
-    buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false inlineLabel=false origArgs={} passArgs={} catchArgs...>
+    buttons="" language="" placeholder="" tooltip="" title="" fieldTitleBlank=false collapse=false inlineLabel=false wrap="" origArgs={} passArgs={} catchArgs...>
   <#if tooltip?has_content> 
     <#local class = addClassArg(class, "has-tip tip-right")>
   </#if>
@@ -96,6 +96,7 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
     <#if id?has_content> id="${id}"</#if><#rt/>
     <#if (readonly?is_string && readonly?has_content) || (readonly?is_boolean && readonly == true)> readonly="readonly"</#if><#rt/>
     <#if maxlength?has_content> maxlength="${maxlength}"</#if><#rt/>
+    <#if wrap?has_content> wrap="${wrap}"</#if><#rt/>
     <#if placeholder?has_content> placeholder="${placeholder}"</#if><#t/>
     ><#t/>
     <#if value?has_content>${value}<#else><#nested></#if><#t>

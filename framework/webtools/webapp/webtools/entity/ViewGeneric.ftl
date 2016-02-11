@@ -67,9 +67,9 @@ function ShowTab(lname) {
         <@cell>
           <@heading id="xml-view" attribs={"data-magellan-destination":"xml-view"}>${uiLabelMap.WebtoolsEntityXMLRepresentation}</@heading>
         
-          <@code type="html">
-              <#assign valueXmlDoc = Static["org.ofbiz.entity.GenericValue"].makeXmlDocument([value]) />${Static["org.ofbiz.base.util.UtilXml"].writeXmlDocument(valueXmlDoc)}
-          </@code>
+          <@code type="html"><#rt>
+              <#assign valueXmlDoc = Static["org.ofbiz.entity.GenericValue"].makeXmlDocument([value]) />${Static["org.ofbiz.base.util.UtilXml"].writeXmlDocument(valueXmlDoc)}<#t>
+          </@code><#lt>
         
         </@cell>
     </@row>
@@ -105,6 +105,7 @@ function ShowTab(lname) {
             <p>${uiLabelMap.WebtoolsEntityName} ${entityName} ${uiLabelMap.WebtoolsWithPk} ${findByPk} ${uiLabelMap.WebtoolsSpecifiedEntity2}.</p>
           </#if>
           <form action="<@ofbizUrl>UpdateGeneric?entityName=${entityName}</@ofbizUrl>" method="post" name="updateForm">
+            <@fields type="default-manual">
             <#assign showFields = true>
             <#-- FIXME: inputs within table elems -->
             <@table type="fields" autoAltRows=true> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
@@ -112,12 +113,12 @@ function ShowTab(lname) {
                 <#if hasUpdatePermission>
                   <#if newFieldPkList?has_content>
                     <input type="hidden" name="UPDATE_MODE" value="UPDATE"/>
-                    <#list newFieldPkList as field>
+                    <#list newFieldPkList as entityField>
                       <@tr>
-                        <@td>${field.name}</@td>
+                        <@td>${entityField.name}</@td>
                         <@td>
-                          <input type="hidden" name="${field.name}" value="${field.value}"/>
-                          ${field.value}
+                          <input type="hidden" name="${entityField.name}" value="${entityField.value}"/>
+                          ${entityField.value}
                         </@td>
                       </@tr>
                     </#list>
@@ -131,32 +132,32 @@ function ShowTab(lname) {
                   <#if newFieldPkList?has_content>
                     <@tr type="meta"><@td><p>${uiLabelMap.WebtoolsYouMayCreateAnEntity}</p>
                     <input type="hidden" name="UPDATE_MODE" value="CREATE"/></@td></@tr>
-                    <#list newFieldPkList as field>
+                    <#list newFieldPkList as entityField>
                       <@tr>
-                        <@td>${field.name}</@td>
+                        <@td>${entityField.name}</@td>
                         <@td>
-                          <#if field.fieldType == 'DateTime'>
-                            ${uiLabelMap.CommonFormatDateTime}<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                          <#elseif field.fieldType == 'Date'>
-                            ${uiLabelMap.CommonFormatDate}<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=true timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                          <#elseif field.fieldType == 'Time'>
-                            ${uiLabelMap.CommonFormatTime}<input type="text" size="6" maxlength="10" name="${field.name}" value="${field.value}" />
-                          <#elseif field.fieldType == 'Integer'>
-                            <input type="text" size="20" name="${field.name}" value="${field.value}" />
-                          <#elseif field.fieldType == 'Long'>
-                            <input type="text" size="20" name="${field.name}" value="${field.value}" />
-                          <#elseif field.fieldType == 'Double'>
-                            <input type="text" size="20" name="${field.name}" value="${field.value}" />
-                          <#elseif field.fieldType == 'Float'>
-                            <input type="text" size="20" name="${field.name}" value="${field.value}" />
-                          <#elseif field.fieldType == 'StringOneRow'>
-                            <input type="text" size="${field.stringLength}" maxlength="${field.stringLength}" name="${field.name}" value="${field.value}" />
-                          <#elseif field.fieldType == 'String'>
-                            <input type="text" size="80" maxlength="${field.stringLength}" name="${field.name}" value="${field.value}" />
-                          <#elseif field.fieldType == 'Textarea'>
-                            <textarea cols="60" rows="3" maxlength="${field.stringLength}" name="${field.name}">${field.value}</textarea>
+                          <#if entityField.fieldType == 'DateTime'>
+                            <@field type="datetime" name="${entityField.name}" value="${entityField.value}" size="25" maxlength="30" id="${entityField.name}" />
+                          <#elseif entityField.fieldType == 'Date'>
+                            <@field type="datetime" dateType="date" name="${entityField.name}" value="${entityField.value}" size="25" maxlength="30" id="${entityField.name}" />
+                          <#elseif entityField.fieldType == 'Time'>
+                            <@field type="datetime" dateType="time" name="${entityField.name}" size="6" maxlength="10" value="${entityField.value}" />
+                          <#elseif entityField.fieldType == 'Integer'>
+                            <@field type="input" size="20" name="${entityField.name}" value="${entityField.value}" />
+                          <#elseif entityField.fieldType == 'Long'>
+                            <@field type="input" size="20" name="${entityField.name}" value="${entityField.value}" />
+                          <#elseif entityField.fieldType == 'Double'>
+                            <@field type="input" size="20" name="${entityField.name}" value="${entityField.value}" />
+                          <#elseif entityField.fieldType == 'Float'>
+                            <@field type="input" size="20" name="${entityField.name}" value="${entityField.value}" />
+                          <#elseif entityField.fieldType == 'StringOneRow'>
+                            <@field type="input" size="${entityField.stringLength}" maxlength="${entityField.stringLength}" name="${entityField.name}" value="${entityField.value}" />
+                          <#elseif entityField.fieldType == 'String'>
+                            <@field type="input" size="80" maxlength="${entityField.stringLength}" name="${entityField.name}" value="${entityField.value}" />
+                          <#elseif entityField.fieldType == 'Textarea'>
+                            <@field type="textarea" cols="60" rows="3" maxlength="${entityField.stringLength}" name="${entityField.name}">${entityField.value}</@field>
                           <#else>
-                            <input type="text" size="20" name="${field.name}" value="${field.value}" />
+                            <@field type="input" size="20" name="${entityField.name}" value="${entityField.value}" />
                           </#if>
                         </@td>
                       </@tr>
@@ -169,53 +170,56 @@ function ShowTab(lname) {
               </#if>
               <#if showFields>
                 <#if newFieldNoPkList?has_content>
-                  <#list newFieldNoPkList as field>
+                  <#list newFieldNoPkList as entityField>
                     <@tr>
-                      <@td>${field.name}</@td>
+                      <@td>${entityField.name}</@td>
                       <@td>
-                        <#if field.fieldType == 'DateTime'>
-                          ${uiLabelMap.CommonFormatDateTime}<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=false timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                        <#elseif field.fieldType == 'Date'>
-                          ${uiLabelMap.CommonFormatDate}<@htmlTemplate.renderDateTimeField name="${field.name}" event="" action="" className="" alert="" title="Format: yyyy-MM-dd HH:mm:ss.SSS" value="${field.value}" size="25" maxlength="30" id="${field.name}" dateType="date" shortDateInput=true timeDropdownParamName="" defaultDateTimeString="" localizedIconTitle="" timeDropdown="" timeHourName="" classString="" hour1="" hour2="" timeMinutesName="" minutes="" isTwelveHour="" ampmName="" amSelected="" pmSelected="" compositeType="" formName=""/>
-                        <#elseif field.fieldType == 'Time'>
-                          ${uiLabelMap.CommonFormatTime}<input type="text" size="6" maxlength="10" name="${field.name}" value="${field.value}" />
-                        <#elseif field.fieldType == 'Integer'>
-                          <input type="text" size="20" name="${field.name}" value="${field.value}" />
-                        <#elseif field.fieldType == 'Long'>
-                          <input type="text" size="20" name="${field.name}" value="${field.value}" />
-                        <#elseif field.fieldType == 'Double'>
-                          <input type="text" size="20" name="${field.name}" value="${field.value}" />
-                        <#elseif field.fieldType == 'Float'>
-                          <input type="text" size="20" name="${field.name}" value="${field.value}" />
-                        <#elseif field.fieldType == 'StringOneRow'>
-                          <input type="text" size="${field.stringLength}" maxlength="${field.stringLength}" name="${field.name}" value="${field.value}" />
-                        <#elseif field.fieldType == 'String'>
-                          <input type="text" size="80" maxlength="${field.stringLength}" name="${field.name}" value="${field.value}" />
-                        <#elseif field.fieldType == 'Textarea'>
-                          <textarea cols="60" rows="3" maxlength="${field.stringLength}" name="${field.name}">${field.value}</textarea>
+                        <#if entityField.fieldType == 'DateTime'>
+                          <@field type="datetime" name="${entityField.name}" value="${entityField.value}" size="25" maxlength="30" id="${entityField.name}" />
+                        <#elseif entityField.fieldType == 'Date'>
+                          <@field type="datetime" dateType="date" name="${entityField.name}" value="${entityField.value}" size="25" maxlength="30" id="${entityField.name}" />
+                        <#elseif entityField.fieldType == 'Time'>
+                          <@field type="datetime" dateType="time" size="6" maxlength="10" name="${entityField.name}" value="${entityField.value}" />
+                        <#elseif entityField.fieldType == 'Integer'>
+                          <@field type="input" size="20" name="${entityField.name}" value="${entityField.value}" />
+                        <#elseif entityField.fieldType == 'Long'>
+                          <@field type="input" size="20" name="${entityField.name}" value="${entityField.value}" />
+                        <#elseif entityField.fieldType == 'Double'>
+                          <@field type="input" size="20" name="${entityField.name}" value="${entityField.value}" />
+                        <#elseif entityField.fieldType == 'Float'>
+                          <@field type="input" size="20" name="${entityField.name}" value="${entityField.value}" />
+                        <#elseif entityField.fieldType == 'StringOneRow'>
+                          <@field type="input" size="${entityField.stringLength}" maxlength="${entityField.stringLength}" name="${entityField.name}" value="${entityField.value}" />
+                        <#elseif entityField.fieldType == 'String'>
+                          <@field type="input" size="80" maxlength="${entityField.stringLength}" name="${entityField.name}" value="${entityField.value}" />
+                        <#elseif entityField.fieldType == 'Textarea'>
+                          <@field type="textarea" cols="60" rows="3" maxlength="${entityField.stringLength}" name="${entityField.name}">${entityField.value}</@field>
                         <#else>
-                          <input type="text" size="20" name="${field.name}" value="${field.value}" />
+                          <@field type="input" size="20" name="${entityField.name}" value="${entityField.value}" />
                         </#if>
                       </@td>
                     </@tr>
                   </#list>
-                  <#if value?has_content>
-                    <#assign button = "${uiLabelMap.CommonUpdate}">
-                  <#else>
-                    <#assign button = "${uiLabelMap.CommonCreate}">
-                  </#if>
                 <@tfoot>
                   <@tr>
                     <@td>&nbsp;</@td>
                     <@td>
-                      <input type="submit" name="Update" value="${button}" class="${styles.link_run_sys!} ${styles.action_update!}" />
-                      <a href="<@ofbizUrl>ViewGeneric?${curFindString}</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonCancel}</a>
+                      <@field type="submitarea">
+                          <#if value?has_content>
+                            <#assign button = "${uiLabelMap.CommonUpdate}">
+                          <#else>
+                            <#assign button = "${uiLabelMap.CommonCreate}">
+                          </#if>
+                          <@field type="submit" name="Update" text="${button}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
+                          <@field type="submit" submitType="link" href=makeOfbizUrl("ViewGeneric?${curFindString}") class="+${styles.link_nav_cancel!}" text="${uiLabelMap.CommonCancel}"/>
+                      </@field>
                     </@td>
                   </@tr>
                 </@tfoot>
                 </#if>
               </#if>
             </@table>
+            </@fields>
           </form>
         </@cell>
         </@row>
@@ -231,10 +235,10 @@ function ShowTab(lname) {
                     <@th class="${styles.grid_large!}9">${uiLabelMap.CommonValue}</@th>
                   </@tr>
                   </@thead>
-                  <#list context.fields as field> <#-- Cato: WARN: name clash with macros if don't use context. map -->
+                  <#list context.fields as entityField> <#-- Cato: WARN: name clash with macros if don't use context. map -->
                     <@tr>
-                      <@td>${field.name}</@td>
-                      <@td>${field.value}</@td>
+                      <@td>${entityField.name}</@td>
+                      <@td>${entityField.value}</@td>
                     </@tr>
                   </#list>
                 </@table>
@@ -252,13 +256,13 @@ function ShowTab(lname) {
             <@grid>  
       <#list relationFieldList as relation>
                     <li>
-                            <@pul title="${relation.title}${relation.relatedTable}">
+                        <@pul title="${relation.title}${relation.relatedTable}">
                             <@pli type="description">${relation.type}</@pli>
                 <#if relation.valueRelated?has_content>
-                              <@pli><a href="<@ofbizUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}</@ofbizUrl>">${uiLabelMap.CommonView}</a></@pli>
+                            <@pli><a href="<@ofbizUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}</@ofbizUrl>">${uiLabelMap.CommonView}</a></@pli>
                 </#if>
                 <#if hasAllCreate || relCreate>
-                              <@pli><a href="<@ofbizUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}&amp;enableEdit=true</@ofbizUrl>">${uiLabelMap.CommonCreate}</a></@pli>
+                            <@pli><a href="<@ofbizUrl>ViewGeneric?${relation.encodeRelatedEntityFindString}&amp;enableEdit=true</@ofbizUrl>">${uiLabelMap.CommonCreate}</a></@pli>
                 </#if>
 
             <#if relation.valueRelated?has_content>
@@ -286,17 +290,17 @@ function ShowTab(lname) {
                           </@pli>
             
             <#else>
-              <#if "one" = relation.type>
-                                <#--
-                                    <@pli>
-              <b>${uiLabelMap.WebtoolsNoValueFoundFor}</b> ${relation.title}${relation.relatedTable}.
-                                   </@pli>
-                               -->
-                               <#else>
-                               <@pli>
-                                <a href="<@ofbizUrl>FindGeneric?${relation.encodeRelatedEntityFindString}&amp;find=true</@ofbizUrl>">${uiLabelMap.CommonFind}</a>
-                               </@pli>                       
-              </#if>
+                          <#if "one" = relation.type>
+                            <#--
+                                <@pli>
+                                  <b>${uiLabelMap.WebtoolsNoValueFoundFor}</b> ${relation.title}${relation.relatedTable}.
+                               </@pli>
+                           -->
+                          <#else>
+                            <@pli>
+                              <a href="<@ofbizUrl>FindGeneric?${relation.encodeRelatedEntityFindString}&amp;find=true</@ofbizUrl>">${uiLabelMap.CommonFind}</a>
+                            </@pli>                       
+                          </#if>
             </#if>
                         </@pul>
                     </li>

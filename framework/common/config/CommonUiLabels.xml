@@ -16076,4 +16076,43 @@
         <value xml:lang="zh_CN">查看</value>
         <value xml:lang="zh_TW">檢視</value>
     </property>
+    <property key="CommonDateInfoLabel">
+        <value xml:lang="de">${dateLabel}</value>
+        <value xml:lang="en">${dateLabel}</value>
+        <value xml:lang="fr">${dateLabel}</value>
+        <value xml:lang="it">${dateLabel}</value>
+        <value xml:lang="ja">${dateLabel}</value>
+        <value xml:lang="pt">${dateLabel}</value>
+        <value xml:lang="ro">${dateLabel}</value>
+        <value xml:lang="th">${dateLabel}</value>
+        <value xml:lang="vi">${dateLabel}</value>
+        <value xml:lang="zh">${dateLabel}</value>
+        <value xml:lang="zh_TW">${dateLabel}</value>
+    </property>
+    <property key="CommonDateInfoFormat">
+        <value xml:lang="de">Format: ${dateFormat}</value>
+        <value xml:lang="en">Format: ${dateFormat}</value>
+        <value xml:lang="fr">Format: ${dateFormat}</value>
+        <value xml:lang="it">Formato: ${dateFormat}</value>
+        <value xml:lang="ja">書式: ${dateFormat}</value>
+        <value xml:lang="pt">Formato: ${dateFormat}</value>
+        <value xml:lang="ro">Format: ${dateFormat}</value>
+        <value xml:lang="th">รูปแบบ: ${dateFormat}</value>
+        <value xml:lang="vi">Định dạng: ${dateFormat}</value>
+        <value xml:lang="zh">格式: ${dateFormat}</value>
+        <value xml:lang="zh_TW">格式: ${dateFormat}</value>
+    </property>
+    <property key="CommonDateInfoLabelAndFormat">
+        <value xml:lang="de">${dateLabel} (Format: ${dateFormat})</value>
+        <value xml:lang="en">${dateLabel} (Format: ${dateFormat})</value>
+        <value xml:lang="fr">${dateLabel} (Format: ${dateFormat})</value>
+        <value xml:lang="it">${dateLabel} (Formato: ${dateFormat})</value>
+        <value xml:lang="ja">${dateLabel} (書式: ${dateFormat})</value>
+        <value xml:lang="pt">${dateLabel} (Formato: ${dateFormat})</value>
+        <value xml:lang="ro">${dateLabel} (Format: ${dateFormat})</value>
+        <value xml:lang="th">${dateLabel} (รูปแบบ: ${dateFormat})</value>
+        <value xml:lang="vi">${dateLabel} (Định dạng: ${dateFormat})</value>
+        <value xml:lang="zh">${dateLabel} (格式: ${dateFormat})</value>
+        <value xml:lang="zh_TW">${dateLabel} (格式: ${dateFormat})</value>
+    </property>
 </resource>

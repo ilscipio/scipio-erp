@@ -2,8 +2,6 @@
 $include-html-reveal-classes: $include-html-classes;
 body {}
 
-input,select,text-area {max-width:50em;}
-
 .fullWidth {
     width: 100%;
     /*max-width: 85em;*/
@@ -43,6 +41,10 @@ input,select,text-area {max-width:50em;}
         }
     }
 }
+
+// Fix form elements
+//input,select,text-area {max-width:50em;}
+
 
 /* NAVIGATION */
   

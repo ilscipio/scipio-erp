@@ -106,7 +106,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="OpportunitySideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -388,7 +388,7 @@ under the License.
                     </widgets>
                     <fail-widgets>
                         <decorator-screen name="main-decorator">
-                            <decorator-section name="left-columns">
+                            <decorator-section name="left-column" override-by-auto-include="true">
                                 <include-menu name="OpportunitySideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
                             </decorator-section>
                             <decorator-section name="body">
@@ -405,7 +405,7 @@ under the License.
         <section>
             <widgets>
                 <decorator-screen name="main-decorator">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="AccountSideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
                     </decorator-section>                  
                     <decorator-section name="body">
@@ -420,7 +420,7 @@ under the License.
         <section>
             <widgets>
                 <decorator-screen name="main-decorator">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="ContactSideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -443,7 +443,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="LeadSideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -461,7 +461,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="EventSideBar" location="component://marketing/widget/sfa/SfaMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">

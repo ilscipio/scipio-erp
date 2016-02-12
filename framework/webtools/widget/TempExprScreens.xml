@@ -56,7 +56,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="TemporalExpressionDecorator" location="${parameters.tempExprDecoratorLocation}">
-                   <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                   <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                                 <section>
                                     <condition>
                                         <if-service-permission service-name="tempExprPermissionCheck" main-action="CREATE"/>

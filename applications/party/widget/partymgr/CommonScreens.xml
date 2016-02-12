@@ -90,7 +90,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true) and (not empty context.party)}">
+                    <decorator-section name="left-column" use-when="${(context.widePage != true) and (context.hasBasePermission == true) and (not empty context.party)}" override-by-auto-include="true">
                         <include-menu location="component://party/widget/partymgr/PartyMenus.xml" name="ProfileSideBar"/>
                     </decorator-section>
                     <decorator-section name="pre-body" use-when="${(context.widePage == true) and (context.hasBasePermission == true) and (not empty context.party)}">

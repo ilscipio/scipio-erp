@@ -88,12 +88,11 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${(context.hasBasePermission == true) and (not empty context.project)}">
+                    <decorator-section name="left-column" use-when="${(context.hasBasePermission == true) and (not empty context.project)}" override-by-auto-include="true">
                         <section>
                             <condition>
                                 <and>
                                     <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
-                                    <not><if-empty field="project"/></not>
                                 </and>
                             </condition>
                             <widgets>
@@ -145,12 +144,11 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${(context.hasBasePermission == true) and (not empty context.workEffort)}">
+                    <decorator-section name="left-column" use-when="${(context.hasBasePermission == true) and (not empty context.workEffort)}" override-by-auto-include="true">
                         <section>
                             <condition>
                                 <and>
                                     <if-compare field="hasBasePermission" operator="equals" type="Boolean" value="true"/>
-                                    <not><if-empty field="workEffort"/></not>
                                 </and>
                             </condition>
                             <widgets>
@@ -312,7 +310,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="MyTimeSubSideBar" location="component://projectmgr/widget/ProjectMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -401,7 +399,7 @@ under the License.
                     <widgets/>
                 </section>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu location="component://projectmgr/widget/ProjectMenus.xml" name="ResourceSideBar"/>
                     </decorator-section>
                     <decorator-section name="pre-body" use-when="${context.widePage == true}">

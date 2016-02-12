@@ -169,7 +169,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu location="component://accounting/widget/ap/ApMenus.xml" name="ApInvoiceSideBar"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -275,7 +275,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" --> <!-- one way to make the left-column overridable by screens: use-when="${sections['left-column']==null}" fallback-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="ApReportSideBar" location="component://accounting/widget/ap/ApMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">

@@ -121,7 +121,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="TaskSideBar" location="component://scrum/widget/scrumMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -190,7 +190,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="ProductSideBar" location="component://scrum/widget/scrumMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -236,7 +236,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="ProductBackLogItemSideBar" location="component://scrum/widget/scrumMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -306,7 +306,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="ProductBackLogItemSideBar" location="component://scrum/widget/scrumMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -393,7 +393,7 @@ under the License.
                     <widgets/>
                 </section>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}">
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu location="component://scrum/widget/scrumMenus.xml" name="ResourceSideBar"/>
                     </decorator-section>
                     <decorator-section name="pre-body" use-when="${context.widePage == true}">
@@ -444,7 +444,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="ProjectMenu" location="component://scrum/widget/scrumMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -552,7 +552,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="SprintMenu" location="component://scrum/widget/scrumMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
@@ -571,7 +571,7 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
+                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="ScrumAdminSubMenu" location="component://scrum/widget/scrumMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">

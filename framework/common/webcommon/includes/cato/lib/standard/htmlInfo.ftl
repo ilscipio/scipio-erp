@@ -172,9 +172,10 @@ WIDGETS: <label.../> elements in screen widgets can be mapped to this macro usin
     id          = id
     class       = classes or additional classes for message container (innermost containing element)
                   (if boolean, true means use defaults, false means prevent non-essential defaults; prepend with "+" to append-only, i.e. never replace non-essential defaults)
+    text        = text. If string not specified, uses #nested instead.
 -->
 <#assign commonMsg_defaultArgs = {
-  "type":"", "class":"", "id":"", "passArgs":{}
+  "type":"", "class":"", "id":"", "text":true, "passArgs":{}
 }>
 <#macro commonMsg args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.commonMsg_defaultArgs)>
@@ -186,7 +187,7 @@ WIDGETS: <label.../> elements in screen widgets can be mapped to this macro usin
   <#local styleNamePrefix = "commonmsg_" + type?replace("-", "_")>
   <#local defaultClass = styles[styleNamePrefix]!styles["commonmsg_default"]>
   <#local class = addClassArgDefault(class, defaultClass)>
-  <@commonMsg_markup type=type styleNamePrefix=styleNamePrefix class=class id=id origArgs=origArgs passArgs=passArgs><#nested></@commonMsg_markup>
+  <@commonMsg_markup type=type styleNamePrefix=styleNamePrefix class=class id=id origArgs=origArgs passArgs=passArgs><#if !text?is_boolean>${text}<#elseif !(text?is_boolean && text == false)><#nested></#if></@commonMsg_markup>
 </#macro>
 
 <#-- @commonMsg main markup - theme override -->

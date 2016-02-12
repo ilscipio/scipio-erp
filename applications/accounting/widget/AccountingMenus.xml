@@ -1336,6 +1336,11 @@
             </link>
         </menu-item>
     </menu>
+    
+    <menu name="PartyAdminSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        default-menu-item-name="PartyAcctgPreference">
+        <include-elements menu-name="PartyAdminTabBar" recursive="full" />
+    </menu>
 
     <menu name="PartyAdminAssignTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="tabButtonItem2" default-menu-item-name="GlAccountSalInvoice">
@@ -1405,7 +1410,12 @@
             </link>
         </menu-item>
     </menu>
-
+    
+    <menu name="PartyAdminAssignSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        selected-menuitem-context-field-name="tabButtonItem2" default-menu-item-name="GlAccountSalInvoice">
+        <include-elements menu-name="PartyAdminAssignTabBar" recursive="full" />
+    </menu>
+    
     <menu name="PartyAccountingChecksTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
         selected-menuitem-context-field-name="tabButtonItem2" default-menu-item-name="GlAccountSalInvoice">
         <menu-item name="PrintChecksTabButton" title="${uiLabelMap.AccountingPrintChecks}">
@@ -1418,6 +1428,11 @@
                 <parameter param-name="organizationPartyId" />
             </link>
         </menu-item>
+    </menu>
+    
+    <menu name="PartyAccountingChecksSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml"
+        selected-menuitem-context-field-name="tabButtonItem2" default-menu-item-name="GlAccountSalInvoice">
+        <include-elements menu-name="PartyAccountingChecksTabBar" recursive="full" />
     </menu>
 
     <menu name="PaymentTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

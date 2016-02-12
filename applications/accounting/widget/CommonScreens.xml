@@ -309,15 +309,8 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
-                        <section>
-                            <condition>
-                                <not><if-empty field="organizationPartyId"/></not>
-                            </condition>
-                            <widgets>
-                                <include-menu name="OrganizationTabBar" location="component://accounting/widget/AccountingMenus.xml"/>
-                            </widgets>
-                        </section>
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.organizationPartyId}" override-by-auto-include="true">
+                        <include-menu name="OrganizationSideBar" location="component://accounting/widget/AccountingMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>

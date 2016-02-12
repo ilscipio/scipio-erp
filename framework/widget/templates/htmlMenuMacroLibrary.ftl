@@ -56,7 +56,14 @@ TODO/FIXME:
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
+  <#local menuIdNum = getRequestVar("catoMenuIdNum")!0>
+  <#local menuIdNum = menuIdNum + 1 />
+  <#local dummy = setRequestVar("catoMenuIdNum", menuIdNum)>
+  <#if !id?has_content>
+    <#local id = "menu_" + menuIdNum>
+  </#if>
   <#if !inlineEntries>
+    <#local extraMenuAttribs = {}>
     <#if styleSet.contains("menu-main")>
       <#local remStyle = removeStyleNames(style, "menu-main")>
         <li class="${styles.menu_main_wrap!}"><a href="#" class="${styles.menu_main_item_link!}"
@@ -70,6 +77,11 @@ TODO/FIXME:
     <#elseif styleSet.contains("menu-button")>
       <#local remStyle = removeStyleNames(style, "menu-button")>
       <#local classes = joinStyleNames(styles.menu_button!, remStyle)>
+    <#elseif styleSet.contains("menu-button-dropdown")>
+      <#local remStyle = removeStyleNames(style, "menu-button-dropdown")>
+      <#local classes = joinStyleNames(styles.menu_button_dropdown!, remStyle)>
+      <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false" class="${styles.menu_button_dropdown_mainbutton!}">${title}</button><br>
+      <#local extraMenuAttribs = extraMenuAttribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
     <#elseif styleSet.contains("menu-tab")>    
       <#local remStyle = removeStyleNames(style, "menu-tab")>
       <#local classes = joinStyleNames(styles.menu_tab!, remStyle)>
@@ -87,7 +99,7 @@ TODO/FIXME:
            not sure should keep that behavior or not, but might not consistent with foundation styles? -->
       <#local classes = joinStyleNames(styles.menu_default!, style)>
     </#if>
-        <ul<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if>>
+        <ul<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><@elemAttribStr attribs=extraMenuAttribs />>
             <#-- Hardcoded alternative that will always display a Dashboard link on top of the sidebar
             <#local dashboardLink><a href="<@ofbizUrl>/main</@ofbizUrl>">${uiLabelMap.CommonDashboard!}</a></#local>
             <@renderMenuItemBegin style="${styles.menu_sidebar_itemdashboard!}" linkStr=dashboardLink! /><@renderMenuItemEnd/>-->
@@ -220,7 +232,14 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
 <#if boundaryComment?has_content>
 <!-- ${boundaryComment} -->
 </#if>
+  <#local menuIdNum = getRequestVar("catoMenuIdNum")!0>
+  <#local menuIdNum = menuIdNum + 1 />
+  <#local dummy = setRequestVar("catoMenuIdNum", menuIdNum)>
+  <#if !id?has_content>
+    <#local id = "menu_" + menuIdNum>
+  </#if>
   <#if !inlineEntries>
+    <#local extraMenuAttribs = {}>
     <#if styleSet.contains("menu-main")>
       <#local remStyle = removeStyleNames(style, "menu-main")>
         <li class="${styles.menu_main_wrap!}"><a href="#" class="${styles.menu_main_item_link!}"
@@ -234,6 +253,11 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
     <#elseif styleSet.contains("menu-button")>
       <#local remStyle = removeStyleNames(style, "menu-button")>
       <#local classes = joinStyleNames(styles.menu_button!, remStyle)>
+    <#elseif styleSet.contains("menu-button-dropdown")>
+      <#local remStyle = removeStyleNames(style, "menu-button-dropdown")>
+      <#local classes = joinStyleNames(styles.menu_button_dropdown!, remStyle)>
+      <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false" class="${styles.menu_button_dropdown_mainbutton!}">${title}</button><br>
+      <#local extraMenuAttribs = extraMenuAttribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
     <#elseif styleSet.contains("menu-tab")>    
       <#local remStyle = removeStyleNames(style, "menu-tab")>
       <#local classes = joinStyleNames(styles.menu_tab!, remStyle)>
@@ -251,7 +275,7 @@ Menu styles can be set via menu-container-style attribute. The rendering will di
            not sure should keep that behavior or not, but might not consistent with foundation styles? -->
       <#local classes = joinStyleNames(styles.menu_default!, style)>
     </#if>
-        <ul<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if>>
+        <ul<#if id?has_content> id="${id}"</#if><#if classes?has_content> class="${classes}"</#if><@elemAttribStr attribs=extraMenuAttribs />>
             <#-- Hardcoded alternative that will always display a Dashboard link on top of the sidebar
             <#local dashboardLink><a href="<@ofbizUrl>/main</@ofbizUrl>">${uiLabelMap.CommonDashboard!}</a></#local>
             <@renderMenuItemBegin style="${styles.menu_sidebar_itemdashboard!}" linkStr=dashboardLink! /><@renderMenuItemEnd/>-->

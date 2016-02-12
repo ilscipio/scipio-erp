@@ -148,11 +148,13 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     nestedFirst     = default false, if true, use nested items before items list, otherwise items list always first.
                       usually use only one of alternatives but versatile.
     htmlWrap        = wrapping HTML element (ul|div|span, default: ul)
+    specialType     = [|button-dropdown]
+                      DEV NOTE: each specialType could have its own styles hash menu_special_xxx entries
 -->
 <#assign menu_defaultArgs = {
   "type":"generic", "class":"", "inlineItems":false, "id":"", "style":"", "attribs":{},
   "items":true, "preItems":true, "postItems":true, "sort":false, "sortBy":"", "sortDesc":false,
-  "nestedFirst":false, "htmlWrap":true, "passArgs":{}
+  "nestedFirst":false, "title":"", "specialType":"", "mainButtonClass":"", "htmlWrap":true, "passArgs":{}
 }>
 <#macro menu args={} inlineArgs...>
   <#-- class arg needs special handling here to support extended "+" logic (mostly for section menu defs) -->
@@ -174,6 +176,13 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
     <#local htmlWrap = htmlWrap?string("ul", "")>
   </#if>
 
+  <#local menuIdNum = getRequestVar("catoMenuIdNum")!0>
+  <#local menuIdNum = menuIdNum + 1 />
+  <#local dummy = setRequestVar("catoMenuIdNum", menuIdNum)>
+  <#if !id?has_content>
+    <#local id = "menu_" + menuIdNum>
+  </#if>
+
   <#local prevMenuInfo = catoCurrentMenuInfo!>
   <#local prevMenuItemIndex = catoCurrentMenuItemIndex!>
   <#local styleName = type?replace("-","_")>
@@ -188,7 +197,14 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
 
   <#local class = addClassArgDefault(class, styles["menu_" + styleName]!styles["menu_default"]!"")>
 
-  <@menu_markup class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItems=inlineItems htmlWrap=htmlWrap origArgs=origArgs passArgs=passArgs>
+  <#if specialType?is_boolean && specialType == false>
+    <#local specialType = "">
+  <#else>
+    <#local specialType = styles["menu_" + styleName + "_specialtype"]!"">
+  </#if>
+  <#local mainButtonClass = addClassArgDefault(mainButtonClass, styles["menu_" + styleName + "_mainbutton"]!"")>
+  
+  <@menu_markup class=class id=id style=style attribs=attribs excludeAttribs=["class", "id", "style"] inlineItems=inlineItems htmlWrap=htmlWrap title=title specialType=specialType mainButtonClass=mainButtonClass origArgs=origArgs passArgs=passArgs>
   <#if !(preItems?is_boolean && preItems == false)>
     <#if preItems?is_sequence>
       <#list preItems as item>
@@ -233,8 +249,12 @@ FIXME? doesn't survive screens.render (uses #globals only), but probably doesn't
 </#macro>
 
 <#-- @menu container main markup - theme override -->
-<#macro menu_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false htmlWrap="ul" origArgs={} passArgs={} catchArgs...>
+<#macro menu_markup class="" id="" style="" attribs={} excludeAttribs=[] inlineItems=false specialType="" mainButtonClass="" title="" htmlWrap="ul" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems && htmlWrap?has_content>
+    <#if specialType == "button-dropdown">
+      <button href="#" data-dropdown="${id}" aria-controls="${id}" aria-expanded="false" class="${mainButtonClass}">${title}</button><br>
+      <#local attribs = attribs + {"data-dropdown-content":"true", "aria-hidden":"true"}>
+    </#if>
     <${htmlWrap}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if style?has_content> style="${style}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=excludeAttribs/></#if>>
   </#if>
       <#nested>

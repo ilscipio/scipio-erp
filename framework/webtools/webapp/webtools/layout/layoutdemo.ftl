@@ -151,6 +151,12 @@
   </@menuitem>
 </@menu>
 
+<@menu type="button-dropdown" title="Single dropdown button menu">
+  <@menuitem type="link" text="Menu Button 1" />
+  <@menuitem type="link" text="Menu Button 2" contentClass="+${styles.disabled}"/>
+  <@menuitem type="link" text="Menu Button 3" contentClass="+${styles.button_color_green}"/>
+</@menu>
+
 </@section>                                     
 
 <@section>

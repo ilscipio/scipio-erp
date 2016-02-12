@@ -79,4 +79,7 @@ under the License.
         </menu-item>
     </menu>
     
+    <!-- Cato: Experimental new menu type. Makes a single drop-down button menu. -->
+    <menu name="CommonButtonDropdownMenu" type="simple" menu-container-style="menu-button-dropdown" default-widget-style="" default-link-style="${styles.menu_button_dropdown_item_link}" default-selected-style="${styles.menu_button_dropdown_itemactive}" />    
+    
 </menus>

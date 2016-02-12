@@ -855,7 +855,8 @@
 
 <@section title="Common messages">
   <@commonMsg type="generic">Generic message</@commonMsg>
-  <@commonMsg type="result">Result message ("no records found")</@commonMsg>
+  <@commonMsg type="result">Result message</@commonMsg>
+  <@commonMsg type="result-norecord" />
   <@commonMsg type="error">Fatal error message</@commonMsg>
   <@commonMsg type="fail">Non-fatal error message (fail)</@commonMsg>
 </@section>

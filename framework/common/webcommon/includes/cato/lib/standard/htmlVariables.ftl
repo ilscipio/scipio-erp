@@ -64,6 +64,8 @@
   <#-- Common messages (default message type container styles)
       NOTE: these styles are secondary to markup choices made by theme markup macro -->
     "commonmsg_result" : "result-msg",
+    "commonmsg_result_norecord" : "result-msg result-no-record-msg",
+    "commonmsg_result_norecord_prop" : "CommonNoRecordFoundSentence",
     "commonmsg_info" : "info-msg",
     "commonmsg_info_important" : "info-msg info-important",
     "commonmsg_warning" : "warning-msg",

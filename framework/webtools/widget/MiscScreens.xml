@@ -206,6 +206,7 @@ under the License.
                 </screenlet>
                 <screenlet title="Common message labels">
                     <label style="common-msg-result" text="Result message"/>
+                    <label style="common-msg-result-norecord" text=" "/>
                     <label style="common-msg-warning" text="General warning message"/>
                     <label style="common-msg-error" text="General error message"/>
                     <label style="common-msg-error-perm" text="Permission error message"/>

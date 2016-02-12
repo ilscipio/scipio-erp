@@ -151,7 +151,7 @@ WIDGETS: <label.../> elements in screen widgets can be mapped to this macro usin
       <@commonMsg type="error-perm" class="+myclass">Permission Error</@commonMsg>
       
   * Usage Example *  
-    <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>            
+    <@commonMsg type="result-norecord"/>            
              
   * Parameters *
     type        = [default|generic|...], default default - the type of message contained.
@@ -161,6 +161,7 @@ WIDGETS: <label.../> elements in screen widgets can be mapped to this macro usin
                   Types recognizes by Cato standard markup (theme-defined types are possible):
                     result: an informational result from any kind of query. e.g., "No records found.".
                         is a normal event that shouldn't distract user attention.
+                    result-norecord: specific "No records found." message.
                     info: general information (NOTE: this is not really useful, but supported for completeness)
                     info-important: general important information
                     warning: general warning
@@ -190,8 +191,13 @@ WIDGETS: <label.../> elements in screen widgets can be mapped to this macro usin
 
 <#-- @commonMsg main markup - theme override -->
 <#macro commonMsg_markup type="" styleNamePrefix="" class="" id="" origArgs={} passArgs={} catchArgs...>
-  <#if type == "result" || type == "info">
-    <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>><#nested></p>
+  <#if type == "result" || type?starts_with("result-") || type == "info">
+    <#local nestedContent><#nested></#local>
+    <#local nestedContent = nestedContent?trim> <#-- helpful in widgets -->
+    <#if !nestedContent?has_content>
+      <#local nestedContent = uiLabelMap[styles.commonmsg_result_norecord_prop!"CommonNoRecordFoundSentence"]>
+    </#if>
+    <p<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if>>${nestedContent}</p>
   <#elseif type == "error" || type?starts_with("error-")>
     <#-- NOTE: here we must resolve class arg before passing to @alert and make additive only -->
     <@alert type="error" class=("+"+compileClassArg(class)) id=id><#nested></@alert>

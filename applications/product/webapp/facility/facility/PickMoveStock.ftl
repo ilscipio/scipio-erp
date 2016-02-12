@@ -138,7 +138,7 @@ under the License.
             <input type="hidden" name="_rowCount" value="${rowCount}" />
         </form>
       <#else>
-        <@commonMsg type="result">${uiLabelMap.ProductNoStockMovesNeeded}.</@commonMsg>
+        <@commonMsg type="result-norecord">${uiLabelMap.ProductNoStockMovesNeeded}.</@commonMsg>
       </#if>
       
       <#assign messageCount = 0>

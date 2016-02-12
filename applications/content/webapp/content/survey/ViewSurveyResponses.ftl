@@ -114,7 +114,7 @@ under the License.
       </#list>
     <#else>
       <@tr type="meta">
-        <@td><@commonMsg type="result">${uiLabelMap.ContentSurveyNoQuestions}</@commonMsg></@td>
+        <@td><@commonMsg type="result-norecord">${uiLabelMap.ContentSurveyNoQuestions}</@commonMsg></@td>
       </@tr>
     </#if>
   </@table>

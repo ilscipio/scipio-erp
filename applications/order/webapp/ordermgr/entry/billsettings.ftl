@@ -126,7 +126,7 @@ function makeExpDate() {
                   </#if>
                 </#list>
               <#else>
-                <@commonMsg type="result">${uiLabelMap.AccountingNoPaymentMethods}</@commonMsg>
+                <@commonMsg type="result-norecord">${uiLabelMap.AccountingNoPaymentMethods}</@commonMsg>
               </#if>
           </form>
         <#elseif paymentMethodType?? || finalizeMode?default("") == "payment">

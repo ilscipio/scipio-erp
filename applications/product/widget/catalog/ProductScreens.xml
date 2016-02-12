@@ -1356,7 +1356,7 @@ under the License.
                             <include-form name="ListBestProduct" location="component://product/widget/catalog/ProductForms.xml"/>
                         </widgets>
                         <fail-widgets>
-                            <label style="common-msg-result" text="${uiLabelMap.ProductNoProductFound}."></label>
+                            <label style="common-msg-result-norecord" text="${uiLabelMap.ProductNoProductFound}."></label>
                         </fail-widgets>
                     </section>
                 </screenlet>

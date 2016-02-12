@@ -219,7 +219,7 @@ function setServiceName(selection) {
                   </@tbody>
                 </@table>
             <#else>
-                <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>
+                <@commonMsg type="result-norecord"/>
             </#if>
         </form>
 </@section>

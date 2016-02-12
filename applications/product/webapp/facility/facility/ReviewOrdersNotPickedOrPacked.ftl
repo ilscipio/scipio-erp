@@ -38,6 +38,6 @@ under the License.
            </@tbody>
         </@table>
       <#else>
-        <@commonMsg type="result">${uiLabelMap.OrderNoOrderFound}.</@commonMsg>
+        <@commonMsg type="result-norecord">${uiLabelMap.OrderNoOrderFound}.</@commonMsg>
       </#if>
 </@section>

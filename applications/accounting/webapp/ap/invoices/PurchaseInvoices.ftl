@@ -207,5 +207,5 @@ function runAction() {
     </@table>
   </form>
 <#else>
-  <@commonMsg type="result">${uiLabelMap.AccountingNoInvoicesFound}.</@commonMsg>
+  <@commonMsg type="result-norecord">${uiLabelMap.AccountingNoInvoicesFound}.</@commonMsg>
 </#if>

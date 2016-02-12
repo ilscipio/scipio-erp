@@ -172,7 +172,7 @@ under the License.
   </@section>
 
   <#else>
-    <@commonMsg type="result">${uiLabelMap.OrderReturnNoReturnableItems} #${orderId}</@commonMsg>
+    <@commonMsg type="result-norecord">${uiLabelMap.OrderReturnNoReturnableItems} #${orderId}</@commonMsg>
   </#if>
   
 </@section>
@@ -223,7 +223,7 @@ under the License.
       </#list>
       </@table>
     <#else>
-      <@commonMsg type="result">${uiLabelMap.OrderNoOrderAdjustments}</@commonMsg>
+      <@commonMsg type="result-norecord">${uiLabelMap.OrderNoOrderAdjustments}</@commonMsg>
     </#if>
   </@section>
 

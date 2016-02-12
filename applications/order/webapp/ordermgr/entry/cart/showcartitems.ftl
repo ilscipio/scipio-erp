@@ -325,7 +325,7 @@ under the License.
       </@table>
     </form>
   <#else>
-    <@commonMsg type="result">${uiLabelMap.OrderNoOrderItemsToDisplay}</@commonMsg>
+    <@commonMsg type="result-norecord">${uiLabelMap.OrderNoOrderItemsToDisplay}</@commonMsg>
   </#if>
 </@section>
 

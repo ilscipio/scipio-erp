@@ -475,7 +475,7 @@ document.lookuporder.orderId.focus();
     </@paginate>
     
   <#else>
-    <@commonMsg type="result">${uiLabelMap.OrderNoOrderFound}.</@commonMsg>
+    <@commonMsg type="result-norecord">${uiLabelMap.OrderNoOrderFound}.</@commonMsg>
   </#if>
     
   </@section>

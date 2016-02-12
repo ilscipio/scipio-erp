@@ -44,5 +44,5 @@ under the License.
       </#list>
     </@table>
   <#else>
-    <@commonMsg type="result">${uiLabelMap.WorkEffortNoEventsFound}.</@commonMsg>
+    <@commonMsg type="result-norecord">${uiLabelMap.WorkEffortNoEventsFound}.</@commonMsg>
   </#if>

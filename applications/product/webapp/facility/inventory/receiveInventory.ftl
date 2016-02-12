@@ -233,7 +233,7 @@ under the License.
             <input type="hidden" name="_useRowSubmit" value="Y"/>
             <#assign rowCount = 0/>
           <#if !purchaseOrderItems?? || purchaseOrderItems.size() == 0>
-            <@commonMsg type="result">${uiLabelMap.ProductNoItemsPoReceive}.</@commonMsg>
+            <@commonMsg type="result-norecord">${uiLabelMap.ProductNoItemsPoReceive}.</@commonMsg>
           <#else>
             <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 <@tr>

@@ -88,7 +88,7 @@ under the License.
         </@tbody>
       </@table>
     <#else>
-      <@commonMsg type="result">${uiLabelMap.CommonNoElementFound}.</@commonMsg>
+      <@commonMsg type="result-norecord">${uiLabelMap.CommonNoElementFound}.</@commonMsg>
     </#if>
     </@section>
     
@@ -135,7 +135,7 @@ under the License.
         -->
       </@table>
     <#else>
-      <@commonMsg type="result">${uiLabelMap.CommonNoElementFound}.</@commonMsg>
+      <@commonMsg type="result-norecord">${uiLabelMap.CommonNoElementFound}.</@commonMsg>
     </#if>
     </@section>
 

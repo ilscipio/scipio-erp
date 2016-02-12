@@ -75,6 +75,6 @@ under the License.
   </@section>
 <#else>
   <@section>
-    <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>
+    <@commonMsg type="result-norecord"/>
   </@section>
 </#if>

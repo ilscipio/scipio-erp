@@ -51,6 +51,6 @@ under the License.
           </@tbody>
         </@table>
       <#else>
-        <@commonMsg type="result">${uiLabelMap.PartyNoPartyAttributesFound}</@commonMsg>
+        <@commonMsg type="result-norecord">${uiLabelMap.PartyNoPartyAttributesFound}</@commonMsg>
       </#if>
   </@section>

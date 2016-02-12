@@ -32,10 +32,10 @@ under the License.
         <@field type="textarea" label="${uiLabelMap.OrderGiftMessage}" id="message" name="answers_1003"></@field>
         <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
       <#else>
-        <@commonMsg type="result">${uiLabelMap.OrderNoGiftCertificatesFound}</@commonMsg>
+        <@commonMsg type="result-norecord">${uiLabelMap.OrderNoGiftCertificatesFound}</@commonMsg>
       </#if>
     <#else>
-      <@commonMsg type="result">${uiLabelMap.OrderNoProductStoreFinAccountSettingsFound}.</@commonMsg>
+      <@commonMsg type="result-norecord">${uiLabelMap.OrderNoProductStoreFinAccountSettingsFound}.</@commonMsg>
     </#if>
 </form>
 

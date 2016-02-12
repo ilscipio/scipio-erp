@@ -349,7 +349,7 @@ function getFinAccountTransRunningTotalAndBalances() {
             </@table>
         </#if>
     <#else>
-        <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>
+        <@commonMsg type="result-norecord"/>
     </#if>
   
 </@section>

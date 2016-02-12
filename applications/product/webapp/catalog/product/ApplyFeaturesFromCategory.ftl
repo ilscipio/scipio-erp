@@ -97,5 +97,5 @@ under the License.
 </@paginate>
 
 <#else>
-  <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>
+  <@commonMsg type="result-norecord"/>
 </#if>

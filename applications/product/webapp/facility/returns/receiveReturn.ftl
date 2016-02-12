@@ -70,7 +70,7 @@ under the License.
             <#assign now = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp().toString()>
             <#assign rowCount = 0>
           <#if !returnItems?? || returnItems?size == 0>
-            <@commonMsg type="result">${uiLabelMap.ProductNoItemsToReceive}</@commonMsg>
+            <@commonMsg type="result-norecord">${uiLabelMap.ProductNoItemsToReceive}</@commonMsg>
           <#else>
             <@table type="data-complex"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                 <@tr>

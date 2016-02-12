@@ -57,7 +57,7 @@ under the License.
           </@tbody>
         </@table>
       <#else>
-        <@commonMsg type="result">${uiLabelMap.ProductNoExistingProductsFound}.</@commonMsg>
+        <@commonMsg type="result-norecord">${uiLabelMap.ProductNoExistingProductsFound}.</@commonMsg>
       </#if>
 
       <@row>

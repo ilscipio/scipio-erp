@@ -79,7 +79,7 @@ under the License.
             <#-- submit button -->
             <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="+${styles.link_run_sys!} ${styles.action_add!}"/>
         <#elseif txType?has_content>
-            <@commonMsg type="result">${uiLabelMap.AccountingTransactionTypeNotYetSupported}</@commonMsg>
+            <@commonMsg type="warning">${uiLabelMap.AccountingTransactionTypeNotYetSupported}</@commonMsg>
         </#if>
     </form>
 <#else>

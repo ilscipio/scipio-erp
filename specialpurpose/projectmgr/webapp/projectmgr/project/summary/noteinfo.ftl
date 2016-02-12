@@ -67,7 +67,7 @@ under the License.
               <#if project?has_content>
                 <@commonMsg type="result">${uiLabelMap.ProjectMgrProjectNoNotes}.</@commonMsg>
               <#else>
-                <@commonMsg type="result">${uiLabelMap.ProjectMgrTaskNoNotes}.</@commonMsg>
+                <@commonMsg type="result-norecord">${uiLabelMap.ProjectMgrTaskNoNotes}.</@commonMsg>
               </#if>
             </#if>
           </@td>

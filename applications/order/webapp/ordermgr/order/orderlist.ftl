@@ -216,7 +216,7 @@ under the License.
             </@tr>
           </#list>
           <#if !orderHeaderList?has_content>
-            <@tr type="meta"><@td colspan="9"><@commonMsg type="result">${uiLabelMap.OrderNoOrderFound}</@commonMsg></@td></@tr>
+            <@tr type="meta"><@td colspan="9"><@commonMsg type="result-norecord">${uiLabelMap.OrderNoOrderFound}</@commonMsg></@td></@tr>
           </#if>
         </@table>
       </@paginate>

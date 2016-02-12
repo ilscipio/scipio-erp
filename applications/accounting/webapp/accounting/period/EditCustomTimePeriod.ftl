@@ -132,7 +132,7 @@ under the License.
                     </@table>
                 </form>
             <#else>
-                <@commonMsg type="result">${uiLabelMap.AccountingNoCurrentCustomTimePeriodSelected}</@commonMsg>>
+                <@commonMsg type="warning">${uiLabelMap.AccountingNoCurrentCustomTimePeriodSelected}</@commonMsg>>
             </#if>
         </@section>
   
@@ -228,7 +228,7 @@ under the License.
                     </#list>
                 </@table>
             <#else>
-                <@commonMsg type="result">${uiLabelMap.AccountingNoChildPeriodsFound}</@commonMsg>
+                <@commonMsg type="result-norecord">${uiLabelMap.AccountingNoChildPeriodsFound}</@commonMsg>
             </#if>
         </@section>
   

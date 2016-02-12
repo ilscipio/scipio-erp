@@ -11,5 +11,5 @@
     </#list>  
   </@chart>
 <#else>
-  <@resultMsg>${uiLabelMap.CommonNoRecordFound}.</@resultMsg>
+  <@commonMsg type="result-norecord" />
 </#if>

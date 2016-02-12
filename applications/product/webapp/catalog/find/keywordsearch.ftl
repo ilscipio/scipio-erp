@@ -24,7 +24,7 @@ under the License.
     <div><a href="<@ofbizUrl>advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)!}</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_find!}">${uiLabelMap.CommonRefineSearch}</a></div>
 
   <#if !productIds?has_content>
-    <@commonMsg type="result">${uiLabelMap.ProductNoResultsFound}.</@commonMsg>
+    <@commonMsg type="result-norecord">${uiLabelMap.ProductNoResultsFound}.</@commonMsg>
   <#else>
     <@script>
         function checkProductToBagTextArea(field, idValue) {

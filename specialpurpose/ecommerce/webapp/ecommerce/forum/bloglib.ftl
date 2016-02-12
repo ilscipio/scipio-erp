@@ -87,7 +87,7 @@ under the License.
 
 
 <#if sz == 0 >
-  <@tr><@td align="center">${uiLabelMap.CommonNoRecordFound}</@td></@tr>
+  <@tr><@td align="center"><@commonMsg type="result-norecord" /></@td></@tr>
 </#if>
 <@wrapSubContentCache subContentId=contentIdx wrapTemplateId=stdWrapId contentPurposeList="ARTICLE">
 </@wrapSubContentCache>

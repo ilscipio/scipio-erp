@@ -55,5 +55,5 @@ under the License.
         <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="+${styles.link_run_sys!} ${styles.action_update!}" />
     </form>
 <#else>
-    <@commonMsg type="result">${uiLabelMap.CommonNoRecordFound}.</@commonMsg>
+    <@commonMsg type="result-norecord"/>
 </#if>

@@ -263,7 +263,7 @@ under the License.
                   </@table>
                 </#if>
                 <#if !tasksFound>
-                  <@commonMsg type="result">${uiLabelMap.CommonNoTaskAssigned}</@commonMsg>
+                  <@commonMsg type="result-norecord">${uiLabelMap.CommonNoTaskAssigned}</@commonMsg>
                 </#if>
               </@td>
             </@tr>

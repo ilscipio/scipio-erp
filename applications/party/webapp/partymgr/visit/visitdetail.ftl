@@ -117,7 +117,7 @@ under the License.
       </@table>
     </@paginate>
   <#else>
-    <@commonMsg type="result">${uiLabelMap.PartyNoServerHitsFound}</@commonMsg>
+    <@commonMsg type="result-norecord">${uiLabelMap.PartyNoServerHitsFound}</@commonMsg>
   </#if>
 </@section>
 

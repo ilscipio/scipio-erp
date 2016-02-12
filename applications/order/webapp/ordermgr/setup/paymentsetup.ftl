@@ -69,7 +69,7 @@ under the License.
             </@tbody>
           </@table>
         <#else>
-            <@commonMsg type="result">No settings found.</@commonMsg>
+            <@commonMsg type="result-norecord">No settings found.</@commonMsg>
         </#if>
     </@section>
 

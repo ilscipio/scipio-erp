@@ -154,5 +154,5 @@ under the License.
 </@table>
 
 <#else>
-  <@commonMsg type="result">${uiLabelMap.WorkEffortFailedCalendarEntries}!</@commonMsg>
+  <@commonMsg type="result-norecord">${uiLabelMap.WorkEffortFailedCalendarEntries}!</@commonMsg>
 </#if>

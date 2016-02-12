@@ -78,7 +78,7 @@ under the License.
                 </@tr>
             </#list>
             <#if !requestList?has_content>
-                <@tr><@td colspan="9"><@commonMsg type="result">${uiLabelMap.OrderNoRequestFound}</@commonMsg></@td></@tr>
+                <@tr><@td colspan="9"><@commonMsg type="result-norecord">${uiLabelMap.OrderNoRequestFound}</@commonMsg></@td></@tr>
             </#if>
         </@table>
     </div>

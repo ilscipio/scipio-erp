@@ -112,7 +112,7 @@ function clickAll(e) {
       </@table>
     </form>
 <#else>
-    <@commonMsg type="result">${uiLabelMap.ProductNoSelectableFeaturesFound}</@commonMsg>
+    <@commonMsg type="result-norecord">${uiLabelMap.ProductNoSelectableFeaturesFound}</@commonMsg>
 </#if>
 <@section title="${uiLabelMap.ProductVariantAdd}">
     <form action="<@ofbizUrl>addVariantsToVirtual</@ofbizUrl>" method="post" name="addVariantsToVirtual">

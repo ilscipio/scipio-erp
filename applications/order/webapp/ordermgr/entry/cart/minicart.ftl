@@ -82,6 +82,6 @@ under the License.
             <@cartLinks />
           </#if>
         <#else>
-          <@commonMsg type="result">${uiLabelMap.OrderShoppingCartEmpty}</@commonMsg>
+          <@commonMsg type="result-norecord">${uiLabelMap.OrderShoppingCartEmpty}</@commonMsg>
         </#if>
 </@section>

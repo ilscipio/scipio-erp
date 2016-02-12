@@ -77,13 +77,12 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.segmentGroupId}" override-by-auto-include="true">
                         <section>
                             <!-- do check for MARKETING, _VIEW permission -->
                             <condition>
                                 <and>
                                     <if-has-permission permission="MARKETING" action="_VIEW"/>
-                                    <not><if-empty field="segmentGroupId"/></not>
                                 </and>
                             </condition>
                             <widgets>

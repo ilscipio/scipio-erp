@@ -41,8 +41,7 @@ under the License.
                         <section>
                             <condition>
                                 <and>
-                                    <if-service-permission service-name="acctgBasePermissionCheck"
-                                        main-action="VIEW" />
+                                    <if-service-permission service-name="acctgBasePermissionCheck" main-action="VIEW" />
                                     <not>
                                         <if-empty field="taxAuthority" />
                                     </not>

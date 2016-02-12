@@ -148,6 +148,9 @@ under the License.
                                     <widgets>
                                         <include-menu name="TimesheetSideBar" location="component://workeffort/widget/TimesheetMenus.xml"/>
                                     </widgets>
+                                    <fail-widgets>
+                                        <include-menu name="WorkEffortAppSideBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
+                                    </fail-widgets>
                                 </section>
                             </widgets>
                         </section>

@@ -93,6 +93,9 @@ under the License.
                                     <widgets>
                                         <include-menu name="FacilitySideBar" location="component://product/widget/facility/FacilityMenus.xml"/>
                                     </widgets>
+                                    <fail-widgets>
+                                        <include-menu name="FacilityAppSideBar" location="component://product/widget/facility/FacilityMenus.xml"/>
+                                    </fail-widgets>
                                 </section>
                             </widgets>
                             <fail-widgets>

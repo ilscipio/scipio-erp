@@ -73,10 +73,11 @@ under the License.
                 <set field="headerStyle" value="header-row-1"/>
                 <set field="tableStyle" value="${styles.table_data_list} light-grid"/>
                 <set field="ofbizWidgetsLayoutScreenLocation" value="component://webtools/widget/MiscScreens.xml#WebtoolsLayoutDemoOfbizWidgets" />
+                <set field="parameters.showLeftColumn" value="Y" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty parameters.showLeftColumn and parameters.showLeftColumn == 'Y'}" override-by-auto-include="true">
                         <section>
                             <condition>
                                 <and>

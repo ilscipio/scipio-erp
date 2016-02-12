@@ -779,15 +779,8 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
-                        <section>
-                            <condition>
-                                <not><if-empty field="workEffort"/></not>
-                            </condition>
-                            <widgets>
-                                <include-menu name="ICalendarSideBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
-                            </widgets>
-                        </section>
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.workEffort}" override-by-auto-include="true">
+                        <include-menu name="ICalendarSideBar" location="component://workeffort/widget/WorkEffortMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>

@@ -83,12 +83,12 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.example}" override-by-auto-include="true">
                         <section>
                             <condition>
                                 <and>
                                     <if-has-permission permission="EXAMPLE" action="_VIEW"/>
-                                    <not><if-empty field="example"/></not><!-- This is a check useful when only seed data are loaded -->
+                                    <!-- Cato: moved to use-when: <not><if-empty field="example"/></not> --><!-- This is a check useful when only seed data are loaded -->
                                 </and>
                             </condition>
                             <widgets>
@@ -152,12 +152,12 @@ under the License.
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${mainDecoratorLocation}">
-                    <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                    <decorator-section name="left-column" use-when="${context.widePage != true and not empty context.exampleFeature}" override-by-auto-include="true">
                         <section>
                             <condition>
                                 <and>
                                     <if-has-permission permission="EXAMPLE" action="_VIEW"/>
-                                    <not><if-empty field="exampleFeature"/></not><!-- This is a check useful when only seed data are loaded -->
+                                    <!-- Cato: moved to use-when: <not><if-empty field="exampleFeature"/></not> --><!-- This is a check useful when only seed data are loaded -->
                                 </and>
                             </condition>
                             <widgets>

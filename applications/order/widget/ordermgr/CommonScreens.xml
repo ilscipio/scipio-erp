@@ -280,11 +280,7 @@ under the License.
                                 <include-menu name="RequestSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
                             </widgets>
                             <fail-widgets>
-                                <section>
-                                    <widgets>
-                                        <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
-                                    </widgets>
-                                </section>
+                                <include-menu name="OrderAppSideBar" location="component://order/widget/ordermgr/OrderMenus.xml"/>
                             </fail-widgets>
                         </section>
                     </decorator-section>

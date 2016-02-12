@@ -80,38 +80,40 @@ under the License.
             </@field>
             <@field type="input" label="${uiLabelMap.FormFieldTitle_webSiteUrl}" name="webSiteUrl" size="100" value="${webSiteUrl!}"/>
             <@field type="generic" label="${uiLabelMap.FormFieldTitle_paymentMethodsAccepted}">
+                <@fields type="default-manual" ignoreParentField=true fieldArgs={"inline":true}>
                     <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                         <@tr>
                             <@td align="right" width="23%">${uiLabelMap.FormFieldTitle_paymentPayPal}</@td>
-                            <@td width="2%"><input type="checkbox" name="paymentPayPal" <#if parameters.paymentPayPal??>checked="checked"</#if> /></@td>
+                            <@td width="2%"><@field type="checkbox" name="paymentPayPal" checked=(parameters.paymentPayPal??) /></@td>
                             <@td align="right" width="23%">${uiLabelMap.FormFieldTitle_paymentVisaMC}</@td>
-                            <@td width="2%"><input type="checkbox" name="paymentVisaMC" <#if parameters.paymentVisaMC??>checked="checked"</#if> /></@td>
+                            <@td width="2%"><@field type="checkbox" name="paymentVisaMC" checked=(parameters.paymentVisaMC??) /></@td>
                             <@td align="right" width="23%">${uiLabelMap.FormFieldTitle_paymentAmEx}</@td>
-                            <@td width="2%"><input type="checkbox" name="paymentAmEx" <#if parameters.paymentAmEx??>checked="checked"</#if> /></@td>
+                            <@td width="2%"><@field type="checkbox" name="paymentAmEx" checked=(parameters.paymentAmEx??) /></@td>
                             <@td align="right" width="23%">${uiLabelMap.FormFieldTitle_paymentDiscover}</@td>
-                            <@td width="2%"><input type="checkbox" name="paymentDiscover" <#if parameters.paymentDiscover??>checked="checked"</#if> /></@td>
+                            <@td width="2%"><@field type="checkbox" name="paymentDiscover" checked=(parameters.paymentDiscover??) /></@td>
                         </@tr>
                         <@tr>
                             <@td align="right" width="23%">${uiLabelMap.FormFieldTitle_paymentMOCC}</@td>
-                            <@td width="2%"><input type="checkbox" name="paymentMOCC" <#if parameters.paymentMOCC??>checked="checked"</#if> /></@td>
+                            <@td width="2%"><@field type="checkbox" name="paymentMOCC" checked=(parameters.paymentMOCC??) /></@td>
                             <@td align="right" width="23%">${uiLabelMap.FormFieldTitle_paymentPersonalCheck}</@td>
-                            <@td width="2%"><input type="checkbox" name="paymentPersonalCheck" <#if parameters.paymentPersonalCheck??>checked="checked"</#if> /></@td>
+                            <@td width="2%"><@field type="checkbox" name="paymentPersonalCheck" checked=(parameters.paymentPersonalCheck??) /></@td>
                             <@td align="right" width="23%">${uiLabelMap.FormFieldTitle_paymentCCAccepted}</@td>
-                            <@td width="2%"><input type="checkbox" name="paymentCCAccepted" <#if parameters.paymentCCAccepted??>checked="checked"</#if> /></@td>
+                            <@td width="2%"><@field type="checkbox" name="paymentCCAccepted" checked=(parameters.paymentCCAccepted??) /></@td>
                             <@td align="right" width="23%">${uiLabelMap.FormFieldTitle_paymentCashInPerson}</@td>
-                            <@td width="2%"><input type="checkbox" name="paymentCashInPerson" <#if parameters.paymentCashInPerson??>checked="checked"</#if> /></@td>
+                            <@td width="2%"><@field type="checkbox" name="paymentCashInPerson" checked=(parameters.paymentCashInPerson??) /></@td>
                         </@tr>
                         <@tr>
                             <@td align="right" width="23%">${uiLabelMap.FormFieldTitle_paymentCashOnPickup}</@td>
-                            <@td width="2%"><input type="checkbox" name="paymentCashOnPickup" <#if parameters.paymentCashOnPickup??>checked="checked"</#if> /></@td>
+                            <@td width="2%"><@field type="checkbox" name="paymentCashOnPickup" checked=(parameters.paymentCashOnPickup??) /></@td>
                             <@td align="right" width="23%">${uiLabelMap.FormFieldTitle_paymentCOD}</@td>
-                            <@td width="2%"><input type="checkbox" name="paymentCOD" <#if parameters.paymentCOD??>checked="checked"</#if> /></@td>
+                            <@td width="2%"><@field type="checkbox" name="paymentCOD" checked=(parameters.paymentCOD??) /></@td>
                             <@td align="right" width="23%">${uiLabelMap.FormFieldTitle_paymentCODPrePayDelivery}</@td>
-                            <@td width="2%"><input type="checkbox" name="paymentCODPrePayDelivery" <#if parameters.paymentCODPrePayDelivery??>checked="checked"</#if> /></@td>
+                            <@td width="2%"><@field type="checkbox" name="paymentCODPrePayDelivery" checked=(parameters.paymentCODPrePayDelivery??) /></@td>
                             <@td align="right" width="23%">${uiLabelMap.FormFieldTitle_paymentMoneyXferAccepted}</@td>
-                            <@td width="2%"><input type="checkbox" name="paymentMoneyXferAccepted" <#if parameters.paymentMoneyXferAccepted??>checked="checked"</#if> /></@td>
+                            <@td width="2%"><@field type="checkbox" name="paymentMoneyXferAccepted" checked=(parameters.paymentMoneyXferAccepted??) /></@td>
                         </@tr>
                     </@table>
+                </@fields>
             </@field>
             <@field type="input" label="${uiLabelMap.FormFieldTitle_payPalEmail}" name="payPalEmail" size="50" maxlength="50" value="${parameters.payPalEmail!}" />
             <@field type="textarea" label="${uiLabelMap.FormFieldTitle_customXml}" cols="60" rows="6" wrap="soft" name="customXml">${customXml!}</@field>

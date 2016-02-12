@@ -29,11 +29,11 @@ under the License.
             <@field type="input" label="Middle Name" autocomplete="off" id="RegisterPerson_middleName" maxlength="60" size="40" name="middleName" value="${requestParameters.middleName!}"/>
             <@field type="input" required=true label="Last name" autocomplete="off" id="RegisterPerson_lastName" maxlength="60" size="40" name="lastName" value="${requestParameters.lastName!}"/>
             <@field type="input" required=true label="Email" autocomplete="off" id="RegisterPerson_USER_EMAIL" maxlength="250" size="60" name="USER_EMAIL" value="${requestParameters.USER_EMAIL!}"/>
-            <#-- Cato: FIXME? Why no user login? -->
+        
             <@field type="display" label="User Login"></@field>
             <@field type="input" required=true label="Username" autocomplete="off" id="RegisterPerson_USERNAME" maxlength="250" size="30" name="USERNAME" value="${requestParameters.USERNAME!}"/>
             <@field type="password" required=true label="Password" id="RegisterPerson_PASSWORD" maxlength="250" size="15" name="PASSWORD"  value="${requestParameters.PASSWORD!}"/>
-            <@field type="password" required=true label="Password (Confirm)" id="RegisterPerson_CONFIRM_PASSWORD" maxlength="250" size="15" name="CONFIRM_PASSWORD" class="required false" value="${requestParameters.CONFIRM_PASSWORD!}"/>
+            <@field type="password" required=true label="Password (Confirm)" id="RegisterPerson_CONFIRM_PASSWORD" maxlength="250" size="15" name="CONFIRM_PASSWORD" value="${requestParameters.CONFIRM_PASSWORD!}"/>
                         
             <@field type="generic" label="Verify captcha code">  
                 <@field type="display" label="Code Captcha">

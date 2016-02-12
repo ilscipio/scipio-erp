@@ -108,14 +108,14 @@ under the License.
               </#if>
           </@field>
           <@field type="select" label="${uiLabelMap.OrderReturnNeedsAutoReceive}" name="needsInventoryReceive">
-              <#if needsInventoryReceive??>
-                <#if "Y" == needsInventoryReceive>
-                  <option selected="selected" value="${needsInventoryReceive}">${uiLabelMap.CommonYes}</option>
-                <#elseif "N" == needsInventoryReceive>
-                  <option selected="selected" value="${needsInventoryReceive}">${uiLabelMap.CommonNo}</option>
-                </#if>
-                <option value="${needsInventoryReceive}">---</option>
+            <#if needsInventoryReceive??>
+              <#if "Y" == needsInventoryReceive>
+                <option selected="selected" value="${needsInventoryReceive}">${uiLabelMap.CommonYes}</option>
+              <#elseif "N" == needsInventoryReceive>
+                <option selected="selected" value="${needsInventoryReceive}">${uiLabelMap.CommonNo}</option>
               </#if>
+              <option value="${needsInventoryReceive}">---</option>
+            </#if>
               <option value="Y">${uiLabelMap.CommonYes}</option>
               <option value="N">${uiLabelMap.CommonNo}</option>
           </@field>
@@ -145,9 +145,9 @@ under the License.
               </#if>
           </@field>
           <@field type="generic" label="${uiLabelMap.OrderReturnToAddress}">
-              <#if (postalAddressTo?has_content)>
-                <@displayAddress postalAddress = postalAddressTo editable=false />
-              </#if>
+            <#if (postalAddressTo?has_content)>
+              <@displayAddress postalAddress = postalAddressTo editable=false />
+            </#if>
           </@field>
           <@field type="submit" text="${uiLabelMap.CommonUpdate}" class="+${styles.link_run_sys!} ${styles.action_update!}"/>
         <#else>

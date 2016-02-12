@@ -48,7 +48,6 @@ under the License.
     </#if>
   </#if>
   
-    <#-- FIXME: form inside table -->
   <#if !mechMap.contactMech?has_content>
       <form method="post" action="<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
         <input type="hidden" name="DONE_PAGE" value="${donePage}" />
@@ -61,6 +60,7 @@ under the License.
   <#else>  
       <#if mechMap.purposeTypes?has_content>
         <@field type="generic" label="${uiLabelMap.PartyContactPurposes}">
+          <@fields type="default-manual" ignoreParentField=true>
           <@table type="data-list"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
             <@tbody>
               <#if mechMap.partyContactMechPurposes?has_content>
@@ -99,7 +99,7 @@ under the License.
                     <input type="hidden" name="DONE_PAGE" value="${donePage}" />
                     <input type="hidden" name="useValues" value="true" />
                     <input type="hidden" name="contactMechId" value="${contactMechId!}" />
-                    <@field type="select" name="contactMechPurposeTypeId">
+                    <@field type="select" name="contactMechPurposeTypeId" container=false>
                       <option></option>
                       <#list mechMap.purposeTypes as contactMechPurposeType>
                         <option value="${contactMechPurposeType.contactMechPurposeTypeId}">${contactMechPurposeType.get("description",locale)}</option>
@@ -107,10 +107,11 @@ under the License.
                     </@field>
                   </form>
                 </@td>
-                <@td><a href="javascript:document.newpurposeform.submit()" class="${styles.link_run_sys!} ${styles.action_add!}">${uiLabelMap.PartyAddPurpose}</a></@td>
+                <@td><@field type="submit" submitType="link" href="javascript:document.newpurposeform.submit()" class="+${styles.link_run_sys!} ${styles.action_add!}" text="${uiLabelMap.PartyAddPurpose}" /></@td>
               </@tr>
             </@tfoot>
           </@table>
+          </@fields>
         </@field>
       </#if>
       <form method="post" action="<@ofbizUrl>${mechMap.requestName}</@ofbizUrl>" name="editcontactmechform" id="editcontactmechform">
@@ -146,10 +147,10 @@ under the License.
     </@field>
   <#elseif "TELECOM_NUMBER" = mechMap.contactMechTypeId!>
     <@field type="generic" label="${uiLabelMap.PartyPhoneNumber}">
-        <@field type="input" size="4" maxlength="10" name="countryCode" value="${(mechMap.telecomNumber.countryCode)?default(request.getParameter('countryCode')!)}" />
-        -&nbsp;<@field type="input" size="4" maxlength="10" name="areaCode" value="${(mechMap.telecomNumber.areaCode)?default(request.getParameter('areaCode')!)}" />
-        -&nbsp;<@field type="input" size="15" maxlength="15" name="contactNumber" value="${(mechMap.telecomNumber.contactNumber)?default(request.getParameter('contactNumber')!)}" />
-        &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" size="6" maxlength="10" name="extension" value="${(mechMap.partyContactMech.extension)?default(request.getParameter('extension')!)}" />
+        <@field type="input" inline=true size="4" maxlength="10" name="countryCode" value="${(mechMap.telecomNumber.countryCode)?default(request.getParameter('countryCode')!)}" />
+        -&nbsp;<@field type="input" inline=true size="4" maxlength="10" name="areaCode" value="${(mechMap.telecomNumber.areaCode)?default(request.getParameter('areaCode')!)}" />
+        -&nbsp;<@field type="input" inline=true size="15" maxlength="15" name="contactNumber" value="${(mechMap.telecomNumber.contactNumber)?default(request.getParameter('contactNumber')!)}" />
+        &nbsp;${uiLabelMap.PartyContactExt}&nbsp;<@field type="input" inline=true size="6" maxlength="10" name="extension" value="${(mechMap.partyContactMech.extension)?default(request.getParameter('extension')!)}" />
     </@field>
     <@field type="display" label="">
         [${uiLabelMap.CommonCountryCode}] [${uiLabelMap.PartyAreaCode}] [${uiLabelMap.PartyContactNumber}] [${uiLabelMap.PartyContactExt}]

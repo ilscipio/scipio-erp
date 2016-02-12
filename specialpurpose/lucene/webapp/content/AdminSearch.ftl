@@ -17,28 +17,27 @@ specific language governing permissions and limitations
 under the License.
 -->
 <hr />
-    <form method="post"  action="/content/control/AdminSearch"  name="searchQuery">
 
-<@field type="input" label="${uiLabelMap.ContentQueryLine}" class="+inputBox" name="queryLine" size="60"/>
+  <form method="post" action="/content/control/AdminSearch" name="searchQuery">
 
-<@field type="select" label="${uiLabelMap.CommonSelect} ${uiLabelMap.ContentCategory}" name="lcSiteId">
-      <option value=""></option>
-      <@listSiteIds contentId="WebStoreCONTENT" indentIndex=0/>
+    <@field type="input" label="${uiLabelMap.ContentQueryLine}" class="+inputBox" name="queryLine" size="60"/>
+    
+    <@field type="select" label="${uiLabelMap.CommonSelect} ${uiLabelMap.ContentCategory}" name="lcSiteId">
+        <option value=""></option>
+        <@listSiteIds contentId="WebStoreCONTENT" indentIndex=0/>
+    </@field>
 
-</@field>
-
-
-<!-- category form -->
+<#-- category form -->
 
     <@field type="generic" label="${uiLabelMap.ProductFeatures}">
-        ${uiLabelMap.CommonAll} <input type="radio" name="any_or_all" value="all" checked="checked"/>
-          ${uiLabelMap.CommonAny} <input type="radio" name="any_or_all" value="any"/>
+        <@field type="radio" name="any_or_all" value="all" checked=true label="${uiLabelMap.CommonAll}"/>
+        <@field type="radio" name="any_or_all" value="any" label="${uiLabelMap.CommonAny}"/>
     </@field>
 <#--
     <@field type="generic" label="Feature IDs">
-        <input type="text" class="inputBox" name="SEARCH_FEAT" size="15" value="${requestParameters.SEARCH_FEAT!}"/>&nbsp;
-          <input type="text" class="inputBox" name="SEARCH_FEAT2" size="15" value="${requestParameters.SEARCH_FEAT!}"/>&nbsp;
-          <input type="text" class="inputBox" name="SEARCH_FEAT3" size="15" value="${requestParameters.SEARCH_FEAT!}"/>&nbsp;
+        <@field type="input" class="inputBox" name="SEARCH_FEAT" size="15" value="${requestParameters.SEARCH_FEAT!}"/>
+        <@field type="input" class="inputBox" name="SEARCH_FEAT2" size="15" value="${requestParameters.SEARCH_FEAT!}"/>
+        <@field type="input" class="inputBox" name="SEARCH_FEAT3" size="15" value="${requestParameters.SEARCH_FEAT!}"/>
     </@field>
 -->
     <#list productFeatureTypeIdsOrdered as productFeatureTypeId>
@@ -46,26 +45,26 @@ under the License.
       <#assign productFeatureType = delegator.findOne("ProductFeatureType", findPftMap, true)>
       <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
       <@field type="select" label="${(productFeatureType.description)!}" name="pft_${productFeatureTypeId}">
-              <option value="">- ${uiLabelMap.CommonAny} -</option>
-              <#list productFeatures as productFeature>
-              <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
-              </#list>
+          <option value="">- ${uiLabelMap.CommonAny} -</option>
+        <#list productFeatures as productFeature>
+          <option value="${productFeature.productFeatureId}">${productFeature.description?default("No Description")} [${productFeature.productFeatureId}]</option>
+        </#list>
       </@field>
     </#list>
     <#if searchConstraintStrings?has_content>
       <@field type="generic" label="${uiLabelMap.CommonLast} ${uiLabelMap.CommonSearch}">
           <#list searchConstraintStrings as searchConstraintString>
-                <div>&nbsp;-&nbsp;${searchConstraintString}</div>
-            </#list>
+            <div>&nbsp;-&nbsp;${searchConstraintString}</div>
+          </#list>
             <div>${uiLabelMap.CommonSortedBy}: ${searchSortOrderString}</div>
             <div>
-              ${uiLabelMap.CommonNew} ${uiLabelMap.CommonSearch} <input type="radio" name="clearSearch" value="Y" checked="checked"/>
-              ${uiLabelMap.CommonRefineSearch} <input type="radio" name="clearSearch" value="N"/>
+              <@field type="radio" name="clearSearch" value="Y" checked=true label="${uiLabelMap.CommonNew} ${uiLabelMap.CommonSearch}"/>
+              <@field type="radio" name="clearSearch" value="N" label="${uiLabelMap.CommonRefineSearch}"/>
             </div>
       </@field>
     </#if>
 
-<@field type="submit" class="+${styles.link_run_sys!} ${styles.action_find!}" name="submitButton" text="${uiLabelMap.CommonFind}"/>
+    <@field type="submit" class="+${styles.link_run_sys!} ${styles.action_find!}" name="submitButton" text="${uiLabelMap.CommonFind}"/>
 </form>
 
 

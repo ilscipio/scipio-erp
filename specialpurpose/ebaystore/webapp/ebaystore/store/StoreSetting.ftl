@@ -146,7 +146,7 @@ under the License.
                     "keyup":"countAreaChars(document.StoreSettingForm.storeDesc,300,document.getElementById('charsleft2'));"}>${ebayStore.storeDesc!}</@field>
                 <div id="charsleft2"></div>
             </@field>
-            <@field type="generic" label="${uiLabelMap.EbayStoreStoreURL}">
+            <@field type="display" label="${uiLabelMap.EbayStoreStoreURL}">
                 <a href="${ebayStore.storeUrl!}" target="_blank">${ebayStore.storeUrl!}</a>
             </@field>
             <@field type="input" label="${uiLabelMap.EbayStoreStoreLogoURL}" name="storeLogoURL" size="50" value="${ebayStore.storeLogoURL!}"/>
@@ -193,13 +193,13 @@ under the License.
                 <b>${uiLabelMap.EbayStoreStoreColorTheme}</b>
             </@field>
             <@field type="generic" label="${uiLabelMap.EbayStoreStorePrimaryColor}">
-                ${uiLabelMap.CommonNbr}<@field type="input" container=false id="storePrimaryColor" name="storePrimaryColor" size="10" value="${ebayStore.storeColorPrimary!}"/>
+                ${uiLabelMap.CommonNbr}<@field type="input" inline=true id="storePrimaryColor" name="storePrimaryColor" size="10" value="${ebayStore.storeColorPrimary!}"/>
             </@field>
             <@field type="generic" label="${uiLabelMap.EbayStoreStoreSecondColor}">
-                ${uiLabelMap.CommonNbr}<@field type="input" container=false id="storeSecondaryColor" name="storeSecondaryColor" size="10" value="${ebayStore.storeColorSecondary!}"/>
+                ${uiLabelMap.CommonNbr}<@field type="input" inline=true id="storeSecondaryColor" name="storeSecondaryColor" size="10" value="${ebayStore.storeColorSecondary!}"/>
             </@field>
             <@field type="generic" label="${uiLabelMap.EbayStoreStoreAccentColor}">
-                ${uiLabelMap.CommonNbr}<@field type="input" container=false id="storeAccentColor" name="storeAccentColor" size="10" value="${ebayStore.storeColorAccent!}"/>
+                ${uiLabelMap.CommonNbr}<@field type="input" inline=true id="storeAccentColor" name="storeAccentColor" size="10" value="${ebayStore.storeColorAccent!}"/>
             </@field>
       </@fields>
 

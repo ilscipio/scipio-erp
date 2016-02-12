@@ -35,7 +35,7 @@ under the License.
                </#list>
             </@field>
             ${uiLabelMap.WorkEffortIncludeAllSubWorkEfforts}?
-            <@field type="radio" name="SEARCH_SUB_WORK_EFFORTS" value="Y" checked="checked" label="${uiLabelMap.CommonYes}"/>
+            <@field type="radio" name="SEARCH_SUB_WORK_EFFORTS" value="Y" checked=true label="${uiLabelMap.CommonYes}"/>
             <@field type="radio" name="SEARCH_SUB_WORK_EFFORTS" value="N" label="${uiLabelMap.CommonNo}"/>
         </@field>
         <@field type="lookup" label="${uiLabelMap.PartyPartyId}" value="${requestParameters.partyId!}" formName="advToKeyWordSearchForm" name="partyId" id="partyId" fieldFormName="LookupPartyName"/>
@@ -56,7 +56,7 @@ under the License.
                 <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevancy}</option>
                 <option value="SortWorkEffortField:workEffortName">${uiLabelMap.WorkEffortName}</option>
             </@field>
-            <@field type="radio" name="sortAscending" value="Y" checked="checked" label="${uiLabelMap.ProductLowToHigh}"/>
+            <@field type="radio" name="sortAscending" value="Y" checked=true label="${uiLabelMap.ProductLowToHigh}"/>
             <@field type="radio" name="sortAscending" value="N" label="${uiLabelMap.ProductHighToLow}"/>
         </@field>
         <#if searchConstraintStrings?has_content>
@@ -66,7 +66,7 @@ under the License.
                 </#list>
                 <div>${uiLabelMap.CommonSortedBy} ${searchSortOrderString}</div>
                 <div>
-                  <@field type="radio" name="clearSearch" value="Y" checked="checked" label="${uiLabelMap.ProductNewSearch}"/>
+                  <@field type="radio" name="clearSearch" value="Y" checked=true label="${uiLabelMap.ProductNewSearch}"/>
                   <@field type="radio" name="clearSearch" value="N" label="${uiLabelMap.CommonRefineSearch}"/>
                 </div>
           </@field>

@@ -489,10 +489,21 @@ or even multiple per fieldset.
     radioType           = default radio type  
     open/close          = advanced structure logic
     ignoreParentField   = default false. If true, causes all fields within to ignore their parent and behave as if no parent.
+    fieldArgs           = A map of @field parameters that will be used as new defaults for each field call.
+                          This is an automated mechanism. The map will be blended over the standard @field defaults before the invocation.
+                          In addition, contrary to the parameters, a map passed directly to @fields will be blended over both the @field defaults
+                          AND over any defaults set in the styles for the given @fields type: 
+                            {@field regular defaults} + {fieldargs from styles hash} + {@fields fieldArgs direct arg}
+                          NOTES:
+                            * This may overlap with some of the existing parameters above. Covers other cases not made explicit above.
+                            * If set to boolean false, will prevent all custom default field args and prevent using those set in styles hash. Probably never needed.
+                          EXAMPLE:
+                            <@fields type="default" fieldArgs={"labelArea":false}>
 -->
 <#assign fields_defaultArgs = {
   "type":"default", "open":true, "close":true, "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaExceptions":true, "labelAreaRequireContent":"", "labelAreaConsumeExceptions":true,
-  "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "checkboxType":"", "radioType":"", "ignoreParentField":"", "passArgs":{}
+  "formName":"", "formId":"", "inlineItems":"", "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"", "checkboxType":"", "radioType":"", "ignoreParentField":"", 
+  "fieldArgs":true, "passArgs":{}
 }>
 <#macro fields args={} inlineArgs...>
   <#-- NOTE: this is non-standard args usage -->
@@ -589,13 +600,26 @@ or even multiple per fieldset.
     <#local radioType = styles[stylesPrefix + "radiotype"]!styles["fields_default_radiotype"]!"">
   </#if>
 
+  <#local fieldArgsFromStyles = styles[stylesPrefix + "fieldargs"]!styles["fields_default_fieldargs"]!false>
+  <#if fieldArgs?is_boolean>
+    <#if fieldArgs == true>
+      <#local fieldArgs = fieldArgsFromStyles>
+    </#if>
+  <#else>
+    <#local fieldArgs = toSimpleMap(fieldArgs)>
+    <#if !fieldArgsFromStyles?is_boolean>
+      <#local fieldArgs = fieldArgsFromStyles + fieldArgs>
+    </#if>
+  </#if>
+
   <#return {"type":type, "labelType":labelType, "labelPosition":labelPosition, 
     "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, 
     "labelAreaRequireContent":labelAreaRequireContent, "labelAreaConsumeExceptions":labelAreaConsumeExceptions,
     "formName":formName, "formId":formId, "inlineItems":inlineItems,
     "collapse":collapse, "collapsePostfix":collapsePostfix, "collapsedInlineLabel":collapsedInlineLabel,
     "checkboxType":checkboxType, "radioType":radioType,
-    "ignoreParentField":ignoreParentField}>
+    "ignoreParentField":ignoreParentField,
+    "fieldArgs":fieldArgs}>
 </#function>
 
 <#-- 
@@ -695,6 +719,8 @@ To use @field as a low-level control, it should be given a parent @fields with "
 
 This system can accodomate custom @fields types, but a default set are provided in the cato
 standard markup.
+
+NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argument.
 
   * Usage Example *  
     <@field attr="" /> <#- single field using default look ->
@@ -941,12 +967,29 @@ standard markup.
   "events":{}, "wrap":"", "passArgs":{} 
 }>
 <#macro field args={} inlineArgs...> 
-  <#-- TODO: the following calls should be combined into a mergeArgMapsToLocals method, but
-      it is not currently possible. see mergeArgMapsToLocals in utilities.ftl. -->
-  <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.field_defaultArgs)>
+
+  <#-- parent @fields group elem info (if any; may be omitted) -->
+  <#local fieldsInfo = readRequestStack("catoFieldsInfoStack")!{}>
+  <#if !fieldsInfo.type??>
+    <#if !catoDefaultFieldsInfo?has_content>
+      <#-- optimization -->
+      <#global catoDefaultFieldsInfo = makeFieldsInfo({"type":"default"})>
+    </#if>
+    <#local fieldsInfo = catoDefaultFieldsInfo>
+  </#if>
+
+  <#-- special default fields override -->
+  <#local defaultArgs = catoStdTmplLib.field_defaultArgs>
+  <#if !fieldsInfo.fieldArgs?is_boolean>
+    <#local defaultArgs = defaultArgs + fieldsInfo.fieldArgs>
+  </#if>
+
+  <#-- standard args -->
+  <#local args = mergeArgMaps(args, inlineArgs, defaultArgs)>
   <#local dummy = localsPutAll(args)>
   <#local origArgs = args>
         
+  <#-- other defaults -->      
   <#if !type?has_content>
     <#local type = "generic">
   <#elseif type == "text">
@@ -980,16 +1023,6 @@ standard markup.
   </#if>
   <#if onFocus?has_content>
     <#local events = events + {"focus": onFocus}>
-  </#if>
-  
-  <#-- parent @fields group elem info (if any; may be omitted) -->
-  <#local fieldsInfo = readRequestStack("catoFieldsInfoStack")!{}>
-  <#if !fieldsInfo.type??>
-    <#if !catoDefaultFieldsInfo?has_content>
-      <#-- optimization -->
-      <#global catoDefaultFieldsInfo = makeFieldsInfo({"type":"default"})>
-    </#if>
-    <#local fieldsInfo = catoDefaultFieldsInfo>
   </#if>
   
   <#-- parent @field elem info (if any; is possible) -->

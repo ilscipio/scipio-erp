@@ -789,6 +789,7 @@
     "fields_default_collapsedinlinelabel" : "datetime", <#-- can be true, false, or list of type names -->
     "fields_default_checkboxtype" : "",
     "fields_default_radiotype" : "",
+    "fields_default_fieldargs" : {},                    <#-- This can be set to a map of new default args to use for @field calls. Can overlap with the other settings above. See @fields macro. -->
 
     <#-- alternate to default with different top-level checkbox styles -->
     "fields_default_alt1_labelareaconsumeexceptions" : "checkbox-single radio-single",

@@ -57,16 +57,16 @@ under the License.
                 <decorator-screen name="CommonWorkEffortDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <container style="screenlet-body">
-                            <label text="${uiLabelMap.CommonName} " style="label"/><label text="${workEffort.workEffortName}"/>
-                            <label text="${uiLabelMap.CommonType} " style="label"/><label text="${workEffortType.description}"/>
-                            <label text="${uiLabelMap.CommonPurpose} " style="label"/><label text="${workEffortPurposeType.description}"/>
-                            <label text="${uiLabelMap.CommonStatus} " style="label"/><label text="${currentStatusItem.description}"/>
+                            <container><label text="${uiLabelMap.CommonName}: " style="span"/><label text="${workEffort.workEffortName}" style="span"/></container>
+                            <container><label text="${uiLabelMap.CommonType}: " style="span"/><label text="${workEffortType.description}" style="span"/></container>
+                            <container><label text="${uiLabelMap.CommonPurpose}: " style="span"/><label text="${workEffortPurposeType.description}" style="span"/></container>
+                            <container><label text="${uiLabelMap.CommonStatus}: " style="span"/><label text="${currentStatusItem.description}" style="span"/></container>
                         </container>
                         <container style="screenlet-body">
-                            <label text="${uiLabelMap.WorkEffortPercentComplete} " style="label"/><label text="${workEffort.percentComplete}"/>
-                            <label text="${uiLabelMap.CommonPriority} " style="label"/><label text="${workEffort.priority}"/>
-                            <label text="${uiLabelMap.WorkEffortEstimatedStartDate} " style="label"/><label text="${workEffort.estimatedStartDate}"/>
-                            <label text="${uiLabelMap.WorkEffortEstimatedCompletionDate} " style="label"/><label text="${workEffort.estimatedCompletionDate}"/>
+                            <container><label text="${uiLabelMap.WorkEffortPercentComplete}: " style="span"/><label text="${workEffort.percentComplete}" style="span"/></container>
+                            <container><label text="${uiLabelMap.CommonPriority}: " style="span"/><label text="${workEffort.priority}" style="span"/></container>
+                            <container><label text="${uiLabelMap.WorkEffortEstimatedStartDate}: " style="span"/><label text="${workEffort.estimatedStartDate}" style="span"/></container>
+                            <container><label text="${uiLabelMap.WorkEffortEstimatedCompletionDate}: " style="span"/><label text="${workEffort.estimatedCompletionDate}" style="span"/></container>
                         </container>
                         <section>
                             <condition><not><if-empty field="partyAssignments"/></not></condition>
@@ -176,10 +176,10 @@ under the License.
                                                     <link target="/ordermgr/control/orderview" url-mode="inter-app" text="${orderHeader.orderId}" style="${styles.link_nav_info_id}">
                                                         <parameter param-name="orderId" from-field="orderHeader.orderId"/>
                                                     </link>
-                                                    <label text="${uiLabelMap.CommonType} " style="label"/><label text="${orderHeader.orderTypeDescription}"/>
-                                                    <label text="${uiLabelMap.CommonStatus} " style="label"/><label text="${orderHeader.statusItemDescription}"/>
-                                                    <label text="${uiLabelMap.CommonTotal} " style="label"/><label text="${orderHeader.grandTotal}"/>
-                                                    <label text="${uiLabelMap.CommonDate} " style="label"/><label text="${orderHeader.orderDate}"/>
+                                                    <container><label text="${uiLabelMap.CommonType}: " style="span"/><label text="${orderHeader.orderTypeDescription}" style="span"/></container>
+                                                    <container><label text="${uiLabelMap.CommonStatus}: " style="span"/><label text="${orderHeader.statusItemDescription}" style="span"/></container>
+                                                    <container><label text="${uiLabelMap.CommonTotal}: " style="span"/><label text="${orderHeader.grandTotal}" style="span"/></container>
+                                                    <container><label text="${uiLabelMap.CommonDate}: " style="span"/><label text="${orderHeader.orderDate}" style="span"/></container>
                                                 </container>
                                             </widgets>
                                         </section>

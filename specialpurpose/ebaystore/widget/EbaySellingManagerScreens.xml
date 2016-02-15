@@ -190,8 +190,8 @@
                 <decorator-screen name="SellingManagerDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="notes">
-                            <label style="label" text="Please subscribed to Selling Manager Pro before you use this function because ebay product inventory will open when you start selling manager pro on ebay site."></label>
-                            <label style="label" text="if you subscribed already then still can not use, please check you internet connection."></label>
+                            <label text="Please subscribed to Selling Manager Pro before you use this function because ebay product inventory will open when you start selling manager pro on ebay site."></label>
+                            <label text="if you subscribed already then still can not use, please check you internet connection."></label>
                             <label text="- To subscribe for production site"></label>
                             <link target="http://pages.ebay.com/selling_manager_pro" text="http://pages.ebay.com/selling_manager_pro"  target-window="_BLANK" url-mode="plain"></link>
                             <label text="- To upgrade store level sandbox site"></label>

@@ -94,8 +94,8 @@ under the License.
                                 </container>
                             </widgets>
                             <fail-widgets>
-                                <container id="norender" style="label">
-                                    <label text="${uiLabelMap.ContentCMSNotExist}"/>
+                                <container id="norender">
+                                    <label style="common-msg-result-norecord" text="${uiLabelMap.ContentCMSNotExist}"/>
                                 </container>
                             </fail-widgets>
                         </section>

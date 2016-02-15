@@ -6,6 +6,9 @@ import org.ofbiz.entity.util.*
 import org.ofbiz.product.category.CategoryWorker
 import org.ofbiz.service.ServiceUtil
 
+import com.ilscipio.cato.ce.demoSuite.dataGenerator.DemoSuiteDataWorker
+import com.ilscipio.cato.ce.demoSuite.dataGenerator.MockarooDataGenerator
+
 
 
 public Map createDemoProduct(DispatcherContext ) {
@@ -89,6 +92,8 @@ public Map createDemoProduct(DispatcherContext ) {
         Debug.log("productCategoryIds size ========> " + productCategoryIds.size());
         if (num > 1 && num > productCategoryIds.size())
             factor = productCategoryIds.size() / num;
+            
+        String addresses = DemoSuiteDataWorker.generateAddress(num, "json", MockarooDataGenerator.class);
 
         for (int i = 0; i < num; i++) {
             // Create Product

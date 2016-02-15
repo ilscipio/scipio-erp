@@ -1,65 +1,150 @@
 package com.ilscipio.cato.ce.demoSuite.dataGenerator;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class MockarooDataGenerator extends ExternalDataGeneratorProvider {
+import org.ofbiz.base.conversion.ConversionException;
+import org.ofbiz.base.conversion.JSONConverters;
+import org.ofbiz.base.conversion.JSONConverters.JSONToList;
+import org.ofbiz.base.conversion.JSONConverters.ListToJSON;
+import org.ofbiz.base.lang.JSON;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.HttpClient;
+import org.ofbiz.base.util.HttpClientException;
 
-    public MockarooDataGenerator(String exportFormat) {
-        super("mockaroo", exportFormat);
-        try {
-            url = new URL(properties.getProperty("demosuite.test.data.provider.mockaroo.url"));
-        } catch (MalformedURLException e) {
-        }
-        exportFormats = properties.getProperty("demosuite.test.data.provider.mockaroo.exportFormats").split(",");
-        method = properties.getProperty("demosuite.test.data.provider.mockaroo.method");
+import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
 
+import javolution.util.FastList;
+import javolution.util.FastMap;
+
+public class MockarooDataGenerator<T extends DemoDataObject> extends ThirdPartyDataGenerator<T> {
+    private static String MOCKAROO_DATA_GENERATOR = "mockaroo";
+
+    // private MockarooDataGenerator<T> mockarooDataGenerator;
+
+    private final Class<T> returnObjectClass;
+
+    public MockarooDataGenerator(Class<T> type) {
+        this.returnObjectClass = type;
     }
 
-    // URL url = new
-    // URL("http://www.mockaroo.com/api/generate.json?key=abcd1234");
-    // HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-    // conn.setDoOutput(true);
-    // conn.setRequestMethod("POST");
-    // conn.setRequestProperty("Content-Type", "application/json");
-    //
-    // JSONObject yearsEmployed = new JSONObject();
-    // yearsEmployed.put("name", "yearsEmployed");
-    // yearsEmployed.put("type", "Number");
-    // yearsEmployed.put("min", 1);
-    // yearsEmployed.put("max", 30);
-    // yearsEmployed.put("decimals", 0);
-    //
-    // JSONObject department = new JSONObject();
-    // department.put("name", "department");
-    // department.put("type", "Custom List");
-    // JSONArray values = new JSONArray();
-    // values.put("R+D");
-    // values.put("Marketing");
-    // values.put("HR");
-    // department.put("values", values);
-    //
-    // JSONObject dob = new JSONObject();
-    // dob.put("name", "dob");
-    // dob.put("type", "Date");
-    // dob.put("min", "1/1/1950");
-    // dob.put("max", "1/1/2000");
-    // dob.put("format", "%m/%d/%Y");
-    //
-    // JSONArray fields = new JSONArray();
-    // fields.put(yearsEmployed);
-    // fields.put(department);
-    // fields.put(dob);
-    //
-    // OutputStream os = conn.getOutputStream();
-    // os.write(fields.toString().getBytes());
-    // os.flush();
-    //
-    // JSONObject data = new
-    // JSONObject(IOUtils.toString(conn.getInputStream()));
-    //
-    // System.out.println(data.getInt("yearsEmployed"));
-    // System.out.println(data.getString("department"));
-    // System.out.println(data.getString("dob"));
+    @Override
+    protected List<T> retrieveData(Integer count, String schema, String format) {
+
+        HttpClient httpClient = new HttpClient();
+        MockarooSettings settings = new MockarooSettings(count, schema);
+        // HashMap<String, Object> queryParameters =
+        // settings.getQueryParameters();
+        // httpClient.setParameters(queryParameters);
+        String url = properties.get("demosuite.test.data.provider." + getDataGeneratorName() + ".url") + format + "?key="
+                + settings.getQueryParameters().get("key");
+        httpClient.setContentType("application/json");
+        httpClient.setUrl(url + "&count=" + count);
+        ListToJSON listJsonConverter = new JSONConverters.ListToJSON();
+        try {
+            JSON json = listJsonConverter.convert(settings.getFields(schema));
+            Debug.log(json.toString());
+            httpClient.setRawStream(json.toString());
+
+        } catch (ConversionException e1) {
+            Debug.logError(e1.getMessage(), "");
+        }
+
+        try {
+            String r = httpClient.sendHttpRequest(settings.getMethod());
+            try {
+                Debug.log("json result ===========> " + JSON.from(r).toString());
+                JSONToList jsonListConverter = new JSONConverters.JSONToList();
+                List<T> resultList = FastList.newInstance();
+                for (Object o : jsonListConverter.convert(JSON.from(r))) {
+                    resultList.add((T) JSON.from(o).toObject(returnObjectClass));
+                }
+                return resultList;
+
+            } catch (ConversionException e) {
+                Debug.logError(e.getMessage(), "");
+            } catch (IOException e) {
+                Debug.logError(e.getMessage(), "");
+            }
+
+        } catch (HttpClientException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    // @Override
+    // public MockarooDataGenerator<T> create(Class<T> returnObjectClass) {
+    // if (mockarooDataGenerator == null)
+    // mockarooDataGenerator = new MockarooDataGenerator<T>(returnObjectClass);
+    // return mockarooDataGenerator;
+    // }
+
+    @Override
+    protected String getDataGeneratorName() {
+        return MOCKAROO_DATA_GENERATOR;
+    }
+
+    public class MockarooSettings extends DataGeneratorSettings {
+        private static final long serialVersionUID = 5626474670087711771L;
+
+        private HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+
+        public MockarooSettings(Integer count, String schema) {
+            queryParameters.put("count", count);
+            // queryParameters.put("schema", schema);
+            queryParameters.put("key", properties.get("demosuite.test.data.provider." + getDataGeneratorName() + ".key"));
+            // queryParameters.put("fields",
+            // properties.get("demosuite.test.data.provider." +
+            // getDataGeneratorName() + ".schema." + schema));
+
+        }
+
+        @Override
+        public HashMap<String, Object> getQueryParameters() {
+            // demosuite.test.data.provider.mockaroo.queryParams = key,
+            // callback, count, array, include_header, schema, delimiter, fields
+            return queryParameters;
+        }
+
+        public List<Object> getFields(String schema) {
+            List<Object> fields = new ArrayList<Object>();
+            if (schema.equals("address")) {
+                Map<String, Object> country = FastMap.newInstance();
+                country.put("name", "country");
+                country.put("type", "Country");
+
+                Map<String, Object> state = FastMap.newInstance();
+                state.put("name", "state");
+                state.put("type", "State");
+
+                Map<String, Object> city = FastMap.newInstance();
+                city.put("name", "city");
+                city.put("type", "City");
+
+                Map<String, Object> street = FastMap.newInstance();
+                street.put("name", "street");
+                street.put("type", "Street Name");
+
+                Map<String, Object> zip = FastMap.newInstance();
+                zip.put("name", "zip");
+                zip.put("type", "Postal Code");
+
+                fields.add(country);
+                fields.add(state);
+                fields.add(city);
+                fields.add(street);
+                fields.add(zip);
+            } else if (schema.equals("product")) {
+
+            }
+
+            return fields;
+        }
+
+    }
 
 }

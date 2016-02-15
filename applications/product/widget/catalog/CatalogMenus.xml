@@ -41,10 +41,10 @@ under the License.
         <menu-item name="categories" title="${uiLabelMap.ProductCategories}"><link target="FindCategory"/></menu-item>
         <menu-item name="products" title="${uiLabelMap.ProductProducts}"><link target="FindProduct"/></menu-item>               
         <menu-item name="stores" title="${uiLabelMap.ProductStores}"><link target="FindProductStore"/></menu-item>
-        <menu-item name="prices" title="${uiLabelMap.ProductPrices}"><link target="FindProductPrice"/></menu-item>
-        <menu-item name="promotions" title="${uiLabelMap.ProductPromotions}"><link target="FindProductPromotion"/></menu-item>
-        <menu-item name="media" title="${uiLabelMap.ProductMedia}"><link target="FindProductContent"/></menu-item>
-        <menu-item name="setttings" title="${uiLabelMap.ProductSettings}" sort-mode="off"><link target="FindProductSettings"/></menu-item>
+        <!-- Cato: TODO? FindProductPrice target does not exist <menu-item name="prices" title="${uiLabelMap.ProductPrices}"><link target="FindProductPrice"/></menu-item>-->
+        <!-- Cato: TODO? FindProductPromotion target does not exist <menu-item name="promotions" title="${uiLabelMap.ProductPromotions}"><link target="FindProductPromotion"/></menu-item>-->
+        <!-- Cato: TODO? FindProductContent target does not exist <menu-item name="media" title="${uiLabelMap.ProductMedia}"><link target="FindProductContent"/></menu-item>-->
+        <!-- Cato: TODO? FindProductSettings target does not exist <menu-item name="settings" title="${uiLabelMap.ProductSettings}" sort-mode="off"><link target="FindProductSettings"/></menu-item>-->
     </menu>
 
     <menu name="CatalogTabBar" extends="CommonTabBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

@@ -31579,4 +31579,10 @@
         <value xml:lang="en">Lot Ref.</value>
         <value xml:lang="nl">Batch ref.</value>
     </property>
+    <!-- Cato: new. TODO: localize -->
+    <property key="ProductSettings">
+        <value xml:lang="de">Produkteinstellungen</value>
+        <value xml:lang="en">Product Settings</value>
+        <value xml:lang="fr">Paramètres du produit</value>
+    </property>
 </resource>

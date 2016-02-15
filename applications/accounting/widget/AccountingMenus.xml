@@ -70,9 +70,10 @@
         <menu-item name="companies" title="${uiLabelMap.AccountingOrgGlSettings}">
             <link target="ListCompanies" />
         </menu-item> -->
+        <!-- Cato: TODO? AccountingSettings target does not exist
         <menu-item name="AccountingSettings" title="${uiLabelMap.CommonSettings}" sort-mode="off">
             <link target="AccountingSettings" />
-        </menu-item>
+        </menu-item>-->
     </menu>
 
     <menu name="AccountingAppSideBar" title="${uiLabelMap.AccountingManager}" extends="CommonAppSideBarMenu"

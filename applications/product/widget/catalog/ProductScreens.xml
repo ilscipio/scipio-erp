@@ -33,6 +33,7 @@ under the License.
                 <set field="productId" from-field="parameters.productId" global="true"/>
                 <entity-one entity-name="Product" value-field="product"/>
                 <set field="product" from-field="product" global="true"/>
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">

@@ -45,7 +45,11 @@ under the License.
                 <!-- ToDo: Move to themes? -->
                 <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jquery.cookie/jquery.cookie.js" global="true"/>    
                 <set field="layoutSettings.styleSheets[+0]" value="/base-theme/bower_components/jstree/dist/themes/default/style.css" global="true"/>
-                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>                               
+                <set field="layoutSettings.javaScripts[+0]" value="/base-theme/bower_components/jstree/dist/jstree.min.js" global="true"/>      
+                
+                <!-- main-decorator special sidebar config -->
+                <set field="showMainRegularBar" from-field="showMainRegularBar" default-value="true" />
+                <set field="showMainExtendedBar" from-field="showMainExtendedBar" default-value="false" />                       
             </actions>
             <widgets>
                 <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
@@ -58,9 +62,24 @@ under the License.
                                 <decorator-section-include name="left-column"/>
                             </widgets>
                             <fail-widgets>
-                                <!-- provide default column for all others -->
-                                <include-menu location="component://product/widget/catalog/CatalogMenus.xml" name="CatalogAppSideBar"/>
-                            </fail-widgets>
+                                <section>
+                                    <condition>
+                                        <if-compare field="showMainRegularBar" operator="equals" type="Boolean" value="true"/>
+                                    </condition>
+                                    <widgets>
+                                        <!-- provide default column for all others -->
+                                        <include-menu location="component://product/widget/catalog/CatalogMenus.xml" name="CatalogAppSideBar"/>
+                                    </widgets>
+                                </section>
+                           </fail-widgets>
+                        </section>
+                        <section>
+                            <condition>
+                                <if-compare field="showMainExtendedBar" operator="equals" type="Boolean" value="true"/>
+                            </condition>
+                            <widgets>
+                                <include-screen name="leftbar" />
+                            </widgets>
                         </section>
                     </decorator-section>
                     <decorator-section name="body">
@@ -77,6 +96,7 @@ under the License.
                 <set field="headerItem" value="catalogs"/>
                 <set field="prodCatalogId" from-field="parameters.prodCatalogId"/>
                 <entity-one entity-name="ProdCatalog" value-field="prodCatalog"/>
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -88,8 +108,11 @@ under the License.
                             <widgets>
                                 <include-menu name="CatalogSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                             </widgets>
+                            <fail-widgets>
+                                <!-- provide default column for all others -->
+                                <include-menu location="component://product/widget/catalog/CatalogMenus.xml" name="CatalogAppSideBar"/>
+                            </fail-widgets>
                         </section>
-                        <include-screen name="leftbar"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -143,6 +166,7 @@ under the License.
                 <set field="headerItem" value="categories"/>
                 <set field="productCategoryId" from-field="parameters.productCategoryId"/>
                 <entity-one entity-name="ProductCategory" value-field="productCategory"/>
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
             </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
@@ -154,8 +178,11 @@ under the License.
                             <widgets>
                                 <include-menu name="CategorySideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                             </widgets>
+                            <fail-widgets>
+                                <!-- provide default column for all others -->
+                                <include-menu location="component://product/widget/catalog/CatalogMenus.xml" name="CatalogAppSideBar"/>
+                            </fail-widgets>
                         </section>
-                        <include-screen name="leftbar" location="component://product/widget/catalog/CommonScreens.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -205,6 +232,9 @@ under the License.
     
     <screen name="CommonConfigDecorator">
         <section>
+            <actions>
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
@@ -250,6 +280,9 @@ under the License.
     
     <screen name="CommonProductStoreDecorator">
         <section>
+            <actions>
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
@@ -260,8 +293,11 @@ under the License.
                                     <include-menu name="ProductStoreSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                                 </container>
                             </widgets>
+                            <fail-widgets>
+                                <!-- provide default column for all others -->
+                                <include-menu location="component://product/widget/catalog/CatalogMenus.xml" name="CatalogAppSideBar"/>
+                            </fail-widgets>
                         </section>
-                        <include-screen name="leftbar"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>
@@ -315,14 +351,18 @@ under the License.
 
     <screen name="CommonProductStoreGroupDecorator">
         <section>
+            <actions>
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-screen name="ProductStoreGroupTree"/>
                     </decorator-section>
+                    <!-- Cato: what is this?
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
                         <include-menu name="ProductStoreGroupButtonBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
-                    </decorator-section>
+                    </decorator-section>-->
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -348,6 +388,9 @@ under the License.
 
     <screen name="CommonShippingDecorator">
         <section>
+            <actions>
+                <set field="showMainExtendedBar" type="Boolean" value="true" />
+            </actions>
             <widgets>
                 <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
@@ -359,7 +402,6 @@ under the License.
                                 <include-menu name="ShippingSideBar" location="component://product/widget/catalog/CatalogMenus.xml"/>
                             </widgets>
                         </section>
-                        <include-screen name="leftbar"/>
                     </decorator-section>
                     <decorator-section name="body">
                         <section>

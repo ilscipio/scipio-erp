@@ -41,7 +41,7 @@ under the License.
                             </widgets>
                             <fail-widgets>
                                 <screenlet title="${uiLabelMap.ImageManagementApplication}">
-                                    <container><label style="label" text="${uiLabelMap.ImageManagementWelcomeMessage}"/></container>
+                                    <container><label text="${uiLabelMap.ImageManagementWelcomeMessage}"/></container>
                                 </screenlet>
                             </fail-widgets>
                         </section>

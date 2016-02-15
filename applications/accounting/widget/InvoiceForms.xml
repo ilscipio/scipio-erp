@@ -22,25 +22,25 @@ under the License.
     xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
     <!-- Invoice forms -->
     <form name="FindInvoices" type="single" target="findInvoices" title="Find and list invoices"
-        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        header-row-style="header-row" default-position-span="1"> <!-- orig: default-table-style=-style="basic-table" -->
         <field name="invoiceId" title="${uiLabelMap.CommonId}"><text-find ignore-case="true"/></field>
         <field name="invoiceDate" title="${uiLabelMap.CommonDate}" position="2"><date-find type="date"/></field>
         <field name="description"><text-find ignore-case="true"/></field>
-        <field position="2" name="invoiceTypeId" title="${uiLabelMap.CommonType}">
+        <field position="1" name="invoiceTypeId" title="${uiLabelMap.CommonType}">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="InvoiceType"/>
             </drop-down>
         </field>
-        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="1">
+        <field name="statusId" title="${uiLabelMap.CommonStatus}" position="2">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="StatusItem">
                     <entity-constraint name="statusTypeId" operator="equals" value="INVOICE_STATUS"/>
                 </entity-options>
             </drop-down>
         </field>
-        <field position="2" name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
-        <field position="1" name="partyIdTo" parameter-name="partyId" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>        
-        <field position="2" name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
+        <field position="1" name="partyIdFrom" title="${uiLabelMap.CommonFrom} ${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>
+        <field position="2" name="partyIdTo" parameter-name="partyId" title="${uiLabelMap.CommonTo} ${uiLabelMap.CommonParty}"><lookup target-form-name="LookupPartyName"/></field>        
+        <field position="1" name="billingAccountId"><lookup target-form-name="LookupBillingAccount"/></field>
         <field position="2" name="referenceNumber" ><text-find/></field>
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
         <field name="searchAction" title="${uiLabelMap.CommonFind}" widget-style="${styles.link_run_sys} ${styles.action_find}"><submit button-type="button"/></field>

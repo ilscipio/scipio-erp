@@ -65,7 +65,7 @@ under the License.
         <field name="amountToApply" widget-area-style="amount" title-area-style="align-right"><display type="currency" currency="${currencyUomId}"/></field>
     </form>
 
-    <form name="FindArInvoices" type="single" target="FindArInvoices" extends="FindInvoices" extends-resource="component://accounting/widget/InvoiceForms.xml">
+    <form name="FindArInvoices" type="single" target="FindArInvoices" extends="FindInvoices" extends-resource="component://accounting/widget/InvoiceForms.xml" default-position-span="1">
         <field name="parentTypeId"><hidden value="SALES_INVOICE"/></field>
         <field name="invoiceTypeId" title="${uiLabelMap.CommonType}" position="1">
             <drop-down allow-empty="true">

@@ -670,6 +670,7 @@ under the License.
         <response name="error" type="request" value="orderentry"/>
     </request-map>
     <request-map uri="quickadd">
+        <security https="true" auth="true"/>
         <response name="success" type="view" value="quickadd"/>
     </request-map>
 

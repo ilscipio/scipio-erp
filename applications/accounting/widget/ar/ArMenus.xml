@@ -26,9 +26,13 @@ under the License.
         <menu-item name="ap" title="${uiLabelMap.AccountingApManager}" sort-mode="off" widget-style="+${styles.menu_subappitem}">
             <link target="/ap/control/main" url-mode="inter-app" style="+${styles.menu_subappitem_link}"/>
         </menu-item> -->
-        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" widget-style="${styles.menu_sidebar_itemdashboard}" >
+        <menu-item name="main" title="${uiLabelMap.CommonDashboard}" sort-mode="off" override-mode="replace">
             <condition><not><if-empty field="userLogin"/></not></condition>
-            <link target="/accounting/control/main" link-type="anchor"/>
+            <link target="/accounting/control/main" link-type="anchor" url-mode="inter-app"/>
+        </menu-item>
+        <menu-item name="overview" title="${uiLabelMap.CommonOverview}" sort-mode="off">
+            <condition><not><if-empty field="userLogin"/></not></condition>
+            <link target="main" link-type="anchor"/>
         </menu-item>
         <menu-item name="agreements" title="${uiLabelMap.AccountingAgreements}"><link target="FindAgreement"/></menu-item>
         <menu-item name="invoices" title="${uiLabelMap.AccountingInvoicesMenu}"><link target="findInvoices"/></menu-item>

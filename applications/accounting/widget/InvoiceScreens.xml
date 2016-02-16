@@ -76,7 +76,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleFindInvoice"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonInvoiceDecorator" location="${parameters.invoiceDecoratorLocation}">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>

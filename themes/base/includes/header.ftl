@@ -253,7 +253,7 @@ so for now we have to split the screens in half and rely on the menu widget rend
         <!-- whatever you want goes here -->
         <ul class="off-canvas-list">
           <@generalMenu />
-          <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}&amp;portalPageId=${parameters.portalPageId!}</@ofbizUrl></#assign>
+          <#assign helpLink><@ofbizUrl>showHelp?helpTopic=${helpTopic!}<#if parameters.portalPageId?has_content>&portalPageId=${parameters.portalPageId!}</#if></@ofbizUrl></#assign>
           <#if helpLink?has_content><li class="has-form"><@modal label="${uiLabelMap.CommonHelp}" id="help" href="${helpLink}"></@modal></li></#if>   
         </ul>
     </aside>

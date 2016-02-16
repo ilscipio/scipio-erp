@@ -320,7 +320,7 @@ under the License.
                     <xs:documentation>Cato: explicit total grid positions to use for this form. Sometimes it's clearer to specify though may be omitted and it will be auto-calculated.</xs:documentation>
                 </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="default-position-span" type="xs:integer" default="0">
+            <xs:attribute name="default-position-span" type="xs:integer" default="1">
                 <xs:annotation>
                     <xs:documentation>Cato: default position span for field elements for this form. 0 means auto or occupy all available positions. 1 means occupy one position grid space.</xs:documentation>
                 </xs:annotation>

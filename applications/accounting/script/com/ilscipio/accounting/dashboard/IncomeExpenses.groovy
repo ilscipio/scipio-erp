@@ -1,4 +1,3 @@
-import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
 import javolution.util.FastList
@@ -38,7 +37,23 @@ Map<Date, Map<String, BigDecimal>> processResults() {
     int iCount = context.chartIntervalCount != null ? Integer.parseInt(context.chartIntervalCount) : 6;
     String iScope = context.chartIntervalScope != null ? context.chartIntervalScope : "month"; //day|week|month|year
     
-    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, null, context.locale, context.timeZone);
+    Calendar calendar = Calendar.getInstance();
+    if (iScope.equals("day")) {
+        calendar.set(Calendar.DAY_OF_YEAR, calendar.get(Calendar.DAY_OF_YEAR) - 30);       
+    } else if (iScope.equals("week")) {
+        calendar.set(Calendar.DAY_OF_WEEK, 1);
+        calendar.set(Calendar.WEEK_OF_YEAR, calendar.get(Calendar.WEEK_OF_YEAR) - 12);
+    } else if (iScope.equals("month")) {
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.MONTH, calendar.get(Calendar.MONTH) - 6);
+    } else if (iScope.equals("year")) {
+        calendar.set(Calendar.DAY_OF_YEAR, 1);
+        calendar.set(Calendar.MONTH, 1);
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR) - 5);
+    }
+    fromDate = UtilDateTime.toTimestamp(calendar.getTime());
+    
+    dateIntervals = UtilDateTime.getPeriodIntervalAndFormatter(iScope, fromDate, context.locale, context.timeZone);
     Debug.log("dateIntervals ========> " + dateIntervals);
     //Debug.log("dateIntervals ========> " + dateIntervals);
     

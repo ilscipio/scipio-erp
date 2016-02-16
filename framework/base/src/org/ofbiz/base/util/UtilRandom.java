@@ -21,7 +21,7 @@ public class UtilRandom {
         Calendar cal = Calendar.getInstance();
 
         if (context.get("maxDate") != null) {
-            endTime = ((Timestamp) context.get("endTime")).getTime();
+            endTime = ((Timestamp) context.get("maxDate")).getTime();
         } else {
             endTime = cal.getTimeInMillis();
         }

@@ -90,7 +90,7 @@ under the License.
                 <set field="invoices" from-field="PastDueInvoices"/>
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.AccountingPastDueInvoices}: (${PastDueInvoicestotalAmount})">
+                <screenlet>
                     <include-form name="ListReports" location="component://accounting/widget/ar/forms/InvoiceForms.xml"/>
                 </screenlet>
             </widgets>

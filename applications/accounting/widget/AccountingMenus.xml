@@ -584,7 +584,7 @@
     </menu>
 
     <menu name="FinAccountMainSideBar" extends="CommonSideBarMenu" extends-resource="component://common/widget/CommonMenus.xml">
-        <include-elements menu-name="FinAccountMainTabBar" recursive="includes-only" />
+        <include-elements menu-name="FinAccountSideBar" recursive="includes-only" />
     </menu>
 
     <menu name="FinAccountReconciliationsTabBar" extends="CommonButtonBarMenu" extends-resource="component://common/widget/CommonMenus.xml">

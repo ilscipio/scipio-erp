@@ -144,11 +144,10 @@ under the License.
                   <@tr>
                     <@td scope="row" class="${styles.grid_large!}3">
                       <#-- billing accounts require a special OrderPaymentPreference because it is skipped from above section of OPPs -->
-                      <div>${uiLabelMap.AccountingBillingAccount}&nbsp;
+                      ${uiLabelMap.AccountingBillingAccount}&nbsp;
                           <#if billingAccountMaxAmount?has_content>
                           <br />${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=billingAccountMaxAmount?default(0.00) isoCode=currencyUomId/>
                           </#if>
-                          </div>
                     </@td>
                     <@td colspan="2">
                         <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
@@ -167,7 +166,6 @@ under the License.
                     <@td>
                         <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
                             <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">
-                              <div>
                                 <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
                                 <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
                                   <input type="hidden" name="orderId" value="${orderId}" />
@@ -175,7 +173,6 @@ under the License.
                                   <input type="hidden" name="statusId" value="PAYMENT_CANCELLED" />
                                   <input type="hidden" name="checkOutPaymentId" value="${paymentMethod.paymentMethodTypeId!}" />
                                 </form>
-                              </div>
                             </#if>
                         </#if>
                     </@td>
@@ -194,7 +191,6 @@ under the License.
                     </#if>
                   </@td>
                   <@td colspan="2">
-                    <div>
                       <#if (finAccountType?has_content)>
                         ${finAccountType.description?default(finAccountType.finAccountTypeId)}&nbsp;
                       </#if>
@@ -204,17 +200,13 @@ under the License.
                       <br />
 
                       <#-- Authorize and Capture transactions -->
-                      <div>
                         <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">
                           <a href="/accounting/control/AuthorizeTransaction?orderId=${orderId!}&amp;orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}${StringUtil.wrapString(externalKeyParam)}">${uiLabelMap.AccountingAuthorize}</a>
                         </#if>
                         <#if orderPaymentPreference.statusId == "PAYMENT_AUTHORIZED">
                           <a href="/accounting/control/CaptureTransaction?orderId=${orderId!}&amp;orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}${StringUtil.wrapString(externalKeyParam)}">${uiLabelMap.AccountingCapture}</a>
                         </#if>
-                      </div>
-                    </div>
                     <#if gatewayResponses?has_content>
-                      <div>
                         <hr />
                         <#list gatewayResponses as gatewayResponse>
                           <#assign transactionCode = gatewayResponse.getRelatedOne("TranCodeEnumeration", false)>
@@ -227,13 +219,11 @@ under the License.
                           <a href="/accounting/control/ViewGatewayResponse?paymentGatewayResponseId=${gatewayResponse.paymentGatewayResponseId}${StringUtil.wrapString(externalKeyParam)}">${uiLabelMap.CommonDetails}</a>
                           <#if gatewayResponse_has_next><hr /></#if>
                         </#list>
-                      </div>
                     </#if>
                   </@td>
                   <@td>
                     <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
                      <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">
-                        <div>
                           <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
                           <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
                             <input type="hidden" name="orderId" value="${orderId}" />
@@ -241,7 +231,6 @@ under the License.
                             <input type="hidden" name="statusId" value="PAYMENT_CANCELLED" />
                             <input type="hidden" name="checkOutPaymentId" value="${paymentMethod.paymentMethodTypeId!}" />
                           </form>
-                        </div>
                      </#if>
                     </#if>
                   </@td>
@@ -266,12 +255,10 @@ under the License.
                 </@td>
                 <#if paymentMethodType.paymentMethodTypeId != "EXT_OFFLINE" && paymentMethodType.paymentMethodTypeId != "EXT_PAYPAL" && paymentMethodType.paymentMethodTypeId != "EXT_COD">
                   <@td colspan="2">
-                    <div>
                       <#if orderPaymentPreference.maxAmount?has_content>
                          <br />${uiLabelMap.OrderPaymentMaximumAmount}: <@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>
                       </#if>
                       <br />&nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
-                    </div>
                     <#--
                     <div><@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>&nbsp;-&nbsp;${(orderPaymentPreference.authDate.toString())!}</div>
                     <div>&nbsp;<#if orderPaymentPreference.authRefNum??>(${uiLabelMap.OrderReference}: ${orderPaymentPreference.authRefNum})</#if></div>
@@ -285,7 +272,6 @@ under the License.
                   <@td>
                    <#if (!orderHeader.statusId.equals("ORDER_COMPLETED")) && !(orderHeader.statusId.equals("ORDER_REJECTED")) && !(orderHeader.statusId.equals("ORDER_CANCELLED"))>
                     <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">
-                      <div>
                         <a href="javascript:document.CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}.submit()" class="${styles.link_run_sys!} ${styles.action_terminate!}">${uiLabelMap.CommonCancel}</a>
                         <form name="CancelOrderPaymentPreference_${orderPaymentPreference.orderPaymentPreferenceId}" method="post" action="<@ofbizUrl>updateOrderPaymentPreference</@ofbizUrl>">
                           <input type="hidden" name="orderId" value="${orderId}" />
@@ -293,7 +279,6 @@ under the License.
                           <input type="hidden" name="statusId" value="PAYMENT_CANCELLED" />
                           <input type="hidden" name="checkOutPaymentId" value="${paymentMethod.paymentMethodTypeId!}" />
                         </form>
-                      </div>
                     </#if>
                    </#if>
                   </@td>
@@ -323,7 +308,6 @@ under the License.
                   </#if>
                 </@td>
                 <@td colspan="2">
-                  <div>
                     <#if creditCard?has_content>
                       <#if creditCard.companyNameOnCard??>${creditCard.companyNameOnCard}<br /></#if>
                       <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}&nbsp;</#if>
@@ -345,20 +329,16 @@ under the License.
                       <br />
 
                       <#-- Authorize and Capture transactions -->
-                      <div>
                         <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED">
                           <a href="/accounting/control/AuthorizeTransaction?orderId=${orderId!}&amp;orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}${StringUtil.wrapString(externalKeyParam)}">${uiLabelMap.AccountingAuthorize}</a>
                         </#if>
                         <#if orderPaymentPreference.statusId == "PAYMENT_AUTHORIZED">
                           <a href="/accounting/control/CaptureTransaction?orderId=${orderId!}&amp;orderPaymentPreferenceId=${orderPaymentPreference.orderPaymentPreferenceId}${StringUtil.wrapString(externalKeyParam)}">${uiLabelMap.AccountingCapture}</a>
                         </#if>
-                      </div>
                     <#else>
                       ${uiLabelMap.CommonInformation} ${uiLabelMap.CommonNot} ${uiLabelMap.CommonAvailable}
                     </#if>
-                  </div>
                   <#if gatewayResponses?has_content>
-                    <div>
                       <hr />
                       <#list gatewayResponses as gatewayResponse>
                         <#assign transactionCode = gatewayResponse.getRelatedOne("TranCodeEnumeration", false)>
@@ -371,7 +351,6 @@ under the License.
                         <a href="/accounting/control/ViewGatewayResponse?paymentGatewayResponseId=${gatewayResponse.paymentGatewayResponseId}${StringUtil.wrapString(externalKeyParam)}">${uiLabelMap.CommonDetails}</a>
                         <#if gatewayResponse_has_next><hr /></#if>
                       </#list>
-                    </div>
                   </#if>
                 </@td>
                 <@td>
@@ -541,8 +520,7 @@ under the License.
       <@td scope="row" class="${styles.grid_large!}3">
          <input type="hidden" name="orderId" value="${orderId!}"/>${uiLabelMap.AccountingPaymentMethod}
       </@td>
-      <@td>&nbsp;</@td>
-      <@td colspan="2">
+      <@td colspan="3">
          <select name="paymentMethodId">
            <#list paymentMethodValueMaps as paymentMethodValueMap>
              <#assign paymentMethod = paymentMethodValueMap.paymentMethod/>

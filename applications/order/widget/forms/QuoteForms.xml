@@ -21,7 +21,7 @@ under the License.
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-form.xsd">
 
     <form name="FindQuotes" target="FindQuote" title="" type="single"
-        header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
+        header-row-style="header-row" default-position-span="1"> <!-- orig: default-table-style=-style="basic-table" -->
         <!-- 
         <auto-fields-entity entity-name="Quote" default-field-type="find"/>
          -->

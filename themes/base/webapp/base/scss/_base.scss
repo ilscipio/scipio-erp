@@ -43,7 +43,9 @@ body {}
 }
 
 // Fix form elements
-//input,select,text-area {max-width:50em;}
+form > div > .columns:last-child {max-width:50em;float:left!important;}
+
+
 
 
 /* NAVIGATION */

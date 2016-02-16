@@ -18,14 +18,15 @@ under the License.
 -->
 
 <#if productCategory?has_content>
-  <@table type="generic" border="0" cellpadding="3" cellspacing="0">
-    <@tr>
-      <@td>
+  <@section>
+    <@row>
+      <@cell columns=6>
         <@heading>${productCategory.categoryName!}</@heading>
-      </@td>
-      <@td align="right">
+      </@cell>
+      <@cell columns=6 class="+${styles.text_right!}">
         <form name="choosequickaddform" method="post" action="<@ofbizUrl>quickadd</@ofbizUrl>">
-          <select name="category_id">
+        <@fields type="default-nolabels">
+          <@field type="select" name="category_id">
             <option value="${productCategory.productCategoryId}">${productCategory.categoryName!}</option>
             <option value="${productCategory.productCategoryId}">--</option>
             <#list quickAddCats as quickAddCatalogId>
@@ -34,48 +35,54 @@ under the License.
                 <option value="${quickAddCatalogId}">${loopCategory.categoryName!}</option>
               </#if>
             </#list>
-          </select>
-          <div><a href="javascript:document.choosequickaddform.submit()" class="${styles.link_run_session!} ${styles.action_select!}">${uiLabelMap.ProductChooseQuickAddCategory}</a></div>
+          </@field>
+          <@field type="submit" submitType="link" href="javascript:document.choosequickaddform.submit()" class="+${styles.link_run_session!} ${styles.action_select!}" text="${uiLabelMap.ProductChooseQuickAddCategory}" />
+        </@fields>
         </form>
-      </@td>
-    </@tr>
+      </@cell>
+    </@row>
     <#if productCategory.categoryImageUrl?? || productCategory.longDescription??>
-      <@tr><@td colspan='2'><hr class="sepbar"/></@td></@tr>
-      <@tr>
-        <@td valign="top" width="0" colspan='2'>
+      <hr class="sepbar"/>
+      <@row>
+        <@cell>
             <#if productCategory.categoryImageUrl??>
               <img src="<@ofbizContentUrl>${productCategory.categoryImageUrl}</@ofbizContentUrl>" vspace="5" hspace="5" class="cssImgLarge" alt="" />
             </#if>
             ${productCategory.longDescription!}
-          </@td>
-      </@tr>
+        </@cell>
+      </@row>
     </#if>
-  </@table>
+  </@section>
 </#if>
 
-<#if productCategoryMembers?? && 0 < productCategoryMembers?size>
-  <br />
-  <center>
+<#if productCategoryMembers?? && (0 < productCategoryMembers?size)>
+  <@section>
+    <@row>
+      <@cell>
   <form method="post" action="<@ofbizUrl>addtocartbulk</@ofbizUrl>" name="bulkaddform">
+  <@fields type="default-nolabels">
     <input type="hidden" name="category_id" value="${categoryId}" />
-    <div class="quickaddall">
-      <a href="javascript:document.bulkaddform.submit()" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddAllToCart}</a>
-    </div>
-    <div class="quickaddtable">
+    <@field type="submit" submitType="link" href="javascript:document.bulkaddform.submit()" class="${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddAllToCart}" />
+    <@row>
+      <@cell class="+quickaddtable">
       <#list productCategoryMembers as productCategoryMember>
         <#assign product = productCategoryMember.getRelatedOne("Product", true)>
-        <p>
+          <@section>
             ${setRequestAttribute("optProductId", productCategoryMember.productId)}
             ${screens.render(quickaddsummaryScreen)}
-        </p>
+          </@section>
       </#list>
-    </div>
-    <div class="quickaddall">
-      <a href="javascript:document.bulkaddform.submit()" class="${styles.link_run_session!} ${styles.action_add!}">${uiLabelMap.OrderAddAllToCart}</a>
-    </div>
+      </@cell>
+    </@row>
+    <@field type="submit" submitType="link" href="javascript:document.bulkaddform.submit()" class="${styles.link_run_session!} ${styles.action_add!}" text="${uiLabelMap.OrderAddAllToCart}" />
+  </@fields>
   </form>
-  </center>
+      </@cell>
+    </@row>
+  </@section>
 <#else>
-  <@commonMsg type="result-norecord">${uiLabelMap.ProductNoProductsInThisCategory}.</@commonMsg>
+  <@section>
+    <@commonMsg type="result-norecord">${uiLabelMap.ProductNoProductsInThisCategory}.</@commonMsg>
+  </@section>
 </#if>
 

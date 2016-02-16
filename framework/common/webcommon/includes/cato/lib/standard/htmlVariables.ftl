@@ -325,6 +325,8 @@
   <#-- Generic action styles - help the UI describe actions possible in the system
       action_xxx styles are fully generic and meant to apply to any interactive UI element (link, menu item, onclick, etc.) and
       for any element that directly or indirectly triggers or encourages an action (nav link, submit button, etc.).-->
+    "action_prefix" : "action-",                          <#-- sometimes used to detect if a style already contains an action style or not -->
+
     <#-- Generic UI functionality action types -->
     "action_nav" : "action-nav",                          <#-- basically, identifies a navigation link. usually optional; added for clarity. -->
     "action_run" : "action-run",                          <#-- identifies a link or item that actually runs an action, such as a form submit button, or download PDF button, or intermediate action like clearing a form. nav links should never have this. -->

@@ -933,7 +933,11 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <#else>
     <#local buttonMarkup>
       <#if buttonType == "text-link">
-        <#local class = addClassArgDefault(class, styles.link_run_sys!)>
+        <#-- FIXME?: slow, very specific check to test if link already has an action class.
+            Currently, unsure how should have this default semantic, so play it safe. -->
+        <#if styles.action_prefix?has_content && !containsStyleNamePrefix(class, styles.action_prefix)>
+          <#local class = addClassArgDefault(class, styles.link_run_sys!)>
+        </#if>
         <#-- FIXME: this static method of disabling links means the link loses information and not easily toggleable -->
         <#if disabled>
           <#local href = "javascript:void(0)">
@@ -946,8 +950,12 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
           <#if events?has_content><@commonElemEventAttribStr events=events /><#elseif confirmation?has_content>onclick="return confirm('${confirmation?js_string}');"</#if>
         </#if>/>
       <#else>
+        <#-- FIXME?: slow, very specific check to test if link already has an action class.
+            Currently, unsure how should have this default semantic, so play it safe. -->
+        <#if styles.action_prefix?has_content && !containsStyleNamePrefix(class, styles.action_prefix)>
+          <#local class = addClassArgDefault(class, styles.link_run_sys!)>
+        </#if>
         <#-- TODO?: here there is no case to generate <button> (instead of <input type="button">) in case template needs... -->
-        <#local class = addClassArgDefault(class, styles.link_run_sys!)>
         <input type="<#if inputType?has_content>${inputType}<#elseif containerId?has_content>button<#else>submit</#if>"<@fieldClassAttribStr class=class alert=alert /><#if id?has_content> id="${id}"</#if>
         <#if name?has_content> name="${name}"</#if><#if text?has_content> value="${text}"</#if>
         <#if disabled> disabled="disabled"<#else>

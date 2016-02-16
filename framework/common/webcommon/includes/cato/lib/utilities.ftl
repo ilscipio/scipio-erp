@@ -362,6 +362,12 @@ NOTE: now recognizes special syntax cato class args.
   <#return getPlainClassArgNames(styleString)?split(" ")?seq_contains(className)> 
 </#function> 
 
+<#function containsStyleNamePrefix styleString classNamePrefix>
+  <#-- don't need regexp -->
+  <#local plainStyle = getPlainClassArgNames(styleString)>
+  <#return plainStyle?starts_with(classNamePrefix) || plainStyle?contains(" " + classNamePrefix)> 
+</#function> 
+
 <#-- 
 *************
 * removeStyleNames

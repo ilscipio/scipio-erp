@@ -43,37 +43,20 @@ under the License.
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
 
-        <@field type="generic" label="${uiLabelMap.AccountingNameAccount}">
-            <input type="text" class="required" size="30" maxlength="60" name="nameOnAccount" value="${eftAccountData.nameOnAccount!}" />
-            <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@field>
+        <@field type="input" required=true label="${uiLabelMap.AccountingNameAccount}" size="30" maxlength="60" name="nameOnAccount" value="${eftAccountData.nameOnAccount!}" />
         <@field type="input" label="${uiLabelMap.AccountingCompanyNameAccount}" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccountData.companyNameOnAccount!}" />
-        <@field type="generic" label="${uiLabelMap.AccountingBankName}">
-            <input type="text" class="required" size="30" maxlength="60" name="bankName" value="${eftAccountData.bankName!}" />
-            <span class="tooltip">${uiLabelMap.CommonRequired}</span>
+        <@field type="input" required=true label="${uiLabelMap.AccountingBankName}" size="30" maxlength="60" name="bankName" value="${eftAccountData.bankName!}" />
+        <@field type="input" required=true label="${uiLabelMap.AccountingRoutingNumber}" size="10" maxlength="30" name="routingNumber" value="${eftAccountData.routingNumber!}" />
+        <@field type="select" required=true label="${uiLabelMap.AccountingAccountType}" name="accountType">
+            <option>${eftAccountData.accountType!}</option>
+            <option></option>
+            <option>${uiLabelMap.CommonChecking}</option>
+            <option>${uiLabelMap.CommonSavings}</option>
         </@field>
-        <@field type="generic" label="${uiLabelMap.AccountingRoutingNumber}">
-            <input type="text" class="required" size="10" maxlength="30" name="routingNumber" value="${eftAccountData.routingNumber!}" />
-            <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@field>
-        <@field type="generic" label="${uiLabelMap.AccountingAccountType}">
-            <select name="accountType" class="required">
-              <option>${eftAccountData.accountType!}</option>
-              <option></option>
-              <option>${uiLabelMap.CommonChecking}</option>
-              <option>${uiLabelMap.CommonSavings}</option>
-            </select>
-            <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@field>
-        <@field type="generic" label="${uiLabelMap.AccountingAccountNumber}">
-            <input type="text" class="required" size="20" maxlength="40" name="accountNumber" value="${eftAccountData.accountNumber!}" />
-            <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@field>
-        <@field type="generic" label="${uiLabelMap.CommonDescription}">
-            <input type="text" class="required" size="30" maxlength="60" name="description" value="${paymentMethodData.description!}" />
-            <span class="tooltip">${uiLabelMap.CommonRequired}</span>
-        </@field>
+        <@field type="input" required=true label="${uiLabelMap.AccountingAccountNumber}" size="20" maxlength="40" name="accountNumber" value="${eftAccountData.accountNumber!}" />
+        <@field type="input" required=true label="${uiLabelMap.CommonDescription}" size="30" maxlength="60" name="description" value="${paymentMethodData.description!}" />
         <@field type="generic" label="${uiLabelMap.PartyBillingAddress}">
+          <@fields type="default-manual" ignoreParentField=true>
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
             <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
               [Create New Address]</a>&nbsp;&nbsp;
@@ -83,7 +66,7 @@ under the License.
             <#if curPostalAddress??>
               <@tr>
                 <@td class="button-col">
-                  <input type="radio" name="contactMechId" value="${curContactMechId}" checked="checked" />
+                  <@field type="radio" inline=true name="contactMechId" value="${curContactMechId}" checked=true />
                 </@td>
                 <@td>
                   <p><b>${uiLabelMap.PartyUseCurrentAddress}:</b></p>
@@ -125,7 +108,7 @@ under the License.
                 <#assign partyContactMech = postalAddressInfo.partyContactMech>
                 <@tr>
                   <@td class="button-col">
-                    <input type="radio" name="contactMechId" value="${contactMech.contactMechId}" />
+                    <@field type="radio" inline=true name="contactMechId" value="${contactMech.contactMechId}" />
                   </@td>
                   <@td>
                     <#list partyContactMechPurposes as partyContactMechPurpose>
@@ -144,11 +127,12 @@ under the License.
                   </@td>
                 </@tr>
               </#list>
-              <#if !postalAddressInfos?has_content && !curContactMech??>
-                  <@tr type="meta"><@td colspan="2">${uiLabelMap.PartyNoContactInformation}.</@td></@tr>
-              </#if>
             </@tbody>
             </@table>
+            <#if !postalAddressInfos?has_content && !curContactMech??>
+              <@commonMsg type="result-norecord">${uiLabelMap.PartyNoContactInformation}.</@commonMsg>
+            </#if>
+          </@fields>
         </@field>
 
       </form>

@@ -40,12 +40,14 @@ under the License.
         <input type="hidden" name="paymentMethodId" value="${paymentMethodId}" />
     </#if>
         <input type="hidden" name="partyId" value="${partyId}"/>
-        <@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
-        <@tbody>
-        ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
-        <@tr>
-          <@td>${uiLabelMap.AccountingBillingAddress}</@td>
-          <@td>
+        <@row>
+          <@cell>
+            ${screens.render("component://accounting/widget/CommonScreens.xml#creditCardFields")}
+          </@cell>
+        </@row>
+
+        <@field type="generic" label="${uiLabelMap.AccountingBillingAddress}">
+          <@fields type="default-manual" ignoreParentField=true>
             <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
             <a href="<@ofbizUrl>editcontactmech</@ofbizUrl>" class="${styles.link_nav!} ${styles.action_add!}">
               [Create New Address]</a>&nbsp;&nbsp;
@@ -57,27 +59,27 @@ under the License.
               <#assign hasCurrent = true>
               <@tr>
                 <@td class="button-col">
-                  <input type="radio" name="contactMechId" value="${curContactMechId}" checked="checked" />
+                  <@field type="radio" inline=true name="contactMechId" value="${curContactMechId}" checked=true />
                 </@td>
                 <@td>
                   <p><b>${uiLabelMap.PartyUseCurrentAddress}:</b></p>
                   <#list curPartyContactMechPurposes as curPartyContactMechPurpose>
                     <#assign curContactMechPurposeType = curPartyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)>
-                    <p>
+                    <div>
                       <b>${curContactMechPurposeType.get("description",locale)!}</b>
                       <#if curPartyContactMechPurpose.thruDate??>
                         (${uiLabelMap.CommonExpire}:${curPartyContactMechPurpose.thruDate.toString()})
                       </#if>
-                    </p>
+                    </div>
                   </#list>
-                  <#if curPostalAddress.toName??><p><b>${uiLabelMap.CommonTo}:</b> ${curPostalAddress.toName}</p></#if>
-                  <#if curPostalAddress.attnName??><p><b>${uiLabelMap.PartyAddrAttnName}:</b> ${curPostalAddress.attnName}</p></#if>
-                  <#if curPostalAddress.address1??><p>${curPostalAddress.address1}</p></#if>
-                  <#if curPostalAddress.address2??><p>${curPostalAddress.address2}</p></#if>
-                  <p>${curPostalAddress.city!}<#if curPostalAddress.stateProvinceGeoId?has_content>,&nbsp;${curPostalAddress.stateProvinceGeoId!}</#if>&nbsp;${curPostalAddress.postalCode!}</p>
-                  <#if curPostalAddress.countryGeoId??><p>${curPostalAddress.countryGeoId}</p></#if>
-                  <p>(${uiLabelMap.CommonUpdated}:&nbsp;${(curPartyContactMech.fromDate.toString())!})</p>
-                  <#if curPartyContactMech.thruDate??><p><b>${uiLabelMap.CommonDelete}:&nbsp;${curPartyContactMech.thruDate.toString()}</b></p></#if>
+                  <#if curPostalAddress.toName??><div><b>${uiLabelMap.CommonTo}:</b> ${curPostalAddress.toName}</div></#if>
+                  <#if curPostalAddress.attnName??><div><b>${uiLabelMap.PartyAddrAttnName}:</b> ${curPostalAddress.attnName}</div></#if>
+                  <#if curPostalAddress.address1??><div>${curPostalAddress.address1}</div></#if>
+                  <#if curPostalAddress.address2??><div>${curPostalAddress.address2}</div></#if>
+                  <div>${curPostalAddress.city!}<#if curPostalAddress.stateProvinceGeoId?has_content>,&nbsp;${curPostalAddress.stateProvinceGeoId!}</#if>&nbsp;${curPostalAddress.postalCode!}</div>
+                  <#if curPostalAddress.countryGeoId??><div>${curPostalAddress.countryGeoId}</div></#if>
+                  <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(curPartyContactMech.fromDate.toString())!})</div>
+                  <#if curPartyContactMech.thruDate??><div><b>${uiLabelMap.CommonDelete}:&nbsp;${curPartyContactMech.thruDate.toString()}</b></div></#if>
                 </@td>
               </@tr>
             <#else>
@@ -101,30 +103,27 @@ under the License.
                 <#assign partyContactMech = postalAddressInfo.partyContactMech>
                 <@tr>
                   <@td class="button-col">
-                    <input type="radio" name="contactMechId" value="${contactMech.contactMechId}" />
+                    <@field type="radio" inline=true name="contactMechId" value="${contactMech.contactMechId}" />
                   </@td>
                   <@td>
                     <#list partyContactMechPurposes as partyContactMechPurpose>
                       <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType", true)>
-                      <p>
+                      <div>
                         <b>${contactMechPurposeType.get("description",locale)!}</b>
                         <#if partyContactMechPurpose.thruDate??>(${uiLabelMap.CommonExpire}:${partyContactMechPurpose.thruDate})</#if>
-                      </p>
+                      </div>
                     </#list>
-                    <#if postalAddress.toName??><p><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}</p></#if>
-                    <#if postalAddress.attnName??><p><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName}</p></#if>
-                    <#if postalAddress.address1??><p>${postalAddress.address1}</p></#if>
-                    <#if postalAddress.address2??><p>${postalAddress.address2}</p></#if>
-                    <p>${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId}</#if>&nbsp;${postalAddress.postalCode!}</p>
-                    <#if postalAddress.countryGeoId??><p>${postalAddress.countryGeoId}</p></#if>
-                    <p>(${uiLabelMap.CommonUpdated}:&nbsp;${(partyContactMech.fromDate.toString())!})</p>
-                    <#if partyContactMech.thruDate??><p><b>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</b></p></#if>
+                    <#if postalAddress.toName??><div><b>${uiLabelMap.CommonTo}:</b> ${postalAddress.toName}</div></#if>
+                    <#if postalAddress.attnName??><div><b>${uiLabelMap.PartyAddrAttnName}:</b> ${postalAddress.attnName}</div></#if>
+                    <#if postalAddress.address1??><div>${postalAddress.address1}</div></#if>
+                    <#if postalAddress.address2??><div>${postalAddress.address2}</div></#if>
+                    <div>${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId}</#if>&nbsp;${postalAddress.postalCode!}</div>
+                    <#if postalAddress.countryGeoId??><div>${postalAddress.countryGeoId}</div></#if>
+                    <div>(${uiLabelMap.CommonUpdated}:&nbsp;${(partyContactMech.fromDate.toString())!})</div>
+                    <#if partyContactMech.thruDate??><div><b>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</b></div></#if>
                   </@td>
                 </@tr>
               </#list>
-              <#if !postalAddressInfos?has_content && !curContactMech??>
-                  <@tr type="meta"><@td colspan="2">${uiLabelMap.PartyNoContactInformation}.</@td></@tr>
-              </#if>
               <#-- not yet supported in party manager
               <@tr>
                 <@td align="right" valigh="top" width="1%">
@@ -137,11 +136,14 @@ under the License.
               -->
             </@tbody>
             </@table>
-          </@td>
-        </@tr>
-        </@tbody>
-        </@table>
+            <#if !postalAddressInfos?has_content && !curContactMech??>
+              <@commonMsg type="result-norecord">${uiLabelMap.PartyNoContactInformation}.</@commonMsg>
+            </#if>
+          </@fields>
+        </@field>
       </form>
+      
       <@saveCancelMenu />
+
 </@section>
 <!-- end editcreditcard.ftl -->

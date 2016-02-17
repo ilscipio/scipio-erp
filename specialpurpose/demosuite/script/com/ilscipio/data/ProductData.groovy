@@ -1,6 +1,7 @@
 import org.ofbiz.base.util.Debug
 import org.ofbiz.base.util.UtilProperties
 import org.ofbiz.base.util.UtilRandom
+import org.ofbiz.base.util.UtilValidate
 import org.ofbiz.entity.*
 import org.ofbiz.entity.util.*
 import org.ofbiz.product.category.CategoryWorker
@@ -8,6 +9,7 @@ import org.ofbiz.service.ServiceUtil
 
 import com.ilscipio.cato.ce.demoSuite.dataGenerator.DemoSuiteDataWorker
 import com.ilscipio.cato.ce.demoSuite.dataGenerator.MockarooDataGenerator
+import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct
 
 
 
@@ -93,13 +95,18 @@ public Map createDemoProduct(DispatcherContext ) {
         if (num > 1 && num > productCategoryIds.size())
             factor = productCategoryIds.size() / num;
             
-        String addresses = DemoSuiteDataWorker.generateAddress(num, "json", MockarooDataGenerator.class);
+        List<DemoDataProduct> generatedProducts = DemoSuiteDataWorker.generateProduct(num, MockarooDataGenerator.class);
 
-        for (int i = 0; i < num; i++) {
-            // Create Product
-            String productId = "GEN_" + delegator.getNextSeqId("demo-product");
-            productCategoryId = productCategoryIds.get(UtilRandom.random(productCategoryIds));
-            Debug.log("selected category id =====> " + productCategoryId + " product id =========> " + productId);
+        if (UtilValidate.isNotEmpty(generatedProducts) && generatedProducts.size() == num) {
+            for (int i = 0; i < num; i++) {
+                DemoDataProduct demoDataProduct = generatedProducts.get(i);
+                // Create Product
+                String productId = "GEN_" + delegator.getNextSeqId("demo-product");
+                productCategoryId = productCategoryIds.get(UtilRandom.random(productCategoryIds));
+                productName = demoDataProduct.getName();
+                productDescription = demoDataProduct.getDescription();
+                Debug.log("selected category id =====> " + productCategoryId + " product id =========> " + productId + " product name " + productName);
+            }
         }
         //
         //      // store the changes

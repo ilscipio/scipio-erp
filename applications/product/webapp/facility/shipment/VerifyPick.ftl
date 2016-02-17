@@ -82,7 +82,7 @@ under the License.
     <@section title=sectionTitle>
         <#if orderItemShipGroup?has_content>
           <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
-          <#assign carrier = orderItemShipGroup.carrierPartyId?default("N/A")>
+          <#assign carrier = orderItemShipGroup.carrierPartyId!(uiLabelMap.CommonNA)>
           <@row>
               <@cell columns=4>
                 <span>${uiLabelMap.ProductShipToAddress}</span>
@@ -195,7 +195,7 @@ under the License.
                     <@td>&nbsp;</@td>
                   </#if>
                   <@td>${orderItemSeqId!}</@td>
-                  <@td>${product.productId?default("N/A")}</@td>
+                  <@td>${product.productId!(uiLabelMap.CommonNA)}</@td>
                   <@td>
                     <a href="/catalog/control/EditProduct?productId=${product.productId!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_name!}" target="_blank">${(product.internalName)!}</a>
                   </@td>
@@ -245,7 +245,7 @@ under the License.
                             <#assign product = inventoryItem.getRelatedOne("Product", false)/>
                             <@tr>
                               <@td colspan="2"></@td>
-                              <@td>${product.productId?default("N/A")}</@td>
+                              <@td>${product.productId!(uiLabelMap.CommonNA)}</@td>
                               <@td>${product.internalName!}</@td>
                               <@td></@td>
                               <@td align="right">${workEffortInventoryAssign.quantity!}</@td>

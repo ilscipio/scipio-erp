@@ -436,7 +436,7 @@ document.lookuporder.orderId.focus();
               <@td align="right"><#if orderHeader.grandTotal?has_content><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orh.getCurrency()/></#if></@td>
 
               <@td>&nbsp;</@td>
-              <@td>${(statusItem.get("description",locale)!(statusItem.statusId!("N/A")))!""}</@td>
+              <@td>${(statusItem.get("description",locale)!(statusItem.statusId!(uiLabelMap.CommonNA)))!""}</@td>
               <#if ((requestParameters.filterInventoryProblems!"N") == "Y") || ((requestParameters.filterPOsOpenPastTheirETA!"N") == "Y") || ((requestParameters.filterPOsWithRejectedItems!"N") == "Y") || ((requestParameters.filterPartiallyReceivedPOs!"N") == "Y")>
                   <@td>
                       <#if filterInventoryProblems.contains(orderHeader.orderId)>

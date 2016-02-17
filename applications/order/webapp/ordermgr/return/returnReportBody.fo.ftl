@@ -25,7 +25,7 @@ under the License.
     <fo:table-cell><fo:block></fo:block></fo:table-cell>
     <fo:table-cell number-columns-spanned="3" padding="1mm">
       <fo:block wrap-option="wrap">
-        <#if returnAdjustment.comments?has_content>${returnAdjustment.comments}<#else>${returnAdjustment.description?default("N/A")}</#if>
+        <#if returnAdjustment.comments?has_content>${returnAdjustment.comments}<#else>${returnAdjustment.description!(uiLabelMap.CommonNA)}</#if>
       </fo:block>
     </fo:table-cell>
     <fo:table-cell><fo:block></fo:block></fo:table-cell>

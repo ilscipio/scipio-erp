@@ -85,7 +85,7 @@ under the License.
                                     <#if orderHeader.statusId = "ORDER_CANCELLED" || orderHeader.statusId = "ORDER_COMPLETED">
                                       <strong>
                                       <#if productId??>
-                                        ${orderItem.productId?default("N/A")} - ${orderItem.itemDescription!}
+                                        ${orderItem.productId!(uiLabelMap.CommonNA)} - ${orderItem.itemDescription!}
                                       <#elseif orderItemType??>
                                         ${orderItemType.description} - ${orderItem.itemDescription!}
                                       <#else>
@@ -94,7 +94,7 @@ under the License.
                                       </strong>
                                     <#else>
                                       <#if productId??>
-                                        <#assign orderItemName = orderItem.productId?default("N/A")/>
+                                        <#assign orderItemName = orderItem.productId!(uiLabelMap.CommonNA)/>
                                       <#elseif orderItemType??>
                                         <#assign orderItemName = orderItemType.description/>
                                       </#if>

@@ -36,7 +36,7 @@ under the License.
                         <@td>${subscription.subscriptionId}</@td>
                         <@td>
                             <#assign subscriptionType = subscription.getRelatedOne('SubscriptionType', false)!>
-                            ${(subscriptionType.description)?default(subscription.subscriptionTypeId?default('N/A'))}
+                            ${(subscriptionType.description)?default(subscription.subscriptionTypeId!(uiLabelMap.CommonNA))}
                         </@td>
                         <@td>${subscription.description!}</@td>
                         <@td>

@@ -26,7 +26,7 @@ under the License.
     </#if>
     <@tr>
         <@td colspan="2">&nbsp;</@td>
-        <@td colspan="3" align="right"><span>${returnAdjustment.get("description",locale)?default("N/A")}</span>
+        <@td colspan="3" align="right"><span>${returnAdjustment.get("description",locale)!(uiLabelMap.CommonNA)}</span>
             <#if returnAdjustment.comments?has_content>: ${returnAdjustment.comments}</#if>
         </@td>
         <#if (adjEditable)>
@@ -150,7 +150,7 @@ under the License.
                  <#assign returnItemSubTotal = item.get("returnQuantity") * item.get("returnPrice") >
               </#if>
               <@tr valign="middle" alt=alt_row>
-                <@td><a href="<@ofbizUrl>orderview?orderId=${item.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${item.orderId}</a> - ${item.orderItemSeqId?default("N/A")}
+                <@td><a href="<@ofbizUrl>orderview?orderId=${item.orderId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${item.orderId}</a> - ${item.orderItemSeqId!(uiLabelMap.CommonNA)}
                   <input name="orderId_o_${rowCount}" value="${item.orderId}" type="hidden" />
                   <input name="returnId_o_${rowCount}" value="${item.returnId}" type="hidden" />
                   <input name="returnItemTypeId_o_${rowCount}" value="${item.returnItemTypeId}" type="hidden" />
@@ -161,11 +161,11 @@ under the License.
                     <#if item.get("productId")??>
                         <a href="/catalog/control/EditProductInventoryItems?productId=${item.productId}" class="${styles.link_nav_info_id!}">${item.productId}</a>
                     <#else>
-                        N/A
+                        ${uiLabelMap.CommonNA}
                     </#if></@td>
                 <@td>
                     <#if readOnly>
-                        ${item.description?default("N/A")}
+                        ${item.description!(uiLabelMap.CommonNA)}
                     <#else>
                         <input name="description_o_${rowCount}" value="${item.description!}" type="text" size="15" />
                     </#if>
@@ -195,7 +195,7 @@ under the License.
                 </@td>
                 <@td>
                     <#if readOnly>
-                        ${returnReason.get("description",locale)?default("N/A")}
+                        ${returnReason.get("description",locale)!(uiLabelMap.CommonNA)}
                     <#else>
                         <select name="returnReasonId_o_${rowCount}">
                             <#if (returnReason?has_content)>
@@ -213,7 +213,7 @@ under the License.
                       <#if status?has_content>
                       ${status.get("description",locale)}
                       <#else>
-                      N/A
+                      ${uiLabelMap.CommonNA}
                       </#if>
                   <#else>
                       <select name="expectedItemStatus_o_${rowCount}">
@@ -229,7 +229,7 @@ under the License.
                   </@td>
                 <@td>
                     <#if (readOnly)>
-                        ${returnType.get("description",locale)?default("N/A")}
+                        ${returnType.get("description",locale)!(uiLabelMap.CommonNA)}
                     <#else>
                         <select name="returnTypeId_o_${rowCount}">
                             <#if (returnType?has_content)>

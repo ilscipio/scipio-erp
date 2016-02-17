@@ -176,7 +176,7 @@ under the License.
               <fo:table-cell>
                 <fo:block>
                   <#if productId??>
-                    ${itemIssuance.productId?default("N/A")} - ${itemIssuance.internalName!} - ${itemIssuance.description!} - ${itemIssuance.comments!}
+                    ${itemIssuance.productId!(uiLabelMap.CommonNA)} - ${itemIssuance.internalName!} - ${itemIssuance.description!} - ${itemIssuance.comments!}
                   </#if>
                 </fo:block>
               </fo:table-cell>

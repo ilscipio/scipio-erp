@@ -91,11 +91,11 @@ under the License.
       </fo:table-row>
       <fo:table-row>
         <fo:table-cell><fo:block font-weight="bold">${uiLabelMap.OrderShipBeforeDate}</fo:block></fo:table-cell>
-        <fo:table-cell><fo:block>${shipGroup.shipByDate?default("N/A")}</fo:block></fo:table-cell>
+        <fo:table-cell><fo:block>${shipGroup.shipByDate!(uiLabelMap.CommonNA)}</fo:block></fo:table-cell>
       </fo:table-row>
       <fo:table-row>
         <fo:table-cell><fo:block font-weight="bold">${uiLabelMap.OrderShipAfterDate}</fo:block></fo:table-cell>
-        <fo:table-cell><fo:block>${shipGroup.shipAfterDate?default("N/A")}</fo:block></fo:table-cell>
+        <fo:table-cell><fo:block>${shipGroup.shipAfterDate!(uiLabelMap.CommonNA)}</fo:block></fo:table-cell>
       </fo:table-row>
     </fo:table-body>
   </fo:table>

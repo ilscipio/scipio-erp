@@ -284,7 +284,7 @@ under the License.
                 <#assign carrierPartyId = cart.getCarrierPartyId(groupIdx)!>
               </#if>
               <#if carrierPartyId?? && carrierPartyId != "_NA_">${carrierPartyId!}</#if>
-              ${(shipmentMethodType.description)?default("N/A")}
+              ${(shipmentMethodType.description)!(uiLabelMap.CommonNA)}
             </li>
             <li>
               <#if shippingAccount??>${uiLabelMap.AccountingUseAccount}: ${shippingAccount}</#if>

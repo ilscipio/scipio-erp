@@ -49,9 +49,9 @@
             <@tr>
               <@td>${alias.webSiteId}</@td>
               <@td>${alias.pathAlias}</@td>
-              <@td>${alias.aliasTo?default("N/A")}</@td>
-              <@td>${alias.contentId?default("N/A")}</@td>
-              <@td>${alias.mapKey?default("N/A")}</@td>
+              <@td>${alias.aliasTo!(uiLabelMap.CommonNA)}</@td>
+              <@td>${alias.contentId!(uiLabelMap.CommonNA)}</@td>
+              <@td>${alias.mapKey!(uiLabelMap.CommonNA)}</@td>
               <@td><a href="javascript:void(0);" onclick="javascript:pathRemove('${webSiteId}', '${alias.pathAlias}', '${contentId}');" class="${styles.link_run_sys!} ${styles.action_remove!}">${uiLabelMap.CommonRemove}</a></@td>
             </@tr>
         </#list>

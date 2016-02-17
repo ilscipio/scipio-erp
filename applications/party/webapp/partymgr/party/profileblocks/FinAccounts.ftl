@@ -21,7 +21,7 @@ under the License.
     <p>
         <b>${uiLabelMap.AccountingAccountNumber}:</b> <a href="/accounting/control/EditFinAccount?finAccountId=${ownedFinAccount.finAccountId}${StringUtil.wrapString(externalKeyParam)}"
              class="${styles.link_nav_info_id!}">${ownedFinAccount.finAccountId}</a>
-        <b>${uiLabelMap.AccountingAccountType}:</b> ${(ownedFinAccountType.description)?default('N/A')}
+        <b>${uiLabelMap.AccountingAccountType}:</b> ${(ownedFinAccountType.description)!(uiLabelMap.CommonNA)}
         <b>${uiLabelMap.FormFieldTitle_finAccountName}:</b> ${ownedFinAccount.finAccountName!}
     </p>
     <p>

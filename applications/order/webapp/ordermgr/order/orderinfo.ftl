@@ -83,7 +83,7 @@ under the License.
       <@td colspan="3">
         <#if orderHeader.salesChannelEnumId?has_content>
           <#assign channel = orderHeader.getRelatedOne("SalesChannelEnumeration", false)>
-          ${(channel.get("description",locale))?default("N/A")}
+          ${(channel.get("description",locale))!(uiLabelMap.CommonNA)}
         <#else>
           ${uiLabelMap.CommonNA}
         </#if>

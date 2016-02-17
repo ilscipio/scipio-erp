@@ -121,7 +121,7 @@ under the License.
                         <#assign backOrderedQuantity = orderItemData.backOrderedQuantity?default(0)>
                         <#assign fulfilledReservations = orderItemData.fulfilledReservations>
                         <@tr id="orderItemData_tableRow_${rowCount}" valign="middle">
-                            <@td>${(product.internalName)!} [${orderItem.productId?default("N/A")}]</@td>
+                            <@td>${(product.internalName)!} [${orderItem.productId!(uiLabelMap.CommonNA)}]</@td>
                             <@td>
                                     <#assign upcaLookup = Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", product.productId, "goodIdentificationTypeId", "UPCA")/>
                                     <#assign upca = delegator.findOne("GoodIdentification", upcaLookup, true)!/>

@@ -126,7 +126,7 @@ under the License.
                 <#if (orderItemShipGroup.contactMechId)?has_content>
                   <#assign postalAddress = orderItemShipGroup.getRelatedOne("PostalAddress", false)>
                 </#if>
-                <#assign carrier = orderItemShipGroup.carrierPartyId?default("N/A")>
+                <#assign carrier = orderItemShipGroup.carrierPartyId!(uiLabelMap.CommonNA)>
                 <@table type="fields" class="+${styles.table_spacing_medium_hint!}"> <#-- orig: class="basic-table" --> <#-- orig: cellpadding="4" cellspacing="4" -->
                   <@tr>
                     <@td valign="top">
@@ -267,9 +267,9 @@ under the License.
                           <@td><@field type="checkbox" name="sel_${rowKey}" value="Y" checked=(inputQty>0) /></@td>
                           <@td>${orderItem.orderItemSeqId}</@td>
                           <@td>
-                              ${orderProduct.productId?default("N/A")}
+                              ${orderProduct.productId!(uiLabelMap.CommonNA)}
                               <#if orderProduct.productId != product.productId>
-                                  &nbsp;${product.productId?default("N/A")}
+                                  &nbsp;${product.productId!(uiLabelMap.CommonNA)}
                               </#if>
                           </@td>
                           <@td>
@@ -436,9 +436,9 @@ under the License.
                     <#assign product = Static["org.ofbiz.product.product.ProductWorker"].findProduct(delegator, line.getProductId())/>
                     <@tr>
                       <@td>${line.getOrderItemSeqId()}</@td>
-                      <@td>${line.getProductId()?default("N/A")}</@td>
+                      <@td>${line.getProductId()!(uiLabelMap.CommonNA)}</@td>
                       <@td>
-                          <a href="/catalog/control/EditProduct?productId=${line.getProductId()!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_name!}" target="_blank">${product.internalName!?default("[N/A]")}</a>
+                          <a href="/catalog/control/EditProduct?productId=${line.getProductId()!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_name!}" target="_blank">${product.internalName!("[${uiLabelMap.CommonNA}]")}</a>
                       </@td>
                       <@td>${line.getInventoryItemId()}</@td>
                       <@td align="right">${line.getQuantity()}</@td>
@@ -472,9 +472,9 @@ under the License.
                   <#assign product = Static["org.ofbiz.product.product.ProductWorker"].findProduct(delegator, line.getProductId())/>
                   <@tr>
                       <@td>${line.getOrderItemSeqId()}</@td>
-                      <@td>${line.getProductId()?default("N/A")}</@td>
+                      <@td>${line.getProductId()!(uiLabelMap.CommonNA)}</@td>
                       <@td>
-                          <a href="/catalog/control/EditProduct?productId=${line.getProductId()!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_name!}" target="_blank">${product.internalName!?default("[N/A]")}</a>
+                          <a href="/catalog/control/EditProduct?productId=${line.getProductId()!}${StringUtil.wrapString(externalKeyParam)}" class="${styles.link_nav_info_name!}" target="_blank">${product.internalName!("[${uiLabelMap.CommonNA}]")}</a>
                       </@td>
                       <@td>${line.getInventoryItemId()}</@td>
                       <@td align="right">${line.getQuantity()}</@td>

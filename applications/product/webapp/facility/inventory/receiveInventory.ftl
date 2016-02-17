@@ -202,7 +202,7 @@ under the License.
                   <@td width="5%" nowrap="nowrap"><input type="radio" name="shipmentId" value="${shipment.shipmentId}" /></@td>
                   <@td width="5%" nowrap="nowrap">${shipment.shipmentId}</@td>
                   <@td>${shipmentType.get("description",locale)?default(shipmentType.shipmentTypeId?default(""))}</@td>
-                  <@td>${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</@td>
+                  <@td>${statusItem.get("description",locale)?default(statusItem.statusId!(uiLabelMap.CommonNA))}</@td>
                   <@td>${(originFacility.facilityName)!} [${shipment.originFacilityId!}]</@td>
                   <@td>${(destinationFacility.facilityName)!} [${shipment.destinationFacilityId!}]</@td>
                   <@td style="white-space: nowrap;">${(shipment.estimatedArrivalDate.toString())!}</@td>

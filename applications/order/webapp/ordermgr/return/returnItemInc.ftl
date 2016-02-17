@@ -78,7 +78,7 @@ under the License.
               <@td colspan="4">
                 <input type="hidden" name="returnAdjustmentTypeId_o_${rowCount}" value="${returnAdjustmentType}"/>
                 <input type="hidden" name="orderAdjustmentId_o_${rowCount}" value="${orderItem.orderAdjustmentId}"/>
-                ${description?default("N/A")}
+                ${description!(uiLabelMap.CommonNA)}
               </@td>
               <@td>
                 ${orderItem.amount?string("##0.00")}
@@ -202,7 +202,7 @@ under the License.
             <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="_NA_"/>
             <input type="hidden" name="description_o_${rowCount}" value="${description}"/>
             <div>
-              ${description?default("N/A")}
+              ${description!(uiLabelMap.CommonNA)}
             </div>
           </@td>
           <@td>

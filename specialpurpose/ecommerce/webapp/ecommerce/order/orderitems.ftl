@@ -282,7 +282,7 @@ under the License.
           <#assign shipGroupAddress = (shipGroup.getRelatedOne("PostalAddress", false))!>
           <@tr>
             <@td>
-              ${uiLabelMap.OrderShipGroup}: [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("N/A")}
+              ${uiLabelMap.OrderShipGroup}: [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1!(uiLabelMap.CommonNA)}
             </@td>
             <@td>
               ${shipGroupAssoc.quantity?string.number}

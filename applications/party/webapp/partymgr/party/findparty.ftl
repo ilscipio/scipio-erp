@@ -205,7 +205,7 @@ under the License.
         <@td><a href="<@ofbizUrl>viewprofile?partyId=${partyRow.partyId}</@ofbizUrl>">${partyRow.partyId}</a></@td>
         <@td>
       <#if partyRow.containsKey("userLoginId")>
-          ${partyRow.userLoginId!"N/A"}
+          ${partyRow.userLoginId!(uiLabelMap.CommonNA)}
       <#else>
         <#assign userLogins = partyRow.getRelated("UserLogin", null, null, false)!>
         <#if userLogins?has_content && (userLogins.size() > 0)>

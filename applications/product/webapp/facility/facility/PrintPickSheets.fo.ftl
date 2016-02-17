@@ -216,16 +216,15 @@ under the License.
 
                                                                             <#-- product ID -->
                                                                             <#if product?has_content>
-                                                                                <fo:table-cell ><fo:block font-size="10pt">${product.productId}</fo:block></fo:table-cell>
+                                                                                <fo:table-cell><fo:block font-size="10pt">${product.productId}</fo:block></fo:table-cell>
                                                                             <#else>
-                                                                                <fo:table-cell ><fo:block font-size="10pt">[N/A]</fo:block></fo:table-cell>
+                                                                                <fo:table-cell><fo:block font-size="10pt">[${uiLabelMap.CommonNA}]</fo:block></fo:table-cell>
                                                                             </#if>
 
                                                                             <#-- product name -->
                                                                             <#if product?has_content>
-                                                                                <fo:table-cell ><fo:block font-size="10pt">${product.productName?default(product.internalName?default("[Not Internal Name Set!]"))?xml}</fo:block></fo:table-cell>
+                                                                                <fo:table-cell><fo:block font-size="10pt">${product.productName?default(product.internalName?default("[Not Internal Name Set!]"))?xml}</fo:block></fo:table-cell>
                                                                             <#else>
-                                                                                <fo:table-cell ><fo:block font-size="10pt">[N/A]</fo:block></fo:table-cell>
                                                                             </#if>
 
                                                                             <#-- supplier -->

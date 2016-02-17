@@ -54,7 +54,7 @@ under the License.
                                 <#if orderItem.supplierProductId?has_content>
                                     ${orderItem.supplierProductId} - ${orderItem.itemDescription!}
                                 <#elseif productId??>
-                                    ${orderItem.productId?default("N/A")} - ${orderItem.itemDescription!}
+                                    ${orderItem.productId!(uiLabelMap.CommonNA)} - ${orderItem.itemDescription!}
                                 <#elseif orderItemType??>
                                     ${orderItemType.get("description",locale)} - ${orderItem.itemDescription!}
                                 <#else>

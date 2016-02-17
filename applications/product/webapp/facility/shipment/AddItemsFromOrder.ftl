@@ -99,7 +99,7 @@ under the License.
                 <#assign totalQuantityIssuedAndReserved = orderItemData.totalQuantityIssuedAndReserved!>
                 <@tr id="orderItemData_tableRow_${rowCount}" valign="middle">
                     <@td>${orderItemAndShipGroupAssoc.orderId} / ${orderItemAndShipGroupAssoc.shipGroupSeqId} / ${orderItemAndShipGroupAssoc.orderItemSeqId}</@td>
-                    <@td>${(product.internalName)!} [${orderItemAndShipGroupAssoc.productId?default("N/A")}]</@td>
+                    <@td>${(product.internalName)!} [${orderItemAndShipGroupAssoc.productId!(uiLabelMap.CommonNA)}]</@td>
                     <@td>
                         <#if itemIssuances?has_content>
                             <#list itemIssuances as itemIssuance>

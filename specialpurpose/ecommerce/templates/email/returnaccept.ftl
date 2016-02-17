@@ -25,7 +25,7 @@ ${uiLabelMap.EcommerceReturnRequest}
 <#list returnItems as item>
   <#assign returnReason = item.getRelatedOne("ReturnReason", false)!>
   <#assign returnType = item.getRelatedOne("ReturnType", false)!>
-  ${item.description?default("N/A")} - ${item.returnQuantity?string.number} @ ${item.returnPrice}
+  ${item.description!(uiLabelMap.CommonNA)} - ${item.returnQuantity?string.number} @ ${item.returnPrice}
 </#list>
 </pre>
 <br /><br />

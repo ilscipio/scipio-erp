@@ -83,7 +83,7 @@ function uploadTrackingCode(orderId, productStoreId) {
               <@td align="right"><@ofbizCurrency amount=orderHeader.grandTotal isoCode=orh.getCurrency()/></@td>
 
               <@td>&nbsp;</@td>
-              <@td>${statusItem.get("description",locale)?default(statusItem.statusId?default("N/A"))}</@td>
+              <@td>${statusItem.get("description",locale)?default(statusItem.statusId!(uiLabelMap.CommonNA))}</@td>
 
               <#if (requestParameters.filterInventoryProblems?default("N") == "Y") || (requestParameters.filterPOsOpenPastTheirETA?default("N") == "Y") || (requestParameters.filterPOsWithRejectedItems?default("N") == "Y") || (requestParameters.filterPartiallyReceivedPOs?default("N") == "Y")>
                   <@td>

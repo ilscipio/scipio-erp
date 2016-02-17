@@ -128,7 +128,7 @@ function lookupShipments() {
             <@tr valign="middle">
               <@td><a href="<@ofbizUrl>ViewShipment?shipmentId=${shipment.shipmentId}</@ofbizUrl>" class="${styles.link_nav_info_id!}">${shipment.shipmentId}</a></@td>
               <@td>${(shipmentType.get("description",locale))?default(shipmentType.shipmentTypeId?default(""))}</@td>
-              <@td>${(statusItem.get("description",locale))?default(statusItem.statusId?default("N/A"))}</@td>
+              <@td>${(statusItem.get("description",locale))?default(statusItem.statusId!(uiLabelMap.CommonNA))}</@td>
               <@td>${(originFacility.facilityName)!} [${shipment.originFacilityId!}]</@td>
               <@td>${(destinationFacility.facilityName)!} [${shipment.destinationFacilityId!}]</@td>
               <@td><span style="white-space: nowrap;">${(shipment.estimatedShipDate.toString())!}</span></@td>

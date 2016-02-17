@@ -214,8 +214,8 @@ under the License.
                           <#if gatewayResponse.transactionDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(gatewayResponse.transactionDate, "", locale, timeZone)!} </#if>
                           <@ofbizCurrency amount=gatewayResponse.amount isoCode=currencyUomId/><br />
                           (${uiLabelMap.OrderReference}&nbsp;${gatewayResponse.referenceNum!}
-                          ${uiLabelMap.OrderAvs}&nbsp;${gatewayResponse.gatewayAvsResult?default("N/A")}
-                          ${uiLabelMap.OrderScore}&nbsp;${gatewayResponse.gatewayScoreResult?default("N/A")})
+                          ${uiLabelMap.OrderAvs}&nbsp;${gatewayResponse.gatewayAvsResult!(uiLabelMap.CommonNA)}
+                          ${uiLabelMap.OrderScore}&nbsp;${gatewayResponse.gatewayScoreResult!(uiLabelMap.CommonNA)})
                           <a href="/accounting/control/ViewGatewayResponse?paymentGatewayResponseId=${gatewayResponse.paymentGatewayResponseId}${StringUtil.wrapString(externalKeyParam)}">${uiLabelMap.CommonDetails}</a>
                           <#if gatewayResponse_has_next><hr /></#if>
                         </#list>
@@ -311,9 +311,9 @@ under the License.
                     <#if creditCard?has_content>
                       <#if creditCard.companyNameOnCard??>${creditCard.companyNameOnCard}<br /></#if>
                       <#if creditCard.titleOnCard?has_content>${creditCard.titleOnCard}&nbsp;</#if>
-                      ${creditCard.firstNameOnCard?default("N/A")}&nbsp;
+                      ${creditCard.firstNameOnCard!(uiLabelMap.CommonNA)}&nbsp;
                       <#if creditCard.middleNameOnCard?has_content>${creditCard.middleNameOnCard}&nbsp;</#if>
-                      ${creditCard.lastNameOnCard?default("N/A")}
+                      ${creditCard.lastNameOnCard!(uiLabelMap.CommonNA)}
                       <#if creditCard.suffixOnCard?has_content>&nbsp;${creditCard.suffixOnCard}</#if>
                       <br />
 
@@ -346,8 +346,8 @@ under the License.
                         <#if gatewayResponse.transactionDate?has_content>${Static["org.ofbiz.base.util.UtilFormatOut"].formatDateTime(gatewayResponse.transactionDate, "", locale, timeZone)!} </#if>
                         <@ofbizCurrency amount=gatewayResponse.amount isoCode=currencyUomId/><br />
                         (${uiLabelMap.OrderReference}&nbsp;${gatewayResponse.referenceNum!}
-                        ${uiLabelMap.OrderAvs}&nbsp;${gatewayResponse.gatewayAvsResult?default("N/A")}
-                        ${uiLabelMap.OrderScore}&nbsp;${gatewayResponse.gatewayScoreResult?default("N/A")})
+                        ${uiLabelMap.OrderAvs}&nbsp;${gatewayResponse.gatewayAvsResult!(uiLabelMap.CommonNA)}
+                        ${uiLabelMap.OrderScore}&nbsp;${gatewayResponse.gatewayScoreResult!(uiLabelMap.CommonNA)})
                         <a href="/accounting/control/ViewGatewayResponse?paymentGatewayResponseId=${gatewayResponse.paymentGatewayResponseId}${StringUtil.wrapString(externalKeyParam)}">${uiLabelMap.CommonDetails}</a>
                         <#if gatewayResponse_has_next><hr /></#if>
                       </#list>
@@ -426,11 +426,11 @@ under the License.
                 <@td colspan="2">
                     <#if giftCard?has_content>
                       <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session) || security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
-                        ${giftCard.cardNumber?default("N/A")} [${giftCard.pinNumber?default("N/A")}]
+                        ${giftCard.cardNumber!(uiLabelMap.CommonNA)} [${giftCard.pinNumber!(uiLabelMap.CommonNA)}]
                         &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                       <#else>
                       <@maskSensitiveNumber cardNumber=giftCard.cardNumber!/>
-                      <#if !cardNumberDisplay?has_content>N/A</#if>
+                      <#if !cardNumberDisplay?has_content>${uiLabelMap.CommonNA}</#if>
                         &nbsp;[<#if oppStatusItem??>${oppStatusItem.get("description",locale)}<#else>${orderPaymentPreference.statusId}</#if>]
                       </#if>
                     <#else>

@@ -21,14 +21,14 @@ under the License.
 
     <#if hasPermission>
         <#assign shipGroup = shipment.getRelatedOne("PrimaryOrderItemShipGroup", false)!>
-        <#assign carrier = (shipGroup.carrierPartyId)?default("N/A")>
+        <#assign carrier = (shipGroup.carrierPartyId)!(uiLabelMap.CommonNA)>
             <#if packages?has_content>
             <#list packages as package>
 
             <fo:block><fo:leader/></fo:block>
 
             <fo:block font-size="14pt">${uiLabelMap.ProductShipmentId} #${shipmentId} / ${uiLabelMap.ProductPackage} ${package_index + 1}<#if (packages?size > 1)> of ${packages?size}</#if></fo:block>
-            <fo:block font-size="12pt">${uiLabelMap.ProductOrderId} #${shipment.primaryOrderId?default("N/A")} / ${shipment.primaryShipGroupSeqId?default("N/A")}</fo:block>
+            <fo:block font-size="12pt">${uiLabelMap.ProductOrderId} #${shipment.primaryOrderId!(uiLabelMap.CommonNA)} / ${shipment.primaryShipGroupSeqId!(uiLabelMap.CommonNA)}</fo:block>
             <fo:block><fo:leader/></fo:block>
 
             <fo:block space-after.optimum="10pt" font-size="10pt">

@@ -38,96 +38,38 @@ under the License.
 <#-- order list -->
 <@section>
       <form method="post" name="findorder" action="<@ofbizUrl>orderlist</@ofbizUrl>">
+      <#-- Cato: Use alt/simple checkboxes, currently implied by default-alt1
+        FIXME: here, manually override checkboxType for now to preserve the old look (because default-alt1 is slightly non-standard) but really it should be left to styles hash! 
+            Needs to be sorted out globally... -->
+      <@fields type="default-alt1" checkboxType="simple-standard"> 
         <input type="hidden" name="changeStatusAndTypeState" value="Y" />
-       <@row>
-        <@cell>
-          <@row class="+prefix-radius">
-            <@cell columns=3>
-              ${uiLabelMap.CommonStatus}
-            </@cell>
-            <@cell columns=9>
-              <span class="${styles.text_left!}">
-                <input type="checkbox" name="viewall" value="Y" onclick="javascript:setCheckboxes()" <#if state.hasAllStatus()>checked="checked"</#if> /><label>${uiLabelMap.CommonAll}</label>
-                <input type="checkbox" name="viewcreated" value="Y" <#if state.hasStatus('viewcreated')>checked="checked"</#if> /><label>${uiLabelMap.CommonCreated}</label>
-                <input type="checkbox" name="viewprocessing" value="Y" <#if state.hasStatus('viewprocessing')>checked="checked"</#if> /><label>${uiLabelMap.CommonProcessing}</label>
-                <input type="checkbox" name="viewapproved" value="Y" <#if state.hasStatus('viewapproved')>checked="checked"</#if> /><label>${uiLabelMap.CommonApproved}</label>
-                <input type="checkbox" name="viewhold" value="Y" <#if state.hasStatus('viewhold')>checked="checked"</#if> /><label>${uiLabelMap.CommonHeld}</label>
-                <input type="checkbox" name="viewcompleted" value="Y" <#if state.hasStatus('viewcompleted')>checked="checked"</#if> /><label>${uiLabelMap.CommonCompleted}
-                <#--input type="checkbox" name="viewsent" value="Y" <#if state.hasStatus('viewsent')>checked="checked"</#if> /><label>${uiLabelMap.CommonSent}</label>-->
-                <input type="checkbox" name="viewrejected" value="Y" <#if state.hasStatus('viewrejected')>checked="checked"</#if> /><label>${uiLabelMap.CommonRejected}</label>
-                <input type="checkbox" name="viewcancelled" value="Y" <#if state.hasStatus('viewcancelled')>checked="checked"</#if> /><label>${uiLabelMap.CommonCancelled}</label>
-              </span>
-            </@cell>
-          </@row>
-        </@cell>
-      </@row>
-      <@row>
-        <@cell>
-          <@row class="+prefix-radius">
-            <@cell columns=3>
-              <span class="">${uiLabelMap.CommonType}</span>
-            </@cell>
-            <@cell columns=9>
-                <span class="${styles.text_left!}">
-                  <input type="checkbox" name="view_SALES_ORDER" value="Y" <#if state.hasType('view_SALES_ORDER')>checked="checked"</#if>/>
-                  <label>${descr_SALES_ORDER}</label>
-                  <input type="checkbox" name="view_PURCHASE_ORDER" value="Y" <#if state.hasType('view_PURCHASE_ORDER')>checked="checked"</#if>/>
-                  <label>${descr_PURCHASE_ORDER}</label>
-                </span>
-            </@cell>
-          </@row>
-        </@cell>
-       </@row>
-       <@row>
-        <@cell>
-          <@row class="+prefix-radius">
-            <@cell columns=3>
-              <span class="">${uiLabelMap.CommonFilter}</span>
-            </@cell>
-            <@cell columns=9>
-              <span class="${styles.text_left!}">
-                <input type="checkbox" name="filterInventoryProblems" value="Y"
-                    <#if state.hasFilter('filterInventoryProblems')>checked="checked"</#if>/>
-                <label>${uiLabelMap.OrderFilterInventoryProblems}</label>
-                <input type="checkbox" name="filterAuthProblems" value="Y"
-                    <#if state.hasFilter('filterAuthProblems')>checked="checked"</#if>/>
-                <label>${uiLabelMap.OrderFilterAuthProblems}</label>
-              </span>
-            </@cell>
-          </@row>
-        </@cell>
-       </@row>
-       <@row>
-        <@cell>
-          <@row class="+prefix-radius">
-            <@cell columns=3>
-              <span class="">${uiLabelMap.CommonFilter} (${uiLabelMap.OrderFilterPOs})</span>
-            </@cell>
-            <@cell columns=9>
-                <span class="${styles.text_left!}">
-                    <input type="checkbox" name="filterPartiallyReceivedPOs" value="Y"
-                        <#if state.hasFilter('filterPartiallyReceivedPOs')>checked="checked"</#if>/>
-                    <label>${uiLabelMap.OrderFilterPartiallyReceivedPOs}</label>
-                    <input type="checkbox" name="filterPOsOpenPastTheirETA" value="Y"
-                        <#if state.hasFilter('filterPOsOpenPastTheirETA')>checked="checked"</#if>/>
-                    <label>${uiLabelMap.OrderFilterPOsOpenPastTheirETA}</label>
-                    <input type="checkbox" name="filterPOsWithRejectedItems" value="Y"
-                        <#if state.hasFilter('filterPOsWithRejectedItems')>checked="checked"</#if>/>
-                    <label>${uiLabelMap.OrderFilterPOsWithRejectedItems}</label>
-                 </span>
-              </@cell>
-            </@row>
-         </@cell>
-       </@row>
-       <@row>
-        <@cell>
-          <@row class="+prefix-radius">
-            <@cell>
-              <input type="submit" value="${uiLabelMap.CommonFind}" class="${styles.link_run_sys!} ${styles.action_find!}"/>
-            </@cell>
-          </@row>
-        </@cell>
-       </@row>
+        <@field type="generic" label="${uiLabelMap.CommonStatus}">
+            <@field type="checkbox" name="viewall" value="Y" onclick="javascript:setCheckboxes()" checked=(state.hasAllStatus()) label="${uiLabelMap.CommonAll}"/>
+            <@field type="checkbox" name="viewcreated" value="Y" checked=(state.hasStatus('viewcreated')) label="${uiLabelMap.CommonCreated}"/>
+            <@field type="checkbox" name="viewprocessing" value="Y" checked=(state.hasStatus('viewprocessing')) label="${uiLabelMap.CommonProcessing}"/>
+            <@field type="checkbox" name="viewapproved" value="Y" checked=(state.hasStatus('viewapproved')) label="${uiLabelMap.CommonApproved}"/>
+            <@field type="checkbox" name="viewhold" value="Y" checked=(state.hasStatus('viewhold')) label="${uiLabelMap.CommonHeld}"/>
+            <@field type="checkbox" name="viewcompleted" value="Y" checked=(state.hasStatus('viewcompleted')) label="${uiLabelMap.CommonCompleted}"/>
+            <#--@field type="checkbox" name="viewsent" value="Y" checked=(state.hasStatus('viewsent')) label="${uiLabelMap.CommonSent}"/>-->
+            <@field type="checkbox" name="viewrejected" value="Y" checked=(state.hasStatus('viewrejected')) label="${uiLabelMap.CommonRejected}"/>
+            <@field type="checkbox" name="viewcancelled" value="Y" checked=(state.hasStatus('viewcancelled')) label="${uiLabelMap.CommonCancelled}"/>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.CommonType}">
+            <@field type="checkbox" name="view_SALES_ORDER" value="Y" checked=(state.hasType('view_SALES_ORDER')) label="${descr_SALES_ORDER}"/>
+            <@field type="checkbox" name="view_PURCHASE_ORDER" value="Y" checked=(state.hasType('view_PURCHASE_ORDER')) label="${descr_PURCHASE_ORDER}"/>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.CommonFilter}">
+            <@field type="checkbox" name="filterInventoryProblems" value="Y" checked=(state.hasFilter('filterInventoryProblems')) label="${uiLabelMap.OrderFilterInventoryProblems}"/>
+            <@field type="checkbox" name="filterAuthProblems" value="Y" checked=(state.hasFilter('filterAuthProblems')) label="${uiLabelMap.OrderFilterAuthProblems}"/>
+        </@field>
+        <@field type="generic" label="${uiLabelMap.CommonFilter} (${uiLabelMap.OrderFilterPOs})">
+            <@field type="checkbox" name="filterPartiallyReceivedPOs" value="Y" checked=(state.hasFilter('filterPartiallyReceivedPOs')) label="${uiLabelMap.OrderFilterPartiallyReceivedPOs}"/>
+            <@field type="checkbox" name="filterPOsOpenPastTheirETA" value="Y" checked=(state.hasFilter('filterPOsOpenPastTheirETA')) label="${uiLabelMap.OrderFilterPOsOpenPastTheirETA}"/>
+            <@field type="checkbox" name="filterPOsWithRejectedItems" value="Y" checked=(state.hasFilter('filterPOsWithRejectedItems')) label="${uiLabelMap.OrderFilterPOsWithRejectedItems}"/>
+        </@field>
+
+        <@field type="submit" text="${uiLabelMap.CommonFind}" class="${styles.link_run_sys!} ${styles.action_find!}"/>
+      </@fields>
       </form>
 </@section>
  

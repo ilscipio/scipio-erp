@@ -1,11 +1,11 @@
 @import "sass-to-js";
 // ToDo: Update to pattern of chart.js v2 http://nnnick.github.io/Chart.js/docs-v2
 $chartMap: (
-  primaryFillColor: rgba($primary-color,.5),
-  primaryStrokeColor: rgba($primary-color,.7),
+  primaryFillColor: rgba($primary-color,.7),
+  primaryStrokeColor: rgba($primary-color,.9),
   primaryPointStrokeColor: rgba($primary-color,.7),
-  secondaryFillColor: rgba($secondary-color,.3),
-  secondaryStrokeColor: rgba($secondary-color,.7),
+  secondaryFillColor: rgba($secondary-color,.7),
+  secondaryStrokeColor: rgba($secondary-color,.9),
   secondaryPointStrokeColor: rgba($secondary-color,.7),
   pieFillColor1: rgba($primary-color,1),
   pieFillColor2: rgba($secondary-color,1),

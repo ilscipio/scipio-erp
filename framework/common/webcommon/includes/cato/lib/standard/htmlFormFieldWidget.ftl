@@ -668,20 +668,21 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <#if type == "default">
     <#local type = "">
   </#if>
-  <#local defaultClass = styles["field_checkbox_" + type]!styles["field_checkbox_default"]!"">
+  <#local stylesPrefix = "field_checkbox_" + type?replace("-", "_")>
+  <#local defaultClass = styles[stylesPrefix]!styles["field_checkbox_default"]!"">
   <#local class = addClassArgDefault(class, defaultClass)>
-  <#local labelType = styles["field_checkbox_" + type + "_labeltype"]!styles["field_checkbox_default_labeltype"]!"standard">
-  <#local labelPosition = styles["field_checkbox_" + type + "_labelposition"]!styles["field_checkbox_default_labelposition"]!"after">
+  <#local labelType = styles[stylesPrefix + "_labeltype"]!styles["field_checkbox_default_labeltype"]!"standard">
+  <#local labelPosition = styles[stylesPrefix + "_labelposition"]!styles["field_checkbox_default_labelposition"]!"after">
   <@field_checkbox_markup_widget items=items id=id class=class alert=alert allChecked=allChecked 
     currentValue=currentValue defaultValue=defaultValue name=name events=events tooltip=tooltip multiMode=multiMode 
-    fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel type=type 
+    fieldTitleBlank=fieldTitleBlank inlineItems=inlineItems inlineLabel=inlineLabel type=type stylesPrefix=stylesPrefix
     labelType=labelType labelPosition=labelPosition origArgs=origArgs passArgs=passArgs><#nested></@field_checkbox_markup_widget>
 </#macro>
 
 <#-- field markup - theme override 
      FIXME: the styling for these is strange, can't get it to work no matter what -->
 <#macro field_checkbox_markup_widget items=[] id="" class="" alert="" allChecked="" currentValue=[] defaultValue=[] name="" 
-    events={} tooltip="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" 
+    events={} tooltip="" fieldTitleBlank=false multiMode=true inlineItems="" inlineLabel=false type="default" stylesPrefix=""
     labelType="standard" labelPosition="after" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>
@@ -766,18 +767,19 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
   <#if !type?has_content>
     <#local type = "default">
   </#if>
-  <#local defaultClass = styles["field_radio_" + type]!styles["field_radio_default"]!"">
+  <#local stylesPrefix = "field_radio_" + type?replace("-", "_")>
+  <#local defaultClass = styles[stylesPrefix]!styles["field_radio_default"]!"">
   <#local class = addClassArgDefault(class, defaultClass)>
-  <#local labelType = styles["field_radio_" + type + "_labeltype"]!styles["field_radio_default_labeltype"]!"standard">
-  <#local labelPosition = styles["field_radio_" + type + "_labelposition"]!styles["field_radio_default_labelposition"]!"after">
+  <#local labelType = styles[stylesPrefix + "_labeltype"]!styles["field_radio_default_labeltype"]!"standard">
+  <#local labelPosition = styles[stylesPrefix + "_labelposition"]!styles["field_radio_default_labelposition"]!"after">
   <@field_radio_markup_widget items=items id=id class=class alert=alert currentValue=currentValue defaultValue=defaultValue name=name 
     events=events tooltip=tooltip multiMode=multiMode inlineItems=inlineItems fieldTitleBlank=fieldTitleBlank inlineLabel=inlineLabel 
-    type=type labelType=labelType labelPosition=labelPosition origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
+    type=type stylesPrefix=stylesPrefix labelType=labelType labelPosition=labelPosition origArgs=origArgs passArgs=passArgs><#nested></@field_radio_markup_widget>
 </#macro>
 
 <#-- field markup - theme override -->
 <#macro field_radio_markup_widget items="" id="" class="" alert="" currentValue="" defaultValue="" name="" events={} tooltip="" multiMode=true inlineItems="" 
-    type="default" fieldTitleBlank=false inlineLabel=false 
+    type="default" stylesPrefix="" fieldTitleBlank=false inlineLabel=false 
     labelType="standard" labelPosition="after" origArgs={} passArgs={} catchArgs...>
   <#if !inlineItems?is_boolean>
     <#local inlineItems = true>

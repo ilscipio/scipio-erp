@@ -15,15 +15,15 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
 
+import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataAddress;
 import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataObject;
+import com.ilscipio.cato.ce.demoSuite.dataGenerator.dataObject.DemoDataProduct;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
 public class MockarooDataGenerator<T extends DemoDataObject> extends ThirdPartyDataGenerator<T> {
     private static String MOCKAROO_DATA_GENERATOR = "mockaroo";
-
-    // private MockarooDataGenerator<T> mockarooDataGenerator;
 
     private final Class<T> returnObjectClass;
 
@@ -32,56 +32,31 @@ public class MockarooDataGenerator<T extends DemoDataObject> extends ThirdPartyD
     }
 
     @Override
-    protected List<T> retrieveData(Integer count, String schema, String format) {
-
+    protected List<T> retrieveData(Integer count) {
         HttpClient httpClient = new HttpClient();
-        MockarooSettings settings = new MockarooSettings(count, schema);
-        // HashMap<String, Object> queryParameters =
-        // settings.getQueryParameters();
-        // httpClient.setParameters(queryParameters);
-        String url = properties.get("demosuite.test.data.provider." + getDataGeneratorName() + ".url") + format + "?key="
+        MockarooSettings settings = new MockarooSettings();
+        String format = properties.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".exportFormat");
+        String url = properties.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".url") + format + "?key="
                 + settings.getQueryParameters().get("key");
         httpClient.setContentType("application/json");
-        httpClient.setUrl(url + "&count=" + count);
+        httpClient.setUrl(url + "&count=" + count + "&array=true");
         ListToJSON listJsonConverter = new JSONConverters.ListToJSON();
         try {
-            JSON json = listJsonConverter.convert(settings.getFields(schema));
+            JSON json = listJsonConverter.convert(settings.getFields());
             Debug.log(json.toString());
             httpClient.setRawStream(json.toString());
-
         } catch (ConversionException e1) {
             Debug.logError(e1.getMessage(), "");
         }
 
         try {
             String r = httpClient.sendHttpRequest(settings.getMethod());
-            try {
-                Debug.log("json result ===========> " + JSON.from(r).toString());
-                JSONToList jsonListConverter = new JSONConverters.JSONToList();
-                List<T> resultList = FastList.newInstance();
-                for (Object o : jsonListConverter.convert(JSON.from(r))) {
-                    resultList.add((T) JSON.from(o).toObject(returnObjectClass));
-                }
-                return resultList;
-
-            } catch (ConversionException e) {
-                Debug.logError(e.getMessage(), "");
-            } catch (IOException e) {
-                Debug.logError(e.getMessage(), "");
-            }
+            return handleData(r, format);
 
         } catch (HttpClientException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
-
-    // @Override
-    // public MockarooDataGenerator<T> create(Class<T> returnObjectClass) {
-    // if (mockarooDataGenerator == null)
-    // mockarooDataGenerator = new MockarooDataGenerator<T>(returnObjectClass);
-    // return mockarooDataGenerator;
-    // }
 
     @Override
     protected String getDataGeneratorName() {
@@ -93,26 +68,22 @@ public class MockarooDataGenerator<T extends DemoDataObject> extends ThirdPartyD
 
         private HashMap<String, Object> queryParameters = new HashMap<String, Object>();
 
-        public MockarooSettings(Integer count, String schema) {
-            queryParameters.put("count", count);
-            // queryParameters.put("schema", schema);
+        public MockarooSettings() {
             queryParameters.put("key", properties.get("demosuite.test.data.provider." + getDataGeneratorName() + ".key"));
-            // queryParameters.put("fields",
-            // properties.get("demosuite.test.data.provider." +
-            // getDataGeneratorName() + ".schema." + schema));
-
         }
 
-        @Override
+        // @Override
         public HashMap<String, Object> getQueryParameters() {
             // demosuite.test.data.provider.mockaroo.queryParams = key,
             // callback, count, array, include_header, schema, delimiter, fields
             return queryParameters;
         }
 
-        public List<Object> getFields(String schema) {
+        @Override
+        public List<Object> getFields() {
+            Debug.log("returnObjectClass ==========> " + returnObjectClass.getClass());
             List<Object> fields = new ArrayList<Object>();
-            if (schema.equals("address")) {
+            if (returnObjectClass.equals(DemoDataAddress.class)) {
                 Map<String, Object> country = FastMap.newInstance();
                 country.put("name", "country");
                 country.put("type", "Country");
@@ -138,13 +109,55 @@ public class MockarooDataGenerator<T extends DemoDataObject> extends ThirdPartyD
                 fields.add(city);
                 fields.add(street);
                 fields.add(zip);
-            } else if (schema.equals("product")) {
+            } else if (returnObjectClass.equals(DemoDataProduct.class)) {
+                Map<String, Object> id = FastMap.newInstance();
+                id.put("name", "id");
+                id.put("type", "Row Number");
 
+                Map<String, Object> name = FastMap.newInstance();
+                name.put("name", "name");
+                name.put("type", "Words");
+                name.put("min", 1);
+                name.put("max", 3);
+
+                Map<String, Object> description = FastMap.newInstance();
+                description.put("name", "description");
+                description.put("type", "Sentences");
+
+                Map<String, Object> price = FastMap.newInstance();
+                price.put("name", "price");
+                price.put("type", "Money");
+
+                fields.add(id);
+                fields.add(name);
+                fields.add(description);
+                fields.add(price);
             }
-
             return fields;
         }
 
+    }
+
+    @Override
+    List<T> handleData(String result, String format) {
+        if (format.equals("json")) {
+            try {
+//                Debug.log("json result ===========> " + JSON.from(result).toString());
+                JSONToList jsonListConverter = new JSONConverters.JSONToList();
+                List<T> resultList = FastList.newInstance();
+                for (Object o : jsonListConverter.convert(JSON.from(result))) {
+                    resultList.add((T) JSON.from(o).toObject(returnObjectClass));
+                }
+                return resultList;
+            } catch (ConversionException e) {
+                Debug.logError(e.getMessage(), "");
+            } catch (IOException e) {
+                Debug.logError(e.getMessage(), "");
+            }
+        } else {
+            throw new UnsupportedOperationException("Export format " + format + " currently not supported");
+        }
+        return null;
     }
 
 }

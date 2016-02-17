@@ -18,9 +18,9 @@ public abstract class ThirdPartyDataGenerator<T extends DemoDataObject> {
         properties = UtilProperties.getProperties("demosuite.properties");
     }
 
-    protected abstract List<T> retrieveData(Integer count, String schema, String format);
+    protected abstract List<T> retrieveData(Integer count);
 
-//    protected abstract ThirdPartyDataGenerator<T> create(Class<T> returnObjectType);
+    abstract List<T> handleData(String result, String format);
 
     protected abstract String getDataGeneratorName();
 
@@ -28,7 +28,6 @@ public abstract class ThirdPartyDataGenerator<T extends DemoDataObject> {
         private static final long serialVersionUID = -8549187859117423507L;
         private String method;
         private URL url;
-        private String[] exportFormatsAvailable;
 
         public DataGeneratorSettings() {
             try {
@@ -36,7 +35,6 @@ public abstract class ThirdPartyDataGenerator<T extends DemoDataObject> {
             } catch (MalformedURLException e) {
                 throw new RuntimeException(e);
             }
-            exportFormatsAvailable = properties.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".exportFormats").split(",");
             method = properties.getProperty("demosuite.test.data.provider." + getDataGeneratorName() + ".method");
         }
 
@@ -48,11 +46,9 @@ public abstract class ThirdPartyDataGenerator<T extends DemoDataObject> {
             return url;
         }
 
-        public String[] getExportFormatsAvailable() {
-            return exportFormatsAvailable;
-        }
-
         public abstract HashMap<String, Object> getQueryParameters();
+
+        public abstract List<Object> getFields();
 
     }
 

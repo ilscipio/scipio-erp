@@ -265,12 +265,15 @@ under the License.
             <xs:attribute name="override-mode" default="merge">
                 <xs:annotation>
                     <xs:documentation>Cato: can be used to change the default override behavior.
-                        'replace' causes this item to override any prior definition instead of merging, which can be problematic.</xs:documentation>
+                        'replace' causes this item to override any prior definition instead of merging, which can be problematic.
+                        'remove-replace' is the same as replace but explicitly removes the previous item before replacing it;
+                        this is almost the same but allows changing the ordering.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
                         <xs:enumeration value="merge" />
                         <xs:enumeration value="replace" />
+                        <xs:enumeration value="remove-replace" />
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>

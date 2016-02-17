@@ -301,14 +301,22 @@ public class ModelMenuItem extends ModelWidget {
             ModelMenuItem mergedMenuItem;
             if ("replace".equals(modelMenuItem.getOverrideMode())) {
                 mergedMenuItem = modelMenuItem;
+                int existingItemIndex = menuItemList.indexOf(existingMenuItem);
+                menuItemList.set(existingItemIndex, mergedMenuItem);
+            }
+            else if ("remove-replace".equals(modelMenuItem.getOverrideMode())) {
+                menuItemList.remove(existingMenuItem);
+                menuItemMap.remove(modelMenuItem.getName());
+                mergedMenuItem = modelMenuItem;
+                menuItemList.add(modelMenuItem);
             }
             else {
                 // does exist, update the item by doing a merge/override
                 mergedMenuItem = existingMenuItem.mergeOverrideModelMenuItem(modelMenuItem);
+                int existingItemIndex = menuItemList.indexOf(existingMenuItem);
+                menuItemList.set(existingItemIndex, mergedMenuItem);
             }
             
-            int existingItemIndex = menuItemList.indexOf(existingMenuItem);
-            menuItemList.set(existingItemIndex, mergedMenuItem);
             menuItemMap.put(modelMenuItem.getName(), mergedMenuItem);
         } else {
             // does not exist, add to List and Map

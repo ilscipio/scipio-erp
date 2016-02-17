@@ -44,7 +44,8 @@ body {}
 
 // Fix form elements
 form > div > .columns:last-child {max-width:50em;float:left!important;}
-
+// DEV NOTE: I _think_ the selector should be this instead, but not committing for now:
+// div.form-field-entry div.field-entry-widget {max-width:50em;float:left!important;}
 
 
 

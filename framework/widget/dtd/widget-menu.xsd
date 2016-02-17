@@ -78,7 +78,16 @@ under the License.
             <xs:attribute type="xs:string" name="menu-width" />
             <xs:attribute type="xs:string" name="default-cell-width" />
             <xs:attribute type="xs:string" name="default-disabled-title-style" />
-            <xs:attribute type="xs:string" name="selected-menuitem-context-field-name" />
+            <xs:attribute type="xs:string" name="selected-menuitem-context-field-name">
+                <xs:annotation>
+                    <xs:documentation>Selected menu item context field name.
+                        Cato: This attribute has been upgraded to support multiple field names, semicolon-separated (;).
+                        In the order given, if the first field's value in context is empty OR does not
+                        match any menu item name in this menu, it will check the next, and so on.
+                        NOTE: default-menu-item-name is explicitly excluded from the "does this field exist in menu?" logic - 
+                            default-menu-item-name is only used when all of the listed fields were empty (legacy stock behavior).</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
             <xs:attribute type="xs:string" name="menu-container-style">
                 <xs:annotation>
                     <xs:documentation>The style of the container that encloses the menu items. This

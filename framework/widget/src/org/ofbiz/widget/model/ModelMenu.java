@@ -110,7 +110,14 @@ public class ModelMenu extends ModelWidget {
     private final String menuWidth;
     private final String orientation;
     private final ModelMenu parentMenu;
-    private final FlexibleMapAccessor<String> selectedMenuItemContextFieldName;
+    /**
+     * Cato: List of selected menu item context field names.
+     * <p>
+     * We now support multiple lookups instead of only one.
+     */
+    private final List<FlexibleMapAccessor<String>> selectedMenuItemContextFieldName;
+    //private final FlexibleMapAccessor<String> selectedMenuItemContextFieldName;
+    private final String selectedMenuItemContextFieldNameStr;
     private final String target;
     private final FlexibleStringExpander title;
     private final String tooltip;
@@ -146,7 +153,10 @@ public class ModelMenu extends ModelWidget {
         Map<String, ModelMenuItem> menuItemMap = new HashMap<String, ModelMenuItem>();
         String menuWidth = "";
         String orientation = "horizontal";
-        FlexibleMapAccessor<String> selectedMenuItemContextFieldName = FlexibleMapAccessor.getInstance("");
+        // Cato: now using list
+        //FlexibleMapAccessor<String> selectedMenuItemContextFieldName = FlexibleMapAccessor.getInstance("");
+        List<FlexibleMapAccessor<String>> selectedMenuItemContextFieldName = new ArrayList<FlexibleMapAccessor<String>>();
+        String selectedMenuItemContextFieldNameStr = "";
         String target = "";
         FlexibleStringExpander title = FlexibleStringExpander.getInstance("");
         String tooltip = "";
@@ -207,7 +217,10 @@ public class ModelMenu extends ModelWidget {
                 defaultAlignStyle = parent.defaultAlignStyle;
                 fillStyle = parent.fillStyle;
                 extraIndex = parent.extraIndex;
-                selectedMenuItemContextFieldName = parent.selectedMenuItemContextFieldName;
+                // Cato: copy list
+                //selectedMenuItemContextFieldName = parent.selectedMenuItemContextFieldName;
+                selectedMenuItemContextFieldName = new ArrayList<FlexibleMapAccessor<String>>(parent.selectedMenuItemContextFieldName);
+                selectedMenuItemContextFieldNameStr = parent.selectedMenuItemContextFieldNameStr;
                 menuContainerStyleExdr = parent.menuContainerStyleExdr;
                 if (parent.actions != null) {
                     actions.addAll(parent.actions);
@@ -257,9 +270,10 @@ public class ModelMenu extends ModelWidget {
             defaultHideIfSelected = "true".equals(menuElement.getAttribute("default-hide-if-selected").isEmpty());
         if (!menuElement.getAttribute("default-disabled-title-style").isEmpty())
             defaultDisabledTitleStyle = menuElement.getAttribute("default-disabled-title-style");
-        if (!menuElement.getAttribute("selected-menuitem-context-field-name").isEmpty())
-            selectedMenuItemContextFieldName = FlexibleMapAccessor.getInstance(menuElement
-                    .getAttribute("selected-menuitem-context-field-name"));
+        if (!menuElement.getAttribute("selected-menuitem-context-field-name").isEmpty()) {
+            selectedMenuItemContextFieldNameStr = menuElement.getAttribute("selected-menuitem-context-field-name");
+            selectedMenuItemContextFieldName = makeAccessorList(selectedMenuItemContextFieldNameStr);
+        }
         if (!menuElement.getAttribute("menu-container-style").isEmpty())
             menuContainerStyleExdr = FlexibleStringExpander.getInstance(menuElement.getAttribute("menu-container-style"));
         if (!menuElement.getAttribute("default-align").isEmpty())
@@ -309,6 +323,7 @@ public class ModelMenu extends ModelWidget {
         this.orientation = orientation;
         this.parentMenu = parent;
         this.selectedMenuItemContextFieldName = selectedMenuItemContextFieldName;
+        this.selectedMenuItemContextFieldNameStr = selectedMenuItemContextFieldNameStr;
         this.target = target;
         this.title = title;
         this.tooltip = tooltip;
@@ -962,12 +977,41 @@ public class ModelMenu extends ModelWidget {
         return parentMenu;
     }
 
-    public FlexibleMapAccessor<String> getSelectedMenuItemContextFieldName() {
-        return selectedMenuItemContextFieldName;
+    public String getSelectedMenuItemContextFieldName() {
+        return selectedMenuItemContextFieldNameStr;
     }
 
     public String getSelectedMenuItemContextFieldName(Map<String, Object> context) {
-        String menuItemName = this.selectedMenuItemContextFieldName.get(context);
+        // Cato: we support multiple lookups.
+        //String menuItemName = this.selectedMenuItemContextFieldName.get(context);
+        // Cato: New code start...
+        String menuItemName = null;
+        String firstMenuItemName = null;
+        for (FlexibleMapAccessor<String> fieldNameExpr : this.selectedMenuItemContextFieldName) {
+            menuItemName = fieldNameExpr.get(context);
+            // The menu item must not be empty AND it must exist in this menu to be accepted
+            // But record firstMenuItemName to be able to handle defaultMenuItemName in legacy fashion.
+            if (UtilValidate.isNotEmpty(menuItemName)) {
+                if (firstMenuItemName == null) {
+                    firstMenuItemName = menuItemName;
+                }
+                if (this.menuItemMap.containsKey(menuItemName)) {
+                    break;
+                }
+                else {
+                    menuItemName = null;
+                }
+            }
+        }
+        // firstMenuItemName is a hack to preserve legacy ofbiz behavior:
+        // If we did find a non-empty entry but it didn't match any item in our menu,
+        // don't fall back to defaultMenuItemName - just return the first non-matching item.
+        // Only use the "is in menu" check for the fields fallback logic, but not for defaultMenuItemName.
+        // defaultMenuItemName is only used if all fields in list were empty.
+        if (UtilValidate.isEmpty(menuItemName) && UtilValidate.isNotEmpty(firstMenuItemName)) {
+            menuItemName = firstMenuItemName;
+        }
+        // Cato: ... new code end
         if (UtilValidate.isEmpty(menuItemName)) {
             return this.defaultMenuItemName;
         }
@@ -1054,5 +1098,18 @@ public class ModelMenu extends ModelWidget {
 
     public void runActions(Map<String, Object> context) {
         AbstractModelAction.runSubActions(this.actions, context);
+    }
+    
+    /**
+     * Cato: make list of flexible accessors from a semicolon-separated string.
+     * TODO: support escaping semicolons
+     */
+    private static List<FlexibleMapAccessor<String>> makeAccessorList(String accessorsStr) {
+        String[] parts = accessorsStr.split(";");
+        List<FlexibleMapAccessor<String>> list = new ArrayList<FlexibleMapAccessor<String>>(parts.length);
+        for(String part : parts) {
+            list.add(FlexibleMapAccessor.<String>getInstance(part));
+        }
+        return list;
     }
 }

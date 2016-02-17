@@ -30,8 +30,8 @@ under the License.
 
                 <set field="layoutSettings.companyName" from-field="uiLabelMap.AccountingArCompanyName" global="true"/>
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.AccountingCompanySubtitle" global="true"/>
-                <set field="applicationMenuName" value="AccountingAppBar" global="true"/>
-                <set field="applicationMenuLocation" value="component://accounting/widget/AccountingMenus.xml" global="true"/>
+                <set field="applicationMenuName" value="ArAppBar" global="true"/>
+                <set field="applicationMenuLocation" value="component://accounting/widget/ar/ArMenus.xml" global="true"/>
                 <set field="applicationTitle" value="${uiLabelMap.AccountingArManagerApplication}" global="true"/>
             </actions>
            <widgets>

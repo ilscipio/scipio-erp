@@ -181,7 +181,7 @@ public class ModelMenu extends ModelWidget {
             }
             if (parent != null) {
                 type = parent.type;
-                itemsSortMode = parent.type;
+                itemsSortMode = parent.itemsSortMode;
                 target = parent.target;
                 id = parent.id;
                 title = parent.title;
@@ -217,7 +217,7 @@ public class ModelMenu extends ModelWidget {
         if (!menuElement.getAttribute("type").isEmpty())
             type = menuElement.getAttribute("type");
         if (!menuElement.getAttribute("items-sort-mode").isEmpty())
-            type = menuElement.getAttribute("items-sort-mode");
+            itemsSortMode = menuElement.getAttribute("items-sort-mode");
         if (!menuElement.getAttribute("target").isEmpty())
             target = menuElement.getAttribute("target");
         if (!menuElement.getAttribute("id").isEmpty())

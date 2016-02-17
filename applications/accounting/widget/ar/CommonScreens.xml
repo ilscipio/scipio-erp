@@ -38,16 +38,9 @@ under the License.
                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">
                     <decorator-section name="left-column" use-when="${context.widePage != true}"> <!-- override-by-auto-include="true" -->
                         <section>
-                            <condition>
-                                <not><if-empty-section section-name="left-column" /></not>
-                            </condition>
                             <widgets>
-                                <decorator-section-include name="left-column"/>
+                                  <include-menu location="component://accounting/widget/ar/ArMenus.xml" name="ArAppSideBar"/>
                             </widgets>
-                            <fail-widgets>
-                                <!-- provide default column for all others -->
-                                <include-menu location="component://accounting/widget/ar/ArMenus.xml" name="ArAppSideBar"/>
-                            </fail-widgets>
                         </section>
                     </decorator-section>
                     <decorator-section name="body">

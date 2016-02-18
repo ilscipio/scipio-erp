@@ -772,7 +772,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     inlineLabel         = manual override for inline label logic. in general can be left to macro (and @fields types stylable via global styles hash). logical default: "" (false on interface).
                           NOTE: often if you specify this it means you might want to set inlineLabelArea=true as well.
     tooltip         = Small field description - to be displayed to the customer
-    description     = alternative to tooltip
+                      May be set to boolean false to manually prevent tooltip defaults.
+    description     = Field description.
+                      NOTE: currently this is treated as an alternative arg for tooltip
+                      TODO?: DEV NOTE: this should probably be separate from tooltip in the end...
     name            = field name
     value           = field value
     columns         = number of grid columns to use as size for widget + postfix area (combined)
@@ -1009,13 +1012,13 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#local class = addClassArg(class, styles.field_inline!)>
   </#if>
 
-  <#-- treat tooltip and description as synonyms for now -->
-  <#if tooltip?has_content>
-    <#if !description?has_content>
+  <#-- treat tooltip and description (nearly) as synonyms for now -->
+  <#if !tooltip?is_boolean && tooltip?has_content>
+    <#if !(description?is_boolean && description == false) && !description?has_content>
       <#local description = tooltip>
     </#if>
   <#else>
-    <#if description?has_content>
+    <#if (!description?is_boolean && description?has_content) && !(tooltip?is_boolean && tooltip == false)>
       <#local tooltip = description>
     </#if>
   </#if>
@@ -1087,7 +1090,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#if required && (!requiredClass?is_boolean && requiredClass?has_content)>
     <#local class = addClassArg(class, requiredClass)>
   </#if>
-  <#if required && !tooltip?has_content && !(requiredTooltip?is_boolean && requiredTooltip == false)>
+  <#if required && ((tooltip?is_boolean && tooltip == true) || (!tooltip?is_boolean && !tooltip?has_content)) && !(requiredTooltip?is_boolean && requiredTooltip == false)>
     <#if !requiredTooltip?is_boolean && requiredTooltip?has_content>
       <#local tooltip = getTextLabelFromExpr(requiredTooltip)>
     </#if>
@@ -1235,6 +1238,14 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#if !collapsePostfix?is_boolean>
       <#local collapsePostfix = true>
     </#if>
+  </#if>
+  
+  <#-- TODO? ensure boolean string because next calls don't yet support it as boolean -->
+  <#if tooltip?is_boolean>
+    <#local tooltip = "">
+  </#if>
+  <#if description?is_boolean>
+    <#local description = "">
   </#if>
   
   <#-- push this field's info (popped at end) -->

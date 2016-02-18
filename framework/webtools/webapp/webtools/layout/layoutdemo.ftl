@@ -500,6 +500,8 @@
       <@field type="input" name="input2" label="Input 2" postfix=true />
       <@field type="display">Display value</@field>
       <@field type="input" name="input3" label="Input 3" />
+      <@field type="input" name="input4" label="Input 4 (required)" required=true />
+      <@field type="input" name="input5" label="Input 5 (required, tooltip force-disabled)" required=true tooltip=false/>
 
       <@field type="datetime" label="Date 1" name="date1" value="" size="25" maxlength="30" dateType="date-time" />
       <@field type="datetime" label="Date 2" name="date2" value="" size="25" maxlength="30" dateType="date-time" />

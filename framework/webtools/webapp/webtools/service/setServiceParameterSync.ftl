@@ -17,26 +17,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 <form name="scheduleForm" method="post" action="<@ofbizUrl>scheduleServiceSync</@ofbizUrl>">
+
     <#list scheduleOptions as scheduleOption>
       <input type="hidden" name="${scheduleOption.name}" value="${scheduleOption.value}"/>
     </#list>
 
-    <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
-
+  <#-- Cato: leave room for the label area because service parameter names can be long -->
+  <@fields fieldArgs={"columns":8}>
     <#list serviceParameters as serviceParameter>
-      <@tr>
-        <@td>${serviceParameter.name} (${serviceParameter.type}) <#if serviceParameter.optional == "N"><small>${uiLabelMap.CommonRequired}</small></#if></@td>
-        <@td>
-          <input type="text" size="20" name="${serviceParameter.name}" value="<#if serviceParameter.value??>${serviceParameter.value?string}</#if>"<#if serviceParameter.optional == "N"> required</#if>/>
-          <#if serviceParameter.optional == "N"><span class="tooltip">${uiLabelMap.CommonRequired}</span></#if>
-          <#if serviceParameter.defaultValue?has_content>${uiLabelMap.WebtoolsServiceDefault} ${serviceParameter.defaultValue?string}</#if>
-        </@td>
-      </@tr>
+      <#assign fieldLabel>${serviceParameter.name} (<em>${serviceParameter.type}</em>)<#if serviceParameter.defaultValue?has_content> (${uiLabelMap.WebtoolsServiceDefault}: <em>${serviceParameter.defaultValue?string}</em>)</#if></#assign>
+      <@field type="input" label=fieldLabel size="20" name="${serviceParameter.name}" value="${serviceParameter.value!}" required=(serviceParameter.optional == "N")/>
     </#list>
-    <@tfoot>
-      <@tr>
-        <@td colspan="2" align="center"><input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_begin!}" /></@td>
-      </@tr>
-    </@tfoot>
-    </@table>
+  </@fields>
+
+    <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_begin!}" />
+
 </form>

@@ -13106,6 +13106,9 @@
         <value xml:lang="zh">接收支付</value>
         <value xml:lang="zh_TW">接收支付</value>
     </property>
+    <property key="AccountingRecentPayments">
+        <value xml:lang="en">Recent Payments</value>
+    </property>
     <property key="AccountingReconcile">
         <value xml:lang="en">Reconcile</value>
         <value xml:lang="fr">Rapprocher</value>

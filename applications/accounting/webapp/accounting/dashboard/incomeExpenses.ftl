@@ -2,12 +2,7 @@
 <#assign library=chartLibrary!"chart"/>
 <#assign datasets=chartDatasets?number!1 />
 
-<#if totalMap?has_content>
-    <@heading relLevel=1>
-        <#if title?has_content>${title!} - </#if>
-        ${uiLabelMap.AccountingIncomesExpenses}            
-    </@heading>            
-    
+<#if totalMap?has_content>    
     <#if chartType == "line" || chartType == "bar">
         <@chart type=chartType library=library xlabel=xlabel!"" ylabel=ylabel!"" label1=label1!"" label2=label2!"">
             <#list totalMap.keySet() as key>        

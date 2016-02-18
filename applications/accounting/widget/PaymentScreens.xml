@@ -103,7 +103,7 @@ under the License.
                 <set field="isReduced" from-field="isReduced" default-value="false" type="Boolean" />                
             </actions>
             <widgets>
-                <screenlet title="${uiLabelMap.AccountingInvoicePayments}">
+                <screenlet title="${uiLabelMap.AccountingRecentPayments}">
                     <include-form name="ListPayments"  location="component://accounting/widget/PaymentForms.xml"/>
                 </screenlet>
             </widgets>

@@ -41,9 +41,16 @@ under the License.
                             </container>
                         </container>
                         <container style="${styles.grid_row}">
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="ListSalesOrders" location="component://order/widget/ordermgr/OrderViewScreens.xml"/>
+                            </container>
+                            <container style="${styles.grid_large}6 ${styles.grid_cell}">
+                                <include-screen name="BestSellingProducts" location="component://product/widget/catalog/ProductScreens.xml"/>
+                            </container>
+                            <!-- CATO: Removed for now. Add back in if you want to use the Portal Concept instead.
                             <container style="${styles.grid_large}12 ${styles.grid_cell}">
                                 <include-portal-page id="OrderPortalPage"/>
-                            </container>
+                            </container>-->
                         </container>
                     </decorator-section>
                 </decorator-screen>

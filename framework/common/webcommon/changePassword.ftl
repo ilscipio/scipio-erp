@@ -30,34 +30,19 @@ under the License.
       <input type="hidden" name="requirePasswordChange" value="Y"/>
       <input type="hidden" name="USERNAME" value="${username}"/>
       <input type="hidden" name="userTenantId" value="${tenantId!}"/>
-      <@table type="generic" cellspacing="0">
-        <@tr>
-          <@td class="label">${uiLabelMap.CommonUsername}</@td>
-          <@td>${username}</@td>
-        </@tr>
-        <@tr>
-          <@td class="label">${uiLabelMap.CommonCurrentPassword}</@td>
-          <@td><input type="password" name="PASSWORD" value="" size="20"/></@td>
-        </@tr>
-        <@tr>
-          <@td class="label">${uiLabelMap.CommonNewPassword}</@td>
-          <@td><input type="password" name="newPassword" value="" size="20"/></@td>
-        </@tr>
-        <@tr>
-          <@td class="label">${uiLabelMap.CommonNewPasswordVerify}</@td>
-          <@td><input type="password" name="newPasswordVerify" value="" size="20"/></@td>
-        </@tr>
-        <@tr>
-          <@td colspan="2" align="center">
-            <input type="submit" value="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
-          </@td>
-        </@tr>
-      </@table>
+      <@field type="display" label="${uiLabelMap.CommonUsername}">${username}</@field>
+      <@field type="password" label="${uiLabelMap.CommonCurrentPassword}" name="PASSWORD" value="" size="20" />
+      <@field type="password" label="${uiLabelMap.CommonNewPassword}" name="newPassword" value="" size="20" />
+      <@field type="password" label="${uiLabelMap.CommonNewPasswordVerify}" name="newPasswordVerify" value="" size="20" />
+      
+      <@field type="submit" text="${uiLabelMap.CommonSubmit}" class="${styles.link_run_sys!} ${styles.action_update!}"/>
     </form>
 </@section>
 </@cell>
 </@row>
 
 <@script>
-  document.loginform.PASSWORD.focus();
+    jQuery(document).ready(function() {
+        document.loginform.PASSWORD.focus();
+    });
 </@script>

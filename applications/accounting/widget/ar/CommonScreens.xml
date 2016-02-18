@@ -32,8 +32,7 @@ under the License.
                 <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.AccountingCompanySubtitle" global="true"/>
                 <set field="applicationMenuName" value="ArAppBar" global="true"/>
                 <set field="applicationMenuLocation" value="component://accounting/widget/ar/ArMenus.xml" global="true"/>
-                <set field="applicationTitle" value="${uiLabelMap.AccountingArManagerApplication}" global="true"/>
-                <set field="headerItem" value="ar" />
+                <set field="applicationTitle" value="${uiLabelMap.AccountingArManagerApplication}" global="true"/>                
             </actions>
            <widgets>
                <decorator-screen name="ApplicationDecorator" location="component://commonext/widget/CommonScreens.xml" auto-decorator-section-include="true">

@@ -1657,6 +1657,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#else>
       <#local widgetAndPostfixColumns = 12>
     </#if>
+  <#else>
+    <#-- DEV NOTE: WARN: this case is untested and I'm not sure if correct -->
+    <#local widgetAndPostfixColumns = columns>
   </#if>
   
   <#if widgetPostfixCombined>

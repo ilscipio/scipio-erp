@@ -190,7 +190,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonServiceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleScheduleJob}">
+                        <screenlet>
                             <platform-specific>
                                 <html><html-template location="component://webtools/webapp/webtools/service/setServiceParameterSync.ftl"/></html>
                             </platform-specific>

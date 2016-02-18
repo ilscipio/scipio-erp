@@ -24,7 +24,7 @@ under the License.
   <screen name="DashboardServerTraffic">
       <section>
             <actions> 
-                <set field="chartType" value="line"/>
+                <set field="chartType" value="bar"/>
                 <set field="chartValue" value="count"/>
                 <set field="chartData" value="day"/>
                 <set field="chartLibrary" value="chart"/>

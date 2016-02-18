@@ -177,6 +177,25 @@ TODO: java transform.
 
 <#-- 
 *************
+* getTextLabelFromExpr
+************
+Convenience function that accepts a string in multiple formats.
+If starts with "#LABEL:", the following name is taken from uiLabelMap.
+If starts with "#PROP:", the following location/name is passed through to getPropertyMsgFromLocExpr
+If no prefix, returns the text as-is.
+-->
+<#function getTextLabelFromExpr textExpr msgArgs=false specLocale=true>
+  <#if textExpr?starts_with("#LABEL:")>
+    <#return getLabel(textExpr[7..])!"">
+  <#elseif textExpr?starts_with("#PROP:")>
+    <#return getPropertyMsgFromLocExpr(textExpr[6..], msgArgs, specLocale)!"">
+  <#else>
+    <#return textExpr>
+  </#if>
+</#function>
+
+<#-- 
+*************
 * addParamDelimToUrl
 ************
 Adds a param delimiter to end of url if needed.

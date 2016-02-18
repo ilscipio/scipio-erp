@@ -522,24 +522,24 @@ or even multiple per fieldset.
   <#local dummy = localsPutAll(args)>
   
   <#local stylesType = type?replace("-","_")>
-  <#local stylesPrefix = "fields_" + stylesType + "_">
+  <#local stylesPrefix = "fields_" + stylesType>
   <#-- DON'T do this, it messes with intuition - individual default fallbacks are good enough
-  <#if !styles[stylesPrefix + "labeltype"]??>
+  <#if !styles[stylesPrefix + "_labeltype"]??>
     <#local stylesType = "default">
-    <#local stylesPrefix = "fields_default_">
+    <#local stylesPrefix = "fields_default">
   </#if>-->
 
   <#if !labelArea?is_boolean>
-    <#local stylesLabelArea = styles[stylesPrefix + "labelarea"]!styles["fields_default_labelarea"]!"">
+    <#local stylesLabelArea = styles[stylesPrefix + "_labelarea"]!styles["fields_default_labelarea"]!"">
     <#if stylesLabelArea?is_boolean>
       <#local labelArea = stylesLabelArea>
     </#if>
   </#if>
   <#if !labelType?has_content>
-    <#local labelType = styles[stylesPrefix + "labeltype"]!styles["fields_default_labeltype"]!"horizontal">
+    <#local labelType = styles[stylesPrefix + "_labeltype"]!styles["fields_default_labeltype"]!"horizontal">
   </#if>
   <#if !labelPosition?has_content>
-    <#local labelPosition = styles[stylesPrefix + "labelposition"]!styles["fields_default_labelposition"]!"left">
+    <#local labelPosition = styles[stylesPrefix + "_labelposition"]!styles["fields_default_labelposition"]!"left">
   </#if>
   <#if !labelArea?is_boolean>
     <#local labelArea = (labelType != "none" && labelPosition != "none")>
@@ -549,7 +549,7 @@ or even multiple per fieldset.
     <#if labelAreaExceptions?is_boolean && labelAreaExceptions == false>
       <#local labelAreaExceptions = []>
     <#else>
-      <#local labelAreaExceptions = styles[stylesPrefix + "labelareaexceptions"]!styles["fields_default_labelareaexceptions"]!"">
+      <#local labelAreaExceptions = styles[stylesPrefix + "_labelareaexceptions"]!styles["fields_default_labelareaexceptions"]!"">
     </#if>
   </#if>
   <#if labelAreaExceptions?is_string> <#-- WARN: ?is_string unreliable -->
@@ -561,14 +561,14 @@ or even multiple per fieldset.
   </#if>
 
   <#if !labelAreaRequireContent?is_boolean>
-    <#local labelAreaRequireContent = styles[stylesPrefix + "labelarearequirecontent"]!styles["fields_default_labelarearequirecontent"]!"">
+    <#local labelAreaRequireContent = styles[stylesPrefix + "_labelarearequirecontent"]!styles["fields_default_labelarearequirecontent"]!"">
   </#if>
 
   <#if !labelAreaConsumeExceptions?is_sequence && !labelAreaConsumeExceptions?is_string>
     <#if labelAreaConsumeExceptions?is_boolean && labelAreaConsumeExceptions == false>
       <#local labelAreaConsumeExceptions = []>
     <#else>
-      <#local labelAreaConsumeExceptions = styles[stylesPrefix + "labelareaconsumeexceptions"]!styles["fields_default_labelareaconsumeexceptions"]!"">
+      <#local labelAreaConsumeExceptions = styles[stylesPrefix + "_labelareaconsumeexceptions"]!styles["fields_default_labelareaconsumeexceptions"]!"">
     </#if>
   </#if>
   <#if labelAreaConsumeExceptions?is_string> <#-- WARN: ?is_string unreliable -->
@@ -580,13 +580,13 @@ or even multiple per fieldset.
   </#if>
 
   <#if !collapse?is_boolean>
-    <#local collapse = styles[stylesPrefix + "collapse"]!styles["fields_default_collapse"]!"">
+    <#local collapse = styles[stylesPrefix + "_collapse"]!styles["fields_default_collapse"]!"">
   </#if>
   <#if !collapsePostfix?is_boolean>
-    <#local collapsePostfix = styles[stylesPrefix + "collapsepostfix"]!styles["fields_default_collapsepostfix"]!"">
+    <#local collapsePostfix = styles[stylesPrefix + "_collapsepostfix"]!styles["fields_default_collapsepostfix"]!"">
   </#if>
   <#if !collapsedInlineLabel?has_content>
-    <#local collapsedInlineLabel = styles[stylesPrefix + "collapsedinlinelabel"]!styles["fields_default_collapsedinlinelabel"]!"">
+    <#local collapsedInlineLabel = styles[stylesPrefix + "_collapsedinlinelabel"]!styles["fields_default_collapsedinlinelabel"]!"">
   </#if>
   <#if collapsedInlineLabel?is_string>
     <#if collapsedInlineLabel?has_content> <#-- WARN: ?is_string unreliable -->
@@ -594,13 +594,13 @@ or even multiple per fieldset.
     </#if>
   </#if>
   <#if !checkboxType?has_content>
-    <#local checkboxType = styles[stylesPrefix + "checkboxtype"]!styles["fields_default_checkboxtype"]!"">
+    <#local checkboxType = styles[stylesPrefix + "_checkboxtype"]!styles["fields_default_checkboxtype"]!"">
   </#if>
   <#if !radioType?has_content>
-    <#local radioType = styles[stylesPrefix + "radiotype"]!styles["fields_default_radiotype"]!"">
+    <#local radioType = styles[stylesPrefix + "_radiotype"]!styles["fields_default_radiotype"]!"">
   </#if>
 
-  <#local fieldArgsFromStyles = styles[stylesPrefix + "fieldargs"]!styles["fields_default_fieldargs"]!false>
+  <#local fieldArgsFromStyles = styles[stylesPrefix + "_fieldargs"]!styles["fields_default_fieldargs"]!false>
   <#if fieldArgs?is_boolean>
     <#if fieldArgs == true>
       <#local fieldArgs = fieldArgsFromStyles>
@@ -612,7 +612,7 @@ or even multiple per fieldset.
     </#if>
   </#if>
 
-  <#return {"type":type, "labelType":labelType, "labelPosition":labelPosition, 
+  <#return {"type":type, "stylesType":stylesType, "stylesPrefix":stylesPrefix, "labelType":labelType, "labelPosition":labelPosition, 
     "labelArea":labelArea, "labelAreaExceptions":labelAreaExceptions, 
     "labelAreaRequireContent":labelAreaRequireContent, "labelAreaConsumeExceptions":labelAreaConsumeExceptions,
     "formName":formName, "formId":formId, "inlineItems":inlineItems,
@@ -812,7 +812,10 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
                       Marks the field with styles.field_inline.
                       Theme should act on this style to prevent taking up all the width.
     ignoreParentField    = default false. If true causes a child field to act as if it had no parent field. Rarely needed.
-    required        = required input
+    required        = boolean, default false. Marks a required input.
+    requiredClass   = default required class name. Does not support extended class +/= syntax.
+    requiredTooltip = tooltip to use when field is required. this is overridden by regular tooltip.
+                      for this, can prefix with "#LABEL:" string which indicates to take the named label from uiLabelMap.
     postfix         = boolean true/false, controls whether an extra area is appended after widget area
     postfixSize     = manual postfix size, in (large) grid columns
     postfixContent  = manual postfix markup/content - set to boolean false to prevent any content (but not area container)
@@ -957,7 +960,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   "cols":"50", "dateType":"date-time", "multiple":"", "checked":"", 
   "collapse":"", "collapsePostfix":"", "collapsedInlineLabel":"",
   "tooltip":"", "columns":"", "norows":false, "nocells":false, "container":"", "containerId":"", "containerClass":"",
-  "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":1, "postfixContent":true, "required":false, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
+  "fieldFormName":"", "formName":"", "formId":"", "postfix":false, "postfixSize":1, "postfixContent":true, "required":false, "requiredClass":"", "requiredTooltip":true, "items":false, "autocomplete":true, "progressArgs":{}, "progressOptions":{}, 
   "labelType":"", "labelPosition":"", "labelArea":"", "labelAreaRequireContent":"", "labelAreaConsume":"", "inlineLabelArea":"", "inlineLabel":false,
   "description":"",
   "submitType":"input", "text":"", "href":"", "src":"", "confirmMsg":"", "inlineItems":"", 
@@ -1079,8 +1082,13 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     <#local id = "field_id_${renderSeqNumber!}_${fieldIdNum!0}">
   </#if>
   
-  <#if required && (!containsStyleName(class, styles.required!""))>
-    <#local class = addClassArg(class, styles.required!"")>
+  <#if required && (!requiredClass?is_boolean && requiredClass?has_content)>
+    <#local class = addClassArg(class, requiredClass)>
+  </#if>
+  <#if required && !tooltip?has_content && !(requiredTooltip?is_boolean && requiredTooltip == false)>
+    <#if !requiredTooltip?is_boolean && requiredTooltip?has_content>
+      <#local tooltip = getTextLabelFromExpr(requiredTooltip)>
+    </#if>
   </#if>
   <#-- the widgets do this now
   <#local class = compileClassArg(class)>-->

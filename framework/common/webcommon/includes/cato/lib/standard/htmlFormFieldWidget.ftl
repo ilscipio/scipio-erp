@@ -184,8 +184,8 @@ TODO: _markup_widget macros should be cleaned up and logic moved to _widget macr
                 <#else>
                   <#local title = dateFormatString>
                 </#if>
-              <#elseif title?starts_with("#PROP:")>
-                <#local title = getPropertyMsgFromLocExpr(title?substring(6), {"dateLabel":origLabel, "dateFormatString":dateFormatString})!"">
+              <#else>
+                <#local title = getTextLabelFromExpr(title, {"dateLabel":origLabel, "dateFormatString":dateFormatString})!"">
               </#if>
             </#if>
           </#if>

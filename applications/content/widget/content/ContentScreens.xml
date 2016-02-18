@@ -219,7 +219,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditContent}">
+                        <screenlet>
                             <include-form name="EditContent" location="component://content/widget/content/ContentForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -410,7 +410,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet id="AddContentMetaDataPanel" title="${uiLabelMap.PageTitleAddMetaData}" collapsible="true">
+                        <screenlet id="AddContentMetaDataPanel" collapsible="true">
                             <include-form name="AddContentMetaData" location="component://content/widget/content/ContentForms.xml"/>
                         </screenlet>
                         <include-form name="ListContentMetaData" location="component://content/widget/content/ContentForms.xml"/>
@@ -505,22 +505,18 @@ under the License.
             <widgets>
                 <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleLookupContent}">
-                                    <container style="left-border">
-                                        <platform-specific>
-                                            <html>
-                                                <html-template location="component://content/webapp/content/content/ContentNav.ftl"/>
-                                            </html>
-                                        </platform-specific>
-                                    </container>
-                                    <container style="leftonly">
-                                        <include-screen name="ListContentTree"/>
-                                    </container>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet>
+                            <container style="left-border">
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="component://content/webapp/content/content/ContentNav.ftl"/>
+                                    </html>
+                                </platform-specific>
+                            </container>
+                            <container style="leftonly">
+                                <include-screen name="ListContentTree"/>
+                            </container>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -541,28 +537,24 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <section>
-                    <widgets>
-                        <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
-                            <decorator-section name="body">
-                                <screenlet title="${uiLabelMap.PageTitleLookupContent}">
-                                    <container style="left-border">
-                                        <platform-specific>
-                                            <html>
-                                                <html-template location="component://content/webapp/content/content/ContentNav.ftl"/>
-                                            </html>
-                                        </platform-specific>
-                                    </container>
-                                    <container style="leftonly">
-                                        <container style="contentarea">
-                                            <include-screen name="ViewContentDetail"/>
-                                        </container>
-                                    </container>
-                                </screenlet>
-                            </decorator-section>
-                        </decorator-screen>
-                    </widgets>
-                </section>
+                <decorator-screen name="LookupDecorator" location="component://common/widget/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <screenlet>
+                            <container style="left-border">
+                                <platform-specific>
+                                    <html>
+                                        <html-template location="component://content/webapp/content/content/ContentNav.ftl"/>
+                                    </html>
+                                </platform-specific>
+                            </container>
+                            <container style="leftonly">
+                                <container style="contentarea">
+                                    <include-screen name="ViewContentDetail"/>
+                                </container>
+                            </container>
+                        </screenlet>
+                    </decorator-section>
+                </decorator-screen>
             </widgets>
         </section>
     </screen>

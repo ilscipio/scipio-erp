@@ -257,16 +257,16 @@ under the License.
                                 </screenlet>
                             </widgets>
                         </section>
-                                <section>
-                                    <condition>
-                                        <not><if-empty field="parameters.forumMessageId"/></not>
-                                    </condition>
-                                    <widgets>
-                                        <screenlet title="${uiLabelMap.ContentForumMessage} ${parameters.forumMessageId}">
-                                            <include-form name="EditForumThreadMessage" location="component://content/widget/forum/ForumForms.xml"/>
-                                        </screenlet>
-                                    </widgets>
-                                </section>
+                        <section>
+                            <condition>
+                                <not><if-empty field="parameters.forumMessageId"/></not>
+                            </condition>
+                            <widgets>
+                                <screenlet title="${uiLabelMap.ContentForumMessage} ${parameters.forumMessageId}">
+                                    <include-form name="EditForumThreadMessage" location="component://content/widget/forum/ForumForms.xml"/>
+                                </screenlet>
+                            </widgets>
+                        </section>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

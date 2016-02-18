@@ -24,7 +24,7 @@ under the License.
     <screen name="CommonBlogDecorator">
         <section>
             <actions>
-                <set field="headerItem" value="Blog"/>
+                <set field="headerItem" from-field="headerItem" default-value="Blog"/>
                 <property-map resource="ContentUiLabels" map-name="uiLabelMap" global="true"/>
             </actions>
             <widgets>
@@ -118,6 +118,8 @@ under the License.
         <section>
             <actions>
                 <set field="headerItem" value="Blog"/>
+                <set field="tabButtonItem" value="ListBlog"/>
+                <set field="titleProperty" value="ContentBlogList"/>
                 <entity-condition entity-name="ContentAssocViewTo" list="blogs" use-cache="true">
                     <condition-list combine="and">
                         <condition-expr field-name="contentIdStart" operator="equals" value="BLOGROOT"/>
@@ -137,7 +139,7 @@ under the License.
                 <decorator-screen name="CommonBlogDecorator">
                     <decorator-section name="body">
                         <include-menu name="BlogSubTabBar" location="component://content/widget/content/ContentMenus.xml"/>
-                        <screenlet title="${uiLabelMap.ContentBlogList}" navigation-form-name="ListBlogs">
+                        <screenlet navigation-form-name="ListBlogs">
                             <include-form name="ListBlogs" location="component://content/widget/forum/BlogForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -150,12 +152,13 @@ under the License.
             <actions>
                 <set field="tabButtonItem" value="EditBlog"/>
                 <set field="contentId" from-field="parameters.blogContentId"/>
+                <set field="titleProperty" value="ContentBlogEdit"/>
                 <entity-one entity-name="Content" value-field="content"/>
             </actions>
             <widgets>
                 <decorator-screen name="BlogDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ContentBlogEdit}">
+                        <screenlet>
                             <include-form name="EditBlog" location="component://content/widget/forum/BlogForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -168,6 +171,7 @@ under the License.
         <section>
             <actions>
                 <set field="tabButtonItem" value="Articles"/>
+                <set field="titleProperty" value="ContentBlogArticleList"/>
                 <entity-condition entity-name="ContentAssocViewTo" use-cache="false" list="blogContent">
                     <condition-list combine="and">
                         <condition-expr field-name="contentIdStart" operator="equals" from-field="parameters.blogContentId"/>
@@ -180,7 +184,7 @@ under the License.
             <widgets>
                 <decorator-screen name="BlogDecorator">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ContentBlogArticleList}" navigation-form-name="BlogContent">
+                        <screenlet navigation-form-name="BlogContent">
                             <include-form name="BlogContent" location="component://content/widget/forum/BlogForms.xml"/>
                         </screenlet>
                     </decorator-section>

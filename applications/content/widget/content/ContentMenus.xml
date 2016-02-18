@@ -56,9 +56,10 @@ under the License.
             </link>
         </menu-item>
         <menu-item name="role" title="${uiLabelMap.FormFieldTitle_roles}" >
+            <!-- Cato: works without contentId
             <condition>
                 <not><if-empty field="currentValue.contentId"/></not>
-            </condition>
+            </condition>-->
             <link target="EditContentRole">
                 <parameter param-name="contentId" from-field="parameters.contentId"/>
             </link>

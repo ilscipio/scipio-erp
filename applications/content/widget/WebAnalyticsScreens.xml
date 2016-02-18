@@ -37,13 +37,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWebAnalyticsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.CatalogWebAnalytics}">
-                                    <include-form name="ListWebAnalyticsConfig" location="component://content/widget/website/WebAnalyticsForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet>
+                            <include-form name="ListWebAnalyticsConfig" location="component://content/widget/website/WebAnalyticsForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -64,7 +60,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWebAnalyticsDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditWebAnalyticsConfigs}">
+                        <screenlet>
                             <include-form name="EditWebAnalyticsConfig" location="component://content/widget/website/WebAnalyticsForms.xml"/>
                         </screenlet>
                     </decorator-section>

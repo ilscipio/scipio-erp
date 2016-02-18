@@ -74,7 +74,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleListLayout}">
+                        <screenlet>
                             <container>
                                 <link target="EditLayoutSubContent" text="${uiLabelMap.CommonCreateNew}" style="${styles.link_nav} ${styles.action_add}">
                                     <parameter param-name="mode" value="add"/>
@@ -101,7 +101,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditLayout}">
+                        <screenlet>
                             <include-form name="EditLayout" location="component://content/widget/layout/LayoutForms.xml"/>
                             <link target="cloneLayout" text="${uiLabelMap.ContentCloneLayout}" style="${styles.link_run_sys} ${styles.action_copy}">
                                 <parameter param-name="contentId" from-field="currentValue.contentId"/>
@@ -128,7 +128,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditLayoutSubContent}">
+                        <screenlet>
                             <include-form name="EditLayoutSubContent" location="component://content/widget/layout/LayoutForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -226,12 +226,11 @@ under the License.
                 <set field="titleProperty" value="PageTitleEditLayout"/>
                 <set field="headerItem" value="Layout"/>
                 <set field="tabButtonItem" to-scope="user" value="EditLayout"/>
-
             </actions>
             <widgets>
                 <decorator-screen name="CommonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditLayout}">
+                        <screenlet>
                             <include-form name="AddLayout" location="component://content/widget/layout/LayoutForms.xml"/>
                         </screenlet>
                     </decorator-section>

@@ -28,6 +28,7 @@ under the License.
 ${menuWrapper.renderMenuString()}
 -->
 
+<#-- Cato: TODO? this should probably be converted but it may be a special case due to formatting content special way? -->
 <#-- Main Heading -->
 <@table type="generic" width="100%" cellpadding="0" cellspacing="0" border="0">
   <@tr>
@@ -268,7 +269,7 @@ ${menuWrapper.renderMenuString()}
                 <@tr><@td align="right" nowrap="nowrap"><div class="tabletext"><b></b></div></@td><@td><div class="tabletext">
                     <#-- ${textData!} -->
                     <@renderContentAsText subContentId=content.contentId  editRequestName="/EditAddContent"/>
-                    <div></@td></@tr>
+                    </div></@td></@tr>
               </@table>
           </@td>
         </@tr>

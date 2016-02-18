@@ -79,7 +79,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditCMSContent}">
+                        <screenlet>
                             <platform-specific>
                                 <html><html-template location="component://content/webapp/content/cms/CMSContentEdit.ftl"/></html>
                             </platform-specific>
@@ -124,8 +124,8 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ContentCMSEditPage}">
-                            <link text="${uiLabelMap.ContentGoToFind}" target="CMSContentFind?VIEW_INDEX=${CMSContentFindViewIndex}&amp;${CMSContentFindQueryString}"/>
+                        <screenlet>
+                            <link text="${uiLabelMap.ContentGoToFind}" target="CMSContentFind?VIEW_INDEX=${CMSContentFindViewIndex}&amp;${CMSContentFindQueryString}" style="${styles.link_nav} ${styles.action_find}"/>
                             <include-form name="EditAddContentStuff" location="component://content/widget/cms/CMSForms.xml"/>
                             <content content-id="${contentId}" enable-edit-name="notfound"  edit-request="EditAddSubContent?MASTER_caMapKey=${MASTER_caMapKey}&amp;MASTER_contentId=${MASTER_contentId}&amp;MASTER_caContentIdTo=${MASTER_caContentIdTo}&amp;MASTER_caContentAssocTypeId=${MASTER_caContentAssocTypeId}&amp;MASTER_caFromDate=${MASTER_caFromDate}&amp;MASTER_caThruDate=${MASTER_caThruDate}&amp;MASTER_drDataResourceId=${MASTER_drDataResourceId}&amp;caContentIdTo=${caContentIdTo}"/>
                         </screenlet>
@@ -159,8 +159,8 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ContentCMSAddSubContent}">
-                            <link text="${uiLabelMap.ContentGoToFind}" target="CMSContentFind?VIEW_INDEX=${CMSContentFindViewIndex}&amp;${CMSContentFindQueryString}"/>
+                        <screenlet>
+                            <link text="${uiLabelMap.ContentGoToFind}" target="CMSContentFind?VIEW_INDEX=${CMSContentFindViewIndex}&amp;${CMSContentFindQueryString}" style="${styles.link_nav} ${styles.action_find}"/>
                             <include-form name="EditAddSubContentStuff" location="component://content/widget/cms/CMSForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -183,7 +183,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ContentCMSSearchPage}">
+                        <screenlet>
                             <platform-specific>
                                 <html><html-template location="component://content/webapp/content/cms/CMSSites.ftl"/></html>
                             </platform-specific>
@@ -203,7 +203,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleSearchContent}">
+                        <screenlet>
                             <platform-specific>
                                 <html><html-template location="component://content/webapp/content/cms/addSubSite.ftl"/></html>
                             </platform-specific>

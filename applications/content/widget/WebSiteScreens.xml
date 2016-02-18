@@ -65,7 +65,7 @@ under the License.
                     <decorator-section name="body">
                         <section>
                             <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleEditWebSite}">
+                                <screenlet>
                                     <include-form name="EditWebSite" location="component://content/widget/website/WebSiteForms.xml"/>
                                 </screenlet>
                             </widgets>
@@ -384,13 +384,9 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonWebSiteDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <section>
-                            <widgets>
-                                <screenlet title="${uiLabelMap.PageTitleWebSiteSEO}">
-                                    <include-form name="CreateWebsiteSEO" location="component://content/widget/website/WebSiteForms.xml"/>
-                                </screenlet>
-                            </widgets>
-                        </section>
+                        <screenlet>
+                            <include-form name="CreateWebsiteSEO" location="component://content/widget/website/WebSiteForms.xml"/>
+                        </screenlet>
                     </decorator-section>
                 </decorator-screen>
             </widgets>

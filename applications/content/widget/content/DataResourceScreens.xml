@@ -374,7 +374,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditElectronicText}">
+                        <screenlet>
                             <include-form name="EditElectronicText" location="component://content/widget/content/DataResourceForms.xml"/>
                         </screenlet>
                     </decorator-section>
@@ -466,7 +466,7 @@ under the License.
             <widgets>
                 <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.PageTitleEditHtmlText}">
+                        <screenlet>
                             <include-form name="EditHtmlText" location="component://content/widget/content/DataResourceForms.xml"/>
                         </screenlet>
                     </decorator-section>

@@ -130,15 +130,19 @@ under the License.
                                         <not><if-empty field="currentValue.contentId"/></not>
                                     </condition>
                                     <widgets>
-                                        <label style="heading" text="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentValue.contentName},${currentValue.description} [${currentValue.contentId}]  ${${extraFunctionName}}"/>
+                                        <screenlet title="${uiLabelMap[labelTitleProperty]} ${uiLabelMap.CommonFor}: ${currentValue.contentName},${currentValue.description} [${currentValue.contentId}]  ${${extraFunctionName}}">
+                                            <decorator-section-include name="body"/>
+                                        </screenlet>
                                     </widgets>
                                     <fail-widgets>
-                                        <label style="heading" text="${uiLabelMap.PageTitleAddContent}"/>
+                                        <screenlet title="${uiLabelMap.PageTitleAddContent}">
+                                            <decorator-section-include name="body"/>
+                                        </screenlet>
                                     </fail-widgets>
                                 </section>
-                                <container style="no-clear">
+                                <!--<container style="no-clear">
                                     <decorator-section-include name="body"/>
-                                </container>
+                                </container>-->
                             </widgets>
                             <fail-widgets>
                                 <label style="common-msg-error-perm">${uiLabelMap.ContentViewPermissionError}</label>
@@ -243,10 +247,11 @@ under the License.
             <widgets>
                 <decorator-screen name="main-decorator">
                     <decorator-section name="left-column" use-when="${context.widePage != true}" override-by-auto-include="true">
+                        <include-menu location="component://content/widget/content/ContentMenus.xml" name="ContentAppSideBar"/>
                         <include-menu name="${menuName}" location="component://content/widget/compdoc/CompDocMenus.xml"/>
                     </decorator-section>
                     <decorator-section name="body">
-                        <label text="${title}" style="heading"/>
+                        <label text="${subTitle}" style="heading"/>
                         <decorator-section-include name="body"/>
                     </decorator-section>
                 </decorator-screen>
@@ -408,11 +413,12 @@ under the License.
             <actions>
                 <set field="headerItem" value="main"/>
                 <set field="tabButtonItem" from-field="headerItem"/>
+                <set field="titleProperty" value="ContentMain"/>
             </actions>
             <widgets>
-                <decorator-screen name="main-decorator"  location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="main-decorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
-                        <screenlet title="${uiLabelMap.ContentMain}">
+                        <screenlet>
                             <container><label text="${uiLabelMap.ContentWelcome}"/></container>
                         </screenlet>
                     </decorator-section>

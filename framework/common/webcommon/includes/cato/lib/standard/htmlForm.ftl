@@ -775,7 +775,9 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     description     = alternative to tooltip
     name            = field name
     value           = field value
-    columns         = int value for columns for field (overrides classes)
+    columns         = number of grid columns to use as size for widget + postfix area (combined)
+                      DEV NOTE: this value now includes the postfix area because this usually easier
+                          to use this way and because the widget + postfix configuration is variable
     class           = css classes for the field element (NOT the cell container!)
                       supports prefixes:
                         "+": causes the classes to append only, never replace defaults (same logic as empty string "")
@@ -1658,7 +1660,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       <#local widgetAndPostfixColumns = 12>
     </#if>
   <#else>
-    <#-- DEV NOTE: WARN: this case is untested and I'm not sure if correct -->
+    <#-- DEV NOTE: WARN: variable name swap here -->
     <#local widgetAndPostfixColumns = columns>
   </#if>
   

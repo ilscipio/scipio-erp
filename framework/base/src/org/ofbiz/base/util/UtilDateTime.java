@@ -493,6 +493,20 @@ public class UtilDateTime {
         if (date == null) return null;
         return new Timestamp(date.getTime());
     }
+    
+    /**
+     * CATO: Converts a timestamp  into a Date
+     *
+     * @param dateTime a Timestamp
+     * @return The corresponding Date
+     */
+    public static java.util.Date toDate(Timestamp timestamp) {
+        if (timestamp == null) {
+            return null;
+        }
+        long milliseconds = timestamp.getTime() + (timestamp.getNanos() / 1000000);
+    	return new Date(milliseconds);
+    }
 
     /**
      * Converts a date and time String into a Date

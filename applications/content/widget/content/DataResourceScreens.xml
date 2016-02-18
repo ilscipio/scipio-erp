@@ -30,7 +30,7 @@ under the License.
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="30"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator"  location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator"  location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <decorator-screen name="FindScreenDecorator" location="component://common/widget/CommonScreens.xml">
                             <decorator-section name="menu-bar">
@@ -74,7 +74,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -162,7 +162,7 @@ under the License.
                 <entity-condition entity-name="DataCategory" list="dataCategoryList"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ContentContentsAssociatedToDataResource}">
                             <include-form name="EditDataResource" location="component://content/widget/content/DataResourceForms.xml"/>
@@ -191,7 +191,7 @@ under the License.
                 <set field="currentMenuItemName" to-scope="user" value="browsedataresource"/>
             </actions>
             <widgets>
-                <decorator-screen name="common-decorator">
+                <decorator-screen name="CommonDecorator">
                     <decorator-section name="body">
                     </decorator-section>
                 </decorator-screen>
@@ -211,7 +211,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="ImageUpload" location="component://content/widget/content/DataResourceForms.xml"/>
                         <!-- Commented out the following snippet because the behaviour is too random (does not depend on browser)-->
@@ -234,7 +234,7 @@ under the License.
                 <set field="currentMenuItemName" to-scope="user" value="adddataresource"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="AddDataResource" location="component://content/widget/content/DataResourceForms.xml"/>
                     </decorator-section>
@@ -251,7 +251,7 @@ under the License.
                 <set field="tabButtonItem" value="adddataresourcetext"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="AddDataResourceText" location="component://content/widget/content/DataResourceForms.xml"/>
                     </decorator-section>
@@ -268,7 +268,7 @@ under the License.
                 <set field="tabButtonItem" value="adddataresourceurl"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="AddDataResourceUrl" location="component://content/widget/content/DataResourceForms.xml"/>
                     </decorator-section>
@@ -286,7 +286,7 @@ under the License.
                 <set field="tabButtonItem" value="adddataresourceupload"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="AddDataResourceUpload" location="component://content/widget/content/DataResourceForms.xml"/>
                     </decorator-section>
@@ -303,7 +303,7 @@ under the License.
                 <set field="tabButtonItem" value="adddataresource"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="AddDataResourceFromContent" location="component://content/widget/content/DataResourceForms.xml"/>
                     </decorator-section>
@@ -320,7 +320,7 @@ under the License.
                 <set field="tabButtonItem" value="editdataresourcetext"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="EditDataResourceText" location="component://content/widget/content/DataResourceForms.xml"/>
                     </decorator-section>
@@ -337,7 +337,7 @@ under the License.
                 <set field="tabButtonItem" value="editdataresourceurl"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="EditDataResourceUrl" location="component://content/widget/content/DataResourceForms.xml"/>
                     </decorator-section>
@@ -354,7 +354,7 @@ under the License.
                 <set field="tabButtonItem" value="editdataresourceupload"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <include-form name="EditDataResourceUpload" location="component://content/widget/content/DataResourceForms.xml"/>
                     </decorator-section>
@@ -372,7 +372,7 @@ under the License.
                 <entity-one entity-name="DataResource" value-field="currentValue"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditElectronicText}">
                             <include-form name="EditElectronicText" location="component://content/widget/content/DataResourceForms.xml"/>
@@ -395,7 +395,7 @@ under the License.
                 <get-related value-field="currentValue" relation-name="DataResourceAttribute" list="dataResourceAttribute"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="DataResourceAttributePanel" title="${uiLabelMap.PageTitleEditDataResourceAttribute}" collapsible="true">
                             <include-form name="AddDataResourceAttribute" location="component://content/widget/content/DataResourceForms.xml"/>
@@ -419,7 +419,7 @@ under the License.
                 <get-related value-field="currentValue" relation-name="DataResourceRole" list="dataResourceRole"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="DataResourceRolePanel" title="${uiLabelMap.PageTitleEditDataResourceRole}" collapsible="true">
                             <include-form name="AddDataResourceRole" location="component://content/widget/content/DataResourceForms.xml"/>
@@ -443,7 +443,7 @@ under the License.
                 <get-related value-field="currentValue" relation-name="ProductFeatureDataResource" list="productFeatureDataResource"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="DataResourceProductFeaturePanel" title="${uiLabelMap.PageTitleEditDataResourceProductFeatures}" collapsible="true">
                             <include-form name="AddDataResourceProductFeature" location="component://content/widget/content/DataResourceForms.xml"/>
@@ -464,7 +464,7 @@ under the License.
                 <entity-one entity-name="DataResource" value-field="currentValue"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonDataResourceDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditHtmlText}">
                             <include-form name="EditHtmlText" location="component://content/widget/content/DataResourceForms.xml"/>

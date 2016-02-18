@@ -34,7 +34,7 @@ under the License.
                 <set field="currentCMSMenuItemName" value="contentfind" to-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
+                <decorator-screen name="CommonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -77,7 +77,7 @@ under the License.
                 <set field="menuContext.contentTarget" value="CMSContentEdit?contentId=${contentId}&amp;drDataResourceId=${dataResourceId}"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
+                <decorator-screen name="CommonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditCMSContent}">
                             <platform-specific>
@@ -122,7 +122,7 @@ under the License.
                 <set field="enableEdit" value="true"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
+                <decorator-screen name="CommonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ContentCMSEditPage}">
                             <link text="${uiLabelMap.ContentGoToFind}" target="CMSContentFind?VIEW_INDEX=${CMSContentFindViewIndex}&amp;${CMSContentFindQueryString}"/>
@@ -157,7 +157,7 @@ under the License.
                 <set field="currentCMSMenuItemName" value="EditAddContent" to-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
+                <decorator-screen name="CommonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ContentCMSAddSubContent}">
                             <link text="${uiLabelMap.ContentGoToFind}" target="CMSContentFind?VIEW_INDEX=${CMSContentFindViewIndex}&amp;${CMSContentFindQueryString}"/>
@@ -181,7 +181,7 @@ under the License.
                 <script location="component://content/webapp/content/WEB-INF/actions/cms/MostRecentPrep.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
+                <decorator-screen name="CommonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ContentCMSSearchPage}">
                             <platform-specific>
@@ -201,7 +201,7 @@ under the License.
                 <set field="titleProperty" value="PageTitleSearchContent"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
+                <decorator-screen name="CommonCmsDecorator" location="${parameters.cmsDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleSearchContent}">
                             <platform-specific>

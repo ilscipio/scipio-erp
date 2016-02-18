@@ -36,7 +36,7 @@ under the License.
                 <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="30"/>
             </actions>
             <widgets>
-                <decorator-screen name="contentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="ContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -95,12 +95,12 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="contentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="ContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
                                 <container style="left">
-                                    <screenlet title="${uiLabelMap.PageTitleNavigateContent}" >
+                                    <screenlet>
                                         <container id="EditDocumentTree"/>
                                         <include-screen name="navigateMenu"/>
                                     </screenlet>
@@ -217,7 +217,7 @@ under the License.
                 <entity-one entity-name="Content" value-field="currentValue"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditContent}">
                             <include-form name="EditContent" location="component://content/widget/content/ContentForms.xml"/>
@@ -242,7 +242,7 @@ under the License.
                 <entity-one entity-name="Content" value-field="currentValue"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditContentAssoc}">
                             <include-form name="ListContentAssocFrom" location="component://content/widget/content/ContentForms.xml"/>
@@ -300,7 +300,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AddContentRolePanel" title="${uiLabelMap.PageTitleAddRole}" collapsible="true">
                             <include-form name="AddContentRole" location="component://content/widget/content/ContentForms.xml"/>
@@ -324,7 +324,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AddContentPurposePanel" title="${uiLabelMap.PageTitleAddPurpose}" collapsible="true">
                             <include-form name="AddContentPurpose" location="component://content/widget/content/ContentForms.xml"/>
@@ -348,7 +348,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AddContentAttributePanel" title="${uiLabelMap.PageTitleAddAttribute}" collapsible="true">
                             <include-form name="AddContentAttribute" location="component://content/widget/content/ContentForms.xml"/>
@@ -375,7 +375,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -408,7 +408,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AddContentMetaDataPanel" title="${uiLabelMap.PageTitleAddMetaData}" collapsible="true">
                             <include-form name="AddContentMetaData" location="component://content/widget/content/ContentForms.xml"/>
@@ -432,7 +432,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AddWorkEffortContentPanel" title="${uiLabelMap.PageTitleAddWorkEffort}" collapsible="true">
                             <include-form name="AddWorkEffortContent" location="component://content/widget/content/ContentForms.xml"/>
@@ -605,7 +605,7 @@ under the License.
                 <script location="component://content/webapp/content/WEB-INF/actions/content/ContentSearchOptions.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="contentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="ContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                          <platform-specific>
                               <html><html-template location="component://content/webapp/content/content/ContentSearchOptions.ftl"/></html>
@@ -623,7 +623,7 @@ under the License.
                 <script location="component://content/webapp/content/WEB-INF/actions/content/ContentSearchResults.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="contentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="ContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                          <platform-specific>
                               <html><html-template location="component://content/webapp/content/content/ContentSearchResults.ftl"/></html>
@@ -646,7 +646,7 @@ under the License.
                 </entity-one>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="AddContentKeywordsPanel" title="${uiLabelMap.PageTitleAddContentKeyword}" collapsible="true">
                             <include-form name="AddContentKeyword" location="component://content/widget/content/ContentForms.xml"/>

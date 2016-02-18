@@ -200,7 +200,7 @@ under the License.
     </screen>
 
     <!-- forum decorator? -->
-    <screen name="commonForumDecorator">
+    <screen name="CommonForumDecorator">
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>

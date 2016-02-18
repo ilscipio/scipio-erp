@@ -500,7 +500,7 @@ under the License.
                 <set field="contentAssoc.contentAssocTypeId" value="PUBLISH_LINK"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonForumDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonForumDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <label text="${uiLabelMap.EcommerceBlogAddThread}"></label>
                         <include-form name="AddForumMessage" location="component://ecommerce/widget/ForumForms.xml"/>
@@ -522,7 +522,7 @@ under the License.
                 <set field="contentAssoc.contentAssocTypeId" value="RESPONSE"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonForumDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonForumDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <label text="${uiLabelMap.EcommerceBlogAddResponse}"></label>
                         <include-form name="AddForumMessage" location="component://ecommerce/widget/ForumForms.xml"/>

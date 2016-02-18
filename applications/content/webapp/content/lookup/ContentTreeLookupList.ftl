@@ -32,33 +32,33 @@
   </#if>
 </@menu>
 
-<hr />
+<#--<hr />-->
 
-<@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
-<#if tabButtonItem=="ListContentTree">
-<#--Form ListContentTree-->
-<@thead>
-  <@tr class="header-row">
-    <@th>${uiLabelMap.FormFieldTitle_contentId}</@th>
-    <@th>${uiLabelMap.FormFieldTitle_coContentName}</@th>
-    <@th>${uiLabelMap.FormFieldTitle_mimeTypeId}</@th>
-  </@tr>
-</@thead>
-<#elseif tabButtonItem=="ListDocument">
-<#--Form ListDocument-->
-<@thead>
- <@tr class="header-row">
-    <@th>${uiLabelMap.FormFieldTitle_contentId}</@th>
-    <@th>${uiLabelMap.CommonView}</@th>
-    <@th>${uiLabelMap.FormFieldTitle_contentTypeId}</@th>
-    <@th>${uiLabelMap.FormFieldTitle_mimeTypeId}</@th>
-    <@th>${uiLabelMap.FormFieldTitle_contentStatusId}</@th>
-    <@th>${uiLabelMap.FormFieldTitle_caCratedDate}</@th>
-    <@th>${uiLabelMap.CommonDelete}</@th>
-  </@tr>
-</@thead>
-</#if>
 <#if contentAssoc?has_content>  
+<@table type="data-list" autoAltRows=true> <#-- orig: class="basic-table hover-bar" --> <#-- orig: cellspacing="0" -->
+    <#if tabButtonItem=="ListContentTree">
+    <#--Form ListContentTree-->
+    <@thead>
+      <@tr class="header-row">
+        <@th>${uiLabelMap.FormFieldTitle_contentId}</@th>
+        <@th>${uiLabelMap.FormFieldTitle_coContentName}</@th>
+        <@th>${uiLabelMap.FormFieldTitle_mimeTypeId}</@th>
+      </@tr>
+    </@thead>
+    <#elseif tabButtonItem=="ListDocument">
+    <#--Form ListDocument-->
+    <@thead>
+     <@tr class="header-row">
+        <@th>${uiLabelMap.FormFieldTitle_contentId}</@th>
+        <@th>${uiLabelMap.CommonView}</@th>
+        <@th>${uiLabelMap.FormFieldTitle_contentTypeId}</@th>
+        <@th>${uiLabelMap.FormFieldTitle_mimeTypeId}</@th>
+        <@th>${uiLabelMap.FormFieldTitle_contentStatusId}</@th>
+        <@th>${uiLabelMap.FormFieldTitle_caCratedDate}</@th>
+        <@th>${uiLabelMap.CommonDelete}</@th>
+      </@tr>
+    </@thead>
+    </#if>
        <#assign alt_row = false/>
        <#assign listcount=0>
       <#list contentAssoc as contentData>
@@ -92,5 +92,7 @@
      </#if>
          <#assign listcount=listcount+1>
       </#list>
-</#if>
 </@table>
+<#else>
+  <@commonMsg type="result-norecord" />
+</#if>

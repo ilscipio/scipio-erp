@@ -30,7 +30,7 @@ under the License.
                 <set field="currentMenuItemName" to-scope="user" value="type"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="ContentTypePanel" title="${uiLabelMap.PageTitleEditContentType}" collapsible="true">
                             <include-form name="AddContentType" location="component://content/widget/contentsetup/ContentSetupForms.xml"/>
@@ -50,7 +50,7 @@ under the License.
                 <set field="currentMenuItemName" to-scope="user" value="typeAttr"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="ContentTypeAttrPanel" title="${uiLabelMap.PageTitleEditContentAttribute}" collapsible="true">
                             <include-form name="AddContentTypeAttr" location="component://content/widget/contentsetup/ContentSetupForms.xml"/>
@@ -70,7 +70,7 @@ under the License.
                 <set field="currentMenuItemName" to-scope="user" value="assocType"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="ContentAssocTypePanel" title="${uiLabelMap.PageTitleEditContentAssoc}" collapsible="true">
                             <include-form name="AddContentAssocType" location="component://content/widget/contentsetup/ContentSetupForms.xml"/>
@@ -90,7 +90,7 @@ under the License.
                 <set field="currentMenuItemName" to-scope="user" value="purposeType"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="ContentPurposeTypePanel" title="${uiLabelMap.PageTitleEditContentPurpose}" collapsible="true">
                             <include-form name="AddContentPurposeType" location="component://content/widget/contentsetup/ContentSetupForms.xml"/>
@@ -110,7 +110,7 @@ under the License.
                 <set field="currentMenuItemName" to-scope="user" value="assocPred"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="ContentAssocPredicatePanel" title="${uiLabelMap.PageTitleEditContentAssocPredicate}" collapsible="true">
                             <include-form name="AddContentAssocPredicate" location="component://content/widget/contentsetup/ContentSetupForms.xml"/>
@@ -130,7 +130,7 @@ under the License.
                 <set field="currentMenuItemName" to-scope="user" value="contentPurposeOp"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="ContentPurposeOperationPanel" title="${uiLabelMap.PageTitleEditContentPurposeOperation}" collapsible="true">
                             <include-form name="AddContentPurposeOperation" location="component://content/widget/contentsetup/ContentSetupForms.xml"/>
@@ -152,7 +152,7 @@ under the License.
                 <script location="component://content/webapp/content/WEB-INF/actions/contentsetup/UserPermPrep.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <platform-specific>
                             <html>
@@ -172,7 +172,7 @@ under the License.
                 <set field="currentMenuItemName" to-scope="user" value="contentOp"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonContentSetupDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet id="ContentOperationPanel" title="${uiLabelMap.PageTitleEditContentOperation}" collapsible="true">
                             <include-form name="AddContentOperation" location="component://content/widget/contentsetup/ContentSetupForms.xml"/>

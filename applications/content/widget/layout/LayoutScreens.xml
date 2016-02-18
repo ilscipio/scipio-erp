@@ -31,7 +31,7 @@ under the License.
                 <set field="viewSize" from-field="parameters.VIEW_SIZE" type="Integer" default-value="${viewSizeDefaultValue}"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -72,7 +72,7 @@ under the License.
                 </entity-and>
             </actions>
             <widgets>
-                <decorator-screen name="commonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleListLayout}">
                             <container>
@@ -99,7 +99,7 @@ under the License.
                 <entity-one entity-name="ContentDataResourceView" value-field="currentValue"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditLayout}">
                             <include-form name="EditLayout" location="component://content/widget/layout/LayoutForms.xml"/>
@@ -126,7 +126,7 @@ under the License.
                 <script location="component://content/webapp/content/WEB-INF/actions/layout/EditSubContent.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditLayoutSubContent}">
                             <include-form name="EditLayoutSubContent" location="component://content/widget/layout/LayoutForms.xml"/>
@@ -147,7 +147,7 @@ under the License.
                 <script location="component://content/webapp/content/WEB-INF/actions/layout/EditSubContent.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <!--
                         <include-form name="EditLayoutText" location="component://content/widget/layout/LayoutForms.xml"/>
@@ -168,7 +168,7 @@ under the License.
                 <script location="component://content/webapp/content/WEB-INF/actions/layout/EditSubContent.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <!--
                         <include-form name="EditLayoutHtml" location="component://content/widget/layout/LayoutForms.xml"/>
@@ -189,7 +189,7 @@ under the License.
                 <script location="component://content/webapp/content/WEB-INF/actions/layout/EditSubContent.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <!--
                         <include-form name="EditLayoutUrl" location="component://content/widget/layout/LayoutForms.xml"/>
@@ -210,7 +210,7 @@ under the License.
                 <script location="component://content/webapp/content/WEB-INF/actions/layout/EditSubContent.groovy"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <!--
                         <include-form name="EditLayoutImage" location="component://content/widget/layout/LayoutForms.xml"/>
@@ -229,7 +229,7 @@ under the License.
 
             </actions>
             <widgets>
-                <decorator-screen name="commonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
+                <decorator-screen name="CommonLayoutDecorator" location="${parameters.mainDecoratorLocation}">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.PageTitleEditLayout}">
                             <include-form name="AddLayout" location="component://content/widget/layout/LayoutForms.xml"/>

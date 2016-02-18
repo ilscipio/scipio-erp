@@ -25,9 +25,12 @@ under the License.
         header-row-style="header-row"> <!-- orig: default-table-style=-style="basic-table" -->
         <!--auto-fields-entity entity-name="Content" default-field-type="find" /-->
         <field name="noConditionFind"><hidden value="Y"/><!-- if this isn't there then with all fields empty no query will be done --></field>
-        <field name="contentId"><text-find ignore-case="true"/></field>
-        <field name="contentName"><text-find ignore-case="true"/></field>
-        <field name="description"><text-find ignore-case="true"/></field>
+        <field name="contentId" position="1"><text-find ignore-case="true"/></field>
+        <field name="contentName" position="2"><text-find ignore-case="true"/></field>
+        <field name="description" position="1"><text-find ignore-case="true"/></field>
+        <field name="localeString" position="2">
+            <lookup target-form-name="LookupLocale"></lookup>
+        </field>
         <field name="contentTypeId" position="1">
             <drop-down allow-empty="true">
                 <entity-options description="${description}" entity-name="ContentType" key-field-name="contentTypeId">
@@ -57,9 +60,6 @@ under the License.
             </drop-down>
         </field>
         <field name="createdByUserLogin" position="2"><lookup target-form-name="LookupUserLoginAndPartyDetails"/></field>
-        <field name="localeString">
-            <lookup target-form-name="LookupLocale"></lookup>
-        </field>
         <!--<field name="localeString">
             <drop-down allow-empty="true">
                 <entity-options entity-name="CountryCode" description="${countryName} [${countryCode}]" key-field-name="countryCode">

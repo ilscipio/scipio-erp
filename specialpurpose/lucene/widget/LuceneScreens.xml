@@ -20,7 +20,7 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <screen name="commonCmsDecorator">
+    <screen name="CommonCmsDecorator">
         <section>
             <actions>
                 <set field="currentCMSMenuItemName" from-field="currentCMSMenuItemName" from-scope="user"/>
@@ -67,7 +67,7 @@ under the License.
                 <property-map map-name="uiLabelMap" resource="ProductUiLabels"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonCmsDecorator">
+                <decorator-screen name="CommonCmsDecorator">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ContentCMSSearchPage}">
                             <platform-specific>
@@ -91,7 +91,7 @@ under the License.
                 <property-map map-name="uiLabelMap" resource="ProductUiLabels"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonCmsDecorator">
+                <decorator-screen name="CommonCmsDecorator">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ContentCMSSearchPage}">
                             <include-form name="LuceneQuery" location="component://lucene/widget/LuceneForms.xml"/>
@@ -111,7 +111,7 @@ under the License.
                 <set field="currentCMSMenuItemName" value="index" to-scope="user"/>
             </actions>
             <widgets>
-                <decorator-screen name="commonCmsDecorator">
+                <decorator-screen name="CommonCmsDecorator">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ContentCMSSearchPage}">
                             <include-form name="IndexContentDocuments" location="component://lucene/widget/LuceneForms.xml"/>

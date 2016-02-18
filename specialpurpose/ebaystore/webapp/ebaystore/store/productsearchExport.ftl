@@ -203,8 +203,6 @@ under the License.
 <@section title="Items to export" menuContent=menuContent>
 <form id="ProductsExportToEbay" method="post" action="<@ofbizUrl>exportProductsFromEbayStore</@ofbizUrl>" name="ProductsExportToEbay">
     <input type="hidden" name="productStoreId" value="${productStoreId!}"/>
-    <@table type="generic" class="${styles.table_basic!}" cellspacing="0"> <#-- orig: class="basic-table" -->
-        <@tr><@td>
         <#if addItemObj?has_content>
             <@menu type="button">
              <#assign id = 1>
@@ -806,8 +804,7 @@ under the License.
             </#list>
         </#if>
        </#if>
-       </@td></@tr>
-    </@table>
+
     <#--if addItemList?has_content>
         <@table type="fields"> <#- orig: class="basic-table" -> <#- orig: cellspacing="0" ->
             <@tr>

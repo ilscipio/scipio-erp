@@ -63,7 +63,7 @@ under the License.
         </section>
     </screen>
 
-    <screen name="commonCmsDecorator">
+    <screen name="CommonCmsDecorator">
         <section>
             <actions>
                 <set field="currentCMSMenuItemName" from-field="currentCMSMenuItemName" from-scope="user"/>
@@ -99,7 +99,7 @@ under the License.
         </section>
     </screen>
 
-    <screen name="commonContentDecorator">
+    <screen name="CommonContentDecorator">
         <section>
             <actions>
                 <set field="headerItem" value="Content"/>
@@ -150,7 +150,7 @@ under the License.
         </section>
     </screen>
 
-    <screen name="contentDecorator">
+    <screen name="ContentDecorator">
         <section>
             <actions>
                 <set field="headerItem" value="Content"/>
@@ -188,7 +188,7 @@ under the License.
     </screen>
 
 
-    <screen name="commonDataResourceDecorator">
+    <screen name="CommonDataResourceDecorator">
         <section>
             <actions>
                 <set field="headerItem" value="DataResource"/>
@@ -235,7 +235,7 @@ under the License.
         </section>
     </screen>
 
-    <screen name="commonCompDocDecorator">
+    <screen name="CommonCompDocDecorator">
         <section>
             <actions>
                 <set field="headerItem" value="CompDoc"/>
@@ -254,7 +254,7 @@ under the License.
         </section>
     </screen>
 
-    <screen name="commonContentSetupDecorator">
+    <screen name="CommonContentSetupDecorator">
         <section>
             <actions>
                 <set field="currentMenuItemName" from-field="currentMenuItemName" from-scope="user"/>
@@ -289,7 +289,7 @@ under the License.
         </section>
     </screen>
 
-    <screen name="commonDataResourceSetupDecorator">
+    <screen name="CommonDataResourceSetupDecorator">
         <section>
             <actions>
                 <set field="tabButtonItem" from-field="tabButtonItem" from-scope="user"/>
@@ -368,7 +368,7 @@ under the License.
         </section>
     </screen>
 
-    <screen name="commonLayoutDecorator">
+    <screen name="CommonLayoutDecorator">
         <section>
             <actions>
                 <set field="tabButtonItem" from-field="tabButtonItem" from-scope="user"/>

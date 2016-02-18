@@ -21,7 +21,7 @@ under the License.
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:noNamespaceSchemaLocation="http://ofbiz.apache.org/dtds/widget-screen.xsd">
 
-    <screen name="commonBlogDecorator">
+    <screen name="CommonBlogDecorator">
         <section>
             <actions>
                 <set field="headerItem" value="Blog"/>
@@ -57,10 +57,10 @@ under the License.
         </section>
     </screen>
 
-    <screen name="blogDecorator">
+    <screen name="BlogDecorator">
         <section>
             <widgets>
-                <decorator-screen name="commonBlogDecorator">
+                <decorator-screen name="CommonBlogDecorator">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -88,7 +88,7 @@ under the License.
     <screen name="BlogArticleDecorator">
         <section>
             <widgets>
-                <decorator-screen name="commonBlogDecorator">
+                <decorator-screen name="CommonBlogDecorator">
                     <decorator-section name="body">
                         <section>
                             <condition>
@@ -134,7 +134,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="commonBlogDecorator">
+                <decorator-screen name="CommonBlogDecorator">
                     <decorator-section name="body">
                         <include-menu name="BlogSubTabBar" location="component://content/widget/content/ContentMenus.xml"/>
                         <screenlet title="${uiLabelMap.ContentBlogList}" navigation-form-name="ListBlogs">
@@ -153,7 +153,7 @@ under the License.
                 <entity-one entity-name="Content" value-field="content"/>
             </actions>
             <widgets>
-                <decorator-screen name="blogDecorator">
+                <decorator-screen name="BlogDecorator">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ContentBlogEdit}">
                             <include-form name="EditBlog" location="component://content/widget/forum/BlogForms.xml"/>
@@ -178,7 +178,7 @@ under the License.
                 </entity-condition>
             </actions>
             <widgets>
-                <decorator-screen name="blogDecorator">
+                <decorator-screen name="BlogDecorator">
                     <decorator-section name="body">
                         <screenlet title="${uiLabelMap.ContentBlogArticleList}" navigation-form-name="BlogContent">
                             <include-form name="BlogContent" location="component://content/widget/forum/BlogForms.xml"/>

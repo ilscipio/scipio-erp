@@ -22,24 +22,34 @@ to this one.
                     
   * Parameters *
     class                 = css classes (supports prefixed/extended syntax, but normally no classes will be added)
+    id                    = id
     attribs/inlineAttribs = other attributes for div; attribs map needed for attribs with dashes in names.
                             NOTE: camelCase names are automatically converted to dash-separated-lowercase-names.
 -->
 <#assign container_defaultArgs = {
-  "class":"", "open":true, "close":true, "elem":"", "attribs":{}, "passArgs":{}
+  "class":"", "id":"", "open":true, "close":true, "elem":"", "attribs":{}, "passArgs":{}
 }>
 <#macro container args={} inlineArgs...>
   <#local args = mergeArgMaps(args, inlineArgs, catoStdTmplLib.container_defaultArgs)>
   <#local dummy = localsPutAll(args)>
+  <#local origArgs = args>
   <#local attribs = makeAttribMapFromArgMap(args)>
   <#if !elem?has_content || elem == "container">
     <#local elem = "div">
+  </#if>
+  <#if open && !close>
+    <#local dummy = pushRequestStack("catoContainerStack", {
+      "class":class, "elem":elem, "id":id, "attribs":attribs, "origArgs":origArgs, "passArgs":passArgs
+    })>
+  <#elseif close && !open>
+    <#local stackValues = popRequestStack("catoContainerStack")!{}>
+    <#local dummy = localsPutAll(stackValues)>
   </#if>
   <#if open>
     <#-- NOTE: currently, no stack needed; simple -->
     <#-- save grid sizes (can simply assume this is a cell; saveCurrentContainerSizesFromStyleStr will be okay with it) -->
     <#local dummy = saveCurrentContainerSizesFromStyleStr(class)>
-    <${elem}<@compiledClassAttribStr class=class /><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class"]/></#if>><#rt>
+    <${elem}<@compiledClassAttribStr class=class /><#if id?has_content> id="${id}"</#if><#if attribs?has_content><@commonElemAttribStr attribs=attribs exclude=["class", "id"]/></#if>><#rt>
   </#if>
       <#nested><#t>
   <#if close>

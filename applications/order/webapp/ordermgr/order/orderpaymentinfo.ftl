@@ -77,7 +77,7 @@ under the License.
            <@td>&nbsp;</@td>
            <@td>
              <#list invoices as invoice>
-               <div>${uiLabelMap.CommonNbr}<a href="/accounting/control/invoiceOverview?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}">${invoice}</a>
+               <div>${uiLabelMap.CommonNbr} <a href="/accounting/control/invoiceOverview?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}">${invoice}</a>
                (<a target="_BLANK" href="/accounting/control/invoice.pdf?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}">PDF</a>)</div>
              </#list>
            </@td>
@@ -153,7 +153,7 @@ under the License.
                         <@table type="fields"> <#-- orig: class="basic-table" --> <#-- orig: cellspacing="0" -->
                             <@tr>
                                 <@td valign="top">
-                                    ${uiLabelMap.CommonNbr}<a href="/accounting/control/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}${StringUtil.wrapString(externalKeyParam)}">${billingAccount.billingAccountId}</a>  - ${billingAccount.description!}
+                                    ${uiLabelMap.CommonNbr} <a href="/accounting/control/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}${StringUtil.wrapString(externalKeyParam)}">${billingAccount.billingAccountId}</a>  - ${billingAccount.description!}
                                 </@td>
                                 <@td valign="top" align="right">
                                     <#if orderPaymentPreference.statusId != "PAYMENT_SETTLED" && orderPaymentPreference.statusId != "PAYMENT_RECEIVED">
@@ -502,7 +502,7 @@ under the License.
             <@td scope="row" class="${styles.grid_large!}3">${uiLabelMap.OrderInvoices}</@td>
             <@td colspan="3">
               <#list invoices as invoice>
-                <div>${uiLabelMap.CommonNbr}<a href="/accounting/control/invoiceOverview?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}">${invoice}</a>
+                <div>${uiLabelMap.CommonNbr} <a href="/accounting/control/invoiceOverview?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}">${invoice}</a>
                 (<a target="_BLANK" href="/accounting/control/invoice.pdf?invoiceId=${invoice}${StringUtil.wrapString(externalKeyParam)}">PDF</a>)</div>
               </#list>
             </@td>

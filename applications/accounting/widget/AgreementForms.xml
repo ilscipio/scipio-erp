@@ -29,7 +29,7 @@ under the License.
             </drop-down>
         </field>
         <field name="agreementName" title="${uiLabelMap.CommonName}"><text-find/></field>
-        <field name="description" title="${uiLabelMap.CommonDescription}"><text-find/></field>
+        <field name="description" title="${uiLabelMap.CommonDescription}" position="2"><text-find/></field>
         <field name="partyIdFrom" title="${uiLabelMap.CommonParty} ${uiLabelMap.CommonFrom}">
             <lookup target-form-name="LookupPartyName"/>
         </field>

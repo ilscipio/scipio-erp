@@ -80,9 +80,11 @@ under the License.
             <xs:attribute type="xs:string" name="default-disabled-title-style" />
             <xs:attribute type="xs:string" name="selected-menuitem-context-field-name">
                 <xs:annotation>
-                    <xs:documentation>Selected menu item context field name.
-                        Cato: This attribute has been upgraded to support multiple field names, semicolon-separated (;).
-                        In the order given, if the first field's value in context is empty OR does not
+                    <xs:documentation>Selected menu item context field name. Name of a field in context (usually set by screens) that will be checked for a menu item name.
+                        The menu item that matches this field value by name will receive a selection style ('default-selected-style' or 'selected-style').
+                        Cato: This is a STOCK attribute. This attribute has been upgraded to support multiple field names, semicolon-separated (;).
+                        With a single field name or expression, the behavior is unchanged from the STOCK implementation.
+                        With multiple semicolon-separated names, in the order given, if the first field's value in context is empty OR does not
                         match any menu item name in this menu, it will check the next, and so on.
                         NOTE: default-menu-item-name is explicitly excluded from the "does this field exist in menu?" logic - 
                             default-menu-item-name is only used when all of the listed fields were empty (legacy stock behavior).</xs:documentation>
@@ -107,7 +109,7 @@ under the License.
             <xs:attribute type="xs:string" name="default-permission-entity-action" />
             <xs:attribute name="items-sort-mode">
                 <xs:annotation>
-                    <xs:documentation>Cato: If true, sort final menu items by some attribute. Default off.
+                    <xs:documentation>Cato: If true, sort final menu items by some attribute, defined by the value. Default off.
                         displaytext means try to use linktext, if none use title, if none use name.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
@@ -138,7 +140,11 @@ under the License.
             <xs:attribute type="xs:string" name="resource" />
             <xs:attribute name="recursive" use="required">
                 <xs:annotation>
-                    <xs:documentation>Cato: if and what to recurse when included menus have their own extends and includes.</xs:documentation>
+                    <xs:documentation>Cato: if and what to recurse when included menus have their own extends and includes, to find elements.
+                        'includes-only' means it will follow includes in the target menu. 
+                        'extends-only' means it will follow extends directives in the target menu.
+                        'full' means will follow all of the above.
+                        'no' means will follow none.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -274,9 +280,9 @@ under the License.
             <xs:attribute name="override-mode" default="merge">
                 <xs:annotation>
                     <xs:documentation>Cato: can be used to change the default override behavior.
-                        'replace' causes this item to override any prior definition instead of merging, which can be problematic.
+                        'replace' causes this item to override any prior definition instead of merging (merging in STOCK can be problematic).
                         'remove-replace' is the same as replace but explicitly removes the previous item before replacing it;
-                        this is almost the same but allows changing the ordering.</xs:documentation>
+                        this is almost the same as 'replace' but allows changing the ordering.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">
@@ -291,7 +297,8 @@ under the License.
                     <xs:documentation>Cato: controls whether sorting applies to this item or
                         not. Only meaningful when items-sort-mode is enabled.
                         If set to off, item will try to remain at the same index of the menu items
-                        in which it was declared.</xs:documentation>
+                        in which it was declared.
+                        NOTE: 'override-mode' can influence the final display order when combined with 'soft-mode' off.</xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:token">

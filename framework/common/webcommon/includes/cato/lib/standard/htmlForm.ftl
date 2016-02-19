@@ -1533,7 +1533,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
 <#macro field_markup_container type="" class="" columns="" postfix=false postfixSize=0 postfixContent=true labelArea=true labelType="" labelPosition="" labelAreaContent="" collapse="" collapseLabel="" collapsePostfix="" norows=false nocells=false container=true containerId="" containerClass="" origArgs={} passArgs={} catchArgs...>
   <#local rowClass = containerClass>
   <#local labelAreaClass = "">  
-  <#local postfixClass = "">
+  <#local postfixAreaClass = "">
+  <#local widgetPostfixAreaClass = "">
 
   <#local labelInRow = (labelType != "vertical")>
   
@@ -1550,7 +1551,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
   <#local fieldEntryTypeClass = "field-entry-type-" + mapCatoFieldTypeToStyleName(type)>
   <#local labelAreaClass = addClassArg(labelAreaClass, "field-entry-title " + fieldEntryTypeClass)>
   <#local class = addClassArg(class, "field-entry-widget " + fieldEntryTypeClass)>
-  <#local postfixClass = addClassArg(postfixClass, "field-entry-postfix " + fieldEntryTypeClass)>
+  <#local postfixAreaClass = addClassArg(postfixAreaClass, "field-entry-postfix " + fieldEntryTypeClass)>
+  <#local widgetPostfixAreaClass = addClassArg(widgetPostfixAreaClass, "field-entry-widgetpostfix " + fieldEntryTypeClass)>
 
   <#local rowClass = addClassArg(rowClass, "form-field-entry " + fieldEntryTypeClass)>
   <@row class=rowClass collapse=collapse!false norows=(norows || !container) id=containerId>
@@ -1569,7 +1571,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
               <#nested>
             </@cell>
             <#if postfix && !nocells && container>
-              <@cell class=compileClassArg(postfixClass, defaultGridStyles.postfixArea)>
+              <@cell class=compileClassArg(postfixAreaClass, defaultGridStyles.postfixArea)>
                 <#if (postfixContent?is_boolean && postfixContent == true) || !postfixContent?has_content>
                   <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
                 <#elseif !postfixContent?is_boolean> <#-- boolean false means prevent markup -->
@@ -1589,7 +1591,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
       </#if>
 
       <#-- need this surrounding cell/row for collapsePostfix (only if true and collapse false) -->
-      <@cell class=compileClassArg("", defaultGridStyles.widgetPostfixArea) open=widgetPostfixCombined close=widgetPostfixCombined>
+      <@cell class=compileClassArg(widgetPostfixAreaClass, defaultGridStyles.widgetPostfixArea) open=widgetPostfixCombined close=widgetPostfixCombined>
         <@row open=widgetPostfixCombined close=widgetPostfixCombined collapse=(collapse || (postfix && collapsePostfix))>
           <#-- NOTE: here this is the same as doing 
                  class=("=" + compileClassArg(class, defaultGridStyles.widgetArea))
@@ -1598,7 +1600,7 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
             <#nested>
           </@cell>
           <#if postfix && !nocells && container>
-            <@cell class=compileClassArg(postfixClass, defaultGridStyles.postfixArea)>
+            <@cell class=compileClassArg(postfixAreaClass, defaultGridStyles.postfixArea)>
               <#if (postfixContent?is_boolean && postfixContent == true) || !postfixContent?has_content>
                 <span class="postfix"><input type="submit" class="${styles.icon!} ${styles.icon_button!}" value="${styles.icon_button_value!}"/></span>
               <#elseif !postfixContent?is_boolean> <#-- boolean false means prevent markup -->

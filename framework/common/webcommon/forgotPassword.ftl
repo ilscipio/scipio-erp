@@ -17,37 +17,28 @@ specific language governing permissions and limitations
 under the License.
 -->
 <#assign logo><img src="<@ofbizContentUrl>/images/feather-tiny.png</@ofbizContentUrl>"/></#assign>
+<#assign labelUsername><i class="${styles.icon!} ${styles.icon_user!}"></i></#assign>
+<#assign labelPassword><i class="${styles.icon!} ${styles.icon_password!}"></i></#assign>
+<#assign labelTenant><i class="${styles.icon!} ${styles.icon_tenant!}"></i></#assign>
+<#assign username = requestParameters.USERNAME?default((sessionAttributes.autoUserLogin.userLoginId)?default(""))>
 
 <@row>
   <@cell class="${styles.grid_large!}3 ${styles.grid_large!}centered login-box" last=true id="login">
-    <div id="login-box-title">
-        <@heading level=1>${logo} ${uiLabelMap.CommonRegistered!}</@heading>
+    <div id="login-box-title" class="${styles.login_header!}">
+        <@heading level=1>${logo} ${uiLabelMap.CommonPassword!}</@heading>
     </div>
     <@section id="login-box-content">
-            <@panel>
-              <form method="post" action="<@ofbizUrl>forgotPassword${previousParams!}</@ofbizUrl>" name="forgotpassword">
-               <@row>
-                <@cell class="auth-plain">
-                  <@row collapse=true class="+prefix-radius">
-                    <@cell columns=3>
-                      <span class="prefix">${uiLabelMap.CommonUsername}</span>
-                    </@cell>
-                    <@cell columns=9>
-                      <input type="text" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>" size="20" placeholder="admin"/>
-                    </@cell>
-                  </@row>
+        <form method="post" action="<@ofbizUrl>forgotPassword${previousParams!}</@ofbizUrl>" name="forgotpassword">
+            <@field type="input" name="USERNAME" value="${username}" size="20" collapse=true placeholder="${uiLabelMap.CommonUsername}" tooltip="${uiLabelMap.CommonUsername}" label="${labelUsername!}"/>
+            <@row>
+                <@cell columns=12 >
+                    <a href="<@ofbizUrl>authview</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>
+                    <@field type="submit" name="GET_PASSWORD_HINT" class="${styles.link_run_sys!} ${styles.action_view!}" value="${uiLabelMap.CommonGetPasswordHint}" container=false/>
+                    <@field type="submit" name="EMAIL_PASSWORD" class="${styles.link_run_sys!} ${styles.action_send!}" value="${uiLabelMap.CommonEmailPassword}" container=false/>
+                    <input type="hidden" name="JavaScriptEnabled" value="N"/>
                 </@cell>
-               </@row>
-              <@row>
-                <@cell columns=12>
-                      <input type="submit" name="GET_PASSWORD_HINT" class="${styles.link_run_sys!} ${styles.action_view!}" value="${uiLabelMap.CommonGetPasswordHint}"/>
-                      <input type="submit" name="EMAIL_PASSWORD" class="${styles.link_run_sys!} ${styles.action_send!}" value="${uiLabelMap.CommonEmailPassword}"/>
-                      <#--<a href="<@ofbizUrl>authview</@ofbizUrl>" class="${styles.link_nav_cancel!}">${uiLabelMap.CommonGoBack}</a>-->
-                </@cell>
-               </@row>
-               <input type="hidden" name="JavaScriptEnabled" value="N"/>
-              </form>
-            </@panel>
+            </@row>
+        </form>
     </@section>
   </@cell>
 </@row>

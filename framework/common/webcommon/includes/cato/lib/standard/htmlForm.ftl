@@ -813,8 +813,8 @@ NOTE: All @field arg defaults can be overridden by the @fields fieldArgs argumen
     norows          = render without the rows-container
     nocells         = render without the cells-container
     container       = defaul true. If false, sets norows=true and nocells=true.
-    inline          = default false. If true, forces container=false and 
-                      Marks the field with styles.field_inline.
+    inline          = default false. If true, forces container=false and marks the field with styles.field_inline, or
+                      in other words, turns it into a logically inline element (traditionally, CSS "display: inline;").
                       Theme should act on this style to prevent taking up all the width.
     ignoreParentField    = default false. If true causes a child field to act as if it had no parent field. Rarely needed.
     required        = boolean, default false. Marks a required input.

@@ -442,7 +442,7 @@ menu item element must override this and provide a proper check.
   * Usage Example *  
     <@paginate mode="single" ... />
     <@paginate mode="content">
-      <@table>
+      <@table type="data-list">
         ...
       </@table>
     </@paginate>            

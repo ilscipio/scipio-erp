@@ -725,6 +725,29 @@
     </@form>
   </@section>
 
+  <@section title="Widget-only custom form fields, no containers (@fields type=\"default-manual-widgetonly\")">
+    <@form name="form6">
+    <@fields type="default-manual-widgetonly">
+      <@row>
+        <@cell columns=6>
+          <@field type="input" name="input1" />
+        </@cell>
+        <@cell columns=6>
+          <@field type="input" name="input2" />
+        </@cell>
+      </@row>
+      <@row>
+        <@cell>
+          <span>Radios:</span>
+          <@field type="radio" name="radio1" label="Radio 1" value="val1"/>
+          <br/>
+          <span>Checkboxes:</span>
+          <@field type="checkbox" name="checkbox1" label="Checkbox 1" value="val1" />
+        </@cell>
+      </@row>
+    </@fields>
+    </@form>
+  </@section>
 </@section>
 
 <@section title="Class arguments test">

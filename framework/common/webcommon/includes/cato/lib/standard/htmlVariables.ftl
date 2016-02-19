@@ -794,7 +794,8 @@
     <#-- fields type-based styles 
         NOTE: fields_default_xxx is also used as a fallback for the more specialized type for any
             missing individual definitions (same as menu and table defs) 
-            the other ones simply override them. -->
+            the other ones simply override them. 
+        TODO?: DEV NOTE: could remove some of these fields in favor of _fieldargs entries, but requires review... -->
     <#-- default styles for most forms -->
     "fields_default_labeltype" : "horizontal",
     "fields_default_labelposition" : "left",
@@ -841,6 +842,21 @@
     "fields_default_manual_collapsepostfix" : true,
     "fields_default_manual_collapsedinlinelabel" : "", <#-- can be true, false, or list of type names -->
     "fields_default_manual_checkboxtype" : "",
+
+    <#-- free-form/manual widget-only layout - same as default-manual but all fields have no containers by default  -->
+    "fields_default_manual_widgetonly_labeltype" : "horizontal",
+    "fields_default_manual_widgetonly_labelposition" : "left",
+    "fields_default_manual_widgetonly_labelarea" : false,
+    "fields_default_manual_widgetonly_labelareaexceptions" : "", 
+    "fields_default_manual_widgetonly_labelarearequirecontent" : false, 
+    "fields_default_manual_widgetonly_labelareaconsumeexceptions" : "",
+    "fields_default_manual_widgetonly_collapse" : false,
+    "fields_default_manual_widgetonly_collapsepostfix" : true,
+    "fields_default_manual_widgetonly_collapsedinlinelabel" : "",
+    "fields_default_manual_widgetonly_checkboxtype" : "",
+    "fields_default_manual_widgetonly_fieldargs" : {
+        "container" : "false"
+    }, 
 
     <#-- completely generic - NO imposed styles - keep styles out of this -->
     "fields_generic_labeltype" : "horizontal",

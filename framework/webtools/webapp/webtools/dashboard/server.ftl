@@ -1,4 +1,4 @@
 <#-- CATO: Empty dashboard for now -->
-<@section title="Widget Test"> 
+<@section> 
   ${screens.render("component://webtools/widget/CommonWidgets.xml#DashboardServerTraffic")}
 </@section>
